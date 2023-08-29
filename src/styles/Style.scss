@@ -1,0 +1,276 @@
+@import './Variables.scss';
+
+body {
+  background: $background;
+}
+
+.bbp {
+  &-wrapper {
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    p {
+      small {
+        font-size: 0.625rem;
+        font-weight: bold;
+      }
+    }
+
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+
+    input:not([type='radio']),
+    textarea,
+    select {
+      background-color: $light-gray;
+      border: 0.125rem solid $medium-gray;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      width: 100%;
+
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        outline: none;
+      }
+    }
+
+    input[type='radio'] {
+      width: 1rem;
+    }
+
+    .bbp-header {
+      background-color: $primary;
+      color: $white;
+      padding: 3rem 0rem 5rem 0rem;
+      text-align: center;
+
+      h2 {
+        font-weight: bold;
+      }
+
+      nav {
+        ul {
+          cursor: pointer;
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          list-style-type: none;
+          padding: 0;
+        }
+      }
+
+      li {
+        a {
+          background: inherit;
+          border-radius: 0.5rem;
+          padding: 8px;
+        }
+
+        &:hover,
+        &.active {
+          background-color: $secondary;
+          color: $black;
+          opacity: 0.7;
+
+          a {
+            color: $black;
+          }
+        }
+
+        &.active {
+          font-weight: bold;
+        }
+
+        &.active {
+          opacity: 0.9;
+        }
+      }
+    }
+
+    .bbp-container {
+      display: grid;
+      margin: 0 auto;
+      max-width: 900px;
+      height: 610px;
+      padding: 0rem 1rem 1rem 1rem;
+
+      .bbp {
+        &-forms {
+          border: 0.125rem solid $light-gray;
+          border-radius: 1.5rem;
+          min-width: 350px;
+          padding: 3rem;
+          transform: translateY(-8%);
+
+          .error-message {
+            background-color: $fail-background;
+            color: $fail;
+            font-size: 0.875rem;
+            font-weight: bold;
+            padding: 0.625rem;
+            position: absolute;
+            text-align: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+          }
+
+          .error-message-fixed {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+          }
+
+          .bbp-radio-group {
+            small {
+              display: block;
+            }
+
+            .bbp-radio-options {
+              display: flex;
+              gap: 1rem;
+              margin-top: 0.625rem;
+
+              label {
+                cursor: pointer;
+                display: flex;
+              }
+            }
+          }
+
+          .bbp-counter {
+            p {
+              color: $white;
+            }
+          }
+
+          .bbp-button {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            padding: 3.5rem 3rem;
+
+            &:last-child {
+              justify-content: end;
+            }
+
+            .bbp-btn {
+              &-submit,
+              &-return {
+                border: none;
+                border-radius: 1rem;
+                color: $black;
+                cursor: pointer;
+                font-weight: bold;
+                padding: 1rem 2.25rem;
+
+                &:hover {
+                  opacity: 0.9;
+                }
+              }
+
+              &-submit {
+                background-color: $secondary;
+              }
+
+              &-return {
+                background-color: $medium-gray;
+              }
+            }
+          }
+
+          svg.bbp-icon-arrow-left {
+            transform: translate(-10px, -1px);
+          }
+
+          svg.bbp-icon-arrow-right {
+            transform: translate(10px, -1px);
+          }
+        }
+
+        &-forms#form-home,
+        &-forms#form-personal-data,
+        &-forms#form-contact,
+        &-forms#form-packages,
+        &-forms#form-payment {
+          background: linear-gradient(to bottom, $white 77%, $primary 0%);
+        }
+      }
+
+      .bbp-btn {
+        &-redo {
+          background-color: $medium-gray;
+          border: none;
+          border-radius: 1rem;
+          color: $black;
+          cursor: pointer;
+          font-weight: bold;
+          padding: 1rem 2.25rem;
+
+          &:hover {
+            opacity: 0.9;
+          }
+
+          svg.bbp-icon-arrow-right {
+            transform: translate(10px, -1px);
+          }
+        }
+      }
+
+      .bbp-success-message {
+        align-items: center;
+        background-color: $form-sent-success;
+        border-radius: 4px;
+        color: $primary;
+        display: grid;
+        height: 50%;
+        margin: 20px auto;
+        padding: 20px;
+        text-align: center;
+
+        h3 {
+          word-break: break-word;
+          margin-top: 0;
+        }
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    #havePackages {
+      height: 750px;
+    }
+
+    footer {
+      position: relative;
+      width: 100%;
+    }
+
+    .bbp-footer-logo {
+      bottom: 0;
+      height: 6.25rem;
+      position: absolute;
+      right: 0;
+    }
+
+    .bbp-copyright {
+      align-items: end;
+      display: flex;
+      justify-self: center;
+      margin: 0;
+    }
+  }
+}
