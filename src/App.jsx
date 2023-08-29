@@ -1,9 +1,7 @@
+import FormRoutes from './Pages/Form-root/FormRoutes.jsx';
+
 function App() {
-  return (
-    <>
-      <h1>IPBV FORM</h1>
-    </>
-  );
+  return <FormRoutes />;
 }
 
 export default App;
