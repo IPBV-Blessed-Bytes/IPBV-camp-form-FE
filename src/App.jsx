@@ -1,4 +1,4 @@
-import FormRoutes from './Pages/Form-root/FormRoutes.jsx';
+import FormRoutes from './Pages/Form-root/';
 
 function App() {
   return <FormRoutes />;

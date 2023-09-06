@@ -30,15 +30,9 @@ body {
     textarea,
     select {
       background-color: $light-gray;
-      border: 0.125rem solid $medium-gray;
       border-radius: 0.5rem;
       padding: 0.5rem;
       width: 100%;
-
-      &:focus {
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        outline: none;
-      }
     }
 
     input[type='radio'] {
@@ -108,28 +102,6 @@ body {
           min-width: 350px;
           padding: 3rem;
           transform: translateY(-8%);
-
-          .error-message {
-            background-color: $fail-background;
-            color: $fail;
-            font-size: 0.875rem;
-            font-weight: bold;
-            padding: 0.625rem;
-            position: absolute;
-            text-align: center;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-          }
-
-          .error-message-fixed {
-            position: fixed;
-            left: 0;
-            top: 0;
-            right: 0;
-            z-index: 1000;
-          }
 
           .bbp-radio-group {
             small {
@@ -271,6 +243,136 @@ body {
       display: flex;
       justify-self: center;
       margin: 0;
+    }
+  }
+}
+
+.form {
+  &-container {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-top: -40px;
+
+    .card {
+      height: fit-content;
+
+      .card-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .card-text {
+        color: #7f7f7f;
+        margin-top: -6px;
+        font-size: 16px;
+      }
+
+      .card-body {
+        padding: 30px 30px 50px 30px;
+
+        textarea {
+          resize: none;
+          height: 100px;
+        }
+      }
+    }
+
+    .allergy-container {
+      > div:first-child {
+        margin-bottom: 1rem;
+      }
+
+      @media (min-width: $md) {
+        > div:first-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .package-container {
+      display: flex;
+      flex-direction: column;
+      border-radius: 60px;
+      transition: box-shadow 0.3s;
+
+      &-body {
+        background-color: #535a71;
+        color: #fff;
+        padding: 10px;
+        display: flex;
+        flex: auto;
+        flex-direction: column;
+        width: 100%;
+
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+
+      &-title {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      &-button-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      img {
+        width: 100%;
+        height: 150px;
+        flex: auto;
+
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+      }
+
+      @media (min-width: $md) {
+        flex-direction: row;
+
+        img {
+          flex: 0 0 40%;
+          width: 260px;
+          height: 160px;
+          border-top-left-radius: 6px;
+          border-top-right-radius: unset;
+          border-bottom-left-radius: 6px;
+        }
+
+        &-body {
+          flex: 0 0 60%;
+          border-top-right-radius: 6px;
+          border-bottom-right-radius: 6px;
+          border-bottom-left-radius: unset;
+          height: 160px;
+        }
+      }
+    }
+
+    .package-container + .package-container {
+      margin-top: 20px;
+    }
+  }
+
+  &-footer-container {
+    height: 100px;
+    background-color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 30px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+
+    button {
+      width: 200px;
     }
   }
 }

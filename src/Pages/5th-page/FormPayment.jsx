@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import Icons from '../../components/Icons.jsx';
+import Icons from '../../components/Icons';
 
 function FormPayment() {
-
   return (
     <form className="bbp-forms" id="form-payment">
       <h1>Pagamento</h1>

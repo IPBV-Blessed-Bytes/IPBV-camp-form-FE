@@ -1,5 +1,6 @@
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import PropTypes from 'prop-types';
+// import { enumSteps } from '../Pages/Form-root';
 
 function Header() {
   const resolvedPath = useResolvedPath('/enviado');

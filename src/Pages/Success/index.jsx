@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Icons from '../../components/Icons.jsx';
+import Icons from '../../components/Icons';
 
 const FormSuccess = () => {
   return (
