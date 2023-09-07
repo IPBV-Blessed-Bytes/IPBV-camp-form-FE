@@ -277,9 +277,32 @@ body {
       }
     }
 
+    .react-datepicker-wrapper,
+    .cpf-container {
+      width: 100%;
+      margin-bottom: 1em;
+
+      @media (min-width: $md) {
+        width: unset;
+        margin-bottom: unset;
+      }
+    }
+
+    .cellphone-container {
+      > div {
+        margin-bottom: 1em;
+      }
+
+      @media (min-width: $md) {
+        > div {
+          margin-bottom: 0;
+        }
+      }
+    }
+
     .allergy-container {
       > div:first-child {
-        margin-bottom: 1rem;
+        margin-bottom: 1em;
       }
 
       @media (min-width: $md) {
@@ -367,12 +390,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-inline: 30px;
+    padding-inline: 20px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 
     button {
-      width: 200px;
+      width: 130px;
+    }
+
+    @media (min-width: $md) {
+      padding-inline: 30px;
+
+      button {
+        width: 200px;
+      }
     }
   }
 }

@@ -1,9 +1,6 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import {
-  FormGroup,
-  FormLabel,
-} from 'react-bootstrap';
+import { FormGroup, FormLabel } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
@@ -14,17 +11,12 @@ import InputMask from 'react-input-mask';
 
 import { additionalInformationSchema } from '../../form/validations/schema';
 
-function FormContact({ nextStep, backStep }) {
+function FormContact({ nextStep, backStep, initialValues, updateForm }) {
   const { values, handleChange, errors, submitForm } = useFormik({
-    initialValues: {
-      cellPhone: '',
-      email: '',
-      isWhatsApp: '',
-      hasAllergy: '',
-      allergy: '',
-    },
+    initialValues,
     onSubmit: () => {
       nextStep();
+      updateForm(values);
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -39,8 +31,8 @@ function FormContact({ nextStep, backStep }) {
 
           <Card.Text>Nos informe como poderemos te contactar</Card.Text>
           <Form>
-            <Row className="mb-3">
-              <Col>
+            <Row className="cellphone-container">
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>Telefone:</Form.Label>
 
@@ -65,7 +57,7 @@ function FormContact({ nextStep, backStep }) {
                   <Form.Control.Feedback type="invalid">{errors.cellPhone}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label>É whatsApp?</Form.Label>
 
@@ -157,7 +149,13 @@ function FormContact({ nextStep, backStep }) {
       </Card.Body>
 
       <div className="form-footer-container">
-        <Button variant="secondary" onClick={backStep}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            backStep();
+            updateForm(values);
+          }}
+        >
           Voltar
         </Button>
 
@@ -172,6 +170,14 @@ function FormContact({ nextStep, backStep }) {
 FormContact.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
+  updateForm: PropTypes.func,
+  initialValues: PropTypes.shape({
+    cellPhone: PropTypes.string,
+    email: PropTypes.string,
+    isWhatsApp: PropTypes.bool,
+    hasAllergy: PropTypes.bool,
+    allergy: PropTypes.string,
+  }),
 };
 
 export default FormContact;

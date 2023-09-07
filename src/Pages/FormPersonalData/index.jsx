@@ -1,36 +1,29 @@
-import InputMask from 'react-input-mask';
-import DatePicker from 'react-datepicker';
-import PropTypes from 'prop-types';
-import { useFormik } from 'formik';
 import ptBR from 'date-fns/locale/pt';
-import { personalInformationSchema } from '../../form/validations/schema';
-import { rgShipper, issuingState } from './data';
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
+import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import DatePicker from 'react-datepicker';
+import InputMask from 'react-input-mask';
 
-function FormPersonalData({ nextStep, backStep }) {
+import { personalInformationSchema } from '../../form/validations/schema';
+import { issuingState, rgShipper } from './data';
+
+function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
   const { values, errors, handleChange, submitForm } = useFormik({
-    initialValues: {
-      name: '',
-      birthday: '',
-      cpf: '',
-      rg: '',
-      rgShipper: '',
-      rgShipperState: '',
-    },
+    initialValues,
     onSubmit: () => {
       nextStep();
+      updateForm(values);
     },
     validationSchema: personalInformationSchema,
     validateOnBlur: false,
     validateOnChange: false,
   });
-
-  console.log('errors: ', errors);
 
   return (
     <Card>
@@ -55,7 +48,7 @@ function FormPersonalData({ nextStep, backStep }) {
             </Form.Group>
 
             <Row className="mb-3">
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>Data de Nascimento:</Form.Label>
                   <Form.Control
@@ -87,7 +80,7 @@ function FormPersonalData({ nextStep, backStep }) {
                 </Form.Group>
               </Col>
 
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>CPF:</Form.Label>
                   <Form.Control
@@ -96,6 +89,7 @@ function FormPersonalData({ nextStep, backStep }) {
                     mask="999.999.999-99"
                     name="cpf"
                     id="cpf"
+                    className="cpf-container"
                     value={values.cpf}
                     onChange={(event) =>
                       handleChange({
@@ -111,7 +105,7 @@ function FormPersonalData({ nextStep, backStep }) {
                 </Form.Group>
               </Col>
 
-              <Col>
+              <Col md={4}>
                 <Form.Group>
                   <Form.Label>RG:</Form.Label>
                   <Form.Control
@@ -179,7 +173,13 @@ function FormPersonalData({ nextStep, backStep }) {
       </Card.Body>
 
       <div className="form-footer-container">
-        <Button variant="secondary" onClick={backStep}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            backStep();
+            updateForm(values);
+          }}
+        >
           Voltar
         </Button>
 
@@ -194,6 +194,15 @@ function FormPersonalData({ nextStep, backStep }) {
 FormPersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
+  updateForm: PropTypes.func,
+  initialValues: PropTypes.shape({
+    name: PropTypes.string,
+    birthday: PropTypes.instanceOf(Date),
+    cpf: PropTypes.string,
+    rg: PropTypes.string,
+    rgShipper: PropTypes.string,
+    rgShipperState: PropTypes.string,
+  }),
 };
 
 export default FormPersonalData;

@@ -20,8 +20,40 @@ export const enumSteps = {
   success: 5,
 };
 
+const initialValues = {
+  personalInformation: {
+    name: '',
+    birthday: '',
+    cpf: '',
+    rg: '',
+    rgShipper: '',
+    rgShipperState: '',
+  },
+  contact: {
+    cellPhone: '',
+    email: '',
+    isWhatsApp: '',
+    hasAllergy: '',
+    allergy: '',
+  },
+  package: {
+    accomodation: '',
+    transportation: '',
+  },
+};
+
 function FormRoutes() {
-  const [steps, setSteps] = useState(enumSteps.contact);
+  const [steps, setSteps] = useState(enumSteps.packages);
+  const [formValues, setFormValues] = useState(initialValues);
+
+  const updateFormValues = (key) => {
+    return (value) => {
+      setFormValues({
+        ...formValues,
+        [key]: value,
+      });
+    };
+  };
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
@@ -42,9 +74,23 @@ function FormRoutes() {
       <div className="form-container">
         {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
 
-        {steps === enumSteps.personalData && <FormPersonalData nextStep={nextStep} backStep={backStep} />}
+        {steps === enumSteps.personalData && (
+          <FormPersonalData
+            nextStep={nextStep}
+            backStep={backStep}
+            updateForm={updateFormValues('personalInformation')}
+            initialValues={formValues.personalInformation}
+          />
+        )}
 
-        {steps === enumSteps.contact && <FormContact nextStep={nextStep} backStep={backStep} />}
+        {steps === enumSteps.contact && (
+          <FormContact
+            nextStep={nextStep}
+            backStep={backStep}
+            updateForm={updateFormValues('contact')}
+            initialValues={formValues.contact}
+          />
+        )}
 
         {steps === enumSteps.packages && <FormPackages nextStep={nextStep} backStep={backStep} />}
 
