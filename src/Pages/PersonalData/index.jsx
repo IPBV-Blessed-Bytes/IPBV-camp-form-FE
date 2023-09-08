@@ -26,13 +26,14 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
   });
 
   return (
-    <Card>
+    <Card className="bbp-general-height">
       <Card.Body>
         <Container>
           <Card.Title>Informações Pessoais</Card.Title>
 
           <Card.Text>
-            Favor, informe os seus dados pessoais pois serão de extrema importância para o acampamento
+            Favor, informe os seus dados pessoais pois serão de extrema importância para a administração de sua
+            inscrição
           </Card.Text>
           <Form>
             <Form.Group className="mb-3">
@@ -174,16 +175,17 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
 
       <div className="form-footer-container">
         <Button
-          variant="secondary"
+          variant="light"
           onClick={() => {
             backStep();
             updateForm(values);
           }}
+          size="lg"
         >
           Voltar
         </Button>
 
-        <Button variant="warning" onClick={submitForm}>
+        <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>

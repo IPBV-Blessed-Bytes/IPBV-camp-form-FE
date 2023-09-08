@@ -40,7 +40,7 @@ function FormPackages({ nextStep, backStep }) {
 
   return (
     <>
-      <Card>
+      <Card className="bbp-general-height">
         <Card.Body>
           <Container>
             <Form>
@@ -56,7 +56,19 @@ function FormPackages({ nextStep, backStep }) {
                       <Accordion.Header>{accomodation.name}</Accordion.Header>
 
                       <Accordion.Body>
+                        <div
+                          className="card"
+                          style={{
+                            margin: '20px 10px',
+                            width: '400px',
+                            padding: '10px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            cursor: 'pointer',
+                          }}
+                        ></div>
                         <Card
+                        className="hover"
                           style={{
                             margin: '20px 10px',
                             width: '400px',
@@ -91,11 +103,11 @@ function FormPackages({ nextStep, backStep }) {
         </Card.Body>
 
         <div className="form-footer-container">
-          <Button variant="secondary" onClick={backStep}>
+          <Button variant="light" onClick={backStep} size="lg">
             Voltar
           </Button>
 
-          <Button variant="warning" onClick={submitForm}>
+          <Button variant="warning" onClick={submitForm} size="lg">
             Avançar
           </Button>
         </div>

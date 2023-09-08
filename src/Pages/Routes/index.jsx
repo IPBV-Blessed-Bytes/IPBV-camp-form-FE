@@ -4,11 +4,11 @@ import { useState } from 'react';
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import FormPayment from '../5th-page/FormPayment';
-import FormContact from '../FormContact';
-import FormHome from '../FormHome';
-import FormPackages from '../FormPackages';
-import FormPersonalData from '../FormPersonalData';
+import FormPayment from '../Payment';
+import FormContact from '../Contact';
+import FormHome from '../Home';
+import FormPackages from '../Packages';
+import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
 
 export const enumSteps = {
