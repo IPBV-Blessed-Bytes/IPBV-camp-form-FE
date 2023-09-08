@@ -42,7 +42,7 @@ body {
     .bbp-header {
       background-color: $primary;
       color: $white;
-      padding: 3rem 0rem 5rem 0rem;
+      padding: 3rem 0rem 3rem 0rem;
       text-align: center;
 
       h2 {
@@ -226,16 +226,8 @@ body {
       height: 750px;
     }
 
-    footer {
-      position: relative;
-      width: 100%;
-    }
-
     .bbp-footer-logo {
-      bottom: 0;
       height: 6.25rem;
-      position: absolute;
-      right: 0;
     }
 
     .bbp-copyright {
@@ -252,6 +244,10 @@ body {
     max-width: 800px;
     margin-inline: auto;
     margin-top: -40px;
+
+    .bbp-general-height {
+      min-height: 650px;
+    }
 
     .card {
       height: fit-content;
@@ -275,6 +271,12 @@ body {
           height: 100px;
         }
       }
+    }
+
+    .inner-card:hover {
+      background-color: #4267a7;
+      color: white;
+      opacity: 0.8;
     }
 
     .react-datepicker-wrapper,
@@ -385,14 +387,14 @@ body {
   }
 
   &-footer-container {
-    height: 100px;
-    background-color: $primary;
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding-inline: 20px;
+    background-color: $primary;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+    display: flex;
+    height: 100px;
+    justify-content: space-between;
+    padding-inline: 20px;
 
     button {
       width: 130px;
