@@ -24,14 +24,14 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
   });
 
   return (
-    <Card>
+    <Card className="bbp-general-height">
       <Card.Body>
         <Container>
-          <Card.Title>Contato</Card.Title>
+          <Card.Title>Informações de Contato</Card.Title>
 
           <Card.Text>Nos informe como poderemos te contactar</Card.Text>
           <Form>
-            <Row className="cellphone-container">
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group>
                   <Form.Label>Telefone:</Form.Label>
@@ -97,7 +97,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
             </Form.Group>
 
-            <Row className="allergy-container">
+            <Row>
               <Col md={values.hasAllergy ? 4 : 6}>
                 <FormGroup>
                   <FormLabel>Você possui algum tipo de alergia?</FormLabel>
@@ -117,8 +117,8 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                     }
                   >
                     <option value="">Selecione uma opção</option>
-                    <option value={true}>Sim</option>
                     <option value={false}>Não</option>
+                    <option value={true}>Sim</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.hasAllergy}</Form.Control.Feedback>
                 </FormGroup>
@@ -150,16 +150,17 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
 
       <div className="form-footer-container">
         <Button
-          variant="secondary"
+          variant="light"
           onClick={() => {
             backStep();
             updateForm(values);
           }}
+          size="lg"
         >
           Voltar
         </Button>
 
-        <Button variant="warning" onClick={submitForm}>
+        <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>

@@ -6,7 +6,7 @@ import Card from 'react-bootstrap/Card';
 
 function FormHome(props) {
   return (
-    <Card>
+    <Card className="bbp-general-height">
       <Card.Body>
         <Container>
           <Card.Title>Bem-Vindo</Card.Title>
@@ -24,10 +24,8 @@ function FormHome(props) {
         </Container>
       </Card.Body>
 
-      <div className="form-footer-container">
-        <div></div>
-
-        <Button variant="warning" onClick={props.nextStep}>
+      <div className="form-footer-container justify-content-end">
+        <Button variant="warning" onClick={props.nextStep} size="lg">
           Avançar
         </Button>
       </div>
