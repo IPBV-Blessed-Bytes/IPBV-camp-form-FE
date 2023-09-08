@@ -68,7 +68,7 @@ function FormPackages({ nextStep, backStep }) {
                           }}
                         ></div>
                         <Card
-                        className="hover"
+                        className="inner-card"
                           style={{
                             margin: '20px 10px',
                             width: '400px',
