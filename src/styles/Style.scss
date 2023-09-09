@@ -180,26 +180,6 @@ body {
         }
       }
 
-      .bbp-btn {
-        &-redo {
-          background-color: $medium-gray;
-          border: none;
-          border-radius: 1rem;
-          color: $black;
-          cursor: pointer;
-          font-weight: bold;
-          padding: 1rem 2.25rem;
-
-          &:hover {
-            opacity: 0.9;
-          }
-
-          svg.bbp-icon-arrow-right {
-            transform: translate(10px, -1px);
-          }
-        }
-      }
-
       .bbp-success-message {
         align-items: center;
         background-color: $form-sent-success;
@@ -247,6 +227,10 @@ body {
 
     .bbp-general-height {
       min-height: 650px;
+    }
+
+    .pointer {
+      cursor: pointer;
     }
 
     .card {
