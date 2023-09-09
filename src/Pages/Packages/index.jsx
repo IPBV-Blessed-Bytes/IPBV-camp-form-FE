@@ -1,4 +1,4 @@
-import { useFormik } from 'formik';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -6,37 +6,69 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 
-import { packageSchema } from '../../form/validations/schema';
-
 function FormPackages({ nextStep, backStep }) {
-  const { values, handleChange, errors, submitForm } = useFormik({
-    initialValues: {
-      accomodation: '',
-      transportation: '',
-      food: '',
-    },
-    onSubmit: () => {
-      nextStep();
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: packageSchema,
-  });
+  const [activeCard, setActiveCard] = useState(null);
 
-  const accomodations = [
+  const handleClick = (cardId) => {
+    setActiveCard(cardId === activeCard ? null : cardId);
+  };
+
+  const accomodation = [
     {
       name: 'Colégio XV de Novembro',
-      description: 'lorem lorem impsu bla bla bla siadmnsaoidmsam io',
     },
     {
       name: 'Seminário São José',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae nisl euismod, lacinia nisl vita',
     },
     {
-      name: 'Hotel íbis',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      name: 'Hotel Ibis',
     },
   ];
+
+  const cards = [
+    {
+      id: '1',
+      values: { accomodation: '00,00', food: '280,00', transportation: '160,00', total: '440,00' },
+      observation: 'HOSPEDAGEM COLETIVA em salas de aula',
+    },
+    {
+      id: '2',
+      values: { accomodation: '00,00', food: '280,00', transportation: '00,00', total: '280,00' },
+      observation: 'HOSPEDAGEM COLETIVA em salas de aula',
+    },
+    {
+      id: '3',
+      values: { accomodation: '00,00', food: '280,00', transportation: '160,00', total: '440,00' },
+      observation: 'HOSPEDAGEM COLETIVA PARA A FAMÍLIA em salas de aula',
+    },
+    {
+      id: '4',
+      values: { accomodation: '00,00', food: '280,00', transportation: '00,00', total: '280,00' },
+      observation: 'HOSPEDAGEM COLETIVA PARA A FAMÍLIA em salas de aula',
+    },
+    {
+      id: '5',
+      values: { accomodation: '600,00', food: '200,00', transportation: '160,00', total: '960,00' },
+      observation: 'HOSPEDAGEM INDIVIDUAL, café da manhã incluso no seminário',
+    },
+    {
+      id: '6',
+      values: { accomodation: '600,00', food: '200,00', transportation: '00,00', total: '800,00' },
+      observation: 'HOSPEDAGEM INDIVIDUAL, café da manhã incluso no seminário',
+    },
+    {
+      id: '7',
+      values: { accomodation: '550,00', food: '200,00', transportation: '160,00', total: '910,00' },
+      observation: 'HOSPEDAGEM DUPLA, café da manhã incluso no hotel',
+    },
+    {
+      id: '8',
+      values: { accomodation: '550,00', food: '200,00', transportation: '00,00', total: '750,00' },
+      observation: 'HOSPEDAGEM DUPLA, café da manhã incluso no hotel',
+    },
+  ];
+
+  const groupedCards = [cards.slice(0, 4), cards.slice(4, 6), cards.slice(6, 8)];
 
   return (
     <>
@@ -46,56 +78,44 @@ function FormPackages({ nextStep, backStep }) {
             <Form>
               <Card.Title>Pacotes</Card.Title>
               <Card.Text>
-                Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar!
+                Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar,
+                posteriormente escolha o pacote deseja e clique nele para ser redirecionado.
               </Card.Text>
 
               <Accordion>
-                {accomodations.map((accomodation, key) => (
-                  <>
-                    <Accordion.Item eventKey={String(key)}>
-                      <Accordion.Header>{accomodation.name}</Accordion.Header>
-
-                      <Accordion.Body>
-                        <div
-                          className="card"
-                          style={{
-                            margin: '20px 10px',
-                            width: '400px',
-                            padding: '10px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            cursor: 'pointer',
-                          }}
-                        ></div>
+                {accomodation.map((accomodation, index) => (
+                  <Accordion.Item key={index} eventKey={String(index)}>
+                    <Accordion.Header>{accomodation.name}</Accordion.Header>
+                    <Accordion.Body className="d-grid gap-3">
+                      {groupedCards[index].map((cards) => (
                         <Card
-                        className="inner-card"
-                          style={{
-                            margin: '20px 10px',
-                            width: '400px',
-                            padding: '10px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            cursor: 'pointer',
-                          }}
+                          key={cards.id}
+                          className={`${activeCard === cards.id ? ' card-is-active' : ''}`}
+                          onClick={() => handleClick(cards.id)}
                         >
-                          <div
-                            style={{
-                              fontSize: '16px',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            HOSPEDAGEM COLETIVA EM SALAS DE AULA + REFEIÇÕES
-                          </div>
-
-                          <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
-                            <div>alimentação - R$280,00 </div>
-                            <div>Ônibus- R$160,00 </div>
-                            <div>total - R$ 440,10 </div>
-                          </div>
+                          <Card.Body>
+                            <Card.Title>{cards.observation}</Card.Title>
+                            <Card.Text>
+                              <div>
+                                <span>Hospedagem:</span> R$ {cards.values.accomodation}
+                              </div>
+                              <div>
+                                <span>Alimentação:</span> R$ {cards.values.food}
+                              </div>
+                              <div>
+                                <span>Ônibus:</span> R$ {cards.values.transportation}
+                              </div>
+                              <div>
+                                <em>
+                                  <span>Total:</span> <u>R$ {cards.values.total}</u>
+                                </em>
+                              </div>
+                            </Card.Text>
+                          </Card.Body>
                         </Card>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </>
+                      ))}
+                    </Accordion.Body>
+                  </Accordion.Item>
                 ))}
               </Accordion>
             </Form>
@@ -106,8 +126,7 @@ function FormPackages({ nextStep, backStep }) {
           <Button variant="light" onClick={backStep} size="lg">
             Voltar
           </Button>
-
-          <Button variant="warning" onClick={submitForm} size="lg">
+          <Button variant="warning" onClick={activeCard && nextStep} size="lg">
             Avançar
           </Button>
         </div>
