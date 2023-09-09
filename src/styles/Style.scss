@@ -253,7 +253,8 @@ body {
       height: fit-content;
 
       .card-title {
-        font-size: 32px;
+        font-size: 22px;
+        font-weight: bold;
         margin-bottom: 20px;
       }
 
@@ -261,22 +262,30 @@ body {
         color: #7f7f7f;
         margin-top: -6px;
         font-size: 16px;
+
+        span {
+          color: $black;
+          font-weight: bold;
+        }
       }
 
       .card-body {
-        padding: 30px 30px 50px 30px;
+        padding: 1.875rem;
 
         textarea {
           resize: none;
-          height: 100px;
+          height: 6.25rem;
         }
       }
     }
 
-    .inner-card:hover {
-      background-color: #4267a7;
-      color: white;
-      opacity: 0.8;
+    button.accordion-button:not(.collapsed) {
+      color: $primary;
+      font-weight: bold;
+    }
+
+    .card-is-active {
+      background-color: $inner-card-hover;
     }
 
     .react-datepicker-wrapper,
