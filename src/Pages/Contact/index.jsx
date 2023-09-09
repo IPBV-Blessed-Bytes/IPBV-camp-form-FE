@@ -74,7 +74,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                       })
                     }
                   >
-                    <option value="">Selecione uma opção</option>
+                    <option value="" disabled>Selecione uma opção</option>
                     <option value={true}>Sim</option>
                     <option value={false}>Não</option>
                   </Form.Select>

@@ -141,7 +141,7 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
                 id="rgShipper"
                 onChange={handleChange}
               >
-                <option>Selecione uma opção</option>
+                <option value="" disabled>Selecione uma opção</option>
                 {rgShipper.map((org) => (
                   <option key={org.value} value={org.value}>
                     {org.label}
@@ -160,7 +160,7 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
                 id="rgShipperState"
                 onChange={handleChange}
               >
-                <option>Selecione uma opção</option>
+                <option value="" disabled>Selecione uma opção</option>
                 {issuingState.map((orgState) => (
                   <option key={orgState.value} value={orgState.value}>
                     {orgState.label}
