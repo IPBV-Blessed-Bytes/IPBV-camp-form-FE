@@ -90,7 +90,7 @@ function FormPackages({ nextStep, backStep }) {
                       {groupedCards[index].map((cards) => (
                         <Card
                           key={cards.id}
-                          className={`${activeCard === cards.id ? ' card-is-active' : ''}`}
+                          className={`pointer ${activeCard === cards.id ? ' card-is-active' : ''}`}
                           onClick={() => handleClick(cards.id)}
                         >
                           <Card.Body>
