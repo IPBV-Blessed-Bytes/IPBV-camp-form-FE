@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import Icons from '../../components/Icons';
 
 function FormPayment() {
   return (
@@ -12,7 +11,6 @@ function FormPayment() {
         <div className="col bbp-button">
           <Link to="/pacotes">
             <span className="bbp-btn-return">
-              <Icons typeIcon="arrow-left" className="bbp-icon-arrow-left" iconSize={20} fill="#000" />
               VOLTAR
             </span>
           </Link>
@@ -21,7 +19,6 @@ function FormPayment() {
           <Link to="/enviado">
             <span className="bbp-btn-submit">
               ENVIAR
-              <Icons typeIcon="arrow-right" className="bbp-icon-arrow-right" iconSize={20} fill="#000" />
             </span>
           </Link>
         </div>
