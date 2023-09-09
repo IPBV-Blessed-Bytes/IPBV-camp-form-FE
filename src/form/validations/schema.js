@@ -36,4 +36,8 @@ const packageSchema = yup.object().shape({
   food: yup.string().required('Favor, informe o tipo de alimentação'),
 });
 
-export { personalInformationSchema, additionalInformationSchema, packageSchema };
+const formPaymentSchema = yup.object().shape({
+  formPayment: yup.string().required('Favor, selecione o tipo de pagamento'),
+});
+
+export { personalInformationSchema, additionalInformationSchema, packageSchema, formPaymentSchema };

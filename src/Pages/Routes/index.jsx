@@ -10,14 +10,16 @@ import FormHome from '../Home';
 import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
+import ChooseFormPayment from '../ChooseFormPayment';
 
 export const enumSteps = {
   home: 0,
   personalData: 1,
   contact: 2,
   packages: 3,
-  checkout: 4,
-  success: 5,
+  formPayment: 4,
+  checkout: 5,
+  success: 6,
 };
 
 const initialValues = {
@@ -40,6 +42,9 @@ const initialValues = {
     accomodation: '',
     transportation: '',
   },
+  formPayment: {
+    formPayment: '',
+  },
 };
 
 function FormRoutes() {
@@ -58,6 +63,12 @@ function FormRoutes() {
   const nextStep = () => {
     if (steps < enumSteps.success) {
       setSteps(steps + 1);
+    }
+  };
+
+  const skipTwoSteps = () => {
+    if (steps === enumSteps.formPayment) {
+      setSteps(enumSteps.success);
     }
   };
 
@@ -93,6 +104,16 @@ function FormRoutes() {
         )}
 
         {steps === enumSteps.packages && <FormPackages nextStep={nextStep} backStep={backStep} />}
+
+        {steps === enumSteps.formPayment && (
+          <ChooseFormPayment
+            nextStep={nextStep}
+            skipTwoSteps={skipTwoSteps}
+            backStep={backStep}
+            updateForm={updateFormValues('formPayment')}
+            initialValues={formValues.formPayment}
+          />
+        )}
 
         {steps === enumSteps.checkout && <FormPayment nextStep={nextStep} backStep={backStep} />}
 
