@@ -28,16 +28,16 @@ const additionalInformationSchema = yup.object().shape({
     then: () => yup.string().required('Favor, nos informe mais sobre a sua alergia'),
     otherwise: () => yup.string().nullable(),
   }),
-});
-
-const packageSchema = yup.object().shape({
-  accomodation: yup.string().required('Favor, informe o tipo de acomodação'),
-  transportation: yup.string().required('Favor, informe o tipo de transporte'),
-  food: yup.string().required('Favor, informe o tipo de alimentação'),
+  hasAggregate: yup.boolean().required('Favor, nos informe se você tem algum agregado'),
+  aggregate: yup.string().when('hasAgregate', {
+    is: true,
+    then: () => yup.string().required('Favor, nos informe quais são seus agregados (esposo, esposa, filhos, etc)'),
+    otherwise: () => yup.string().nullable(),
+  }),
 });
 
 const formPaymentSchema = yup.object().shape({
   formPayment: yup.string().required('Favor, selecione o tipo de pagamento'),
 });
 
-export { personalInformationSchema, additionalInformationSchema, packageSchema, formPaymentSchema };
+export { personalInformationSchema, additionalInformationSchema, formPaymentSchema };
