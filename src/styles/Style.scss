@@ -21,7 +21,7 @@ body {
       }
     }
 
-    a {
+    a:not(.form-success__button){
       color: $white;
       text-decoration: none;
     }
@@ -42,7 +42,7 @@ body {
     .bbp-header {
       background-color: $primary;
       color: $white;
-      padding: 3rem 0rem 3rem 0rem;
+      padding: 3rem 1.875rem 5rem;
       text-align: center;
 
       h2 {
@@ -50,40 +50,28 @@ body {
       }
 
       nav {
-        ul {
+        ol {
           cursor: pointer;
           display: flex;
           gap: 1rem;
           justify-content: center;
           list-style-type: none;
           padding: 0;
-        }
-      }
 
-      li {
-        a {
-          background: inherit;
-          border-radius: 0.5rem;
-          padding: 8px;
-        }
+          li {
+            &:hover,
+            &.active {
+              color: $secondary;
+            }
 
-        &:hover,
-        &.active {
-          background-color: $secondary;
-          color: $black;
-          opacity: 0.7;
+            &:hover {
+              opacity: 0.8;
+            }
 
-          a {
-            color: $black;
+            &.active {
+              font-weight: bold;
+            }
           }
-        }
-
-        &.active {
-          font-weight: bold;
-        }
-
-        &.active {
-          opacity: 0.9;
         }
       }
     }
@@ -231,6 +219,20 @@ body {
 
     .pointer {
       cursor: pointer;
+      position: relative; /* Necessário para o efeito de zoom */
+      display: inline-block;
+      overflow: hidden;
+
+      div {
+        transition:
+          transform 0.5s,
+          background-color 0.5s; /* Adiciona uma transição suave */
+
+        &:hover {
+          transform: scale(1.03); /* Aumenta o tamanho da imagem em 10% */
+          background-color: transparent; /* Altera a cor de fundo quando hover */
+        }
+      }
     }
 
     .card {
@@ -400,5 +402,39 @@ body {
         width: 200px;
       }
     }
+  }
+}
+
+.horizontal-line {
+  border: none;
+  height: 2px;
+  background-color: $primary;
+  margin: 30px 0;
+}
+
+.form-success {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 20px;
+  }
+
+  &__message {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  &__contact {
+    font-weight: bold;
+  }
+
+  &__button {
+    margin-top: 20px;
   }
 }
