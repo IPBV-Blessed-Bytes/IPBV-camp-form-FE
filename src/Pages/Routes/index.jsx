@@ -1,16 +1,13 @@
-import 'react-datepicker/dist/react-datepicker.css';
-
 import { useState } from 'react';
-
-import Footer from '../../components/Footer';
+import 'react-datepicker/dist/react-datepicker.css';
 import Header from '../../components/Header';
-import FormPayment from '../Payment';
-import FormContact from '../Contact';
+import Footer from '../../components/Footer';
 import FormHome from '../Home';
-import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
-import FormSuccess from '../Success';
+import FormContact from '../Contact';
+import FormPackages from '../Packages';
 import ChooseFormPayment from '../ChooseFormPayment';
+import FormSuccess from '../Success';
 
 export const enumSteps = {
   home: 0,
@@ -18,8 +15,7 @@ export const enumSteps = {
   contact: 2,
   packages: 3,
   formPayment: 4,
-  checkout: 5,
-  success: 6,
+  success: 5,
 };
 
 const initialValues = {
@@ -48,7 +44,7 @@ const initialValues = {
 };
 
 function FormRoutes() {
-  const [steps, setSteps] = useState(enumSteps.packages);
+  const [steps, setSteps] = useState(enumSteps.success);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -78,9 +74,13 @@ function FormRoutes() {
     }
   };
 
+  const goBackToStep = (step) => {
+    setSteps(step);
+  };
+
   return (
     <div className="bbp-wrapper">
-      <Header />
+      <Header currentStep={steps} goBackToStep={goBackToStep} />
 
       <div className="form-container">
         {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
@@ -115,9 +115,7 @@ function FormRoutes() {
           />
         )}
 
-        {steps === enumSteps.checkout && <FormPayment nextStep={nextStep} backStep={backStep} />}
-
-        {steps === enumSteps.success && <FormSuccess />}
+        {steps === enumSteps.success && <FormSuccess formPayment={formValues.formPayment.formPayment} />}
       </div>
       <Footer />
     </div>
