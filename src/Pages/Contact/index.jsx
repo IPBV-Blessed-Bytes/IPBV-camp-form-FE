@@ -74,7 +74,9 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                       })
                     }
                   >
-                    <option value="" disabled>Selecione uma opção</option>
+                    <option value="" disabled>
+                      Selecione uma opção
+                    </option>
                     <option value={true}>Sim</option>
                     <option value={false}>Não</option>
                   </Form.Select>
@@ -97,13 +99,13 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
               <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
             </Form.Group>
 
-            <Row>
-              <Col md={values.hasAllergy ? 4 : 6}>
+            <Row className="mb-3">
+              <Col md={values.hasAllergy ? 6 : 6}>
                 <FormGroup>
                   <FormLabel>Você possui algum tipo de alergia?</FormLabel>
 
                   <Form.Select
-                    id="email"
+                    id="allergy"
                     name="hasAllergy"
                     isInvalid={!!errors.hasAllergy}
                     value={values.hasAllergy}
@@ -124,7 +126,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                 </FormGroup>
               </Col>
 
-              <Col md={values.hasAllergy ? 8 : 6}>
+              <Col md={values.hasAllergy ? 6 : 6}>
                 {values.hasAllergy && (
                   <FormGroup>
                     <FormLabel>Descreva as suas alergias aqui:</FormLabel>
@@ -140,6 +142,55 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                     />
 
                     <Form.Control.Feedback type="invalid">{errors.allergy}</Form.Control.Feedback>
+                  </FormGroup>
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col md={values.hasAggregate ? 6 : 6}>
+                <FormGroup>
+                  <FormLabel>Você possui algum agregado?</FormLabel>
+                  <Form.Select
+                    id="hasAggregate"
+                    name="hasAggregate"
+                    isInvalid={!!errors.hasAggregate}
+                    value={values.hasAggregate}
+                    onChange={(event) =>
+                      handleChange({
+                        target: {
+                          name: 'hasAggregate',
+                          value: event.target.value === 'true',
+                        },
+                      })
+                    }
+                  >
+                    <option value="">Selecione uma opção</option>
+                    <option value={false}>Não</option>
+                    <option value={true}>Sim</option>
+                  </Form.Select>
+                  <Card.Text className='mt-2'>
+                    Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
+                    etc), assim atrelaremos sua inscrição a eles para que fiquem juntos.
+                  </Card.Text>
+                  <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
+                </FormGroup>
+              </Col>
+
+              <Col md={values.hasAggregate ? 6 : 6}>
+                {values.hasAggregate && (
+                  <FormGroup>
+                    <FormLabel>Nos informe quem são seus agregados:</FormLabel>
+                    <Form.Control
+                      isInvalid={!!errors.aggregate}
+                      as="textarea"
+                      name="aggregate"
+                      placeholder="Nos informe quem são seus agregados que irão dormir no mesmo quarto que você, APENAS QUE ESTÃO NO MESMO QUARTO."
+                      value={values.aggregate}
+                      onChange={handleChange}
+                      style={{ resize: 'none' }}
+                    />
+
+                    <Form.Control.Feedback type="invalid">{errors.aggregate}</Form.Control.Feedback>
                   </FormGroup>
                 )}
               </Col>
