@@ -1,46 +1,34 @@
-import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// import { enumSteps } from '../Pages/Form-root';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
-function Header() {
-  const resolvedPath = useResolvedPath('/enviado');
-  const isSubmittedPage = useMatch({ path: resolvedPath.pathname, end: true });
+const Header = ({ currentStep, goBackToStep }) => {
+  const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Pagamento', 'Final'];
+
+  const handleStepChange = (newStep) => {
+    if (newStep <= currentStep) {
+      goBackToStep(newStep);
+    }
+  };
 
   return (
     <header className="bbp-header">
       <h2>ACAMPAMENTO IPBV 2024</h2>
-      {!isSubmittedPage && (
-        <>
-          <p>Preencha o formulário abaixo para fazer sua inscrição</p>
-          <nav>
-            <ul>
-              <Navbar to="/">Home</Navbar>
-              <Navbar to="/dados">Dados Pessoais</Navbar>
-              <Navbar to="/contato">Contato</Navbar>
-              <Navbar to="/pacotes">Pacotes</Navbar>
-              <Navbar to="/pagamento">Pagamento</Navbar>
-            </ul>
-          </nav>
-        </>
-      )}
+      <Breadcrumb className="mt-4">
+        {headerSteps.map((step, index) => (
+          <Breadcrumb.Item key={index} active={currentStep === index} onClick={() => handleStepChange(index)}>
+            {step}
+          </Breadcrumb.Item>
+        ))}
+      </Breadcrumb>
     </header>
   );
-}
+};
+
+Header.propTypes = {
+  currentStep: PropTypes.number.isRequired,
+  maxStep: PropTypes.number.isRequired,
+  nextStep: PropTypes.func.isRequired,
+  backStep: PropTypes.func.isRequired,
+};
 
 export default Header;
-
-function Navbar({ to, children }) {
-  const resolvedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
-
-  return (
-    <li className={isActive ? 'active' : ''}>
-      <Link to={to}>{children}</Link>
-    </li>
-  );
-}
-
-Navbar.propTypes = {
-  to: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
