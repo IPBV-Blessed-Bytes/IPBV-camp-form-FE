@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { formPaymentSchema } from '../../form/validations/schema';
 
-function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initialValues }) {
+const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initialValues }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -25,7 +25,7 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
   });
 
   return (
-    <Card className="bbp-general-height">
+    <Card className="form__container__general-height">
       <Card.Body>
         <Container>
           <Card.Title>Pagamento</Card.Title>
@@ -43,7 +43,7 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
                   Selecione uma opção
                 </option>
                 <option value="online">Online (preferencial)</option>
-                <option value="inPerson">Presencialmente (secretaria da igreja)</option>
+                <option value="inPerson">Presencial (secretaria da igreja)</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
@@ -51,7 +51,7 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
         </Container>
       </Card.Body>
 
-      <div className="form-footer-container">
+      <div className="form__container__buttons">
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
@@ -61,7 +61,7 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
       </div>
     </Card>
   );
-}
+};
 
 ChooseFormPayment.propTypes = {
   nextStep: PropTypes.func,

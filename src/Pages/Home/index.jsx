@@ -4,13 +4,11 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
-function FormHome(props) {
+const FormHome = (props) => {
   return (
-    <Card className="bbp-general-height">
+    <Card className="form__container__general-height">
       <Card.Body>
         <Container>
-          <Card.Title>Bem-Vindo</Card.Title>
-
           <div className="row">
             <div className="col">
               <h3 className="mb-2">Acampamento no período de carnaval 2024</h3>
@@ -21,7 +19,7 @@ function FormHome(props) {
               </p>
             </div>
           </div>
-          <hr class="horizontal-line" />
+          <hr className="horizontal-line" />
           <div className="row">
             <div className="col">
               <h4 className="mb-2">Observações:</h4>
@@ -45,8 +43,8 @@ function FormHome(props) {
                 </li>
                 <li>
                   Se você tiver qualquer parente (pai, mãe, esposo, esposa, filhos, etc) que irão dormir no mesmo quarto
-                  que você, seja no colégio, hotel ou seminário, na sessão de contato nos informe isso para que possamos
-                  vincular os quartos para todos.
+                  que você, seja no colégio, hotel ou seminário, na sessão de contato, nos informe isso para que
+                  possamos vincular os quartos para todos.
                 </li>
                 <li>
                   É necessário inscrever todas as pessoas, pagantes e não pagantes, para fins de pagamento e fins de
@@ -58,14 +56,14 @@ function FormHome(props) {
         </Container>
       </Card.Body>
 
-      <div className="form-footer-container justify-content-end">
+      <div className="form__container__buttons justify-content-end">
         <Button variant="warning" onClick={props.nextStep} size="lg">
           Avançar
         </Button>
       </div>
     </Card>
   );
-}
+};
 
 FormHome.propTypes = {
   nextStep: PropTypes.func,

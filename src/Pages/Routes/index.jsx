@@ -33,6 +33,8 @@ const initialValues = {
     isWhatsApp: '',
     hasAllergy: '',
     allergy: '',
+    hasAggregate: '',
+    aggregate: '',
   },
   package: {
     accomodation: '',
@@ -43,8 +45,8 @@ const initialValues = {
   },
 };
 
-function FormRoutes() {
-  const [steps, setSteps] = useState(enumSteps.success);
+const FormRoutes = () => {
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -78,11 +80,15 @@ function FormRoutes() {
     setSteps(step);
   };
 
+  const initialStep = () => {
+    setSteps(enumSteps.home);
+  };
+
   return (
-    <div className="bbp-wrapper">
+    <div className="form">
       <Header currentStep={steps} goBackToStep={goBackToStep} />
 
-      <div className="form-container">
+      <div className="form__container">
         {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
 
         {steps === enumSteps.personalData && (
@@ -115,11 +121,13 @@ function FormRoutes() {
           />
         )}
 
-        {steps === enumSteps.success && <FormSuccess formPayment={formValues.formPayment.formPayment} />}
+        {steps === enumSteps.success && (
+          <FormSuccess formPayment={formValues.formPayment.formPayment} initialStep={initialStep} />
+        )}
       </div>
       <Footer />
     </div>
   );
-}
+};
 
 export default FormRoutes;
