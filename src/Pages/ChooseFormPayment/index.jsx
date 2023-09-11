@@ -11,7 +11,9 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
     initialValues,
     onSubmit: () => {
       if (values.formPayment === 'online') {
-        nextStep();
+        nextStep('online');
+      } else if (values.formPayment === 'inPerson') {
+        nextStep('inPerson');
       } else {
         skipTwoSteps();
       }
@@ -29,7 +31,7 @@ function ChooseFormPayment({ nextStep, skipTwoSteps, backStep, updateForm, initi
           <Card.Title>Pagamento</Card.Title>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Escolha sua forma de pagamento</Form.Label>
+              <Form.Label>Escolha sua forma de pagamento:</Form.Label>
               <Form.Select
                 id="formPayment"
                 name="formPayment"
