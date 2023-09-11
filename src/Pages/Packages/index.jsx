@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import Icons from '../../components/Icons';
 
 function FormPackages({ nextStep, backStep }) {
   const [activeCard, setActiveCard] = useState(null);
@@ -28,43 +29,51 @@ function FormPackages({ nextStep, backStep }) {
   const cards = [
     {
       id: '1',
+      title: 'PACOTE 1 - HOSPEDAGEM COLETIVA INDIVIDUAL',
+      observation: '* Em salas de aula COM ônibus *',
       values: { accomodation: '00,00', food: '280,00', transportation: '160,00', total: '440,00' },
-      observation: 'HOSPEDAGEM COLETIVA em salas de aula',
     },
     {
       id: '2',
+      title: 'PACOTE 2 - HOSPEDAGEM COLETIVA INDIVIDUAL',
+      observation: '* Em salas de aula SEM ônibus *',
       values: { accomodation: '00,00', food: '280,00', transportation: '00,00', total: '280,00' },
-      observation: 'HOSPEDAGEM COLETIVA em salas de aula',
     },
     {
       id: '3',
+      title: 'PACOTE 3 - HOSPEDAGEM COLETIVA PARA A FAMÍLIA',
+      observation: '* Em salas de aula COM ônibus *',
       values: { accomodation: '00,00', food: '280,00', transportation: '160,00', total: '440,00' },
-      observation: 'HOSPEDAGEM COLETIVA PARA A FAMÍLIA em salas de aula',
     },
     {
       id: '4',
+      title: 'PACOTE 4 - HOSPEDAGEM COLETIVA PARA A FAMÍLIA',
+      observation: '* Em salas de aula SEM ônibus *',
       values: { accomodation: '00,00', food: '280,00', transportation: '00,00', total: '280,00' },
-      observation: 'HOSPEDAGEM COLETIVA PARA A FAMÍLIA em salas de aula',
     },
     {
       id: '5',
+      title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
+      observation: '* COM ônibus / Café da manhã incluso no seminário *',
       values: { accomodation: '600,00', food: '200,00', transportation: '160,00', total: '960,00' },
-      observation: 'HOSPEDAGEM INDIVIDUAL, café da manhã incluso no seminário',
     },
     {
       id: '6',
+      title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
+      observation: '* SEM ônibus / Café da manhã incluso no seminário *',
       values: { accomodation: '600,00', food: '200,00', transportation: '00,00', total: '800,00' },
-      observation: 'HOSPEDAGEM INDIVIDUAL, café da manhã incluso no seminário',
     },
     {
       id: '7',
+      title: 'PACOTE 7 - HOSPEDAGEM DUPLA',
+      observation: '* COM ônibus / Café da manhã incluso no hotel *',
       values: { accomodation: '550,00', food: '200,00', transportation: '160,00', total: '910,00' },
-      observation: 'HOSPEDAGEM DUPLA, café da manhã incluso no hotel',
     },
     {
       id: '8',
+      title: 'PACOTE 8 - HOSPEDAGEM DUPLA',
+      observation: '* SEM ônibus / Café da manhã incluso no hotel *',
       values: { accomodation: '550,00', food: '200,00', transportation: '00,00', total: '750,00' },
-      observation: 'HOSPEDAGEM DUPLA, café da manhã incluso no hotel',
     },
   ];
 
@@ -90,27 +99,38 @@ function FormPackages({ nextStep, backStep }) {
                       {groupedCards[index].map((cards) => (
                         <Card
                           key={cards.id}
-                          className={`pointer ${activeCard === cards.id ? ' card-is-active' : ''}`}
+                          className={`pointer${activeCard === cards.id ? ' card-is-active' : ''}`}
                           onClick={() => handleClick(cards.id)}
                         >
                           <Card.Body>
-                            <Card.Title>{cards.observation}</Card.Title>
-                            <Card.Text>
-                              <div>
-                                <span>Hospedagem:</span> R$ {cards.values.accomodation}
-                              </div>
-                              <div>
-                                <span>Alimentação:</span> R$ {cards.values.food}
-                              </div>
-                              <div>
-                                <span>Ônibus:</span> R$ {cards.values.transportation}
-                              </div>
-                              <div>
-                                <em>
-                                  <span>Total:</span> <u>R$ {cards.values.total}</u>
-                                </em>
-                              </div>
-                            </Card.Text>
+                            <Card.Title>{cards.title}</Card.Title>
+                            <div className="d-flex justify-content-between">
+                              <Card.Text>
+                                <div className="mb-2">
+                                  <span>{cards.observation}</span>
+                                </div>
+                                <div>
+                                  <span>Hospedagem:</span> R$ {cards.values.accomodation}
+                                </div>
+                                <div>
+                                  <span>Alimentação:</span> R$ {cards.values.food}
+                                </div>
+                                <div>
+                                  <span>Ônibus:</span> R$ {cards.values.transportation}
+                                </div>
+                                <div>
+                                  <em>
+                                    <span>Total:</span> <u>R$ {cards.values.total}</u>
+                                  </em>
+                                </div>
+                              </Card.Text>
+                              <Icons
+                                typeIcon="selected"
+                                className={activeCard === cards.id ? 'align-self-end' : 'd-none'}
+                                iconSize="50"
+                                fill="#4267a7"
+                              />
+                            </div>
                           </Card.Body>
                         </Card>
                       ))}
