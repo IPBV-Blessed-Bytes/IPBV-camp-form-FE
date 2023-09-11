@@ -5,7 +5,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
     <>
       {typeIcon === 'visible-password' && (
         <svg
-          className={'bbp-icons ' + className}
+          className={'form-icons ' + className}
           height={iconSize ? iconSize + 'px' : '30px'}
           onClick={onClick}
           viewBox="0 0 24 24"
@@ -40,7 +40,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
 
       {typeIcon === 'hidden-password' && (
         <svg
-          className={'bbp-icons ' + className}
+          className={'form-icons ' + className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
           viewBox="0 0 28 28"
@@ -158,6 +158,7 @@ Icons.propTypes = {
   onClick: PropTypes.func,
   typeIcon: PropTypes.string,
   fill: PropTypes.string,
+  stroke: PropTypes.string,
 };
 
 export default Icons;

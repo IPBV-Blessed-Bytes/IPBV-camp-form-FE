@@ -11,7 +11,7 @@ const Header = ({ currentStep, goBackToStep }) => {
   };
 
   return (
-    <header className="bbp-header">
+    <header className="form__header">
       <h2>ACAMPAMENTO IPBV 2024</h2>
       <Breadcrumb className="mt-4">
         {headerSteps.map((step, index) => (
@@ -26,9 +26,7 @@ const Header = ({ currentStep, goBackToStep }) => {
 
 Header.propTypes = {
   currentStep: PropTypes.number.isRequired,
-  maxStep: PropTypes.number.isRequired,
-  nextStep: PropTypes.func.isRequired,
-  backStep: PropTypes.func.isRequired,
+  goBackToStep: PropTypes.number.isRequired,
 };
 
 export default Header;

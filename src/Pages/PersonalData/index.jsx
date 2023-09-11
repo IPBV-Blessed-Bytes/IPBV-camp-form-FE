@@ -13,7 +13,7 @@ import InputMask from 'react-input-mask';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from './data';
 
-function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
+const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
   const { values, errors, handleChange, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -26,14 +26,13 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
   });
 
   return (
-    <Card className="bbp-general-height">
+    <Card className="form__container__general-height">
       <Card.Body>
         <Container>
           <Card.Title>Informações Pessoais</Card.Title>
 
           <Card.Text>
-            Favor, informe os seus dados pessoais pois serão de extrema importância para a administração de sua
-            inscrição
+            Informe seus dados pessoais, pois eles são essenciais para a administração de sua inscrição.
           </Card.Text>
           <Form>
             <Form.Group className="mb-3">
@@ -141,7 +140,9 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
                 id="rgShipper"
                 onChange={handleChange}
               >
-                <option value="" disabled>Selecione uma opção</option>
+                <option value="" disabled>
+                  Selecione uma opção
+                </option>
                 {rgShipper.map((org) => (
                   <option key={org.value} value={org.value}>
                     {org.label}
@@ -160,7 +161,9 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
                 id="rgShipperState"
                 onChange={handleChange}
               >
-                <option value="" disabled>Selecione uma opção</option>
+                <option value="" disabled>
+                  Selecione uma opção
+                </option>
                 {issuingState.map((orgState) => (
                   <option key={orgState.value} value={orgState.value}>
                     {orgState.label}
@@ -173,7 +176,7 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
         </Container>
       </Card.Body>
 
-      <div className="form-footer-container">
+      <div className="form__container__buttons">
         <Button
           variant="light"
           onClick={() => {
@@ -191,7 +194,7 @@ function FormPersonalData({ nextStep, backStep, updateForm, initialValues }) {
       </div>
     </Card>
   );
-}
+};
 
 FormPersonalData.propTypes = {
   nextStep: PropTypes.func,

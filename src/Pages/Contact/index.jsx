@@ -11,7 +11,7 @@ import InputMask from 'react-input-mask';
 
 import { additionalInformationSchema } from '../../form/validations/schema';
 
-function FormContact({ nextStep, backStep, initialValues, updateForm }) {
+const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -24,15 +24,15 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
   });
 
   return (
-    <Card className="bbp-general-height">
+    <Card className="form__container__general-height">
       <Card.Body>
         <Container>
           <Card.Title>Informações de Contato</Card.Title>
 
           <Card.Text>Nos informe como poderemos te contactar</Card.Text>
           <Form>
-            <Row className="mb-3">
-              <Col md={6}>
+            <Row>
+              <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Telefone:</Form.Label>
 
@@ -57,7 +57,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                   <Form.Control.Feedback type="invalid">{errors.cellPhone}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={6}>
+              <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>É whatsApp?</Form.Label>
 
@@ -135,7 +135,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                       isInvalid={!!errors.allergy}
                       as="textarea"
                       name="allergy"
-                      placeholder="Nos fale mais sobre sua alergia"
+                      placeholder="Descreva sua alergia"
                       value={values.allergy}
                       onChange={handleChange}
                       style={{ resize: 'none' }}
@@ -168,7 +168,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                     <option value={false}>Não</option>
                     <option value={true}>Sim</option>
                   </Form.Select>
-                  <Card.Text className='mt-2'>
+                  <Card.Text className="mt-2">
                     Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
                     etc), assim atrelaremos sua inscrição a eles para que fiquem juntos.
                   </Card.Text>
@@ -184,7 +184,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
                       isInvalid={!!errors.aggregate}
                       as="textarea"
                       name="aggregate"
-                      placeholder="Nos informe quem são seus agregados que irão dormir no mesmo quarto que você, APENAS QUE ESTÃO NO MESMO QUARTO."
+                      placeholder="Informe quem são seus agregados que irão dormir no mesmo quarto, APENAS QUE ESTÃO NO MESMO QUARTO."
                       value={values.aggregate}
                       onChange={handleChange}
                       style={{ resize: 'none' }}
@@ -199,7 +199,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
         </Container>
       </Card.Body>
 
-      <div className="form-footer-container">
+      <div className="form__container__buttons">
         <Button
           variant="light"
           onClick={() => {
@@ -217,7 +217,7 @@ function FormContact({ nextStep, backStep, initialValues, updateForm }) {
       </div>
     </Card>
   );
-}
+};
 
 FormContact.propTypes = {
   nextStep: PropTypes.func,
