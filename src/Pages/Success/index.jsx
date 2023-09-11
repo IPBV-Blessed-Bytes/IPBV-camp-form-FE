@@ -1,35 +1,40 @@
+import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 
-const FormSuccess = () => {
+const FormSuccess = (formPayment) => {
   return (
-    <Card className="bbp-general-height">
+    <Card className="bbp-general-height form-success">
       <Card.Body>
         <Container>
-          <div className="">
-            <div className="">
-              <h3>
-                <b>Formulário enviado com sucesso!</b>
-              </h3>
-              <p>Obrigado por enviar suas informações.</p>
-              <br />
-              <p>
+          <div className="text-center">
+            <div className="form-success__title">
+              <b>Formulário enviado com sucesso!</b>
+            </div>
+            <p className="form-success__message">Obrigado por enviar suas informações.</p>
+            <p className="form-success__contact">
+              {formPayment.formPayment === 'online' ? (
                 <b>Qualquer dúvida, entraremos em contato.</b>
-              </p>
-              <small>
-                <em>Igreja Presbiteriana de Boa Viagem</em>
-              </small>
-            </div>
-
-            <div className="form-footer-container">
-              <Button variant="warning" onClick={''} size="lg">
-                Novo Cadastro
-              </Button>
-            </div>
+              ) : (
+                <b>
+                  Como a opção de pagamento escolhida foi PRESENCIAL, favor entrar em contato <br />
+                  com a secretaria em até 7 dias úteis para efetuar o pagamento.
+                </b>
+              )}
+            </p>
+            <small>
+              <em>Igreja Presbiteriana de Boa Viagem</em>
+            </small>
           </div>
         </Container>
       </Card.Body>
+
+      <div className="form-footer-container text-center justify-content-center">
+        <Button variant="warning" size="lg" href='/' className="form-success__button">
+          Novo Cadastro
+        </Button>
+      </div>
     </Card>
   );
 };
