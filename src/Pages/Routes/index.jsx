@@ -1,12 +1,14 @@
-import { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import Header from '../../components/Header';
+
+import { useState } from 'react';
+
 import Footer from '../../components/Footer';
-import FormHome from '../Home';
-import FormPersonalData from '../PersonalData';
-import FormContact from '../Contact';
-import FormPackages from '../Packages';
+import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
+import FormContact from '../Contact';
+import FormHome from '../Home';
+import FormPackages from '../Packages';
+import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
 
 export const enumSteps = {
@@ -109,7 +111,9 @@ const FormRoutes = () => {
           />
         )}
 
-        {steps === enumSteps.packages && <FormPackages nextStep={nextStep} backStep={backStep} />}
+        {steps === enumSteps.packages && (
+          <FormPackages nextStep={nextStep} backStep={backStep} birthDate={formValues.personalInformation.birthday} />
+        )}
 
         {steps === enumSteps.formPayment && (
           <ChooseFormPayment
