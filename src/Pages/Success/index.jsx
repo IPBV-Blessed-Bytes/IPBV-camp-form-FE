@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 
-const FormSuccess = (formPayment, initialStep) => {
+const FormSuccess = ({ formPayment, initialStep }) => {
   return (
     <Card className="form__container__general-height">
       <Card.Body>

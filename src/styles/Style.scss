@@ -143,6 +143,28 @@ body {
       font-weight: bold;
     }
 
+    .accordion-body {
+      .card-body {
+        .package-description-container {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 0px;
+          margin-bottom: 10px;
+
+          @media (min-width: $md) {
+            gap: 10px;
+          }
+        }
+
+        .price-with-discount {
+          color: red;
+          font-style: italic;
+          text-decoration: line-through;
+        }
+      }
+    }
+
     .card-is-active {
       background-color: $inner-card-hover;
     }
@@ -179,6 +201,11 @@ body {
           margin-bottom: 0;
         }
       }
+    }
+
+    .selected-icon-container {
+      display: flex;
+      flex-direction: row-reverse;
     }
 
     &__buttons {
