@@ -39,8 +39,7 @@ const initialValues = {
     aggregate: '',
   },
   package: {
-    accomodation: '',
-    transportation: '',
+    price: '',
   },
   formPayment: {
     formPayment: '',
@@ -48,7 +47,7 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.packages);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -60,30 +59,43 @@ const FormRoutes = () => {
     };
   };
 
+  const resetFormValues = () => {
+    setFormValues(initialValues);
+  };
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const nextStep = () => {
     if (steps < enumSteps.success) {
       setSteps(steps + 1);
+      scrollTop();
     }
   };
 
   const skipTwoSteps = () => {
     if (steps === enumSteps.formPayment) {
       setSteps(enumSteps.success);
+      scrollTop();
     }
   };
 
   const backStep = () => {
     if (steps > 0) {
       setSteps(steps - 1);
+      scrollTop();
     }
   };
 
   const goBackToStep = (step) => {
     setSteps(step);
+    scrollTop();
   };
 
   const initialStep = () => {
     setSteps(enumSteps.home);
+    scrollTop();
   };
 
   return (
@@ -112,7 +124,12 @@ const FormRoutes = () => {
         )}
 
         {steps === enumSteps.packages && (
-          <FormPackages nextStep={nextStep} backStep={backStep} birthDate={formValues.personalInformation.birthday} />
+          <FormPackages
+            nextStep={nextStep}
+            backStep={backStep}
+            birthDate={formValues.personalInformation.birthday}
+            updateForm={updateFormValues('package')}
+          />
         )}
 
         {steps === enumSteps.formPayment && (
@@ -126,7 +143,12 @@ const FormRoutes = () => {
         )}
 
         {steps === enumSteps.success && (
-          <FormSuccess formPayment={formValues.formPayment.formPayment} initialStep={initialStep} />
+          <FormSuccess
+            formPayment={formValues.formPayment.formPayment}
+            initialStep={initialStep}
+            customerName={formValues.personalInformation.name}
+            resetForm={resetFormValues}
+          />
         )}
       </div>
       <Footer />
