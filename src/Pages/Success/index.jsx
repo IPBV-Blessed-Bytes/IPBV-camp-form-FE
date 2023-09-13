@@ -3,14 +3,19 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
-const FormSuccess = ({ formPayment, initialStep }) => {
+const FormSuccess = ({ formPayment, initialStep, customerName, resetForm }) => {
+  const handleNewRegistration = () => {
+    resetForm();
+    initialStep();
+  };
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
         <Container>
           <div className="form__success text-center">
             <div className="form__success__title">
-              <b>Formulário enviado com sucesso!</b>
+              <b>Formulário enviado com sucesso, <span className='text-uppercase'>{customerName}</span>!</b>
             </div>
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
@@ -31,7 +36,7 @@ const FormSuccess = ({ formPayment, initialStep }) => {
       </Card.Body>
 
       <div className="form__container__buttons text-center justify-content-center">
-        <Button variant="warning" size="lg" onClick={initialStep} className="form-success__button">
+        <Button variant="warning" size="lg" onClick={handleNewRegistration} className="form-success__button">
           Novo Cadastro
         </Button>
       </div>
@@ -42,6 +47,8 @@ const FormSuccess = ({ formPayment, initialStep }) => {
 FormSuccess.propTypes = {
   formPayment: PropTypes.string,
   initialStep: PropTypes.func,
+  resetForm: PropTypes.func,
+  customerName: PropTypes.string,
 };
 
 export default FormSuccess;
