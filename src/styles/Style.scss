@@ -283,6 +283,8 @@ body {
   }
 }
 
+// Style utility classes
+
 a:not(.form-success__button) {
   color: $white;
   text-decoration: none;
@@ -302,5 +304,87 @@ a:not(.form-success__button) {
 .form-success__button {
   @media (max-width: $md) {
     width: 10.9375rem !important;
+  }
+}
+
+//login
+.mktp-login {
+  gap: 2rem;
+
+  &__info {
+    text-align: center;
+
+    h1 {
+      font-weight: bold;
+    }
+
+    h4 {
+      font-weight: normal;
+    }
+  }
+
+  &__box {
+    min-height: 27.625rem;
+    form {
+      label {
+        font-weight: bold;
+      }
+
+      .login-icon {
+        background-color: $white;
+        position: absolute;
+        transform: translate(-3rem, 0.5625rem);
+        width: 2.75rem;
+      }
+    }
+
+    &__wrapper {
+      margin-bottom: 0.625rem;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: $md) {
+  .mktp-login {
+    flex-direction: column;
+
+    &__info {
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      h4 {
+        font-size: 1.25rem;
+      }
+    }
+
+    &__box__wrapper:last-child {
+      display: grid;
+      gap: 0.5rem;
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .mktp-login {
+    &__info {
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      h4 {
+        font-size: 1rem;
+      }
+    }
+
+    &__box {
+      .separator {
+        display: none !important;
+      }
+    }
   }
 }
