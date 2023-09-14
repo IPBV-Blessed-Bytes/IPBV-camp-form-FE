@@ -109,6 +109,38 @@ const packageHotel = ({ age, withTransportation }) => {
   };
 };
 
+const packageHotel = ({ age, withTransportation }) => {
+  let accomodation = [550];
+  let food = [200];
+  const transportation = withTransportation ? 160 : 0;
+
+  let foodDiscountDescription = '';
+  let accomodationDiscountDescription = '';
+
+  if (age <= 10) {
+    food = [200, 0];
+    accomodation = [550, 0];
+    foodDiscountDescription = 'Crianças até 10 anos não pagam alimentação';
+    accomodationDiscountDescription = 'Crianças até 10 anos não pagam hospedagem dormindo com os pais';
+  }
+
+  const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
+  const foodValue = food.length > 1 ? food[1] : food[0];
+
+  const total = accomodationValue + foodValue + transportation;
+
+  return {
+    total,
+    accomodation,
+    food,
+    transportation,
+    discountDescription: {
+      food: foodDiscountDescription,
+      accomodation: accomodationDiscountDescription,
+    },
+  };
+};
+
 const generatePackagesValues = (packageType, age) => {
   if (packageType === 'school') {
     const packageWithBuss = packageSchool({
