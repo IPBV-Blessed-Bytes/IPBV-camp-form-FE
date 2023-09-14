@@ -15,11 +15,13 @@ const FormSuccess = ({ formPayment, initialStep, customerName, resetForm }) => {
         <Container>
           <div className="form__success text-center">
             <div className="form__success__title">
-              <b>Formulário enviado com sucesso, <span className='text-uppercase'>{customerName}</span>!</b>
+              <b>
+                Formulário enviado com sucesso, <span className="text-uppercase">{customerName}</span>!
+              </b>
             </div>
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
-              {formPayment.formPayment === 'online' ? (
+              {formPayment === 'online' ? (
                 <b>Qualquer dúvida entraremos em contato.</b>
               ) : (
                 <b>
