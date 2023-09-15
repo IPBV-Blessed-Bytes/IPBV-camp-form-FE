@@ -119,19 +119,16 @@ const FormRoutes = () => {
       const data = formValues;
 
       const response = await axios.post('https://campform.up.railway.app/', data);
+      // console.log('response API', response.data.data.payment_url);
 
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
-      } else if (response.status === 403) {
-        toast.warn('CPF já cadastrado!');
-      } else if (response.status === 500) {
-        toast.error('Falha no servidor da aplicação!');
-      } else {
-        toast.error('Erro ao enviar dados. Tente novamente mais tarde.');
+
+        window.location.href = response.data.data.payment_url;
       }
     } catch (error) {
-      console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
-      toast.error('Erro ao enviar dados. Tente novamente mais tarde.');
+      console.error('CPF já Cadastrado!', error);
+      toast.error('CPF já Cadastrado!');
     }
   };
 
