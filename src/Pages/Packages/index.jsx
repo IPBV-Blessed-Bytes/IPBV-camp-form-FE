@@ -15,7 +15,7 @@ const XV_NOVEMBRO = 'Colégio XV de Novembro';
 const SEMINARIO = 'Seminário São José';
 const HOTEL_IBIS = 'Hotel Ibis';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired }) => {
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired, sendForm }) => {
   const [activeCard, setActiveCard] = useState(null);
   const [totalValue, setTotalValue] = useState('');
   const [selectedAccomodation, setSelectedAccomodation] = useState('');
@@ -56,6 +56,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
         transportation: selectedTransportation,
         food: selectedFood,
       });
+      sendForm(totalValue);
 
       if (totalValue === 0) {
         noPaymentRequired();
