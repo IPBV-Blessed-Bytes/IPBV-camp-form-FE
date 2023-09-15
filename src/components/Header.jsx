@@ -12,7 +12,9 @@ const Header = ({ currentStep, goBackToStep }) => {
 
   return (
     <header className="form__header">
-      <h2>ACAMPAMENTO IPBV 2024</h2>
+      <h2>
+        <a href="/">ACAMPAMENTO IPBV 2024</a>
+      </h2>
       <Breadcrumb className="mt-4">
         {headerSteps.map((step, index) => (
           <Breadcrumb.Item key={index} active={currentStep === index} onClick={() => handleStepChange(index)}>
