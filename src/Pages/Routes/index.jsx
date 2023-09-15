@@ -49,7 +49,7 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.formPayment);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -101,7 +101,6 @@ const FormRoutes = () => {
   };
 
   const sendFormValues = async () => {
-    try {
       const data = {
         name: '',
         birthday: '',
