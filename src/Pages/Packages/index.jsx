@@ -15,7 +15,7 @@ const XV_NOVEMBRO = 'Colégio XV de Novembro';
 const SEMINARIO = 'Seminário São José';
 const HOTEL_IBIS = 'Hotel Ibis';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired }) => {
   const [activeCard, setActiveCard] = useState(null);
   const [totalValue, setTotalValue] = useState('');
   const [selectedAccomodation, setSelectedAccomodation] = useState('');
@@ -56,6 +56,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
         transportation: selectedTransportation,
         food: selectedFood,
       });
+
+      if (totalValue === 0) {
+        noPaymentRequired();
+      } else {
+        nextStep();
+      }
     } else {
       setMsgError('d-block');
       setBorderError('msg-error');
@@ -201,11 +207,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
                                         {formatCurrency(accomodation)}
                                       </div>
                                       {hasAccomodationWithDiscount && (
-                                        <>
-                                          <div>{formatCurrency(accomodationWithDiscount)}</div>
-
-                                          <span>{cards.values.discountDescription.accomodation}</span>
-                                        </>
+                                        <div>{formatCurrency(accomodationWithDiscount)}</div>
                                       )}
                                     </div>
                                   </div>
@@ -215,13 +217,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
                                       <div className={!!hasFoodWithDiscount && 'price-with-discount'}>
                                         {formatCurrency(food)}
                                       </div>
-                                      {hasFoodWithDiscount && (
-                                        <>
-                                          <div>{formatCurrency(foodWithDiscount)}</div>
-
-                                          <span>{cards.values.discountDescription.food}</span>
-                                        </>
-                                      )}
+                                      {hasFoodWithDiscount && <div>{formatCurrency(foodWithDiscount)}</div>}
                                     </div>
                                   </div>
                                   <div className="package-description-container">
@@ -231,17 +227,18 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
                                         {formatCurrency(transportation)}
                                       </div>
                                       {hasTransportationDiscount && (
-                                        <>
-                                          <div>{formatCurrency(transportationWithDiscount)}</div>
-
-                                          <span>{cards.values.discountDescription.transportation}</span>
-                                        </>
+                                        <div>{formatCurrency(transportationWithDiscount)}</div>
                                       )}
                                     </div>
                                   </div>
                                   <div className="package-description-container">
-                                    <em>
+                                    <em className='d-flex gap-1'>
                                       <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
+                                      {(hasTransportationDiscount ||
+                                        hasAccomodationWithDiscount ||
+                                        hasFoodWithDiscount) && (
+                                        <span>{cards.values.discountDescription.accomodation}</span>
+                                      )}
                                     </em>
                                   </div>
                                 </div>
