@@ -50,7 +50,7 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.personalData);
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
