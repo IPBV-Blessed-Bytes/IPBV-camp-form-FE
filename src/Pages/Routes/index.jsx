@@ -82,7 +82,7 @@ const FormRoutes = () => {
     if (steps < enumSteps.success) {
       setSteps(enumSteps.success);
       scrollTop();
-      setPayment(true)
+      setPayment(true);
     }
   };
 
@@ -108,6 +108,10 @@ const FormRoutes = () => {
   const initialStep = () => {
     setSteps(enumSteps.home);
     scrollTop();
+  };
+
+  const sendForm = (totalValue) => {
+    totalValue === 0 && sendFormValues();
   };
 
   const sendFormValues = async () => {
@@ -192,6 +196,7 @@ const FormRoutes = () => {
             birthDate={formValues.personalInformation.birthday}
             updateForm={updateFormValues('package')}
             noPaymentRequired={noPaymentRequired}
+            sendForm={sendForm}
           />
         )}
 
@@ -202,7 +207,7 @@ const FormRoutes = () => {
             backStep={backStep}
             updateForm={updateFormValues('formPayment')}
             initialValues={formValues.formPayment}
-            sendFormValues={sendFormValues}
+            sendForm={sendForm}
           />
         )}
 
