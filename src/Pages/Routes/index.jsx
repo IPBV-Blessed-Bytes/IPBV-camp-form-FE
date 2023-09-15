@@ -1,6 +1,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
@@ -49,8 +50,9 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.formPayment);
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
+  const [payment, setPayment] = useState(false);
 
   const updateFormValues = (key) => {
     return (value) => {
@@ -73,6 +75,14 @@ const FormRoutes = () => {
     if (steps < enumSteps.success) {
       setSteps(steps + 1);
       scrollTop();
+    }
+  };
+
+  const noPaymentRequired = () => {
+    if (steps < enumSteps.success) {
+      setSteps(enumSteps.success);
+      scrollTop();
+      setPayment(true)
     }
   };
 
@@ -134,18 +144,21 @@ const FormRoutes = () => {
       const response = await axios.post('https://campform.up.railway.app/', data);
 
       if (response.status === 201) {
-        console.log('Dados enviados com sucesso!');
+        toast.success('Dados enviados com sucesso!');
       } else if (response.status === 403) {
-        console.error('CPF já cadastrado!');
+        toast.warn('CPF já cadastrado!');
       } else if (response.status === 500) {
-        console.error('Falha no servidor da aplicação!');
+        toast.error('Falha no servidor da aplicação!');
       } else {
-        console.error('Erro ao enviar dados. Tente novamente mais tarde.');
+        toast.error('Erro ao enviar dados. Tente novamente mais tarde.');
       }
     } catch (error) {
       console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
+      toast.error('Erro ao enviar dados. Tente novamente mais tarde.');
     }
   };
+
+  console.log('formValues', formValues);
 
   return (
     <div className="form">
@@ -178,6 +191,7 @@ const FormRoutes = () => {
             backStep={backStep}
             birthDate={formValues.personalInformation.birthday}
             updateForm={updateFormValues('package')}
+            noPaymentRequired={noPaymentRequired}
           />
         )}
 
@@ -198,6 +212,7 @@ const FormRoutes = () => {
             initialStep={initialStep}
             customerName={formValues.personalInformation.name}
             resetForm={resetFormValues}
+            noPaymentRequired={payment}
           />
         )}
       </div>
