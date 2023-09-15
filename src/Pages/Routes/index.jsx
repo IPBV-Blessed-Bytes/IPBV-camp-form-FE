@@ -101,10 +101,7 @@ const FormRoutes = () => {
   };
 
   const sendFormValues = async () => {
-    console.log('entrou fct');
     try {
-      console.log('entrou try');
-
       const data = {
         name: '',
         birthday: '',
@@ -127,9 +124,6 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post('https://campform.up.railway.app/', data);
-      console.log('data', data);
-
-      console.log('response:', response.data);
 
       if (response.status === 201) {
         console.log('Dados enviados com sucesso!');
@@ -143,10 +137,7 @@ const FormRoutes = () => {
     } catch (error) {
       console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
     }
-    console.log('sendFormValues');
   };
-
-  console.log('json', formValues);
 
   return (
     <div className="form">
