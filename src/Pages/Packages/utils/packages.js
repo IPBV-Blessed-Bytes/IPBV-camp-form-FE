@@ -26,9 +26,7 @@ const packageSchool = ({ age, withTransportation }) => {
     transportation,
     total,
     discountDescription: {
-      food: discountDescription,
       accomodation: discountDescription,
-      transportation: discountDescription,
     },
   };
 };
@@ -39,20 +37,17 @@ const packageSeminary = ({ age, withTransportation }) => {
   let transportation = [160];
 
   let discountDescription = '';
-  let accomodationDiscountDescription = '';
 
   if (age <= 8) {
     food = [200, 0];
     transportation = withTransportation ? [160, 0] : [0];
     accomodation = [600, 0];
     discountDescription = 'Criança até 8 anos não paga';
-    accomodationDiscountDescription = 'Criança até 8 anos não paga';
   } else if (age >= 9 && age <= 14) {
     food = [200, 100];
     transportation = withTransportation ? [160, 80] : [0];
     accomodation = [600, 300];
     discountDescription = 'Criança de 9 a 14 anos paga apenas 50%';
-    accomodationDiscountDescription = 'Criança de 9 a 14 anos paga apenas 50%';
   }
 
   const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
@@ -67,9 +62,7 @@ const packageSeminary = ({ age, withTransportation }) => {
     food,
     transportation,
     discountDescription: {
-      food: discountDescription,
-      accomodation: accomodationDiscountDescription,
-      transportation: discountDescription,
+      accomodation: discountDescription,
     },
   };
 };
@@ -80,14 +73,12 @@ const packageHotel = ({ age, withTransportation }) => {
   let transportation = [160];
 
   let discountDescription = '';
-  let accomodationDiscountDescription = '';
 
   if (age <= 10) {
     food = [200, 0];
     transportation = withTransportation ? [160, 0] : [0];
     accomodation = [550, 0];
     discountDescription = 'Criança até 10 anos não paga hospedagem *dormindo com os pais';
-    accomodationDiscountDescription = 'Criança até 10 anos não paga hospedagem *dormindo com os pais';
   }
 
   const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
@@ -102,9 +93,7 @@ const packageHotel = ({ age, withTransportation }) => {
     food,
     transportation,
     discountDescription: {
-      food: discountDescription,
-      accomodation: accomodationDiscountDescription,
-      transportation: discountDescription,
+      accomodation: discountDescription,
     },
   };
 };
