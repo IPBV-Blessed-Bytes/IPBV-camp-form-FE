@@ -1,21 +1,24 @@
 const packageSchool = ({ age, withTransportation }) => {
   const accomodation = [0];
   let food = [280];
-  const transportation = withTransportation ? 160 : 0;
+  let transportation = [160];
 
-  let foodDiscountDescription = '';
+  let discountDescription = '';
 
   if (age <= 6) {
     food = [280, 0];
-    foodDiscountDescription = 'Crianças até 6 anos não pagam alimentação';
+    transportation = withTransportation ? [160, 0] : [0];
+    discountDescription = 'Criança até 6 anos não paga';
   } else if (age >= 7 && age <= 12) {
     food = [280, 140];
-    foodDiscountDescription = 'Crianças de 7 a 12 anos pagam apenas 50% da alimentação';
+    transportation = withTransportation ? [160, 80] : [0];
+    discountDescription = 'Criança de 7 a 12 anos paga apenas 50%';
   }
 
   const foodValue = food.length > 1 ? food[1] : food[0];
+  const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodation[0] + foodValue + transportation;
+  const total = accomodation[0] + foodValue + transportationValue;
 
   return {
     accomodation,
@@ -23,7 +26,9 @@ const packageSchool = ({ age, withTransportation }) => {
     transportation,
     total,
     discountDescription: {
-      food: foodDiscountDescription,
+      food: discountDescription,
+      accomodation: discountDescription,
+      transportation: discountDescription,
     },
   };
 };
@@ -31,27 +36,30 @@ const packageSchool = ({ age, withTransportation }) => {
 const packageSeminary = ({ age, withTransportation }) => {
   let accomodation = [600];
   let food = [200];
-  const transportation = withTransportation ? 160 : 0;
+  let transportation = [160];
 
-  let foodDiscountDescription = '';
+  let discountDescription = '';
   let accomodationDiscountDescription = '';
 
   if (age <= 8) {
     food = [200, 0];
+    transportation = withTransportation ? [160, 0] : [0];
     accomodation = [600, 0];
-    foodDiscountDescription = 'Crianças até 8 anos não pagam alimentação';
-    accomodationDiscountDescription = 'Crianças até 8 anos não pagam hospedagem';
+    discountDescription = 'Criança até 8 anos não paga';
+    accomodationDiscountDescription = 'Criança até 8 anos não paga';
   } else if (age >= 9 && age <= 14) {
     food = [200, 100];
+    transportation = withTransportation ? [160, 80] : [0];
     accomodation = [600, 300];
-    foodDiscountDescription = 'Crianças de 9 a 14 anos pagam apenas 50% da alimentação';
-    accomodationDiscountDescription = 'Crianças de 9 a 14 anos pagam apenas 50% da hospedagem';
+    discountDescription = 'Criança de 9 a 14 anos paga apenas 50%';
+    accomodationDiscountDescription = 'Criança de 9 a 14 anos paga apenas 50%';
   }
 
   const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
   const foodValue = food.length > 1 ? food[1] : food[0];
+  const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodationValue + foodValue + transportation;
+  const total = accomodationValue + foodValue + transportationValue;
 
   return {
     total,
@@ -59,8 +67,9 @@ const packageSeminary = ({ age, withTransportation }) => {
     food,
     transportation,
     discountDescription: {
-      food: foodDiscountDescription,
+      food: discountDescription,
       accomodation: accomodationDiscountDescription,
+      transportation: discountDescription,
     },
   };
 };
@@ -68,22 +77,24 @@ const packageSeminary = ({ age, withTransportation }) => {
 const packageHotel = ({ age, withTransportation }) => {
   let accomodation = [550];
   let food = [200];
-  const transportation = withTransportation ? 160 : 0;
+  let transportation = [160];
 
-  let foodDiscountDescription = '';
+  let discountDescription = '';
   let accomodationDiscountDescription = '';
 
   if (age <= 10) {
     food = [200, 0];
+    transportation = withTransportation ? [160, 0] : [0];
     accomodation = [550, 0];
-    foodDiscountDescription = 'Crianças até 10 anos não pagam alimentação';
-    accomodationDiscountDescription = 'Crianças até 10 anos não pagam hospedagem dormindo com os pais';
+    discountDescription = 'Criança até 10 anos não paga hospedagem *dormindo com os pais';
+    accomodationDiscountDescription = 'Criança até 10 anos não paga hospedagem *dormindo com os pais';
   }
 
   const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
   const foodValue = food.length > 1 ? food[1] : food[0];
+  const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodationValue + foodValue + transportation;
+  const total = accomodationValue + foodValue + transportationValue;
 
   return {
     total,
@@ -91,8 +102,9 @@ const packageHotel = ({ age, withTransportation }) => {
     food,
     transportation,
     discountDescription: {
-      food: foodDiscountDescription,
+      food: discountDescription,
       accomodation: accomodationDiscountDescription,
+      transportation: discountDescription,
     },
   };
 };
