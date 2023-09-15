@@ -9,6 +9,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
 
+  @media (max-width: $lg) {
+    display: block;
+  }
+
   &__header {
     background-color: $primary;
     color: $white;
@@ -78,10 +82,14 @@ body {
     max-width: 50rem;
     margin-inline: auto;
     margin-top: -2.5rem;
-    min-width: 50rem;
 
     &__general-height {
       min-height: 44.375rem;
+      width: 50rem;
+
+      @media (max-width: $lg) {
+        width: 100%;
+      }
     }
 
     &-pointer {
@@ -89,7 +97,6 @@ body {
       display: inline-block;
       overflow: hidden;
       position: relative;
-
       transition:
         transform 0.5s,
         background-color 0.5s;
@@ -157,11 +164,11 @@ body {
           display: flex;
           flex-wrap: wrap;
           align-items: center;
-          gap: 0px;
-          margin-bottom: 10px;
+          gap: 0rem;
+          margin-bottom: 0.625rem;
 
           @media (min-width: $md) {
-            gap: 10px;
+            gap: 0.625rem;
           }
         }
 
