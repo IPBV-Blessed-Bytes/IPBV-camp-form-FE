@@ -1,7 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
-
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
+import axios from "axios";
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
@@ -50,7 +49,7 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.formPayment);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -102,38 +101,48 @@ const FormRoutes = () => {
   };
 
   const sendFormValues = async () => {
-    // try {
-    //   const data = {
-    //     name: '',
-    //     birthday: '',
-    //     cpf: '',
-    //     rg: '',
-    //     rgShipper: '',
-    //     rgShipperState: '',
-    //     cellPhone: '',
-    //     email: '',
-    //     isWhatsApp: '',
-    //     hasAllergy: '',
-    //     allergy: '',
-    //     hasAggregate: '',
-    //     aggregate: '',
-    //     price: '',
-    //     accomodation: '',
-    //     transportation: '',
-    //     food: '',
-    //     formPayment: '',
-    //   };
+    console.log('entrou fct');
+    try {
+      console.log('entrou try');
 
-    //   const response = await axios.post('http://localhost:3000/', data);
+      const data = {
+        name: '',
+        birthday: '',
+        cpf: '',
+        rg: '',
+        rgShipper: '',
+        rgShipperState: '',
+        cellPhone: '',
+        email: '',
+        isWhatsApp: '',
+        hasAllergy: '',
+        allergy: '',
+        hasAggregate: '',
+        aggregate: '',
+        price: '',
+        accomodation: '',
+        transportation: '',
+        food: '',
+        formPayment: '',
+      };
 
-    //   if (response.status === 201) {
-    //     console.log('Dados enviados com sucesso!');
-    //   } else {
-    //     console.log('Erro ao enviar dados. Tente novamente mais tarde.');
-    //   }
-    // } catch (error) {
-    //   console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
-    // }
+      const response = await axios.post('https://campform.up.railway.app/', data);
+      console.log('data', data);
+
+      console.log('response:', response.data);
+
+      if (response.status === 201) {
+        console.log('Dados enviados com sucesso!');
+      } else if (response.status === 403) {
+        console.error('CPF já cadastrado!');
+      } else if (response.status === 500) {
+        console.error('Falha no servidor da aplicação!');
+      } else {
+        console.error('Erro ao enviar dados. Tente novamente mais tarde.');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
+    }
     console.log('sendFormValues');
   };
 
