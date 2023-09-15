@@ -11,10 +11,10 @@ const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initi
     initialValues,
     onSubmit: () => {
       if (values.formPayment === 'online') {
-        // nextStep('online');
+        nextStep('online');
         sendForm(0);
       } else if (values.formPayment === 'inPerson') {
-        // nextStep('inPerson');
+        nextStep('inPerson');
         sendForm(0);
       } else {
         skipTwoSteps();

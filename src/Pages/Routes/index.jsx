@@ -124,7 +124,7 @@ const FormRoutes = () => {
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
 
-        window.location.href = response.data.data.payment_url;
+        // window.location.href = response.data.data.payment_url;
       }
     } catch (error) {
       console.error('CPF já Cadastrado!', error);
