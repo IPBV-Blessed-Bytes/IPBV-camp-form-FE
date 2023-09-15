@@ -116,34 +116,7 @@ const FormRoutes = () => {
 
   const sendFormValues = async () => {
     try {
-      const data = {
-        personalInformation: {
-          name: '',
-          birthday: '',
-          cpf: '',
-          rg: '',
-          rgShipper: '',
-          rgShipperState: '',
-        },
-        contact: {
-          cellPhone: '',
-          email: '',
-          isWhatsApp: '',
-          hasAllergy: '',
-          allergy: '',
-          hasAggregate: '',
-          aggregate: '',
-        },
-        package: {
-          price: '',
-          accomodation: '',
-          transportation: '',
-          food: '',
-        },
-        formPayment: {
-          formPayment: '',
-        },
-      };
+      const data = formValues;
 
       const response = await axios.post('https://campform.up.railway.app/', data);
 
@@ -161,8 +134,6 @@ const FormRoutes = () => {
       toast.error('Erro ao enviar dados. Tente novamente mais tarde.');
     }
   };
-
-  console.log('formValues', formValues);
 
   return (
     <div className="form">
