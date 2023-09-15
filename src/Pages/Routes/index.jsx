@@ -1,6 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
-import axios from 'axios';
+import axios from "axios";
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
@@ -103,24 +103,32 @@ const FormRoutes = () => {
   const sendFormValues = async () => {
     try {
       const data = {
-        name: '',
-        birthday: '',
-        cpf: '',
-        rg: '',
-        rgShipper: '',
-        rgShipperState: '',
-        cellPhone: '',
-        email: '',
-        isWhatsApp: '',
-        hasAllergy: '',
-        allergy: '',
-        hasAggregate: '',
-        aggregate: '',
-        price: '',
-        accomodation: '',
-        transportation: '',
-        food: '',
-        formPayment: '',
+        personalInformation: {
+          name: '',
+          birthday: '',
+          cpf: '',
+          rg: '',
+          rgShipper: '',
+          rgShipperState: '',
+        },
+        contact: {
+          cellPhone: '',
+          email: '',
+          isWhatsApp: '',
+          hasAllergy: '',
+          allergy: '',
+          hasAggregate: '',
+          aggregate: '',
+        },
+        package: {
+          price: '',
+          accomodation: '',
+          transportation: '',
+          food: '',
+        },
+        formPayment: {
+          formPayment: '',
+        },
       };
 
       const response = await axios.post('https://campform.up.railway.app/', data);
