@@ -52,6 +52,7 @@ const initialValues = {
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
+  const [payment, setPayment] = useState(false);
 
   const updateFormValues = (key) => {
     return (value) => {
@@ -74,6 +75,14 @@ const FormRoutes = () => {
     if (steps < enumSteps.success) {
       setSteps(steps + 1);
       scrollTop();
+    }
+  };
+
+  const noPaymentRequired = () => {
+    if (steps < enumSteps.success) {
+      setSteps(enumSteps.success);
+      scrollTop();
+      setPayment(true)
     }
   };
 
@@ -182,6 +191,7 @@ const FormRoutes = () => {
             backStep={backStep}
             birthDate={formValues.personalInformation.birthday}
             updateForm={updateFormValues('package')}
+            noPaymentRequired={noPaymentRequired}
           />
         )}
 
@@ -202,6 +212,7 @@ const FormRoutes = () => {
             initialStep={initialStep}
             customerName={formValues.personalInformation.name}
             resetForm={resetFormValues}
+            noPaymentRequired={payment}
           />
         )}
       </div>

@@ -15,7 +15,7 @@ const XV_NOVEMBRO = 'Colégio XV de Novembro';
 const SEMINARIO = 'Seminário São José';
 const HOTEL_IBIS = 'Hotel Ibis';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired }) => {
   const [activeCard, setActiveCard] = useState(null);
   const [totalValue, setTotalValue] = useState('');
   const [selectedAccomodation, setSelectedAccomodation] = useState('');
@@ -56,6 +56,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
         transportation: selectedTransportation,
         food: selectedFood,
       });
+
+      if (totalValue === 0) {
+        noPaymentRequired();
+      } else {
+        nextStep();
+      }
     } else {
       setMsgError('d-block');
       setBorderError('msg-error');
