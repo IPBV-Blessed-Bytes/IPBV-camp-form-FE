@@ -18,6 +18,9 @@ const HOTEL_IBIS = 'Hotel Ibis';
 const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
   const [activeCard, setActiveCard] = useState(null);
   const [totalValue, setTotalValue] = useState('');
+  const [selectedAccomodation, setSelectedAccomodation] = useState('');
+  const [selectedTransportation, setSelectedTransportation] = useState('');
+  const [selectedFood, setSelectedFood] = useState('');
   const [msgError, setMsgError] = useState('');
   const [borderError, setBorderError] = useState('');
   const age = calculateAge(birthDate);
@@ -33,11 +36,13 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
       const selectedCard = cards.find((card) => card.id === cardId);
 
       if (selectedCard) {
-        const {
-          values: { total },
-        } = selectedCard;
+        const { total } = selectedCard.values;
+        const { accomodation, transportation, food } = selectedCard;
 
         setTotalValue(total);
+        setSelectedAccomodation(accomodation);
+        setSelectedTransportation(transportation);
+        setSelectedFood(food);
       }
     }
   };
@@ -45,7 +50,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
   const submitForm = () => {
     if (activeCard) {
       nextStep();
-      updateForm({ price: totalValue });
+      updateForm({
+        price: totalValue,
+        accomodation: selectedAccomodation,
+        transportation: selectedTransportation,
+        food: selectedFood,
+      });
     } else {
       setMsgError('d-block');
       setBorderError('msg-error');
@@ -68,16 +78,38 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
     {
       id: '1',
       accomodation: XV_NOVEMBRO,
-      title: 'PACOTE 1 - HOSPEDAGEM COLETIVA INDIVIDUAL',
+      title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
       observation: '* Em salas de aula COM ônibus',
       values: { ...schoollWithBuss },
+      transportation: 'Com Ônibus',
+      food: 'Café da manhã, almoço e jantar',
     },
     {
       id: '2',
       accomodation: XV_NOVEMBRO,
-      title: 'PACOTE 2 - HOSPEDAGEM COLETIVA INDIVIDUAL',
+      title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
       observation: '* Em salas de aula SEM ônibus',
       values: { ...schollWithoutBuss },
+      transportation: 'Sem Ônibus',
+      food: 'Café da manhã, almoço e jantar',
+    },
+    {
+      id: '3',
+      accomodation: XV_NOVEMBRO,
+      title: 'PACOTE 3 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
+      observation: '* Em salas de aula COM ônibus',
+      values: { ...schoollWithBuss },
+      transportation: 'Com Ônibus',
+      food: 'Café da manhã, almoço e jantar',
+    },
+    {
+      id: '4',
+      accomodation: XV_NOVEMBRO,
+      title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
+      observation: '* Em salas de aula SEM ônibus',
+      values: { ...schollWithoutBuss },
+      transportation: 'Sem Ônibus',
+      food: 'Café da manhã, almoço e jantar',
     },
     {
       id: '5',
@@ -85,6 +117,8 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
       title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
       observation: '* COM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithBuss },
+      transportation: 'Com Ônibus',
+      food: 'Almoço e jantar',
     },
     {
       id: '6',
@@ -92,6 +126,8 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
       title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
       observation: '* SEM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithoutBuss },
+      transportation: 'Sem Ônibus',
+      food: 'Almoço e jantar',
     },
     {
       id: '7',
@@ -99,6 +135,8 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
       title: 'PACOTE 7 - HOSPEDAGEM DUPLA',
       observation: '* COM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithBuss },
+      transportation: 'Com Ônibus',
+      food: 'Almoço e jantar',
     },
     {
       id: '8',
@@ -106,6 +144,8 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
       title: 'PACOTE 8 - HOSPEDAGEM DUPLA',
       observation: '* SEM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithoutBuss },
+      transportation: 'Sem Ônibus',
+      food: 'Almoço e jantar',
     },
   ];
 
@@ -113,13 +153,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
     <Card className="form__container__general-height">
       <Card.Body>
         <Container>
+          <Card.Title>Pacotes</Card.Title>
+          <Card.Text>
+            Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
+            Posteriormente escolha o pacote deseja e clique nele para ser redirecionado.
+          </Card.Text>
           <Form>
-            <Card.Title>Pacotes</Card.Title>
-            <Card.Text>
-              Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
-              Posteriormente escolha o pacote deseja e clique nele para ser redirecionado.
-            </Card.Text>
-
             <Accordion>
               {accomodation.map((accomodation, index) => (
                 <Accordion.Item className={borderError} key={index} eventKey={String(index)}>
@@ -234,6 +273,9 @@ FormPackages.propTypes = {
   updateForm: PropTypes.func,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
+    accomodation: PropTypes.string,
+    transportation: PropTypes.string,
+    food: PropTypes.string,
   }),
 };
 
