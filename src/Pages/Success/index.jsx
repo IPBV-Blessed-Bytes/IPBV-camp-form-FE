@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
-const FormSuccess = ({ formPayment, initialStep, customerName, resetForm }) => {
+const FormSuccess = ({ formPayment, initialStep, customerName, resetForm, noPaymentRequired }) => {
   const handleNewRegistration = () => {
     resetForm();
     initialStep();
@@ -21,7 +21,7 @@ const FormSuccess = ({ formPayment, initialStep, customerName, resetForm }) => {
             </div>
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
-              {formPayment === 'online' ? (
+              {formPayment === 'online' || noPaymentRequired ? (
                 <b>Qualquer dúvida entraremos em contato.</b>
               ) : (
                 <b>
