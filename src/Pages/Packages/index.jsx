@@ -173,6 +173,9 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
                         const [food, foodWithDiscount] = cards.values.food;
                         const hasFoodWithDiscount = typeof foodWithDiscount === 'number';
 
+                        const [transportation, transportationWithDiscount] = cards.values.transportation;
+                        const hasTransportationDiscount = typeof transportationWithDiscount === 'number';
+
                         return (
                           <Card
                             key={cards.id}
@@ -222,7 +225,19 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm }) => {
                                     </div>
                                   </div>
                                   <div className="package-description-container">
-                                    <span>Ônibus:</span> R$ {cards.values.transportation}
+                                    <span>Ônibus:</span>
+                                    <div>
+                                      <div className={!!hasTransportationDiscount && 'price-with-discount'}>
+                                        {formatCurrency(transportation)}
+                                      </div>
+                                      {hasTransportationDiscount && (
+                                        <>
+                                          <div>{formatCurrency(transportationWithDiscount)}</div>
+
+                                          <span>{cards.values.discountDescription.transportation}</span>
+                                        </>
+                                      )}
+                                    </div>
                                   </div>
                                   <div className="package-description-container">
                                     <em>
