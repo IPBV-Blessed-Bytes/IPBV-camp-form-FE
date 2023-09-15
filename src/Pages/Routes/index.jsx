@@ -1,6 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
@@ -39,6 +39,9 @@ const initialValues = {
     aggregate: '',
   },
   package: {
+    accomodation: '',
+    transportation: '',
+    food: '',
     price: '',
   },
   formPayment: {
@@ -47,7 +50,7 @@ const initialValues = {
 };
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.packages);
+  const [steps, setSteps] = useState(enumSteps.personalData);
   const [formValues, setFormValues] = useState(initialValues);
 
   const updateFormValues = (key) => {
@@ -98,6 +101,44 @@ const FormRoutes = () => {
     scrollTop();
   };
 
+  const sendFormValues = async () => {
+    // try {
+    //   const data = {
+    //     name: '',
+    //     birthday: '',
+    //     cpf: '',
+    //     rg: '',
+    //     rgShipper: '',
+    //     rgShipperState: '',
+    //     cellPhone: '',
+    //     email: '',
+    //     isWhatsApp: '',
+    //     hasAllergy: '',
+    //     allergy: '',
+    //     hasAggregate: '',
+    //     aggregate: '',
+    //     price: '',
+    //     accomodation: '',
+    //     transportation: '',
+    //     food: '',
+    //     formPayment: '',
+    //   };
+
+    //   const response = await axios.post('http://localhost:3000/', data);
+
+    //   if (response.status === 201) {
+    //     console.log('Dados enviados com sucesso!');
+    //   } else {
+    //     console.log('Erro ao enviar dados. Tente novamente mais tarde.');
+    //   }
+    // } catch (error) {
+    //   console.error('Erro ao enviar dados. Tente novamente mais tarde.', error);
+    // }
+    console.log('sendFormValues');
+  };
+
+  console.log('json', formValues);
+
   return (
     <div className="form">
       <Header currentStep={steps} goBackToStep={goBackToStep} />
@@ -139,6 +180,7 @@ const FormRoutes = () => {
             backStep={backStep}
             updateForm={updateFormValues('formPayment')}
             initialValues={formValues.formPayment}
+            sendFormValues={sendFormValues}
           />
         )}
 
