@@ -1,6 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
-import axios from 'axios';
+import axios from "axios";
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
