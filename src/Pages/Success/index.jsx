@@ -3,10 +3,11 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
-const FormSuccess = ({ formPayment, initialStep, customerName, resetForm, noPaymentRequired }) => {
+const FormSuccess = ({ formPayment, initialStep, customerName, resetForm, noPaymentRequired, resetFormSubmitted }) => {
   const handleNewRegistration = () => {
     resetForm();
     initialStep();
+    resetFormSubmitted();
   };
 
   return (

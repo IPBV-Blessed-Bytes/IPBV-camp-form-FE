@@ -53,6 +53,7 @@ const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [payment, setPayment] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const updateFormValues = (key) => {
     return (value) => {
@@ -65,6 +66,10 @@ const FormRoutes = () => {
 
   const resetFormValues = () => {
     setFormValues(initialValues);
+  };
+
+  const resetFormSubmitted = () => {
+    setFormSubmitted(false);
   };
 
   const scrollTop = () => {
@@ -123,6 +128,7 @@ const FormRoutes = () => {
 
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
+        setFormSubmitted(true);
 
         // window.location.href = response.data.data.payment_url;
       }
@@ -134,7 +140,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      <Header currentStep={steps} goBackToStep={goBackToStep} />
+      <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} />
 
       <div className="form__container">
         {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
@@ -186,6 +192,7 @@ const FormRoutes = () => {
             customerName={formValues.personalInformation.name}
             resetForm={resetFormValues}
             noPaymentRequired={payment}
+            resetFormSubmitted={resetFormSubmitted}
           />
         )}
       </div>
