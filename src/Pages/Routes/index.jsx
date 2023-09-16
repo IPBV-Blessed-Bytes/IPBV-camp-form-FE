@@ -124,11 +124,12 @@ const FormRoutes = () => {
       const data = formValues;
 
       const response = await axios.post('https://campform.up.railway.app/', data);
-      // console.log('response API', response.data.data.payment_url);
+      console.log('response API', response.data);
 
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
         setFormSubmitted(true);
+        console.log('formValues', formValues);
 
         // window.location.href = response.data.data.payment_url;
       }

@@ -11,10 +11,10 @@ const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initi
     initialValues,
     onSubmit: () => {
       if (values.formPayment === 'online') {
-        nextStep('online');
+        // nextStep('online');
         sendForm(0);
       } else if (values.formPayment === 'inPerson') {
-        nextStep('inPerson');
+        // nextStep('inPerson');
         sendForm(0);
       } else {
         skipTwoSteps();
@@ -44,8 +44,8 @@ const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initi
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                <option value="online">Online (preferencial)</option>
-                <option value="inPerson">Presencial (secretaria da igreja)</option>
+                <option value="online">ONLINE (preferencial)</option>
+                <option value="inPerson">PRESENCIAL (secretaria da igreja)</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
