@@ -84,7 +84,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
   const cards = [
     {
       id: '1',
-      accomodation: XV_NOVEMBRO,
+      accomodation: { id: '1-colegio-individual', name: XV_NOVEMBRO },
       title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
       observation: '* Em salas de aula COM ônibus',
       values: { ...schoollWithBuss },
@@ -93,7 +93,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '2',
-      accomodation: XV_NOVEMBRO,
+      accomodation: { id: '2-colegio-individual', name: XV_NOVEMBRO },
       title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
       observation: '* Em salas de aula SEM ônibus',
       values: { ...schollWithoutBuss },
@@ -102,7 +102,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '3',
-      accomodation: XV_NOVEMBRO,
+      accomodation: { id: '3-colegio-familia', name: XV_NOVEMBRO },
       title: 'PACOTE 3 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
       observation: '* Em salas de aula COM ônibus',
       values: { ...schoollWithBuss },
@@ -111,7 +111,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '4',
-      accomodation: XV_NOVEMBRO,
+      accomodation: { id: '4-colegio-familia', name: XV_NOVEMBRO },
       title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
       observation: '* Em salas de aula SEM ônibus',
       values: { ...schollWithoutBuss },
@@ -120,7 +120,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '5',
-      accomodation: SEMINARIO,
+      accomodation: { id: '5-seminario-individual', name: SEMINARIO },
       title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
       observation: '* COM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithBuss },
@@ -129,7 +129,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '6',
-      accomodation: SEMINARIO,
+      accomodation: { id: '6-seminario-individual', name: SEMINARIO },
       title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
       observation: '* SEM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithoutBuss },
@@ -138,7 +138,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '7',
-      accomodation: HOTEL_IBIS,
+      accomodation: { id: '7-hotel-dupla', name: HOTEL_IBIS },
       title: 'PACOTE 7 - HOSPEDAGEM DUPLA',
       observation: '* COM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithBuss },
@@ -147,7 +147,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
     },
     {
       id: '8',
-      accomodation: HOTEL_IBIS,
+      accomodation: { id: '8-hotel-dupla', name: HOTEL_IBIS },
       title: 'PACOTE 8 - HOSPEDAGEM DUPLA',
       observation: '* SEM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithoutBuss },
@@ -172,7 +172,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                   <Accordion.Header>{accomodation.name}</Accordion.Header>
                   <Accordion.Body className="d-grid gap-3">
                     {cards
-                      .filter((card) => card.accomodation === accomodation.name)
+                      .filter((card) => card.accomodation.name === accomodation.name)
                       .map((cards) => {
                         const [accomodation, accomodationWithDiscount] = cards.values.accomodation;
                         const hasAccomodationWithDiscount = typeof accomodationWithDiscount === 'number';
@@ -193,7 +193,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                               setMsgError('d-none');
                             }}
                           >
-                            <Card.Body>
+                            <Card.Body id={cards.accomodation.id}>
                               <Card.Title>{cards.title}</Card.Title>
                               <div className="card-wrapper d-flex justify-content-between">
                                 <div className="card-text">
@@ -208,7 +208,11 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                                         {formatCurrency(accomodation)}
                                       </div>
                                       {hasAccomodationWithDiscount && (
-                                        <div>{formatCurrency(accomodationWithDiscount)}</div>
+                                        <>
+                                          <div>{formatCurrency(accomodationWithDiscount)}</div>
+
+                                          <span>{cards.values.discountDescription.accomodation}</span>
+                                        </>
                                       )}
                                     </div>
                                   </div>
@@ -218,28 +222,31 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                                       <div className={!!hasFoodWithDiscount && 'price-with-discount'}>
                                         {formatCurrency(food)}
                                       </div>
-                                      {hasFoodWithDiscount && <div>{formatCurrency(foodWithDiscount)}</div>}
+                                      {hasFoodWithDiscount && (
+                                        <>
+                                          <div>{formatCurrency(foodWithDiscount)}</div>
+                                          <span>{cards.values.discountDescription.food}</span>
+                                        </>
+                                      )}
                                     </div>
                                   </div>
                                   <div className="package-description-container">
                                     <span>Ônibus:</span>
                                     <div>
-                                      <div className={!!hasTransportationDiscount && 'price-with-discount'}>
+                                      <div className={hasTransportationDiscount && 'price-with-discount'}>
                                         {formatCurrency(transportation)}
                                       </div>
                                       {hasTransportationDiscount && (
-                                        <div>{formatCurrency(transportationWithDiscount)}</div>
+                                        <>
+                                          <div>{formatCurrency(transportationWithDiscount)}</div>
+                                          <span>{cards.values.discountDescription.transportation}</span>
+                                        </>
                                       )}
                                     </div>
                                   </div>
                                   <div className="package-description-container">
                                     <em className="d-flex gap-1">
                                       <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
-                                      {(hasTransportationDiscount ||
-                                        hasAccomodationWithDiscount ||
-                                        hasFoodWithDiscount) && (
-                                        <span>{cards.values.discountDescription.accomodation}</span>
-                                      )}
                                     </em>
                                   </div>
                                 </div>

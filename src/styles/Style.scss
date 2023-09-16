@@ -166,6 +166,10 @@ body {
           @media (min-width: $md) {
             gap: 0.625rem;
           }
+
+          span {
+            min-width: 8rem;
+          }
         }
 
         .price-with-discount {
