@@ -1,10 +1,14 @@
 import PropTypes from 'prop-types';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
-const Header = ({ currentStep, goBackToStep }) => {
+const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
   const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Pagamento', 'Final'];
 
   const handleStepChange = (newStep) => {
+    if (formSubmitted) {
+      return;
+    }
+
     if (newStep <= currentStep) {
       goBackToStep(newStep);
     }
