@@ -70,6 +70,7 @@ ChooseFormPayment.propTypes = {
   skipTwoSteps: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
+  sendForm: PropTypes.func,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
   }),

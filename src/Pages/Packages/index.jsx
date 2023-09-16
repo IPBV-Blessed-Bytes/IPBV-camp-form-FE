@@ -233,7 +233,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                                     </div>
                                   </div>
                                   <div className="package-description-container">
-                                    <em className='d-flex gap-1'>
+                                    <em className="d-flex gap-1">
                                       <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
                                       {(hasTransportationDiscount ||
                                         hasAccomodationWithDiscount ||
@@ -284,6 +284,8 @@ FormPackages.propTypes = {
   backStep: PropTypes.func,
   birthDate: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
+  noPaymentRequired: PropTypes.bool,
+  sendForm: PropTypes.func,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,

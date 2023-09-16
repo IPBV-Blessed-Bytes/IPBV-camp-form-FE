@@ -51,6 +51,7 @@ FormSuccess.propTypes = {
   initialStep: PropTypes.func,
   resetForm: PropTypes.func,
   customerName: PropTypes.string,
+  noPaymentRequired: PropTypes.bool,
 };
 
 export default FormSuccess;
