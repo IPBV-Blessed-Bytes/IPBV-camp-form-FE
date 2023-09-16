@@ -10,16 +10,14 @@ const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initi
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
+      updateForm(values);
       if (values.formPayment === 'online') {
-        // nextStep('online');
-        sendForm(0);
+        sendForm();
       } else if (values.formPayment === 'inPerson') {
-        // nextStep('inPerson');
-        sendForm(0);
+        sendForm();
       } else {
         skipTwoSteps();
       }
-      updateForm(values);
     },
     validateOnBlur: false,
     validateOnChange: false,

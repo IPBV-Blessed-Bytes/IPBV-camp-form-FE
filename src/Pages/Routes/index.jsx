@@ -54,7 +54,6 @@ const FormRoutes = () => {
   const [formValues, setFormValues] = useState(initialValues);
   const [payment, setPayment] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-
   const updateFormValues = (key) => {
     return (value) => {
       setFormValues({
@@ -90,7 +89,7 @@ const FormRoutes = () => {
       setPayment(true);
     }
   };
-
+  
   const skipTwoSteps = () => {
     if (steps === enumSteps.formPayment) {
       setSteps(enumSteps.success);
@@ -115,23 +114,18 @@ const FormRoutes = () => {
     scrollTop();
   };
 
-  const sendForm = (totalValue) => {
-    totalValue === 0 && sendFormValues();
+  const sendForm = () => {
+    sendFormValues();
   };
 
-  const sendFormValues = async () => {
+  const sendFormValues = async () => {  
     try {
       const data = formValues;
-
       const response = await axios.post('https://campform.up.railway.app/', data);
-      console.log('response API', response.data);
-
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
         setFormSubmitted(true);
-        console.log('formValues', formValues);
-
-        // window.location.href = response.data.data.payment_url;
+        window.location.href = response.data.data.payment_url;
       }
     } catch (error) {
       console.error('CPF já Cadastrado!', error);

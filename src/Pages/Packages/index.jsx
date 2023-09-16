@@ -10,6 +10,7 @@ import Icons from '../../components/Icons';
 import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import generatePackagesValues from './utils/packages';
+import { enumSteps } from '../Routes';
 
 const XV_NOVEMBRO = 'Colégio XV de Novembro';
 const SEMINARIO = 'Seminário São José';
@@ -18,9 +19,6 @@ const HOTEL_IBIS = 'Hotel Ibis';
 const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired, sendForm }) => {
   const [activeCard, setActiveCard] = useState(null);
   const [totalValue, setTotalValue] = useState('');
-  const [selectedAccomodation, setSelectedAccomodation] = useState('');
-  const [selectedTransportation, setSelectedTransportation] = useState('');
-  const [selectedFood, setSelectedFood] = useState('');
   const [msgError, setMsgError] = useState('');
   const [borderError, setBorderError] = useState('');
   const age = calculateAge(birthDate);
@@ -31,36 +29,28 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
 
   const handleClick = (cardId) => {
     setActiveCard(cardId === activeCard ? null : cardId);
-
-    if (cardId !== activeCard) {
-      const selectedCard = cards.find((card) => card.id === cardId);
-
-      if (selectedCard) {
-        const { total } = selectedCard.values;
-        const { accomodation, transportation, food } = selectedCard;
-
-        setTotalValue(total);
-        setSelectedAccomodation(accomodation);
-        setSelectedTransportation(transportation);
-        setSelectedFood(food);
-      }
+    const selectedCard = cards.find((card)=> card.id===cardId);
+    if(selectedCard){
+      const { total } = selectedCard.values;
+      setTotalValue(() => total);
+      const { accomodation, transportation, food } = selectedCard;
+      updateForm({        
+        price: total,
+        accomodation: accomodation,
+        transportation: transportation,
+        food: food,
+      });
     }
+
   };
 
   const submitForm = () => {
-    if (activeCard) {
-      nextStep();
-      updateForm({
-        price: totalValue,
-        accomodation: selectedAccomodation,
-        transportation: selectedTransportation,
-        food: selectedFood,
-      });
-      sendForm(totalValue);
-
-      if (totalValue === 0) {
+    if (activeCard) {;
+      if(totalValue === 0){
         noPaymentRequired();
-      } else {
+        sendForm();
+      }
+      else {
         nextStep();
       }
     } else {
