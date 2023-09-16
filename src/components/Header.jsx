@@ -33,6 +33,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
 Header.propTypes = {
   currentStep: PropTypes.number.isRequired,
   goBackToStep: PropTypes.number.isRequired,
+  formSubmitted: PropTypes.bool,
 };
 
 export default Header;
