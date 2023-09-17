@@ -115,21 +115,20 @@ const FormRoutes = () => {
     scrollTop();
   };
 
-  const sendForm = (totalValue) => {
-    totalValue === 0 && sendFormValues();
+  const sendForm = (totalValue, formPayment) => {
+    totalValue === 0 && sendFormValues(formPayment);
   };
 
-  const sendFormValues = async () => {
+  const sendFormValues = async (formPayment) => {
     try {
       const data = formValues;
+      data.formPayment.formPayment = formPayment
 
       const response = await axios.post('https://campform.up.railway.app/', data);
-      console.log('response API', response.data);
 
       if (response.status === 201) {
         toast.success('Dados enviados com sucesso!');
         setFormSubmitted(true);
-        console.log('formValues', formValues);
 
         // window.location.href = response.data.data.payment_url;
       }

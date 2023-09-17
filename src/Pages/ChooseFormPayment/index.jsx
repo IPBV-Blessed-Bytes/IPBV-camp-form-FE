@@ -6,16 +6,16 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initialValues, sendForm }) => {
+const ChooseFormPayment = ({ skipTwoSteps, backStep, updateForm, initialValues, sendForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
       if (values.formPayment === 'online') {
         // nextStep('online');
-        sendForm(0);
+        sendForm(0, values.formPayment);
       } else if (values.formPayment === 'inPerson') {
         // nextStep('inPerson');
-        sendForm(0);
+        sendForm(0, values.formPayment);
       } else {
         skipTwoSteps();
       }
