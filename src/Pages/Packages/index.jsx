@@ -1,150 +1,51 @@
 import { useState } from 'react';
+
 import PropTypes from 'prop-types';
 import { Accordion } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Icons from '../../components/Icons';
 
+import Icons from '../../components/Icons';
 import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
-import generatePackagesValues from './utils/packages';
-import { enumSteps } from '../Routes';
+import getPackages, { accommodations } from './utils/packages';
 
-const XV_NOVEMBRO = 'Colégio XV de Novembro';
-const SEMINARIO = 'Seminário São José';
-const HOTEL_IBIS = 'Hotel Ibis';
-
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequired, sendForm }) => {
-  const [activeCard, setActiveCard] = useState(null);
-  const [totalValue, setTotalValue] = useState('');
-  const [msgError, setMsgError] = useState('');
-  const [borderError, setBorderError] = useState('');
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) => {
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [hasError, setHasError] = useState(false);
   const age = calculateAge(birthDate);
+  const packages = getPackages(age);
 
-  const [schoollWithBuss, schollWithoutBuss] = generatePackagesValues('school', age);
-  const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
-  const [hotelWithBuss, hotelWithoutBuss] = generatePackagesValues('hotel', age);
-
-  const handleClick = (cardId) => {
-    setActiveCard(cardId === activeCard ? null : cardId);
-    const selectedCard = cards.find((card)=> card.id===cardId);
-    if(selectedCard){
-      const { total } = selectedCard.values;
-      setTotalValue(() => total);
-      const { accomodation, transportation, food } = selectedCard;
-      updateForm({        
-        price: total,
-        accomodation: accomodation,
-        transportation: transportation,
-        food: food,
-      });
+  const handleClick = (selectedPackage) => {
+    if (hasError) {
+      setHasError(false);
     }
 
+    setSelectedPackage(selectedPackage);
+
+    const { accomodation, transportation, food, values } = selectedPackage;
+    updateForm({
+      price: values.total,
+      accomodation: accomodation,
+      transportation: transportation,
+      food: food,
+    });
   };
 
   const submitForm = () => {
-    if (activeCard) {;
-      if(totalValue === 0){
-        noPaymentRequired();
-        sendForm();
-      }
-      else {
-        nextStep();
-      }
+    if (!selectedPackage) {
+      setHasError(true);
+      return;
+    }
+
+    if (selectedPackage.values.total === 0) {
+      sendForm();
     } else {
-      setMsgError('d-block');
-      setBorderError('msg-error');
+      nextStep();
     }
   };
-
-  const accomodation = [
-    {
-      name: XV_NOVEMBRO,
-    },
-    {
-      name: SEMINARIO,
-    },
-    {
-      name: HOTEL_IBIS,
-    },
-  ];
-
-  const cards = [
-    {
-      id: '1',
-      accomodation: { id: '1-colegio-individual', name: XV_NOVEMBRO },
-      title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
-      observation: '* Em salas de aula COM ônibus',
-      values: { ...schoollWithBuss },
-      transportation: 'Com Ônibus',
-      food: 'Café da manhã, almoço e jantar',
-    },
-    {
-      id: '2',
-      accomodation: { id: '2-colegio-individual', name: XV_NOVEMBRO },
-      title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
-      observation: '* Em salas de aula SEM ônibus',
-      values: { ...schollWithoutBuss },
-      transportation: 'Sem Ônibus',
-      food: 'Café da manhã, almoço e jantar',
-    },
-    {
-      id: '3',
-      accomodation: { id: '3-colegio-familia', name: XV_NOVEMBRO },
-      title: 'PACOTE 3 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
-      observation: '* Em salas de aula COM ônibus',
-      values: { ...schoollWithBuss },
-      transportation: 'Com Ônibus',
-      food: 'Café da manhã, almoço e jantar',
-    },
-    {
-      id: '4',
-      accomodation: { id: '4-colegio-familia', name: XV_NOVEMBRO },
-      title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA',
-      observation: '* Em salas de aula SEM ônibus',
-      values: { ...schollWithoutBuss },
-      transportation: 'Sem Ônibus',
-      food: 'Café da manhã, almoço e jantar',
-    },
-    {
-      id: '5',
-      accomodation: { id: '5-seminario-individual', name: SEMINARIO },
-      title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
-      observation: '* COM ônibus / Café da manhã incluso no seminário',
-      values: { ...seminaryWithBuss },
-      transportation: 'Com Ônibus',
-      food: 'Almoço e jantar',
-    },
-    {
-      id: '6',
-      accomodation: { id: '6-seminario-individual', name: SEMINARIO },
-      title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU DUPLA',
-      observation: '* SEM ônibus / Café da manhã incluso no seminário',
-      values: { ...seminaryWithoutBuss },
-      transportation: 'Sem Ônibus',
-      food: 'Almoço e jantar',
-    },
-    {
-      id: '7',
-      accomodation: { id: '7-hotel-dupla', name: HOTEL_IBIS },
-      title: 'PACOTE 7 - HOSPEDAGEM DUPLA',
-      observation: '* COM ônibus / Café da manhã incluso no hotel',
-      values: { ...hotelWithBuss },
-      transportation: 'Com Ônibus',
-      food: 'Almoço e jantar',
-    },
-    {
-      id: '8',
-      accomodation: { id: '8-hotel-dupla', name: HOTEL_IBIS },
-      title: 'PACOTE 8 - HOSPEDAGEM DUPLA',
-      observation: '* SEM ônibus / Café da manhã incluso no hotel',
-      values: { ...hotelWithoutBuss },
-      transportation: 'Sem Ônibus',
-      food: 'Almoço e jantar',
-    },
-  ];
 
   return (
     <Card className="form__container__general-height">
@@ -157,12 +58,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
           </Card.Text>
           <Form>
             <Accordion>
-              {accomodation.map((accomodation, index) => (
-                <Accordion.Item className={borderError} key={index} eventKey={String(index)}>
-                  <Accordion.Header>{accomodation.name}</Accordion.Header>
+              {accommodations.map((accomodation, index) => (
+                <Accordion.Item className={hasError ? 'msg-error' : ''} key={index} eventKey={String(index)}>
+                  <Accordion.Header>{accomodation}</Accordion.Header>
                   <Accordion.Body className="d-grid gap-3">
-                    {cards
-                      .filter((card) => card.accomodation.name === accomodation.name)
+                    {packages
+                      .filter((element) => element.accomodation.name === accomodation)
                       .map((cards) => {
                         const [accomodation, accomodationWithDiscount] = cards.values.accomodation;
                         const hasAccomodationWithDiscount = typeof accomodationWithDiscount === 'number';
@@ -176,11 +77,11 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                         return (
                           <Card
                             key={cards.id}
-                            className={`form__container-pointer${activeCard === cards.id ? ' card-is-active' : ''}`}
+                            className={`form__container-pointer${
+                              selectedPackage?.id === cards.id ? ' card-is-active' : ''
+                            }`}
                             onClick={() => {
-                              handleClick(cards.id);
-                              setBorderError('');
-                              setMsgError('d-none');
+                              handleClick(cards);
                             }}
                           >
                             <Card.Body id={cards.accomodation.id}>
@@ -243,7 +144,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                               </div>
                               {
                                 <div className="selected-icon-container">
-                                  {activeCard === cards.id && (
+                                  {selectedPackage?.id === cards.id && (
                                     <Icons typeIcon="selected" iconSize={50} fill="#4267a7" />
                                   )}
                                 </div>
@@ -256,10 +157,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, noPaymentRequ
                 </Accordion.Item>
               ))}
             </Accordion>
-            <div className={`invalid-feedback ${msgError}`}>
-              Selecione um pacote &nbsp;
-              <Icons typeIcon="error" iconSize={25} fill="#c92432" />
-            </div>
+            {hasError && (
+              <div className={`invalid-feedback d-block`}>
+                Selecione um pacote &nbsp;
+                <Icons typeIcon="error" iconSize={25} fill="#c92432" />
+              </div>
+            )}
           </Form>
         </Container>
       </Card.Body>

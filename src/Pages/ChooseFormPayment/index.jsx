@@ -1,23 +1,18 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ nextStep, skipTwoSteps, backStep, updateForm, initialValues, sendForm }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
       updateForm(values);
-      if (values.formPayment === 'online') {
-        sendForm();
-      } else if (values.formPayment === 'inPerson') {
-        sendForm();
-      } else {
-        skipTwoSteps();
-      }
+      sendForm();
     },
     validateOnBlur: false,
     validateOnChange: false,
