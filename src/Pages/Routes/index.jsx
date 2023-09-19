@@ -1,7 +1,10 @@
 import 'react-datepicker/dist/react-datepicker.css';
+
 import { useState } from 'react';
+
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
@@ -39,7 +42,10 @@ const initialValues = {
     aggregate: '',
   },
   package: {
-    accomodation: '',
+    accomodation: {
+      id: '',
+      name: '',
+    },
     transportation: '',
     food: '',
     price: '',
@@ -52,9 +58,7 @@ const initialValues = {
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
-  const [payment, setPayment] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-
   const updateFormValues = (key) => {
     return (value) => {
       setFormValues({
@@ -83,14 +87,6 @@ const FormRoutes = () => {
     }
   };
 
-  const noPaymentRequired = () => {
-    if (steps < enumSteps.success) {
-      setSteps(enumSteps.success);
-      scrollTop();
-      setPayment(true);
-    }
-  };
-
   const skipTwoSteps = () => {
     if (steps === enumSteps.formPayment) {
       setSteps(enumSteps.success);
@@ -115,27 +111,24 @@ const FormRoutes = () => {
     scrollTop();
   };
 
-  const sendForm = (totalValue) => {
-    totalValue === 0 && sendFormValues();
+  const sendForm = () => {
+    sendFormValues();
   };
 
   const sendFormValues = async () => {
     try {
-      const data = formValues;
-
-      const response = await axios.post('https://campform.up.railway.app/', data);
-      console.log('response API', response.data);
+      const response = await axios.post('https://campform.up.railway.app/', formValues);
 
       if (response.status === 201) {
-        toast.success('Dados enviados com sucesso!');
         setFormSubmitted(true);
-        console.log('formValues', formValues);
-
-        // window.location.href = response.data.data.payment_url;
+        setSteps(enumSteps.success);
+        if (response.data.data.payment_url) {
+          window.open(response.data.data.payment_url, '_blank');
+        }
       }
     } catch (error) {
-      console.error('CPF já Cadastrado!', error);
-      toast.error('CPF já Cadastrado!');
+      const errorMessage = error.message ? error.message : String(error);
+      toast.error(errorMessage || 'Erro ao enviar os dados!');
     }
   };
 
@@ -148,40 +141,38 @@ const FormRoutes = () => {
 
         {steps === enumSteps.personalData && (
           <FormPersonalData
+            initialValues={formValues.personalInformation}
             nextStep={nextStep}
             backStep={backStep}
             updateForm={updateFormValues('personalInformation')}
-            initialValues={formValues.personalInformation}
           />
         )}
 
         {steps === enumSteps.contact && (
           <FormContact
+            initialValues={formValues.contact}
             nextStep={nextStep}
             backStep={backStep}
             updateForm={updateFormValues('contact')}
-            initialValues={formValues.contact}
           />
         )}
 
         {steps === enumSteps.packages && (
           <FormPackages
+            birthDate={formValues.personalInformation.birthday}
             nextStep={nextStep}
             backStep={backStep}
-            birthDate={formValues.personalInformation.birthday}
             updateForm={updateFormValues('package')}
-            noPaymentRequired={noPaymentRequired}
             sendForm={sendForm}
           />
         )}
 
         {steps === enumSteps.formPayment && (
           <ChooseFormPayment
-            nextStep={nextStep}
+            initialValues={formValues.formPayment}
             skipTwoSteps={skipTwoSteps}
             backStep={backStep}
             updateForm={updateFormValues('formPayment')}
-            initialValues={formValues.formPayment}
             sendForm={sendForm}
           />
         )}
@@ -189,10 +180,10 @@ const FormRoutes = () => {
         {steps === enumSteps.success && (
           <FormSuccess
             formPayment={formValues.formPayment.formPayment}
-            initialStep={initialStep}
             customerName={formValues.personalInformation.name}
+            noPaymentRequired={formValues.package.price === 0}
+            initialStep={initialStep}
             resetForm={resetFormValues}
-            noPaymentRequired={payment}
             resetFormSubmitted={resetFormSubmitted}
           />
         )}
