@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Project files
+
+.gradle
+build/
+
+
+# Testing tool files
+
+/*/poshi-*.properties
+/*/test-results
+/*/tests
