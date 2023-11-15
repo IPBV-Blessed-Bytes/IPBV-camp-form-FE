@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     eslint({
       emitError: true,
-      failOnError: false,
+      // failOnError: false,
     }),
   ],
   server: {

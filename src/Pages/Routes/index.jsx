@@ -1,10 +1,8 @@
 import 'react-datepicker/dist/react-datepicker.css';
-
 import { useState } from 'react';
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
@@ -133,63 +131,73 @@ const FormRoutes = () => {
   };
 
   return (
-    <div className="form">
-      <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} />
+    <Router>
+      <div className="form">
+        <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} />
 
-      <div className="form__container">
-        {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
+        <div className="form__container">
+          {steps === enumSteps.home && <FormHome nextStep={nextStep} backStep={backStep} />}
 
-        {steps === enumSteps.personalData && (
-          <FormPersonalData
-            initialValues={formValues.personalInformation}
-            nextStep={nextStep}
-            backStep={backStep}
-            updateForm={updateFormValues('personalInformation')}
-          />
-        )}
+          {steps === enumSteps.personalData && (
+            <FormPersonalData
+              initialValues={formValues.personalInformation}
+              nextStep={nextStep}
+              backStep={backStep}
+              updateForm={updateFormValues('personalInformation')}
+            />
+          )}
 
-        {steps === enumSteps.contact && (
-          <FormContact
-            initialValues={formValues.contact}
-            nextStep={nextStep}
-            backStep={backStep}
-            updateForm={updateFormValues('contact')}
-          />
-        )}
+          {steps === enumSteps.contact && (
+            <FormContact
+              initialValues={formValues.contact}
+              nextStep={nextStep}
+              backStep={backStep}
+              updateForm={updateFormValues('contact')}
+            />
+          )}
 
-        {steps === enumSteps.packages && (
-          <FormPackages
-            birthDate={formValues.personalInformation.birthday}
-            nextStep={nextStep}
-            backStep={backStep}
-            updateForm={updateFormValues('package')}
-            sendForm={sendForm}
-          />
-        )}
+          {steps === enumSteps.packages && (
+            <FormPackages
+              birthDate={formValues.personalInformation.birthday}
+              nextStep={nextStep}
+              backStep={backStep}
+              updateForm={updateFormValues('package')}
+              sendForm={sendForm}
+            />
+          )}
 
-        {steps === enumSteps.formPayment && (
-          <ChooseFormPayment
-            initialValues={formValues.formPayment}
-            skipTwoSteps={skipTwoSteps}
-            backStep={backStep}
-            updateForm={updateFormValues('formPayment')}
-            sendForm={sendForm}
-          />
-        )}
+          {steps === enumSteps.formPayment && (
+            <ChooseFormPayment
+              initialValues={formValues.formPayment}
+              skipTwoSteps={skipTwoSteps}
+              backStep={backStep}
+              updateForm={updateFormValues('formPayment')}
+              sendForm={sendForm}
+            />
+          )}
 
-        {steps === enumSteps.success && (
-          <FormSuccess
-            formPayment={formValues.formPayment.formPayment}
-            customerName={formValues.personalInformation.name}
-            noPaymentRequired={formValues.package.price === 0}
-            initialStep={initialStep}
-            resetForm={resetFormValues}
-            resetFormSubmitted={resetFormSubmitted}
-          />
-        )}
+          <Routes>
+            <Route
+              path="/sucesso"
+              component={() => (
+                <FormSuccess
+                  formPayment={formValues.formPayment.formPayment}
+                  customerName={formValues.personalInformation.name}
+                  noPaymentRequired={formValues.package.price === 0}
+                  initialStep={initialStep}
+                  resetForm={resetFormValues}
+                  resetFormSubmitted={resetFormSubmitted}
+                />
+              )}
+            />
+            {/* {steps === enumSteps.success && (
+            
+          )} */}
+          </Routes>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </Router>
   );
 };
 
