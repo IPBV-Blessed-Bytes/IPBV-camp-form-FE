@@ -14,8 +14,8 @@ const FormHome = (props) => {
               <h3 className="mb-2">Acampamento no período de carnaval 2024</h3>
               <h5 className="mb-2">Igreja Presbiteriana de Boa Viagem</h5>
               <p className="mb-2">
-              Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da igreja no telefone <em>(81) 9839-0194</em> ou no email
-                <em> secretaria@inscricaoipbv.com.br</em>
+                Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a administração da
+                igreja no telefone <em>(81) 9839-0194</em>.
               </p>
             </div>
           </div>
@@ -26,29 +26,27 @@ const FormHome = (props) => {
               <ul>
                 <li>
                   <u>
-                    <b>Todos os campos do formulário devem ser preenchidos obrigatoriamente.</b>
+                    <b>Todos os campos do formulário devem ser preenchidos corretamente.</b>
                   </u>
                 </li>
                 <li>
                   Pagamentos online (aqui no formulário) são preferidos pois automatiza o processo e facilita o trabalho
-                  da secretaria da igreja.
+                  da administração da igreja. <u>Qualquer impedimento, favor contactar a administração.</u>
                 </li>
                 <li>
                   Se a opção de pagamento escolhida for presencial, ainda assim se faz necessário preenchimento do
-                  formulário para fins de controle.
-                </li>
-                <li>
-                  Para pagamentos presenciais, após finalizar o preenchimento do formulário favor se dirigir em até 7
-                  dias úteis para efetuar o pagamento.
+                  formulário para fins de controle. Para pagamentos presenciais, após finalizar o preenchimento do
+                  formulário favor se dirigir em até 7 dias úteis para efetuar o pagamento.
                 </li>
                 <li>
                   Se você tiver qualquer parente (pai, mãe, esposo, esposa, filhos, etc) que irão dormir no mesmo quarto
-                  que você, seja no colégio, hotel ou seminário, na sessão de contato, nos informe isso para que
-                  possamos vincular os quartos para todos.
+                  que você, seja no colégio, hotel ou seminário, na sessão de contato nos informe isso para que possamos
+                  vincular os quartos para todos.
                 </li>
                 <li>
-                  É necessário inscrever todas as pessoas, pagantes e não pagantes, para fins de pagamento e fins de
-                  controle da secretaria. (crianças, jovens e adultos)
+                  É necessário registrar todas as pessoas, pagantes e não pagantes, desde crianças recém-nascidas até
+                  idosos, para fins de controle e pagamento da administração, abrangendo todas as faixas etárias, desde
+                  crianças e jovens até adultos.
                 </li>
               </ul>
             </div>
