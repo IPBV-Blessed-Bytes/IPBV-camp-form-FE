@@ -29,7 +29,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
         <Container>
           <Card.Title>Informações de Contato</Card.Title>
 
-          <Card.Text>Nos informe como poderemos te contactar</Card.Text>
+          <Card.Text>Nos informe como poderemos te contactar caso necessário.</Card.Text>
           <Form>
             <Row>
               <Col md={6} className="mb-3">
@@ -168,9 +168,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <option value={false}>Não</option>
                     <option value={true}>Sim</option>
                   </Form.Select>
-                  <Card.Text className="mt-2">
+                  <Card.Text className="mt-2 mb-0">
                     Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
-                    etc), assim atrelaremos sua inscrição a eles para que fiquem juntos.
+                    etc).
                   </Card.Text>
                   <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                 </FormGroup>
@@ -184,7 +184,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       isInvalid={!!errors.aggregate}
                       as="textarea"
                       name="aggregate"
-                      placeholder="Informe quem são seus agregados que irão dormir no mesmo quarto, APENAS QUE ESTÃO NO MESMO QUARTO."
+                      placeholder="Agregados APENAS QUE IRÃO DORMIR NO MESMO QUARTO, assim atrelaremos as suas inscrições para que fiquem juntos."
                       value={values.aggregate}
                       onChange={handleChange}
                       style={{ resize: 'none' }}
