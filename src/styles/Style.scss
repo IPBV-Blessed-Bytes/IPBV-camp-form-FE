@@ -56,6 +56,7 @@ body {
 
   &__footer {
     &-logo {
+      cursor: pointer;
       height: 6.25rem;
     }
 
@@ -280,6 +281,39 @@ body {
     }
   }
 
+  .admin {
+    .input-login-wrapper {
+      position: relative;
+    }
+
+    &__user,
+    &__password {
+      background-color: $inner-card-hover;
+      border-color: $primary;
+      color: $primary;
+      font-weight: bold;
+
+      &::placeholder {
+        color: $primary;
+        font-weight: normal;
+      }
+    }
+
+    .login-icon {
+      padding: 0.25rem;
+      position: absolute;
+      right: 0;
+      transform: translate(-0.625rem, -2.1875rem);
+    }
+
+    .input-login-btn-wrapper {
+      button {
+        background-color: $primary;
+        border-color: $primary;
+      }
+    }
+  }
+
   input,
   textarea,
   select {
@@ -304,8 +338,50 @@ a:not(.form-success__button) {
   margin: 1rem 0;
 }
 
+.packages-horizontal-line {
+  background-color: $medium-gray;
+  border: none;
+  height: 0.125rem;
+  margin: 1rem 0;
+}
+
 .msg-error {
   border-color: $fail;
+}
+
+.card-disabled {
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+
+    .no-vacancy {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner-border {
+    color: $secondary;
+  }
 }
 
 .form-success__button {
