@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import logoFooter from '../../public/Images/logo.png';
 
 const Footer = () => {
+  const navigateTo = useNavigate();
+
   return (
     <footer className="d-flex align-items-center justify-content-between">
       <div className="form__footer d-flex flex-column p-3">
@@ -10,7 +13,9 @@ const Footer = () => {
         </p>
       </div>
 
-      <img src={logoFooter} className="form__footer-logo" alt="logo" />
+      <a onClick={() => navigateTo('/igreja/admin')}>
+        <img src={logoFooter} className="form__footer-logo" alt="logo" />
+      </a>
     </footer>
   );
 };
