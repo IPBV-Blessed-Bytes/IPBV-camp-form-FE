@@ -1,5 +1,5 @@
-import { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Accordion } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -12,11 +12,24 @@ import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) => {
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm, spinnerLoading, availablePackages }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
   const age = calculateAge(birthDate);
   const packages = getPackages(age);
+
+  const packageMapping = {
+    1: { available: 'colegioIndividual', used: 'colegioIndividualComOnibus' },
+    2: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibus' },
+    3: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibus' },
+    4: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibus' },
+    5: { available: 'seminario', used: 'seminarioIndividualComOnibus' },
+    6: { available: 'seminario', used: 'seminarioIndividualSemOnibus' },
+    7: { available: 'hotel', used: 'hotelDuplaComOnibus' },
+    8: { available: 'hotel', used: 'hotelDuplaSemOnibus' },
+    9: { available: 'outro', used: 'outroComOnibus' },
+    10: { available: 'outro', used: 'outroSemOnibus' },
+  };
 
   const handleClick = (selectedPackage) => {
     if (hasError) {
@@ -57,6 +70,13 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) =
             Posteriormente escolha o pacote deseja e clique nele para ser redirecionado.
           </Card.Text>
           <Form>
+            {spinnerLoading && (
+              <div className="overlay">
+                <div className="spinner-container">
+                  <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+                </div>
+              </div>
+            )}
             <Accordion>
               {accommodations.map((accomodation, index) => (
                 <Accordion.Item className={hasError ? 'msg-error' : ''} key={index} eventKey={String(index)}>
@@ -74,20 +94,31 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) =
                         const [transportation, transportationWithDiscount] = cards.values.transportation;
                         const hasTransportationDiscount = typeof transportationWithDiscount === 'number';
 
+                        const { available: availablePackageName, used: usedPackageName } =
+                          packageMapping[cards.id] || {};
+                        const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
+
+                        const openPackages = availableSlots - availablePackages?.data?.usedPackages?.[usedPackageName];
+                        const isPackageAvailable = openPackages > 0;
+
                         return (
                           <Card
                             key={cards.id}
                             className={`form__container-pointer${
                               selectedPackage?.id === cards.id ? ' card-is-active' : ''
+                            }${!isPackageAvailable ? ' not-available' : ''} ${
+                              !isPackageAvailable ? 'card-disabled' : ''
                             }`}
                             onClick={() => {
-                              handleClick(cards);
+                              if (isPackageAvailable) {
+                                handleClick(cards);
+                              }
                             }}
                           >
                             <Card.Body id={cards.accomodation.id}>
                               <Card.Title>{cards.title}</Card.Title>
                               <div className="card-wrapper d-flex justify-content-between">
-                                <div className="card-text">
+                                <div className="card-text w-100">
                                   <p className="mb-2">
                                     <span>{cards.observation}</span>
                                   </p>
@@ -101,12 +132,12 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) =
                                       {hasAccomodationWithDiscount && (
                                         <>
                                           <div>{formatCurrency(accomodationWithDiscount)}</div>
-
                                           <span>{cards.values.discountDescription.accomodation}</span>
                                         </>
                                       )}
                                     </div>
                                   </div>
+                                  <div className="packages-horizontal-line"></div>
                                   <div className="package-description-container">
                                     <span>Alimentação:</span>
                                     <div>
@@ -121,6 +152,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) =
                                       )}
                                     </div>
                                   </div>
+                                  <div className="packages-horizontal-line"></div>
                                   <div className="package-description-container">
                                     <span>Ônibus:</span>
                                     <div>
@@ -135,11 +167,24 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm }) =
                                       )}
                                     </div>
                                   </div>
+                                  <div className="packages-horizontal-line"></div>
                                   <div className="package-description-container">
                                     <em className="d-flex gap-1">
                                       <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
                                     </em>
                                   </div>
+                                  {!isPackageAvailable && (
+                                    <div className="package-description-container justify-content-end">
+                                      <span className="no-vacancy text-danger text-decoration-underline">
+                                        Sem Vagas Disponíveis
+                                      </span>
+                                    </div>
+                                  )}
+                                  {isPackageAvailable && (
+                                    <div className="package-description-container justify-content-end">
+                                      <span className="text-success">Vagas Disponíveis: {openPackages}</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               {
