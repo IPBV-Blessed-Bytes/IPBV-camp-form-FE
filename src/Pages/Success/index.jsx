@@ -3,11 +3,12 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
-const FormSuccess = ({ formPayment, initialStep, customerName, resetForm, noPaymentRequired, resetFormSubmitted }) => {
+const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
   const handleNewRegistration = () => {
     resetForm();
     initialStep();
     resetFormSubmitted();
+    window.location.href = '/';
   };
 
   return (
@@ -16,22 +17,18 @@ const FormSuccess = ({ formPayment, initialStep, customerName, resetForm, noPaym
         <Container>
           <div className="form__success text-center">
             <div className="form__success__title">
-              <b>
-                Formulário enviado com sucesso, <span className="text-uppercase">{customerName}</span>!
-              </b>
+              <b>Formulário enviado com sucesso!</b>
             </div>
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
-              {formPayment === 'online' || noPaymentRequired ? (
-                <b>Qualquer dúvida entraremos em contato.</b>
-              ) : (
-                <b>
-                  Como a opção de pagamento escolhida foi PRESENCIAL, favor entrar em contato <br />
-                  com a secretaria em até 7 dias úteis para efetuar o pagamento.
-                </b>
-              )}
+              <b>Qualquer dúvida entraremos em contato.</b><br/>
+              <b>
+                Caso a opção de pagamento escolhida tenha sido PRESENCIAL, favor entrar em contato
+                com a secretaria em até 7 dias úteis para efetuar o pagamento. Qualquer impedimento, favor contactar a
+                administração.
+              </b>
             </p>
-            <small>
+            <small className='mt-5'>
               <em>Igreja Presbiteriana de Boa Viagem</em>
             </small>
           </div>
@@ -52,7 +49,6 @@ FormSuccess.propTypes = {
   initialStep: PropTypes.func,
   resetForm: PropTypes.func,
   resetFormSubmitted: PropTypes.func,
-  customerName: PropTypes.string,
   noPaymentRequired: PropTypes.bool,
 };
 
