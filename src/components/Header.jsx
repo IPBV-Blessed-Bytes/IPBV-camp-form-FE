@@ -1,10 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
-  const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Pagamento', 'Final'];
+  const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Pagamento'];
+  const navigateTo = useNavigate();
 
   const handleStepChange = (newStep) => {
+    if (window.location.pathname === '/sucesso') {
+      navigateTo('/');
+      return;
+    }
+
     if (formSubmitted) {
       return;
     }
