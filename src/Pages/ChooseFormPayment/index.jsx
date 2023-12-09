@@ -7,11 +7,10 @@ import Form from 'react-bootstrap/Form';
 
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading}) => {
   const { values, handleChange, errors, submitForm } = useFormik({
-    initialValues,
+    initialValues: initialValues.formPayment,
     onSubmit: () => {
-      updateForm(values);
       sendForm();
     },
     validateOnBlur: false,
@@ -19,9 +18,21 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm }) =>
     validationSchema: formPaymentSchema,
   });
 
+  const selectChangeHandler = (e) => {
+    updateForm(e.target.value);
+    handleChange(e);
+  };
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
+        {spinnerLoading && (
+          <div className="overlay">
+            <div className="spinner-container">
+              <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            </div>
+          </div>
+        )}
         <Container>
           <Card.Title>Pagamento</Card.Title>
           <Form>
@@ -32,7 +43,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm }) =>
                 name="formPayment"
                 isInvalid={!!errors.formPayment}
                 value={values.formPayment}
-                onChange={handleChange}
+                onChange={selectChangeHandler}
               >
                 <option value="" disabled>
                   Selecione uma opção
