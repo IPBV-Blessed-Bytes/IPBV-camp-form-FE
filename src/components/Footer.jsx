@@ -13,7 +13,7 @@ const Footer = () => {
         </p>
       </div>
 
-      <a onClick={() => navigateTo('/igreja/admin')}>
+      <a onClick={() => navigateTo('/admin')}>
         <img src={logoFooter} className="form__footer-logo" alt="logo" />
       </a>
     </footer>
