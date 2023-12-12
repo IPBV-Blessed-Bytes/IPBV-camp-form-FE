@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -7,11 +8,16 @@ import Form from 'react-bootstrap/Form';
 
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading}) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
+  const navigateTo = useNavigate();
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
       sendForm();
+
+      if (values.formPayment === 'inPerson') {
+        navigateTo('/sucesso');
+      }
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -30,6 +36,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
           <div className="overlay">
             <div className="spinner-container">
               <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+              <span>Carregando dados</span>
             </div>
           </div>
         )}
