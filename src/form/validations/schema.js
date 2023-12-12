@@ -7,6 +7,7 @@ const personalInformationSchema = yup.object().shape({
   cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
   rgShipper: yup.string().required('Selecione o órgão expedidor do seu RG'),
   rgShipperState: yup.string().required('Selecione a UF do órgão expedidor'),
+  gender: yup.string().required('Selecione um gênero'),
 });
 
 const additionalInformationSchema = yup.object().shape({
