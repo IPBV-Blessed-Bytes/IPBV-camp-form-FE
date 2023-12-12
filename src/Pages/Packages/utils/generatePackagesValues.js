@@ -41,7 +41,7 @@ const packageSchool = ({ age, withTransportation }) => {
 };
 
 const packageSeminary = ({ age, withTransportation }) => {
-  let accomodation = [600];
+  let accomodation = [480];
   let food = [200];
   let transportation = withTransportation ? [160] : [0];
 
@@ -69,7 +69,7 @@ const packageSeminary = ({ age, withTransportation }) => {
     accomodation = [600, 0];
     accomodationDiscountDescription = 'Criança até 8 anos não paga hospedagem';
   } else if (age >= 9 && age <= 14) {
-    accomodation = [600, 300];
+    accomodation = [480, 240];
     accomodationDiscountDescription = 'Criança de 9 a 14 anos paga apenas 50% na hospedagem';
   }
 
@@ -143,7 +143,7 @@ const packageHotel = ({ age, withTransportation }) => {
 
 const packageOther = ({ age, withTransportation }) => {
   let accomodation = [0];
-  let food = [280];
+  let food = [200];
   let transportation = withTransportation ? [160] : [0];
 
   let foodDiscountDescription = '';
@@ -151,10 +151,10 @@ const packageOther = ({ age, withTransportation }) => {
 
   //Alimentação
   if (age <= 6) {
-    food = [280, 0];
+    food = [200, 0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
   } else if (age >= 7 && age <= 12) {
-    food = [280, 140];
+    food = [200, 100];
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
