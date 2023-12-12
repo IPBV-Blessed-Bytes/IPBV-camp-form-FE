@@ -16,7 +16,7 @@ const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const SPREADSHEET_URL =
   'https://docs.google.com/spreadsheets/d/1BY0Owcj99nG9DtTx6XLHioZEQnY7Ffb7inX2gBd11WY/edit?usp=sharing';
-
+const FILTERS_URL = 'https://docs.google.com/spreadsheets/d/1MPYASaBbk6XM3ecGwNEAMBSUpWx_MPlio6D1RZAUdrM/edit#gid=0';
 const PackageCard = ({ title, remainingVacancies, filledVacancies, background, titleColor }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>
     <Card className={`h-100 ${background}`}>
@@ -45,18 +45,23 @@ const ExternalLinkRow = () => (
         <Card.Body>
           <Card.Title className="fw-bold text-success">Link da Planilha</Card.Title>
           <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições em tempo real!</Card.Text>
-          <Button variant="success" href={SPREADSHEET_URL} target="_blank">
-            {/* <Button variant="success" href="NOVO LINK DO DRIVE" target="_blank"> */}
-            <strong>PLANILHA INSCRIÇÕES</strong>
-          </Button>
+          <div className="btn-wrapper">
+            <Button variant="success" href={SPREADSHEET_URL} target="_blank">
+              {/* <Button variant="success" href="NOVO LINK DO DRIVE" target="_blank"> */}
+              <strong>PLANILHA INSCRIÇÕES</strong>
+            </Button>
+            <Button variant="info" href={FILTERS_URL} target="_blank">
+              <strong>PLANILHA FILTROS</strong>
+            </Button>
+          </div>
         </Card.Body>
       </Card>
     </Col>
   </Row>
 );
 
-const Admin = () => {
-  const isNotChurchPathname = window.location.pathname !== '/admin';
+const Admin = ({ totalRegistrations }) => {
+  const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -230,145 +235,169 @@ const Admin = () => {
   };
 
   return (
-    <div className={`p-4 admin ${isNotChurchPathname && 'd-none'}`}>
-      <Container fluid>
-        {!isLoggedIn ? (
-          <Row className="justify-content-center">
-            <Row>
-              <Col xs={12} className="text-end mb-2">
-                <p className="d-none d-sm-block">Clique para voltar ao Formulário de inscrição:</p>
-                <Button variant="danger" onClick={(handleLogout, () => navigateTo('/'))}>
-                  Voltar
-                </Button>
-              </Col>
-            </Row>
-            <Col xs={12} md={6}>
-              <Form>
-                <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
-
-                <Form.Group className="input-login-wrapper mb-3" controlId="username">
-                  <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
-                  <Form.Control
-                    className="admin__user"
-                    type="text"
-                    placeholder="Digite seu nome de usuário"
-                    value={loginData.username}
-                    onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                    onKeyDown={handleKeyDown}
-                  />
-                </Form.Group>
-
-                <Form.Group className="input-login-wrapper mb-3" controlId="password">
-                  <Form.Label className="fw-bold">Senha:</Form.Label>
-                  <Form.Control
-                    className="admin__password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Digite sua senha"
-                    value={loginData.password}
-                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    onKeyDown={handleKeyDown}
-                  />
-                  <Icon
-                    className="login-icon"
-                    typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
-                    onClick={handleShowPassword}
-                  />
-                </Form.Group>
-
-                <div className="input-login-btn-wrapper d-flex justify-content-end">
-                  <Button variant="primary" onClick={handleLogin}>
-                    Entrar
+    <>
+      {isAdminPathname && (
+        <Container className="p-4 admin" fluid>
+          {!isLoggedIn ? (
+            <Row className="justify-content-center">
+              <Row>
+                <Col xs={12} className="text-end mb-2">
+                  <p className="d-none d-sm-block">Clique para voltar ao Formulário de inscrição:</p>
+                  <Button variant="danger" onClick={(handleLogout, () => navigateTo('/'))}>
+                    Voltar
                   </Button>
-                </div>
-              </Form>
-            </Col>
-          </Row>
-        ) : (
-          <>
-            <Row>
-              <Col xs={12} className="text-end mb-2">
-                <p>
-                  Bem-vinda,
-                  <span>
-                    <strong className="text-uppercase"> {loggedInUsername}</strong>
-                  </span>
-                  !
-                </p>
-                <Button variant="danger" onClick={handleLogout}>
-                  Sair
-                </Button>
+                </Col>
+              </Row>
+              <Col xs={12} md={6}>
+                <Form>
+                  <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
+
+                  <Form.Group className="input-login-wrapper mb-3" controlId="username">
+                    <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
+                    <Form.Control
+                      className="admin__user"
+                      type="text"
+                      placeholder="Digite seu nome de usuário"
+                      value={loginData.username}
+                      onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="input-login-wrapper mb-3" controlId="password">
+                    <Form.Label className="fw-bold">Senha:</Form.Label>
+                    <Form.Control
+                      className="admin__password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Digite sua senha"
+                      value={loginData.password}
+                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      onKeyDown={handleKeyDown}
+                    />
+                    <Icon
+                      className="login-icon"
+                      typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
+                      onClick={handleShowPassword}
+                    />
+                  </Form.Group>
+
+                  <div className="input-login-btn-wrapper d-flex justify-content-end">
+                    <Button variant="primary" onClick={handleLogin}>
+                      Entrar
+                    </Button>
+                  </div>
+                </Form>
               </Col>
             </Row>
-            <Row>
-              <h4 className="text-center text-info fw-bold mb-4">PACOTES</h4>
-              {firstRowCards.map((card) => (
-                <PackageCard key={card.title} {...card} />
-              ))}
-            </Row>
+          ) : (
+            <>
+              <Row>
+                <Col xs={12} className="text-end mb-2">
+                  <p>
+                    Bem-vinda,
+                    <span>
+                      <strong className="text-uppercase"> {loggedInUsername}</strong>
+                    </span>
+                    !
+                  </p>
+                  <Button variant="danger" onClick={handleLogout}>
+                    Sair
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <h4 className="text-center text-info fw-bold mb-4">PACOTES</h4>
+                {firstRowCards.map((card) => (
+                  <PackageCard key={card.title} {...card} />
+                ))}
+              </Row>
 
-            <div className="packages-horizontal-line" />
+              <div className="packages-horizontal-line" />
 
-            <Row className="mt-4 d-none d-md-flex">
-              <Col xs={12} md={6} lg={4}>
-                <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE</h4>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <h4 className="text-center text-info fw-bold mb-4">TOTAL</h4>
-              </Col>
-            </Row>
+              <Row className="mt-4 d-none d-md-flex">
+                <Col xs={12} md={6} lg={4}>
+                  <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE</h4>
+                </Col>
+                <Col xs={12} md={6} lg={4}>
+                  <h4 className="text-center text-info fw-bold mb-4">TOTAL</h4>
+                </Col>
+              </Row>
 
-            <Row className="mt-4 d-flex d-md-none">
-              <Col xs={12}>
-                <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE E TOTAL</h4>
-              </Col>
-            </Row>
+              <Row className="mt-4 d-flex d-md-none">
+                <Col xs={12}>
+                  <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE E TOTAL</h4>
+                </Col>
+              </Row>
 
-            <Row>
-              <Col className="mb-4" xs={12} md={6} lg={4}>
-                <Card className="h-100 bg-dark">
-                  <Card.Body>
-                    <Card.Title className="fw-bold text-warning">Ônibus Preenchidos</Card.Title>
-                    <Card.Text>
-                      Vagas Preenchidas com Ônibus:{' '}
-                      <em>
-                        <b>{isNaN(totalVacanciesWithBuses) ? 'Indefinido' : totalVacanciesWithBuses.toString()}</b>
-                      </em>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+              <Row>
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="h-100 bg-dark">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-warning">Ônibus Preenchidos</Card.Title>
+                      <Card.Text>
+                        Vagas Preenchidas com Ônibus:{' '}
+                        <em>
+                          <b>{isNaN(totalVacanciesWithBuses) ? 'Indefinido' : totalVacanciesWithBuses.toString()}</b>
+                        </em>
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
 
-              <Col className="mb-4" xs={12} md={6} lg={4}>
-                <Card className="bg-light">
-                  <Card.Body>
-                    <Card.Title className="fw-bold text-success">Total de Inscritos</Card.Title>
-                    <Card.Text>
-                      Vagas Totais Preenchidas:{' '}
-                      <em>
-                        <b>{isNaN(totalVacanciesFilled) ? 'Indefinido' : totalVacanciesFilled.toString()}</b>
-                      </em>
-                      <br />
-                      Vagas Totais Restantes:{' '}
-                      <em>
-                        <b>
-                          {isNaN(300 - totalVacanciesFilled) ? 'Indefinido' : (300 - totalVacanciesFilled).toString()}
-                        </b>
-                      </em>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="bg-light">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-success">Total de Inscritos Apenas Adultos</Card.Title>
+                      <Card.Text>
+                        Vagas Totais Preenchidas:{' '}
+                        <em>
+                          <b>{isNaN(totalRegistrations) ? 'Indefinido' : totalRegistrations.toString()}</b>
+                        </em>
+                        <br />
+                        Vagas Totais Restantes:{' '}
+                        <em>
+                          <b>
+                            {isNaN(300 - totalRegistrations) ? 'Indefinido' : (300 - totalRegistrations).toString()}
+                          </b>
+                        </em>
+                        <br />
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
 
-            <div className="packages-horizontal-line" />
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="bg-dark">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-warning">Total de Inscritos Geral</Card.Title>
+                      <Card.Text>
+                        Vagas Totais Preenchidas:{' '}
+                        <em>
+                          <b>{isNaN(totalVacanciesFilled) ? 'Indefinido' : totalVacanciesFilled.toString()}</b>
+                        </em>
+                        <br />
+                        Vagas Totais Restantes: Vagas Totais Restantes (Adultos):{' '}
+                        <em>
+                          <b>
+                            {isNaN(300 - totalVacanciesFilled) ? 'Indefinido' : (300 - totalVacanciesFilled).toString()}
+                          </b>
+                        </em>
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
 
-            <Row>
-              <ExternalLinkRow />
-            </Row>
-          </>
-        )}
-      </Container>
-    </div>
+              <div className="packages-horizontal-line" />
+
+              <Row>
+                <ExternalLinkRow />
+              </Row>
+            </>
+          )}
+        </Container>
+      )}
+    </>
   );
 };
 
