@@ -63,11 +63,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm, spi
       return;
     }
 
-    if (selectedPackage.values.total === 0) {
-      sendForm();
-    } else {
-      nextStep();
-    }
+    nextStep();
   };
 
   const packagesPath = availablePackages.data.usedPackages;
