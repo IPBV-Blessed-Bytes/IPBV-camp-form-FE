@@ -65,9 +65,9 @@ const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [redirectMessage, setRedirectMessage] = useState('');
+  const [totalRegistrations, setTotalRegistrations] = useState({});
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
-  const isChurchPathname = window.location.pathname === '/admin';
+  const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -136,12 +136,10 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post('https://ipbv-camp-form-be-production.up.railway.app/', updatedFormValues);
-
       if (response.data.data.payment_url) {
         window.open(response.data.data.payment_url, '_self');
       } else if (response.status === 201) {
         setFormSubmitted(true);
-        setRedirectMessage('navigate');
         nextStep();
       }
     } catch (error) {
@@ -177,7 +175,7 @@ const FormRoutes = () => {
     const fetchTotalRegistrations = async () => {
       try {
         const response = await axios.get('https://ipbv-camp-form-be-production.up.railway.app/total-registrations');
-        console.log('fetchTotalRegistrations', response);
+        setTotalRegistrations(response.data.totalRegistrations);
       } catch (error) {
         toast.error(
           error.message === 'Request failed with status code 503'
@@ -192,85 +190,87 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      <div className={isChurchPathname && 'd-none'}>
-        <Header
-          className={isChurchPathname && 'd-none'}
-          currentStep={steps}
-          goBackToStep={goBackToStep}
-          formSubmitted={formSubmitted}
-        />
+      {isAdminPathname && (
+        <div>
+          <Header
+            className={isAdminPathname && 'd-none'}
+            currentStep={steps}
+            goBackToStep={goBackToStep}
+            formSubmitted={formSubmitted}
+          />
 
-        <div className="form__container">
-          {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
+          <div className="form__container">
+            {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
 
-          {steps === enumSteps.personalData && isNotSuccessPathname && (
-            <FormPersonalData
-              initialValues={formValues.personalInformation}
-              nextStep={nextStep}
-              backStep={backStep}
-              updateForm={updateFormValues('personalInformation')}
-            />
-          )}
+            {steps === enumSteps.personalData && isNotSuccessPathname && (
+              <FormPersonalData
+                initialValues={formValues.personalInformation}
+                nextStep={nextStep}
+                backStep={backStep}
+                updateForm={updateFormValues('personalInformation')}
+              />
+            )}
 
-          {steps === enumSteps.contact && isNotSuccessPathname && (
-            <FormContact
-              initialValues={formValues.contact}
-              nextStep={nextStep}
-              backStep={backStep}
-              updateForm={updateFormValues('contact')}
-            />
-          )}
+            {steps === enumSteps.contact && isNotSuccessPathname && (
+              <FormContact
+                initialValues={formValues.contact}
+                nextStep={nextStep}
+                backStep={backStep}
+                updateForm={updateFormValues('contact')}
+              />
+            )}
 
-          {steps === enumSteps.packages && isNotSuccessPathname && (
-            <FormPackages
-              birthDate={formValues.personalInformation.birthday}
-              nextStep={nextStep}
-              backStep={backStep}
-              updateForm={updateFormValues('package')}
-              sendForm={sendForm}
-              spinnerLoading={loading}
-              availablePackages={availablePackages}
-            />
-          )}
+            {steps === enumSteps.packages && isNotSuccessPathname && (
+              <FormPackages
+                birthDate={formValues.personalInformation.birthday}
+                nextStep={nextStep}
+                backStep={backStep}
+                updateForm={updateFormValues('package')}
+                sendForm={sendForm}
+                spinnerLoading={loading}
+                availablePackages={availablePackages}
+              />
+            )}
 
-          {steps === enumSteps.finalReview && isNotSuccessPathname && (
-            <FinalReview
-              nextStep={nextStep}
-              backStep={backStep}
-              updateForm={updateFormValues('finalReview')}
-              formValues={formValues}
-              redirectMessage={redirectMessage}
-            />
-          )}
+            {steps === enumSteps.finalReview && isNotSuccessPathname && (
+              <FinalReview
+                nextStep={nextStep}
+                backStep={backStep}
+                updateForm={updateFormValues('finalReview')}
+                formValues={formValues}
+                sendForm={sendForm}
+              />
+            )}
 
-          {steps === enumSteps.formPayment && isNotSuccessPathname && (
-            <ChooseFormPayment
-              initialValues={formValues}
-              skipTwoSteps={skipTwoSteps}
-              backStep={backStep}
-              updateForm={updateFormValues('formPayment')}
-              sendForm={sendForm}
-              spinnerLoading={loading}
-            />
-          )}
+            {steps === enumSteps.formPayment && isNotSuccessPathname && (
+              <ChooseFormPayment
+                initialValues={formValues}
+                skipTwoSteps={skipTwoSteps}
+                backStep={backStep}
+                updateForm={updateFormValues('formPayment')}
+                sendForm={sendForm}
+                spinnerLoading={loading}
+              />
+            )}
 
-          <Routes>
-            <Route
-              path="/sucesso"
-              element={
-                <FormSuccess
-                  initialStep={initialStep}
-                  resetForm={resetFormValues}
-                  resetFormSubmitted={resetFormSubmitted}
-                />
-              }
-            />
-          </Routes>
+            <Routes>
+              <Route
+                path="/sucesso"
+                element={
+                  <FormSuccess
+                    initialStep={initialStep}
+                    resetForm={resetFormValues}
+                    resetFormSubmitted={resetFormSubmitted}
+                  />
+                }
+              />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      )}
       <Routes>
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<Admin totalRegistrations={totalRegistrations} />} />
       </Routes>
     </div>
   );
