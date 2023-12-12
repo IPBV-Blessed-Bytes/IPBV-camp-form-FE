@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 
 import { personalInformationSchema } from '../../form/validations/schema';
-import { issuingState, rgShipper } from './data';
+import { issuingState, rgShipper, gender } from './data';
 
 const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
   const { values, errors, handleChange, submitForm } = useFormik({
@@ -35,17 +35,43 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
             Informe seus dados pessoais, pois eles são essenciais para a administração de sua inscrição.
           </Card.Text>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Nome Completo:</Form.Label>
-              <Form.Control
-                type="text"
-                id="name"
-                isInvalid={!!errors.name}
-                value={values.name}
-                onChange={handleChange}
-              />
-              <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
-            </Form.Group>
+            <Row className="mb-3">
+              <Col md={8}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Nome Completo:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    id="name"
+                    isInvalid={!!errors.name}
+                    value={values.name}
+                    onChange={handleChange}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Gênero:</Form.Label>
+                  <Form.Select
+                    isInvalid={!!errors.gender}
+                    value={values.gender}
+                    name="gender"
+                    id="gender"
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>
+                      Selecione uma opção
+                    </option>
+                    {gender.map((gender) => (
+                      <option key={gender.value} value={gender.value}>
+                        {gender.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
 
             <Row className="mb-3">
               <Col md={4}>
@@ -207,6 +233,7 @@ FormPersonalData.propTypes = {
     rg: PropTypes.string,
     rgShipper: PropTypes.string,
     rgShipperState: PropTypes.string,
+    gender: PropTypes.string,
   }),
 };
 
