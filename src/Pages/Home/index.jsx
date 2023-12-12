@@ -12,10 +12,12 @@ const FormHome = (props) => {
           <div className="row">
             <div className="col">
               <h3 className="mb-2">Acampamento no período de carnaval 2024</h3>
-              <h5 className="mb-2">Igreja Presbiteriana de Boa Viagem</h5>
+              <h5 className="mb-2">
+                Igreja Presbiteriana de Boa Viagem - <span className="date-enphasis">10 a 14 de Fevereiro</span>
+              </h5>
               <p className="mb-2">
-                Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a administração da
-                igreja no telefone <em>(81) 9839-0194</em>.
+                Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
+                igreja no telefone <em>(81) 9839-0194</em> (whatsapp).
               </p>
             </div>
           </div>
@@ -26,27 +28,30 @@ const FormHome = (props) => {
               <ul>
                 <li>
                   <u>
-                    <b>Todos os campos do formulário devem ser preenchidos corretamente.</b>
+                    <b>
+                      AS INSCRIÇÕES SÃO INDIVIDUAIS! Por favor, preencha todos os campos corretamente.
+                    </b>
                   </u>
                 </li>
                 <li>
-                  Pagamentos online (aqui no formulário) são preferidos pois automatiza o processo e facilita o trabalho
-                  da administração da igreja. <u>Qualquer impedimento, favor contactar a administração.</u>
+                  Recomendamos realizar os pagamentos online aqui no formulário, pois isso automatiza o processo e
+                  simplifica o trabalho da secretaria da igreja.
+                  <u>Caso encontre alguma dificuldade, entre em contato com a secretaria.</u>
                 </li>
                 <li>
-                  Se a opção de pagamento escolhida for presencial, ainda assim se faz necessário preenchimento do
-                  formulário para fins de controle. Para pagamentos presenciais, após finalizar o preenchimento do
-                  formulário favor se dirigir em até 7 dias úteis para efetuar o pagamento.
+                  Mesmo se optar por pagar presencialmente, é essencial preencher o formulário para controle. No caso de
+                  pagamentos presenciais, por favor, entre em contato com a secretaria em até 7 dias úteis após o
+                  preenchimento para efetuar o pagamento.
                 </li>
                 <li>
-                  Se você tiver qualquer parente (pai, mãe, esposo, esposa, filhos, etc) que irão dormir no mesmo quarto
-                  que você, seja no colégio, hotel ou seminário, na sessão de contato nos informe isso para que possamos
-                  vincular os quartos para todos.
+                  Caso algum parente (pai, mãe, esposo, esposa, filhos, etc.) compartilhe o mesmo quarto que você, seja
+                  no colégio, hotel ou seminário, por favor, informe-nos na seção de contato. Isso nos permitirá
+                  organizar os quartos para todos.
                 </li>
                 <li>
-                  É necessário registrar todas as pessoas, pagantes e não pagantes, desde crianças recém-nascidas até
-                  idosos, para fins de controle e pagamento da administração, abrangendo todas as faixas etárias, desde
-                  crianças e jovens até adultos.
+                  Para garantir um controle adequado e facilitar o processo de inscrições, é fundamental registrar todas
+                  as pessoas, incluindo crianças recém-nascidas e idosos. Isso abrange todas as faixas etárias, desde
+                  crianças e jovens até adultos, independentemente de serem pagantes ou não.
                 </li>
               </ul>
             </div>
