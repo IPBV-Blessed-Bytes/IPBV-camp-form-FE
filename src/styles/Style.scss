@@ -248,7 +248,7 @@ body {
       }
 
       .btn-warning {
-        &:disabled{
+        &:disabled {
           cursor: not-allowed;
           pointer-events: all;
         }
@@ -418,6 +418,18 @@ a:not(.form-success__button) {
 
   input {
     width: auto;
+  }
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  a {
+    &:hover {
+      color: yellow;
+    }
   }
 }
 
