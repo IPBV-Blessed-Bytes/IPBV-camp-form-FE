@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
-  const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Pagamento'];
+  const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Revisão', 'Pagamento'];
   const navigateTo = useNavigate();
 
   const handleStepChange = (newStep) => {
