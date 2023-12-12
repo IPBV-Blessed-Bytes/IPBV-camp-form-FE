@@ -13,7 +13,7 @@ const FormHome = (props) => {
             <div className="col">
               <h3 className="mb-2">Acampamento no período de carnaval 2024</h3>
               <h5 className="mb-2">
-                Igreja Presbiteriana de Boa Viagem - <span className="date-enphasis">10 a 14 de Fevereiro</span>
+                Igreja Presbiteriana de Boa Viagem - <span className="date-enphasis fw-bold">10 a 14 de Fevereiro</span>
               </h5>
               <p className="mb-2">
                 Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
