@@ -159,13 +159,16 @@ body {
       .card-body {
         .package-description-container {
           display: flex;
-          flex-wrap: wrap;
           align-items: center;
           gap: 0rem;
           margin-bottom: 0.625rem;
 
           @media (min-width: $md) {
             gap: 0.625rem;
+          }
+
+          @media (max-width: $md) {
+            flex-wrap: wrap;
           }
 
           span {
@@ -242,6 +245,13 @@ body {
 
       button {
         width: 8.125rem;
+      }
+
+      .btn-warning {
+        &:disabled{
+          cursor: not-allowed;
+          pointer-events: all;
+        }
       }
 
       @media (min-width: $md) {
@@ -335,7 +345,7 @@ a:not(.form-success__button) {
   background-color: $primary;
   border: none;
   height: 0.125rem;
-  margin: 1rem 0;
+  margin: 0.75rem 0;
 }
 
 .packages-horizontal-line {
@@ -375,12 +385,39 @@ a:not(.form-success__button) {
 }
 
 .spinner-container {
-  display: flex;
   align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
   justify-content: center;
 
   .spinner-border {
     color: $secondary;
+  }
+}
+
+.bg-dark.card {
+  color: $white;
+}
+
+.date-enphasis {
+  color: $primary;
+  font-weight: bogld;
+}
+
+.registration-closed-message {
+  font-weight: bold;
+  margin-top: 12.5rem;
+  text-align: center;
+}
+
+.form-review {
+  &__section-title {
+    color: #204691 !important;
+  }
+
+  input {
+    width: auto;
   }
 }
 
