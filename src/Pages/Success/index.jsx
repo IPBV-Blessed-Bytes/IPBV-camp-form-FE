@@ -8,7 +8,7 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
     resetForm();
     initialStep();
     resetFormSubmitted();
-    window.location.href = '/';
+    window.location.pathname = '/';
   };
 
   return (
