@@ -190,7 +190,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {isAdminPathname && (
+      {!isAdminPathname && (
         <div>
           <Header
             className={isAdminPathname && 'd-none'}
