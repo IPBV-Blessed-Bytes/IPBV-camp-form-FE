@@ -11,7 +11,7 @@ import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm, spinnerLoading, availablePackages }) => {
+const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoading, availablePackages }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
   const age = calculateAge(birthDate);
@@ -53,7 +53,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, sendForm, spi
   const scrollToEnd = () => {
     const element = document.getElementById('scroll-target');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -271,7 +271,6 @@ FormPackages.propTypes = {
   birthDate: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
   noPaymentRequired: PropTypes.bool,
-  sendForm: PropTypes.func,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,
