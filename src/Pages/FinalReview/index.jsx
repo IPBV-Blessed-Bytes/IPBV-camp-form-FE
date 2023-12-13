@@ -38,7 +38,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                 <Card.Text>Revise os dados do formulário antes de submeter.</Card.Text>
 
                 <Form>
-                  <Row>
+                  <Row className="row-gap">
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Nome:</span> <br />
@@ -55,7 +55,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     </Col>
                   </Row>{' '}
                   <div className="packages-horizontal-line" />
-                  <Row>
+                  <Row className="row-gap">
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Gênero:</span> <br />
@@ -70,7 +70,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     </Col>
                   </Row>{' '}
                   <div className="packages-horizontal-line" />
-                  <Row>
+                  <Row className="row-gap">
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title"> CPF:</span> <br />{' '}
@@ -85,7 +85,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     </Col>
                   </Row>{' '}
                   <div className="packages-horizontal-line" />
-                  <Row>
+                  <Row className="row-gap">
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title"> Telefone: </span>
@@ -102,7 +102,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     </Col>
                   </Row>{' '}
                   <div className="packages-horizontal-line" />
-                  <Row>
+                  <Row className="row-gap">
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
@@ -122,7 +122,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
-                      label={'Os valores de preenchimento estão corretos?'}
+                      label={'Os valores foram preenchidos corretamente?'}
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
                     />
@@ -137,7 +137,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
               Voltar
             </Button>
             <Button variant="warning" onClick={handleClick} size="lg" disabled={!isConfirmed}>
-              CONFIRMAR
+              Confirmar
             </Button>
           </div>
         </Card>
