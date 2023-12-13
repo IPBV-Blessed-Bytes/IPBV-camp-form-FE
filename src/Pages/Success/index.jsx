@@ -4,6 +4,8 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
 const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
+  const pathnamePagarme = window.location.search;
+
   const handleNewRegistration = () => {
     resetForm();
     initialStep();
@@ -21,14 +23,16 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
             </div>
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
-              <b>Qualquer dúvida entraremos em contato.</b><br/>
-              <b>
-                Caso a opção de pagamento escolhida tenha sido PRESENCIAL, favor entrar em contato
-                com a secretaria em até 7 dias úteis para efetuar o pagamento. Qualquer impedimento, favor contactar a
-                administração.
-              </b>
+              {pathnamePagarme ? (
+                <b>Qualquer dúvida entraremos em contato.</b>
+              ) : (
+                <b>
+                  Caso a opção de pagamento escolhida tenha sido PRESENCIAL, favor entrar em contato com a secretaria em
+                  até 7 dias úteis para efetuar o pagamento. Qualquer impedimento, favor contactar a administração.
+                </b>
+              )}
             </p>
-            <small className='mt-5'>
+            <small className="mt-5">
               <em>Igreja Presbiteriana de Boa Viagem</em>
             </small>
           </div>
