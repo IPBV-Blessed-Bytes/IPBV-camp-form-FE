@@ -137,6 +137,10 @@ body {
       .card-body {
         padding: 1.875rem;
 
+        @media (max-width: $sm) {
+          padding: 1rem 0.75rem;
+        }
+
         textarea {
           height: 6.25rem;
           resize: none;
@@ -430,6 +434,12 @@ a:not(.form-success__button) {
     &:hover {
       color: yellow;
     }
+  }
+}
+
+.row-gap {
+  @media (max-width: $md) {
+    gap: 0.5rem;
   }
 }
 
