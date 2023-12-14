@@ -302,7 +302,6 @@ body {
 
     &__user,
     &__password {
-      background-color: $inner-card-hover;
       border-color: $primary;
       color: $primary;
       font-weight: bold;
@@ -435,6 +434,13 @@ a:not(.form-success__button) {
       color: yellow;
     }
   }
+}
+
+.login-admin-card {
+  background: $medium-gray;
+  border-radius: 3.125rem 0rem;
+  padding: 3.125rem 1.875rem;
+  box-shadow: 0.5625rem 0.5625rem 0.625rem rgb(0 0 0 / 21%);
 }
 
 .closed-admin {
