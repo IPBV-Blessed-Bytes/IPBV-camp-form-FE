@@ -23,6 +23,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
     validationSchema: additionalInformationSchema,
   });
 
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
@@ -85,20 +86,41 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 </Form.Group>
               </Col>
             </Row>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Email:</Form.Label>
-              <Form.Control
-                isInvalid={!!errors.email}
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-              />
-
-              <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-            </Form.Group>
-
+            <Row>
+              <Col md={8} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>Email:</Form.Label>
+                  <Form.Control
+                    isInvalid={!!errors.email}
+                    type="email"
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col md={4} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>Igreja:</Form.Label>
+                  <Form.Select
+                    id="church"
+                    name="church"
+                    isInvalid={!!errors.church}
+                    value={values.church}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>Selecione uma opção</option>
+                    <option value="Boa Viagem">IP. Boa Viagem</option>
+                    <option value="Casa Caiada">IP. Casa Caiada</option>
+                    <option value="Madalena">IP. Madalena</option>
+                    <option value="Batista Reformada">IB. Reformada do Recife</option>
+                    <option value="Outra">Outra</option>
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.church}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
             <Row className="mb-3">
               <Col md={values.hasAllergy ? 6 : 6}>
                 <FormGroup>

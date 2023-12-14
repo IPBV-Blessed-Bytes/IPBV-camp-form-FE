@@ -41,6 +41,7 @@ const initialValues = {
     cellPhone: '',
     email: '',
     isWhatsApp: '',
+    church: '',
     hasAllergy: '',
     allergy: '',
     hasAggregate: '',
