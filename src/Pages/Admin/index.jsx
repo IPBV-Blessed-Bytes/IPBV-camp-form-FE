@@ -60,7 +60,7 @@ const ExternalLinkRow = () => (
   </Row>
 );
 
-const Admin = ({ totalRegistrations }) => {
+const Admin = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -119,25 +119,21 @@ const Admin = ({ totalRegistrations }) => {
     }
   };
 
+  const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
+  const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
+  const totalPaiedPlusChildren = totalRegistrationsGlobal.totalPaiedPlusChildren;
+  const totalChildren = totalRegistrationsGlobal.totalChildren;
+  const totalNonPaied = totalRegistrationsGlobal.totalNonPaied;
+
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
 
   const schoolIndividualTotal = availablePackagesTotal?.colegioIndividual || 0;
   const schoolFamilyTotal = availablePackagesTotal?.colegioFamilia || 0;
+  const schoolCampingTotal = availablePackagesTotal?.colegioCamping || 0;
   const seminaryTotal = availablePackagesTotal?.seminario || 0;
   const hotelTotal = availablePackagesTotal?.hotel || 0;
   const otherTotal = availablePackagesTotal?.outro || 0;
-
-  const schoolIndividualUsed =
-    availablePackagesUsed.colegioIndividualComOnibus + availablePackagesUsed.colegioIndividualSemOnibus;
-  const schoolFamilyUsed =
-    availablePackagesUsed.colegioFamiliaComOnibus + availablePackagesUsed.colegioFamiliaSemOnibus;
-  const schoolCampingUsed =
-    availablePackagesUsed.colegioCampingComOnibus + availablePackagesUsed.colegioCampingSemOnibus;
-  const seminaryUsed =
-    availablePackagesUsed.seminarioIndividualComOnibus + availablePackagesUsed.seminarioIndividualSemOnibus;
-  const hotelUsed = availablePackagesUsed.hotelDuplaComOnibus + availablePackagesUsed.hotelDuplaSemOnibus;
-  const otherUsed = availablePackagesUsed.outroComOnibus + availablePackagesUsed.outroSemOnibus;
 
   const schoolIndividualWithBus = availablePackagesUsed.colegioIndividualComOnibus;
   const schoolFamilyWithBus = availablePackagesUsed.colegioFamiliaComOnibus;
@@ -153,8 +149,6 @@ const Admin = ({ totalRegistrations }) => {
     seminaryWithBus +
     hotelWithBus +
     otherWithBus;
-  const totalVacanciesFilled =
-    schoolIndividualUsed + schoolFamilyUsed + schoolCampingUsed + seminaryUsed + hotelUsed + otherUsed;
 
   const calculateVacancies = (usedPackages, totalPackages, withBus, withoutBus, specificTotals) => {
     if (
@@ -187,6 +181,7 @@ const Admin = ({ totalRegistrations }) => {
       {
         colegioIndividualComOnibus: schoolIndividualTotal,
         colegioFamiliaComOnibus: schoolFamilyTotal,
+        colegioCampingComOnibus: schoolCampingTotal,
         seminarioIndividualComOnibus: seminaryTotal,
         hotelDuplaComOnibus: hotelTotal,
         outroComOnibus: otherTotal,
@@ -218,17 +213,24 @@ const Admin = ({ totalRegistrations }) => {
       'text-success',
     ),
     createCardData(
-      'Seminário São José',
-      'seminarioIndividualComOnibus',
-      'seminarioIndividualSemOnibus',
+      'Colégio XV - Camping',
+      'colegioCampingComOnibus',
+      'colegioCampingSemOnibus',
       'bg-dark',
       'text-warning',
     ),
-    createCardData('Hotel Íbis', 'hotelDuplaComOnibus', 'hotelDuplaSemOnibus', 'bg-light', 'text-success'),
-    createCardData('Outra Acomodação', 'outroComOnibus', 'outroSemOnibus', 'bg-dark', 'text-warning'),
+    createCardData(
+      'Seminário São José',
+      'seminarioIndividualComOnibus',
+      'seminarioIndividualSemOnibus',
+      'bg-light',
+      'text-success',
+    ),
+    createCardData('Hotel Íbis', 'hotelDuplaComOnibus', 'hotelDuplaSemOnibus', 'bg-dark', 'text-warning'),
+    createCardData('Outra Acomodação', 'outroComOnibus', 'outroSemOnibus', 'bg-light', 'text-success'),
   ];
 
-  const firstRowCards = cards.slice(0, 5);
+  const firstRowCards = cards.slice(0, 6);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -248,46 +250,48 @@ const Admin = ({ totalRegistrations }) => {
                   </Button>
                 </Col>
               </Row>
-              <Col xs={12} md={6}>
-                <Form>
-                  <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
+              <Row className="justify-content-center">
+                <Col xs={12} md={6}>
+                  <Form className="login-admin-card">
+                    <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
 
-                  <Form.Group className="input-login-wrapper mb-3" controlId="username">
-                    <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
-                    <Form.Control
-                      className="admin__user"
-                      type="text"
-                      placeholder="Digite seu nome de usuário"
-                      value={loginData.username}
-                      onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                      onKeyDown={handleKeyDown}
-                    />
-                  </Form.Group>
+                    <Form.Group className="input-login-wrapper mb-3" controlId="username">
+                      <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
+                      <Form.Control
+                        className="admin__user"
+                        type="text"
+                        placeholder="Digite seu nome de usuário"
+                        value={loginData.username}
+                        onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                        onKeyDown={handleKeyDown}
+                      />
+                    </Form.Group>
 
-                  <Form.Group className="input-login-wrapper mb-3" controlId="password">
-                    <Form.Label className="fw-bold">Senha:</Form.Label>
-                    <Form.Control
-                      className="admin__password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Digite sua senha"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      onKeyDown={handleKeyDown}
-                    />
-                    <Icon
-                      className="login-icon"
-                      typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
-                      onClick={handleShowPassword}
-                    />
-                  </Form.Group>
+                    <Form.Group className="input-login-wrapper mb-3" controlId="password">
+                      <Form.Label className="fw-bold">Senha:</Form.Label>
+                      <Form.Control
+                        className="admin__password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Digite sua senha"
+                        value={loginData.password}
+                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                        onKeyDown={handleKeyDown}
+                      />
+                      <Icon
+                        className="login-icon"
+                        typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
+                        onClick={handleShowPassword}
+                      />
+                    </Form.Group>
 
-                  <div className="input-login-btn-wrapper d-flex justify-content-end">
-                    <Button variant="primary" onClick={handleLogin}>
-                      Entrar
-                    </Button>
-                  </div>
-                </Form>
-              </Col>
+                    <div className="input-login-btn-wrapper d-flex justify-content-end">
+                      <Button variant="primary" onClick={handleLogin}>
+                        Entrar
+                      </Button>
+                    </div>
+                  </Form>
+                </Col>
+              </Row>
             </Row>
           ) : (
             <>
@@ -314,18 +318,9 @@ const Admin = ({ totalRegistrations }) => {
 
               <div className="packages-horizontal-line" />
 
-              <Row className="mt-4 d-none d-md-flex">
-                <Col xs={12} md={6} lg={4}>
-                  <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE</h4>
-                </Col>
-                <Col xs={12} md={6} lg={4}>
+              <Row className="mt-4">
+                <Col xs={12} md={6} lg={12}>
                   <h4 className="text-center text-info fw-bold mb-4">TOTAL</h4>
-                </Col>
-              </Row>
-
-              <Row className="mt-4 d-flex d-md-none">
-                <Col xs={12}>
-                  <h4 className="text-center text-info fw-bold mb-4">TRANSPORTE E TOTAL</h4>
                 </Col>
               </Row>
 
@@ -333,11 +328,44 @@ const Admin = ({ totalRegistrations }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-warning">Ônibus Preenchidos</Card.Title>
+                      <Card.Title className="fw-bold text-warning">Total de Inscritos VÁLIDOS (adultos)</Card.Title>
                       <Card.Text>
-                        Vagas Preenchidas com Ônibus:{' '}
+                        Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalVacanciesWithBuses) ? 'Indefinido' : totalVacanciesWithBuses.toString()}</b>
+                          <b>{isNaN(totalValidRegistrations) ? 'Indefinido' : totalValidRegistrations.toString()}</b>
+                        </em>
+                        <br />
+                        Vagas Totais Restantes:{' '}
+                        <em>
+                          <b>
+                            {isNaN(300 - totalValidRegistrations)
+                              ? 'Indefinido'
+                              : (300 - totalValidRegistrations).toString()}
+                          </b>
+                        </em>
+                        <br />
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="h-100 bg-light">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-success">Total de Inscritos + Crianças</Card.Title>
+                      <Card.Text>
+                        Vagas Totais Preenchidas:{' '}
+                        <em>
+                          <b>{isNaN(totalPaiedPlusChildren) ? 'Indefinido' : totalPaiedPlusChildren.toString()}</b>
+                        </em>
+                        <br />
+                        Vagas Totais Restantes:{' '}
+                        <em>
+                          <b>
+                            {isNaN(300 - totalPaiedPlusChildren)
+                              ? 'Indefinido'
+                              : (300 - totalPaiedPlusChildren).toString()}
+                          </b>
                         </em>
                       </Card.Text>
                     </Card.Body>
@@ -345,9 +373,9 @@ const Admin = ({ totalRegistrations }) => {
                 </Col>
 
                 <Col className="mb-4" xs={12} md={6} lg={4}>
-                  <Card className="bg-light">
+                  <Card className="h-100 bg-dark">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-success">Total de Inscritos Apenas Adultos</Card.Title>
+                      <Card.Title className="fw-bold text-warning">Total de Inscritos + Não pagantes</Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
@@ -365,28 +393,98 @@ const Admin = ({ totalRegistrations }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
+              </Row>
+              <Row>
                 <Col className="mb-4" xs={12} md={6} lg={4}>
-                  <Card className="bg-dark">
+                  <Card className="h-100 bg-light">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-warning">Total de Inscritos Geral</Card.Title>
+                      <Card.Title className="fw-bold text-success">Total de Crianças</Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalVacanciesFilled) ? 'Indefinido' : totalVacanciesFilled.toString()}</b>
+                          <b>{isNaN(totalChildren) ? 'Indefinido' : totalChildren.toString()}</b>
                         </em>
                         <br />
-                        Vagas Totais Restantes: Vagas Totais Restantes (Adultos):{' '}
+                        Vagas Totais Restantes:{' '}
                         <em>
-                          <b>
-                            {isNaN(300 - totalVacanciesFilled) ? 'Indefinido' : (300 - totalVacanciesFilled).toString()}
-                          </b>
+                          <b>{isNaN(300 - totalChildren) ? 'Indefinido' : (300 - totalChildren).toString()}</b>
+                        </em>
+                        <br />
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="h-100 bg-dark">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-warning">Total de Não Pagantes (day use)</Card.Title>
+                      <Card.Text>
+                        Vagas Totais Preenchidas:{' '}
+                        <em>
+                          <b>{isNaN(totalNonPaied) ? 'Indefinido' : totalNonPaied.toString()}</b>
+                        </em>
+                        <br />
+                        Vagas Totais Restantes:{' '}
+                        <em>
+                          <b>{isNaN(300 - totalNonPaied) ? 'Indefinido' : (300 - totalNonPaied).toString()}</b>
+                        </em>
+                        <br />
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col className="mb-4" xs={12} md={6} lg={4}>
+                  <Card className="h-100 bg-warning">
+                    <Card.Body>
+                      <Card.Title className="fw-bold text-dark">Ônibus Preenchidos</Card.Title>
+                      <Card.Text>
+                        Vagas Preenchidas com Ônibus:{' '}
+                        <em>
+                          <b>{isNaN(totalVacanciesWithBuses) ? 'Indefinido' : totalVacanciesWithBuses.toString()}</b>
                         </em>
                       </Card.Text>
                     </Card.Body>
                   </Card>
                 </Col>
               </Row>
+
+              <div className="packages-horizontal-line" />
+              <h4>Notas:</h4>
+              <div>
+                <ul>
+                  <li>
+                    <em>
+                      <b>Inscritos Válidos</b>
+                    </em>{' '}
+                    : Contagem de adultos que contam como uma inscrição válida
+                  </li>
+                  <li>
+                    <em>
+                      <b>Não Pagantes (day use)</b>
+                    </em>{' '}
+                    : Pessoas que não irão dormir, comer ou se transportar no ônibus, apenas assistir aos cultos e(ou)
+                    participar das programações
+                  </li>
+                  <li>
+                    <em>
+                      <b>Inscritos + Crianças</b>
+                    </em>{' '}
+                    : Contagem de inscritos válidos e crianças
+                  </li>
+                  <li>
+                    <em>
+                      <b>Inscritos + Não pagantes</b>
+                    </em>{' '}
+                    : Contagem de inscritos válidos e não pagantes (day use)
+                  </li>
+                  <li>
+                    <em>
+                      <b>Ônibus Preenchidos</b>
+                    </em>{' '}
+                    : Contagem de pessoas inscritas nos ônibus
+                  </li>
+                </ul>
+              </div>
 
               <div className="packages-horizontal-line" />
 
