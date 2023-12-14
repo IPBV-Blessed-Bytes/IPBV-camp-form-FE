@@ -14,7 +14,12 @@ const Footer = ({ onAdminClick }) => {
   return (
     <footer className="d-flex align-items-center justify-content-between">
       <div className="form__footer d-flex flex-column p-3">
-        <p className="form__footer__powered mb-2">Powered by Blessed Bytes Team</p>
+        <p className="form__footer__powered mb-2">
+          Powered by Blessed Bytes Team •{' '}
+          <em>
+            <b>1 Coríntios 15:58</b>
+          </em>
+        </p>
         <p className="form__footer__copyright">
           © 2023 Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
         </p>
