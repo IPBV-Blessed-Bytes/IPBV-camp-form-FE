@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 
 import { personalInformationSchema } from '../../form/validations/schema';
-import { issuingState, rgShipper, gender } from './data';
+import { issuingState, rgShipper } from './data';
 
 const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
   const { values, errors, handleChange, submitForm } = useFormik({
@@ -62,11 +62,8 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
-                    {gender.map((gender) => (
-                      <option key={gender.value} value={gender.value}>
-                        {gender.label}
-                      </option>
-                    ))}
+                    <option value="Homem">Homem</option>
+                    <option value="Mulher">Mulher</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
                 </Form.Group>
