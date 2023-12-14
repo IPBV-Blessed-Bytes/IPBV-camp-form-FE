@@ -182,11 +182,38 @@ const packageOther = ({ age, withTransportation }) => {
   };
 };
 
+const packageDayUse = () => {
+  let accomodation = [0];
+  let food = [0];
+  let transportation = [0];
+
+  let foodDiscountDescription = '';
+  let transportationDiscountDescription = '';
+
+  const accomodationValue = accomodation[0];
+  const foodValue = food[0];
+  const transportationValue = transportation[0];
+
+  const total = accomodationValue + foodValue + transportationValue;
+
+  return {
+    total,
+    accomodation,
+    food,
+    transportation,
+    discountDescription: {
+      food: foodDiscountDescription,
+      transportation: transportationDiscountDescription,
+    },
+  };
+};
+
 const packagesBundles = {
   school: packageSchool,
   seminary: packageSeminary,
   hotel: packageHotel,
   other: packageOther,
+  dayUse: packageDayUse,
 };
 
 const generatePackagesValues = (packageType, age) => {
