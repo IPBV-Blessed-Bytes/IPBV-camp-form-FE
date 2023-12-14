@@ -348,7 +348,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>
@@ -371,7 +370,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
@@ -393,8 +391,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
-              <Row>
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>
