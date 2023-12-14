@@ -4,6 +4,13 @@ import FormRoutes from './Pages/Routes';
 
 function App() {
   const toggleSite = 'form-on';
+
+  console.error = (message) => {
+    if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
+      return;
+    }
+  };
+
   return (
     <>
       {toggleSite === 'form-on' && <FormRoutes />}
