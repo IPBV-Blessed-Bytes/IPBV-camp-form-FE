@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
-const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
+const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   const headerSteps = ['Início', 'Dados Pessoais', 'Contato', 'Pacotes', 'Revisão', 'Pagamento'];
   const navigateTo = useNavigate();
 
@@ -26,13 +26,15 @@ const Header = ({ currentStep, goBackToStep, formSubmitted }) => {
       <h2>
         <a href="/">ACAMPAMENTO IPBV 2024</a>
       </h2>
-      <Breadcrumb className="mt-4">
-        {headerSteps.map((step, index) => (
-          <Breadcrumb.Item key={index} active={currentStep === index} onClick={() => handleStepChange(index)}>
-            {step}
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
+      {showNavMenu && (
+        <Breadcrumb className="mt-4">
+          {headerSteps.map((step, index) => (
+            <Breadcrumb.Item key={index} active={currentStep === index} onClick={() => handleStepChange(index)}>
+              {step}
+            </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+      )}
     </header>
   );
 };
