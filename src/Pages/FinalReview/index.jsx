@@ -144,7 +144,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
               Voltar
             </Button>
             <Button variant="warning" onClick={handleClick} size="lg" disabled={!isConfirmed}>
-              Confirmar
+              Avançar
             </Button>
           </div>
         </Card>
