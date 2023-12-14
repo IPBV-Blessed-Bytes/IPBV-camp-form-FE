@@ -437,6 +437,19 @@ a:not(.form-success__button) {
   }
 }
 
+.closed-admin {
+  .input-login-wrapper {
+    position: relative;
+  }
+  
+  .login-icon {
+    padding: 0.25rem;
+    position: absolute;
+    right: 0;
+    transform: translate(-0.625rem, -2.1875rem);
+  }
+}
+
 .row-gap {
   @media (max-width: $md) {
     gap: 0.5rem;
