@@ -66,7 +66,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                <option value="online">ONLINE (preferencial)</option>
+                <option value="online">ONLINE (prioritariamente)</option>
                 <option value="inPerson">PRESENCIAL (secretaria da igreja)</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
@@ -79,7 +79,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-        <Button variant="warning" onClick={submitForm} size="lg">
+        <Button variant="success" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>
