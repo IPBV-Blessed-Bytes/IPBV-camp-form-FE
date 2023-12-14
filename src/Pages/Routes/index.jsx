@@ -237,7 +237,7 @@ const FormRoutes = () => {
                 sendForm={sendForm}
                 spinnerLoading={loading}
                 availablePackages={availablePackages}
-                totalRegistrations={totalRegistrations}
+                totalRegistrationsGlobal={totalRegistrations}
               />
             )}
 

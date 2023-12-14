@@ -11,7 +11,15 @@ import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 
-const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoading, availablePackages }) => {
+const FormPackages = ({
+  nextStep,
+  backStep,
+  birthDate,
+  updateForm,
+  spinnerLoading,
+  availablePackages,
+  totalRegistrationsGlobal,
+}) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
   const age = calculateAge(birthDate);
@@ -67,24 +75,9 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
     nextStep();
   };
 
-  const packagesPath = availablePackages.data.usedPackages;
+  const validRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
 
-  const packagesSum =
-    packagesPath.colegioCampingComOnibus +
-    packagesPath.colegioCampingSemOnibus +
-    packagesPath.colegioFamiliaComOnibus +
-    packagesPath.colegioFamiliaSemOnibus +
-    packagesPath.colegioIndividualComOnibus +
-    packagesPath.colegioIndividualSemOnibus +
-    packagesPath.hotelDuplaComOnibus +
-    packagesPath.hotelDuplaSemOnibus +
-    packagesPath.outroComOnibus +
-    packagesPath.outroSemOnibus +
-    packagesPath.seminarioIndividualComOnibus +
-    packagesPath.seminarioIndividualSemOnibus +
-    packagesPath.usuarioSemCusto;
-
-  const isRegistrationClosed = packagesSum >= 300;
+  const isRegistrationClosed = validRegistrations >= 300;
 
   return (
     <Card className="form__container__general-height">
@@ -165,7 +158,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
                                     <div className="package-description-container">
                                       <span>Hospedagem:</span>
                                       <div>
-                                        <div className={hasAccomodationWithDiscount && 'price-with-discount'}>
+                                        <div className={hasAccomodationWithDiscount ? 'price-with-discount' : ''}>
                                           {formatCurrency(accomodation)}
                                         </div>
                                         {hasAccomodationWithDiscount && (
@@ -180,7 +173,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
                                     <div className="package-description-container">
                                       <span>Alimentação:</span>
                                       <div>
-                                        <div className={!!hasFoodWithDiscount && 'price-with-discount'}>
+                                        <div className={!!hasFoodWithDiscount ? 'price-with-discount' : ''}>
                                           {formatCurrency(food)}
                                         </div>
                                         {hasFoodWithDiscount && (
@@ -195,7 +188,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
                                     <div className="package-description-container">
                                       <span>Ônibus:</span>
                                       <div>
-                                        <div className={hasTransportationDiscount && 'price-with-discount'}>
+                                        <div className={hasTransportationDiscount ? 'price-with-discount' : ''}>
                                           {formatCurrency(transportation)}
                                         </div>
                                         {hasTransportationDiscount && (
