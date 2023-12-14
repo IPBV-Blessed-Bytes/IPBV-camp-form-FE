@@ -1,3 +1,4 @@
+import CloseForm from './Pages/CloseForm';
 import Offline from './Pages/Offline';
 import FormRoutes from './Pages/Routes';
 
@@ -7,6 +8,7 @@ function App() {
     <>
       {toggleSite === 'form-on' && <FormRoutes />}
       {toggleSite === 'form-off' && <Offline />}
+      {toggleSite === 'form-closed' && <CloseForm />}
       {toggleSite === 'google' && (
         <div
           style={{
