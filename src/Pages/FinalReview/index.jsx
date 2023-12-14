@@ -103,17 +103,23 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                   </Row>{' '}
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={4} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
                         <br />
                         {formValues.contact.hasAllergy ? 'Sim -' : 'Não'} {formValues.contact.allergy}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={4} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title"> Agregados:</span> <br />{' '}
                         {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
+                      </Card.Text>
+                    </Col>
+                    <Col md={4} className=" fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Igreja:</span> <br />
+                        {formValues.contact.church}
                       </Card.Text>
                     </Col>
                   </Row>{' '}
