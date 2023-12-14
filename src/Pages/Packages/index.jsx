@@ -30,6 +30,7 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
     10: { available: 'hotel', used: 'hotelDuplaSemOnibus' },
     11: { available: 'outro', used: 'outroComOnibus' },
     12: { available: 'outro', used: 'outroSemOnibus' },
+    13: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
   const handleClick = (selectedPackage) => {
@@ -80,7 +81,8 @@ const FormPackages = ({ nextStep, backStep, birthDate, updateForm, spinnerLoadin
     packagesPath.outroComOnibus +
     packagesPath.outroSemOnibus +
     packagesPath.seminarioIndividualComOnibus +
-    packagesPath.seminarioIndividualSemOnibus;
+    packagesPath.seminarioIndividualSemOnibus +
+    packagesPath.usuarioSemCusto;
 
   const isRegistrationClosed = packagesSum >= 300;
 

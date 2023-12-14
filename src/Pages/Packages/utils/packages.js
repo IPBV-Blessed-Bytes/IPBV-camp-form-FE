@@ -12,6 +12,7 @@ const getPackages = (age) => {
   const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
   const [hotelWithBuss, hotelWithoutBuss] = generatePackagesValues('hotel', age);
   const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age);
+  const [dayUse] = generatePackagesValues('dayUse');
 
   const packages = [
     {
@@ -19,7 +20,7 @@ const getPackages = (age) => {
       title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA COM ÔNIBUS',
       observation: '* Em salas de aula COM ônibus',
       values: { ...schoolWithBus },
-      accomodation: { id: 'colegioIndividualComOnibus',name: XV_NOVEMBRO, subAccomodation: 'Colégio Individual' },
+      accomodation: { id: 'colegioIndividualComOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Individual' },
       transportation: 'Com Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -123,6 +124,16 @@ const getPackages = (age) => {
       accomodation: { id: 'outroSemOnibus', name: OTHER, subAccomodation: 'Outro' },
       transportation: 'Sem Ônibus',
       food: 'Almoço e jantar',
+    },
+    {
+      id: '13',
+      title: 'PACOTE 13 - ASSISTIR O CULTO',
+      observation:
+        '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem',
+      values: { ...dayUse },
+      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'dayUse' },
+      transportation: 'Sem Ônibus',
+      food: 'Sem Alimentação',
     },
   ];
 
