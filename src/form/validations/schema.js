@@ -14,6 +14,7 @@ const additionalInformationSchema = yup.object().shape({
   email: yup.string().email('Informe um e-mail válido').required('Informe o seu e-mail'),
   cellPhone: yup.string().min(10, 'Informe um número de telefone válido').required('Informe o seu número de telefone'),
   isWhatsApp: yup.boolean().required('Informe se o número é whatsapp ou não'),
+  church: yup.string().required('Informe sua igreja'),
   hasAllergy: yup.boolean().required('Informe se você tem alergia'),
   allergy: yup.string().when('hasAllergy', {
     is: true,
