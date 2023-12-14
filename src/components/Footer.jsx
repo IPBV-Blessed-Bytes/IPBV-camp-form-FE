@@ -1,8 +1,15 @@
+// Footer.js
+import React from 'react';
+import { PropTypes } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import logoFooter from '../../public/Images/logo.png';
 
-const Footer = () => {
+const Footer = ({ onAdminClick }) => {
   const navigateTo = useNavigate();
+
+  const handleAdminClick = () => {
+    onAdminClick();
+  };
 
   return (
     <footer className="d-flex align-items-center justify-content-between">
@@ -13,11 +20,15 @@ const Footer = () => {
         </p>
       </div>
 
-      <a onClick={() => navigateTo('/admin')}>
+      <a onClick={handleAdminClick}>
         <img src={logoFooter} className="form__footer-logo" alt="logo" />
       </a>
     </footer>
   );
+};
+
+Footer.propTypes = {
+  onAdminClick: PropTypes.func.isRequired,
 };
 
 export default Footer;

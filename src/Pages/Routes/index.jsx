@@ -1,6 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -176,7 +176,7 @@ const FormRoutes = () => {
     const fetchTotalRegistrations = async () => {
       try {
         const response = await axios.get('https://ipbv-camp-form-be-production.up.railway.app/total-registrations');
-        setTotalRegistrations(response.data.totalRegistrations);
+        setTotalRegistrations(response.data);
       } catch (error) {
         toast.error(
           error.message === 'Request failed with status code 503'
@@ -189,6 +189,12 @@ const FormRoutes = () => {
     fetchTotalRegistrations();
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
   return (
     <div className="form">
       {!isAdminPathname && (
@@ -198,6 +204,7 @@ const FormRoutes = () => {
             currentStep={steps}
             goBackToStep={goBackToStep}
             formSubmitted={formSubmitted}
+            showNavMenu
           />
 
           <div className="form__container">
@@ -230,6 +237,7 @@ const FormRoutes = () => {
                 sendForm={sendForm}
                 spinnerLoading={loading}
                 availablePackages={availablePackages}
+                totalRegistrations={totalRegistrations}
               />
             )}
 
@@ -267,11 +275,11 @@ const FormRoutes = () => {
               />
             </Routes>
           </div>
-          <Footer />
+          <Footer onAdminClick={handleAdminClick} />
         </div>
       )}
       <Routes>
-        <Route path="/admin" element={<Admin totalRegistrations={totalRegistrations} />} />
+        <Route path="/admin" element={<Admin totalRegistrationsGlobal={totalRegistrations} />} />
       </Routes>
     </div>
   );
