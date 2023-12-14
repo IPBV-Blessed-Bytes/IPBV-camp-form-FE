@@ -96,13 +96,14 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     placeholderText="dd/mm/aaaa"
                     showMonthDropdown={true}
                     showYearDropdown={true}
+                    title="Preencher Data de nascimento corretamente pois é ela quem calcula o valor a ser pago!"
                   />
                   <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
                     {errors.birthday}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-
+              
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>CPF:</Form.Label>
@@ -123,6 +124,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                       })
                     }
                     placeholder="000.000000-00"
+                    title="Preencher CPF válido. Caso não possua, preencher 00000000000!"
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
                 </Form.Group>
@@ -147,6 +149,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                       })
                     }
                     placeholder="0.000-000"
+                    title="Preencher RG válido. Caso não possua, preencher 0000000!"
                   />
 
                   <Form.Control.Feedback type="invalid">{errors.rg}</Form.Control.Feedback>
