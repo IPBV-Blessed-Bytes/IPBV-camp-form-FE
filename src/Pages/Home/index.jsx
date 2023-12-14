@@ -35,7 +35,7 @@ const FormHome = (props) => {
                 </li>
                 <li>
                   Recomendamos realizar os pagamentos online aqui no formulário, pois isso automatiza o processo e
-                  simplifica o trabalho da secretaria da igreja.
+                  simplifica o trabalho da secretaria da igreja.{' '}
                   <u>Caso encontre alguma dificuldade, entre em contato com a secretaria.</u>
                 </li>
                 <li>
