@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,7 +11,7 @@ import { formPaymentSchema } from '../../form/validations/schema';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
   const navigateTo = useNavigate();
-  const { values, handleChange, errors, submitForm } = useFormik({
+  const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
       sendForm();
@@ -23,6 +24,16 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
     validateOnChange: false,
     validationSchema: formPaymentSchema,
   });
+
+  useEffect(() => {
+    if (initialValues.formPayment !== values.formPayment) {
+      setValues({
+        ...values,
+        formPayment: '',
+      });
+    }
+  }, [initialValues.formPayment, setValues, values.formPayment]);
+  
 
   const selectChangeHandler = (e) => {
     updateForm(e.target.value);
