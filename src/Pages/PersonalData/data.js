@@ -42,10 +42,4 @@ const issuingState = [
   { value: 'TO', label: 'TO' },
 ];
 
-const gender = [
-  { value: 'Homem', label: 'Homem' },
-  { value: 'Mulher', label: 'Mulher' },
-  { value: 'Criança', label: 'Criança (até 10 anos)' },
-];
-
-export { rgShipper, issuingState, gender };
+export { rgShipper, issuingState };
