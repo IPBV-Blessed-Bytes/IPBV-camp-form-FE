@@ -251,7 +251,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col xs={12} md={6}>
+                <Col xs={12} md={6} className='d-flex justify-content-center'>
                   <Form className="login-admin-card">
                     <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
 
