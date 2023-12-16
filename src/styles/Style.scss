@@ -16,7 +16,7 @@ body {
   &__header {
     background-color: $primary;
     color: $white;
-    padding: 3rem 1.875rem;
+    padding: 1.25rem 1.875rem 3rem;
     text-align: center;
 
     h2 {
@@ -339,7 +339,12 @@ body {
 
 // Style utility classes
 
-a:not(.form-success__button) {
+.mail-to {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not(.form-success__button, .mail-to) {
   color: $white;
   text-decoration: none;
 }
@@ -448,7 +453,7 @@ a:not(.form-success__button) {
   .input-login-wrapper {
     position: relative;
   }
-  
+
   .login-icon {
     padding: 0.25rem;
     position: absolute;

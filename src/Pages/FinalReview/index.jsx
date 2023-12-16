@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -130,7 +125,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
-                      label={'Os dados foram preenchidos corretamente?'}
+                      label={'Confirma que os dados foram preenchidos corretamente?'}
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
                     />
@@ -144,7 +139,13 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
             <Button variant="light" onClick={backStep} size="lg">
               Voltar
             </Button>
-            <Button variant="warning" onClick={handleClick} size="lg" disabled={!isConfirmed}>
+            <Button
+              variant="warning"
+              onClick={handleClick}
+              size="lg"
+              disabled={!isConfirmed}
+              title={!isConfirmed && `Confirme acima que os dados foram preenchidos corretamente`}
+            >
               Avançar
             </Button>
           </div>

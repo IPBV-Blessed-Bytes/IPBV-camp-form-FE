@@ -137,7 +137,10 @@ const FormRoutes = () => {
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
       };
 
-      const response = await axios.post('https://ipbv-camp-form-be-production.up.railway.app/send-values', updatedFormValues);
+      const response = await axios.post(
+        'https://ipbv-camp-form-be-production-2b7d.up.railway.app/send-values',
+        updatedFormValues,
+      );
 
       if (response.data.data.payment_url) {
         window.open(response.data.data.payment_url, '_self');
@@ -160,7 +163,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get('https://ipbv-camp-form-be-production.up.railway.app/package-count');
+        const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/package-count');
         setAvailablePackages(response);
       } catch (error) {
         toast.error(
@@ -177,7 +180,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get('https://ipbv-camp-form-be-production.up.railway.app/total-registrations');
+        const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/total-registrations');
         setTotalRegistrations(response.data);
       } catch (error) {
         toast.error(

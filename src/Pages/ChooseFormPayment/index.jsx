@@ -2,11 +2,7 @@ import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-
+import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
@@ -33,7 +29,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
       });
     }
   }, [initialValues.formPayment, setValues, values.formPayment]);
-  
 
   const selectChangeHandler = (e) => {
     updateForm(e.target.value);
@@ -79,7 +74,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-        <Button variant="success" onClick={submitForm} size="lg">
+        <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>

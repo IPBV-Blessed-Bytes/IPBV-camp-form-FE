@@ -3,19 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import Icons from '../../components/Icons';
 
-const API_URL = 'https://ipbv-camp-form-be-production.up.railway.app';
+const API_URL = 'https://ipbv-camp-form-be-production-2b7d.up.railway.app';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const SPREADSHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1BY0Owcj99nG9DtTx6XLHioZEQnY7Ffb7inX2gBd11WY/edit?usp=sharing';
+  'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
 const FILTERS_URL = 'https://docs.google.com/spreadsheets/d/1MPYASaBbk6XM3ecGwNEAMBSUpWx_MPlio6D1RZAUdrM/edit#gid=0';
 const PackageCard = ({ title, remainingVacancies, filledVacancies, background, titleColor }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>
@@ -30,7 +25,7 @@ const PackageCard = ({ title, remainingVacancies, filledVacancies, background, t
           <br />
           Vagas Preenchidas:{' '}
           <em>
-            <b>{filledVacancies || '-'}</b>
+            <b>{filledVacancies || '0'}</b>
           </em>
         </Card.Text>
       </Card.Body>
@@ -47,12 +42,11 @@ const ExternalLinkRow = () => (
           <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições em tempo real!</Card.Text>
           <div className="btn-wrapper">
             <Button variant="success" href={SPREADSHEET_URL} target="_blank">
-              {/* <Button variant="success" href="NOVO LINK DO DRIVE" target="_blank"> */}
               <strong>PLANILHA INSCRIÇÕES</strong>
             </Button>
-            <Button variant="info" href={FILTERS_URL} target="_blank">
+            {/* <Button variant="info" href={FILTERS_URL} target="_blank">
               <strong>PLANILHA FILTROS</strong>
-            </Button>
+            </Button> */}
           </div>
         </Card.Body>
       </Card>
@@ -165,7 +159,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
 
       return { filledVacancies, remainingVacancies };
     } else {
-      return { filledVacancies: '-', remainingVacancies: '-' };
+      return { filledVacancies: '0', remainingVacancies: '0' };
     }
   };
 
@@ -243,15 +237,15 @@ const Admin = ({ totalRegistrationsGlobal }) => {
           {!isLoggedIn ? (
             <Row className="justify-content-center">
               <Row>
-                <Col xs={12} className="text-end mb-2">
+                <Col xs={12} className="text-end mb-4">
                   <p className="d-none d-sm-block">Clique para voltar ao Formulário de inscrição:</p>
-                  <Button variant="danger" onClick={(handleLogout, () => navigateTo('/'))}>
-                    Voltar
+                  <Button className="fw-bold" variant="danger" onClick={(handleLogout, () => navigateTo('/'))}>
+                    Voltar para Formulário
                   </Button>
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col xs={12} md={6} className='d-flex justify-content-center'>
+                <Col xs={12} md={6} className="d-flex justify-content-center">
                   <Form className="login-admin-card">
                     <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
 
@@ -285,7 +279,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Form.Group>
 
                     <div className="input-login-btn-wrapper d-flex justify-content-end">
-                      <Button variant="primary" onClick={handleLogin}>
+                      <Button className="fw-bold" variant="primary" onClick={handleLogin}>
                         Entrar
                       </Button>
                     </div>
@@ -310,18 +304,14 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 </Col>
               </Row>
               <Row>
-                <h4 className="text-center text-info fw-bold mb-4">PACOTES</h4>
+                <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
                 {firstRowCards.map((card) => (
                   <PackageCard key={card.title} {...card} />
                 ))}
               </Row>
 
-              <div className="packages-horizontal-line" />
-
               <Row className="mt-4">
-                <Col xs={12} md={6} lg={12}>
-                  <h4 className="text-center text-info fw-bold mb-4">TOTAL</h4>
-                </Col>
+                <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
               </Row>
 
               <Row>
@@ -481,8 +471,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                   </li>
                 </ul>
               </div>
-
-              <div className="packages-horizontal-line" />
 
               <Row>
                 <ExternalLinkRow />

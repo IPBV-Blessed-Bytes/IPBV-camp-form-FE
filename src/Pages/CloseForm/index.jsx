@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Row, Col, Form, Button } from 'react-bootstrap';
 import Icons from '../../components/Icons';
 import FormRoutes from '../Routes';
 
@@ -19,7 +16,7 @@ const CloseForm = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('https://ipbv-camp-form-be-production.up.railway.app/credentials');
+      const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/credentials');
       const credentialsData = response.data;
 
       const user = credentialsData.find((u) => u.login === loginData.username && u.password === loginData.password);
