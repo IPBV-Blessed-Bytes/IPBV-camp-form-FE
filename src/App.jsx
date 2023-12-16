@@ -3,7 +3,7 @@ import Offline from './Pages/Offline';
 import FormRoutes from './Pages/Routes';
 
 function App() {
-  const toggleSite = 'google';
+  const toggleSite = 'blank-page';
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
@@ -16,6 +16,7 @@ function App() {
       {toggleSite === 'form-on' && <FormRoutes />}
       {toggleSite === 'form-off' && <Offline />}
       {toggleSite === 'form-closed' && <CloseForm />}
+      {toggleSite === 'blank-page' && <></>}
       {toggleSite === 'google' && (
         <div
           style={{
