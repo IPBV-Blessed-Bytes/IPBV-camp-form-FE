@@ -87,7 +87,7 @@ const FormPackages = ({
           {!isRegistrationClosed && (
             <Card.Text>
               Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
-              Posteriormente escolha o pacote deseja e clique nele para ser redirecionado.
+              Posteriormente escolha o pacote desejado e clique nele para ser redirecionado.
             </Card.Text>
           )}
 

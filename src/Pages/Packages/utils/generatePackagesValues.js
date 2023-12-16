@@ -66,7 +66,7 @@ const packageSeminary = ({ age, withTransportation }) => {
 
   //Hospedagem
   if (age <= 8) {
-    accomodation = [600, 0];
+    accomodation = [480, 0];
     accomodationDiscountDescription = 'Criança até 8 anos não paga hospedagem';
   } else if (age >= 9 && age <= 14) {
     accomodation = [480, 240];
