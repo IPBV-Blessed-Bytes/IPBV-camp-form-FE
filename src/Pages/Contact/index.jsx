@@ -1,12 +1,6 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { FormGroup, FormLabel } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import { FormGroup, FormLabel, Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
 import { additionalInformationSchema } from '../../form/validations/schema';

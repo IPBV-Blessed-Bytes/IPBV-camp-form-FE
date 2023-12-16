@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
+import { Container, Card, Button } from 'react-bootstrap';
 
 const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
   const pathnamePagarme = window.location.search;
