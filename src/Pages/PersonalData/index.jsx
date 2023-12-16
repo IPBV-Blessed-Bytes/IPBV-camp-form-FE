@@ -1,12 +1,7 @@
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 
@@ -51,7 +46,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
               </Col>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Gênero:</Form.Label>
+                  <Form.Label>Categoria de Acampante:</Form.Label>
                   <Form.Select
                     isInvalid={!!errors.gender}
                     value={values.gender}
@@ -62,9 +57,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
-                    <option value="Homem">Homem</option>
-                    <option value="Mulher">Mulher</option>
-                    <option value="Criança">Criança</option>
+                    <option value="Homem">Adulto Masculino</option>
+                    <option value="Mulher">Adulto Feminimo</option>
+                    <option value="Criança (até 10 anos)">Criança</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
                 </Form.Group>

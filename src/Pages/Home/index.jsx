@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
-
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import { Container, Button, Card } from 'react-bootstrap';
 
 const FormHome = (props) => {
   return (
@@ -34,9 +31,8 @@ const FormHome = (props) => {
                   </u>
                 </li>
                 <li>
-                  Recomendamos realizar o pagamento online, isso automatiza o processo e
-                  simplifica o trabalho da secretaria da igreja.{' '}
-                  <u>Caso encontre alguma dificuldade, entre em contato com a secretaria.</u>
+                  Recomendamos realizar o pagamento online, isso automatiza o processo e simplifica o trabalho da
+                  secretaria da igreja. <u>Caso encontre alguma dificuldade, entre em contato com a secretaria.</u>
                 </li>
                 <li>
                   Mesmo se optar por pagar presencialmente, é essencial preencher o formulário para controle. No caso de

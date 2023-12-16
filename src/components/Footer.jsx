@@ -1,11 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 import logoFooter from '../../public/Images/logo.png';
 
 const Footer = ({ onAdminClick }) => {
-  const navigateTo = useNavigate();
-
   const handleAdminClick = () => {
     onAdminClick();
   };
@@ -14,7 +11,7 @@ const Footer = ({ onAdminClick }) => {
     <footer className="d-flex align-items-center justify-content-between">
       <div className="form__footer d-flex flex-column p-3">
         <p className="form__footer__powered mb-2">
-          Powered by Blessed Bytes Team •{' '}
+          <a className="mail-to" href={`mailto:alvinho.leal@live.com`}>Powered by Blessed Bytes Team </a>•{' '}
           <em>
             <b>1 Coríntios 15:58</b>
           </em>

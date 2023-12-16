@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-
+import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import Icons from '../../components/Icons';
 import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
@@ -62,7 +57,7 @@ const FormPackages = ({
   const scrollToEnd = () => {
     const element = document.getElementById('scroll-target');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: 'smooth', bot: 0 });
     }
   };
 
@@ -71,7 +66,6 @@ const FormPackages = ({
       setHasError(true);
       return;
     }
-
     nextStep();
   };
 
@@ -127,10 +121,11 @@ const FormPackages = ({
 
                           const { available: availablePackageName, used: usedPackageName } =
                             packageMapping[cards.id] || {};
-                          const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
 
-                          const openPackages =
-                            availableSlots - availablePackages?.data?.usedPackages?.[usedPackageName];
+                          const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
+                          const availableValidPackages = availablePackages?.data?.usedValidPackages?.[usedPackageName];
+
+                          const openPackages = availableSlots - availableValidPackages;
                           const isPackageAvailable = openPackages > 0;
 
                           return (

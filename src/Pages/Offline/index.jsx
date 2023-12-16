@@ -1,5 +1,4 @@
-import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
+import { Container, Card } from 'react-bootstrap';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
