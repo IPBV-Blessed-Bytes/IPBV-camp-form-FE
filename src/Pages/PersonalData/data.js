@@ -10,6 +10,10 @@ const rgShipper = [
   { value: 'SSJ', label: 'SSJ - Secretaria de Segurança e Justiça' },
   { value: 'SSPPS', label: 'SSPPS - Secretaria de Segurança Pública e Polícia Social' },
   { value: 'SESP', label: 'SESP - Secretaria de Estado de Segurança Pública' },
+  { value: 'MEX', label: 'MEX - Ministério do Exército' },
+  { value: 'MAE', label: 'MAE - Ministério da Aeronáutica' },
+  { value: 'MMA', label: 'MMA - Ministério da Marinha' },
+  { value: 'OAB', label: 'OAB - Ordem dos Advogados do Brasil' },
 ];
 
 const issuingState = [

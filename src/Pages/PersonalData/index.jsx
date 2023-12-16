@@ -64,6 +64,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     </option>
                     <option value="Homem">Homem</option>
                     <option value="Mulher">Mulher</option>
+                    <option value="Criança">Criança</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
                 </Form.Group>
