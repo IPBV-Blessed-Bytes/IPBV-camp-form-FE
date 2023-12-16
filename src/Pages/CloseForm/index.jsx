@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Icon from '../../components/Icon';
+import Icons from '../../components/Icons';
 import FormRoutes from '../Routes';
 
 const CloseForm = () => {
@@ -78,7 +77,7 @@ const CloseForm = () => {
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     onKeyDown={handleKeyDown}
                   />
-                  <Icon
+                  <Icons
                     className="login-icon"
                     typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
                     onClick={handleShowPassword}

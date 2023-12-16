@@ -9,9 +9,9 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Icon from '../../components/Icon';
+import Icons from '../../components/Icons';
 
-const API_URL = 'https://ipbv-camp-form-be-production.up.railway.app/';
+const API_URL = 'https://ipbv-camp-form-be-production.up.railway.app';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const SPREADSHEET_URL =
@@ -277,7 +277,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         onKeyDown={handleKeyDown}
                       />
-                      <Icon
+                      <Icons
                         className="login-icon"
                         typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
                         onClick={handleShowPassword}

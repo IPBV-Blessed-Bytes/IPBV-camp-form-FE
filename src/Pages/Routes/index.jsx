@@ -138,20 +138,12 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post('https://ipbv-camp-form-be-production.up.railway.app/send-values', updatedFormValues);
-      // const storedData = JSON.parse(localStorage.getItem('formValues')) || [];
-      // storedData.push(initialValues);
-      // localStorage.setItem('formValues', JSON.stringify(formValues));
-      // console.log('Envios anteriores: ', storedData);
 
       if (response.data.data.payment_url) {
         window.open(response.data.data.payment_url, '_self');
       } else if (response.status === 201) {
         setFormSubmitted(true);
         nextStep();
-
-        // localStorage.removeItem('formValues');
-        // const storedData = JSON.parse(localStorage.getItem('formValues')) || [];
-        // console.log('BD Limpo: ', storedData);
       }
     } catch (error) {
       const errorMessage = error.message ? error.message : String(error);
@@ -198,10 +190,6 @@ const FormRoutes = () => {
 
     fetchTotalRegistrations();
   }, []);
-
-  // useEffect(() => {
-  // }, [updatedFormValues]);
-  // console.log(formValues)
 
   const handleAdminClick = () => {
     navigate('/admin');
