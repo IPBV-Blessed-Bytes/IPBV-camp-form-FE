@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Icon from '../../components/Icon';
 
-const API_URL = 'https://ipbv-camp-form-be-production.up.railway.app';
+const API_URL = 'https://ipbv-camp-form-be-production.up.railway.app/send-values';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const SPREADSHEET_URL =
@@ -251,7 +251,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col xs={12} md={6}>
+                <Col xs={12} md={6} className='d-flex justify-content-center'>
                   <Form className="login-admin-card">
                     <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
 
@@ -348,7 +348,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>
@@ -371,7 +370,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
@@ -393,8 +391,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
-              <Row>
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>

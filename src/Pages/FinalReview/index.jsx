@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { format } from 'date-fns';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -66,7 +67,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title"> Data de Nascimento:</span> <br />{' '}
-                        {formValues.personalInformation.birthday.toISOString().split('T')[0]}
+                        {format(new Date(formValues.personalInformation.birthday), 'dd/MM/yyyy')}
                       </Card.Text>
                     </Col>
                   </Row>{' '}
@@ -129,7 +130,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
-                      label={'Os valores foram preenchidos corretamente?'}
+                      label={'Os dados foram preenchidos corretamente?'}
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
                     />

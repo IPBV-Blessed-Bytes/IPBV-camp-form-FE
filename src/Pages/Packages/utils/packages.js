@@ -35,7 +35,7 @@ const getPackages = (age) => {
     },
     {
       id: '3',
-      title: 'PACOTE 3 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA COM ÔNIBUS',
+      title: 'PACOTE 3 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL COM ÔNIBUS',
       observation: '* Em salas de aula COM ônibus',
       values: { ...schoolWithBus },
       accomodation: { id: 'colegioFamiliaComOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Família' },
@@ -44,7 +44,7 @@ const getPackages = (age) => {
     },
     {
       id: '4',
-      title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA COLETIVA SEM ÔNIBUS',
+      title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL SEM ÔNIBUS',
       observation: '* Em salas de aula SEM ônibus',
       values: { ...schoolWithouBus },
       accomodation: { id: 'colegioFamiliaSemOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Família' },
