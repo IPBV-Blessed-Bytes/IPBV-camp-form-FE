@@ -71,6 +71,7 @@ const FormRoutes = () => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(undefined);
   const navigate = useNavigate();
 
   const updateFormValues = (key) => {
@@ -132,6 +133,7 @@ const FormRoutes = () => {
 
   const sendFormValues = async () => {
     try {
+      setStatus('loading');
       const updatedFormValues = {
         ...formValues,
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
@@ -141,14 +143,15 @@ const FormRoutes = () => {
         'https://ipbv-camp-form-be-production-2b7d.up.railway.app/send-values',
         updatedFormValues,
       );
+      setStatus('loaded');
 
       if (response.data.data.payment_url) {
         window.open(response.data.data.payment_url, '_self');
       } else if (response.status === 201) {
         setFormSubmitted(true);
-        nextStep();
       }
     } catch (error) {
+      setStatus('error');
       const errorMessage = error.message ? error.message : String(error);
       toast.error(
         errorMessage === 'Request failed with status code 403'
@@ -166,7 +169,7 @@ const FormRoutes = () => {
         const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/package-count');
         setAvailablePackages(response);
       } catch (error) {
-        toast.error(
+        console.error(
           error.message === 'Request failed with status code 503'
             ? 'Banco de dados fora do ar. Tente novamente mais tarde'
             : error.message,
@@ -180,10 +183,12 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/total-registrations');
+        const response = await axios.get(
+          'https://ipbv-camp-form-be-production-2b7d.up.railway.app/total-registrations',
+        );
         setTotalRegistrations(response.data);
       } catch (error) {
-        toast.error(
+        console.error(
           error.message === 'Request failed with status code 503'
             ? 'Banco de dados fora do ar. Tente novamente mais tarde'
             : error.message,
@@ -251,6 +256,7 @@ const FormRoutes = () => {
                 updateForm={updateFormValues('finalReview')}
                 formValues={formValues}
                 sendForm={sendForm}
+                status={status}
               />
             )}
 
@@ -262,6 +268,7 @@ const FormRoutes = () => {
                 updateForm={updateFormValues('formPayment')}
                 sendForm={sendForm}
                 spinnerLoading={loading}
+                status={status}
               />
             )}
 
