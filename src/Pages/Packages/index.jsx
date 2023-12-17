@@ -143,7 +143,7 @@ const FormPackages = ({
                               }}
                             >
                               <Card.Body id={cards.id}>
-                                <Card.Title>{cards.title}</Card.Title>
+                                <Card.Title>{cards.title}{' '}<span className='text-danger'>{cards.subtitle}</span></Card.Title>
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
                                     <p className="mb-2">
