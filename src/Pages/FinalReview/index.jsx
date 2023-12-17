@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
-const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
+const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
@@ -15,11 +15,16 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm }) => {
   const handleClick = () => {
     if (formValues.package.price === 0) {
       sendForm();
-      navigateTo('/sucesso');
     } else {
       nextStep();
     }
   };
+
+  useEffect(() => {
+    if (status === 'loaded') {
+      navigateTo('/sucesso');
+    }
+  }, [status]);
 
   const isSuccessPathname = location.pathname === '/sucesso';
 

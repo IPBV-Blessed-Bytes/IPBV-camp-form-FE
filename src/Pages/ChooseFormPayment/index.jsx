@@ -5,21 +5,26 @@ import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
   const navigateTo = useNavigate();
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
       sendForm();
-
-      if (values.formPayment === 'inPerson') {
-        navigateTo('/sucesso');
-      }
     },
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: formPaymentSchema,
   });
+
+  useEffect(() => {
+    if (values.formPayment === 'inPerson' && status === 'loaded') {
+      navigateTo('/sucesso');
+    } else {
+    }
+  }, [status, values.formPayment]);
+
+  console.log(status);
 
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
@@ -83,7 +88,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
 };
 
 ChooseFormPayment.propTypes = {
-  nextStep: PropTypes.func,
   skipTwoSteps: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
