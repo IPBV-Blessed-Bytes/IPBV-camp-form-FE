@@ -24,8 +24,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
     }
   }, [status, values.formPayment]);
 
-  console.log(status);
-
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
       setValues({
