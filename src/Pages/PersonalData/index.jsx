@@ -142,7 +142,6 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                         },
                       })
                     }
-                    placeholder="0.000-000"
                     title="Preencher RG válido. Caso não possua, preencher 0000000!"
                   />
 
