@@ -64,6 +64,15 @@ body {
       @media (max-width: $md) {
         font-size: 0.875rem;
       }
+
+      @media (max-width: $sm) {
+        display: flex;
+        flex-direction: column;
+
+        span {
+          display: none;
+        }
+      }
     }
 
     &__copyright {
@@ -435,8 +444,11 @@ a:not(.form-success__button, .mail-to) {
   justify-content: center;
 
   a {
+    align-items: center;
+    display: flex;
+
     &:hover {
-      color: yellow;
+      color: $primary;
     }
   }
 }
