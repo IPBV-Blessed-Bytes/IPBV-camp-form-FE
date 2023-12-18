@@ -1,7 +1,6 @@
 const rgShipper = [
   { value: 'SDS', label: 'SDS - Secretaria de Defesa Social' },
   { value: 'SSP', label: 'SSP - Secretaria de Segurança Pública' },
-  { value: 'CNH', label: 'CNH - Carteira Nacional de Habilitação' },
   { value: 'SSPDS', label: 'SSPDS - Secretaria de Segurança Pública e Defesa Social' },
   { value: 'SEDS', label: 'SEDS - Secretaria de Estado de Defesa Social' },
   { value: 'DPF', label: 'DPF - Departamento de Polícia Federal' },
@@ -14,7 +13,6 @@ const rgShipper = [
   { value: 'MEX', label: 'MEX - Ministério do Exército' },
   { value: 'MAE', label: 'MAE - Ministério da Aeronáutica' },
   { value: 'MMA', label: 'MMA - Ministério da Marinha' },
-  { value: 'OAB', label: 'OAB - Ordem dos Advogados do Brasil' },
   { value: 'Outro', label: 'Outro' },
 ];
 
