@@ -11,6 +11,9 @@ const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const SPREADSHEET_URL =
   'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
+const OLD_SPREADSHEET_URL =
+  'https://docs.google.com/spreadsheets/d/1PdM9oq7uESYWXM2BzVQunSu5-FmpZXswLvAxt4So8rc/edit#gid=1419229141';
+const PAGARME = 'https://id.pagar.me/signin';
 const FILTERS_URL = 'https://docs.google.com/spreadsheets/d/1MPYASaBbk6XM3ecGwNEAMBSUpWx_MPlio6D1RZAUdrM/edit#gid=0';
 const PackageCard = ({ title, remainingVacancies, filledVacancies, background, titleColor }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>
@@ -43,6 +46,12 @@ const ExternalLinkRow = () => (
           <div className="btn-wrapper">
             <Button variant="success" href={SPREADSHEET_URL} target="_blank">
               <strong>PLANILHA INSCRIÇÕES</strong>
+            </Button>
+            <Button variant="info" href={PAGARME} target="_blank">
+              <strong>PAGAR.ME</strong>
+            </Button>
+            <Button variant="warning" href={OLD_SPREADSHEET_URL} target="_blank">
+              <strong>PLANILHA ANTIGA</strong>
             </Button>
             {/* <Button variant="info" href={FILTERS_URL} target="_blank">
               <strong>PLANILHA FILTROS</strong>
