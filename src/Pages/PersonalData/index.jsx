@@ -99,7 +99,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              
+
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>CPF:</Form.Label>
@@ -130,9 +130,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                 <Form.Group>
                   <Form.Label>RG:</Form.Label>
                   <Form.Control
-                    as={InputMask}
                     isInvalid={!!errors.rg}
-                    mask="9.999-999"
                     id="rg"
                     name="rg"
                     value={values.rg}
