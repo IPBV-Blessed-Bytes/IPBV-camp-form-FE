@@ -56,6 +56,7 @@ const initialValues = {
     transportation: '',
     food: '',
     price: '',
+    title: '',
   },
   formPayment: {
     formPayment: '',
