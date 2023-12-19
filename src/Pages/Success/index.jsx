@@ -35,11 +35,15 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
                   <div className="qr-code-container">
                     <p>
                       Opções de pagamento presencial são cartão de crédito (maquineta) em até 12x com juros ou Pix no QR
-                      Code abaixo. <b>Enviar comprovante de transferência para o whatsapp (81) 9839-0194</b>
+                      Code abaixo. <b>Enviar comprovante de transferência para o whatsapp (81) 9839-0194.</b>
+                      <br />
+                      Acrescentar 10 centavos ao pagamento para fins de controle de entradas na conta.
                     </p>
                     <div className="qr-code-image">
-                      <small>
-                        <em>QR Code Pix Igreja</em>
+                      <small className="text-success">
+                        <b>
+                          Chave Pix: <em>11.244.944/0001-20</em>
+                        </b>
                       </small>
                       <img src={qrCode} />
                     </div>
