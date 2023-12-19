@@ -8,12 +8,12 @@ const FormHome = (props) => {
         <Container>
           <div className="row">
             <div className="col">
-              <h3 className="mb-2">Acampamento no período de carnaval 2024</h3>
-              <h5 className="mb-2">
+              <h3 className="mb-2 text-center">Acampamento no período de carnaval 2024</h3>
+              <h5 className="mb-2 text-center">
                 IP de Boa Viagem -{' '}
                 <span className="date-enphasis fw-bold">10 a 14 de Fevereiro • Colégio XV de Novembro - Garanhuns</span>
               </h5>
-              <p className="mb-2">
+              <p className="mb-2 text-center">
                 Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
                 igreja no telefone <em>(81) 9839-0194</em> (whatsapp). <br />
                 <b>Vagas Limitadas • Inscrições e Pagamento até 15 de Janeiro!</b>
