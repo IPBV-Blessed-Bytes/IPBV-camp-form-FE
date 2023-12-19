@@ -14,7 +14,6 @@ const SPREADSHEET_URL =
 const OLD_SPREADSHEET_URL =
   'https://docs.google.com/spreadsheets/d/1PdM9oq7uESYWXM2BzVQunSu5-FmpZXswLvAxt4So8rc/edit#gid=1419229141';
 const PAGARME = 'https://id.pagar.me/signin';
-const FILTERS_URL = 'https://docs.google.com/spreadsheets/d/1MPYASaBbk6XM3ecGwNEAMBSUpWx_MPlio6D1RZAUdrM/edit#gid=0';
 const PackageCard = ({ title, remainingVacancies, filledVacancies, background, titleColor }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>
     <Card className={`h-100 ${background}`}>
@@ -127,7 +126,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   const totalPaiedPlusChildren = totalRegistrationsGlobal.totalPaiedPlusChildren;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
   const totalNonPaied = totalRegistrationsGlobal.totalNonPaied;
-
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
 
@@ -140,7 +138,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
 
   const schoolIndividualWithBus = availablePackagesUsed.colegioIndividualComOnibus;
   const schoolFamilyWithBus = availablePackagesUsed.colegioFamiliaComOnibus;
-  const schoolCampingWithBus = availablePackagesUsed.colegioCampingComOnibus;
   const seminaryWithBus = availablePackagesUsed.seminarioIndividualComOnibus;
   const hotelWithBus = availablePackagesUsed.hotelDuplaComOnibus;
   const otherWithBus = availablePackagesUsed.outroComOnibus;
@@ -148,7 +145,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   const totalVacanciesWithBuses =
     schoolIndividualWithBus +
     schoolFamilyWithBus +
-    schoolCampingWithBus +
     seminaryWithBus +
     hotelWithBus +
     otherWithBus;
@@ -165,7 +161,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
       const totalVacancies = specificTotals[withBus];
 
       const remainingVacancies = totalVacancies - filledVacancies;
-
       return { filledVacancies, remainingVacancies };
     } else {
       return { filledVacancies: '0', remainingVacancies: '0' };
@@ -184,7 +179,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
       {
         colegioIndividualComOnibus: schoolIndividualTotal,
         colegioFamiliaComOnibus: schoolFamilyTotal,
-        colegioCampingComOnibus: schoolCampingTotal,
+        colegioCampingSemAlimentacao: schoolCampingTotal,
         seminarioIndividualComOnibus: seminaryTotal,
         hotelDuplaComOnibus: hotelTotal,
         outroComOnibus: otherTotal,
@@ -217,8 +212,8 @@ const Admin = ({ totalRegistrationsGlobal }) => {
     ),
     createCardData(
       'Colégio XV - Camping',
-      'colegioCampingComOnibus',
-      'colegioCampingSemOnibus',
+      'colegioCampingSemAlimentacao',
+      'colegioCampingComAlimentacao',
       'bg-dark',
       'text-warning',
     ),
