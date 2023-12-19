@@ -43,12 +43,13 @@ const FormPackages = ({
 
     setSelectedPackage(selectedPackage);
 
-    const { accomodation, transportation, food, values } = selectedPackage;
+    const { accomodation, transportation, food, values, title } = selectedPackage;
     updateForm({
       price: values.total,
       accomodation: accomodation,
       transportation: transportation,
       food: food,
+      title: title,
     });
 
     scrollToEnd();
@@ -330,6 +331,7 @@ FormPackages.propTypes = {
     accomodation: PropTypes.string,
     transportation: PropTypes.string,
     food: PropTypes.string,
+    title: PropTypes.string,
   }),
 };
 
