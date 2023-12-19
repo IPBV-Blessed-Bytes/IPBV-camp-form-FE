@@ -38,8 +38,10 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
                       Code abaixo. <b>Enviar comprovante de transferência para o whatsapp (81) 9839-0194</b>
                     </p>
                     <div className="qr-code-image">
-                      <small>
-                        <em>QR Code Pix Igreja</em>
+                      <small className="text-success">
+                        <b>
+                          Chave Pix (CNPJ): <em>11.244.944/0001-20</em>
+                        </b>
                       </small>
                       <img src={qrCode} />
                     </div>
