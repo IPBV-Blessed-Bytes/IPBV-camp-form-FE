@@ -474,6 +474,22 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.qr-code-image {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+  justify-content: center;
+
+  img {
+    height: 100%;
+  }
+
+  @media (max-width: $sm) {
+    height: 200px;
+  }
+}
+
 .row-gap {
   @media (max-width: $md) {
     gap: 0.5rem;
