@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const personalInformationSchema = yup.object().shape({
   name: yup.string().required('Informe o seu nome'),
   birthday: yup.date().required('Informe a sua data de nascimento'),
-  rg: yup.string().min(7, 'Informe um RG válido. Mínimo 7 dígitos').required('Informe o seu rg'),
+  rg: yup.string().min(6, 'Informe um RG válido. Mínimo 6 dígitos').required('Informe o seu rg'),
   cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
   rgShipper: yup.string().required('Selecione o órgão expedidor do seu RG'),
   rgShipperState: yup.string().required('Selecione a UF do órgão expedidor'),
