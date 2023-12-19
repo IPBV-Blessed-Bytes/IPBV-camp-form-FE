@@ -190,11 +190,6 @@ const FormPackages = ({
                           const openPackages = availableSlots - usedValidPackagesSum;
                           const isPackageAvailable = openPackages > 0;
 
-
-                          // console.log('availableSlots',availableSlots)
-                          console.log('usedValidPackagesSum',usedValidPackagesSum)
-                          // console.log('openPackages',openPackages)
-                          // console.log('isPackageAvailable',isPackageAvailable)
                           return (
                             <Card
                               key={cards.id}
