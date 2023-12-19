@@ -54,7 +54,7 @@ const getPackages = (age) => {
     {
       id: '5',
       title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) COM ÔNIBUS',
-      observation: '* No espaço no colégio destinado para camping COM ônibus (levar sua própria barraca)',
+      observation: '* No espaço no colégio destinado para camping COM ônibus (levar sua própria barraca). Não será permitido levar barraca no ônibus.',
       values: { ...schoolWithBus },
       accomodation: { id: 'colegioCampingComOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Com Ônibus',
