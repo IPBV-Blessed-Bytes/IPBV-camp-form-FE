@@ -25,8 +25,8 @@ const FormPackages = ({
     2: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibus' },
     3: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibus' },
     4: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibus' },
-    5: { available: 'colegioCamping', used: 'colegioCampingComOnibus' },
-    6: { available: 'colegioCamping', used: 'colegioCampingSemOnibus' },
+    5: { available: 'colegioCamping', used: 'colegioCampingSemAlimentacao' },
+    6: { available: 'colegioCamping', used: 'colegioCampingComAlimentacao' },
     7: { available: 'seminario', used: 'seminarioIndividualComOnibus' },
     8: { available: 'seminario', used: 'seminarioIndividualSemOnibus' },
     9: { available: 'hotel', used: 'hotelDuplaComOnibus' },
@@ -148,13 +148,13 @@ const FormPackages = ({
                             },
                             5: {
                               colegioCamping:
-                                usedValidPackagesPath?.colegioCampingComOnibus +
-                                usedValidPackagesPath?.colegioCampingSemOnibus,
+                                usedValidPackagesPath?.colegioCampingSemAlimentacao +
+                                usedValidPackagesPath?.colegioCampingComAlimentacao,
                             },
                             6: {
                               colegioCamping:
-                                usedValidPackagesPath?.colegioCampingComOnibus +
-                                usedValidPackagesPath?.colegioCampingSemOnibus,
+                                usedValidPackagesPath?.colegioCampingSemAlimentacao +
+                                usedValidPackagesPath?.colegioCampingComAlimentacao,
                             },
                             7: {
                               seminario:
@@ -190,6 +190,11 @@ const FormPackages = ({
                           const openPackages = availableSlots - usedValidPackagesSum;
                           const isPackageAvailable = openPackages > 0;
 
+
+                          // console.log('availableSlots',availableSlots)
+                          console.log('usedValidPackagesSum',usedValidPackagesSum)
+                          // console.log('openPackages',openPackages)
+                          // console.log('isPackageAvailable',isPackageAvailable)
                           return (
                             <Card
                               key={cards.id}
