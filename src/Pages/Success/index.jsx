@@ -42,7 +42,7 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
                     <div className="qr-code-image">
                       <small className="text-success">
                         <b>
-                          Chave Pix: <em>11.244.944/0001-20</em>
+                          Chave Pix (CNPJ): <em>11.244.944/0001-20</em>
                         </b>
                       </small>
                       <img src={qrCode} />
