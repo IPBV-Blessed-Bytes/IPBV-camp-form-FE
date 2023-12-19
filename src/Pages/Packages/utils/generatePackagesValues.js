@@ -182,7 +182,7 @@ const packageOther = ({ age, withTransportation }) => {
   };
 };
 
-const packageDayUse = () => {
+const packageNonPaid = () => {
   let accomodation = [0];
   let food = [0];
   let transportation = [0];
@@ -213,7 +213,7 @@ const packagesBundles = {
   seminary: packageSeminary,
   hotel: packageHotel,
   other: packageOther,
-  dayUse: packageDayUse,
+  nonPaid: packageNonPaid,
 };
 
 const generatePackagesValues = (packageType, age) => {

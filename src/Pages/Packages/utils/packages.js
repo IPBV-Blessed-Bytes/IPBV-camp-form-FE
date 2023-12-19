@@ -12,7 +12,7 @@ const getPackages = (age) => {
   const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
   const [hotelWithBuss, hotelWithoutBuss] = generatePackagesValues('hotel', age);
   const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age);
-  const [dayUse] = generatePackagesValues('dayUse');
+  const [nonPaid] = generatePackagesValues('nonPaid');
 
   const packages = [
     {
@@ -53,19 +53,21 @@ const getPackages = (age) => {
     },
     {
       id: '5',
-      title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) COM ÔNIBUS',
-      observation: '* No espaço no colégio destinado para camping COM ônibus (levar sua própria barraca). Não será permitido levar barraca no ônibus.',
-      values: { ...schoolWithBus },
-      accomodation: { id: 'colegioCampingComOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
-      transportation: 'Com Ônibus',
-      food: 'Café da manhã, almoço e jantar',
+      title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
+      subtitle: '• SEM ALIMENTAÇÃO',
+      observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO',
+      values: { ...nonPaid },
+      accomodation: { id: 'colegioCampingSemAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
+      transportation: 'Sem Ônibus',
+      food: 'Sem alimentação',
     },
     {
       id: '6',
       title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
-      observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca)',
+      subtitle: '• COM ALIMENTAÇÃO',
+      observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e COM ALIMENTAÇÃO',
       values: { ...schoolWithouBus },
-      accomodation: { id: 'colegioCampingSemOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
+      accomodation: { id: 'colegioCampingComAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -134,8 +136,8 @@ const getPackages = (age) => {
       title: 'PACOTE 13 - ASSISTIR O CULTO',
       observation:
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem',
-      values: { ...dayUse },
-      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'dayUse' },
+      values: { ...nonPaid },
+      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'nonPaid' },
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
