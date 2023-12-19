@@ -119,13 +119,75 @@ const FormPackages = ({
                           const [transportation, transportationWithDiscount] = cards.values.transportation;
                           const hasTransportationDiscount = typeof transportationWithDiscount === 'number';
 
+                          const usedValidPackagesPath = availablePackages?.data?.usedValidPackages;
+
                           const { available: availablePackageName, used: usedPackageName } =
                             packageMapping[cards.id] || {};
 
                           const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
-                          const availableValidPackages = availablePackages?.data?.usedValidPackages?.[usedPackageName];
+                          const usedValidPackagesMapping = {
+                            1: {
+                              colegioIndividual:
+                                usedValidPackagesPath?.colegioIndividualComOnibus +
+                                usedValidPackagesPath?.colegioIndividualSemOnibus,
+                            },
+                            2: {
+                              colegioIndividual:
+                                usedValidPackagesPath?.colegioIndividualComOnibus +
+                                usedValidPackagesPath?.colegioIndividualSemOnibus,
+                            },
+                            3: {
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibus +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibus,
+                            },
+                            4: {
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibus +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibus,
+                            },
+                            5: {
+                              colegioCamping:
+                                usedValidPackagesPath?.colegioCampingComOnibus +
+                                usedValidPackagesPath?.colegioCampingSemOnibus,
+                            },
+                            6: {
+                              colegioCamping:
+                                usedValidPackagesPath?.colegioCampingComOnibus +
+                                usedValidPackagesPath?.colegioCampingSemOnibus,
+                            },
+                            7: {
+                              seminario:
+                                usedValidPackagesPath?.seminarioIndividualComOnibus +
+                                usedValidPackagesPath?.seminarioIndividualSemOnibus,
+                            },
+                            8: {
+                              seminario:
+                                usedValidPackagesPath?.seminarioIndividualComOnibus +
+                                usedValidPackagesPath?.seminarioIndividualSemOnibus,
+                            },
+                            9: {
+                              hotel:
+                                usedValidPackagesPath?.hotelDuplaComOnibus + usedValidPackagesPath?.hotelDuplaSemOnibus,
+                            },
+                            10: {
+                              hotel:
+                                usedValidPackagesPath?.hotelDuplaComOnibus + usedValidPackagesPath?.hotelDuplaSemOnibus,
+                            },
+                            11: {
+                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
+                            },
+                            12: {
+                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
+                            },
+                            13: {
+                              usuarioSemCusto: usedValidPackagesPath?.usuarioSemCusto,
+                            },
+                          };
 
-                          const openPackages = availableSlots - availableValidPackages;
+                          const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
+
+                          const openPackages = availableSlots - usedValidPackagesSum;
                           const isPackageAvailable = openPackages > 0;
 
                           return (
@@ -143,7 +205,9 @@ const FormPackages = ({
                               }}
                             >
                               <Card.Body id={cards.id}>
-                                <Card.Title>{cards.title}{' '}<span className='text-danger'>{cards.subtitle}</span></Card.Title>
+                                <Card.Title>
+                                  {cards.title} <span className="text-danger">{cards.subtitle}</span>
+                                </Card.Title>
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
                                     <p className="mb-2">
