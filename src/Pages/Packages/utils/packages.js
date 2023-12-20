@@ -137,7 +137,7 @@ const getPackages = (age) => {
       observation:
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem',
       values: { ...nonPaid },
-      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'nonPaid' },
+      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externo' },
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
