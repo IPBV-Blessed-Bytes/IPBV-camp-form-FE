@@ -189,6 +189,12 @@ body {
           }
         }
 
+        .package-available {
+          align-items: end;
+          display: flex;
+          flex-direction: column;
+        }
+
         .price-with-discount {
           color: red;
           font-style: italic;

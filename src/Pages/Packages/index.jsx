@@ -74,6 +74,8 @@ const FormPackages = ({
 
   const isRegistrationClosed = validRegistrations >= 300;
 
+  const isChild = age < 11;
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
@@ -189,7 +191,7 @@ const FormPackages = ({
                           const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
 
                           const openPackages = availableSlots - usedValidPackagesSum;
-                          const isPackageAvailable = openPackages > 0;
+                          const isPackageAvailable = openPackages > 0 || isChild;
 
                           return (
                             <Card
@@ -273,8 +275,15 @@ const FormPackages = ({
                                       </div>
                                     )}
                                     {isPackageAvailable && (
-                                      <div className="package-description-container justify-content-end">
-                                        <span className="text-success">Vagas Disponíveis: {openPackages}</span>
+                                      <div className="package-description-container package-available mt-3 justify-content-end">
+                                        <span className="text-success">
+                                          Vagas Disponíveis Adultos: <em>{openPackages}</em>
+                                        </span>
+                                        {isChild && (
+                                          <span className="text-success">
+                                            Vagas Disponíveis Crianças: <em>Ilimitado</em>
+                                          </span>
+                                        )}
                                       </div>
                                     )}
                                   </div>
