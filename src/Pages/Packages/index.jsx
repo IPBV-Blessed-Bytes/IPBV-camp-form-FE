@@ -269,7 +269,7 @@ const FormPackages = ({
                                     </div>
                                     {!isPackageAvailable && (
                                       <div className="package-description-container justify-content-end">
-                                        <span className="no-vacancy text-danger text-decoration-underline">
+                                        <span className="no-vacancy text-danger text-decoration-underline mt-3">
                                           Sem Vagas Disponíveis
                                         </span>
                                       </div>
@@ -277,13 +277,20 @@ const FormPackages = ({
                                     {isPackageAvailable && (
                                       <div className="package-description-container package-available mt-3 justify-content-end">
                                         <span className="text-success">
-                                          Vagas Disponíveis Adultos: <em>{openPackages}</em>
+                                          Vagas Disponíveis:
+                                          <ul className='m-0'>
+                                            <li>
+                                              Adultos: <em>{openPackages}</em>
+                                            </li>
+                                            {isChild && (
+                                              <li>
+                                                <span className="text-success">
+                                                  Crianças: <em>Ilimitado</em>
+                                                </span>
+                                              </li>
+                                            )}
+                                          </ul>
                                         </span>
-                                        {isChild && (
-                                          <span className="text-success">
-                                            Vagas Disponíveis Crianças: <em>Ilimitado</em>
-                                          </span>
-                                        )}
                                       </div>
                                     )}
                                   </div>
