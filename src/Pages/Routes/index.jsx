@@ -1,20 +1,23 @@
 import 'react-datepicker/dist/react-datepicker.css';
-import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+
+import { useEffect, useState } from 'react';
+
 import { format } from 'date-fns';
+import PropTypes from 'prop-types';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import { getPackageCount, getTotalRegistrations, submitFormValues } from '../../fetchers/forms';
+import Admin from '../Admin';
 import ChooseFormPayment from '../ChooseFormPayment';
 import FormContact from '../Contact';
+import FinalReview from '../FinalReview';
 import FormHome from '../Home';
 import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
-import Admin from '../Admin';
-import FinalReview from '../FinalReview';
 
 export const enumSteps = {
   home: 0,
@@ -140,10 +143,7 @@ const FormRoutes = () => {
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
       };
 
-      const response = await axios.post(
-        'https://ipbv-camp-form-be-production-2b7d.up.railway.app/send-values',
-        updatedFormValues,
-      );
+      const response = await submitFormValues(updatedFormValues);
       setStatus('loaded');
 
       if (response.data.data.payment_url) {
@@ -167,7 +167,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/package-count');
+        const response = await getPackageCount();
         setAvailablePackages(response);
       } catch (error) {
         console.error(
@@ -184,9 +184,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get(
-          'https://ipbv-camp-form-be-production-2b7d.up.railway.app/total-registrations',
-        );
+        const response = await getTotalRegistrations();
         setTotalRegistrations(response.data);
       } catch (error) {
         console.error(
