@@ -214,7 +214,7 @@ const FormPackages = ({
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
                                     <p className="mb-2">
-                                      <span>{cards.observation}</span>
+                                      <span>{cards.observation} | {cards.food}</span>
                                     </p>
 
                                     <div className="package-description-container">
