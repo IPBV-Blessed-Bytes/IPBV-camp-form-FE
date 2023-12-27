@@ -154,7 +154,7 @@ const FormRoutes = () => {
     } catch (error) {
       setStatus('error');
       try {
-        const response = await axios.post('https://ipbv-camp-form-be-production.up.railway.app/cpf-error-messages', {
+        const response = await axios.post('https://ipbv-camp-form-be-production-2b7d.up.railway.app/cpf-error-messages', {
           cpf: formValues.personalInformation.cpf,
         });
 
