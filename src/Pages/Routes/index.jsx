@@ -154,10 +154,12 @@ const FormRoutes = () => {
     } catch (error) {
       setStatus('error');
       try {
-        const response = await axios.post('https://ipbv-camp-form-be-production-2b7d.up.railway.app/cpf-error-messages', {
-          cpf: formValues.personalInformation.cpf,
-        });
-
+        const response = await axios.post(
+          'https://ipbv-camp-form-be-production-2b7d.up.railway.app/cpf-error-messages',
+          {
+            cpf: formValues.personalInformation.cpf,
+          },
+        );
         if (response.data.cpfDuplicatedMissedLink) {
           setEndpointErrorMessage(
             'CPF já cadastrado: Link de pagamento online gerado e ainda válido. Aguarde 20 minutos e tente novamente.',
@@ -166,6 +168,8 @@ const FormRoutes = () => {
           setEndpointErrorMessage('CPF já cadastrado: Inscrição válida aguardando pagamento.');
         } else if (response.data.cpfDuplicatedRegistrationDone) {
           setEndpointErrorMessage('CPF já cadastrado: Inscrição já validada com sucesso.');
+        } else {
+          toast.error('CPF já cadastrado. ');
         }
       } catch (error) {
         toast.error(error.message);
