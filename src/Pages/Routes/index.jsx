@@ -168,7 +168,7 @@ const FormRoutes = () => {
           setEndpointErrorMessage('CPF já cadastrado: Inscrição já validada com sucesso.');
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error);
       }
     } finally {
       setLoading(false);
