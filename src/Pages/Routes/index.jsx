@@ -71,17 +71,16 @@ const FormRoutes = () => {
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
+  const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const navigate = useNavigate();
 
-  const updateFormValues = (key) => {
-    return (value) => {
-      setFormValues({
-        ...formValues,
-        [key]: value,
-      });
-    };
+  const updateFormValues = (key) => (value) => {
+    setFormValues({
+      ...formValues,
+      [key]: value,
+    });
   };
 
   const resetFormValues = () => {
@@ -127,7 +126,7 @@ const FormRoutes = () => {
     scrollTop();
   };
 
-  const sendForm = () => {
+  const sendForm = async () => {
     setLoading(true);
     sendFormValues();
   };
@@ -150,15 +149,27 @@ const FormRoutes = () => {
         window.open(response.data.data.payment_url, '_self');
       } else if (response.status === 201) {
         setFormSubmitted(true);
+        toast.success('Inscrição validada com sucesso');
       }
     } catch (error) {
       setStatus('error');
-      const errorMessage = error.message ? error.message : String(error);
-      toast.error(
-        errorMessage === 'Request failed with status code 403'
-          ? 'CPF já Cadastrado'
-          : errorMessage || 'Erro ao enviar os dados!',
-      );
+      try {
+        const response = await axios.post('https://ipbv-camp-form-be-production.up.railway.app/cpf-error-messages', {
+          cpf: formValues.personalInformation.cpf,
+        });
+
+        if (response.data.cpfDuplicatedMissedLink) {
+          setEndpointErrorMessage(
+            'CPF já cadastrado: Link de pagamento online gerado e ainda válido. Aguarde 20 minutos e tente novamente.',
+          );
+        } else if (response.data.cpfDuplicatedWaitingPayment) {
+          setEndpointErrorMessage('CPF já cadastrado: Inscrição válida aguardando pagamento.');
+        } else if (response.data.cpfDuplicatedRegistrationDone) {
+          setEndpointErrorMessage('CPF já cadastrado: Inscrição já validada com sucesso.');
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } finally {
       setLoading(false);
     }
@@ -199,6 +210,12 @@ const FormRoutes = () => {
 
     fetchTotalRegistrations();
   }, []);
+
+  useEffect(() => {
+    if (endpointErrorMessage) {
+      toast.error(endpointErrorMessage);
+    }
+  }, [endpointErrorMessage]);
 
   const handleAdminClick = () => {
     navigate('/admin');
