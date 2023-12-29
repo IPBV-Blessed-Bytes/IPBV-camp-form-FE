@@ -143,21 +143,18 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   const otherWithBus = availablePackagesUsed.outroComOnibus;
 
   const totalVacanciesWithBuses =
-    schoolIndividualWithBus +
-    schoolFamilyWithBus +
-    seminaryWithBus +
-    hotelWithBus +
-    otherWithBus;
+    schoolIndividualWithBus + schoolFamilyWithBus + seminaryWithBus + hotelWithBus + otherWithBus;
 
-  const calculateVacancies = (usedPackages, totalPackages, withBus, withoutBus, specificTotals) => {
+  const calculateVacancies = (usedPackages, usedValidPackages, totalPackages, withBus, withoutBus, specificTotals) => {
     if (
       usedPackages &&
+      usedValidPackages &&
       totalPackages &&
       Object.keys(usedPackages).length > 0 &&
+      Object.keys(usedValidPackages).length > 0 &&
       Object.keys(totalPackages).length > 0
     ) {
-      const filledVacancies = usedPackages[withBus] + usedPackages[withoutBus];
-
+      const filledVacancies = usedValidPackages[withBus] + usedValidPackages[withoutBus];
       const totalVacancies = specificTotals[withBus];
 
       const remainingVacancies = totalVacancies - filledVacancies;
@@ -170,9 +167,11 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   const createCardData = (title, withBusKey, withoutBusKey, background, titleColor) => {
     const usedPackages = availablePackages.usedPackages || {};
     const totalPackages = availablePackages.totalPackages || {};
+    const usedValidPackages = availablePackages.usedValidPackages || {};
 
     const { filledVacancies, remainingVacancies } = calculateVacancies(
       usedPackages,
+      usedValidPackages,
       totalPackages,
       withBusKey,
       withoutBusKey,
