@@ -74,7 +74,6 @@ const getPackages = (age) => {
     {
       id: '7',
       title: 'PACOTE 7 - HOSPEDAGEM INDIVIDUAL OU DUPLA COM ÔNIBUS',
-      subtitle: '• APENAS PRA QUEM JÁ ESTAVA PRÉ-INSCRITO NO FORMULÁRIO ANTIGOApenas pra quem já estava pré-inscrito no formulário antigo!',
       observation: '* COM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithBuss },
       accomodation: { id: 'seminarioIndividualComOnibus', name: SEMINARIO, subAccomodation: 'Seminário Individual' },
@@ -84,7 +83,6 @@ const getPackages = (age) => {
     {
       id: '8',
       title: 'PACOTE 8 - HOSPEDAGEM INDIVIDUAL OU DUPLA SEM ÔNIBUS (APENAS PRA QUEM JÁ ESTAVA INSCRITO NO FORMULÁRIO ANTIGO)',
-      subtitle: '• APENAS PRA QUEM JÁ ESTAVA PRÉ-INSCRITO NO FORMULÁRIO ANTIGO',
       observation: '* SEM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithoutBuss },
       accomodation: { id: 'seminarioIndividualSemOnibus', name: SEMINARIO, subAccomodation: 'Seminário Individual' },
@@ -94,7 +92,6 @@ const getPackages = (age) => {
     {
       id: '9',
       title: 'PACOTE 9 - HOSPEDAGEM DUPLA PARA QUARTO COM CAMA DE CASAL COM ÔNIBUS (APENAS PRA QUEM JÁ ESTAVA INSCRITO NO FORMULÁRIO ANTIGO)',
-      subtitle: '• APENAS PRA QUEM JÁ ESTAVA PRÉ-INSCRITO NO FORMULÁRIO ANTIGO',
       observation: '* COM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithBuss },
       accomodation: { id: 'hotelDuplaComOnibus', name: HOTEL_IBIS, subAccomodation: 'Hotel Dupla' },
@@ -104,7 +101,6 @@ const getPackages = (age) => {
     {
       id: '10',
       title: 'PACOTE 10 - HOSPEDAGEM DUPLA PARA QUARTO COM CAMA DE CASAL SEM ÔNIBUS (APENAS PRA QUEM JÁ ESTAVA INSCRITO NO FORMULÁRIO ANTIGO)',
-      subtitle: '• APENAS PRA QUEM JÁ ESTAVA PRÉ-INSCRITO NO FORMULÁRIO ANTIGO',
       observation: '* SEM ônibus / Café da manhã incluso no hotel',
       values: { ...hotelWithoutBuss },
       accomodation: { id: 'hotelDuplaSemOnibus', name: HOTEL_IBIS, subAccomodation: 'Hotel Dupla' },
