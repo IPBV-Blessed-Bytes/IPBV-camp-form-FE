@@ -214,7 +214,9 @@ const FormPackages = ({
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
                                     <p className="mb-2">
-                                      <span>{cards.observation} | {cards.food}</span>
+                                      <span>
+                                        {cards.observation} | {cards.food}
+                                      </span>
                                     </p>
 
                                     <div className="package-description-container">
@@ -278,17 +280,21 @@ const FormPackages = ({
                                       <div className="package-description-container package-available mt-3 justify-content-end">
                                         <span className="text-success">
                                           Vagas Disponíveis:
-                                          <ul className='m-0'>
-                                            <li>
-                                              Adultos: <em>{openPackages}</em>
-                                            </li>
-                                            {isChild && (
+                                          <ul className="m-0">
+                                            {openPackages > 0 ? (
                                               <li>
-                                                <span className="text-success">
-                                                  Crianças: <em>Ilimitado</em>
-                                                </span>
+                                                Adultos: <em>{openPackages}</em>
+                                              </li>
+                                            ) : (
+                                              <li>
+                                                Adultos: <em className="text-danger">Esgotado</em>
                                               </li>
                                             )}
+                                            <li>
+                                              <span className="text-success">
+                                                Crianças: <em>Ilimitado</em>
+                                              </span>
+                                            </li>
                                           </ul>
                                         </span>
                                       </div>
