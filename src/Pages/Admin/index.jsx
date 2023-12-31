@@ -354,9 +354,9 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(300 - totalPaiedPlusChildren)
+                            {isNaN(400 - totalPaiedPlusChildren)
                               ? 'Indefinido'
-                              : (300 - totalPaiedPlusChildren).toString()}
+                              : (400 - totalPaiedPlusChildren).toString()}
                           </b>
                         </em>
                       </Card.Text>
@@ -376,7 +376,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(300 - totalRegistrations) ? 'Indefinido' : (300 - totalRegistrations).toString()}
+                            {isNaN(400 - totalRegistrations) ? 'Indefinido' : (400 - totalRegistrations).toString()}
                           </b>
                         </em>
                         <br />
@@ -393,12 +393,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         <em>
                           <b>{isNaN(totalChildren) ? 'Indefinido' : totalChildren.toString()}</b>
                         </em>
-                        <br />
-                        Vagas Totais Restantes:{' '}
-                        <em>
-                          <b>{isNaN(300 - totalChildren) ? 'Indefinido' : (300 - totalChildren).toString()}</b>
-                        </em>
-                        <br />
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -412,12 +406,6 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         <em>
                           <b>{isNaN(totalNonPaied) ? 'Indefinido' : totalNonPaied.toString()}</b>
                         </em>
-                        <br />
-                        Vagas Totais Restantes:{' '}
-                        <em>
-                          <b>{isNaN(300 - totalNonPaied) ? 'Indefinido' : (300 - totalNonPaied).toString()}</b>
-                        </em>
-                        <br />
                       </Card.Text>
                     </Card.Body>
                   </Card>
