@@ -72,7 +72,7 @@ const FormPackages = ({
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
 
-  const isRegistrationClosed = validRegistrations >= 300;
+  const isRegistrationClosed = validRegistrations >= 310;
 
   const isChild = age < 11;
 
