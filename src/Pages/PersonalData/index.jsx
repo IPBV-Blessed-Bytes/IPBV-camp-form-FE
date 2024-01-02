@@ -57,9 +57,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
+                    <option value="Criança">Criança (até 10 anos)</option>
                     <option value="Homem">Adulto Masculino</option>
                     <option value="Mulher">Adulto Feminimo</option>
-                    <option value="Criança">Criança (até 10 anos)</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
                 </Form.Group>
