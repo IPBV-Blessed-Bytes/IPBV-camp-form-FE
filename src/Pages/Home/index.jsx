@@ -1,7 +1,15 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { Container, Button, Card } from 'react-bootstrap';
 
 const FormHome = (props) => {
+  useEffect(() => {
+    toast.error(
+      'As vagas estão se esgotando! Corra para fazer sua inscrição e pagamento. Data limite: 15/01. Após essa data, qualquer inscrição não paga será excluída, e a vaga será reaberta!',
+    );
+  }, []);
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
