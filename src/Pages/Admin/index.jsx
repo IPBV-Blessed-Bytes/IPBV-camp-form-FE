@@ -122,8 +122,8 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   };
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
-  const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
-  const totalPaiedPlusChildren = totalRegistrationsGlobal.totalPaiedPlusChildren;
+  const totalValidRegistrationsPaied = totalRegistrationsGlobal.totalValidRegistrationsPaied;
+  const totalValidRegistrationsGlobal = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
   const totalNonPaied = totalRegistrationsGlobal.totalNonPaied;
   const availablePackagesTotal = availablePackages.totalPackages || {};
@@ -321,19 +321,19 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-warning">Total de Inscritos VÁLIDOS (adultos)</Card.Title>
+                      <Card.Title className="fw-bold text-warning">Total de Inscritos válidos (pagantes)</Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalValidRegistrations) ? 'Indefinido' : totalValidRegistrations.toString()}</b>
+                          <b>{isNaN(totalValidRegistrationsPaied) ? 'Indefinido' : totalValidRegistrationsPaied.toString()}</b>
                         </em>
                         <br />
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(300 - totalValidRegistrations)
+                            {isNaN(310 - totalValidRegistrationsPaied)
                               ? 'Indefinido'
-                              : (300 - totalValidRegistrations).toString()}
+                              : (310 - totalValidRegistrationsPaied).toString()}
                           </b>
                         </em>
                         <br />
@@ -344,19 +344,19 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-success">Total de Inscritos + Crianças</Card.Title>
+                      <Card.Title className="fw-bold text-success">Total de Inscritos válidos (pagantes e não pagantes)</Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalPaiedPlusChildren) ? 'Indefinido' : totalPaiedPlusChildren.toString()}</b>
+                          <b>{isNaN(totalValidRegistrationsGlobal) ? 'Indefinido' : totalValidRegistrationsGlobal.toString()}</b>
                         </em>
                         <br />
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(400 - totalPaiedPlusChildren)
+                            {isNaN(400 - totalValidRegistrationsGlobal)
                               ? 'Indefinido'
-                              : (400 - totalPaiedPlusChildren).toString()}
+                              : (400 - totalValidRegistrationsGlobal).toString()}
                           </b>
                         </em>
                       </Card.Text>
@@ -366,7 +366,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-warning">Total de Inscritos + Não pagantes</Card.Title>
+                      <Card.Title className="fw-bold text-warning">Total de Inscritos geral</Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
@@ -444,15 +444,9 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                   </li>
                   <li>
                     <em>
-                      <b>Inscritos + Crianças</b>
+                      <b>Total de inscritos geral</b>
                     </em>{' '}
-                    : Contagem de inscritos válidos e crianças
-                  </li>
-                  <li>
-                    <em>
-                      <b>Inscritos + Não pagantes</b>
-                    </em>{' '}
-                    : Contagem de inscritos válidos e não pagantes (day use)
+                    : Contagem de inscritos válidos (pagantes ou não) e crianças
                   </li>
                   <li>
                     <em>
