@@ -6,7 +6,7 @@ import { Container, Button, Card } from 'react-bootstrap';
 const FormHome = (props) => {
   useEffect(() => {
     toast.error(
-      'As vagas estão se esgotando! Corra para fazer sua inscrição e pagamento. Data limite: 15/01. Após essa data, qualquer inscrição não paga será excluída, e a vaga será reaberta!',
+      'As vagas estão se esgotando! Faça logo sua inscrição e pagamento. Data limite: 15/01. Após essa data, qualquer inscrição não paga será excluída, e a vaga será reaberta!',
     );
   }, []);
 
