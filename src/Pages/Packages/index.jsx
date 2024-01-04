@@ -70,11 +70,11 @@ const FormPackages = ({
     nextStep();
   };
 
-  const validRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
-
-  const isRegistrationClosed = validRegistrations >= 310;
+  const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
 
   const isChild = age < 11;
+
+  const isRegistrationClosed = ((validRegistrations >= 310) && !isChild);
 
   return (
     <Card className="form__container__general-height">
