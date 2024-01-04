@@ -295,7 +295,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
               <Row>
                 <Col xs={12} className="text-end mb-2">
                   <p>
-                    Bem-vinda,
+                    Bem vindo(a),
                     <span>
                       <strong className="text-uppercase"> {loggedInUsername}</strong>
                     </span>
@@ -354,9 +354,9 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(400 - totalValidRegistrationsGlobal)
+                            {isNaN(375 - totalValidRegistrationsGlobal)
                               ? 'Indefinido'
-                              : (400 - totalValidRegistrationsGlobal).toString()}
+                              : (375 - totalValidRegistrationsGlobal).toString()}
                           </b>
                         </em>
                       </Card.Text>
@@ -376,7 +376,7 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(400 - totalRegistrations) ? 'Indefinido' : (400 - totalRegistrations).toString()}
+                            {isNaN(375 - totalRegistrations) ? 'Indefinido' : (375 - totalRegistrations).toString()}
                           </b>
                         </em>
                         <br />
