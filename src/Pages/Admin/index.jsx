@@ -331,9 +331,9 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(310 - totalValidRegistrationsPaied)
+                            {isNaN(311 - totalValidRegistrationsPaied)
                               ? 'Indefinido'
-                              : (310 - totalValidRegistrationsPaied).toString()}
+                              : (311 - totalValidRegistrationsPaied).toString()}
                           </b>
                         </em>
                         <br />
@@ -354,9 +354,9 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                         Vagas Totais Restantes:{' '}
                         <em>
                           <b>
-                            {isNaN(375 - totalValidRegistrationsGlobal)
+                            {isNaN(311 - totalValidRegistrationsGlobal)
                               ? 'Indefinido'
-                              : (375 - totalValidRegistrationsGlobal).toString()}
+                              : (311 - totalValidRegistrationsGlobal).toString()}
                           </b>
                         </em>
                       </Card.Text>
