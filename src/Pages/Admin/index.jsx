@@ -325,18 +325,12 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalValidRegistrationsPaied) ? 'Indefinido' : totalValidRegistrationsPaied.toString()}</b>
-                        </em>
-                        <br />
-                        Vagas Totais Restantes:{' '}
-                        <em>
                           <b>
-                            {isNaN(311 - totalValidRegistrationsPaied)
+                            {isNaN(totalValidRegistrationsPaied)
                               ? 'Indefinido'
-                              : (311 - totalValidRegistrationsPaied).toString()}
+                              : totalValidRegistrationsPaied.toString()}
                           </b>
                         </em>
-                        <br />
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -344,11 +338,18 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-light">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-success">Total de Inscritos válidos (pagantes e não pagantes)</Card.Title>
+                      <Card.Title className="fw-bold text-success">
+                        Total de Inscritos válidos <br />
+                        (pagantes e não pagantes)
+                      </Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
-                          <b>{isNaN(totalValidRegistrationsGlobal) ? 'Indefinido' : totalValidRegistrationsGlobal.toString()}</b>
+                          <b>
+                            {isNaN(totalValidRegistrationsGlobal)
+                              ? 'Indefinido'
+                              : totalValidRegistrationsGlobal.toString()}
+                          </b>
                         </em>
                         <br />
                         Vagas Totais Restantes:{' '}
@@ -366,20 +367,15 @@ const Admin = ({ totalRegistrationsGlobal }) => {
                 <Col className="mb-4" xs={12} md={6} lg={4}>
                   <Card className="h-100 bg-dark">
                     <Card.Body>
-                      <Card.Title className="fw-bold text-warning">Total de Inscritos geral</Card.Title>
+                      <Card.Title className="fw-bold text-warning">
+                        Total de Inscritos geral <br />
+                        (adultos e crianças)
+                      </Card.Title>
                       <Card.Text>
                         Vagas Totais Preenchidas:{' '}
                         <em>
                           <b>{isNaN(totalRegistrations) ? 'Indefinido' : totalRegistrations.toString()}</b>
                         </em>
-                        <br />
-                        Vagas Totais Restantes:{' '}
-                        <em>
-                          <b>
-                            {isNaN(375 - totalRegistrations) ? 'Indefinido' : (375 - totalRegistrations).toString()}
-                          </b>
-                        </em>
-                        <br />
                       </Card.Text>
                     </Card.Body>
                   </Card>
