@@ -33,4 +33,9 @@ const formPaymentSchema = yup.object().shape({
   formPayment: yup.string().required('Selecione o tipo de pagamento'),
 });
 
-export { personalInformationSchema, additionalInformationSchema, formPaymentSchema };
+const chooseWaySchema = yup.object().shape({
+  cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
+  formPayment: yup.string().required('Selecione o tipo de pagamento'),
+});
+
+export { personalInformationSchema, additionalInformationSchema, formPaymentSchema, chooseWaySchema };
