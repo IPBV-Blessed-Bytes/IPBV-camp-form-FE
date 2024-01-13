@@ -20,7 +20,7 @@ const Footer = ({ onAdminClick }) => {
           </em>
         </p>
         <p className="form__footer__copyright">
-          © 2023 Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
+          © 2024 Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
         </p>
       </div>
 

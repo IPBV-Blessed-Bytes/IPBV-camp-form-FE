@@ -1,9 +1,10 @@
+import ChooseWay from './Pages/ChooseWay';
 import CloseForm from './Pages/CloseForm';
 import Offline from './Pages/Offline';
 import FormRoutes from './Pages/Routes';
 
 function App() {
-  const toggleSite = 'form-on';
+  const toggleSite = 'choose-way';
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
@@ -13,6 +14,7 @@ function App() {
 
   return (
     <>
+      {toggleSite === 'choose-way' && <ChooseWay />}
       {toggleSite === 'form-on' && <FormRoutes />}
       {toggleSite === 'form-off' && <Offline />}
       {toggleSite === 'form-closed' && <CloseForm />}

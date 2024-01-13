@@ -495,6 +495,14 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.initial-wrapper {
+  min-height: 200px;
+
+  &__btn {
+    min-width: 240px;
+  }
+}
+
 .row-gap {
   @media (max-width: $md) {
     gap: 0.5rem;
