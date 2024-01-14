@@ -24,6 +24,7 @@ const ChooseWay = () => {
   const [showRegistrationFields, setShowRegistrationFields] = useState(false);
   const [showAnotherScreen, setShowAnotherScreen] = useState(false);
   const [formValues, setFormValues] = useState(initialValues);
+  const [loading, setLoading] = useState(false);
   // const [personData, setPersonData] = useState('');
   const [displayedCpf, setDisplayedCpf] = useState('');
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const ChooseWay = () => {
   });
 
   const sendCpfValue = async () => {
+    setLoading(true);
     submitForm();
 
     try {
@@ -71,12 +73,15 @@ const ChooseWay = () => {
       } else {
         toast.error('Erro! Tente novamente em instantes ou entre em contato com a secretaria.');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   // const fetchPersonData = async () => {
+  //   setLoading(true);
   //   submitForm();
-  //   consultCpf()
+  //   consultCpf();
 
   //   console.log('entrou no fetch');
   //   try {
@@ -92,13 +97,18 @@ const ChooseWay = () => {
 
   //     console.log('passou do payload');
 
-  //     const response = await axios.post('https://ipbv-camp-form-be-production-2b7d.up.railway.app/get-person-data', payload);
+  //     const response = await axios.post(
+  //       'https://ipbv-camp-form-be-production-2b7d.up.railway.app/get-person-data',
+  //       payload,
+  //     );
   //     console.log(response);
   //     // setPersonData(response)
   //   } catch (error) {
   //     // if (error.response.data.registration === 'Invalid CPF.') {
   //     //   toast.error('CPF não cadastrado em nossa base de dados.');
   //     // }
+  //   } finally {
+  //     setLoading(false);
   //   }
   // };
 
@@ -210,6 +220,14 @@ const ChooseWay = () => {
 
                   {showAnotherScreen && (
                     <>
+                      {loading && (
+                        <div className="overlay">
+                          <div className="spinner-container">
+                            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+                            <span>Carregando dados</span>
+                          </div>
+                        </div>
+                      )}
                       {showCpfField && (
                         <>
                           <Row className="text-center mb-5">
@@ -268,7 +286,7 @@ const ChooseWay = () => {
                           </Row>
                         </>
                       )}
-                      {showRegistrationFields && <CpfReview formValues={'personData'}/>}
+                      {showRegistrationFields && <CpfReview formValues={'personData'} />}
                     </>
                   )}
                 </Container>
