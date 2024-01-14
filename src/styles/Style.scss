@@ -503,6 +503,24 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.fix-positioning {
+  margin-bottom: -32px;
+
+  @media (max-width: $sm) {
+    margin-bottom: -16px;
+  }
+
+  @media (min-width: $lg) {
+    margin-left: -52px;
+    margin-bottom: -32px;
+  }
+
+  @media (min-width: $xl) {
+    margin-left: -43px;
+    margin-bottom: -32px;
+  }
+}
+
 .row-gap {
   @media (max-width: $md) {
     gap: 0.5rem;
