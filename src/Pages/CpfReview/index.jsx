@@ -26,7 +26,7 @@ const CpfReview = ({ formValues }) => {
   }
 
   return (
-    <Card className="form__container__general-height">
+    <Card className="form__container__general-height fix-positioning">
       <Card.Body>
         <Container>
           <div className="form-review">
