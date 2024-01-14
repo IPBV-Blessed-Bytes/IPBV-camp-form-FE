@@ -25,15 +25,13 @@ const ChooseWay = () => {
   const [showAnotherScreen, setShowAnotherScreen] = useState(false);
   const [formValues, setFormValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
-  // const [personData, setPersonData] = useState('');
+  const [personData, setPersonData] = useState('');
   const [displayedCpf, setDisplayedCpf] = useState('');
   const navigate = useNavigate();
 
   const { values, errors, handleChange, submitForm } = useFormik({
     initialValues: formValues,
-    onSubmit: () => {
-      // updateForm(values);
-    },
+    onSubmit: () => {},
     validationSchema: chooseWaySchema,
     validateOnBlur: false,
     validateOnChange: false,
@@ -61,7 +59,6 @@ const ChooseWay = () => {
         window.open(response.data.data.payment_url, '_self');
       }
     } catch (error) {
-      console.log(error);
       if (error.response.data.registration === 'Payment Type exchange temporaly unavailable.') {
         toast.error('CPF já cadastrado e pagamento já validado.');
       } else if (error.response.data.registration === 'Invalid CPF.') {
@@ -78,39 +75,32 @@ const ChooseWay = () => {
     }
   };
 
-  // const fetchPersonData = async () => {
-  //   setLoading(true);
-  //   submitForm();
-  //   consultCpf();
+  const fetchPersonData = async () => {
+    setLoading(true);
+    submitForm();
+    consultCpf();
 
-  //   console.log('entrou no fetch');
-  //   try {
-  //     console.log('entrou no try');
+    try {
+      const payload = {
+        personalInformation: {
+          cpf: displayedCpf,
+        },
+      };
 
-  //     const payload = {
-  //       personalInformation: {
-  //         cpf: displayedCpf,
-  //       },
-  //     };
+      const response = await axios.post(
+        'https://ipbv-camp-form-be-production-2b7d.up.railway.app/get-person-data',
+        payload,
+      );
 
-  //     console.log('Enviando os seguintes valores:', payload);
-
-  //     console.log('passou do payload');
-
-  //     const response = await axios.post(
-  //       'https://ipbv-camp-form-be-production-2b7d.up.railway.app/get-person-data',
-  //       payload,
-  //     );
-  //     console.log(response);
-  //     // setPersonData(response)
-  //   } catch (error) {
-  //     // if (error.response.data.registration === 'Invalid CPF.') {
-  //     //   toast.error('CPF não cadastrado em nossa base de dados.');
-  //     // }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      setPersonData(response);
+    } catch (error) {
+      if (error.response.data.registration === 'Invalid CPF.') {
+        toast.error('CPF não cadastrado em nossa base de dados.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAdminClick = () => {
     navigate('/');
@@ -135,6 +125,16 @@ const ChooseWay = () => {
         value: rawCpf,
       },
     });
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (showCpfField) {
+        sendCpfValue();
+      } else if (!showAnotherScreen) {
+        fetchPersonData();
+      }
+    }
   };
 
   return (
@@ -179,7 +179,7 @@ const ChooseWay = () => {
                           </Form.Text>
                         </Col>
                       </Row>
-                      {/* <Row>
+                      <Row>
                         <div className="packages-horizontal-line mb-5 my-md-5" />
                       </Row>
                       <Row className="text-center mb-3">
@@ -202,6 +202,7 @@ const ChooseWay = () => {
                               className="cpf-container"
                               value={displayedCpf}
                               onChange={handleCpfChange}
+                              onKeyDown={handleKeyDown}
                               placeholder="000.000000-00"
                             ></Form.Control>
                             <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
@@ -214,7 +215,7 @@ const ChooseWay = () => {
                             Consultar
                           </Button>
                         </Col>
-                      </Row> */}
+                      </Row>
                     </>
                   )}
 
@@ -271,6 +272,7 @@ const ChooseWay = () => {
                                   className="cpf-container"
                                   value={displayedCpf}
                                   onChange={handleCpfChange}
+                                  onKeyDown={handleKeyDown}
                                   placeholder="000.000000-00"
                                 ></Form.Control>
                                 <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
@@ -286,7 +288,7 @@ const ChooseWay = () => {
                           </Row>
                         </>
                       )}
-                      {showRegistrationFields && <CpfReview formValues={'personData'} />}
+                      {showRegistrationFields && <CpfReview formValues={personData} />}
                     </>
                   )}
                 </Container>
