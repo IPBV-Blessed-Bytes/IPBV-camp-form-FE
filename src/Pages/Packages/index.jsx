@@ -74,7 +74,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = ((validRegistrations >= 311) && !isChild);
+  const isRegistrationClosed = ((validRegistrations >= 360) && !isChild);
 
   return (
     <Card className="form__container__general-height">
