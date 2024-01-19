@@ -50,9 +50,9 @@ const CpfReview = ({ formValues }) => {
               <div className="packages-horizontal-line" />
               <Row className="row-gap">
                 <Col md={6} className=" fw-bold">
-                  <Card.Text>
+                  <Card.Text className="text-success">
                     <span className="form-review__section-title"> Status de Pagamento:</span> <br />{' '}
-                    {formValues.data.payment}
+                    <em>{formValues.data.payment}</em>
                   </Card.Text>
                 </Col>
                 <Col md={6} className=" fw-bold">
