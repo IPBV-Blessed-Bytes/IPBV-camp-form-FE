@@ -24,6 +24,7 @@ const ChooseWay = () => {
   const [showRegistrationFields, setShowRegistrationFields] = useState(false);
   const [showAnotherScreen, setShowAnotherScreen] = useState(false);
   const [formValues, setFormValues] = useState(initialValues);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [personData, setPersonData] = useState('');
   const [displayedCpf, setDisplayedCpf] = useState('');
@@ -42,6 +43,7 @@ const ChooseWay = () => {
   }, []);
 
   const sendCpfValue = async () => {
+    setIsButtonDisabled(true);
     setLoading(true);
     submitForm();
 
@@ -63,6 +65,8 @@ const ChooseWay = () => {
         window.open(response.data.data.payment_url, '_self');
       }
     } catch (error) {
+      setIsButtonDisabled(false);
+
       if (error.response.data.registration === 'Payment Type exchange temporaly unavailable.') {
         toast.error('CPF já cadastrado e pagamento já validado.');
       } else if (error.response.data.registration === 'Invalid CPF.') {
@@ -285,7 +289,7 @@ const ChooseWay = () => {
                           </Row>
                           <Row className="justify-content-center align-items-center">
                             <Col className="justify-content-end d-flex" md={6}>
-                              <Button variant="warning" onClick={sendCpfValue} size="lg">
+                              <Button variant="warning" onClick={sendCpfValue} size="lg" disabled={isButtonDisabled}>
                                 Avançar
                               </Button>
                             </Col>
