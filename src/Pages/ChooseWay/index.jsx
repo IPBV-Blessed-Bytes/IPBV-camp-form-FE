@@ -191,7 +191,7 @@ const ChooseWay = () => {
                         <div className="packages-horizontal-line mb-5 my-md-5" />
                       </Row>
                       <Row className="text-center mb-3">
-                        <h4>Consulte Staus da sua Inscrição abaixo:</h4>
+                        <h4>Consulte Status da sua Inscrição abaixo:</h4>
                         <Form.Text className="d-block mt-3" muted>
                           Insira seu CPF abaixo caso você deseje consultar o status da sua inscrição. Você obterá sua
                           situação atual de pagamento, pacote cadastrado e demais informações importantes.
