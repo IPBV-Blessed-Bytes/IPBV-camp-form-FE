@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,6 +36,10 @@ const ChooseWay = () => {
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  useEffect(() => {
+    toast.error('Se você ainda não o fez, regularize o pagamento de sua inscrição o mais rápido possível!');
+  }, []);
 
   const sendCpfValue = async () => {
     setLoading(true);
