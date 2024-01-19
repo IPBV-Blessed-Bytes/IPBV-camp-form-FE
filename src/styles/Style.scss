@@ -521,6 +521,30 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.choose-way-info-text {
+  &--normal {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  &--danger {
+    color: $fail;
+    font-size: 1rem;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  @media (max-width: $md) {
+    &--normal {
+      font-size: 1rem;
+    }
+
+    &--danger {
+      font-size: 0.875rem;
+    }
+  }
+}
+
 .row-gap {
   @media (max-width: $md) {
     gap: 0.5rem;
