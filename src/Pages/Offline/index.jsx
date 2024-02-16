@@ -14,7 +14,7 @@ const Offline = () => {
                 <div className="form__success__title">
                   <b>
                     Inscrições Encerradas! <br />
-                    Até o acampamento ou até 2025!
+                    Até 2025!
                   </b>
                 </div>
                 <p className="form__success__message"></p>
