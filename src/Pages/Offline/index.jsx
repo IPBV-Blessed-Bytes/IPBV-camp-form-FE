@@ -12,10 +12,9 @@ const Offline = () => {
             <Container>
               <div className="form__success text-center">
                 <div className="form__success__title">
-                  <b>
-                    Inscrições Encerradas! <br />
-                    Até 2025!
-                  </b>
+                  <h2>
+                    <b>As inscrições para o acampamento de 2025 começarão em breve. Aguarde!</b>
+                  </h2>
                 </div>
                 <p className="form__success__message"></p>
                 <p className="form__success__contact">
