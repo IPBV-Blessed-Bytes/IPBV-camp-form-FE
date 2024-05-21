@@ -203,7 +203,7 @@ body {
     }
 
     .card-is-active {
-      background-color: $inner-card-hover;
+      background-color: $turquoise;
     }
 
     .react-datepicker-wrapper,
@@ -555,4 +555,12 @@ a:not(.form-success__button, .mail-to) {
   @media (max-width: $md) {
     width: 10.9375rem !important;
   }
+}
+
+.actived-filter {
+  background-color: $turquoise;
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-bg-state: #edf4fe;
 }

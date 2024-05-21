@@ -93,6 +93,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           />
         </svg>
       )}
+
       {typeIcon === 'arrow-down-double' && (
         <svg
           viewBox="0 0 330 330"
@@ -115,6 +116,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           />
         </svg>
       )}
+
       {typeIcon === 'arrow-right' && (
         <svg
           viewBox="0 0 24 24"
@@ -126,6 +128,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           <path d="m14.523 18.787s4.501-4.505 6.255-6.26c.146-.146.219-.338.219-.53s-.073-.383-.219-.53c-1.753-1.754-6.255-6.258-6.255-6.258-.144-.145-.334-.217-.524-.217-.193 0-.385.074-.532.221-.293.292-.295.766-.004 1.056l4.978 4.978h-14.692c-.414 0-.75.336-.75.75s.336.75.75.75h14.692l-4.979 4.979c-.289.289-.286.762.006 1.054.148.148.341.222.533.222.19 0 .378-.072.522-.215z" />
         </svg>
       )}
+
       {typeIcon === 'arrow-left' && (
         <svg
           viewBox="0 0 24 24"
@@ -137,6 +140,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           <path d="m9.474 5.209s-4.501 4.505-6.254 6.259c-.147.146-.22.338-.22.53s.073.384.22.53c1.752 1.754 6.252 6.257 6.252 6.257.145.145.336.217.527.217.191-.001.383-.074.53-.221.293-.293.294-.766.004-1.057l-4.976-4.976h14.692c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-14.692l4.978-4.979c.289-.289.287-.761-.006-1.054-.147-.147-.339-.221-.53-.221-.191-.001-.38.071-.525.215z" />
         </svg>
       )}
+
       {typeIcon === 'selected' && (
         <svg
           viewBox="0 0 24 24"
@@ -172,6 +176,18 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
               />
             </g>
           </g>
+        </svg>
+      )}
+
+      {typeIcon === 'filter' && (
+        <svg
+          className={className}
+          onClick={onClick}
+          height={iconSize ? iconSize + 'px' : '30px'}
+          fill={fill ? fill : ''}
+          viewBox="0 0 1792 1792"
+        >
+          <path d="M1595 295q17 41-14 70l-493 493v742q0 42-39 59-13 5-25 5-27 0-45-19l-256-256q-19-19-19-45v-486l-493-493q-31-29-14-70 17-39 59-39h1280q42 0 59 39z" />
         </svg>
       )}
     </>
