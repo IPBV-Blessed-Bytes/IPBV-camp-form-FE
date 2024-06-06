@@ -1,3 +1,11 @@
+## Demo Video
+
+Aqui está uma demonstração do projeto:
+
+[Assista ao vídeo no YouTube](https://www.youtube.com/watch?v=8yMUdK8Zcjk?si=LUMQO0NCcwDVqrp-)
+
 # IPBV Camp Form - Frontend
 
-Para subir o ambiente localmente, rode yarn dev e selecione o IP. Automaticamente irá abrir o ambiente em seu navegador e toda alteração feita em código irá espelhar na UI
+• Rode `yarn dev` e selecione a porta para abrir o servidor local do Vite e rodar a aplicação
+
+• Se não tiver o _yarn_ instalado, rode `yarn` que as dependências serão instaladas
