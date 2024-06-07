@@ -52,9 +52,6 @@ const ExternalLinkRow = () => (
             <Button variant="warning" href={OLD_SPREADSHEET_URL} target="_blank">
               <strong>PLANILHA ANTIGA</strong>
             </Button>
-            {/* <Button variant="info" href={FILTERS_URL} target="_blank">
-              <strong>PLANILHA FILTROS</strong>
-            </Button> */}
           </div>
         </Card.Body>
       </Card>
