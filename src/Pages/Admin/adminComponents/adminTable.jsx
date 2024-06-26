@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Container, Row, Button, Form, Modal, Col } from 'react-bootstrap';
+import { Container, Row, Button, Form, Modal, Col, Table } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -142,13 +142,13 @@ const AdminTable = () => {
       'Observação:',
       'Pagamento:',
       'Igreja:',
-      'Data de Inscrição:',
       'Carona:',
+      'Data de Inscrição:',
       'Nascimento:',
       'CPF:',
       'RG:',
       'Órgão Expedidor:',
-      'Estado Órgão Expedidor:',
+      'Estado Expedidor:',
       'Categoria:',
       'Celular:',
       'Whatsapp:',
@@ -156,7 +156,6 @@ const AdminTable = () => {
       'Preço:',
       'Alergia:',
       'Agregados:',
-      'ID Acomodação:',
       'Acomodação:',
       'Sub Acomodação:',
       'Alimentação:',
@@ -167,23 +166,23 @@ const AdminTable = () => {
       {
         Header: () => (
           <div className="d-flex justify-content-between w-100">
-            <div>
-              <input
-                className="w-auto"
+            <span className="d-flex">
+              <Form.Check
+                className="table-checkbox"
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length}
               />
               &nbsp; Todos
-            </div>
+            </span>
           </div>
         ),
         accessor: 'selection',
         Filter: '',
         sortType: 'alphanumeric',
         Cell: ({ row }) => (
-          <input
-            className="w-auto"
+          <Form.Check
+            className="table-checkbox"
             type="checkbox"
             onChange={() => handleCheckboxChange(row.index)}
             checked={selectedRows.includes(row.index)}
@@ -336,7 +335,7 @@ const AdminTable = () => {
 
       <Row>
         <div className="table-responsive">
-          <table {...getTableProps()} className="table table-striped table-bordered table-hover">
+          <Table striped bordered hover {...getTableProps()} className="custom-table">
             <thead>
               {headerGroups.map((headerGroup) => (
                 <React.Fragment key={headerGroup.id}>
@@ -374,7 +373,7 @@ const AdminTable = () => {
                 );
               })}
             </tbody>
-          </table>
+          </Table>
         </div>
       </Row>
 
