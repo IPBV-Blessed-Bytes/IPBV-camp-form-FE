@@ -434,7 +434,7 @@ a:not(.form-success__button, .mail-to) {
 
 .form-review {
   &__section-title {
-    color: #204691 !important;
+    color: $primary !important;
   }
 
   input {
@@ -556,38 +556,6 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
-.filter-input {
-  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
-}
-
-.actived-filter {
-  background-color: $turquoise !important;
-}
-
-.table-hover > tbody > tr:hover > * {
-  --bs-table-bg-state: #edf4fe;
-}
-
-.filter-icon {
-  margin: 0.5rem;
-  position: absolute;
-  right: 0;
-}
-
-.table-cells-header:hover div .sort-icon {
-  display: block !important;
-}
-
-.table-cells-header,
-.table-cells-cols {
-  min-width: 160px;
-}
-
-.sort-icon {
-  user-select: none;
-}
-
-.form-control-bg:hover,
 .form-control-bg:focus {
   color: $primary !important;
   font-weight: bold;
@@ -600,6 +568,24 @@ a:not(.form-success__button, .mail-to) {
 
 button.btn.btn-outline-danger:hover svg {
   fill: #fff;
+}
+
+.sort-icon {
+  user-select: none;
+}
+
+.filter-icon {
+  margin: 0.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.filter-input {
+  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
+}
+
+.actived-filter {
+  background-color: $turquoise !important;
 }
 
 .scroll-to-top {
@@ -627,6 +613,35 @@ button.btn.btn-outline-danger:hover svg {
 
 .scroll-to-top:hover {
   opacity: 1;
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-bg-state: #b2dfb2;
+}
+
+.table-cells-header:hover div .sort-icon {
+  display: block !important;
+}
+
+.table-cells-header,
+.table-cells-cols {
+  min-width: 200px;
+}
+
+.custom-table {
+  --bs-border-color: #000;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-bg-type: rgba(var(--bs-emphasis-color-rgb), 0.1); 
+}
+
+.table>tbody>tr>td.selected-column {
+  background-color: $light-green
+}
+
+.table-checkbox .form-check-input {
+  width: auto;
 }
 
 .table-tools {
