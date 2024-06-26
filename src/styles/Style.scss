@@ -203,9 +203,8 @@ body {
     }
 
     .card-is-active {
-      background-color: $inner-card-hover;
+      background-color: $turquoise;
     }
-
     .react-datepicker-wrapper,
     .cpf-container {
       margin-bottom: 1em;
@@ -554,5 +553,119 @@ a:not(.form-success__button, .mail-to) {
 .form-success__button {
   @media (max-width: $md) {
     width: 10.9375rem !important;
+  }
+}
+
+.filter-input {
+  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
+}
+
+.actived-filter {
+  background-color: $turquoise !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-bg-state: #edf4fe;
+}
+
+.filter-icon {
+  margin: 0.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.table-cells-header:hover div .sort-icon {
+  display: block !important;
+}
+
+.table-cells-header,
+.table-cells-cols {
+  min-width: 160px;
+}
+
+.sort-icon {
+  user-select: none;
+}
+
+.form-control-bg:hover,
+.form-control-bg:focus {
+  color: $primary !important;
+  font-weight: bold;
+}
+
+.btn.btn-outline-success,
+.btn.btn-outline-danger {
+  border-width: 3px !important;
+}
+
+button.btn.btn-outline-danger:hover svg {
+  fill: #fff;
+}
+
+.scroll-to-top {
+  align-items: center;
+  background-color: $form-sent-success;
+  border-radius: 50%;
+  bottom: 1.25rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.5rem;
+  height: 5rem;
+  justify-content: center;
+  opacity: 0.6;
+  position: fixed;
+  right: 1.25rem;
+  width: 5rem;
+  z-index: 1000;
+
+  @media (max-width: $md) {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+.scroll-to-top:hover {
+  opacity: 1;
+}
+
+.table-tools {
+  &__left-buttons {
+    @media (max-width: $md) {
+      button {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__right-buttons {
+    display: flex;
+    justify-content: end;
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__left-buttons,
+  &__right-buttons {
+    @media (max-width: $md) {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__button-name {
+    @media (max-width: $xxxl) {
+      width: 100%;
+    }
+
+    @media (max-width: $md) {
+      display: none;
+    }
   }
 }
