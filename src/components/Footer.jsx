@@ -7,6 +7,8 @@ const Footer = ({ onAdminClick }) => {
     onAdminClick();
   };
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="d-flex align-items-center justify-content-between">
       <div className="form__footer d-flex flex-column p-3">
@@ -20,7 +22,7 @@ const Footer = ({ onAdminClick }) => {
           </em>
         </p>
         <p className="form__footer__copyright">
-          © 2024 Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
+          © {currentYear} Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
         </p>
       </div>
 
