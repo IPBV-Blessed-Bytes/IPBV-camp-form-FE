@@ -153,7 +153,7 @@ const ChooseWay = () => {
             <Card className="form__container__general-height">
               <Card.Body className="align-items-center d-flex">
                 <Container>
-                  <h2 className="text-center fw-bold">ACAMPAMENTO IPBV 2024</h2>
+                  <h2 className="text-center fw-bold">ACAMPAMENTO IPBV 2025</h2>
                   {!showAnotherScreen && (
                     <>
                       <Row className="text-center my-4">
