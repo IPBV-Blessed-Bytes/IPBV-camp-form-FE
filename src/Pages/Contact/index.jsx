@@ -17,7 +17,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
     validationSchema: additionalInformationSchema,
   });
 
-
   return (
     <Card className="form__container__general-height">
       <Card.Body>
@@ -104,17 +103,81 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     value={values.church}
                     onChange={handleChange}
                   >
-                    <option value="" disabled>Selecione uma opção</option>
+                    <option value="" disabled>
+                      Selecione uma opção
+                    </option>
                     <option value="Boa Viagem">IP. Boa Viagem</option>
-                    <option value="Casa Caiada">IP. Casa Caiada</option>
-                    <option value="Madalena">IP. Madalena</option>
-                    <option value="Batista Reformada">IB. Reformada do Recife</option>
                     <option value="Outra">Outra</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.church}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
+                  <Form.Select id="car" name="car" isInvalid={!!errors.car} value={values.car} onChange={handleChange}>
+                    <option value="" disabled>
+                      Selecione uma opção
+                    </option>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.car}</Form.Control.Feedback>
+                  <Card.Text className="mt-2 mb-0">
+                    Possui vagas disponíveis para ceder a outros irmãos que precisam?
+                  </Card.Text>
+                </Form.Group>
+              </Col>
+              {values.car === 'sim' && (
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Quantas vagas?</Form.Label>
+                    <Form.Select
+                      id="numberVacancies"
+                      name="numberVacancies"
+                      isInvalid={!!errors.numberVacancies}
+                      value={values.numberVacancies}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">{errors.numberVacancies}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              )}
+              {values.car === 'nao' && (
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Precisa de carona?</Form.Label>
+                    <Form.Select
+                      id="needRide"
+                      name="needRide"
+                      isInvalid={!!errors.needRide}
+                      value={values.needRide}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      <option value="sim">Sim</option>
+                      <option value="nao">Não</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              )}
+            </Row>
+
             <Row className="mb-3">
               <Col md={values.hasAllergy ? 6 : 6}>
                 <FormGroup>
@@ -142,8 +205,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 </FormGroup>
               </Col>
 
-              <Col md={values.hasAllergy ? 6 : 6}>
-                {values.hasAllergy && (
+              {values.hasAllergy && (
+                <Col md={values.hasAllergy ? 6 : 6}>
                   <FormGroup>
                     <FormLabel>Descreva as suas alergias aqui:</FormLabel>
 
@@ -159,8 +222,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
 
                     <Form.Control.Feedback type="invalid">{errors.allergy}</Form.Control.Feedback>
                   </FormGroup>
-                )}
-              </Col>
+                </Col>
+              )}
             </Row>
             <Row>
               <Col md={values.hasAggregate ? 6 : 6}>
@@ -184,16 +247,16 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <option value={false}>Não</option>
                     <option value={true}>Sim</option>
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
                     Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
                     etc).
                   </Card.Text>
-                  <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                 </FormGroup>
               </Col>
 
-              <Col md={values.hasAggregate ? 6 : 6}>
-                {values.hasAggregate && (
+              {values.hasAggregate && (
+                <Col md={values.hasAggregate ? 6 : 6}>
                   <FormGroup>
                     <FormLabel>Nos informe quem são seus agregados:</FormLabel>
                     <Form.Control
@@ -208,8 +271,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
 
                     <Form.Control.Feedback type="invalid">{errors.aggregate}</Form.Control.Feedback>
                   </FormGroup>
-                )}
-              </Col>
+                </Col>
+              )}
             </Row>
           </Form>
         </Container>
