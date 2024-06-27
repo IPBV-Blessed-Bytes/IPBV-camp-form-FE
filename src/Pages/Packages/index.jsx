@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import Icons from '../../components/Icons';
@@ -124,7 +124,7 @@ const FormPackages = ({
 
                           const usedValidPackagesPath = availablePackages?.data?.usedValidPackages;
 
-                          const { available: availablePackageName, used: usedPackageName } =
+                          const { available: availablePackageName } =
                             packageMapping[cards.id] || {};
 
                           const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
@@ -237,7 +237,7 @@ const FormPackages = ({
                                     <div className="package-description-container">
                                       <span>Alimentação:</span>
                                       <div>
-                                        <div className={!!hasFoodWithDiscount ? 'price-with-discount' : ''}>
+                                        <div className={hasFoodWithDiscount ? 'price-with-discount' : ''}>
                                           {formatCurrency(food)}
                                         </div>
                                         {hasFoodWithDiscount && (
@@ -265,8 +265,8 @@ const FormPackages = ({
                                     </div>
                                     <div className="packages-horizontal-line"></div>
                                     <div className="package-description-container">
-                                      <em className="d-flex gap-1">
-                                        <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
+                                      <em className="d-flex gap-1 info-text-wrapper">
+                                        <span>Total:</span> <u className='card-text'>{formatCurrency(cards.values.total)}</u>
                                       </em>
                                     </div>
                                     {!isPackageAvailable && (
@@ -347,7 +347,9 @@ FormPackages.propTypes = {
   backStep: PropTypes.func,
   birthDate: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
-  noPaymentRequired: PropTypes.bool,
+  spinnerLoading: PropTypes.bool,
+  availablePackages: PropTypes.bool,
+  totalRegistrationsGlobal: PropTypes.bool,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,

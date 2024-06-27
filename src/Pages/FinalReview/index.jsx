@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { format } from 'date-fns';
 
 const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -158,6 +159,14 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
       )}
     </>
   );
+};
+
+FinalReview.propTypes = {
+  nextStep: PropTypes.func,
+  backStep: PropTypes.func,
+  formValues: PropTypes.bool,
+  sendForm: PropTypes.func,
+  status: PropTypes.bool,
 };
 
 export default FinalReview;

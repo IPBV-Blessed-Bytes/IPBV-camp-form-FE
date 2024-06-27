@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
 import { Card, Container, Button, Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
@@ -37,10 +36,6 @@ const ChooseWay = () => {
     validateOnBlur: false,
     validateOnChange: false,
   });
-
-  useEffect(() => {
-    toast.error('Se você ainda não o fez, regularize o pagamento de sua inscrição o mais rápido possível!');
-  }, []);
 
   const sendCpfValue = async () => {
     setIsButtonDisabled(true);
@@ -248,7 +243,7 @@ const ChooseWay = () => {
                             <div className="choose-way-info-text--danger">
                               OBS: Ao escolher o tipo de pagamento, inserir o CPF e avançar, um novo link de pagamento
                               online será gerado automaticamente se sua inscrição for validada (já existindo e com
-                              status de pagamento pendente). Certifique-se de clicar em 'Avançar' apenas quando estiver
+                              status de pagamento pendente). Certifique-se de clicar em &apos;Avançar&apos; apenas quando estiver
                               pronto para efetuar o pagamento, pois o sistema excluirá automaticamente sua inscrição se
                               você avançar sem concluir o pagamento, com um prazo máximo de 15 minutos para expiração do
                               link. Além disso, assegure-se de escolher corretamente o tipo de pagamento, pois não será

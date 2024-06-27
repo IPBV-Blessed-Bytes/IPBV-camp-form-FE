@@ -115,7 +115,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             </Row>
             <Row>
               <Col md={6}>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 info-text-wrapper">
                   <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
                   <Form.Select id="car" name="car" isInvalid={!!errors.car} value={values.car} onChange={handleChange}>
                     <option value="" disabled>
@@ -227,7 +227,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             </Row>
             <Row>
               <Col md={values.hasAggregate ? 6 : 6}>
-                <FormGroup>
+                <FormGroup className="info-text-wrapper">
                   <FormLabel>Você possui algum agregado?</FormLabel>
                   <Form.Select
                     id="hasAggregate"

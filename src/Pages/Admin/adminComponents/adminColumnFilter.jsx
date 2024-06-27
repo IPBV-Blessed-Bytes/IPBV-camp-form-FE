@@ -1,5 +1,5 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import PropTypes from 'prop-types';
 import Icons from '../../../components/Icons';
 
 const AdminColumnFilter = ({ column }) => {
@@ -19,5 +19,11 @@ const AdminColumnFilter = ({ column }) => {
   );
 };
 
+AdminColumnFilter.propTypes = {
+  column: PropTypes.shape({
+    filterValue: PropTypes.bool,
+    setFilter: PropTypes.func,
+  }),
+};
+
 export default AdminColumnFilter;
-``;

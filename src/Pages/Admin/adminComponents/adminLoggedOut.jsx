@@ -1,7 +1,7 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Icons from '../../../components/Icons';
+import PropTypes from 'prop-types';
 
 const AdminLoggedOut = ({
   handleLogout,
@@ -73,5 +73,16 @@ const AdminLoggedOut = ({
     </Row>
   </Row>
 );
+
+AdminLoggedOut.propTypes = {
+  handleLogout: PropTypes.func,
+  loginData: PropTypes.bool,
+  handleKeyDown: PropTypes.func,
+  showPassword: PropTypes.bool,
+  handleShowPassword: PropTypes.func,
+  handleLogin: PropTypes.func,
+  navigateTo: PropTypes.func,
+  setLoginData: PropTypes.func,
+};
 
 export default AdminLoggedOut;

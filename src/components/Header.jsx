@@ -43,6 +43,7 @@ Header.propTypes = {
   currentStep: PropTypes.number.isRequired,
   goBackToStep: PropTypes.number.isRequired,
   formSubmitted: PropTypes.bool,
+  showNavMenu: PropTypes.bool,
 };
 
 export default Header;

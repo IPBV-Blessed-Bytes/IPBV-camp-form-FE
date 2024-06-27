@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,11 +10,10 @@ import AdminLoggedIn from './adminComponents/adminLoggedIn';
 
 const API_URL = 'https://ipbv-camp-form-be-production-2b7d.up.railway.app';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
-const CREDENTIALS_ENDPOINT = `${API_URL}/credentials`;
 const LOGIN_ENDPOINT = `${API_URL}/login`;
 const VERIFY_TOKEN_ENDPOINT = `${API_URL}/verify-token`;
 
-const Admin = ({ totalRegistrationsGlobal }) => {
+const AdminHome = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -246,4 +246,8 @@ const Admin = ({ totalRegistrationsGlobal }) => {
   );
 };
 
-export default Admin;
+AdminHome.propTypes = {
+  totalRegistrationsGlobal: PropTypes.func.isRequired,
+};
+
+export default AdminHome;
