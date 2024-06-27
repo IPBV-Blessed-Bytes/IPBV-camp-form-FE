@@ -299,7 +299,7 @@ const AdminTable = () => {
             <Button
               variant="warning"
               onClick={handleFilterClick}
-              className="text-light d-flex align-items-center"
+              className="filter-btn text-light d-flex align-items-center"
               size="lg"
             >
               <Icons typeIcon="filter" iconSize={30} fill="#fff" />
@@ -346,11 +346,12 @@ const AdminTable = () => {
                       <th
                         className="table-cells-header"
                         key={column.id}
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
                       >
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
-                          <Icons className="sort-icon d-none" typeIcon="sort" iconSize={20} />
+                          <span class="sort-icon-wrapper px-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
+                          </span>
                         </div>
                       </th>
                     ))}
