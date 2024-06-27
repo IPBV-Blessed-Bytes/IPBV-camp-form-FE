@@ -1,9 +1,11 @@
 @import './Variables.scss';
 
+// Body Styles
 body {
   background: $light-gray;
 }
 
+// Form Styles
 .form {
   display: flex;
   flex-direction: column;
@@ -13,6 +15,7 @@ body {
     display: block;
   }
 
+  // Form Header Styles
   &__header {
     background-color: $primary;
     color: $white;
@@ -54,6 +57,7 @@ body {
     }
   }
 
+  // Form Footer Styles
   &__footer {
     &-logo {
       cursor: pointer;
@@ -87,6 +91,7 @@ body {
     }
   }
 
+  // Form Container Styles
   &__container {
     flex: 1 1 auto;
     max-width: 50rem;
@@ -117,6 +122,35 @@ body {
       }
     }
 
+    // Form Success Styles
+    &__success {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      &__title {
+        color: $dark-green;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.25rem;
+      }
+
+      &__message {
+        font-size: 1.125rem;
+        margin-bottom: 1.25rem;
+        text-align: center;
+      }
+
+      &__contact {
+        font-weight: bold;
+      }
+
+      &__button {
+        margin-top: 1.25rem;
+      }
+    }
+
+    // Card Styles
     .card {
       height: fit-content;
 
@@ -205,6 +239,7 @@ body {
     .card-is-active {
       background-color: $turquoise;
     }
+
     .react-datepicker-wrapper,
     .cpf-container {
       margin-bottom: 1em;
@@ -250,6 +285,7 @@ body {
       }
     }
 
+    // Button Styles
     &__buttons {
       align-items: center;
       background-color: $primary;
@@ -280,77 +316,50 @@ body {
       }
     }
   }
+}
 
-  &__success {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    &__title {
-      color: $dark-green;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 1.25rem;
-    }
-
-    &__message {
-      font-size: 1.125rem;
-      margin-bottom: 1.25rem;
-      text-align: center;
-    }
-
-    &__contact {
-      font-weight: bold;
-    }
-
-    &__button {
-      margin-top: 1.25rem;
-    }
+// Admin Styles
+.admin {
+  .input-login-wrapper {
+    position: relative;
   }
 
-  .admin {
-    .input-login-wrapper {
-      position: relative;
-    }
+  &__user,
+  &__password {
+    border-color: $primary;
+    color: $primary;
+    font-weight: bold;
 
-    &__user,
-    &__password {
-      border-color: $primary;
+    &::placeholder {
       color: $primary;
-      font-weight: bold;
-
-      &::placeholder {
-        color: $primary;
-        font-weight: normal;
-      }
-    }
-
-    .login-icon {
-      padding: 0.25rem;
-      position: absolute;
-      right: 0;
-      transform: translate(-0.625rem, -2.1875rem);
-    }
-
-    .input-login-btn-wrapper {
-      button {
-        background-color: $primary;
-        border-color: $primary;
-      }
+      font-weight: normal;
     }
   }
 
-  input,
-  textarea,
-  select {
-    background-color: $light-gray;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    width: 100%;
+  .login-icon {
+    padding: 0.25rem;
+    position: absolute;
+    right: 0;
+    transform: translate(-0.625rem, -2.1875rem);
+  }
+
+  .input-login-btn-wrapper {
+    button {
+      background-color: $primary;
+      border-color: $primary;
+    }
   }
 }
 
 // Style utility classes
+input,
+textarea,
+select {
+  background-color: $light-gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
 
 .mail-to {
   color: inherit;
@@ -380,18 +389,6 @@ a:not(.form-success__button, .mail-to) {
   border-color: $red;
 }
 
-.card-disabled {
-  cursor: not-allowed;
-
-  &:hover {
-    transform: none;
-
-    .no-vacancy {
-      transform: scale(1.04);
-    }
-  }
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -417,44 +414,58 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+::selection {
+  background-color: $light-yellow;
+}
+
+.scroll-to-top {
+  align-items: center;
+  background-color: $light-yellow;
+  border-radius: 50%;
+  bottom: 1.25rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.5rem;
+  height: 5rem;
+  justify-content: center;
+  opacity: 0.6;
+  position: fixed;
+  right: 1.25rem;
+  width: 5rem;
+  z-index: 1000;
+
+  @media (max-width: $md) {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+.card-disabled {
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+
+    .no-vacancy {
+      transform: scale(1.04);
+    }
+  }
+}
+
 .bg-dark.card {
   color: $white;
 }
 
 .date-enphasis {
   color: $primary;
-  font-weight: bogld;
+  font-weight: bold;
 }
 
 .registration-closed-message {
   font-weight: bold;
   margin-top: 12.5rem;
   text-align: center;
-}
-
-.form-review {
-  &__section-title {
-    color: $primary !important;
-  }
-
-  input {
-    width: auto;
-  }
-}
-
-.btn-wrapper {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-
-  a {
-    align-items: center;
-    display: flex;
-
-    &:hover {
-      color: $primary;
-    }
-  }
 }
 
 .login-admin-card {
@@ -550,6 +561,16 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.form-review {
+  &__section-title {
+    color: $primary !important;
+  }
+
+  input {
+    width: auto;
+  }
+}
+
 .form-success__button {
   @media (max-width: $md) {
     width: 10.9375rem !important;
@@ -559,6 +580,21 @@ a:not(.form-success__button, .mail-to) {
 .form-control-bg:focus {
   color: $primary !important;
   font-weight: bold;
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  a {
+    align-items: center;
+    display: flex;
+
+    &:hover {
+      color: $primary;
+    }
+  }
 }
 
 .btn.btn-outline-success,
@@ -588,39 +624,21 @@ button.btn.btn-outline-danger:hover svg {
   background-color: $turquoise !important;
 }
 
-.scroll-to-top {
-  align-items: center;
-  background-color: $light-yellow;
-  border-radius: 50%;
-  bottom: 1.25rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
-  cursor: pointer;
-  display: flex;
-  font-size: 1.5rem;
-  height: 5rem;
-  justify-content: center;
-  opacity: 0.6;
-  position: fixed;
-  right: 1.25rem;
-  width: 5rem;
-  z-index: 1000;
-
-  @media (max-width: $md) {
-    height: 2.5rem;
-    width: 2.5rem;
-  }
-}
-
 .scroll-to-top:hover {
   opacity: 1;
 }
 
+// Admin table styles
 .table-hover > tbody > tr:hover > * {
   --bs-table-bg-state: #b2dfb2;
 }
 
 .table-cells-header:hover div .sort-icon {
   display: block !important;
+}
+
+.table-cells-header {
+  background-color: $medium-green !important;
 }
 
 .table-cells-header,
@@ -688,8 +706,4 @@ button.btn.btn-outline-danger:hover svg {
       display: none;
     }
   }
-}
-
-::selection {
-  background-color: $light-yellow;
 }
