@@ -29,11 +29,9 @@ const FormPackages = ({
     6: { available: 'colegioCamping', used: 'colegioCampingComAlimentacao' },
     7: { available: 'seminario', used: 'seminarioIndividualComOnibus' },
     8: { available: 'seminario', used: 'seminarioIndividualSemOnibus' },
-    9: { available: 'hotel', used: 'hotelDuplaComOnibus' },
-    10: { available: 'hotel', used: 'hotelDuplaSemOnibus' },
-    11: { available: 'outro', used: 'outroComOnibus' },
-    12: { available: 'outro', used: 'outroSemOnibus' },
-    13: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
+    9: { available: 'outro', used: 'outroComOnibus' },
+    10: { available: 'outro', used: 'outroSemOnibus' },
+    11: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
   const handleClick = (selectedPackage) => {

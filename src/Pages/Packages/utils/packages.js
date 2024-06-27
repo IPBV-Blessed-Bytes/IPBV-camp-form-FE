@@ -2,15 +2,13 @@ import generatePackagesValues from './generatePackagesValues';
 
 const XV_NOVEMBRO = 'Colégio XV de Novembro';
 const SEMINARIO = 'Seminário São José';
-const HOTEL_IBIS = 'Hotel Ibis';
 const OTHER = 'Outra Acomodação Externa';
 
-export const accommodations = [XV_NOVEMBRO, SEMINARIO, HOTEL_IBIS, OTHER];
+export const accommodations = [XV_NOVEMBRO, SEMINARIO, OTHER];
 
 const getPackages = (age) => {
   const [schoolWithBus, schoolWithouBus] = generatePackagesValues('school', age);
   const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
-  const [hotelWithBuss, hotelWithoutBuss] = generatePackagesValues('hotel', age);
   const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age);
   const [nonPaid] = generatePackagesValues('nonPaid');
 
@@ -91,47 +89,29 @@ const getPackages = (age) => {
     },
     {
       id: '9',
-      title: 'PACOTE 9 - HOSPEDAGEM DUPLA PARA QUARTO COM CAMA DE CASAL COM ÔNIBUS (APENAS PRA QUEM JÁ ESTAVA INSCRITO NO FORMULÁRIO ANTIGO)',
-      observation: '* COM ônibus / Café da manhã incluso no hotel',
-      values: { ...hotelWithBuss },
-      accomodation: { id: 'hotelDuplaComOnibus', name: HOTEL_IBIS, subAccomodation: 'Hotel Dupla' },
-      transportation: 'Com Ônibus',
-      food: 'Almoço e jantar',
-    },
-    {
-      id: '10',
-      title: 'PACOTE 10 - HOSPEDAGEM DUPLA PARA QUARTO COM CAMA DE CASAL SEM ÔNIBUS (APENAS PRA QUEM JÁ ESTAVA INSCRITO NO FORMULÁRIO ANTIGO)',
-      observation: '* SEM ônibus / Café da manhã incluso no hotel',
-      values: { ...hotelWithoutBuss },
-      accomodation: { id: 'hotelDuplaSemOnibus', name: HOTEL_IBIS, subAccomodation: 'Hotel Dupla' },
-      transportation: 'Sem Ônibus',
-      food: 'Almoço e jantar',
-    },
-    {
-      id: '11',
-      title: 'PACOTE 11 - HOSPEDAGEM EXTERNA COM ÔNIBUS',
+      title: 'PACOTE 9 - HOSPEDAGEM EXTERNA COM ÔNIBUS',
       observation:
-        '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
+        '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade). Taxa de 50 reais fixo para quem estiver hospedado fora',
       values: { ...otherWithBuss },
       accomodation: { id: 'outroComOnibus', name: OTHER, subAccomodation: 'Outro' },
       transportation: 'Com Ônibus',
       food: 'Almoço e jantar',
     },
     {
-      id: '12',
-      title: 'PACOTE 12 - HOSPEDAGEM EXTERNA SEM ÔNIBUS',
+      id: '10',
+      title: 'PACOTE 10 - HOSPEDAGEM EXTERNA SEM ÔNIBUS',
       observation:
-        '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
+        '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade). Taxa de 50 reais fixo para quem estiver hospedado fora',
       values: { ...otherWithoutBuss },
       accomodation: { id: 'outroSemOnibus', name: OTHER, subAccomodation: 'Outro' },
       transportation: 'Sem Ônibus',
       food: 'Almoço e jantar',
     },
     {
-      id: '13',
-      title: 'PACOTE 13 - ASSISTIR O CULTO',
+      id: '11',
+      title: 'PACOTE 11 - ASSISTIR O CULTO',
       observation:
-        '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem',
+        '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. Taxa de 50 reais fixo para quem estiver hospedado fora',
       values: { ...nonPaid },
       accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externo' },
       transportation: 'Sem Ônibus',
