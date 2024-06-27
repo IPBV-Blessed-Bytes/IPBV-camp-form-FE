@@ -41,7 +41,7 @@ const packageSchool = ({ age, withTransportation }) => {
 };
 
 const packageSeminary = ({ age, withTransportation }) => {
-  const accomodation = [500];
+  let accomodation = [500];
   let food = [208];
   let transportation = withTransportation ? [190] : [0];
 
@@ -93,7 +93,7 @@ const packageSeminary = ({ age, withTransportation }) => {
 };
 
 const packageOther = ({ age, withTransportation }) => {
-  const accomodation = [50];
+  let accomodation = [50];
   let food = [208];
   let transportation = withTransportation ? [190] : [0];
 

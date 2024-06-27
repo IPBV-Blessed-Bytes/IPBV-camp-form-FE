@@ -349,7 +349,7 @@ const AdminTable = () => {
                       >
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
-                          <span class="sort-icon-wrapper px-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                          <span className="sort-icon-wrapper px-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
                             <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
                           </span>
                         </div>
