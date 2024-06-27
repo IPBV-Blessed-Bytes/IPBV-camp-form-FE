@@ -20,7 +20,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
   useEffect(() => {
     if (values.formPayment === 'inPerson' && status === 'loaded') {
       navigateTo('/sucesso');
-    } else {
     }
   }, [status, values.formPayment]);
 
@@ -87,10 +86,11 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
 };
 
 ChooseFormPayment.propTypes = {
-  skipTwoSteps: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
   sendForm: PropTypes.func,
+  spinnerLoading: PropTypes.func,
+  status: PropTypes.func,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
   }),

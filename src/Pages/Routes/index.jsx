@@ -1,7 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
@@ -16,56 +15,7 @@ import FormSuccess from '../Success';
 import AdminHome from '../Admin/admin';
 import AdminTable from '../Admin/adminComponents/adminTable';
 import FinalReview from '../FinalReview';
-
-export const enumSteps = {
-  home: 0,
-  personalData: 1,
-  contact: 2,
-  packages: 3,
-  finalReview: 4,
-  formPayment: 5,
-  success: 6,
-};
-
-const initialValues = {
-  registrationDate: '',
-  personalInformation: {
-    name: '',
-    birthday: '',
-    cpf: '',
-    rg: '',
-    rgShipper: '',
-    rgShipperState: '',
-    gender: '',
-  },
-  contact: {
-    cellPhone: '',
-    email: '',
-    isWhatsApp: '',
-    church: '',
-    car: '',
-    numberVacancies: '',
-    needRide: '',
-    hasAllergy: '',
-    allergy: '',
-    hasAggregate: '',
-    aggregate: '',
-  },
-  package: {
-    accomodation: {
-      id: '',
-      name: '',
-      subAccomodation: '',
-    },
-    transportation: '',
-    food: '',
-    price: '',
-    title: '',
-  },
-  formPayment: {
-    formPayment: '',
-  },
-};
+import { enumSteps, initialValues } from './constants';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -246,7 +196,7 @@ const FormRoutes = () => {
             currentStep={steps}
             goBackToStep={goBackToStep}
             formSubmitted={formSubmitted}
-            showNavMenu
+            showNavMenu={true}
           />
 
           <div className="form__container">
@@ -287,7 +237,6 @@ const FormRoutes = () => {
               <FinalReview
                 nextStep={nextStep}
                 backStep={backStep}
-                updateForm={updateFormValues('finalReview')}
                 formValues={formValues}
                 sendForm={sendForm}
                 status={status}
@@ -328,12 +277,6 @@ const FormRoutes = () => {
       </Routes>
     </div>
   );
-};
-
-Header.propTypes = {
-  goBackToStep: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  formSubmitted: PropTypes.bool.isRequired,
 };
 
 export default FormRoutes;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Button, Form, Modal, Col, Table } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
+import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Icons from '../../../components/Icons';
@@ -342,7 +343,11 @@ const AdminTable = () => {
                 <React.Fragment key={headerGroup.id}>
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th className="table-cells-header" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      <th
+                        className="table-cells-header"
+                        key={column.id}
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                      >
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
                           <Icons className="sort-icon d-none" typeIcon="sort" iconSize={20} />
@@ -361,13 +366,14 @@ const AdminTable = () => {
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map((row, i) => {
+              {rows.map((row) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map((cell, index) => (
+                    {row.cells.map((cell) => (
                       <td
-                        className={`table-cells-cols${selectedRows.includes(row.index) ? ' selected-column' : ''}`}
+                        className={`table-cells-cols${selectedRows.includes(row.index) ? ' selected-row' : ''}`}
+                        key={cell.id}
                         {...cell.getCellProps()}
                       >
                         {cell.render('Cell')}
@@ -483,6 +489,15 @@ const AdminTable = () => {
       {showScrollButton && <Icons className="scroll-to-top" typeIcon="arrow-top" onClick={scrollToTop} iconSize={30} />}
     </Container>
   );
+};
+
+AdminTable.propTypes = {
+  row: PropTypes.shape({
+    index: PropTypes.string,
+  }),
+  column: PropTypes.shape({
+    index: PropTypes.string,
+  }),
 };
 
 export default AdminTable;

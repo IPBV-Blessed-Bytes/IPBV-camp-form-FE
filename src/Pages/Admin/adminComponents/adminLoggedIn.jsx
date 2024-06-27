@@ -1,7 +1,7 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import AdminPackageCard from './adminPackageCard';
 import AdminExternalLinkRow from './adminExternalLinkRow';
 
@@ -189,6 +189,18 @@ const AdminLoggedIn = ({
       </Row>
     </>
   );
+};
+
+AdminLoggedIn.propTypes = {
+  loggedInUsername: PropTypes.bool,
+  handleLogout: PropTypes.func,
+  firstRowCards: PropTypes.bool,
+  totalValidRegistrationsPaied: PropTypes.bool,
+  totalValidRegistrationsGlobal: PropTypes.bool,
+  totalRegistrations: PropTypes.bool,
+  totalChildren: PropTypes.bool,
+  totalNonPaied: PropTypes.bool,
+  totalVacanciesWithBuses: PropTypes.bool,
 };
 
 export default AdminLoggedIn;
