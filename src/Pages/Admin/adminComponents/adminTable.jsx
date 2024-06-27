@@ -142,7 +142,8 @@ const AdminTable = () => {
       'Observação:',
       'Pagamento:',
       'Igreja:',
-      'Carona:',
+      'Vagas de Carona:',
+      'Precisa de Carona:',
       'Data de Inscrição:',
       'Nascimento:',
       'CPF:',
@@ -365,7 +366,10 @@ const AdminTable = () => {
                 return (
                   <tr {...row.getRowProps()} key={row.id}>
                     {row.cells.map((cell, index) => (
-                      <td className={`table-cells-cols${index === 0 ? ' first-column' : ''}`} {...cell.getCellProps()}>
+                      <td
+                        className={`table-cells-cols${selectedRows.includes(row.index) ? ' selected-column' : ''}`}
+                        {...cell.getCellProps()}
+                      >
                         {cell.render('Cell')}
                       </td>
                     ))}
