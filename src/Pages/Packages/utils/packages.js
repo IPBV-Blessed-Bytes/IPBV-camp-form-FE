@@ -58,7 +58,7 @@ const getPackages = (age) => {
       values: { ...nonPaid },
       accomodation: { id: 'colegioCampingSemAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Sem Ônibus',
-      food: 'Sem alimentação',
+      food: 'Sem Alimentação',
     },
     {
       id: '6',

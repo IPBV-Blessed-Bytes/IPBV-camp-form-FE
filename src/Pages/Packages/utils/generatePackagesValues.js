@@ -118,7 +118,7 @@ const packageOther = ({ age, withTransportation }) => {
 
   //Hospedagem
   if (age <= 10) {
-    accomodation = [  0, 0];
+    accomodation = [0, 0];
     accomodationDiscountDescription = 'Criança até 10 anos não paga hospedagem';
   } 
 

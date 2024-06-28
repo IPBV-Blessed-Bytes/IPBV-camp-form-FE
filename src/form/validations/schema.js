@@ -32,6 +32,10 @@ const additionalInformationSchema = yup.object().shape({
   }),
 });
 
+const ExtraMealsSchema = yup.object().shape({
+  someFood: yup.string().required('Informe se deseja adquirir alguma refeição'),
+});
+
 const formPaymentSchema = yup.object().shape({
   formPayment: yup.string().required('Selecione o tipo de pagamento'),
 });
@@ -41,4 +45,4 @@ const chooseWaySchema = yup.object().shape({
   formPayment: yup.string().required('Selecione o tipo de pagamento'),
 });
 
-export { personalInformationSchema, additionalInformationSchema, formPaymentSchema, chooseWaySchema };
+export { personalInformationSchema, additionalInformationSchema, ExtraMealsSchema, formPaymentSchema, chooseWaySchema };

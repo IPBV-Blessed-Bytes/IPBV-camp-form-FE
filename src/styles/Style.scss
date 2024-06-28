@@ -406,6 +406,16 @@ a:not(.form-success__button, .mail-to) {
   border-color: $red;
 }
 
+.checkbox-error {
+  input {
+    border-color: $red;
+  }
+  
+  label {
+    color: $red;
+  }
+}
+
 .overlay {
   position: fixed;
   top: 0;

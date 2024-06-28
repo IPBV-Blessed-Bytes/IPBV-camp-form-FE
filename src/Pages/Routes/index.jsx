@@ -16,6 +16,7 @@ import AdminHome from '../Admin/admin';
 import AdminTable from '../Admin/adminComponents/adminTable';
 import FinalReview from '../FinalReview';
 import { enumSteps, initialValues } from './constants';
+import ExtraMeals from '../ExtraMeals';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -30,6 +31,7 @@ const FormRoutes = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [withFood, setWithFood] = useState(false);
   const navigate = useNavigate();
 
   const updateFormValues = (key) => (value) => {
@@ -53,7 +55,11 @@ const FormRoutes = () => {
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
-      setSteps(steps + 1);
+      if (withFood && steps === enumSteps.packages) {
+        setSteps(enumSteps.finalReview);
+      } else {
+        setSteps(steps + 1);
+      }
       scrollTop();
     }
   };
@@ -187,6 +193,14 @@ const FormRoutes = () => {
     navigate('/admin');
   };
 
+  useEffect(() => {
+    if (formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '') {
+      setWithFood(true);
+    } else {
+      setWithFood(false);
+    }
+  }, [formValues.package.food]);
+
   return (
     <div className="form">
       {!isAdminPathname && !isAdminTablePathname && (
@@ -230,6 +244,15 @@ const FormRoutes = () => {
                 spinnerLoading={loading}
                 availablePackages={availablePackages}
                 totalRegistrationsGlobal={totalRegistrations}
+              />
+            )}
+
+            {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+              <ExtraMeals
+                backStep={backStep}
+                nextStep={nextStep}
+                initialValues={formValues.extraMeals}
+                updateForm={updateFormValues('extraMeals')}
               />
             )}
 

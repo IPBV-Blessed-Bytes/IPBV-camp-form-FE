@@ -80,10 +80,20 @@ const FormPackages = ({
         <Container>
           <Card.Title>Pacotes</Card.Title>
           {!isRegistrationClosed && (
-            <Card.Text>
-              Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
-              Posteriormente escolha o pacote desejado e clique nele para ser redirecionado.
-            </Card.Text>
+            <>
+              <Card.Text>
+                Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
+                Posteriormente escolha o pacote desejado com alimentação e transporte (ou não) e clique nele para ser
+                redirecionado.
+              </Card.Text>
+              <hr className="horizontal-line" />
+              <Card.Text>
+                Caso você opte por um pacote SEM alimentação, poderá na próxima etapa do formulário selecionar por
+                alimentações avulsas, escolhendo os dias e refeições específicas. Também poderá fazer essa escolha
+                posteriormente na secretaria da igreja ou mesmo no próprio acampamento, respeitando o tempo mínimo de
+                6hrs antes da refeição.
+              </Card.Text>
+            </>
           )}
 
           {isRegistrationClosed ? (

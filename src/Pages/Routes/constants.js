@@ -3,9 +3,10 @@ export const enumSteps = {
   personalData: 1,
   contact: 2,
   packages: 3,
-  finalReview: 4,
-  formPayment: 5,
-  success: 6,
+  extraMeals: 4,
+  finalReview: 5,
+  formPayment: 6,
+  success: 7,
 };
 
 export const initialValues = {
@@ -42,6 +43,10 @@ export const initialValues = {
     food: '',
     price: '',
     title: '',
+  },
+  extraMeals: {
+    someFood: '',
+    totalValue: '',
   },
   formPayment: {
     formPayment: '',
