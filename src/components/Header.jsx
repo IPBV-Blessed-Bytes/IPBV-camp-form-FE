@@ -29,7 +29,12 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
       {showNavMenu && (
         <Breadcrumb className="mt-4">
           {headerSteps.map((step, index) => (
-            <Breadcrumb.Item key={index} active={currentStep === index} onClick={() => handleStepChange(index)}>
+            <Breadcrumb.Item
+              className={index > currentStep ? 'form__header__future-step' : ''}
+              key={index}
+              active={currentStep === index}
+              onClick={() => handleStepChange(index)}
+            >
               {step}
             </Breadcrumb.Item>
           ))}
@@ -41,7 +46,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
 
 Header.propTypes = {
   currentStep: PropTypes.number.isRequired,
-  goBackToStep: PropTypes.number.isRequired,
+  goBackToStep: PropTypes.func.isRequired,
   formSubmitted: PropTypes.bool,
   showNavMenu: PropTypes.bool,
 };
