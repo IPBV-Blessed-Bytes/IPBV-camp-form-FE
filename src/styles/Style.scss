@@ -1,9 +1,11 @@
 @import './Variables.scss';
 
+// Body Styles
 body {
-  background: $background;
+  background: $light-gray;
 }
 
+// Form Styles
 .form {
   display: flex;
   flex-direction: column;
@@ -13,11 +15,24 @@ body {
     display: block;
   }
 
+  // Form Header Styles
   &__header {
     background-color: $primary;
     color: $white;
     padding: 1.25rem 1.875rem 3rem;
     text-align: center;
+
+    &--future-step {
+      cursor: default;
+
+      a {
+        cursor: default;
+      }
+    }
+
+    &--previous-step a {
+      color: $secondary !important;
+    }
 
     h2 {
       font-weight: bold;
@@ -25,9 +40,8 @@ body {
 
     nav {
       ol {
-        cursor: pointer;
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         justify-content: center;
         list-style-type: none;
         padding: 0;
@@ -54,6 +68,7 @@ body {
     }
   }
 
+  // Form Footer Styles
   &__footer {
     &-logo {
       cursor: pointer;
@@ -87,6 +102,7 @@ body {
     }
   }
 
+  // Form Container Styles
   &__container {
     flex: 1 1 auto;
     max-width: 50rem;
@@ -117,6 +133,35 @@ body {
       }
     }
 
+    // Form Success Styles
+    &__success {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      &__title {
+        color: $dark-green;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.25rem;
+      }
+
+      &__message {
+        font-size: 1.125rem;
+        margin-bottom: 1.25rem;
+        text-align: center;
+      }
+
+      &__contact {
+        font-weight: bold;
+      }
+
+      &__button {
+        margin-top: 1.25rem;
+      }
+    }
+
+    // Card Styles
     .card {
       height: fit-content;
 
@@ -126,8 +171,14 @@ body {
         margin-bottom: 1.25rem;
       }
 
+      .info-text-wrapper {
+        .card-text {
+          color: $dark-green;
+        }
+      }
+
       .card-text {
-        color: $card-text;
+        color: $dark-gray;
         font-size: 1rem;
         margin-top: -0.375rem;
 
@@ -203,7 +254,7 @@ body {
     }
 
     .card-is-active {
-      background-color: $inner-card-hover;
+      background-color: $turquoise;
     }
 
     .react-datepicker-wrapper,
@@ -251,6 +302,7 @@ body {
       }
     }
 
+    // Button Styles
     &__buttons {
       align-items: center;
       background-color: $primary;
@@ -281,77 +333,50 @@ body {
       }
     }
   }
+}
 
-  &__success {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    &__title {
-      color: $title-success;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 1.25rem;
-    }
-
-    &__message {
-      font-size: 1.125rem;
-      margin-bottom: 1.25rem;
-      text-align: center;
-    }
-
-    &__contact {
-      font-weight: bold;
-    }
-
-    &__button {
-      margin-top: 1.25rem;
-    }
+// Admin Styles
+.admin {
+  .input-login-wrapper {
+    position: relative;
   }
 
-  .admin {
-    .input-login-wrapper {
-      position: relative;
-    }
+  &__user,
+  &__password {
+    border-color: $primary;
+    color: $primary;
+    font-weight: bold;
 
-    &__user,
-    &__password {
-      border-color: $primary;
+    &::placeholder {
       color: $primary;
-      font-weight: bold;
-
-      &::placeholder {
-        color: $primary;
-        font-weight: normal;
-      }
-    }
-
-    .login-icon {
-      padding: 0.25rem;
-      position: absolute;
-      right: 0;
-      transform: translate(-0.625rem, -2.1875rem);
-    }
-
-    .input-login-btn-wrapper {
-      button {
-        background-color: $primary;
-        border-color: $primary;
-      }
+      font-weight: normal;
     }
   }
 
-  input,
-  textarea,
-  select {
-    background-color: $light-gray;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    width: 100%;
+  .login-icon {
+    padding: 0.25rem;
+    position: absolute;
+    right: 0;
+    transform: translate(-0.625rem, -2.1875rem);
+  }
+
+  .input-login-btn-wrapper {
+    button {
+      background-color: $primary;
+      border-color: $primary;
+    }
   }
 }
 
 // Style utility classes
+input,
+textarea,
+select {
+  background-color: $light-gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
 
 .mail-to {
   color: inherit;
@@ -378,18 +403,16 @@ a:not(.form-success__button, .mail-to) {
 }
 
 .msg-error {
-  border-color: $fail;
+  border-color: $red;
 }
 
-.card-disabled {
-  cursor: not-allowed;
-
-  &:hover {
-    transform: none;
-
-    .no-vacancy {
-      transform: scale(1.04);
-    }
+.checkbox-error {
+  input {
+    border-color: $red;
+  }
+  
+  label {
+    color: $red;
   }
 }
 
@@ -418,44 +441,58 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+::selection {
+  background-color: $light-yellow;
+}
+
+.scroll-to-top {
+  align-items: center;
+  background-color: $light-yellow;
+  border-radius: 50%;
+  bottom: 1.25rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.5rem;
+  height: 5rem;
+  justify-content: center;
+  opacity: 0.6;
+  position: fixed;
+  right: 1.25rem;
+  width: 5rem;
+  z-index: 1000;
+
+  @media (max-width: $md) {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+.card-disabled {
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+
+    .no-vacancy {
+      transform: scale(1.04);
+    }
+  }
+}
+
 .bg-dark.card {
   color: $white;
 }
 
 .date-enphasis {
   color: $primary;
-  font-weight: bogld;
+  font-weight: bold;
 }
 
 .registration-closed-message {
   font-weight: bold;
   margin-top: 12.5rem;
   text-align: center;
-}
-
-.form-review {
-  &__section-title {
-    color: #204691 !important;
-  }
-
-  input {
-    width: auto;
-  }
-}
-
-.btn-wrapper {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-
-  a {
-    align-items: center;
-    display: flex;
-
-    &:hover {
-      color: $primary;
-    }
-  }
 }
 
 .login-admin-card {
@@ -528,7 +565,7 @@ a:not(.form-success__button, .mail-to) {
   }
 
   &--danger {
-    color: $fail;
+    color: $red;
     font-size: 1rem;
     font-weight: bold;
     font-style: italic;
@@ -551,8 +588,155 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.form-review {
+  &__section-title {
+    color: $primary !important;
+  }
+
+  input {
+    width: auto;
+  }
+}
+
 .form-success__button {
   @media (max-width: $md) {
     width: 10.9375rem !important;
+  }
+}
+
+.form-control-bg:focus {
+  color: $primary !important;
+  font-weight: bold;
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  a {
+    align-items: center;
+    display: flex;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+.btn.btn-outline-success,
+.btn.btn-outline-danger {
+  border-width: 3px !important;
+}
+
+.filter-btn {
+  background-color: $dark-gray;
+  border-color: $dark-gray;
+}
+
+button.btn.btn-outline-danger:hover svg {
+  fill: #fff;
+}
+
+.sort-icon,
+.sort-icon-wrapper {
+  user-select: none;
+}
+
+.filter-icon {
+  margin: 0.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.filter-input {
+  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
+}
+
+.actived-filter {
+  background-color: $turquoise !important;
+}
+
+.scroll-to-top:hover {
+  opacity: 1;
+}
+
+// Admin table styles
+.table-hover > tbody > tr:hover > * {
+  --bs-table-bg-state: #b2dfb2;
+}
+
+.table-cells-header {
+  background-color: $medium-green !important;
+  min-width: 250px;
+
+  div .sort-icon {
+    display: none;
+  }
+
+  &:hover div .sort-icon {
+    display: block;
+  }
+}
+
+.custom-table {
+  --bs-border-color: #000;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-bg-type: rgba(var(--bs-emphasis-color-rgb), 0.1);
+}
+
+.table > tbody > tr > td.selected-row {
+  background-color: $light-green;
+}
+
+.table-checkbox .form-check-input {
+  width: auto;
+}
+
+.form-check-input:checked {
+  background-color: $dark-green;
+  border-color: $dark-green;
+}
+
+.table-tools {
+  &__left-buttons {
+    @media (max-width: $md) {
+      button {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__right-buttons {
+    display: flex;
+    justify-content: end;
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__left-buttons,
+  &__right-buttons {
+    @media (max-width: $md) {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__button-name {
+    @media (max-width: $xxxl) {
+      width: 100%;
+    }
+
+    @media (max-width: $md) {
+      display: none;
+    }
   }
 }

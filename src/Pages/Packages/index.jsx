@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import Icons from '../../components/Icons';
@@ -29,11 +29,9 @@ const FormPackages = ({
     6: { available: 'colegioCamping', used: 'colegioCampingComAlimentacao' },
     7: { available: 'seminario', used: 'seminarioIndividualComOnibus' },
     8: { available: 'seminario', used: 'seminarioIndividualSemOnibus' },
-    9: { available: 'hotel', used: 'hotelDuplaComOnibus' },
-    10: { available: 'hotel', used: 'hotelDuplaSemOnibus' },
-    11: { available: 'outro', used: 'outroComOnibus' },
-    12: { available: 'outro', used: 'outroSemOnibus' },
-    13: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
+    9: { available: 'outro', used: 'outroComOnibus' },
+    10: { available: 'outro', used: 'outroSemOnibus' },
+    11: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
   const handleClick = (selectedPackage) => {
@@ -74,7 +72,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = ((validRegistrations >= 360) && !isChild);
+  const isRegistrationClosed = validRegistrations >= 360 && !isChild;
 
   return (
     <Card className="form__container__general-height">
@@ -82,10 +80,20 @@ const FormPackages = ({
         <Container>
           <Card.Title>Pacotes</Card.Title>
           {!isRegistrationClosed && (
-            <Card.Text>
-              Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
-              Posteriormente escolha o pacote desejado e clique nele para ser redirecionado.
-            </Card.Text>
+            <>
+              <Card.Text>
+                Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
+                Posteriormente escolha o pacote desejado com alimentação e transporte (ou não) e clique nele para ser
+                redirecionado.
+              </Card.Text>
+              <hr className="horizontal-line" />
+              <Card.Text>
+                Caso você opte por um pacote SEM alimentação, poderá na próxima etapa do formulário selecionar por
+                alimentações avulsas, escolhendo os dias e refeições específicas. Também poderá fazer essa escolha
+                posteriormente na secretaria da igreja ou mesmo no próprio acampamento, respeitando o tempo mínimo de
+                6hrs antes da refeição.
+              </Card.Text>
+            </>
           )}
 
           {isRegistrationClosed ? (
@@ -124,8 +132,7 @@ const FormPackages = ({
 
                           const usedValidPackagesPath = availablePackages?.data?.usedValidPackages;
 
-                          const { available: availablePackageName, used: usedPackageName } =
-                            packageMapping[cards.id] || {};
+                          const { available: availablePackageName } = packageMapping[cards.id] || {};
 
                           const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
                           const usedValidPackagesMapping = {
@@ -215,7 +222,8 @@ const FormPackages = ({
                                   <div className="card-text w-100">
                                     <p className="mb-2">
                                       <span>
-                                        {cards.observation} | {cards.food}
+                                        {cards.observation}
+                                        <b className="text-danger">{cards.observationHighlite}</b> | {cards.food}
                                       </span>
                                     </p>
 
@@ -237,7 +245,7 @@ const FormPackages = ({
                                     <div className="package-description-container">
                                       <span>Alimentação:</span>
                                       <div>
-                                        <div className={!!hasFoodWithDiscount ? 'price-with-discount' : ''}>
+                                        <div className={hasFoodWithDiscount ? 'price-with-discount' : ''}>
                                           {formatCurrency(food)}
                                         </div>
                                         {hasFoodWithDiscount && (
@@ -265,8 +273,9 @@ const FormPackages = ({
                                     </div>
                                     <div className="packages-horizontal-line"></div>
                                     <div className="package-description-container">
-                                      <em className="d-flex gap-1">
-                                        <span>Total:</span> <u>{formatCurrency(cards.values.total)}</u>
+                                      <em className="d-flex gap-1 info-text-wrapper">
+                                        <span>Total:</span>{' '}
+                                        <u className="card-text">{formatCurrency(cards.values.total)}</u>
                                       </em>
                                     </div>
                                     {!isPackageAvailable && (
@@ -347,7 +356,9 @@ FormPackages.propTypes = {
   backStep: PropTypes.func,
   birthDate: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
-  noPaymentRequired: PropTypes.bool,
+  spinnerLoading: PropTypes.bool,
+  availablePackages: PropTypes.bool,
+  totalRegistrationsGlobal: PropTypes.bool,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,

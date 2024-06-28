@@ -1,4 +1,3 @@
-import React from 'react';
 import { PropTypes } from 'prop-types';
 import logoFooter from '../../public/Images/logo.png';
 
@@ -6,6 +5,8 @@ const Footer = ({ onAdminClick }) => {
   const handleAdminClick = () => {
     onAdminClick();
   };
+
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="d-flex align-items-center justify-content-between">
@@ -20,7 +21,7 @@ const Footer = ({ onAdminClick }) => {
           </em>
         </p>
         <p className="form__footer__copyright">
-          © 2024 Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
+          © {currentYear} Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
         </p>
       </div>
 

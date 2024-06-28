@@ -1,7 +1,6 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
@@ -13,55 +12,11 @@ import FormHome from '../Home';
 import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
-import Admin from '../Admin';
+import AdminHome from '../Admin/admin';
+import AdminTable from '../Admin/adminComponents/adminTable';
 import FinalReview from '../FinalReview';
-
-export const enumSteps = {
-  home: 0,
-  personalData: 1,
-  contact: 2,
-  packages: 3,
-  finalReview: 4,
-  formPayment: 5,
-  success: 6,
-};
-
-const initialValues = {
-  registrationDate: '',
-  personalInformation: {
-    name: '',
-    birthday: '',
-    cpf: '',
-    rg: '',
-    rgShipper: '',
-    rgShipperState: '',
-    gender: '',
-  },
-  contact: {
-    cellPhone: '',
-    email: '',
-    isWhatsApp: '',
-    church: '',
-    hasAllergy: '',
-    allergy: '',
-    hasAggregate: '',
-    aggregate: '',
-  },
-  package: {
-    accomodation: {
-      id: '',
-      name: '',
-      subAccomodation: '',
-    },
-    transportation: '',
-    food: '',
-    price: '',
-    title: '',
-  },
-  formPayment: {
-    formPayment: '',
-  },
-};
+import { enumSteps, initialValues } from './constants';
+import ExtraMeals from '../ExtraMeals';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -70,10 +25,13 @@ const FormRoutes = () => {
   const [totalRegistrations, setTotalRegistrations] = useState({});
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const isAdminPathname = window.location.pathname === '/admin';
+  const isAdminTablePathname = window.location.pathname === '/admin/tabela';
   const [availablePackages, setAvailablePackages] = useState({});
   const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [withFood, setWithFood] = useState(false);
   const navigate = useNavigate();
 
   const updateFormValues = (key) => (value) => {
@@ -97,7 +55,11 @@ const FormRoutes = () => {
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
-      setSteps(steps + 1);
+      if (withFood && steps === enumSteps.packages) {
+        setSteps(enumSteps.finalReview);
+      } else {
+        setSteps(steps + 1);
+      }
       scrollTop();
     }
   };
@@ -221,20 +183,34 @@ const FormRoutes = () => {
     }
   }, [endpointErrorMessage]);
 
+  useEffect(() => {
+    if (!isLoggedIn && isAdminPathname) {
+      navigate('/admin');
+    }
+  }, [isLoggedIn, isAdminPathname, navigate]);
+
   const handleAdminClick = () => {
     navigate('/admin');
   };
 
+  useEffect(() => {
+    if (formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '') {
+      setWithFood(true);
+    } else {
+      setWithFood(false);
+    }
+  }, [formValues.package.food]);
+
   return (
     <div className="form">
-      {!isAdminPathname && (
+      {!isAdminPathname && !isAdminTablePathname && (
         <div>
           <Header
             className={isAdminPathname && 'd-none'}
             currentStep={steps}
             goBackToStep={goBackToStep}
             formSubmitted={formSubmitted}
-            showNavMenu
+            showNavMenu={true}
           />
 
           <div className="form__container">
@@ -271,11 +247,19 @@ const FormRoutes = () => {
               />
             )}
 
+            {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+              <ExtraMeals
+                backStep={backStep}
+                nextStep={nextStep}
+                initialValues={formValues.extraMeals}
+                updateForm={updateFormValues('extraMeals')}
+              />
+            )}
+
             {steps === enumSteps.finalReview && isNotSuccessPathname && (
               <FinalReview
                 nextStep={nextStep}
                 backStep={backStep}
-                updateForm={updateFormValues('finalReview')}
                 formValues={formValues}
                 sendForm={sendForm}
                 status={status}
@@ -311,16 +295,11 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route path="/admin" element={<Admin totalRegistrationsGlobal={totalRegistrations} />} />
+        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
+        <Route path="/admin/tabela" element={<AdminTable />} />
       </Routes>
     </div>
   );
-};
-
-Header.propTypes = {
-  goBackToStep: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  formSubmitted: PropTypes.bool.isRequired,
 };
 
 export default FormRoutes;

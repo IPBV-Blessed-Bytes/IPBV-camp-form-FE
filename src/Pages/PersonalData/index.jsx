@@ -1,10 +1,11 @@
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
+import { cpf } from 'cpf-cnpj-validator';
 import PropTypes from 'prop-types';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
-
+import { toast } from 'react-toastify';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from './data';
 
@@ -12,8 +13,12 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
   const { values, errors, handleChange, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
-      nextStep();
-      updateForm(values);
+      if (cpf.isValid(values.cpf)) {
+        nextStep();
+        updateForm(values);
+      } else {
+        toast.error('CPF inválido! Por favor, insira um CPF válido.');
+      }
     },
     validationSchema: personalInformationSchema,
     validateOnBlur: false,
@@ -120,7 +125,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                       })
                     }
                     placeholder="000.000000-00"
-                    title="Preencher CPF válido. Caso não possua, preencher 00000000000!"
+                    title="Preencher CPF válido"
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
                 </Form.Group>

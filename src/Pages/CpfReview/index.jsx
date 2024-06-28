@@ -1,4 +1,5 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const CpfReview = ({ formValues }) => {
   if (!formValues || !formValues.data) {
@@ -127,6 +128,23 @@ const CpfReview = ({ formValues }) => {
       </div>
     </Card>
   );
+};
+
+CpfReview.propTypes = {
+  formValues: PropTypes.shape({
+    data: PropTypes.shape({
+      name: PropTypes.string,
+      aggregate: PropTypes.string,
+      payment: PropTypes.string,
+      registrationDate: PropTypes.string,
+      packageTitle: PropTypes.string,
+      accomodation: PropTypes.string,
+      subAccomodation: PropTypes.string,
+      transport: PropTypes.string,
+      food: PropTypes.string,
+      price: PropTypes.number,
+    }),
+  }),
 };
 
 export default CpfReview;
