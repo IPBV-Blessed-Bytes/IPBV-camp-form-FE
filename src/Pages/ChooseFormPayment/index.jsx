@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
-  const navigateTo = useNavigate();
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
@@ -16,12 +14,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
     validateOnChange: false,
     validationSchema: formPaymentSchema,
   });
-
-  useEffect(() => {
-    if (values.formPayment === 'inPerson' && status === 'loaded') {
-      navigateTo('/sucesso');
-    }
-  }, [status, values.formPayment]);
 
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
@@ -65,7 +57,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
                 </option>
                 <option value="pix">Online PIX</option>
                 <option value="creditCard">Online Cartão (Até 12x)</option>
-                <option value="inPerson">Presencial (secretaria da igreja)</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
