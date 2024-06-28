@@ -18,9 +18,6 @@ const mealOptions = [
   { name: 'Terça - almoço', price: 26 },
   { name: 'Terça - jantar', price: 26 },
   { name: 'Quarta - café da manhã', price: 23 },
-  { name: 'Quarta - almoço', price: 26 },
-  { name: 'Quarta - jantar', price: 26 },
-  { name: 'Quinta - café da manhã', price: 23 },
 ];
 
 const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
