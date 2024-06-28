@@ -5,7 +5,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
-  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacotes', 'Revisão', 'Pagamento'];
+  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacotes', 'Alimentação Extra', 'Revisão', 'Pagamento'];
   const navigateTo = useNavigate();
 
   const handleStepChange = (newStep) => {
@@ -46,7 +46,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
                 {step}
               </Breadcrumb.Item>
               {index < headerSteps.length - 1 && (
-                <Icons typeIcon="arrow-right" iconSize={25} fill={index < currentStep ? '#ffc107' : '#fff'} />
+                <Icons className="d-none d-lg-block" typeIcon="arrow-right" iconSize={25} fill={index < currentStep ? '#ffc107' : '#fff'} />
               )}
             </React.Fragment>
           ))}
