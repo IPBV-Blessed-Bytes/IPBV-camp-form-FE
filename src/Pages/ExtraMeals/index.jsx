@@ -26,6 +26,21 @@ const mealOptions = [
 const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
+  const [iconFill, setIconFill] = useState('#3357ff');
+
+  const iconColors = ['#3357ff', '#ff5733', '#89c96e', '#ff33a6', '#ffc107'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIconFill((prevFill) => {
+        const currentIndex = iconColors.indexOf(prevFill);
+        const nextIndex = (currentIndex + 1) % iconColors.length;
+        return iconColors[nextIndex];
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const { values, handleChange, errors, submitForm, setFieldValue } = useFormik({
     initialValues: { ...initialValues, extraMeals: initialValues.extraMeals || [] },
@@ -129,21 +144,26 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
-              <Card.Text className="mb-3">
-                <b>Valores:</b> <br />
-                <ul>
-                  <li>
-                    Café da manhã: <b>R$ 23,00 por refeição</b>
-                  </li>
-                  <li>
-                    Almoço: <b>R$ 26,00 por refeição</b>
-                  </li>
-                  <li>
-                    Jantar: <b>R$ 26,00 por refeição</b>
-                  </li>
-                </ul>
-              </Card.Text>
+            <Row className="mb-3">
+              <Col md={8}>
+                <Card.Text className="mb-3">
+                  <b>Valores:</b> <br />
+                  <ul>
+                    <li>
+                      Café da manhã: <b>R$ 23,00 por refeição</b>
+                    </li>
+                    <li>
+                      Almoço: <b>R$ 26,00 por refeição</b>
+                    </li>
+                    <li>
+                      Jantar: <b>R$ 26,00 por refeição</b>
+                    </li>
+                  </ul>
+                </Card.Text>
+              </Col>
+              <Col md={4} className="d-flex justify-content-center align-items-center">
+                <Icons typeIcon="food" iconSize={100} fill={iconFill} />
+              </Col>
             </Row>
             {values.someFood && (
               <Row className="mb-3">
