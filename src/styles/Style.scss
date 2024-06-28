@@ -22,8 +22,16 @@ body {
     padding: 1.25rem 1.875rem 3rem;
     text-align: center;
 
-    &__future-step a {
-      color: $medium-gray !important;
+    &--future-step {
+      cursor: default;
+
+      a {
+        cursor: default;
+      }
+    }
+
+    &--previous-step a {
+      color: $secondary !important;
     }
 
     h2 {
@@ -32,9 +40,8 @@ body {
 
     nav {
       ol {
-        cursor: pointer;
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         justify-content: center;
         list-style-type: none;
         padding: 0;

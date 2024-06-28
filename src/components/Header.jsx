@@ -1,6 +1,8 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import Icons from './Icons';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacotes', 'Revisão', 'Pagamento'];
@@ -29,14 +31,24 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
       {showNavMenu && (
         <Breadcrumb className="mt-4">
           {headerSteps.map((step, index) => (
-            <Breadcrumb.Item
-              className={index > currentStep ? 'form__header__future-step' : ''}
-              key={index}
-              active={currentStep === index}
-              onClick={() => handleStepChange(index)}
-            >
-              {step}
-            </Breadcrumb.Item>
+            <React.Fragment key={index}>
+              <Breadcrumb.Item
+                className={
+                  index > currentStep
+                    ? 'form__header--future-step'
+                    : index < currentStep
+                    ? 'form__header--previous-step'
+                    : ''
+                }
+                active={currentStep === index}
+                onClick={() => handleStepChange(index)}
+              >
+                {step}
+              </Breadcrumb.Item>
+              {index < headerSteps.length - 1 && (
+                <Icons typeIcon="arrow-right" iconSize={25} fill={index < currentStep ? '#ffc107' : '#fff'} />
+              )}
+            </React.Fragment>
           ))}
         </Breadcrumb>
       )}
