@@ -22,6 +22,10 @@ body {
     padding: 1.25rem 1.875rem 3rem;
     text-align: center;
 
+    &__future-step a {
+      color: $medium-gray !important;
+    }
+
     h2 {
       font-weight: bold;
     }
@@ -719,4 +723,3 @@ button.btn.btn-outline-danger:hover svg {
     }
   }
 }
-
