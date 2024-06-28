@@ -72,7 +72,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = ((validRegistrations >= 360) && !isChild);
+  const isRegistrationClosed = validRegistrations >= 360 && !isChild;
 
   return (
     <Card className="form__container__general-height">
@@ -122,8 +122,7 @@ const FormPackages = ({
 
                           const usedValidPackagesPath = availablePackages?.data?.usedValidPackages;
 
-                          const { available: availablePackageName } =
-                            packageMapping[cards.id] || {};
+                          const { available: availablePackageName } = packageMapping[cards.id] || {};
 
                           const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
                           const usedValidPackagesMapping = {
@@ -213,7 +212,8 @@ const FormPackages = ({
                                   <div className="card-text w-100">
                                     <p className="mb-2">
                                       <span>
-                                        {cards.observation} | {cards.food}
+                                        {cards.observation}
+                                        <b className="text-danger">{cards.observationHighlite}</b> | {cards.food}
                                       </span>
                                     </p>
 
@@ -264,7 +264,8 @@ const FormPackages = ({
                                     <div className="packages-horizontal-line"></div>
                                     <div className="package-description-container">
                                       <em className="d-flex gap-1 info-text-wrapper">
-                                        <span>Total:</span> <u className='card-text'>{formatCurrency(cards.values.total)}</u>
+                                        <span>Total:</span>{' '}
+                                        <u className="card-text">{formatCurrency(cards.values.total)}</u>
                                       </em>
                                     </div>
                                     {!isPackageAvailable && (

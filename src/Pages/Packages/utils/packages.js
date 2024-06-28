@@ -53,7 +53,8 @@ const getPackages = (age) => {
       id: '5',
       title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
-      observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO',
+      observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO. ',
+      observationHighlite: 'Taxa fixa de 50 reais',
       values: { ...nonPaid },
       accomodation: { id: 'colegioCampingSemAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Sem Ônibus',
@@ -91,7 +92,7 @@ const getPackages = (age) => {
       id: '9',
       title: 'PACOTE 9 - HOSPEDAGEM EXTERNA COM ÔNIBUS',
       observation:
-        '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade). Taxa de 50 reais fixo para quem estiver hospedado fora',
+        '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithBuss },
       accomodation: { id: 'outroComOnibus', name: OTHER, subAccomodation: 'Outro' },
       transportation: 'Com Ônibus',
@@ -101,7 +102,7 @@ const getPackages = (age) => {
       id: '10',
       title: 'PACOTE 10 - HOSPEDAGEM EXTERNA SEM ÔNIBUS',
       observation:
-        '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade). Taxa de 50 reais fixo para quem estiver hospedado fora',
+        '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithoutBuss },
       accomodation: { id: 'outroSemOnibus', name: OTHER, subAccomodation: 'Outro' },
       transportation: 'Sem Ônibus',
@@ -111,7 +112,8 @@ const getPackages = (age) => {
       id: '11',
       title: 'PACOTE 11 - ASSISTIR O CULTO',
       observation:
-        '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. Taxa de 50 reais fixo para quem estiver hospedado fora',
+        '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
+      observationHighlite: 'Taxa fixa de 50 reais',
       values: { ...nonPaid },
       accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externo' },
       transportation: 'Sem Ônibus',
