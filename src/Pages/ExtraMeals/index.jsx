@@ -25,7 +25,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [iconFill, setIconFill] = useState('#3357ff');
 
-  const iconColors = ['#3357ff', '#ff5733', '#89c96e', '#ff33a6', '#ffc107'];
+  const iconColors = ['#3357ff', '#ff5733', '#ffc107'];
 
   useEffect(() => {
     const interval = setInterval(() => {
