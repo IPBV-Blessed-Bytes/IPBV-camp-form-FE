@@ -76,13 +76,18 @@ const AdminLoggedOut = ({
 
 AdminLoggedOut.propTypes = {
   handleLogout: PropTypes.func,
-  loginData: PropTypes.bool,
+  loginData: PropTypes.shape({
+    username: PropTypes.string,
+    password: PropTypes.string,
+  }),
   handleKeyDown: PropTypes.func,
   showPassword: PropTypes.bool,
   handleShowPassword: PropTypes.func,
   handleLogin: PropTypes.func,
   navigateTo: PropTypes.func,
   setLoginData: PropTypes.func,
+  loginPage: PropTypes.bool,
+  setLoginPage: PropTypes.func,
 };
 
 export default AdminLoggedOut;
