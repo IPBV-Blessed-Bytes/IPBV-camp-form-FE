@@ -16,8 +16,16 @@ const additionalInformationSchema = yup.object().shape({
   isWhatsApp: yup.boolean().required('Informe se o número é whatsapp ou não'),
   church: yup.string().required('Informe sua igreja'),
   car: yup.string().required('Informe se vai de carro e possui vagas de carona'),
-  numberVacancies: yup.string().required('Informe quantas vagas de carona há'),
-  needRide: yup.string().required('Informe se precisa de carona'),
+  numberVacancies: yup.string().when('car', {
+    is: 'sim',
+    then: () => yup.string().required('Informe quantas vagas de carona há'),
+    otherwise: () => yup.string().nullable(),
+  }),
+  needRide: yup.string().when('car', {
+    is: 'nao',
+    then: () => yup.string().required('Informe se precisa de carona'),
+    otherwise: () => yup.string().nullable(),
+  }),
   hasAllergy: yup.boolean().required('Informe se você tem alergia'),
   allergy: yup.string().when('hasAllergy', {
     is: true,
