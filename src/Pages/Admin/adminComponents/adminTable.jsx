@@ -7,6 +7,7 @@ import axios from 'axios';
 import Icons from '../../../components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
+import { useNavigate } from 'react-router-dom';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
@@ -20,6 +21,7 @@ const AdminTable = () => {
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const navigate = useNavigate();
 
   const apiUrl = 'http://localhost:3001/data';
 
@@ -293,6 +295,17 @@ const AdminTable = () => {
 
   return (
     <Container fluid>
+      <Row className="mt-3">
+        <Col>
+          <Button variant="danger" onClick={() => navigate('/admin')}>
+            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
+            &nbsp;Voltar
+
+          </Button>
+        </Col>
+      </Row>
+      <hr className="horizontal-line" />
+
       <Row className="table-tools">
         <Col xl={9} className="mt-3">
           <div className="table-tools__left-buttons d-flex mb-3 gap-3">
@@ -343,13 +356,13 @@ const AdminTable = () => {
                 <React.Fragment key={headerGroup.id}>
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th
-                        className="table-cells-header"
-                        key={column.id}
-                      >
+                      <th className="table-cells-header" key={column.id}>
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
-                          <span className="sort-icon-wrapper px-3" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                          <span
+                            className="sort-icon-wrapper px-3"
+                            {...column.getHeaderProps(column.getSortByToggleProps())}
+                          >
                             <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
                           </span>
                         </div>
