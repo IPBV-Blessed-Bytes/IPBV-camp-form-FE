@@ -22,14 +22,12 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
       <Card.Body>
         <Container>
           <Card.Title>Informações de Contato</Card.Title>
-
           <Card.Text>Nos informe como poderemos te contactar caso necessário.</Card.Text>
           <Form>
             <Row>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Telefone:</Form.Label>
-
                   <Form.Control
                     type="text"
                     as={InputMask}
@@ -46,15 +44,13 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       });
                     }}
                     placeholder="(00) 00000-0000"
-                  ></Form.Control>
-
+                  />
                   <Form.Control.Feedback type="invalid">{errors.cellPhone}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>É whatsApp?</Form.Label>
-
+                  <Form.Label>É WhatsApp?</Form.Label>
                   <Form.Select
                     name="isWhatsApp"
                     isInvalid={!!errors.isWhatsApp}
@@ -74,7 +70,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <option value={true}>Sim</option>
                     <option value={false}>Não</option>
                   </Form.Select>
-
                   <Form.Control.Feedback type="invalid">{errors.isWhatsApp}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -117,7 +112,13 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               <Col md={6}>
                 <Form.Group className="mb-3 info-text-wrapper">
                   <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
-                  <Form.Select id="car" name="car" isInvalid={!!errors.car} value={values.car} onChange={handleChange}>
+                  <Form.Select
+                    id="car"
+                    name="car"
+                    isInvalid={!!errors.car}
+                    value={values.car}
+                    onChange={handleChange}
+                  >
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
@@ -130,7 +131,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   </Card.Text>
                 </Form.Group>
               </Col>
-              {values.car === 'sim' && (
+
+              {values.car === 'sim' ? (
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Quantas vagas?</Form.Label>
@@ -154,8 +156,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <Form.Control.Feedback type="invalid">{errors.numberVacancies}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              )}
-              {values.car === 'nao' && (
+              ) : (
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Precisa de carona?</Form.Label>
@@ -182,9 +183,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               <Col md={values.hasAllergy ? 6 : 6}>
                 <FormGroup>
                   <FormLabel>Você possui algum tipo de alergia?</FormLabel>
-
                   <Form.Select
-                    id="allergy"
+                    id="hasAllergy"
                     name="hasAllergy"
                     isInvalid={!!errors.hasAllergy}
                     value={values.hasAllergy}
@@ -209,7 +209,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 <Col md={values.hasAllergy ? 6 : 6}>
                   <FormGroup>
                     <FormLabel>Descreva as suas alergias aqui:</FormLabel>
-
                     <Form.Control
                       isInvalid={!!errors.allergy}
                       as="textarea"
@@ -219,7 +218,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       onChange={handleChange}
                       style={{ resize: 'none' }}
                     />
-
                     <Form.Control.Feedback type="invalid">{errors.allergy}</Form.Control.Feedback>
                   </FormGroup>
                 </Col>
@@ -268,7 +266,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       onChange={handleChange}
                       style={{ resize: 'none' }}
                     />
-
                     <Form.Control.Feedback type="invalid">{errors.aggregate}</Form.Control.Feedback>
                   </FormGroup>
                 </Col>
@@ -277,7 +274,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
           </Form>
         </Container>
       </Card.Body>
-
       <div className="form__container__buttons">
         <Button
           variant="light"
@@ -289,7 +285,6 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
         >
           Voltar
         </Button>
-
         <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
@@ -308,6 +303,8 @@ FormContact.propTypes = {
     isWhatsApp: PropTypes.bool,
     hasAllergy: PropTypes.bool,
     allergy: PropTypes.string,
+    hasAggregate: PropTypes.bool,
+    aggregate: PropTypes.string,
   }),
 };
 
