@@ -416,6 +416,10 @@ a:not(.form-success__button, .mail-to) {
   }
 }
 
+.checkbox-label {
+  user-select: none;
+}
+
 .overlay {
   position: fixed;
   top: 0;

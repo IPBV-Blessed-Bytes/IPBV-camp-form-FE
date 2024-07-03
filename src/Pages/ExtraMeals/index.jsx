@@ -40,7 +40,8 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
       if (values.someFood && values.extraMeals.length === 0) {
         setCheckboxHasError(true);
       } else {
-        extraMealSelected && toast.success('Você receberá a senha do almoço adquirido presencialmente, no dia escolhido.');
+        extraMealSelected &&
+          toast.success('Você receberá a senha do almoço adquirido presencialmente, no dia escolhido');
         nextStep();
         updateForm(values);
       }
@@ -171,14 +172,16 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                           <Col md={6} key={meal.name}>
                             <Form.Group>
                               <Form.Check
-                                className={`table-checkbox ${checkboxHasError && 'checkbox-error'}`}
+                                className={`table-checkbox checkbox-label ${checkboxHasError && 'checkbox-error'}`}
                                 type="checkbox"
+                                id={`meal-${meal.name}`}
                                 name={meal.name}
                                 isInvalid={!!errors.extraMeals}
                                 onChange={handleCheckboxChange}
                                 checked={values.extraMeals.includes(meal.name)}
                                 label={`${meal.name} - R$ ${meal.price},00`}
-                              ></Form.Check>
+                              />
+                              <Form.Check.Label className="d-none" htmlFor={`meal-${meal.name}`} />
                             </Form.Group>
                           </Col>
                         ))}
