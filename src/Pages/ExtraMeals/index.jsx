@@ -1,43 +1,38 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
-import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
+import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import Icons from '../../components/Icons';
 import { ExtraMealsSchema } from '../../form/validations/schema';
 
 const mealOptions = [
-  { name: 'Sábado - almoço', price: 26 },
-  { name: 'Sábado - jantar', price: 26 },
-  { name: 'Domingo - café da manhã', price: 23 },
-  { name: 'Domingo - almoço', price: 26 },
-  { name: 'Domingo - jantar', price: 26 },
-  { name: 'Segunda - café da manhã', price: 23 },
-  { name: 'Segunda - almoço', price: 26 },
-  { name: 'Segunda - jantar', price: 26 },
-  { name: 'Terça - café da manhã', price: 23 },
-  { name: 'Terça - almoço', price: 26 },
-  { name: 'Terça - jantar', price: 26 },
-  { name: 'Quarta - café da manhã', price: 23 },
+  { day: 'Sábado', name: 'Sábado - almoço', price: 26 },
+  { day: 'Sábado', name: 'Sábado - jantar', price: 26 },
+  { day: 'Domingo', name: 'Domingo - café da manhã', price: 23 },
+  { day: 'Domingo', name: 'Domingo - almoço', price: 26 },
+  { day: 'Domingo', name: 'Domingo - jantar', price: 26 },
+  { day: 'Segunda', name: 'Segunda - café da manhã', price: 23 },
+  { day: 'Segunda', name: 'Segunda - almoço', price: 26 },
+  { day: 'Segunda', name: 'Segunda - jantar', price: 26 },
+  { day: 'Terça', name: 'Terça - café da manhã', price: 23 },
+  { day: 'Terça', name: 'Terça - almoço', price: 26 },
+  { day: 'Terça', name: 'Terça - jantar', price: 26 },
+  { day: 'Quarta', name: 'Quarta - café da manhã', price: 23 },
 ];
+
+const groupedMealOptions = mealOptions.reduce((acc, meal) => {
+  if (!acc[meal.day]) {
+    acc[meal.day] = [];
+  }
+  acc[meal.day].push(meal);
+  return acc;
+}, {});
 
 const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
-  const [iconFill, setIconFill] = useState('#3357ff');
-
-  const iconColors = ['#3357ff', '#ff5733', '#ffc107'];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIconFill((prevFill) => {
-        const currentIndex = iconColors.indexOf(prevFill);
-        const nextIndex = (currentIndex + 1) % iconColors.length;
-        return iconColors[nextIndex];
-      });
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [extraMealSelected, setExtraMealSelected] = useState(false);
 
   const { values, handleChange, errors, submitForm, setFieldValue } = useFormik({
     initialValues: { ...initialValues, extraMeals: initialValues.extraMeals || [] },
@@ -45,6 +40,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
       if (values.someFood && values.extraMeals.length === 0) {
         setCheckboxHasError(true);
       } else {
+        extraMealSelected && toast.success('Você receberá a senha do almoço adquirido presencialmente, no dia escolhido.');
         nextStep();
         updateForm(values);
       }
@@ -71,6 +67,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
     if (checked) {
       setFieldValue('extraMeals', [...values.extraMeals, name]);
       setCheckboxHasError(false);
+      setExtraMealSelected(true);
     } else {
       setFieldValue(
         'extraMeals',
@@ -79,6 +76,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
       if (values.extraMeals.length === 1) {
         setCheckboxHasError(true);
       }
+      setExtraMealSelected(values.extraMeals.length > 1);
     }
   };
 
@@ -159,30 +157,36 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                 </Card.Text>
               </Col>
               <Col md={4} className="d-flex justify-content-center align-items-center">
-                <Icons typeIcon="food" iconSize={100} fill={iconFill} />
+                <Icons typeIcon="food" iconSize={100} fill="#204691" />
               </Col>
             </Row>
             {values.someFood && (
-              <Row className="mb-3">
-                <Form.Label>
-                  <b>Selecione as refeições:</b>
-                </Form.Label>
-                {mealOptions.map((meal) => (
-                  <Col md={6} className="mb-3" key={meal.name}>
-                    <Form.Group>
-                      <Form.Check
-                        className={`table-checkbox ${checkboxHasError && 'checkbox-error'}`}
-                        type="checkbox"
-                        name={meal.name}
-                        isInvalid={!!errors.extraMeals}
-                        onChange={handleCheckboxChange}
-                        checked={values.extraMeals.includes(meal.name)}
-                        label={`${meal.name} - R$ ${meal.price},00`}
-                      ></Form.Check>
-                    </Form.Group>
-                  </Col>
+              <Accordion className="mb-5">
+                {Object.entries(groupedMealOptions).map(([day, meals], index) => (
+                  <Accordion.Item className={checkboxHasError && 'msg-error'} eventKey={index.toString()} key={day}>
+                    <Accordion.Header>{day}</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        {meals.map((meal) => (
+                          <Col md={6} key={meal.name}>
+                            <Form.Group>
+                              <Form.Check
+                                className={`table-checkbox ${checkboxHasError && 'checkbox-error'}`}
+                                type="checkbox"
+                                name={meal.name}
+                                isInvalid={!!errors.extraMeals}
+                                onChange={handleCheckboxChange}
+                                checked={values.extraMeals.includes(meal.name)}
+                                label={`${meal.name} - R$ ${meal.price},00`}
+                              ></Form.Check>
+                            </Form.Group>
+                          </Col>
+                        ))}
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
                 ))}
-              </Row>
+              </Accordion>
             )}
             {checkboxHasError && (
               <div className={`invalid-feedback d-block`}>
