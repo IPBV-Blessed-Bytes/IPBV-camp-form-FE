@@ -202,7 +202,6 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       'bg-light',
       'text-success',
     ),
-    createCardData('Hotel Íbis', 'hotelDuplaComOnibus', 'hotelDuplaSemOnibus', 'bg-dark', 'text-warning'),
     createCardData('Outra Acomodação', 'outroComOnibus', 'outroSemOnibus', 'bg-light', 'text-success'),
   ];
 
