@@ -214,11 +214,6 @@ body {
       }
     }
 
-    button.accordion-button:not(.collapsed) {
-      color: $primary;
-      font-weight: bold;
-    }
-
     .accordion-body {
       .card-body {
         .package-description-container {
@@ -418,6 +413,11 @@ a:not(.form-success__button, .mail-to) {
 
 .checkbox-label {
   user-select: none;
+}
+
+button.accordion-button:not(.collapsed) {
+  color: $primary;
+  font-weight: bold;
 }
 
 .overlay {
@@ -634,8 +634,13 @@ a:not(.form-success__button, .mail-to) {
 }
 
 .filter-btn {
-  background-color: $dark-gray;
-  border-color: $dark-gray;
+  background-color: $alternate-dark-gray;
+  border-color: $alternate-dark-gray;
+
+  &:hover {
+    background-color: $dark-gray;
+    border-color: $dark-gray;
+  }
 }
 
 button.btn.btn-outline-danger:hover svg {
@@ -705,7 +710,9 @@ button.btn.btn-outline-danger:hover svg {
 }
 
 .table-tools {
-  &__left-buttons {
+  &__left-buttons,
+  &__left-buttons-ride,
+  &__right-buttons-ride {
     @media (max-width: $md) {
       button {
         justify-content: center;
@@ -717,7 +724,8 @@ button.btn.btn-outline-danger:hover svg {
     }
   }
 
-  &__right-buttons {
+  &__right-buttons,
+  &__right-buttons-ride {
     display: flex;
     justify-content: end;
 
@@ -727,10 +735,19 @@ button.btn.btn-outline-danger:hover svg {
   }
 
   &__left-buttons,
-  &__right-buttons {
+  &__right-buttons,
+  &__right-buttons-right {
     @media (max-width: $md) {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__right-buttons-ride {
+    b {
+      @media (min-width: $md) {
+        display: none;
+      }
     }
   }
 
