@@ -7,18 +7,18 @@ import Icons from '../../components/Icons';
 import { ExtraMealsSchema } from '../../form/validations/schema';
 
 const mealOptions = [
-  { day: 'Sábado', name: 'Sábado - almoço', price: 26 },
-  { day: 'Sábado', name: 'Sábado - jantar', price: 26 },
-  { day: 'Domingo', name: 'Domingo - café da manhã', price: 23 },
-  { day: 'Domingo', name: 'Domingo - almoço', price: 26 },
-  { day: 'Domingo', name: 'Domingo - jantar', price: 26 },
-  { day: 'Segunda', name: 'Segunda - café da manhã', price: 23 },
-  { day: 'Segunda', name: 'Segunda - almoço', price: 26 },
-  { day: 'Segunda', name: 'Segunda - jantar', price: 26 },
-  { day: 'Terça', name: 'Terça - café da manhã', price: 23 },
-  { day: 'Terça', name: 'Terça - almoço', price: 26 },
-  { day: 'Terça', name: 'Terça - jantar', price: 26 },
-  { day: 'Quarta', name: 'Quarta - café da manhã', price: 23 },
+  { day: 'Sábado', name: 'Sábado - almoço', price: 26, checkboxMargin: '' },
+  { day: 'Sábado', name: 'Sábado - jantar', price: 26, checkboxMargin: '' },
+  { day: 'Domingo', name: 'Domingo - café da manhã', price: 23, checkboxMargin: 'mb-2' },
+  { day: 'Domingo', name: 'Domingo - almoço', price: 26, checkboxMargin: 'mb-2' },
+  { day: 'Domingo', name: 'Domingo - jantar', price: 26, checkboxMargin: ''},
+  { day: 'Segunda', name: 'Segunda - café da manhã', price: 23, checkboxMargin: 'mb-2' },
+  { day: 'Segunda', name: 'Segunda - almoço', price: 26, checkboxMargin: 'mb-2' },
+  { day: 'Segunda', name: 'Segunda - jantar', price: 26, checkboxMargin: '' },
+  { day: 'Terça', name: 'Terça - café da manhã', price: 23, checkboxMargin: 'mb-2' },
+  { day: 'Terça', name: 'Terça - almoço', price: 26, checkboxMargin: 'mb-2' },
+  { day: 'Terça', name: 'Terça - jantar', price: 26, checkboxMargin: '' },
+  { day: 'Quarta', name: 'Quarta - café da manhã', price: 23, checkboxMargin: '' },
 ];
 
 const groupedMealOptions = mealOptions.reduce((acc, meal) => {
@@ -172,7 +172,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                           <Col md={6} key={meal.name}>
                             <Form.Group>
                               <Form.Check
-                                className={`table-checkbox checkbox-label ${checkboxHasError && 'checkbox-error'}`}
+                                className={`table-checkbox checkbox-label ${meal.checkboxMargin} ${checkboxHasError && 'checkbox-error'}`}
                                 type="checkbox"
                                 id={`meal-${meal.name}`}
                                 name={meal.name}
