@@ -156,7 +156,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <Form.Control.Feedback type="invalid">{errors.numberVacancies}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              ) : (
+              ) : values.car === 'nao' ? (
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Precisa de carona?</Form.Label>
@@ -176,7 +176,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              )}
+              ) : ''}
             </Row>
 
             <Row className="mb-3">
