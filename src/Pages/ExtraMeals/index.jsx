@@ -93,7 +93,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
           <Card.Text>
             <i>
               Caso opte por não adquirir refeições avulsas nesta etapa, você poderá fazê-lo posteriormente entrando em
-              contato com a secretaria ou pessoalmente no acampamento, até o dia anterior à refeição, caso seja
+              contato com a secretaria ou pessoalmente no acampamento, <b>até o dia anterior à refeição</b>, caso seja
               necessário.{' '}
             </i>
           </Card.Text>
