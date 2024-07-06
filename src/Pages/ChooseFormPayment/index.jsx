@@ -55,8 +55,9 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                <option value="pix">Online PIX</option>
-                <option value="creditCard">Online Cartão (Até 12x)</option>
+´                <option value="creditCard">Cartão de Crédito (Até 12x)</option>
+                <option value="pix">PIX</option>
+                <option value="ticket">Boleto</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
