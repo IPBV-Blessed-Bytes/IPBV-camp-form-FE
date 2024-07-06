@@ -17,6 +17,7 @@ import AdminTable from '../Admin/adminComponents/adminTable';
 import FinalReview from '../FinalReview';
 import { enumSteps, initialValues } from './constants';
 import ExtraMeals from '../ExtraMeals';
+import AdminRide from '../Admin/adminComponents/adminRide';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -26,11 +27,12 @@ const FormRoutes = () => {
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const isAdminPathname = window.location.pathname === '/admin';
   const isAdminTablePathname = window.location.pathname === '/admin/tabela';
+  const isAdminRidePathname = window.location.pathname === '/admin/carona';
   const [availablePackages, setAvailablePackages] = useState({});
   const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
   const [withFood, setWithFood] = useState(false);
   const navigate = useNavigate();
 
@@ -203,7 +205,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!isAdminPathname && !isAdminTablePathname && (
+      {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && (
         <div>
           <Header
             className={isAdminPathname && 'd-none'}
@@ -297,6 +299,7 @@ const FormRoutes = () => {
       <Routes>
         <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
         <Route path="/admin/tabela" element={<AdminTable />} />
+        <Route path="/admin/carona" element={<AdminRide />} />
       </Routes>
     </div>
   );

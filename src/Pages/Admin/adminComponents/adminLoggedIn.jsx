@@ -22,15 +22,23 @@ const AdminLoggedIn = ({
     navigate('/admin/tabela');
   };
 
+  const handleRideClick = () => {
+    navigate('/admin/carona');
+  };
+
   return (
     <>
       <Row>
-        <Col xs={6}>
-          <Button variant="success" onClick={handleTableClick} size="lg">
-            Tabela
+        <Col xs={8} md={10}>
+          <Button variant="success" onClick={handleTableClick} className="mb-xs-3">
+            Tabela de Inscritos
+          </Button>
+          &nbsp;
+          <Button variant="warning" onClick={handleRideClick} >
+            Gerenciador de Caronas
           </Button>
         </Col>
-        <Col xs={6} className="text-end mb-2">
+        <Col xs={4} md={2} className="text-end mb-2">
           <p>
             Bem vindo(a),
             <span>
