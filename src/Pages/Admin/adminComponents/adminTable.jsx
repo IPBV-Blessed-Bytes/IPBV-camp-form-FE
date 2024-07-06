@@ -300,14 +300,16 @@ const AdminTable = () => {
           <Button variant="danger" onClick={() => navigate('/admin')}>
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar
-
           </Button>
+        </Col>
+        <Col className="d-flex justify-content-end align-items-center">
+          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Inscritos:</h4>
         </Col>
       </Row>
       <hr className="horizontal-line" />
 
       <Row className="table-tools">
-        <Col xl={9} className="mt-3">
+        <Col xl={9}>
           <div className="table-tools__left-buttons d-flex mb-3 gap-3">
             <Button
               variant="warning"
@@ -334,7 +336,7 @@ const AdminTable = () => {
             </Button>
           </div>
         </Col>
-        <Col xl={3} className="mt-xl-3">
+        <Col xl={3}>
           <div className="table-tools__right-buttons mb-3">
             <Button
               onClick={() => setShowAddModal(true)}
