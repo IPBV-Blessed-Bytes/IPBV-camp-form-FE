@@ -11,6 +11,7 @@ export const enumSteps = {
 
 export const initialValues = {
   registrationDate: '',
+  totalPrice: '',
   personalInformation: {
     name: '',
     birthday: '',
@@ -45,8 +46,8 @@ export const initialValues = {
     title: '',
   },
   extraMeals: {
-    someFood: '',
-    totalValue: '',
+    someFood: false,
+    totalPrice: '',
   },
   formPayment: {
     formPayment: '',

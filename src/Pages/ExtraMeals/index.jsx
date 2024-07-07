@@ -11,7 +11,7 @@ const mealOptions = [
   { day: 'Sábado', name: 'Sábado - jantar', price: 26, checkboxMargin: '' },
   { day: 'Domingo', name: 'Domingo - café da manhã', price: 23, checkboxMargin: 'mb-2' },
   { day: 'Domingo', name: 'Domingo - almoço', price: 26, checkboxMargin: 'mb-2' },
-  { day: 'Domingo', name: 'Domingo - jantar', price: 26, checkboxMargin: ''},
+  { day: 'Domingo', name: 'Domingo - jantar', price: 26, checkboxMargin: '' },
   { day: 'Segunda', name: 'Segunda - café da manhã', price: 23, checkboxMargin: 'mb-2' },
   { day: 'Segunda', name: 'Segunda - almoço', price: 26, checkboxMargin: 'mb-2' },
   { day: 'Segunda', name: 'Segunda - jantar', price: 26, checkboxMargin: '' },
@@ -42,6 +42,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
       } else {
         extraMealSelected &&
           toast.success('Você receberá a senha do almoço adquirido presencialmente, no dia escolhido');
+        values.totalPrice = totalPrice;
         nextStep();
         updateForm(values);
       }
@@ -172,7 +173,9 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                           <Col md={6} key={meal.name}>
                             <Form.Group>
                               <Form.Check
-                                className={`table-checkbox checkbox-label ${meal.checkboxMargin} ${checkboxHasError && 'checkbox-error'}`}
+                                className={`table-checkbox checkbox-label ${meal.checkboxMargin} ${
+                                  checkboxHasError && 'checkbox-error'
+                                }`}
                                 type="checkbox"
                                 id={`meal-${meal.name}`}
                                 name={meal.name}
