@@ -101,6 +101,7 @@ const FormRoutes = () => {
       const updatedFormValues = {
         ...formValues,
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        totalPrice: Number(formValues.package.price) + Number(formValues.extraMeals.totalPrice),
       };
 
       const response = await axios.post(
