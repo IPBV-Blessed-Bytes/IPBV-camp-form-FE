@@ -49,11 +49,34 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
+                        <span className="form-review__section-title">Gênero:</span> <br />
+                        {formValues.personalInformation.gender}
+                      </Card.Text>
+                    </Col>
+                  </Row>
+                  <div className="packages-horizontal-line" />
+                  <Row className="row-gap">
+                    <Col md={5} className="fw-bold">
+                      <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
-                        Nome - {formValues.package.accomodation.name} |{' '}
-                        {formValues.package.accomodation.subAccomodation}
+                        Nome - {formValues.package.accomodation.name} <br />
+                        Acomodação - {formValues.package.accomodation.subAccomodation}
                         <br />
                         Preço - R$ {formValues.package.price},00
+                      </Card.Text>
+                    </Col>
+                    <Col md={4} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Alimentação Extra:</span>
+                        <br />
+                        R$ {formValues.extraMeals.totalPrice},00
+                      </Card.Text>
+                    </Col>
+                    <Col md={3} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Valor Total:</span>
+                        <br />
+                        R$ {formValues.package.price + formValues.extraMeals.totalPrice},00
                       </Card.Text>
                     </Col>
                   </Row>
@@ -61,16 +84,16 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Gênero:</span> <br />
-                        {formValues.personalInformation.gender}
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
                         <span className="form-review__section-title"> Data de Nascimento:</span> <br />
                         {isValid(new Date(formValues.personalInformation.birthday))
                           ? format(new Date(formValues.personalInformation.birthday), 'dd/MM/yyyy')
                           : 'Data inválida'}
+                      </Card.Text>
+                    </Col>
+                    <Col md={6} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Igreja:</span> <br />
+                        {formValues.contact.church}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -108,23 +131,17 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col md={4} className="fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
                         <br />
                         {formValues.contact.hasAllergy ? 'Sim -' : 'Não'} {formValues.contact.allergy}
                       </Card.Text>
                     </Col>
-                    <Col md={4} className="fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title"> Agregados:</span> <br />
                         {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
-                      </Card.Text>
-                    </Col>
-                    <Col md={4} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Igreja:</span> <br />
-                        {formValues.contact.church}
                       </Card.Text>
                     </Col>
                   </Row>
