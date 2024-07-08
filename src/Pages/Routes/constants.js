@@ -46,7 +46,7 @@ export const initialValues = {
     title: '',
   },
   extraMeals: {
-    someFood: false,
+    someFood: '',
     totalPrice: '',
   },
   formPayment: {
