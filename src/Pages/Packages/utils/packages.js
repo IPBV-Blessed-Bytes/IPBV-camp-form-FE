@@ -94,7 +94,7 @@ const getPackages = (age) => {
       observation:
         '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithBuss },
-      accomodation: { id: 'outroComOnibus', name: OTHER, subAccomodation: 'Outro' },
+      accomodation: { id: 'outroComOnibus', name: OTHER, subAccomodation: 'Outra' },
       transportation: 'Com Ônibus',
       food: 'Almoço e jantar',
     },
@@ -104,7 +104,7 @@ const getPackages = (age) => {
       observation:
         '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithoutBuss },
-      accomodation: { id: 'outroSemOnibus', name: OTHER, subAccomodation: 'Outro' },
+      accomodation: { id: 'outroSemOnibus', name: OTHER, subAccomodation: 'Outra' },
       transportation: 'Sem Ônibus',
       food: 'Almoço e jantar',
     },
@@ -115,7 +115,7 @@ const getPackages = (age) => {
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
       observationHighlite: 'Taxa fixa de 50 reais',
       values: { ...nonPaid },
-      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externo' },
+      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externa' },
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
