@@ -13,11 +13,10 @@ const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 const LOGIN_ENDPOINT = `${API_URL}/login`;
 const VERIFY_TOKEN_ENDPOINT = `${API_URL}/verify-token`;
 
-const AdminHome = ({ totalRegistrationsGlobal }) => {
+const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState('');
   const navigateTo = useNavigate();
   const [loginData, setLoginData] = useState({
@@ -33,6 +32,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
           const response = await axios.post(VERIFY_TOKEN_ENDPOINT, { token });
           if (response.data.valid) {
             setIsLoggedIn(true);
+            sessionStorage.setItem('isLoggedIn', 'true');
             setLoggedInUsername(response.data.username);
             fetchPackages();
           } else {
@@ -45,8 +45,10 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       }
     };
 
-    checkToken();
-  }, []);
+    if (!isLoggedIn) {
+      checkToken();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -75,6 +77,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       if (token) {
         localStorage.setItem('token', token);
         setIsLoggedIn(true);
+        sessionStorage.setItem('isLoggedIn', 'true');
         setLoggedInUsername(username);
         toast.success('Usuário logado com sucesso!');
         fetchPackages();
@@ -89,6 +92,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    sessionStorage.setItem('isLoggedIn', 'false');
     setLoggedInUsername('');
     setLoginData({ username: '', password: '' });
     localStorage.removeItem('token');
@@ -119,8 +123,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
   const seminaryWithBus = availablePackagesUsed.seminarioIndividualComOnibus;
   const otherWithBus = availablePackagesUsed.outroComOnibus;
 
-  const totalVacanciesWithBuses =
-    schoolIndividualWithBus + schoolFamilyWithBus + seminaryWithBus + otherWithBus;
+  const totalVacanciesWithBuses = schoolIndividualWithBus + schoolFamilyWithBus + seminaryWithBus + otherWithBus;
 
   const calculateVacancies = (usedPackages, usedValidPackages, totalPackages, withBus, withoutBus, specificTotals) => {
     if (
@@ -243,7 +246,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 };
 
 AdminHome.propTypes = {
-  totalRegistrationsGlobal: PropTypes.func.isRequired,
+  totalRegistrationsGlobal: PropTypes.func,
 };
 
 export default AdminHome;
