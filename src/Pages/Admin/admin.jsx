@@ -112,17 +112,15 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
   const schoolFamilyTotal = availablePackagesTotal?.colegioFamilia || 0;
   const schoolCampingTotal = availablePackagesTotal?.colegioCamping || 0;
   const seminaryTotal = availablePackagesTotal?.seminario || 0;
-  const hotelTotal = availablePackagesTotal?.hotel || 0;
   const otherTotal = availablePackagesTotal?.outro || 0;
 
   const schoolIndividualWithBus = availablePackagesUsed.colegioIndividualComOnibus;
   const schoolFamilyWithBus = availablePackagesUsed.colegioFamiliaComOnibus;
   const seminaryWithBus = availablePackagesUsed.seminarioIndividualComOnibus;
-  const hotelWithBus = availablePackagesUsed.hotelDuplaComOnibus;
   const otherWithBus = availablePackagesUsed.outroComOnibus;
 
   const totalVacanciesWithBuses =
-    schoolIndividualWithBus + schoolFamilyWithBus + seminaryWithBus + hotelWithBus + otherWithBus;
+    schoolIndividualWithBus + schoolFamilyWithBus + seminaryWithBus + otherWithBus;
 
   const calculateVacancies = (usedPackages, usedValidPackages, totalPackages, withBus, withoutBus, specificTotals) => {
     if (
@@ -159,7 +157,6 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
         colegioFamiliaComOnibus: schoolFamilyTotal,
         colegioCampingSemAlimentacao: schoolCampingTotal,
         seminarioIndividualComOnibus: seminaryTotal,
-        hotelDuplaComOnibus: hotelTotal,
         outroComOnibus: otherTotal,
       },
     );

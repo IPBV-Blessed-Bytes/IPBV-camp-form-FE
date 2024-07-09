@@ -72,7 +72,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = validRegistrations >= 360 && !isChild;
+  const isRegistrationClosed = validRegistrations >= 1000 && !isChild;
 
   return (
     <Card className="form__container__general-height">
@@ -177,27 +177,20 @@ const FormPackages = ({
                                 usedValidPackagesPath?.seminarioIndividualSemOnibus,
                             },
                             9: {
-                              hotel:
-                                usedValidPackagesPath?.hotelDuplaComOnibus + usedValidPackagesPath?.hotelDuplaSemOnibus,
+                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
                             },
                             10: {
-                              hotel:
-                                usedValidPackagesPath?.hotelDuplaComOnibus + usedValidPackagesPath?.hotelDuplaSemOnibus,
+                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
                             },
                             11: {
-                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
-                            },
-                            12: {
-                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
-                            },
-                            13: {
                               usuarioSemCusto: usedValidPackagesPath?.usuarioSemCusto,
                             },
                           };
 
                           const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
 
-                          const openPackages = availableSlots - usedValidPackagesSum;
+                          const openPackages = 1000;
+
                           const isPackageAvailable = openPackages > 0 || isChild;
 
                           return (
