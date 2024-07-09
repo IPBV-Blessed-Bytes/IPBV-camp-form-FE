@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
@@ -55,7 +55,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-´                <option value="creditCard">Cartão de Crédito (Até 12x)</option>
+                <option value="creditCard">Cartão de Crédito (Até 12x)</option>
                 <option value="pix">PIX</option>
                 <option value="ticket">Boleto</option>
               </Form.Select>
@@ -82,7 +82,6 @@ ChooseFormPayment.propTypes = {
   updateForm: PropTypes.func,
   sendForm: PropTypes.func,
   spinnerLoading: PropTypes.func,
-  status: PropTypes.func,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
   }),

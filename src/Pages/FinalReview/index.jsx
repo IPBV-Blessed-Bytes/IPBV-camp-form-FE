@@ -78,7 +78,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
                         <br />
-                        R$ {formValues.package.price + formValues.extraMeals.totalPrice},00
+                        R$ {formValues.package.price + (formValues.extraMeals?.totalPrice || 0)},00
                       </Card.Text>
                     </Col>
                   </Row>
@@ -209,6 +209,9 @@ FinalReview.propTypes = {
       hasAggregate: PropTypes.bool.isRequired,
       aggregate: PropTypes.string,
       church: PropTypes.string.isRequired,
+    }).isRequired,
+    extraMeals: PropTypes.shape({
+      totalPrice: PropTypes.number,
     }).isRequired,
   }).isRequired,
   sendForm: PropTypes.func.isRequired,

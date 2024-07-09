@@ -247,6 +247,8 @@ const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
 
 AdminHome.propTypes = {
   totalRegistrationsGlobal: PropTypes.func,
+  isLoggedIn: PropTypes.bool,
+  setIsLoggedIn: PropTypes.func,
 };
 
 export default AdminHome;

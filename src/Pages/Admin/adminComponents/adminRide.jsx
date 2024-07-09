@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { Form, Container, Accordion, Table, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '../../../components/Icons';
@@ -119,9 +120,13 @@ const AdminRide = () => {
         <Table striped bordered hover className="custom-table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
+              <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
                 {headerGroup.headers.map((column) => (
-                  <th className="table-cells-header" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th
+                    className="table-cells-header"
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    key={column.id}
+                  >
                     <div className="d-flex justify-content-between align-items-center">
                       {column.render('Header')}
                       <span className="sort-icon-wrapper">
@@ -137,9 +142,11 @@ const AdminRide = () => {
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} key={row.id}>
                   {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td {...cell.getCellProps()} key={cell.column.id}>
+                      {cell.render('Cell')}
+                    </td>
                   ))}
                 </tr>
               );
@@ -191,6 +198,15 @@ const AdminRide = () => {
       </Accordion>
     </Container>
   );
+};
+
+AdminRide.propTypes = {
+  row: PropTypes.shape({
+    original: PropTypes.shape({
+      checked: PropTypes.bool,
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }),
 };
 
 export default AdminRide;
