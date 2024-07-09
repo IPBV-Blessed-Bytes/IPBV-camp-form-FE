@@ -112,13 +112,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               <Col md={6}>
                 <Form.Group className="mb-3 info-text-wrapper">
                   <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
-                  <Form.Select
-                    id="car"
-                    name="car"
-                    isInvalid={!!errors.car}
-                    value={values.car}
-                    onChange={handleChange}
-                  >
+                  <Form.Select id="car" name="car" isInvalid={!!errors.car} value={values.car} onChange={handleChange}>
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
@@ -176,8 +170,36 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              ) : ''}
+              ) : (
+                ''
+              )}
             </Row>
+
+            {(values.car === 'sim' || (values.car === 'nao' && values.needRide === 'sim')) && (
+              <Row className="mb-3">
+                <Col>
+                  <FormGroup>
+                    <FormLabel>
+                      Deseja fazer alguma observação sobre a carona{' '}
+                      {values.car === 'sim'
+                        ? 'oferecida'
+                        : values.car === 'nao' && values.needRide === 'sim'
+                        ? 'requisitada'
+                        : ''}
+                      ?
+                    </FormLabel>
+                    <Form.Control
+                      as="textarea"
+                      name="rideObservation"
+                      placeholder="Descreva sua observação sobre a carona"
+                      value={values.rideObservation}
+                      onChange={handleChange}
+                      style={{ resize: 'none' }}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+            )}
 
             <Row className="mb-3">
               <Col md={values.hasAllergy ? 6 : 6}>
