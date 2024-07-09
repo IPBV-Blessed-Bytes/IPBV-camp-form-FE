@@ -209,7 +209,7 @@ const FormRoutes = () => {
   return (
     <div className="form">
       {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && (
-        <div>
+        <div className="components-container">
           <Header
             className={isAdminPathname && 'd-none'}
             currentStep={steps}
