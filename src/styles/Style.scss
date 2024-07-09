@@ -688,6 +688,10 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
+.table-overflow-visible {
+  overflow-x: visible;
+}
+
 .custom-table {
   --bs-border-color: #000;
 }
@@ -761,3 +765,5 @@ button.btn.btn-outline-danger:hover svg {
     }
   }
 }
+
+
