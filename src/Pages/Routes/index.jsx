@@ -20,7 +20,7 @@ import ExtraMeals from '../ExtraMeals';
 import AdminRide from '../Admin/adminComponents/adminRide';
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.packages);
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
@@ -103,7 +103,7 @@ const FormRoutes = () => {
       const updatedFormValues = {
         ...formValues,
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
-        totalPrice: formValues.package.price + formValues.extraMeals.totalPrice, // Adiciona a lógica de soma aqui
+        totalPrice: formValues.package.price + formValues.extraMeals.totalPrice,
       };
 
       const response = await axios.post(
