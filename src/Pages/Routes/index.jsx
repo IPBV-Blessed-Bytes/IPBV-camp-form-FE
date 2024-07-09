@@ -32,7 +32,7 @@ const FormRoutes = () => {
   const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
-  const [isLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') === 'true');
   const [withFood, setWithFood] = useState(false);
   const navigate = useNavigate();
 
@@ -206,6 +206,12 @@ const FormRoutes = () => {
     }
   }, [formValues.package.food]);
 
+  useEffect(() => {
+    if (!isLoggedIn && (location.pathname === '/admin/tabela' || location.pathname === '/admin/carona')) {
+      navigate('/admin');
+    }
+  }, [isLoggedIn, location, navigate]);
+
   return (
     <div className="form">
       {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && (
@@ -300,7 +306,16 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminHome
+              totalRegistrationsGlobal={totalRegistrations}
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+            />
+          }
+        />
         <Route path="/admin/tabela" element={<AdminTable />} />
         <Route path="/admin/carona" element={<AdminRide />} />
       </Routes>
