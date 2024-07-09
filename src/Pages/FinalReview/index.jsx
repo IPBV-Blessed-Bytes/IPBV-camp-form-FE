@@ -56,7 +56,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col md={5} className="fw-bold">
+                    <Col md={formValues.extraMeals.totalPrice ? 5 : 6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
                         Nome - {formValues.package.accomodation.name} <br />
@@ -65,14 +65,16 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                         Preço - R$ {formValues.package.price},00
                       </Card.Text>
                     </Col>
-                    <Col md={4} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Alimentação Extra:</span>
-                        <br />
-                        R$ {formValues.extraMeals.totalPrice},00
-                      </Card.Text>
-                    </Col>
-                    <Col md={3} className="fw-bold">
+                    {formValues.extraMeals.totalPrice && (
+                      <Col md={4} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">Alimentação Extra:</span>
+                          <br />
+                          R$ {formValues.extraMeals.totalPrice},00
+                        </Card.Text>
+                      </Col>
+                    )}
+                    <Col md={formValues.extraMeals.totalPrice ? 3 : 6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
                         <br />
