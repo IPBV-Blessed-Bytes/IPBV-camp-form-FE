@@ -72,7 +72,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = validRegistrations >= 1000 && !isChild;
+  const isRegistrationClosed = validRegistrations >= 360 && !isChild;
 
   return (
     <Card className="form__container__general-height">
@@ -189,7 +189,7 @@ const FormPackages = ({
 
                           const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
 
-                          const openPackages = 1000;
+                          const openPackages = availableSlots - usedValidPackagesSum;
 
                           const isPackageAvailable = openPackages > 0 || isChild;
 
