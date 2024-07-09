@@ -23,7 +23,7 @@ const AdminTable = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const navigate = useNavigate();
 
-  const apiUrl = 'http://localhost:3001/data';
+  const apiUrl = 'endpointurl';
 
   useEffect(() => {
     fetchData();

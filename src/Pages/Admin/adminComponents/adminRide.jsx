@@ -9,8 +9,8 @@ import { useTable, useSortBy } from 'react-table';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
-  const rideApiUrl = 'http://localhost:3001/ride';
-  const needRideApiUrl = 'http://localhost:3001/needRide';
+  const rideApiUrl = 'endpointurl';
+  const needRideApiUrl = 'endpointurl';
 
   const navigate = useNavigate();
 
