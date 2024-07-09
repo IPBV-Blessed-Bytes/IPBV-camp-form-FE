@@ -351,7 +351,7 @@ const AdminTable = () => {
       </Row>
 
       <Row>
-        <div className="table-responsive">
+        <div className="table-responsive table-overflow-visible">
           <Table striped bordered hover {...getTableProps()} className="custom-table">
             <thead>
               {headerGroups.map((headerGroup) => (
