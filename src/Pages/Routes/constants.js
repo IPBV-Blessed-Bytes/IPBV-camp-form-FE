@@ -29,6 +29,7 @@ export const initialValues = {
     car: '',
     numberVacancies: '',
     needRide: '',
+    rideObservation: '',
     hasAllergy: '',
     allergy: '',
     hasAggregate: '',
