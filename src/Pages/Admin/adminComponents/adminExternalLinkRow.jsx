@@ -1,10 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 
-const SPREADSHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
 const OLD_SPREADSHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1PdM9oq7uESYWXM2BzVQunSu5-FmpZXswLvAxt4So8rc/edit#gid=1419229141';
+  'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
 const PAGARME = 'https://id.pagar.me/signin';
 
 const AdminExternalLinkRow = () => (
@@ -13,11 +11,8 @@ const AdminExternalLinkRow = () => (
       <Card>
         <Card.Body>
           <Card.Title className="fw-bold text-success">Link da Planilha</Card.Title>
-          <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições em tempo real!</Card.Text>
+          <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições de 2024 e Pagar.me</Card.Text>
           <div className="btn-wrapper">
-            <Button variant="success" href={SPREADSHEET_URL} target="_blank">
-              <strong>PLANILHA INSCRIÇÕES</strong>
-            </Button>
             <Button variant="info" href={PAGARME} target="_blank">
               <strong>PAGAR.ME</strong>
             </Button>
