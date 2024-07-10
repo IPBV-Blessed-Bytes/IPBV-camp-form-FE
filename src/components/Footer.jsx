@@ -1,5 +1,5 @@
 import { PropTypes } from 'prop-types';
-import logoFooter from '../../public/Images/logo.png';
+import logoFooter from '../../public/Images/logo_50.png';
 
 const Footer = ({ onAdminClick }) => {
   const handleAdminClick = () => {
