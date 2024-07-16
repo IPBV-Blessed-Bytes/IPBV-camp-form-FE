@@ -34,14 +34,14 @@ const AdminLoggedOut = ({
         <Form className="login-admin-card">
           <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
 
-          <Form.Group className="input-login-wrapper mb-3" controlId="username">
+          <Form.Group className="input-login-wrapper mb-3" controlId="login">
             <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
             <Form.Control
               className="admin__user"
               type="text"
               placeholder="Digite seu nome de usuário"
-              value={loginData.username}
-              onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+              value={loginData.login}
+              onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
               onKeyDown={handleKeyDown}
             />
           </Form.Group>
@@ -77,7 +77,7 @@ const AdminLoggedOut = ({
 AdminLoggedOut.propTypes = {
   handleLogout: PropTypes.func,
   loginData: PropTypes.shape({
-    username: PropTypes.string,
+    login: PropTypes.string,
     password: PropTypes.string,
   }),
   handleKeyDown: PropTypes.func,
