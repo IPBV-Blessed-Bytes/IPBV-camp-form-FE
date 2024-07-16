@@ -10,7 +10,7 @@ const getPackages = (age) => {
   const [schoolWithBus, schoolWithouBus] = generatePackagesValues('school', age);
   const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
   const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age);
-  const [nonPaid] = generatePackagesValues('nonPaid');
+  const [nonPaid] = generatePackagesValues('nonPaid', age);
 
   const packages = [
     {
@@ -54,7 +54,7 @@ const getPackages = (age) => {
       title: 'PACOTE 5 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO. ',
-      observationHighlite: 'Taxa fixa de 50 reais',
+      observationHighlite: 'Taxa fixa de 50 reais para adultos',
       values: { ...nonPaid },
       accomodation: { id: 'colegioCampingSemAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Sem Ônibus',
@@ -113,7 +113,7 @@ const getPackages = (age) => {
       title: 'PACOTE 11 - ASSISTIR O CULTO',
       observation:
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
-      observationHighlite: 'Taxa fixa de 50 reais',
+      observationHighlite: 'Taxa fixa de 50 reais para adultos',
       values: { ...nonPaid },
       accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externa' },
       transportation: 'Sem Ônibus',
