@@ -23,7 +23,7 @@ const AdminTable = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const navigate = useNavigate();
 
-  const apiUrl = 'endpointurl';
+  const apiUrl = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
 
   useEffect(() => {
     fetchData();
@@ -35,7 +35,7 @@ const AdminTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(`${apiUrl}/acampante`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -351,7 +351,7 @@ const AdminTable = () => {
       </Row>
 
       <Row>
-        <div className="table-responsive table-overflow-visible">
+        <div className="table-responsive">
           <Table striped bordered hover {...getTableProps()} className="custom-table">
             <thead>
               {headerGroups.map((headerGroup) => (

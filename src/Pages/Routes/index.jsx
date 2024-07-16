@@ -107,7 +107,7 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post(
-        'https://ipbv-camp-form-be-production-2b7d.up.railway.app/send-values',
+        'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/checkout/create',
         updatedFormValues,
       );
       setStatus('loaded');
@@ -120,27 +120,6 @@ const FormRoutes = () => {
       }
     } catch (error) {
       setStatus('error');
-      try {
-        const response = await axios.post(
-          'https://ipbv-camp-form-be-production-2b7d.up.railway.app/cpf-error-messages',
-          {
-            cpf: formValues.personalInformation.cpf,
-          },
-        );
-        if (response.data.cpfDuplicatedMissedLink) {
-          setEndpointErrorMessage(
-            'CPF já cadastrado: Link de pagamento online gerado e ainda válido. Aguarde 20 minutos e tente novamente.',
-          );
-        } else if (response.data.cpfDuplicatedWaitingPayment) {
-          setEndpointErrorMessage('CPF já cadastrado: Inscrição válida aguardando pagamento.');
-        } else if (response.data.cpfDuplicatedRegistrationDone) {
-          setEndpointErrorMessage('CPF já cadastrado: Inscrição já validada com sucesso.');
-        } else {
-          toast.error('CPF já cadastrado. ');
-        }
-      } catch (error) {
-        toast.error(error.message);
-      }
     } finally {
       setLoading(false);
     }
@@ -149,7 +128,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/package-count');
+        const response = await axios.get('http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/package-count');
         setAvailablePackages(response);
       } catch (error) {
         console.error(
@@ -167,7 +146,7 @@ const FormRoutes = () => {
     const fetchTotalRegistrations = async () => {
       try {
         const response = await axios.get(
-          'https://ipbv-camp-form-be-production-2b7d.up.railway.app/total-registrations',
+          'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/total-registrations',
         );
         setTotalRegistrations(response.data);
       } catch (error) {
@@ -206,11 +185,6 @@ const FormRoutes = () => {
     }
   }, [formValues.package.food]);
 
-  useEffect(() => {
-    if (!isLoggedIn && (location.pathname === '/admin/tabela' || location.pathname === '/admin/carona')) {
-      navigate('/admin');
-    }
-  }, [isLoggedIn, location, navigate]);
 
   return (
     <div className="form">
