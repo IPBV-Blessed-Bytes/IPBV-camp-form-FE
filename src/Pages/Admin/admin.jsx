@@ -7,48 +7,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import AdminLoggedOut from './adminComponents/adminLoggedOut';
 import AdminLoggedIn from './adminComponents/adminLoggedIn';
+import privateFetcher from '../../fetchers/fetcherWithCredentials';
+import useAuth from '../../hooks/useAuth';
 
 const API_URL = 'https://ipbv-camp-form-be-production-2b7d.up.railway.app';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
-const LOGIN_ENDPOINT = `${API_URL}/login`;
-const VERIFY_TOKEN_ENDPOINT = `${API_URL}/verify-token`;
 
-const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
+const AdminHome = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [loggedInUsername, setLoggedInUsername] = useState('');
   const navigateTo = useNavigate();
+  const { login, logout, user, isLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({
     username: '',
     password: '',
   });
-
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.post(VERIFY_TOKEN_ENDPOINT, { token });
-          if (response.data.valid) {
-            setIsLoggedIn(true);
-            sessionStorage.setItem('isLoggedIn', 'true');
-            setLoggedInUsername(response.data.username);
-            fetchPackages();
-          } else {
-            handleLogout();
-          }
-        } catch (error) {
-          console.error(error.message);
-          handleLogout();
-        }
-      }
-    };
-
-    if (!isLoggedIn) {
-      checkToken();
-    }
-  }, [isLoggedIn]);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -70,32 +44,17 @@ const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
     }
   }, [isLoggedIn]);
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post(LOGIN_ENDPOINT, loginData);
-      const { token, username } = response.data;
-      if (token) {
-        localStorage.setItem('token', token);
-        setIsLoggedIn(true);
-        sessionStorage.setItem('isLoggedIn', 'true');
-        setLoggedInUsername(username);
-        toast.success('Usuário logado com sucesso!');
-        fetchPackages();
-      } else {
-        toast.error('Credenciais Inválidas. Tente novamente!');
-      }
-    } catch (error) {
-      console.error(error.message);
-      toast.error('Erro ao buscar credenciais. Tente novamente mais tarde.');
-    }
-  };
+  useEffect(() => {
+    const fetchPackages = async () => {
+      const response = await privateFetcher.get(PACKAGES_ENDPOINT);
+      setAvailablePackages(response.data);
+    };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    sessionStorage.setItem('isLoggedIn', 'false');
-    setLoggedInUsername('');
-    setLoginData({ username: '', password: '' });
-    localStorage.removeItem('token');
+    fetchPackages();
+  }, []);
+
+  const handleLogin = () => {
+    login(loginData.login, loginData.password);
   };
 
   const handleKeyDown = (e) => {
@@ -217,7 +176,7 @@ const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
         <Container className="p-4 admin" fluid>
           {!isLoggedIn ? (
             <AdminLoggedOut
-              handleLogout={handleLogout}
+              handleLogout={logout}
               loginData={loginData}
               handleKeyDown={handleKeyDown}
               showPassword={showPassword}
@@ -228,8 +187,8 @@ const AdminHome = ({ totalRegistrationsGlobal, isLoggedIn, setIsLoggedIn }) => {
             />
           ) : (
             <AdminLoggedIn
-              loggedInUsername={loggedInUsername}
-              handleLogout={handleLogout}
+              loggedInUsername={user.username}
+              handleLogout={logout}
               firstRowCards={firstRowCards}
               totalValidRegistrationsPaied={totalValidRegistrationsPaied}
               totalValidRegistrationsGlobal={totalValidRegistrationsGlobal}
