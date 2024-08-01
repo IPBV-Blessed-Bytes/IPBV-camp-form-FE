@@ -18,6 +18,7 @@ import FinalReview from '../FinalReview';
 import { enumSteps, initialValues } from './constants';
 import ExtraMeals from '../ExtraMeals';
 import AdminRide from '../Admin/adminComponents/adminRide';
+import useAuth from '../../hooks/useAuth';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -32,9 +33,9 @@ const FormRoutes = () => {
   const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
-  const [isLoggedIn, setIsLoggedIn] = useState(sessionStorage.getItem('isLoggedIn') === 'true');
   const [withFood, setWithFood] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const updateFormValues = (key) => (value) => {
     setFormValues({
@@ -185,7 +186,6 @@ const FormRoutes = () => {
     }
   }, [formValues.package.food]);
 
-
   return (
     <div className="form">
       {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && (
@@ -280,16 +280,7 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route
-          path="/admin"
-          element={
-            <AdminHome
-              totalRegistrationsGlobal={totalRegistrations}
-              isLoggedIn={isLoggedIn}
-              setIsLoggedIn={setIsLoggedIn}
-            />
-          }
-        />
+        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
         <Route path="/admin/tabela" element={<AdminTable />} />
         <Route path="/admin/carona" element={<AdminRide />} />
       </Routes>
