@@ -41,7 +41,7 @@ const packageSchool = ({ age, withTransportation }) => {
 };
 
 const packageSeminary = ({ age, withTransportation }) => {
-  let accomodation = [500];
+  let accomodation = [520];
   let food = [208];
   let transportation = withTransportation ? [190] : [0];
 
@@ -66,10 +66,10 @@ const packageSeminary = ({ age, withTransportation }) => {
 
   //Hospedagem
   if (age <= 8) {
-    accomodation = [500, 0];
+    accomodation = [520, 0];
     accomodationDiscountDescription = 'Criança até 8 anos não paga hospedagem';
   } else if (age >= 9 && age <= 14) {
-    accomodation = [500, 250];
+    accomodation = [520, 260];
     accomodationDiscountDescription = 'Criança de 9 a 14 anos paga apenas 50% na hospedagem';
   }
 
