@@ -328,6 +328,33 @@ body {
       }
     }
   }
+
+  &__success {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &__title {
+      color: $dark-green;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.25rem;
+    }
+
+    &__message {
+      font-size: 1.125rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    &__contact {
+      font-weight: bold;
+    }
+
+    &__button {
+      margin-top: 1.25rem;
+    }
+  }
 }
 
 // Admin Styles
@@ -612,6 +639,10 @@ button.accordion-button:not(.collapsed) {
   @media (max-width: $md) {
     width: 10.9375rem !important;
   }
+}
+
+.form-control:focus {
+  color: $primary !important;
 }
 
 .form-control-bg:focus {
