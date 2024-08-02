@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/_Global.scss';
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from './hooks/useAuth/AuthProvider.jsx';
+import AuthProvider from './hooks/useAuth/AuthProvider.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
