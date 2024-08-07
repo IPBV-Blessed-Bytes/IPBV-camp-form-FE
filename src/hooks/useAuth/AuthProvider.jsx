@@ -36,17 +36,17 @@ const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (userName, passWord) => {
     try {
-      const response = await fetcher.post('auth/login', {
+      const response = await fetcher.post('/auth/login', {
         login: userName,
         password: passWord,
       });
 
       if (response.data.token) {
         setIsLoggedIn(true);
-        setUser(response.data.username);
+        setUser(userName);
 
         localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(response.data.username));
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
       } else {
         toast.error('Credenciais Inválidas. Tente novamente!');
       }
