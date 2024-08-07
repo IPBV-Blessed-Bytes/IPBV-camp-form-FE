@@ -10,7 +10,7 @@ import AdminLoggedIn from './adminComponents/adminLoggedIn';
 import privateFetcher from '../../fetchers/fetcherWithCredentials';
 import useAuth from '../../hooks/useAuth';
 
-const API_URL = 'https://ipbv-camp-form-be-production-2b7d.up.railway.app';
+const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
 const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
 
 const AdminHome = ({ totalRegistrationsGlobal }) => {
@@ -23,26 +23,6 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
     username: '',
     password: '',
   });
-
-  useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(PACKAGES_ENDPOINT, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setAvailablePackages(response.data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    if (isLoggedIn) {
-      fetchPackages();
-    }
-  }, [isLoggedIn]);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -187,7 +167,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
             />
           ) : (
             <AdminLoggedIn
-              loggedInUsername={user.username}
+              loggedInUsername={user ? user : 'Usuário não identificado'}
               handleLogout={logout}
               firstRowCards={firstRowCards}
               totalValidRegistrationsPaied={totalValidRegistrationsPaied}
@@ -206,8 +186,6 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 
 AdminHome.propTypes = {
   totalRegistrationsGlobal: PropTypes.func,
-  isLoggedIn: PropTypes.bool,
-  setIsLoggedIn: PropTypes.func,
 };
 
 export default AdminHome;
