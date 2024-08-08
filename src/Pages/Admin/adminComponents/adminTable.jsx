@@ -23,7 +23,8 @@ const AdminTable = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const navigate = useNavigate();
 
-  const apiUrl = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+  // const apiUrl = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+  const apiUrl = 'http://localhost:3001';
 
   useEffect(() => {
     fetchData();
@@ -61,7 +62,7 @@ const AdminTable = () => {
 
   const handleSaveEdit = async () => {
     try {
-      await axios.put(`${apiUrl}/${editFormData.id}`, editFormData);
+      await axios.put(`${apiUrl}/acampante/${editFormData.id}`, editFormData);
       const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
       setData(newData);
       setShowEditModal(false);
@@ -77,7 +78,7 @@ const AdminTable = () => {
 
   const handleAddSubmit = async () => {
     try {
-      await axios.post(apiUrl, newFormData);
+      await axios.post(`${apiUrl}/acampante`, newFormData);
       fetchData();
       setShowAddModal(false);
       setNewFormData({});
@@ -94,7 +95,7 @@ const AdminTable = () => {
     }
   };
 
-  const handleDeleteAll = () => {
+  const handleDeleteWithCheckbox = () => {
     setShowDeleteModal(true);
     setModalType('delete-all');
   };
@@ -107,7 +108,7 @@ const AdminTable = () => {
   const handleConfirmDeleteAll = async () => {
     try {
       const idsToDelete = selectedRows.map((index) => data[index].id);
-      await Promise.all(idsToDelete.map((id) => axios.delete(`${apiUrl}/${id}`)));
+      await Promise.all(idsToDelete.map((id) => axios.delete(`${apiUrl}/acampante/${id}`)));
       const newData = data.filter((_, index) => !selectedRows.includes(index));
       setData(newData);
       setSelectedRows([]);
@@ -120,7 +121,7 @@ const AdminTable = () => {
   const handleConfirmDeleteSpecific = async () => {
     try {
       const itemToDelete = data[editRowIndex];
-      await axios.delete(`${apiUrl}/${itemToDelete.id}`);
+      await axios.delete(`${apiUrl}/acampante/${itemToDelete.id}`);
       const newData = data.filter((_, index) => index !== editRowIndex);
       setData(newData);
       setEditRowIndex(null);
@@ -325,9 +326,16 @@ const AdminTable = () => {
               <span className="table-tools__button-name">&nbsp;Baixar Excel</span>
             </Button>
             {selectedRows.length > 0 && (
-              <Button variant="danger" onClick={handleDeleteAll} className="d-flex align-items-center" size="lg">
+              <Button
+                variant="danger"
+                onClick={handleDeleteWithCheckbox}
+                className="d-flex align-items-center"
+                size="lg"
+              >
                 <Icons typeIcon="delete" iconSize={30} fill="#fff" />{' '}
-                <span className="table-tools__button-name">&nbsp;Deletar Selecionados</span>
+                <span className="table-tools__button-name">
+                  &nbsp;{selectedRows.length === 1 ? 'Deletar' : 'Deletar Selecionados'}
+                </span>
               </Button>
             )}
             <Button onClick={() => setShowAddModal(true)} className="d-flex align-items-center d-lg-none" size="lg">
