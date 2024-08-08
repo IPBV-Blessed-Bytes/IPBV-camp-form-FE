@@ -12,12 +12,12 @@ import FormHome from '../Home';
 import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
 import FormSuccess from '../Success';
+import ExtraMeals from '../ExtraMeals';
+import FinalReview from '../FinalReview';
 import AdminHome from '../Admin/admin';
 import AdminTable from '../Admin/adminComponents/adminTable';
-import FinalReview from '../FinalReview';
-import { enumSteps, initialValues } from './constants';
-import ExtraMeals from '../ExtraMeals';
 import AdminRide from '../Admin/adminComponents/adminRide';
+import { enumSteps, initialValues } from './constants';
 import useAuth from '../../hooks/useAuth';
 
 const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
@@ -108,10 +108,7 @@ const FormRoutes = () => {
         totalPrice: formValues.package.price + formValues.extraMeals.totalPrice,
       };
 
-      const response = await axios.post(
-        `${API_URL}/checkout/create`,
-        updatedFormValues,
-      );
+      const response = await axios.post(`${API_URL}/checkout/create`, updatedFormValues);
       setStatus('loaded');
 
       if (response.data.data.payment_url) {
@@ -147,9 +144,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/total-registrations`,
-        );
+        const response = await axios.get(`${API_URL}/total-registrations`);
         setTotalRegistrations(response.data);
       } catch (error) {
         console.error(
@@ -164,7 +159,7 @@ const FormRoutes = () => {
   }, []);
 
   useEffect(() => {
-    if (!isLoggedIn && isAdminPathname) {
+    if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname)) {
       navigate('/admin');
     }
   }, [isLoggedIn, isAdminPathname, navigate]);
