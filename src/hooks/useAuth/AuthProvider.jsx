@@ -40,16 +40,12 @@ const AuthProvider = ({ children }) => {
         login: userName,
         password: passWord,
       });
+      setIsLoggedIn(true);
+      setUser(userName);
+      toast.success('Usuário logado com sucesso');
 
-      if (response.data.token) {
-        setIsLoggedIn(true);
-        setUser(userName);
-
-        localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
-      } else {
-        toast.error('Credenciais Inválidas. Tente novamente!');
-      }
+      localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
     } catch (error) {
       console.error(error.message);
       toast.error('Erro ao buscar credenciais. Tente novamente mais tarde');
