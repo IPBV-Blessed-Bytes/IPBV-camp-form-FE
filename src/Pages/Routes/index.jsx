@@ -30,7 +30,6 @@ const FormRoutes = () => {
   const isAdminTablePathname = window.location.pathname === '/admin/tabela';
   const isAdminRidePathname = window.location.pathname === '/admin/carona';
   const [availablePackages, setAvailablePackages] = useState({});
-  const [endpointErrorMessage, setEndpointErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
@@ -161,12 +160,6 @@ const FormRoutes = () => {
 
     fetchTotalRegistrations();
   }, []);
-
-  useEffect(() => {
-    if (endpointErrorMessage) {
-      toast.error(endpointErrorMessage);
-    }
-  }, [endpointErrorMessage]);
 
   useEffect(() => {
     if (!isLoggedIn && isAdminPathname) {
