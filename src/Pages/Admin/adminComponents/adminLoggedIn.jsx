@@ -17,6 +17,7 @@ const AdminLoggedIn = ({
   totalVacanciesWithBuses,
 }) => {
   const navigate = useNavigate();
+  const splitedUsername = loggedInUsername.split('@')[0]
 
   const handleTableClick = () => {
     navigate('/admin/tabela');
@@ -42,7 +43,7 @@ const AdminLoggedIn = ({
           <p>
             Bem vindo(a),
             <span>
-              <strong className="text-uppercase"> {loggedInUsername}</strong>
+              <strong className="text-uppercase"> {splitedUsername}</strong>
             </span>
             !
           </p>
