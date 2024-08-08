@@ -422,7 +422,7 @@ const AdminTable = () => {
                 .slice(1, -1)
                 .filter((column) => column.Header !== 'Ordem')
                 .map((column) => (
-                  <Col key={column.accessor} md={4} className="mb-3">
+                  <Col key={column.accessor} md={12} lg={4} className="mb-3">
                     <Form.Group>
                       <b>
                         <Form.Label>{column.Header}</Form.Label>
@@ -461,7 +461,7 @@ const AdminTable = () => {
                 .slice(1, -1)
                 .filter((column) => column.Header !== 'Ordem')
                 .map((column) => (
-                  <Col key={column.accessor} md={4} className="mb-3">
+                  <Col key={column.accessor} md={12} lg={4} className="mb-3">
                     <Form.Group>
                       <b>
                         <Form.Label>{column.Header}</Form.Label>
