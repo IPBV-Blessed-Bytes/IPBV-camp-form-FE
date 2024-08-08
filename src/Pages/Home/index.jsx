@@ -10,8 +10,8 @@ const FormHome = (props) => {
             <div className="col">
               <h3 className="mb-2 text-center">Acampamento no período de carnaval 2025</h3>
               <h5 className="mb-2 text-center">
-                IP de Boa Viagem -{' '}
-                <span className="date-enphasis fw-bold">01 a 05 de Março • Colégio XV de Novembro - Garanhuns</span>
+                IP de Boa Viagem - {' '}
+                <span className="date-enphasis fw-bold">01 a 05 de Março - Garanhuns<br/> Colégio XV de Novembro • Preletor: Rev. Valdeci Santos</span>
               </h5>
               <p className="mb-2 text-center">
                 Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
