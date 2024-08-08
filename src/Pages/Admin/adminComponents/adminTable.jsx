@@ -9,6 +9,10 @@ import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
 import { useNavigate } from 'react-router-dom';
 
+// const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+const API_URL = 'http://localhost:3001';
+
+
 const AdminTable = () => {
   const [data, setData] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -23,9 +27,6 @@ const AdminTable = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const navigate = useNavigate();
 
-  // const apiUrl = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
-  const apiUrl = 'http://localhost:3001';
-
   useEffect(() => {
     fetchData();
     window.addEventListener('scroll', handleScroll);
@@ -36,7 +37,7 @@ const AdminTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/acampante`);
+      const response = await axios.get(`${API_URL}/acampante`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -62,7 +63,7 @@ const AdminTable = () => {
 
   const handleSaveEdit = async () => {
     try {
-      await axios.put(`${apiUrl}/acampante/${editFormData.id}`, editFormData);
+      await axios.put(`${API_URL}/acampante/${editFormData.id}`, editFormData);
       const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
       setData(newData);
       setShowEditModal(false);
@@ -78,7 +79,7 @@ const AdminTable = () => {
 
   const handleAddSubmit = async () => {
     try {
-      await axios.post(`${apiUrl}/acampante`, newFormData);
+      await axios.post(`${API_URL}/acampante`, newFormData);
       fetchData();
       setShowAddModal(false);
       setNewFormData({});
@@ -108,7 +109,7 @@ const AdminTable = () => {
   const handleConfirmDeleteAll = async () => {
     try {
       const idsToDelete = selectedRows.map((index) => data[index].id);
-      await Promise.all(idsToDelete.map((id) => axios.delete(`${apiUrl}/acampante/${id}`)));
+      await Promise.all(idsToDelete.map((id) => axios.delete(`${API_URL}/acampante/${id}`)));
       const newData = data.filter((_, index) => !selectedRows.includes(index));
       setData(newData);
       setSelectedRows([]);
@@ -121,7 +122,7 @@ const AdminTable = () => {
   const handleConfirmDeleteSpecific = async () => {
     try {
       const itemToDelete = data[editRowIndex];
-      await axios.delete(`${apiUrl}/acampante/${itemToDelete.id}`);
+      await axios.delete(`${API_URL}/acampante/${itemToDelete.id}`);
       const newData = data.filter((_, index) => index !== editRowIndex);
       setData(newData);
       setEditRowIndex(null);

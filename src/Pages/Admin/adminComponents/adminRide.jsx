@@ -8,6 +8,8 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
 
+// const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const rideApiUrl = 'endpointurl';

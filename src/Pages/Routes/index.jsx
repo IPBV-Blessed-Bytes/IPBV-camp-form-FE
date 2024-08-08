@@ -20,6 +20,8 @@ import ExtraMeals from '../ExtraMeals';
 import AdminRide from '../Admin/adminComponents/adminRide';
 import useAuth from '../../hooks/useAuth';
 
+const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
@@ -107,7 +109,7 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post(
-        'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/checkout/create',
+        `${API_URL}/checkout/create`,
         updatedFormValues,
       );
       setStatus('loaded');
@@ -128,7 +130,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get('http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/package-count');
+        const response = await axios.get(`${API_URL}/package-count`);
         setAvailablePackages(response);
       } catch (error) {
         console.error(
@@ -146,7 +148,7 @@ const FormRoutes = () => {
     const fetchTotalRegistrations = async () => {
       try {
         const response = await axios.get(
-          'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080/total-registrations',
+          `${API_URL}/total-registrations`,
         );
         setTotalRegistrations(response.data);
       } catch (error) {
