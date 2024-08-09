@@ -41,9 +41,12 @@ export const initialValues = {
       name: '',
       subAccomodation: '',
     },
+    discountCoupon: '',
+    discountValue: '',
     transportation: '',
     food: '',
     price: '',
+    finalPrice: '',
     title: '',
   },
   extraMeals: {
