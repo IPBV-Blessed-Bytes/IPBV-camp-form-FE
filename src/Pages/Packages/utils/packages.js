@@ -6,10 +6,10 @@ const OTHER = 'Outra Acomodação Externa';
 
 export const accommodations = [XV_NOVEMBRO, SEMINARIO, OTHER];
 
-const getPackages = (age) => {
-  const [schoolWithBus, schoolWithouBus] = generatePackagesValues('school', age);
-  const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age);
-  const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age);
+const getPackages = (age, discount) => {
+  const [schoolWithBus, schoolWithoutBus] = generatePackagesValues('school', age, discount);
+  const [seminaryWithBuss, seminaryWithoutBuss] = generatePackagesValues('seminary', age, discount);
+  const [otherWithBuss, otherWithoutBuss] = generatePackagesValues('other', age, discount);
   const [nonPaid] = generatePackagesValues('nonPaid', age);
 
   const packages = [
@@ -26,7 +26,7 @@ const getPackages = (age) => {
       id: '2',
       title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA SEM ÔNIBUS',
       observation: '* Em salas de aula SEM ônibus',
-      values: { ...schoolWithouBus },
+      values: { ...schoolWithoutBus },
       accomodation: { id: 'colegioIndividualSemOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Individual' },
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
@@ -44,7 +44,7 @@ const getPackages = (age) => {
       id: '4',
       title: 'PACOTE 4 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL SEM ÔNIBUS',
       observation: '* Em salas de aula SEM ônibus',
-      values: { ...schoolWithouBus },
+      values: { ...schoolWithoutBus },
       accomodation: { id: 'colegioFamiliaSemOnibus', name: XV_NOVEMBRO, subAccomodation: 'Colégio Família' },
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
@@ -65,7 +65,7 @@ const getPackages = (age) => {
       title: 'PACOTE 6 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
       subtitle: '• COM ALIMENTAÇÃO',
       observation: '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e COM ALIMENTAÇÃO',
-      values: { ...schoolWithouBus },
+      values: { ...schoolWithoutBus },
       accomodation: { id: 'colegioCampingComAlimentacao', name: XV_NOVEMBRO, subAccomodation: 'Colégio Camping' },
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
