@@ -19,11 +19,12 @@ import AdminTable from '../Admin/adminComponents/adminTable';
 import AdminRide from '../Admin/adminComponents/adminRide';
 import { enumSteps, initialValues } from './constants';
 import useAuth from '../../hooks/useAuth';
+import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 
 const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.packages);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
@@ -31,6 +32,7 @@ const FormRoutes = () => {
   const isAdminPathname = window.location.pathname === '/admin';
   const isAdminTablePathname = window.location.pathname === '/admin/tabela';
   const isAdminRidePathname = window.location.pathname === '/admin/carona';
+  const isAdminCouponsPathname = window.location.pathname === '/admin/cupom';
   const [availablePackages, setAvailablePackages] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
@@ -105,7 +107,7 @@ const FormRoutes = () => {
       const updatedFormValues = {
         ...formValues,
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
-        totalPrice: formValues.package.price + formValues.extraMeals.totalPrice,
+        totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
       };
 
       const response = await axios.post(`${API_URL}/checkout/create`, updatedFormValues);
@@ -159,7 +161,7 @@ const FormRoutes = () => {
   }, []);
 
   useEffect(() => {
-    if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname)) {
+    if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname || isAdminCouponsPathname)) {
       navigate('/admin');
     }
   }, [isLoggedIn, isAdminPathname, navigate]);
@@ -178,7 +180,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && (
+      {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && !isAdminCouponsPathname && (
         <div className="components-container">
           <Header
             className={isAdminPathname && 'd-none'}
@@ -273,6 +275,7 @@ const FormRoutes = () => {
         <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
         <Route path="/admin/tabela" element={<AdminTable />} />
         <Route path="/admin/carona" element={<AdminRide />} />
+        <Route path="/admin/cupom" element={<AdminCoupon />} />
       </Routes>
     </div>
   );
