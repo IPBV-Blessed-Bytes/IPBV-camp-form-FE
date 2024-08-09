@@ -17,7 +17,7 @@ const AdminLoggedIn = ({
   totalVacanciesWithBuses,
 }) => {
   const navigate = useNavigate();
-  const splitedUsername = loggedInUsername.split('@')[0]
+  const splitedUsername = loggedInUsername.split('@')[0];
 
   const handleTableClick = () => {
     navigate('/admin/tabela');
@@ -25,6 +25,10 @@ const AdminLoggedIn = ({
 
   const handleRideClick = () => {
     navigate('/admin/carona');
+  };
+
+  const handleCouponsClick = () => {
+    navigate('/admin/cupom');
   };
 
   return (
@@ -35,8 +39,12 @@ const AdminLoggedIn = ({
             Tabela de Inscritos
           </Button>
           &nbsp;
-          <Button variant="warning" onClick={handleRideClick} >
+          <Button variant="warning" onClick={handleRideClick}>
             Gerenciador de Caronas
+          </Button>
+          &nbsp;
+          <Button variant="primary" onClick={handleCouponsClick}>
+            Cupons de Desconto
           </Button>
         </Col>
         <Col xs={4} md={2} className="text-end mb-2">
