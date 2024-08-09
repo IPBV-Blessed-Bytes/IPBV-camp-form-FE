@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
+import { Accordion, Container, Card, Form, Button, Col, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import Icons from '../../components/Icons';
 import formatCurrency from '../../utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
+import axios from 'axios';
 
 const FormPackages = ({
   nextStep,
@@ -17,6 +19,10 @@ const FormPackages = ({
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
+  const [showCouponField, setShowCouponField] = useState(false);
+  const [discountCoupon, setDiscountCoupon] = useState('');
+  const [discountValue, setDiscountValue] = useState(0);
+  const [hasDiscount, setHasDiscount] = useState(false);
   const age = calculateAge(birthDate);
   const packages = getPackages(age);
 
@@ -34,21 +40,44 @@ const FormPackages = ({
     11: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
+  const handleCouponChange = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/coupons');
+      const coupons = response.data;
+      const validCoupon = coupons.find((coupon) => coupon.code === discountCoupon && !coupon.used);
+      if (validCoupon) {
+        await axios.put(`http://localhost:3001/coupons/${validCoupon.id}`, {
+          ...validCoupon,
+          used: true,
+        });
+
+        setDiscountValue(validCoupon.discount);
+        setHasDiscount(true);
+        toast.success('Cupom validado com sucesso');
+      } else if (discountCoupon === '') {
+        toast.warn('Insira um cupom válido no campo ao lado');
+      } else {
+        setDiscountValue(0);
+        setHasDiscount(false);
+        toast.error('Cupom inválido ou já utilizado');
+      }
+    } catch (error) {
+      console.error('Erro ao verificar o cupom:', error);
+      setDiscountValue(0);
+      setHasDiscount(false);
+    }
+  };
+
+  const handleCouponInputChange = (e) => {
+    setDiscountCoupon(e.target.value);
+  };
+
   const handleClick = (selectedPackage) => {
     if (hasError) {
       setHasError(false);
     }
 
     setSelectedPackage(selectedPackage);
-
-    const { accomodation, transportation, food, values, title } = selectedPackage;
-    updateForm({
-      price: values.total,
-      accomodation: accomodation,
-      transportation: transportation,
-      food: food,
-      title: title,
-    });
 
     scrollToEnd();
   };
@@ -65,7 +94,26 @@ const FormPackages = ({
       setHasError(true);
       return;
     }
+
+    const { accomodation, transportation, food, values, title } = selectedPackage;
+    const finalPrice = Math.max(values.total - discountValue, 0);
+
+    updateForm({
+      price: values.total,
+      finalPrice: finalPrice,
+      discountCoupon: discountCoupon,
+      discountValue: discountValue,
+      accomodation: accomodation,
+      transportation: transportation,
+      food: food,
+      title: title,
+    });
+
     nextStep();
+  };
+
+  const handleCouponClick = () => {
+    setShowCouponField((prevState) => !prevState);
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
@@ -82,9 +130,11 @@ const FormPackages = ({
           {!isRegistrationClosed && (
             <>
               <Card.Text>
-                Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha qual o local que deseja se hospedar.
-                Posteriormente escolha o pacote desejado com alimentação e transporte (ou não) e clique nele para ser
-                redirecionado.
+                Vamos começar a seleção dos pacotes. Primeiro de tudo, informe se tem ou não um cupom de desconto e
+                insira no campo abaixo. Certifique-se de validar o cupom apenas quando for concluir a inscrição e fazer
+                o pagamento, visto que depois de validado o seu cupom não poderá ser reutilizado.Caso não tenha basta
+                pular para escolha do pacote. Depois disso escolha qual o local que deseja se hospedar e o pacote
+                desejado com alimentação e transporte (ou não) e clique nele para ser redirecionado.
               </Card.Text>
               <hr className="horizontal-line" />
               <Card.Text>
@@ -113,6 +163,42 @@ const FormPackages = ({
                   </div>
                 </div>
               )}
+              <div className="packages-horizontal-line"></div>
+              <Row className="my-4">
+                <Col xs={12} md={5} className="mb-md-5 mb-3">
+                  <Form.Group>
+                    <Form.Check
+                      type="checkbox"
+                      id={'hasCoupon'}
+                      name={'hasCoupon'}
+                      onClick={handleCouponClick}
+                      label={'Possui cupom de desconto?'}
+                    />
+                  </Form.Group>
+                </Col>
+                {showCouponField && (
+                  <>
+                    <Col xs={9} md={4} className="mb-md-0 mb-3">
+                      <Form.Group controlId="formCoupon">
+                        <Form.Label>Cupom de Desconto:</Form.Label>
+                        <Icons typeIcon="money" iconSize={25} fill="#65a300" />
+                        <Form.Control
+                          type="text"
+                          value={discountCoupon}
+                          onChange={handleCouponInputChange}
+                          placeholder="Insira o seu cupom aqui"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col xs={3} md={3}>
+                      <Button variant="success" onClick={handleCouponChange}>
+                        <Icons typeIcon="arrow-right" iconSize={25} fill="#fff" /> Validar
+                      </Button>
+                    </Col>
+                  </>
+                )}
+              </Row>
+
               <Accordion>
                 {accommodations.map((accomodation, index) => (
                   <Accordion.Item className={hasError ? 'msg-error' : ''} key={index} eventKey={String(index)}>
@@ -121,6 +207,8 @@ const FormPackages = ({
                       {packages
                         .filter((element) => element.accomodation.name === accomodation)
                         .map((cards) => {
+                          const finalPrice = Math.max(cards.values.total - discountValue, 0);
+
                           const [accomodation, accomodationWithDiscount] = cards.values.accomodation;
                           const hasAccomodationWithDiscount = typeof accomodationWithDiscount === 'number';
 
@@ -268,7 +356,14 @@ const FormPackages = ({
                                     <div className="package-description-container">
                                       <em className="d-flex gap-1 info-text-wrapper">
                                         <span>Total:</span>{' '}
-                                        <u className="card-text">{formatCurrency(cards.values.total)}</u>
+                                        <u className={`card-text ${hasDiscount ? 'price-with-discount' : ''}`}>
+                                          {formatCurrency(cards.values.total)}
+                                        </u>
+                                        {hasDiscount && (
+                                          <u className="card-text">
+                                            <b>*Valor com desconto = ${finalPrice}</b>
+                                          </u>
+                                        )}
                                       </em>
                                     </div>
                                     {!isPackageAvailable && (
