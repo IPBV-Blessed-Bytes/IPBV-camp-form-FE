@@ -5,6 +5,8 @@ import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = 'http://localhost:3001';
+
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +22,7 @@ const AdminCoupon = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/coupons');
+      const response = await axios.get(`${API_URL}/coupons`);
       setCoupons(response.data);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
@@ -29,7 +31,7 @@ const AdminCoupon = () => {
 
   const handleCreateCoupon = async () => {
     try {
-      await axios.post('http://localhost:3001/coupons', {
+      await axios.post(`${API_URL}/coupons`, {
         ...newCoupon,
         id: Date.now().toString(),
         used: false,
@@ -44,7 +46,7 @@ const AdminCoupon = () => {
 
   const handleEditCoupon = async () => {
     try {
-      await axios.put(`http://localhost:3001/coupons/${editingCoupon.id}`, editingCoupon);
+      await axios.put(`${API_URL}/coupons/${editingCoupon.id}`, editingCoupon);
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
@@ -55,7 +57,7 @@ const AdminCoupon = () => {
 
   const handleDeleteCoupon = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/coupons/${id}`);
+      await axios.delete(`${API_URL}/coupons/${id}`);
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();
@@ -109,9 +111,9 @@ const AdminCoupon = () => {
       <hr className="horizontal-line" />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col xs={6}>
-          <div className="table-tools__left-buttons-ride d-flex gap-2">
-            <Button variant="success" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
+        <Col xs={12}>
+          <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
+            <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
               <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
               <span className="table-tools__button-name">&nbsp;Criar Novo Cupom</span>
             </Button>
