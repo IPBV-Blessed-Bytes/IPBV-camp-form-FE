@@ -65,7 +65,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                         Preço - R$ {formValues.package.price},00
                       </Card.Text>
                     </Col>
-                    {formValues.extraMeals.totalPrice && (
+                    {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && (
                       <Col md={4} className="fw-bold">
                         <Card.Text>
                           <span className="form-review__section-title">Alimentação Extra:</span>
@@ -78,7 +78,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
                         <br />
-                        R$ {formValues.package.price + (formValues.extraMeals?.totalPrice || 0)},00
+                        R$ {formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0)},00
                       </Card.Text>
                     </Col>
                   </Row>
@@ -153,6 +153,8 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
                       label={'Confirma que os dados foram preenchidos corretamente?'}
+                      id={'confirmData'}
+                      name={'hasCoupon'}
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
                     />
