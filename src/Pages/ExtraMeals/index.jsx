@@ -53,16 +53,35 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
   });
 
   useEffect(() => {
-    const calculateTotalPrice = () => {
-      const total = values.extraMeals.reduce((sum, meal) => {
-        const mealOption = mealOptions.find((option) => option.name === meal);
-        return sum + (mealOption ? mealOption.price : 0);
-      }, 0);
-      setTotalPrice(total);
-    };
+    if (!values.someFood) {
+      setTotalPrice(0);
+    } else {
+      const calculateTotalPrice = () => {
+        const total = values.extraMeals.reduce((sum, meal) => {
+          const mealOption = mealOptions.find((option) => option.name === meal);
+          return sum + (mealOption ? mealOption.price : 0);
+        }, 0);
+        setTotalPrice(total);
+      };
+      calculateTotalPrice();
+    }
+  }, [values.extraMeals, values.someFood]);
 
-    calculateTotalPrice();
-  }, [values.extraMeals]);
+  const handleChangeSelect = (event) => {
+    const value = event.target.value === 'true';
+    handleChange({
+      target: {
+        name: 'someFood',
+        value,
+      },
+    });
+
+    if (!value) {
+      setFieldValue('extraMeals', []);
+      setExtraMealSelected(false);
+      setCheckboxHasError(false);
+    }
+  };
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -121,14 +140,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                     name="someFood"
                     isInvalid={!!errors.someFood}
                     value={values.someFood}
-                    onChange={(event) =>
-                      handleChange({
-                        target: {
-                          name: 'someFood',
-                          value: event.target.value === 'true',
-                        },
-                      })
-                    }
+                    onChange={handleChangeSelect}
                   >
                     <option value="" disabled>
                       Selecione uma opção
