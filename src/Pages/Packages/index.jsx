@@ -8,6 +8,8 @@ import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 import axios from 'axios';
 
+const API_URL = 'http://localhost:3001';
+
 const FormPackages = ({
   nextStep,
   backStep,
@@ -42,11 +44,11 @@ const FormPackages = ({
 
   const handleCouponChange = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/coupons');
+      const response = await axios.get(`${API_URL}/coupons`);
       const coupons = response.data;
       const validCoupon = coupons.find((coupon) => coupon.code === discountCoupon && !coupon.used);
       if (validCoupon) {
-        await axios.put(`http://localhost:3001/coupons/${validCoupon.id}`, {
+        await axios.put(`${API_URL}/coupons/${validCoupon.id}`, {
           ...validCoupon,
           used: true,
         });
@@ -120,7 +122,7 @@ const FormPackages = ({
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = validRegistrations >= 360 && !isChild;
+  const isRegistrationClosed = validRegistrations >= 600 && !isChild;
 
   return (
     <Card className="form__container__general-height">
