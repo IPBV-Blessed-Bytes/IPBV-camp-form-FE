@@ -194,6 +194,14 @@ body {
         }
       }
 
+      .card-text.discount-coupon {
+        color: $dark-green;
+        display: flex;
+        font-style: italic;
+        justify-content: center;
+        margin-top: 0.25rem;
+      }
+
       .card-body {
         padding: 1.875rem;
 
