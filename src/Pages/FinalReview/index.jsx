@@ -62,7 +62,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                         Nome - {formValues.package.accomodation.name} <br />
                         Acomodação - {formValues.package.accomodation.subAccomodation}
                         <br />
-                        Preço - R$ {formValues.package.price},00
+                        Preço - R$ {formValues.package.finalPrice},00
                       </Card.Text>
                     </Col>
                     {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && (

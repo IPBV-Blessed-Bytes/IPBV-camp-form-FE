@@ -180,7 +180,7 @@ const FormPackages = ({
                 </Col>
                 {showCouponField && (
                   <>
-                    <Col xs={9} md={4} className="mb-md-0 mb-3">
+                    <Col xs={12} md={4} className="mb-md-0 mb-3">
                       <Form.Group controlId="formCoupon">
                         <Form.Label>Cupom de Desconto:</Form.Label>
                         <Icons typeIcon="money" iconSize={25} fill="#65a300" />
@@ -192,9 +192,15 @@ const FormPackages = ({
                         />
                       </Form.Group>
                     </Col>
-                    <Col xs={3} md={3}>
-                      <Button variant="success" onClick={handleCouponChange}>
-                        <Icons typeIcon="arrow-right" iconSize={25} fill="#fff" /> Validar
+                    <Col xs={12} md={3} className="d-flex justify-content-end ">
+                      <Button
+                        variant="success"
+                        onClick={handleCouponChange}
+                        className="d-flex align-items-center"
+                        size="lg"
+                      >
+                        Validar&nbsp;
+                        <Icons typeIcon="coupon" iconSize={25} fill="#fff" />
                       </Button>
                     </Col>
                   </>
@@ -361,13 +367,13 @@ const FormPackages = ({
                                         <u className={`card-text ${hasDiscount ? 'price-with-discount' : ''}`}>
                                           {formatCurrency(cards.values.total)}
                                         </u>
-                                        {hasDiscount && (
-                                          <u className="card-text">
-                                            <b>*Valor com desconto = ${finalPrice}</b>
-                                          </u>
-                                        )}
                                       </em>
                                     </div>
+                                    {hasDiscount && (
+                                      <span className="card-text discount-coupon">
+                                        <b>*Valor com desconto = R${finalPrice}</b>
+                                      </span>
+                                    )}
                                     {!isPackageAvailable && (
                                       <div className="package-description-container justify-content-end">
                                         <span className="no-vacancy text-danger text-decoration-underline mt-3">
