@@ -81,6 +81,18 @@ const FormPackages = ({
 
     setSelectedPackage(selectedPackage);
 
+    const { accomodation, transportation, food, values, title } = selectedPackage;
+   
+    updateForm({
+      price: values.total,
+      discountCoupon: discountCoupon,
+      discountValue: discountValue,
+      accomodation: accomodation,
+      transportation: transportation,
+      food: food,
+      title: title,
+    });
+
     scrollToEnd();
   };
 
