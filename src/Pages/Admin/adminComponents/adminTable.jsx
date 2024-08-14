@@ -9,9 +9,7 @@ import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
 import { useNavigate } from 'react-router-dom';
 
-// const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
-const API_URL = 'http://localhost:3001';
-
+const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
