@@ -36,7 +36,11 @@ const AdminTable = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${API_URL}/acampante`);
-      setData(response.data);
+      if (Array.isArray(response.data)) {
+        setData(response.data);
+      } else {
+        console.error('Data received is not an array:', response.data);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
