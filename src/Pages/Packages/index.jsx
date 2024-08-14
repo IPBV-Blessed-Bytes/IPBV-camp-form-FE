@@ -29,17 +29,21 @@ const FormPackages = ({
   const packages = getPackages(age);
 
   const packageMapping = {
-    1: { available: 'colegioIndividual', used: 'colegioIndividualComOnibus' },
-    2: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibus' },
-    3: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibus' },
-    4: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibus' },
-    5: { available: 'colegioCamping', used: 'colegioCampingSemAlimentacao' },
-    6: { available: 'colegioCamping', used: 'colegioCampingComAlimentacao' },
-    7: { available: 'seminario', used: 'seminarioIndividualComOnibus' },
-    8: { available: 'seminario', used: 'seminarioIndividualSemOnibus' },
-    9: { available: 'outro', used: 'outroComOnibus' },
-    10: { available: 'outro', used: 'outroSemOnibus' },
-    11: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
+    1: { available: 'colegioIndividual', used: 'colegioIndividualComOnibusComAlimentacao' },
+    2: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibusComAlimentacao' },
+    3: { available: 'colegioIndividual', used: 'colegioIndividualComOnibusSemAlimentacao' },
+    4: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibusSemAlimentacao' },
+    5: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibusComAlimentacao' },
+    6: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibusComAlimentacao' },
+    7: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibusSemAlimentacao' },
+    8: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibusSemAlimentacao' },
+    9: { available: 'colegioCamping', used: 'colegioCampingSemOnibusComAlimentacao' },
+    10: { available: 'colegioCamping', used: 'colegioCampingSemOnibusSemAlimentacao' },
+    11: { available: 'seminario', used: 'seminarioIndividualComOnibusComAlimentacao' },
+    12: { available: 'seminario', used: 'seminarioIndividualSemOnibusComAlimentacao' },
+    13: { available: 'outro', used: 'outroComOnibusComAlimentacao' },
+    14: { available: 'outro', used: 'outroSemOnibusSemAlimentacao' },
+    15: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
   const handleCouponChange = async () => {
@@ -106,6 +110,7 @@ const FormPackages = ({
   const submitForm = () => {
     if (!selectedPackage) {
       setHasError(true);
+
       return;
     }
 
@@ -246,51 +251,87 @@ const FormPackages = ({
                           const usedValidPackagesMapping = {
                             1: {
                               colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibus +
-                                usedValidPackagesPath?.colegioIndividualSemOnibus,
+                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
                             },
                             2: {
                               colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibus +
-                                usedValidPackagesPath?.colegioIndividualSemOnibus,
+                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
                             },
                             3: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibus +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibus,
+                              colegioIndividual:
+                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
                             },
                             4: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibus +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibus,
+                              colegioIndividual:
+                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
                             },
                             5: {
-                              colegioCamping:
-                                usedValidPackagesPath?.colegioCampingSemAlimentacao +
-                                usedValidPackagesPath?.colegioCampingComAlimentacao,
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
                             },
                             6: {
-                              colegioCamping:
-                                usedValidPackagesPath?.colegioCampingSemAlimentacao +
-                                usedValidPackagesPath?.colegioCampingComAlimentacao,
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
                             },
                             7: {
-                              seminario:
-                                usedValidPackagesPath?.seminarioIndividualComOnibus +
-                                usedValidPackagesPath?.seminarioIndividualSemOnibus,
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
                             },
                             8: {
-                              seminario:
-                                usedValidPackagesPath?.seminarioIndividualComOnibus +
-                                usedValidPackagesPath?.seminarioIndividualSemOnibus,
+                              colegioFamilia:
+                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
+                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
                             },
                             9: {
-                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
+                              colegioCamping:
+                                usedValidPackagesPath?.colegioCampingSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioCampingSemOnibusSemAlimentacao,
                             },
                             10: {
-                              outro: usedValidPackagesPath?.outroComOnibus + usedValidPackagesPath?.outroSemOnibus,
+                              colegioCamping:
+                                usedValidPackagesPath?.colegioCampingSemOnibusComAlimentacao +
+                                usedValidPackagesPath?.colegioCampingSemOnibusSemAlimentacao,
                             },
                             11: {
+                              seminario:
+                                usedValidPackagesPath?.seminarioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.seminarioIndividualSemOnibusComAlimentacao,
+                            },
+                            12: {
+                              seminario:
+                                usedValidPackagesPath?.seminarioIndividualComOnibusComAlimentacao +
+                                usedValidPackagesPath?.seminarioIndividualSemOnibusComAlimentacao,
+                            },
+                            13: {
+                              outro: usedValidPackagesPath?.outroComOnibusComAlimentacao + usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                            },
+                            14: {
+                              outro: usedValidPackagesPath?.outroComOnibusComAlimentacao + usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                            },
+                            15: {
                               usuarioSemCusto: usedValidPackagesPath?.usuarioSemCusto,
                             },
                           };
@@ -317,7 +358,7 @@ const FormPackages = ({
                             >
                               <Card.Body id={cards.id}>
                                 <Card.Title>
-                                  {cards.title} <span className="text-danger">{cards.subtitle}</span>
+                                  {cards.title} <span className="text-success-custom">{cards.subtitle}</span>
                                 </Card.Title>
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
