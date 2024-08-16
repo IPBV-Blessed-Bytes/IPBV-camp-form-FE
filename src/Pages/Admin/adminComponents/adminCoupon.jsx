@@ -131,11 +131,11 @@ const AdminCoupon = () => {
         <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">Código</th>
-              <th className="table-cells-header">Desconto</th>
-              <th className="table-cells-header">Usado</th>
-              <th className="table-cells-header">Usuário</th>
-              <th className="table-cells-header">Ações</th>
+              <th className="table-cells-header">Código:</th>
+              <th className="table-cells-header">Desconto:</th>
+              <th className="table-cells-header">Usado:</th>
+              <th className="table-cells-header">Usuário:</th>
+              <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
           <tbody>

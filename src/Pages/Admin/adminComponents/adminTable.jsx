@@ -193,7 +193,7 @@ const AdminTable = () => {
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length}
               />
-              &nbsp; Todos
+              &nbsp; Todos:
             </span>
           </div>
         ),
@@ -210,7 +210,7 @@ const AdminTable = () => {
         ),
       },
       {
-        Header: 'Ordem',
+        Header: 'Ordem:',
         accessor: (_, i) => i + 1,
         disableFilters: true,
         sortType: 'alphanumeric',
