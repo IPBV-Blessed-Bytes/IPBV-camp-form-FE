@@ -60,7 +60,7 @@ const AdminRide = () => {
   const offerRideColumns = useMemo(
     () => [
       {
-        Header: 'Marcador',
+        Header: 'Marcador:',
         accessor: 'select',
         Cell: ({ row }) => (
           <Form.Check
@@ -71,15 +71,15 @@ const AdminRide = () => {
         ),
       },
       {
-        Header: 'Nome',
+        Header: 'Nome:',
         accessor: 'name',
       },
       {
-        Header: 'Vagas no Carro',
+        Header: 'Vagas no Carro:',
         accessor: 'seatsInTheCar',
       },
       {
-        Header: 'Observação',
+        Header: 'Observação:',
         accessor: 'observation',
       },
     ],
@@ -89,7 +89,7 @@ const AdminRide = () => {
   const needRideColumns = useMemo(
     () => [
       {
-        Header: 'Marcador',
+        Header: 'Marcador:',
         accessor: 'select',
         Cell: ({ row }) => (
           <Form.Check
@@ -100,11 +100,11 @@ const AdminRide = () => {
         ),
       },
       {
-        Header: 'Nome',
+        Header: 'Nome:',
         accessor: 'name',
       },
       {
-        Header: 'Observação',
+        Header: 'Observação:',
         accessor: 'observation',
       },
     ],
