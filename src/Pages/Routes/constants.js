@@ -12,6 +12,8 @@ export const enumSteps = {
 export const initialValues = {
   registrationDate: '',
   totalPrice: '',
+  observation: '',
+  manualRegistration: '',
   personalInformation: {
     name: '',
     birthday: '',
