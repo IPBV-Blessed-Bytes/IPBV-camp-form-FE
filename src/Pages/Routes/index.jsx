@@ -61,7 +61,15 @@ const FormRoutes = () => {
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
-      if (withFood && steps === enumSteps.packages) {
+      if (formValues.package.food !== 'Sem Alimentação' || formValues.package.food !== '') {
+        setWithFood(true);
+      } else {
+        setWithFood(false);
+      }
+
+      const shouldSkipToFinalReview = withFood && steps === enumSteps.packages;
+
+      if (shouldSkipToFinalReview) {
         setSteps(enumSteps.finalReview);
       } else {
         setSteps(steps + 1);
@@ -108,6 +116,7 @@ const FormRoutes = () => {
         ...formValues,
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
+        manualRegistration: false,
       };
 
       const response = await axios.post(`${API_URL}/checkout/create`, updatedFormValues);
