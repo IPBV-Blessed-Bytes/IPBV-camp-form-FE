@@ -7,6 +7,7 @@ import axios from 'axios';
 import Icons from '../../../components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
+import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
@@ -17,7 +18,7 @@ const AdminTable = () => {
   const [editRowIndex, setEditRowIndex] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newFormData, setNewFormData] = useState({});
+  const [addFormData, setAddFormData] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalType, setModalType] = useState({});
@@ -36,8 +37,8 @@ const AdminTable = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${API_URL}/acampante`);
-      if (Array.isArray(response.data)) {
-        setData(response.data);
+      if (Array.isArray(response.data.content)) {
+        setData(response.data.content);
       } else {
         console.error('Data received is not an array:', response.data);
       }
@@ -58,11 +59,6 @@ const AdminTable = () => {
     setShowDeleteModal(true);
   };
 
-  const handleEditFormChange = (e) => {
-    const { name, value } = e.target;
-    setEditFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
   const handleSaveEdit = async () => {
     try {
       await axios.put(`${API_URL}/acampante/${editFormData.id}`, editFormData);
@@ -74,17 +70,60 @@ const AdminTable = () => {
     }
   };
 
-  const handleAddFormChange = (e) => {
+  const handleFormChange = (e, formType) => {
     const { name, value } = e.target;
-    setNewFormData((prevData) => ({ ...prevData, [name]: value }));
+    const keys = name.split('.');
+
+    const updateState = (setter) => {
+      setter((prevData) => {
+        if (keys.length === 3) {
+          const [parentKey, childKey, grandChildKey] = keys;
+          return {
+            ...prevData,
+            [parentKey]: {
+              ...prevData[parentKey],
+              [childKey]: {
+                ...prevData[parentKey][childKey],
+                [grandChildKey]: value,
+              },
+            },
+          };
+        } else if (keys.length === 2) {
+          const [parentKey, childKey] = keys;
+          return {
+            ...prevData,
+            [parentKey]: {
+              ...prevData[parentKey],
+              [childKey]: value,
+            },
+          };
+        } else {
+          return {
+            ...prevData,
+            [name]: value,
+          };
+        }
+      });
+    };
+
+    if (formType === 'edit') {
+      updateState(setEditFormData);
+    } else if (formType === 'add') {
+      updateState(setAddFormData);
+    }
   };
 
   const handleAddSubmit = async () => {
+    const updatedFormValues = {
+      ...addFormData,
+      manualRegistration: true,
+    };
+
     try {
-      await axios.post(`${API_URL}/acampante`, newFormData);
+      await axios.post(`${API_URL}/acampante`, updatedFormValues);
       fetchData();
       setShowAddModal(false);
-      setNewFormData({});
+      setAddFormData({});
     } catch (error) {
       console.error('Error adding data:', error);
     }
@@ -143,33 +182,6 @@ const AdminTable = () => {
   };
 
   const columns = useMemo(() => {
-    const columnData = [
-      'Pacote:',
-      'Nome:',
-      'Observação:',
-      'Pagamento:',
-      'Igreja:',
-      'Precisa de Carona:',
-      'Vagas de Carona:',
-      'Data de Inscrição:',
-      'Nascimento:',
-      'CPF:',
-      'RG:',
-      'Órgão Expedidor:',
-      'Estado Expedidor:',
-      'Categoria:',
-      'Celular:',
-      'Whatsapp:',
-      'Email:',
-      'Preço:',
-      'Alergia:',
-      'Agregados:',
-      'Acomodação:',
-      'Sub Acomodação:',
-      'Alimentação:',
-      'Transporte:',
-    ];
-
     return [
       {
         Header: () => (
@@ -203,12 +215,157 @@ const AdminTable = () => {
         disableFilters: true,
         sortType: 'alphanumeric',
       },
-      ...columnData.map((field) => ({
-        Header: field,
-        accessor: field,
+      {
+        Header: 'Pacote:',
+        accessor: 'package.title',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: field === 'Nome:' ? alphabeticalSort : 'alphanumeric',
-      })),
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Nome:',
+        accessor: 'personalInformation.name',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: alphabeticalSort,
+      },
+      {
+        Header: 'Observação:',
+        accessor: 'observation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Pagamento:',
+        accessor: 'formPayment.formPayment',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Igreja:',
+        accessor: 'contact.church',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Precisa de Carona:',
+        accessor: 'contact.needRide',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Vagas de Carona:',
+        accessor: 'contact.numberVacancies',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Data de Inscrição:',
+        accessor: 'registrationDate',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Nascimento:',
+        accessor: 'personalInformation.birthday',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'CPF:',
+        accessor: 'personalInformation.cpf',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'RG:',
+        accessor: 'personalInformation.rg',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Órgão Expedidor:',
+        accessor: 'personalInformation.rgShipper',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Estado Expedidor:',
+        accessor: 'personalInformation.rgShipperState',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Categoria:',
+        accessor: 'personalInformation.gender',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Celular:',
+        accessor: 'contact.cellPhone',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Whatsapp:',
+        accessor: 'contact.isWhatsApp',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Email:',
+        accessor: 'contact.email',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Preço:',
+        accessor: 'totalPrice',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Alergia:',
+        accessor: 'contact.allergy',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Agregados:',
+        accessor: 'contact.aggregate',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Acomodação:',
+        accessor: 'package.accomodation.name',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Sub Acomodação:',
+        accessor: 'package.accomodation.subAccomodation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Alimentação:',
+        accessor: 'package.food',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Transporte:',
+        accessor: 'package.transportation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Inscrição Manual:',
+        accessor: 'manualRegistration',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        sortType: 'alphanumeric',
+      },
       {
         Header: 'Editar / Deletar',
         Cell: ({ row }) => (
@@ -420,27 +577,11 @@ const AdminTable = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Row>
-              {columns
-                .slice(1, -1)
-                .filter((column) => column.Header !== 'Ordem')
-                .map((column) => (
-                  <Col key={column.accessor} md={12} lg={4} className="mb-3">
-                    <Form.Group>
-                      <b>
-                        <Form.Label>{column.Header}</Form.Label>
-                      </b>
-                      <Form.Control
-                        type="text"
-                        name={column.accessor}
-                        value={editFormData[column.accessor] || ''}
-                        onChange={handleEditFormChange}
-                        className="form-control-lg form-control-bg"
-                      />
-                    </Form.Group>
-                  </Col>
-                ))}
-            </Row>
+            <AdminTableColumns
+              editFormData={editFormData}
+              handleFormChange={(e) => handleFormChange(e, 'edit')}
+              editForm
+            />
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -459,27 +600,7 @@ const AdminTable = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Row>
-              {columns
-                .slice(1, -1)
-                .filter((column) => column.Header !== 'Ordem')
-                .map((column) => (
-                  <Col key={column.accessor} md={12} lg={4} className="mb-3">
-                    <Form.Group>
-                      <b>
-                        <Form.Label>{column.Header}</Form.Label>
-                      </b>
-                      <Form.Control
-                        type="text"
-                        name={column.accessor}
-                        value={newFormData[column.accessor] || ''}
-                        onChange={handleAddFormChange}
-                        className="form-control-lg form-control-bg"
-                      />
-                    </Form.Group>
-                  </Col>
-                ))}
-            </Row>
+            <AdminTableColumns addFormData={addFormData} handleFormChange={(e) => handleFormChange(e, 'add')} addForm />
           </Form>
         </Modal.Body>
         <Modal.Footer>
