@@ -1,6 +1,8 @@
 import React from 'react';
-import { Row, Form, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AdminTableField from './adminTableField';
+import { packages } from '../../../Pages/Routes/constants';
 
 const AdminTableColumns = ({ addFormData, editFormData, handleFormChange, addForm, editForm }) => {
   const now = new Date();
@@ -9,421 +11,182 @@ const AdminTableColumns = ({ addFormData, editFormData, handleFormChange, addFor
   const year = now.getFullYear();
   const formattedDate = `${day}/${month}/${year}`;
 
+  const packageOptions = packages.map((pkg) => ({
+    label: pkg,
+    value: pkg,
+  }));
+
+  const fields = [
+    {
+      label: 'Pacote',
+      name: 'package.title',
+      type: 'select',
+      placeholder: 'Selecione um pacote',
+      options: packageOptions,
+    },
+    { label: 'Nome', name: 'personalInformation.name', type: 'text', placeholder: 'Nome do Acampante' },
+    { label: 'Observação', name: 'observation', type: 'text', placeholder: 'Observação sobre inscrição' },
+    {
+      label: 'Pagamento',
+      name: 'formPayment.formPayment',
+      type: 'select',
+      placeholder: 'Selecione status de pagamento',
+      options: [
+        { label: 'Pago', value: 'Pago' },
+        { label: 'Não Pago', value: 'Não Pago' },
+      ],
+    },
+    {
+      label: 'Igreja',
+      name: 'contact.church',
+      type: 'select',
+      placeholder: 'Selecione sua igreja',
+      options: [
+        { label: 'IPBV', value: 'IPBV' },
+        { label: 'Outra', value: 'Outra' },
+      ],
+    },
+    {
+      label: 'Vai de Carro',
+      name: 'contact.car',
+      type: 'select',
+      placeholder: 'Selecione se vai de carro',
+      options: [
+        { label: 'Sim', value: 'Sim' },
+        { label: 'Não', value: 'Não' },
+      ],
+    },
+    {
+      label: 'Precisa de Carona',
+      name: 'contact.needRide',
+      type: 'select',
+      placeholder: 'Selecione se precisa de carona',
+      options: [
+        { label: 'Sim', value: 'Sim' },
+        { label: 'Não', value: 'Não' },
+      ],
+    },
+    { label: 'Vagas de Carona', name: 'contact.numberVacancies', type: 'number', placeholder: '0' },
+    {
+      label: 'Data de Inscrição',
+      name: 'registrationDate',
+      type: 'text',
+      value: editForm ? editFormData.registrationDate : formattedDate,
+      disabled: true,
+    },
+    { label: 'Nascimento', name: 'personalInformation.birthday', type: 'text', placeholder: '01/01/1990' },
+    { label: 'CPF', name: 'personalInformation.cpf', type: 'number', placeholder: '1234567890' },
+    { label: 'RG', name: 'personalInformation.rg', type: 'number', placeholder: '0123456' },
+    { label: 'Órgão Expedidor', name: 'personalInformation.rgShipper', type: 'text', placeholder: 'SDS' },
+    { label: 'Estado Expedidor', name: 'personalInformation.rgShipperState', type: 'text', placeholder: 'PE' },
+    {
+      label: 'Categoria',
+      name: 'personalInformation.gender',
+      type: 'select',
+      placeholder: 'Selecione sua categoria/gênero',
+      options: [
+        { label: 'Criança', value: 'Criança' },
+        { label: 'Homem', value: 'Homem' },
+        { label: 'Mulher', value: 'Mulher' },
+      ],
+    },
+    { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854' },
+    {
+      label: 'Whatsapp',
+      name: 'contact.isWhatsApp',
+      type: 'select',
+      placeholder: 'Selecione se número é whatsapp',
+      options: [
+        { label: 'Sim', value: 'Sim' },
+        { label: 'Não', value: 'Não' },
+      ],
+    },
+    { label: 'Email', name: 'contact.email', type: 'text', placeholder: 'teste@teste.com' },
+    { label: 'Preço Total', name: 'totalPrice', type: 'number', placeholder: '500' },
+    { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias' },
+    { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados' },
+    {
+      label: 'Acomodação',
+      name: 'package.accomodation.name',
+      type: 'select',
+      placeholder: 'Selecione a acomodação',
+      options: [
+        { label: 'Colégio', value: 'Colégio' },
+        { label: 'Seminário', value: 'Seminário' },
+        { label: 'Outro', value: 'Outro' },
+      ],
+    },
+    {
+      label: 'Sub Acomodação',
+      name: 'package.accomodation.subAccomodation',
+      type: 'select',
+      placeholder: 'Selecione a sub acomodação',
+      options: [
+        { label: 'Colégio Individual', value: 'Colégio Individual' },
+        { label: 'Colégio Família', value: 'Colégio Família' },
+        { label: 'Colégio Camping', value: 'Colégio Camping' },
+        { label: 'Seminário Individual', value: 'Seminário Individual' },
+        { label: 'Outra', value: 'Outra' },
+      ],
+    },
+    {
+      label: 'Alimentação Extra',
+      name: 'extraMeals.someFood',
+      type: 'select',
+      placeholder: 'Selecione se terá alimentação extra',
+      options: [
+        { label: 'Sim', value: 'Sim' },
+        { label: 'Não', value: 'Não' },
+      ],
+    },
+    {
+      label: 'Dias de Alimentação Extra',
+      name: 'extraMeals.extraMeals',
+      type: 'text',
+      placeholder: 'Domingo, Segunda, Terça, etc.',
+    },
+    {
+      label: 'Alimentação',
+      name: 'package.food',
+      type: 'text',
+      placeholder: 'Café da manhã, almoço e jantar; Almoço e jantar ou Sem Alimentação',
+    },
+    {
+      label: 'Transporte',
+      name: 'package.transportation',
+      type: 'select',
+      placeholder: 'Selecione tipo de transporte',
+      options: [
+        { label: 'Com Ônibus', value: 'Com Ônibus' },
+        { label: 'Sem Ônibus', value: 'Sem Ônibus' },
+      ],
+    },
+  ];
+
   return (
     <Row>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Pacote:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="package.title"
-            value={editForm ? editFormData.package.title : addFormData.package?.title}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Pacote 01 - Nome do Pacote' : ''}
-          ></Form.Control>
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Nome:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="personalInformation.name"
-            value={editForm ? editFormData.personalInformation.name : addFormData.personalInformation?.name}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Nome do Acampante' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Observação:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="observation"
-            value={editForm ? editFormData.observation : addFormData.observation}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Observação sobre inscrição' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Pagamento:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="formPayment.formPayment"
-            value={editForm ? editFormData.formPayment.formPayment : addFormData.formPayment?.formPayment}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Pago ou Não' : ''}
-          ></Form.Control>
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Igreja:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.church"
-            value={editForm ? editFormData.contact.church : addFormData.contact?.church}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'IPBV ou Outra' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Vai de Carro:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.car"
-            value={editForm ? editFormData.contact.car : addFormData.contact?.car}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não' : ''}
-          ></Form.Control>
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Precisa de Carona:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.needRide"
-            value={editForm ? editFormData.contact.needRide : addFormData.contact?.needRide}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não' : ''}
-          ></Form.Control>
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Vagas de Carona:</Form.Label>
-          </b>
-          <Form.Control
-            type="number"
-            name="contact.numberVacancies"
-            value={editForm ? editFormData.contact.numberVacancies : addFormData.contact?.numberVacancies}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '0' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Data de Inscrição:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="registrationDate"
-            value={editForm ? editFormData.registrationDate : formattedDate}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            disabled
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Nascimento:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="personalInformation.birthday"
-            value={editForm ? editFormData.personalInformation.birthday : addFormData.personalInformation?.birthday}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '01/01/1990' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>CPF:</Form.Label>
-          </b>
-          <Form.Control
-            type="number"
-            name="personalInformation.cpf"
-            value={editForm ? editFormData.personalInformation.cpf : addFormData.personalInformation?.cpf}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '1234567890' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>RG:</Form.Label>
-          </b>
-          <Form.Control
-            type="number"
-            name="personalInformation.rg"
-            value={editForm ? editFormData.personalInformation.rg : addFormData.personalInformation?.rg}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '0123456' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Órgão Expedidor:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="personalInformation.rgShipper"
-            value={editForm ? editFormData.personalInformation.rgShipper : addFormData.personalInformation?.rgShipper}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'SDS' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Estado Expedidor:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="personalInformation.rgShipperState"
-            value={
-              editForm
-                ? editFormData.personalInformation.rgShipperState
-                : addFormData.personalInformation?.rgShipperState
-            }
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'PE' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Categoria:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="personalInformation.gender"
-            value={editForm ? editFormData.personalInformation.gender : addFormData.personalInformation?.gender}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Homem, Mulher ou Criança' : ''}
-          ></Form.Control>
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Celular:</Form.Label>
-          </b>
-          <Form.Control
-            type="number"
-            name="contact.cellPhone"
-            value={editForm ? editFormData.contact.cellPhone : addFormData.contact?.cellPhone}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '81993727854' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Whatsapp:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.isWhatsApp"
-            value={editForm ? editFormData.contact.isWhatsApp : addFormData.contact?.isWhatsApp}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Email:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.email"
-            value={editForm ? editFormData.contact.email : addFormData.contact?.email}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'teste@teste.com' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Preço Total:</Form.Label>
-          </b>
-          <Form.Control
-            type="number"
-            name="totalPrice"
-            value={editForm ? editFormData.totalPrice : addFormData.totalPrice}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? '500' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Alergia:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.allergy"
-            value={editForm ? editFormData.contact.allergy : addFormData.contact?.allergy}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não | Quais alergias' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Agregados:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="contact.aggregate"
-            value={editForm ? editFormData.contact.aggregate : addFormData.contact?.aggregate}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não | Quais agregados' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Acomodação:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="package.accomodation.name"
-            value={editForm ? editFormData.package.accomodation.name : addFormData.package?.accomodation?.name}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Colégio, Seminário ou Outro' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Sub Acomodação:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="package.accomodation.subAccomodation"
-            value={
-              editForm
-                ? editFormData.package.accomodation.subAccomodation
-                : addFormData.package?.accomodation?.subAccomodation
-            }
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sala Individual, família, camping, seminário ou outra' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Alimentação Extra:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="extraMeals.someFood"
-            value={editForm ? editFormData.extraMeals.someFood : addFormData.extraMeals?.someFood}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Sim ou Não' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Dias de Alimentação Extra:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="extraMeals.extraMeals"
-            value={editForm ? editFormData.extraMeals.extraMeals : addFormData.extraMeals?.extraMeals}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Domingo, Segunda, Terça' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Alimentação:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="package.food"
-            value={editForm ? editFormData.package.food : addFormData.package?.food}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Café da manhã, almoço e jantar; Almoço e jantar ou Sem Alimentação' : ''}
-          />
-        </Form.Group>
-      </Col>
-      <Col md={12} lg={4} className="mb-3">
-        <Form.Group>
-          <b>
-            <Form.Label>Transporte:</Form.Label>
-          </b>
-          <Form.Control
-            type="text"
-            name="package.transportation"
-            value={editForm ? editFormData.package.transportation : addFormData.package?.transportation}
-            onChange={handleFormChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
-            placeholder={addForm ? 'Com ônibus ou Sem ônibus' : ''}
-          />
-        </Form.Group>
-      </Col>
+      {fields.map((field, index) => (
+        <AdminTableField
+          key={index}
+          label={field.label}
+          type={field.type || 'text'}
+          name={field.name}
+          value={
+            field.name === 'registrationDate'
+              ? editForm
+                ? editFormData.registrationDate
+                : formattedDate
+              : editForm
+              ? editFormData[field.name.split('.')[0]][field.name.split('.')[1]]
+              : addFormData[field.name.split('.')[0]]?.[field.name.split('.')[1]]
+          }
+          onChange={handleFormChange}
+          placeholder={addForm ? field.placeholder : ''}
+          addForm={addForm}
+          disabled={field.disabled || false}
+          options={field.options || []}
+        />
+      ))}
     </Row>
   );
 };
