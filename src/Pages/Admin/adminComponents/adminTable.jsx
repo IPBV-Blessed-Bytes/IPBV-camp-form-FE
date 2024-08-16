@@ -369,10 +369,10 @@ const AdminTable = () => {
       {
         Header: 'Editar / Deletar',
         Cell: ({ row }) => (
-          <div className="justify-content-between d-flex">
+          <div>
             <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
               <Icons typeIcon="edit" iconSize={24} />
-            </Button>
+            </Button>{' '}
             <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index)}>
               <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
             </Button>
