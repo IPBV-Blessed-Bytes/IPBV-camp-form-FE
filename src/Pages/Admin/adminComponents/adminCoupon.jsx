@@ -13,7 +13,7 @@ const AdminCoupon = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [couponToDelete, setCouponToDelete] = useState(null);
-  const [newCoupon, setNewCoupon] = useState({ code: '', discount: '', used: false });
+  const [newCoupon, setNewCoupon] = useState({ code: '', discount: '', used: false, user: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -111,7 +111,13 @@ const AdminCoupon = () => {
       <hr className="horizontal-line" />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col xs={12}>
+        <Col lg={2} md={3} xs={6}>
+          Exemplo de cupom:{' '}
+          <em>
+            <b>NOMEDAPESSOA100</b>
+          </em>
+        </Col>
+        <Col lg={10} md={9} xs={6}>
           <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
             <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
               <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
@@ -128,6 +134,7 @@ const AdminCoupon = () => {
               <th className="table-cells-header">Código</th>
               <th className="table-cells-header">Desconto</th>
               <th className="table-cells-header">Usado</th>
+              <th className="table-cells-header">Usuário</th>
               <th className="table-cells-header">Ações</th>
             </tr>
           </thead>
@@ -137,6 +144,7 @@ const AdminCoupon = () => {
                 <td>{coupon.code}</td>
                 <td>{coupon.discount}</td>
                 <td>{coupon.used ? 'Sim' : 'Não'}</td>
+                <td>{coupon.user}</td>
                 <td>
                   <Button variant="outline-success" onClick={() => openModal(coupon)}>
                     <Icons typeIcon="edit" iconSize={24} />
