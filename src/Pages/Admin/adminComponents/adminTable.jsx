@@ -572,7 +572,9 @@ const AdminTable = () => {
 
       <Modal show={showEditModal} size="xl" onHide={() => setShowEditModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Editar Inscrição</Modal.Title>
+          <Modal.Title>
+            <b>Editar Inscrição</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -595,7 +597,9 @@ const AdminTable = () => {
 
       <Modal show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Nova Inscrição</Modal.Title>
+          <Modal.Title>
+            <b>Nova Inscrição</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -614,7 +618,9 @@ const AdminTable = () => {
 
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão</Modal.Title>
+          <Modal.Title>
+            <b>Confirmar Exclusão</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {modalType === 'delete-all'
