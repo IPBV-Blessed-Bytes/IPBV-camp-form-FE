@@ -7,9 +7,7 @@ import AdminLoggedOut from './adminComponents/adminLoggedOut';
 import AdminLoggedIn from './adminComponents/adminLoggedIn';
 import privateFetcher from '../../fetchers/fetcherWithCredentials';
 import useAuth from '../../hooks/useAuth';
-
-const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
-const PACKAGES_ENDPOINT = `${API_URL}/package-count`;
+import { BASE_URL } from '../../config/index';
 
 const AdminHome = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
@@ -24,7 +22,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 
   useEffect(() => {
     const fetchPackages = async () => {
-      const response = await privateFetcher.get(PACKAGES_ENDPOINT);
+      const response = await privateFetcher.get(`${BASE_URL}/package-count`);
       setAvailablePackages(response.data);
     };
 
@@ -139,7 +137,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       'bg-light',
       'text-success',
     ),
-    createCardData('Outra Acomodação', 'outroComOnibus', 'outroSemOnibus', 'bg-light', 'text-success'),
+    createCardData('Outra Acomodação', 'outroComOnibus', 'outroSemOnibusSemAlimentacao', 'bg-light', 'text-success'),
   ];
 
   const firstRowCards = cards.slice(0, 6);

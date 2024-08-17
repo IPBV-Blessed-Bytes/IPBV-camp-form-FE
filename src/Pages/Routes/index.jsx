@@ -20,8 +20,7 @@ import AdminRide from '../Admin/adminComponents/adminRide';
 import { enumSteps, initialValues } from './constants';
 import useAuth from '../../hooks/useAuth';
 import AdminCoupon from '../Admin/adminComponents/adminCoupon';
-
-const API_URL = 'http://ec2-35-89-80-98.us-west-2.compute.amazonaws.com:8080';
+import { BASE_URL } from '../../config/index';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.packages);
@@ -119,7 +118,7 @@ const FormRoutes = () => {
         manualRegistration: false,
       };
 
-      const response = await axios.post(`${API_URL}/checkout/create`, updatedFormValues);
+      const response = await axios.post(`${BASE_URL}/checkout/create`, updatedFormValues);
       setStatus('loaded');
 
       if (response.data.data.payment_url) {
@@ -138,7 +137,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get(`${API_URL}/package-count`);
+        const response = await axios.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
       } catch (error) {
         console.error(
@@ -155,7 +154,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get(`${API_URL}/total-registrations`);
+        const response = await axios.get(`${BASE_URL}/total-registrations`);
         setTotalRegistrations(response.data);
       } catch (error) {
         console.error(
