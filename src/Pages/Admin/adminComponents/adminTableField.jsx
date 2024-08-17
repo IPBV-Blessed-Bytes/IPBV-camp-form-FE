@@ -27,7 +27,7 @@ const AdminTableField = ({
             disabled={disabled}
             className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
           >
-            <option value="" disabled>
+            <option value="" disabled selected>
               {placeholder}
             </option>
             {options.map((option, index) => (
