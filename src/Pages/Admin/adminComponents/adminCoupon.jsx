@@ -161,7 +161,7 @@ const AdminCoupon = () => {
 
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}</Modal.Title>
+          <Modal.Title><b>{editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}</b></Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
