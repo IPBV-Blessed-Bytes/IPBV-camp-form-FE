@@ -4,8 +4,7 @@ import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap
 import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
-const API_URL = 'http://localhost:3001';
+import { BASE_URL } from '../../../config/index';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -22,8 +21,9 @@ const AdminCoupon = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`${API_URL}/coupons`);
-      setCoupons(response.data);
+      const response = await axios.get(`${BASE_URL}/cupom`);
+
+      setCoupons(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
     }
@@ -31,7 +31,7 @@ const AdminCoupon = () => {
 
   const handleCreateCoupon = async () => {
     try {
-      await axios.post(`${API_URL}/coupons`, {
+      await axios.post(`${BASE_URL}/cupom`, {
         ...newCoupon,
         id: Date.now().toString(),
         used: false,
@@ -46,7 +46,7 @@ const AdminCoupon = () => {
 
   const handleEditCoupon = async () => {
     try {
-      await axios.put(`${API_URL}/coupons/${editingCoupon.id}`, editingCoupon);
+      await axios.put(`${BASE_URL}/cupom/${editingCoupon.id}`, editingCoupon);
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
@@ -57,7 +57,14 @@ const AdminCoupon = () => {
 
   const handleDeleteCoupon = async (id) => {
     try {
-      await axios.delete(`${API_URL}/coupons/${id}`);
+      const requestBody = {
+        id: id,
+        code: '',
+        discount: '',
+        used: true,
+        user: '',
+      };
+      await axios.delete(`${BASE_URL}/cupom/${id}`, { data: requestBody });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();
@@ -161,7 +168,9 @@ const AdminCoupon = () => {
 
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title><b>{editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}</b></Modal.Title>
+          <Modal.Title>
+            <b>{editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
