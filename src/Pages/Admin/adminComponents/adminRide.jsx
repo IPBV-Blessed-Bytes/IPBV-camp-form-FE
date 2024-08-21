@@ -11,6 +11,7 @@ import { BASE_URL } from '../../../config/index';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
+  const [loading, setLoading] = useState(true);
   const rideApiUrl = 'endpointurl';
   const needRideApiUrl = 'endpointurl';
 
@@ -28,6 +29,8 @@ const AdminRide = () => {
         });
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -197,6 +200,15 @@ const AdminRide = () => {
           <div className="table-responsive">{renderTable(needRideTableInstance)}</div>
         </Accordion.Body>
       </Accordion>
+
+      {loading && (
+        <div className="overlay">
+          <div className="spinner-container">
+            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            <span>Carregando dados</span>
+          </div>
+        </div>
+      )}
     </Container>
   );
 };

@@ -9,6 +9,7 @@ import { BASE_URL } from '../../../config/index';
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [couponToDelete, setCouponToDelete] = useState(null);
@@ -26,6 +27,8 @@ const AdminCoupon = () => {
       setCoupons(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -246,6 +249,15 @@ const AdminCoupon = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {loading && (
+        <div className="overlay">
+          <div className="spinner-container">
+            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            <span>Carregando dados</span>
+          </div>
+        </div>
+      )}
     </Container>
   );
 };
