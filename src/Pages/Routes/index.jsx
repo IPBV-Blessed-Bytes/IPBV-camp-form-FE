@@ -116,6 +116,7 @@ const FormRoutes = () => {
         registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
         manualRegistration: false,
+        observation: '',
       };
 
       const response = await axios.post(`${BASE_URL}/checkout/create`, updatedFormValues);
@@ -229,6 +230,7 @@ const FormRoutes = () => {
                 spinnerLoading={loading}
                 availablePackages={availablePackages}
                 totalRegistrationsGlobal={totalRegistrations}
+                formUsername={formValues.personalInformation.name}
               />
             )}
 
