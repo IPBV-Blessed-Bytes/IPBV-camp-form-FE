@@ -8,7 +8,7 @@ import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001';
+import { BASE_URL } from '../../config/index';
 
 const FormPackages = ({
   nextStep,
@@ -18,6 +18,7 @@ const FormPackages = ({
   spinnerLoading,
   availablePackages,
   totalRegistrationsGlobal,
+  formUsername,
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
@@ -149,18 +150,18 @@ const FormPackages = ({
           {!isRegistrationClosed && (
             <>
               <Card.Text>
-                Vamos começar a seleção dos pacotes. Primeiro de tudo, informe se tem ou não um cupom de desconto e
-                insira no campo abaixo. Certifique-se de validar o cupom apenas quando for concluir a inscrição e fazer
-                o pagamento, visto que depois de validado o seu cupom não poderá ser reutilizado.Caso não tenha basta
-                pular para escolha do pacote. Depois disso escolha qual o local que deseja se hospedar e o pacote
-                desejado com alimentação e transporte (ou não) e clique nele para ser redirecionado.
+                Vamos começar a seleção dos pacotes. Primeiro de tudo, informe se você possui um cupom de desconto e
+                insira-o no campo abaixo. Certifique-se de validar o cupom apenas quando for concluir a inscrição e
+                realizar o pagamento, pois, após validado, o seu cupom não poderá ser reutilizado. Caso não tenha um
+                cupom, basta pular para a escolha do pacote. Em seguida, escolha o local de hospedagem e o pacote
+                desejado, com ou sem alimentação e transporte, e clique nele para ser redirecionado.
               </Card.Text>
               <hr className="horizontal-line" />
               <Card.Text>
-                Caso você opte por um pacote SEM alimentação, poderá na próxima etapa do formulário selecionar por
-                alimentações avulsas, escolhendo os dias e refeições específicas. Também poderá fazer essa escolha
-                posteriormente na secretaria da igreja ou mesmo no próprio acampamento, respeitando o tempo mínimo de
-                6hrs antes da refeição.
+                Se optar por um pacote SEM alimentação, na próxima etapa do formulário, você poderá selecionar refeições
+                avulsas, escolhendo os dias e refeições específicas. Também será possível fazer essa escolha
+                posteriormente na secretaria da igreja ou no próprio acampamento, respeitando o tempo mínimo de 6 horas
+                de antecedência para a refeição.
               </Card.Text>
             </>
           )}
