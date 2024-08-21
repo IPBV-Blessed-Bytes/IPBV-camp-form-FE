@@ -10,6 +10,7 @@ import AdminColumnFilter from './adminColumnFilter';
 import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../config/index';
+import Loading from '../../../components/Loading';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
@@ -704,14 +705,7 @@ const AdminTable = () => {
       </Modal>
       {showScrollButton && <Icons className="scroll-to-top" typeIcon="arrow-top" onClick={scrollToTop} iconSize={30} />}
 
-      {loading && (
-        <div className="overlay">
-          <div className="spinner-container">
-            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-            <span>Carregando dados</span>
-          </div>
-        </div>
-      )}
+      <Loading loading={loading} />
     </Container>
   );
 };

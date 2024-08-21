@@ -5,6 +5,7 @@ import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../config/index';
+import Loading from '../../../components/Loading';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -250,14 +251,7 @@ const AdminCoupon = () => {
         </Modal.Footer>
       </Modal>
 
-      {loading && (
-        <div className="overlay">
-          <div className="spinner-container">
-            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-            <span>Carregando dados</span>
-          </div>
-        </div>
-      )}
+      <Loading loading={loading} />
     </Container>
   );
 };
