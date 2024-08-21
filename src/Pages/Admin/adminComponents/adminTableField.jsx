@@ -1,5 +1,5 @@
-import React from 'react';
 import { Form, Col } from 'react-bootstrap';
+import Icons from '../../../components/Icons';
 
 const AdminTableField = ({
   type,
@@ -11,21 +11,31 @@ const AdminTableField = ({
   addForm,
   options = [],
   disabled = false,
+  formSubmitted,
+  oddOrEven,
+  errorMessage,
+  missingFields,
 }) => {
+  const isFieldMissing = missingFields.includes(name);
+
   return (
     <Col md={12} lg={4} className="mb-3">
       <Form.Group>
         <b>
-          <Form.Label>{label}:</Form.Label>
+          <Form.Label>
+            {label}: {isFieldMissing && <span className="text-danger">*</span>}
+          </Form.Label>
         </b>
         {type === 'select' ? (
-          <Form.Control
-            as="select"
+          <Form.Select
             name={name}
+            size="lg"
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
+            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
+              formSubmitted && isFieldMissing && 'msg-error'
+            } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
           >
             <option value="" disabled selected>
               {placeholder}
@@ -35,17 +45,25 @@ const AdminTableField = ({
                 {option.label}
               </option>
             ))}
-          </Form.Control>
+          </Form.Select>
         ) : (
           <Form.Control
             type={type}
             name={name}
             value={value}
             onChange={onChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'}`}
+            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
+              formSubmitted && isFieldMissing && 'msg-error'
+            } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
             placeholder={placeholder}
             disabled={disabled}
           />
+        )}
+        {formSubmitted && isFieldMissing && (
+          <div className="invalid-feedback d-block">
+            {errorMessage}&nbsp;
+            <Icons typeIcon="error" iconSize={25} fill="#c92432" />
+          </div>
         )}
       </Form.Group>
     </Col>
