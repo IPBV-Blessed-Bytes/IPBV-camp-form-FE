@@ -56,33 +56,80 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col md={formValues.extraMeals.totalPrice ? 5 : 6} className="fw-bold">
+                    <Col
+                      md={formValues.extraMeals.totalPrice || formValues.package.discountCoupon ? 5 : 6}
+                      className={`fw-bold ${
+                        !(formValues.extraMeals.totalPrice || formValues.package.discountCoupon) ? 'mb-3' : ''
+                      }`}
+                    >
                       <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
-                        Nome - {formValues.package.accomodation.name} <br />
-                        Acomodação - {formValues.package.accomodation.subAccomodation}
+                        Nome = {formValues.package.accomodation.name} <br />
+                        Acomodação = {formValues.package.accomodation.subAccomodation}
                         <br />
-                        Preço - R$ {formValues.package.finalPrice},00
+                        Preço = R$ {formValues.package.finalPrice},00
                       </Card.Text>
                     </Col>
-                    {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && (
-                      <Col md={4} className="fw-bold">
+                    <Col md={4} className="fw-bold">
+                      {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && (
                         <Card.Text>
                           <span className="form-review__section-title">Alimentação Extra:</span>
                           <br />
                           R$ {formValues.extraMeals.totalPrice},00
                         </Card.Text>
-                      </Col>
-                    )}
-                    <Col md={formValues.extraMeals.totalPrice ? 3 : 6} className="fw-bold">
+                      )}
+                      {formValues.package.discountCoupon && (
+                        <Card.Text>
+                          <span className="form-review__section-title">Cupom:</span>
+                          <br />
+                          {formValues.package.discountCoupon} | R$ {formValues.package.discountValue},00
+                        </Card.Text>
+                      )}
+                    </Col>
+                    <Col
+                      md={formValues.extraMeals.totalPrice || formValues.package.discountCoupon ? 3 : 6}
+                      className="fw-bold"
+                    >
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
                         <br />
-                        R$ {formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0)},00
+                        <em>R$ {formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0)},00</em>
                       </Card.Text>
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+                  {(formValues.contact.needRide === true || formValues.contact.needRide === '') && (
+                    <>
+                      <Row className="row-gap">
+                        {formValues.contact.car === true && (
+                          <>
+                            <Col md={6} className="fw-bold">
+                              <Card.Text>
+                                <span className="form-review__section-title">Vai de carro e pode oferecer carona:</span>{' '}
+                                <br />
+                                {formValues.contact.car === true && 'Sim'}
+                              </Card.Text>
+                            </Col>
+                            <Col md={6} className="fw-bold">
+                              <Card.Text>
+                                <span className="form-review__section-title">Vagas de Carona:</span> <br />
+                                {formValues.contact.numberVacancies}
+                              </Card.Text>
+                            </Col>
+                          </>
+                        )}
+                        {formValues.contact.needRide === true && (
+                          <Col md={6} className="fw-bold">
+                            <Card.Text>
+                              <span className="form-review__section-title">Precisa de Carona:</span> <br />
+                              {formValues.contact.needRide === true && 'Sim'}
+                            </Card.Text>
+                          </Col>
+                        )}
+                      </Row>
+                      <div className="packages-horizontal-line" />
+                    </>
+                  )}
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
