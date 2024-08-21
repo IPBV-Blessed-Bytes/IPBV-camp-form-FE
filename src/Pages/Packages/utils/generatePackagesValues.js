@@ -1,12 +1,13 @@
-const packageSchool = ({ age, withTransportation }) => {
+const packageSchool = ({ age, withTransportation, withFood }) => {
   const accomodation = [0];
-  let food = [300];
+  const fixedRate = [50];
+  let food = withFood ? [300] : [0];
   let transportation = withTransportation ? [190] : [0];
 
   let foodDiscountDescription = '';
   let transportationDiscountDescription = '';
 
-  //Alimentação
+  // Alimentação
   if (age <= 6) {
     food = [300, 0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
@@ -15,7 +16,7 @@ const packageSchool = ({ age, withTransportation }) => {
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
-  //Transporte
+  // Transporte
   if (age <= 6) {
     transportation = withTransportation ? [190, 0] : [0];
     transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
@@ -26,7 +27,8 @@ const packageSchool = ({ age, withTransportation }) => {
   const foodValue = food.length > 1 ? food[1] : food[0];
   const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodation[0] + foodValue + transportationValue;
+  const totalWithoutFixedRate = accomodation[0] + foodValue + transportationValue;
+  const total = !withFood ? totalWithoutFixedRate + fixedRate[0] : totalWithoutFixedRate;
 
   return {
     accomodation,
@@ -37,19 +39,21 @@ const packageSchool = ({ age, withTransportation }) => {
       food: foodDiscountDescription,
       transportation: transportationDiscountDescription,
     },
+    fixedRate,
   };
 };
 
-const packageSeminary = ({ age, withTransportation }) => {
+const packageSeminary = ({ age, withTransportation, withFood }) => {
   let accomodation = [527];
-  let food = [208];
+  const fixedRate = [50];
+  let food = withFood ? [208] : [0];
   let transportation = withTransportation ? [190] : [0];
 
   let foodDiscountDescription = '';
   let transportationDiscountDescription = '';
   let accomodationDiscountDescription = '';
 
-  //Alimentação
+  // Alimentação
   if (age <= 6) {
     food = [208, 0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
@@ -58,13 +62,13 @@ const packageSeminary = ({ age, withTransportation }) => {
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
-  //Transporte
+  // Transporte
   if (age <= 6) {
     transportation = withTransportation ? [190, 0] : [0];
     transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
   }
 
-  //Hospedagem
+  // Hospedagem
   if (age <= 8) {
     accomodation = [527, 0];
     accomodationDiscountDescription = 'Criança até 8 anos não paga hospedagem';
@@ -77,7 +81,8 @@ const packageSeminary = ({ age, withTransportation }) => {
   const foodValue = food.length > 1 ? food[1] : food[0];
   const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodationValue + foodValue + transportationValue;
+  const totalWithoutFixedRate = accomodationValue + foodValue + transportationValue;
+  const total = !withFood ? totalWithoutFixedRate + fixedRate[0] : totalWithoutFixedRate;
 
   return {
     total,
@@ -92,16 +97,17 @@ const packageSeminary = ({ age, withTransportation }) => {
   };
 };
 
-const packageOther = ({ age, withTransportation }) => {
+const packageOther = ({ age, withTransportation, withFood }) => {
   let accomodation = [0];
-  let food = [208];
+  const fixedRate = [50];
+  let food = withFood ? [208] : [0];
   let transportation = withTransportation ? [190] : [0];
 
   let foodDiscountDescription = '';
   let transportationDiscountDescription = '';
   let accomodationDiscountDescription = '';
 
-  //Alimentação
+  // Alimentação
   if (age <= 6) {
     food = [208, 0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
@@ -110,23 +116,24 @@ const packageOther = ({ age, withTransportation }) => {
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
-  //Transporte
+  // Transporte
   if (age <= 6) {
     transportation = withTransportation ? [190, 0] : [0];
     transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
   }
 
-  //Hospedagem
+  // Hospedagem
   if (age <= 10) {
     accomodation = [0, 0];
     accomodationDiscountDescription = 'Criança até 10 anos não paga hospedagem';
-  } 
+  }
 
   const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
   const foodValue = food.length > 1 ? food[1] : food[0];
   const transportationValue = transportation.length > 1 ? transportation[1] : transportation[0];
 
-  const total = accomodationValue + foodValue + transportationValue;
+  const totalWithoutFixedRate = accomodationValue + foodValue + transportationValue;
+  const total = !withFood ? totalWithoutFixedRate + fixedRate[0] : totalWithoutFixedRate;
 
   return {
     total,
@@ -141,61 +148,29 @@ const packageOther = ({ age, withTransportation }) => {
   };
 };
 
-const packageNonPaid = ({ age }) => {
-  let accomodation = [50];
-  let food = [0];
-  let transportation = [0];
-
-  let foodDiscountDescription = '';
-  let transportationDiscountDescription = '';
-  let accomodationDiscountDescription = '';
-
-  //Hospedagem
-  if (age <= 10) {
-    accomodation = [50, 0];
-    accomodationDiscountDescription = 'Criança até 10 anos não paga hospedagem';
+const generatePackagesValues = (type, age) => {
+  switch (type) {
+    case 'school':
+      return [
+        packageSchool({ age, withTransportation: true, withFood: true }),
+        packageSchool({ age, withTransportation: false, withFood: false }),
+        packageSchool({ age, withTransportation: true, withFood: false }),
+        packageSchool({ age, withTransportation: false, withFood: true }),
+      ];
+    case 'seminary':
+      return [
+        packageSeminary({ age, withTransportation: true, withFood: true }),
+        packageSeminary({ age, withTransportation: false, withFood: true }),
+      ];
+    case 'other':
+      return [
+        packageOther({ age, withTransportation: true, withFood: true }),
+        packageOther({ age, withTransportation: false, withFood: true }),
+        packageOther({ age, withTransportation: false, withFood: false }),
+      ];
+    default:
+      return [];
   }
-
-  const accomodationValue = accomodation.length > 1 ? accomodation[1] : accomodation[0];
-  const foodValue = food[0];
-  const transportationValue = transportation[0];
-
-  const total = accomodationValue + foodValue + transportationValue;
-
-  return {
-    total,
-    accomodation,
-    food,
-    transportation,
-    discountDescription: {
-      food: foodDiscountDescription,
-      transportation: transportationDiscountDescription,
-      accomodation: accomodationDiscountDescription,
-    },
-  };
-};
-
-const packagesBundles = {
-  school: packageSchool,
-  seminary: packageSeminary,
-  other: packageOther,
-  nonPaid: packageNonPaid,
-};
-
-const generatePackagesValues = (packageType, age) => {
-  const packageBundle = packagesBundles[packageType];
-
-  const packageWithBuss = packageBundle({
-    age,
-    withTransportation: true,
-  });
-
-  const packageWithoutBuss = packageBundle({
-    age,
-    withTransportation: false,
-  });
-
-  return [packageWithBuss, packageWithoutBuss];
 };
 
 export default generatePackagesValues;
