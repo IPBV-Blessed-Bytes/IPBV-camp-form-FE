@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
 import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../../config/index';
+import fetcher from '../../../fetchers/fetcherWithCredentials'
 import Loading from '../../../components/Loading';
 
 const AdminCoupon = () => {
@@ -23,7 +22,7 @@ const AdminCoupon = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/cupom`);
+      const response = await fetcher.get('cupom');
 
       setCoupons(response.data.coupons);
     } catch (error) {
@@ -35,7 +34,7 @@ const AdminCoupon = () => {
 
   const handleCreateCoupon = async () => {
     try {
-      await axios.post(`${BASE_URL}/cupom`, {
+      await fetcher.post('cupom', {
         ...newCoupon,
         id: Date.now().toString(),
         used: false,
@@ -50,7 +49,7 @@ const AdminCoupon = () => {
 
   const handleEditCoupon = async () => {
     try {
-      await axios.put(`${BASE_URL}/cupom/${editingCoupon.id}`, editingCoupon);
+      await fetcher.put(`cupom/${editingCoupon.id}`, editingCoupon);
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
@@ -68,7 +67,7 @@ const AdminCoupon = () => {
         used: true,
         user: '',
       };
-      await axios.delete(`${BASE_URL}/cupom/${id}`, { data: requestBody });
+      await fetcher.delete(`cupom/${id}`, { data: requestBody });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();

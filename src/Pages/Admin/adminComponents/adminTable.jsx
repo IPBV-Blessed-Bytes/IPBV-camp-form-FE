@@ -3,14 +3,13 @@ import { Container, Row, Button, Form, Modal, Col, Table } from 'react-bootstrap
 import { useTable, useFilters, useSortBy } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
 import Icons from '../../../components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
 import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../../config/index';
 import Loading from '../../../components/Loading';
+import fetcher from '../../../fetchers/fetcherWithCredentials'
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
@@ -44,7 +43,7 @@ const AdminTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/acampante`);
+      const response = await fetcher.get('acampante');
       if (Array.isArray(response.data.content)) {
         setData(response.data.content);
       } else {
@@ -71,7 +70,7 @@ const AdminTable = () => {
 
   const handleSaveEdit = async () => {
     try {
-      await axios.put(`${BASE_URL}/acampante/${editFormData.id}`, editFormData);
+      await fetcher.put(`acampante/${editFormData.id}`, editFormData);
       setFormSubmitted(true);
       const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
       setData(newData);
@@ -140,7 +139,7 @@ const AdminTable = () => {
     };
 
     try {
-      await axios.post(`${BASE_URL}/acampante`, updatedFormValues);
+      await fetcher.post('acampante', updatedFormValues);
       setFormSubmitted(true);
       fetchData();
       setShowAddModal(false);
@@ -171,7 +170,7 @@ const AdminTable = () => {
   const handleConfirmDeleteAll = async () => {
     try {
       const idsToDelete = selectedRows.map((index) => data[index].id);
-      await Promise.all(idsToDelete.map((id) => axios.delete(`${BASE_URL}/acampante/${id}`)));
+      await Promise.all(idsToDelete.map((id) => fetcher.delete(`acampante/${id}`)));
       const newData = data.filter((_, index) => !selectedRows.includes(index));
       setData(newData);
       setSelectedRows([]);
@@ -184,7 +183,7 @@ const AdminTable = () => {
   const handleConfirmDeleteSpecific = async () => {
     try {
       const itemToDelete = data[editRowIndex];
-      await axios.delete(`${BASE_URL}/acampante/${itemToDelete.id}`);
+      await fetcher.delete(`acampante/${itemToDelete.id}`);
       const newData = data.filter((_, index) => index !== editRowIndex);
       setData(newData);
       setEditRowIndex(null);
