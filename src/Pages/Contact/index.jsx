@@ -76,7 +76,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             </Row>
             <Row>
               <Col md={8} className="mb-3">
-                <Form.Group className="mb-3">
+                <Form.Group>
                   <Form.Label>Email:</Form.Label>
                   <Form.Control
                     isInvalid={!!errors.email}
@@ -89,7 +89,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 </Form.Group>
               </Col>
               <Col md={4} className="mb-3">
-                <Form.Group className="mb-3">
+                <Form.Group>
                   <Form.Label>Igreja:</Form.Label>
                   <Form.Select
                     id="church"
@@ -109,15 +109,28 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
             </Row>
             <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3 info-text-wrapper">
+              <Col md={6} className="mb-3">
+                <Form.Group className="info-text-wrapper">
                   <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
-                  <Form.Select id="car" name="car" isInvalid={!!errors.car} value={values.car} onChange={handleChange}>
+                  <Form.Select
+                    id="car"
+                    name="car"
+                    isInvalid={!!errors.car}
+                    value={values.car}
+                    onChange={(event) =>
+                      handleChange({
+                        target: {
+                          name: 'car',
+                          value: event.target.value === 'true',
+                        },
+                      })
+                    }
+                  >
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
-                    <option value="sim">Sim</option>
-                    <option value="nao">Não</option>
+                    <option value={true}>Sim</option>
+                    <option value={false}>Não</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.car}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
@@ -126,9 +139,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 </Form.Group>
               </Col>
 
-              {values.car === 'sim' ? (
-                <Col md={6}>
-                  <Form.Group className="mb-3">
+              {values.car === true ? (
+                <Col md={6} className="mb-3">
+                  <Form.Group>
                     <Form.Label>Quantas vagas?</Form.Label>
                     <Form.Select
                       id="numberVacancies"
@@ -150,22 +163,29 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <Form.Control.Feedback type="invalid">{errors.numberVacancies}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              ) : values.car === 'nao' ? (
-                <Col md={6}>
-                  <Form.Group className="mb-3">
+              ) : values.car === false ? (
+                <Col md={6} className="mb-3">
+                  <Form.Group>
                     <Form.Label>Precisa de carona?</Form.Label>
                     <Form.Select
                       id="needRide"
                       name="needRide"
                       isInvalid={!!errors.needRide}
                       value={values.needRide}
-                      onChange={handleChange}
+                      onChange={(event) =>
+                        handleChange({
+                          target: {
+                            name: 'needRide',
+                            value: event.target.value === 'true',
+                          },
+                        })
+                      }
                     >
                       <option value="" disabled>
                         Selecione uma opção
                       </option>
-                      <option value="sim">Sim</option>
-                      <option value="nao">Não</option>
+                      <option value={true}>Sim</option>
+                      <option value={false}>Não</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
                   </Form.Group>
@@ -175,18 +195,13 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               )}
             </Row>
 
-            {(values.car === 'sim' || (values.car === 'nao' && values.needRide === 'sim')) && (
-              <Row className="mb-3">
-                <Col>
+            {(values.car || values.needRide) && (
+              <Row>
+                <Col className="mb-3">
                   <FormGroup>
                     <FormLabel>
                       Deseja fazer alguma observação sobre a carona{' '}
-                      {values.car === 'sim'
-                        ? 'oferecida'
-                        : values.car === 'nao' && values.needRide === 'sim'
-                        ? 'requisitada'
-                        : ''}
-                      ?
+                      {values.car ? 'oferecida' : !values.car && values.needRide ? 'requisitada' : ''}?
                     </FormLabel>
                     <Form.Control
                       as="textarea"
@@ -201,8 +216,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Row>
             )}
 
-            <Row className="mb-3">
-              <Col md={values.hasAllergy ? 6 : 6}>
+            <Row>
+              <Col md={values.hasAllergy ? 6 : 6} className="mb-3">
                 <FormGroup>
                   <FormLabel>Você possui algum tipo de alergia?</FormLabel>
                   <Form.Select
@@ -228,7 +243,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
 
               {values.hasAllergy && (
-                <Col md={values.hasAllergy ? 6 : 6}>
+                <Col md={values.hasAllergy ? 6 : 6} className="mb-3">
                   <FormGroup>
                     <FormLabel>Descreva as suas alergias aqui:</FormLabel>
                     <Form.Control
@@ -246,7 +261,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               )}
             </Row>
             <Row>
-              <Col md={values.hasAggregate ? 6 : 6}>
+              <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
                 <FormGroup className="info-text-wrapper">
                   <FormLabel>Você possui algum agregado?</FormLabel>
                   <Form.Select
@@ -276,7 +291,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
 
               {values.hasAggregate && (
-                <Col md={values.hasAggregate ? 6 : 6}>
+                <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
                   <FormGroup>
                     <FormLabel>Nos informe quem são seus agregados:</FormLabel>
                     <Form.Control
