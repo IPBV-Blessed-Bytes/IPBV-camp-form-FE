@@ -24,6 +24,7 @@ const AdminTable = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const now = new Date();
@@ -50,6 +51,8 @@ const AdminTable = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,7 +81,7 @@ const AdminTable = () => {
   };
 
   const handleFormChange = (e, formType) => {
-    const { name, value } = e.target; 
+    const { name, value } = e.target;
     const keys = name.split('.');
 
     const booleanValue =
@@ -700,6 +703,15 @@ const AdminTable = () => {
         </Modal.Footer>
       </Modal>
       {showScrollButton && <Icons className="scroll-to-top" typeIcon="arrow-top" onClick={scrollToTop} iconSize={30} />}
+
+      {loading && (
+        <div className="overlay">
+          <div className="spinner-container">
+            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            <span>Carregando dados</span>
+          </div>
+        </div>
+      )}
     </Container>
   );
 };
