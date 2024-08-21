@@ -29,8 +29,18 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
     fetchPackages();
   }, []);
 
+  const scrollUp = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleLogin = () => {
     login(loginData.login, loginData.password);
+
+    scrollUp();
+
+    setTimeout(() => {
+      setLoginData({ username: '', password: '' });
+    }, 1500);
   };
 
   const handleKeyDown = (e) => {
