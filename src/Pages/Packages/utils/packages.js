@@ -6,12 +6,14 @@ const OTHER = 'Outra Acomodação Externa';
 
 export const accommodations = [XV_NOVEMBRO, SEMINARIO, OTHER];
 
-const getPackages = (age, discount) => {
+const getPackages = (age) => {
   const [schoolWithBusWithFood, schoolWithoutBusWithoutFood, schoolWithBusWithoutFood, schoolWithoutBusWithFood] =
-    generatePackagesValues('school', age, discount);
-  const [seminaryWithBusWithFood, seminaryWithoutBusWithFood] = generatePackagesValues('seminary', age, discount);
-  const [otherWithBusWithFood, otherWithoutBusWithFood] = generatePackagesValues('other', age, discount);
-  const [nonPaid] = generatePackagesValues('nonPaid', age);
+    generatePackagesValues('school', age);
+  const [seminaryWithBusWithFood, seminaryWithoutBusWithFood] = generatePackagesValues('seminary', age);
+  const [otherWithBusWithFood, otherWithoutBusWithFood, otherWithoutBusWithoutFood] = generatePackagesValues(
+    'other',
+    age,
+  );
 
   const packages = [
     {
@@ -152,7 +154,7 @@ const getPackages = (age, discount) => {
       observation:
         '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO. ',
       observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
-      values: { ...nonPaid },
+      values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioCampingSemOnibusSemAlimentacao',
         name: XV_NOVEMBRO,
@@ -218,8 +220,8 @@ const getPackages = (age, discount) => {
       observation:
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
       observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
-      values: { ...nonPaid },
-      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Externa' },
+      values: { ...otherWithoutBusWithoutFood },
+      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Outra' },
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },

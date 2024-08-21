@@ -239,7 +239,7 @@ const FormPackages = ({
 
                           const [food, foodWithDiscount] = cards.values.food;
                           const hasFoodWithDiscount = typeof foodWithDiscount === 'number';
-
+                          const [fixedRate] = cards.values.fixedRate || [0];
                           const [transportation, transportationWithDiscount] = cards.values.transportation;
                           const hasTransportationDiscount = typeof transportationWithDiscount === 'number';
 
@@ -326,10 +326,14 @@ const FormPackages = ({
                                 usedValidPackagesPath?.seminarioIndividualSemOnibusComAlimentacao,
                             },
                             13: {
-                              outro: usedValidPackagesPath?.outroComOnibusComAlimentacao + usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                              outro:
+                                usedValidPackagesPath?.outroComOnibusComAlimentacao +
+                                usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
                             },
                             14: {
-                              outro: usedValidPackagesPath?.outroComOnibusComAlimentacao + usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                              outro:
+                                usedValidPackagesPath?.outroComOnibusComAlimentacao +
+                                usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
                             },
                             15: {
                               usuarioSemCusto: usedValidPackagesPath?.usuarioSemCusto,
@@ -369,6 +373,17 @@ const FormPackages = ({
                                       </span>
                                     </p>
 
+                                    {food === 0 && (
+                                      <>
+                                        <div className="package-description-container">
+                                          <span className="text-warning initialism">Taxa de Manutenção:&nbsp;</span>
+                                          <div>
+                                            <div className="text-warning">{formatCurrency(fixedRate)}</div>
+                                          </div>
+                                        </div>
+                                        <div className="packages-horizontal-line"></div>
+                                      </>
+                                    )}
                                     <div className="package-description-container">
                                       <span>Hospedagem:</span>
                                       <div>
@@ -420,13 +435,13 @@ const FormPackages = ({
                                         <u className={`card-text ${hasDiscount ? 'price-with-discount' : ''}`}>
                                           {formatCurrency(cards.values.total)}
                                         </u>
+                                        {hasDiscount && (
+                                          <u className="card-text">
+                                            <b>*Valor com desconto = ${finalPrice}</b>
+                                          </u>
+                                        )}
                                       </em>
                                     </div>
-                                    {hasDiscount && (
-                                      <span className="card-text discount-coupon">
-                                        <b>*Valor com desconto = R${finalPrice}</b>
-                                      </span>
-                                    )}
                                     {!isPackageAvailable && (
                                       <div className="package-description-container justify-content-end">
                                         <span className="no-vacancy text-danger text-decoration-underline mt-3">
