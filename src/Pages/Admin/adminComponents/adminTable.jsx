@@ -23,7 +23,14 @@ const AdminTable = () => {
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const navigate = useNavigate();
+
+  const now = new Date();
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const year = now.getFullYear();
+  const currentDate = `${day}/${month}/${year}`;
 
   useEffect(() => {
     fetchData();
@@ -61,6 +68,7 @@ const AdminTable = () => {
   const handleSaveEdit = async () => {
     try {
       await axios.put(`${BASE_URL}/acampante/${editFormData.id}`, editFormData);
+      setFormSubmitted(true);
       const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
       setData(newData);
       setShowEditModal(false);
@@ -70,8 +78,16 @@ const AdminTable = () => {
   };
 
   const handleFormChange = (e, formType) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     const keys = name.split('.');
+
+    const booleanValue =
+      name === 'extraMeals.someFood' ||
+      name === 'contact.car' ||
+      name === 'contact.needRide' ||
+      name === 'contact.isWhatsApp'
+        ? value === 'true'
+        : value;
 
     const updateState = (setter) => {
       setter((prevData) => {
@@ -82,8 +98,8 @@ const AdminTable = () => {
             [parentKey]: {
               ...prevData[parentKey],
               [childKey]: {
-                ...prevData[parentKey][childKey],
-                [grandChildKey]: value,
+                ...prevData[parentKey]?.[childKey],
+                [grandChildKey]: booleanValue,
               },
             },
           };
@@ -93,13 +109,13 @@ const AdminTable = () => {
             ...prevData,
             [parentKey]: {
               ...prevData[parentKey],
-              [childKey]: value,
+              [childKey]: booleanValue,
             },
           };
         } else {
           return {
             ...prevData,
-            [name]: value,
+            [name]: booleanValue,
           };
         }
       });
@@ -114,12 +130,14 @@ const AdminTable = () => {
 
   const handleAddSubmit = async () => {
     const updatedFormValues = {
-      ...addFormData,
       manualRegistration: true,
+      registrationDate: currentDate,
+      ...addFormData,
     };
 
     try {
       await axios.post(`${BASE_URL}/acampante`, updatedFormValues);
+      setFormSubmitted(true);
       fetchData();
       setShowAddModal(false);
       setAddFormData({});
@@ -227,12 +245,6 @@ const AdminTable = () => {
         sortType: alphabeticalSort,
       },
       {
-        Header: 'Observação:',
-        accessor: 'observation',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
         Header: 'Pagamento:',
         accessor: 'formPayment.formPayment',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -241,24 +253,6 @@ const AdminTable = () => {
       {
         Header: 'Igreja:',
         accessor: 'contact.church',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
-        Header: 'Precisa de Carona:',
-        accessor: 'contact.needRide',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
-        Header: 'Vagas de Carona:',
-        accessor: 'contact.numberVacancies',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
-        Header: 'Data de Inscrição:',
-        accessor: 'registrationDate',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
@@ -293,6 +287,38 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
+        Header: 'Vai de Carro:',
+        accessor: 'contact.car',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+      },
+      {
+        Header: 'Precisa de Carona:',
+        accessor: 'contact.needRide',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+      },
+      {
+        Header: 'Vagas de Carona:',
+        accessor: 'contact.numberVacancies',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Observação de Carona:',
+        accessor: 'contact.rideObservation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Data de Inscrição:',
+        accessor: 'registrationDate',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
         Header: 'Categoria:',
         accessor: 'personalInformation.gender',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -309,6 +335,7 @@ const AdminTable = () => {
         accessor: 'contact.isWhatsApp',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
       },
       {
         Header: 'Email:',
@@ -319,6 +346,12 @@ const AdminTable = () => {
       {
         Header: 'Preço:',
         accessor: 'totalPrice',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Cupom:',
+        accessor: 'package.discountCoupon',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
@@ -347,14 +380,33 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
+        Header: 'Transporte:',
+        accessor: 'package.transportation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
         Header: 'Alimentação:',
         accessor: 'package.food',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Transporte:',
-        accessor: 'package.transportation',
+        Header: 'Alimentação Extra:',
+        accessor: 'extraMeals.someFood',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+      },
+      {
+        Header: 'Dias de Alimentação Extra:',
+        accessor: 'extraMeals.extraMeals',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Observação:',
+        accessor: 'observation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
@@ -581,6 +633,8 @@ const AdminTable = () => {
             <AdminTableColumns
               editFormData={editFormData}
               handleFormChange={(e) => handleFormChange(e, 'edit')}
+              formSubmitted={formSubmitted}
+              currentDate={currentDate}
               editForm
             />
           </Form>
@@ -603,7 +657,13 @@ const AdminTable = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <AdminTableColumns addFormData={addFormData} handleFormChange={(e) => handleFormChange(e, 'add')} addForm />
+            <AdminTableColumns
+              addFormData={addFormData}
+              handleFormChange={(e) => handleFormChange(e, 'add')}
+              formSubmitted={formSubmitted}
+              currentDate={currentDate}
+              addForm
+            />
           </Form>
         </Modal.Body>
         <Modal.Footer>
