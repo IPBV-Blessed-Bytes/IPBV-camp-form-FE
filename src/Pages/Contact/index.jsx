@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { FormGroup, FormLabel, Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
 import { additionalInformationSchema } from '../../form/validations/schema';
@@ -27,7 +27,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             <Row>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Telefone:</Form.Label>
+                  <Form.Label>
+                    <b>Telefone:</b>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     as={InputMask}
@@ -50,7 +52,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>É WhatsApp?</Form.Label>
+                  <Form.Label>
+                    <b>É WhatsApp?</b>
+                  </Form.Label>
                   <Form.Select
                     name="isWhatsApp"
                     isInvalid={!!errors.isWhatsApp}
@@ -77,7 +81,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             <Row>
               <Col md={8} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Email:</Form.Label>
+                  <Form.Label>
+                    <b>Email:</b>
+                  </Form.Label>
                   <Form.Control
                     isInvalid={!!errors.email}
                     type="email"
@@ -90,7 +96,9 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
               <Col md={4} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Igreja:</Form.Label>
+                  <Form.Label>
+                    <b>Igreja:</b>
+                  </Form.Label>
                   <Form.Select
                     id="church"
                     name="church"
@@ -109,9 +117,11 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
             </Row>
             <Row>
-              <Col md={6} className="mb-3">
+              <Col md={8} className="mb-3">
                 <Form.Group className="info-text-wrapper">
-                  <Form.Label>Vai de carro e possui vagas de carona?</Form.Label>
+                  <Form.Label>
+                    <b>Vai de carro e possui vagas de carona?</b>
+                  </Form.Label>
                   <Form.Select
                     id="car"
                     name="car"
@@ -140,9 +150,11 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
 
               {values.car === true ? (
-                <Col md={6} className="mb-3">
+                <Col md={4} className="mb-3">
                   <Form.Group>
-                    <Form.Label>Quantas vagas?</Form.Label>
+                    <Form.Label>
+                      <b>Quantas vagas?</b>
+                    </Form.Label>
                     <Form.Select
                       id="numberVacancies"
                       name="numberVacancies"
@@ -164,9 +176,11 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   </Form.Group>
                 </Col>
               ) : values.car === false ? (
-                <Col md={6} className="mb-3">
+                <Col md={4} className="mb-3">
                   <Form.Group>
-                    <Form.Label>Precisa de carona?</Form.Label>
+                    <Form.Label>
+                      <b>Precisa de carona?</b>
+                    </Form.Label>
                     <Form.Select
                       id="needRide"
                       name="needRide"
@@ -198,11 +212,13 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
             {(values.car || values.needRide) && (
               <Row>
                 <Col className="mb-3">
-                  <FormGroup>
-                    <FormLabel>
-                      Deseja fazer alguma observação sobre a carona{' '}
-                      {values.car ? 'oferecida' : !values.car && values.needRide ? 'requisitada' : ''}?
-                    </FormLabel>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>
+                        Deseja fazer alguma observação sobre a carona{' '}
+                        {values.car ? 'oferecida' : !values.car && values.needRide ? 'requisitada' : ''}?
+                      </b>
+                    </Form.Label>
                     <Form.Control
                       as="textarea"
                       name="rideObservation"
@@ -211,15 +227,17 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       onChange={handleChange}
                       style={{ resize: 'none' }}
                     />
-                  </FormGroup>
+                  </Form.Group>
                 </Col>
               </Row>
             )}
 
             <Row>
               <Col md={values.hasAllergy ? 6 : 6} className="mb-3">
-                <FormGroup>
-                  <FormLabel>Você possui algum tipo de alergia?</FormLabel>
+                <Form.Group>
+                  <Form.Label>
+                    <b>Você possui algum tipo de alergia?</b>
+                  </Form.Label>
                   <Form.Select
                     id="hasAllergy"
                     name="hasAllergy"
@@ -239,13 +257,15 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <option value={true}>Sim</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.hasAllergy}</Form.Control.Feedback>
-                </FormGroup>
+                </Form.Group>
               </Col>
 
               {values.hasAllergy && (
                 <Col md={values.hasAllergy ? 6 : 6} className="mb-3">
-                  <FormGroup>
-                    <FormLabel>Descreva as suas alergias aqui:</FormLabel>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Descreva as suas alergias aqui:</b>
+                    </Form.Label>
                     <Form.Control
                       isInvalid={!!errors.allergy}
                       as="textarea"
@@ -256,14 +276,16 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       style={{ resize: 'none' }}
                     />
                     <Form.Control.Feedback type="invalid">{errors.allergy}</Form.Control.Feedback>
-                  </FormGroup>
+                  </Form.Group>
                 </Col>
               )}
             </Row>
             <Row>
               <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
-                <FormGroup className="info-text-wrapper">
-                  <FormLabel>Você possui algum agregado?</FormLabel>
+                <Form.Group className="info-text-wrapper">
+                  <Form.Label>
+                    <b>Você possui algum agregado?</b>
+                  </Form.Label>
                   <Form.Select
                     id="hasAggregate"
                     name="hasAggregate"
@@ -287,13 +309,15 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
                     etc).
                   </Card.Text>
-                </FormGroup>
+                </Form.Group>
               </Col>
 
               {values.hasAggregate && (
                 <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
-                  <FormGroup>
-                    <FormLabel>Nos informe quem são seus agregados:</FormLabel>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Nos informe quem são seus agregados:</b>
+                    </Form.Label>
                     <Form.Control
                       isInvalid={!!errors.aggregate}
                       as="textarea"
@@ -304,7 +328,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       style={{ resize: 'none' }}
                     />
                     <Form.Control.Feedback type="invalid">{errors.aggregate}</Form.Control.Feedback>
-                  </FormGroup>
+                  </Form.Group>
                 </Col>
               )}
             </Row>
