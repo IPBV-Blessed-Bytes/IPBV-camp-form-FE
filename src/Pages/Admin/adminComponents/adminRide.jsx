@@ -4,11 +4,11 @@ import { Form, Container, Accordion, Table, Row, Col, Button } from 'react-boots
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '../../../components/Icons';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
-import { BASE_URL } from '../../../config/index';
 import Loading from '../../../components/Loading';
+import fetcher from '../../../fetchers/fetcherWithCredentials'
+
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -19,8 +19,8 @@ const AdminRide = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await axios.get(`${BASE_URL}/carona/oferece`);
-        const needRideResponse = await axios.get(`${BASE_URL}/carona/precisa`);
+        const rideResponse = await fetcher.get(`carona/oferece`);
+        const needRideResponse = await fetcher.get(`carona/precisa`);
 
         setRideData({
           offerRide: rideResponse.data,
@@ -38,7 +38,7 @@ const AdminRide = () => {
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
-      await axios.patch(`${BASE_URL}/carona/${id}`, { checked });
+      await fetcher.patch(`carona/${id}`, { checked });
 
       setRideData((prevData) => ({
         ...prevData,
