@@ -139,8 +139,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
-                    <option value={true}>Sim</option>
                     <option value={false}>Não</option>
+                    <option value={true}>Sim</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.car}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
@@ -198,8 +198,8 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       <option value="" disabled>
                         Selecione uma opção
                       </option>
-                      <option value={true}>Sim</option>
                       <option value={false}>Não</option>
+                      <option value={true}>Sim</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
                   </Form.Group>
