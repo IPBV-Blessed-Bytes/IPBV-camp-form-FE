@@ -35,9 +35,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
             Informe seus dados pessoais, pois eles são essenciais para a administração de sua inscrição.
           </Card.Text>
           <Form>
-            <Row className="mb-3">
-              <Col md={8}>
-                <Form.Group className="mb-3">
+            <Row>
+              <Col md={8} className="mb-3">
+                <Form.Group>
                   <Form.Label>Nome Completo:</Form.Label>
                   <Form.Control
                     type="text"
@@ -49,8 +49,8 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                   <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={4}>
-                <Form.Group className="mb-3">
+              <Col md={4} className="mb-3">
+                <Form.Group>
                   <Form.Label>Categoria de Acampante:</Form.Label>
                   <Form.Select
                     isInvalid={!!errors.gender}
@@ -71,8 +71,8 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
               </Col>
             </Row>
 
-            <Row className="mb-3">
-              <Col md={4}>
+            <Row>
+              <Col md={4} className="mb-3">
                 <Form.Group>
                   <Form.Label>Data de Nascimento:</Form.Label>
                   <Form.Control
@@ -105,7 +105,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                 </Form.Group>
               </Col>
 
-              <Col md={4}>
+              <Col md={4} className="mb-3">
                 <Form.Group>
                   <Form.Label>CPF:</Form.Label>
                   <Form.Control
@@ -131,7 +131,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                 </Form.Group>
               </Col>
 
-              <Col md={4}>
+              <Col md={4} className="mb-3">
                 <Form.Group>
                   <Form.Label>RG:</Form.Label>
                   <Form.Control
@@ -155,47 +155,51 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
               </Col>
             </Row>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Órgão Expedidor RG:</Form.Label>
-              <Form.Select
-                isInvalid={!!errors.rgShipper}
-                value={values.rgShipper}
-                name="rgShipper"
-                id="rgShipper"
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Selecione uma opção
-                </option>
-                {rgShipper.map((org) => (
-                  <option key={org.value} value={org.value}>
-                    {org.label}
+            <Col md={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>Órgão Expedidor RG:</Form.Label>
+                <Form.Select
+                  isInvalid={!!errors.rgShipper}
+                  value={values.rgShipper}
+                  name="rgShipper"
+                  id="rgShipper"
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Selecione uma opção
                   </option>
-                ))}
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">{errors.rgShipper}</Form.Control.Feedback>
-            </Form.Group>
+                  {rgShipper.map((org) => (
+                    <option key={org.value} value={org.value}>
+                      {org.label}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">{errors.rgShipper}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
 
-            <Form.Group>
-              <Form.Label>Estado de emissão órgão Expedidor:</Form.Label>
-              <Form.Select
-                value={values.rgShipperState}
-                isInvalid={!!errors.rgShipperState}
-                name="rgShipperState"
-                id="rgShipperState"
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Selecione uma opção
-                </option>
-                {issuingState.map((orgState) => (
-                  <option key={orgState.value} value={orgState.value}>
-                    {orgState.label}
+            <Col md={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>Estado de emissão órgão Expedidor:</Form.Label>
+                <Form.Select
+                  value={values.rgShipperState}
+                  isInvalid={!!errors.rgShipperState}
+                  name="rgShipperState"
+                  id="rgShipperState"
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Selecione uma opção
                   </option>
-                ))}
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">{errors.rgShipperState}</Form.Control.Feedback>
-            </Form.Group>
+                  {issuingState.map((orgState) => (
+                    <option key={orgState.value} value={orgState.value}>
+                      {orgState.label}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">{errors.rgShipperState}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
           </Form>
         </Container>
       </Card.Body>
