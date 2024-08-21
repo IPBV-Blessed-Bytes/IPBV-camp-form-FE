@@ -5,9 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import AdminLoggedOut from './adminComponents/adminLoggedOut';
 import AdminLoggedIn from './adminComponents/adminLoggedIn';
-import privateFetcher from '../../fetchers/fetcherWithCredentials';
 import useAuth from '../../hooks/useAuth';
-import { BASE_URL } from '../../config/index';
 
 const AdminHome = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
@@ -19,15 +17,6 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
     username: '',
     password: '',
   });
-
-  useEffect(() => {
-    const fetchPackages = async () => {
-      const response = await privateFetcher.get(`${BASE_URL}/package-count`);
-      setAvailablePackages(response.data);
-    };
-
-    fetchPackages();
-  }, []);
 
   const scrollUp = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

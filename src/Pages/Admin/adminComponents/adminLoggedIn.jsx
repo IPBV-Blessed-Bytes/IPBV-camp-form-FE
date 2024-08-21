@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AdminPackageCard from './adminPackageCard';
 import AdminExternalLinkRow from './adminExternalLinkRow';
+import privateFetcher from '../../../fetchers/fetcherWithCredentials';
+import { BASE_URL } from '../../../config/index';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -16,6 +19,7 @@ const AdminLoggedIn = ({
   totalNonPaied,
   totalVacanciesWithBuses,
 }) => {
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const splitedUsername = loggedInUsername.split('@')[0];
 
@@ -30,6 +34,21 @@ const AdminLoggedIn = ({
   const handleCouponsClick = () => {
     navigate('/admin/cupom');
   };
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
+        setAvailablePackages(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar os pacotes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   return (
     <>
@@ -200,6 +219,15 @@ const AdminLoggedIn = ({
           </li>
         </ul>
       </div>
+
+      {loading && (
+        <div className="overlay">
+          <div className="spinner-container">
+            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            <span>Carregando dados</span>
+          </div>
+        </div>
+      )}
 
       <Row>
         <AdminExternalLinkRow />
