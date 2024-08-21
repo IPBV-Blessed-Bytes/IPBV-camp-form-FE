@@ -13,16 +13,14 @@ import Loading from '../../../components/Loading';
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
-  const rideApiUrl = 'endpointurl';
-  const needRideApiUrl = 'endpointurl';
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await axios.get(rideApiUrl);
-        const needRideResponse = await axios.get(needRideApiUrl);
+        const rideResponse = await axios.get(`${BASE_URL}/carona/oferece`);
+        const needRideResponse = await axios.get(`${BASE_URL}/carona/precisa`);
 
         setRideData({
           offerRide: rideResponse.data,
@@ -40,8 +38,7 @@ const AdminRide = () => {
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
-      const apiUrl = type === 'offerRide' ? rideApiUrl : needRideApiUrl;
-      await axios.patch(`${apiUrl}/${id}`, { checked });
+      await axios.patch(`${BASE_URL}/carona/${id}`, { checked });
 
       setRideData((prevData) => ({
         ...prevData,
