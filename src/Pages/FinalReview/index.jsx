@@ -98,7 +98,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
-                  {(formValues.contact.needRide === true || formValues.contact.needRide === '') && (
+                  {(formValues.contact.car === true || formValues.contact.needRide === true) && (
                     <>
                       <Row className="row-gap">
                         {formValues.contact.car === true && (
