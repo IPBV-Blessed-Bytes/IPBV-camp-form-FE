@@ -8,6 +8,7 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
 import { BASE_URL } from '../../../config/index';
+import Loading from '../../../components/Loading';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -201,14 +202,7 @@ const AdminRide = () => {
         </Accordion.Body>
       </Accordion>
 
-      {loading && (
-        <div className="overlay">
-          <div className="spinner-container">
-            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-            <span>Carregando dados</span>
-          </div>
-        </div>
-      )}
+      <Loading loading={loading} />
     </Container>
   );
 };

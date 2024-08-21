@@ -7,6 +7,7 @@ import AdminPackageCard from './adminPackageCard';
 import AdminExternalLinkRow from './adminExternalLinkRow';
 import privateFetcher from '../../../fetchers/fetcherWithCredentials';
 import { BASE_URL } from '../../../config/index';
+import Loading from '../../../components/Loading';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -220,15 +221,8 @@ const AdminLoggedIn = ({
         </ul>
       </div>
 
-      {loading && (
-        <div className="overlay">
-          <div className="spinner-container">
-            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-            <span>Carregando dados</span>
-          </div>
-        </div>
-      )}
-
+      <Loading loading={loading} />
+      
       <Row>
         <AdminExternalLinkRow />
       </Row>

@@ -9,6 +9,7 @@ import Footer from '../../components/Footer';
 import FormRoutes from '../Routes';
 import { chooseWaySchema } from '../../form/validations/schema';
 import CpfReview from '../CpfReview';
+import Loading from '../../components/Loading';
 
 const initialValues = {
   personalInformation: {
@@ -224,14 +225,8 @@ const ChooseWay = () => {
 
                   {showAnotherScreen && (
                     <>
-                      {loading && (
-                        <div className="overlay">
-                          <div className="spinner-container">
-                            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-                            <span>Carregando dados</span>
-                          </div>
-                        </div>
-                      )}
+                      <Loading loading={loading} />
+
                       {showCpfField && (
                         <>
                           <Row className="text-center mb-5">
@@ -243,11 +238,12 @@ const ChooseWay = () => {
                             <div className="choose-way-info-text--danger">
                               OBS: Ao escolher o tipo de pagamento, inserir o CPF e avançar, um novo link de pagamento
                               online será gerado automaticamente se sua inscrição for validada (já existindo e com
-                              status de pagamento pendente). Certifique-se de clicar em &apos;Avançar&apos; apenas quando estiver
-                              pronto para efetuar o pagamento, pois o sistema excluirá automaticamente sua inscrição se
-                              você avançar sem concluir o pagamento, com um prazo máximo de 15 minutos para expiração do
-                              link. Além disso, assegure-se de escolher corretamente o tipo de pagamento, pois não será
-                              permitido retornar para realizar alterações após clicar em Avançar.
+                              status de pagamento pendente). Certifique-se de clicar em &apos;Avançar&apos; apenas
+                              quando estiver pronto para efetuar o pagamento, pois o sistema excluirá automaticamente
+                              sua inscrição se você avançar sem concluir o pagamento, com um prazo máximo de 15 minutos
+                              para expiração do link. Além disso, assegure-se de escolher corretamente o tipo de
+                              pagamento, pois não será permitido retornar para realizar alterações após clicar em
+                              Avançar.
                             </div>
                           </Row>
                           <Row className="justify-content-center align-items-center mb-4">
