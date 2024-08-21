@@ -31,7 +31,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
 
   return (
     <Card className="form__container__general-height">
-      <Card.Body>
+      <Card.Body className='choose-form-payment-custom-padding'>
         {spinnerLoading && (
           <div className="overlay">
             <div className="spinner-container">

@@ -262,12 +262,7 @@ body {
 
     .react-datepicker-wrapper,
     .cpf-container {
-      margin-bottom: 1em;
       width: 100%;
-
-      @media (min-width: $md) {
-        margin-bottom: unset;
-      }
     }
 
     .cellphone-container {
@@ -440,7 +435,7 @@ a:not(.form-success__button, .mail-to) {
   input {
     border-color: $red;
   }
-  
+
   label {
     color: $red;
   }
@@ -817,4 +812,25 @@ button.btn.btn-outline-danger:hover svg {
 
 .custom-new-registration::placeholder {
   opacity: 0.5;
+}
+
+.admin-field {
+  &--odd {
+    background-color: $intense-green-light;
+  }
+
+  &--even {
+    background-color: $light-green;
+  }
+}
+
+.form-check-input {
+  border: 1px solid $black;
+  box-shadow:
+    2px 6px 8px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.choose-form-payment-custom-padding {
+  padding: 1.875rem !important;
 }
