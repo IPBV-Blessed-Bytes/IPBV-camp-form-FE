@@ -49,13 +49,14 @@ const FormPackages = ({
 
   const handleCouponChange = async () => {
     try {
-      const response = await axios.get(`${API_URL}/coupons`);
-      const coupons = response.data;
+      const response = await axios.get(`${BASE_URL}/cupom`);
+      const coupons = response.data.coupons;
       const validCoupon = coupons.find((coupon) => coupon.code === discountCoupon && !coupon.used);
       if (validCoupon) {
-        await axios.put(`${API_URL}/coupons/${validCoupon.id}`, {
+        await axios.put(`${BASE_URL}/cupom/${validCoupon.id}`, {
           ...validCoupon,
           used: true,
+          user: formUsername,
         });
 
         setDiscountValue(validCoupon.discount);
@@ -87,7 +88,7 @@ const FormPackages = ({
     setSelectedPackage(selectedPackage);
 
     const { accomodation, transportation, food, values, title } = selectedPackage;
-   
+
     updateForm({
       price: values.total,
       discountCoupon: discountCoupon,
