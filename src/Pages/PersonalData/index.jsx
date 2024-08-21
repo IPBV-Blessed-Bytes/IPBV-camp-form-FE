@@ -36,9 +36,11 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
           </Card.Text>
           <Form>
             <Row>
-              <Col md={8} className="mb-3">
+              <Col md={7} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Nome Completo:</Form.Label>
+                  <Form.Label>
+                    <b>Nome Completo:</b>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     id="name"
@@ -49,9 +51,11 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                   <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={4} className="mb-3">
+              <Col md={5} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Categoria de Acampante:</Form.Label>
+                  <Form.Label>
+                    <b>Categoria de Acampante:</b>
+                  </Form.Label>
                   <Form.Select
                     isInvalid={!!errors.gender}
                     value={values.gender}
@@ -74,7 +78,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
             <Row>
               <Col md={4} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Data de Nascimento:</Form.Label>
+                  <Form.Label>
+                    <b>Data de Nascimento:</b>
+                  </Form.Label>
                   <Form.Control
                     isInvalid={!!errors.birthday}
                     as={DatePicker}
@@ -107,7 +113,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
 
               <Col md={4} className="mb-3">
                 <Form.Group>
-                  <Form.Label>CPF:</Form.Label>
+                  <Form.Label>
+                    <b>CPF:</b>
+                  </Form.Label>
                   <Form.Control
                     as={InputMask}
                     isInvalid={!!errors.cpf}
@@ -133,7 +141,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
 
               <Col md={4} className="mb-3">
                 <Form.Group>
-                  <Form.Label>RG:</Form.Label>
+                  <Form.Label>
+                    <b>RG:</b>
+                  </Form.Label>
                   <Form.Control
                     isInvalid={!!errors.rg}
                     id="rg"
@@ -157,7 +167,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
 
             <Col md={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Órgão Expedidor RG:</Form.Label>
+                <Form.Label>
+                  <b>Órgão Expedidor RG:</b>
+                </Form.Label>
                 <Form.Select
                   isInvalid={!!errors.rgShipper}
                   value={values.rgShipper}
@@ -180,7 +192,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
 
             <Col md={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Estado de emissão órgão Expedidor:</Form.Label>
+                <Form.Label>
+                  <b>Estado de emissão órgão Expedidor:</b>
+                </Form.Label>
                 <Form.Select
                   value={values.rgShipperState}
                   isInvalid={!!errors.rgShipperState}
