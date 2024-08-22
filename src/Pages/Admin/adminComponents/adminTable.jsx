@@ -9,7 +9,9 @@ import AdminColumnFilter from './adminColumnFilter';
 import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../../components/Loading';
-import fetcher from '../../../fetchers/fetcherWithCredentials'
+import fetcher from '../../../fetchers/fetcherWithCredentials';
+import { toast } from 'react-toastify';
+import { initialValues } from '../../../Pages/Routes/constants';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
@@ -68,18 +70,6 @@ const AdminTable = () => {
     setShowDeleteModal(true);
   };
 
-  const handleSaveEdit = async () => {
-    try {
-      await fetcher.put(`acampante/${editFormData.id}`, editFormData);
-      setFormSubmitted(true);
-      const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
-      setData(newData);
-      setShowEditModal(false);
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
-  };
-
   const handleFormChange = (e, formType) => {
     const { name, value } = e.target;
     const keys = name.split('.');
@@ -131,21 +121,69 @@ const AdminTable = () => {
     }
   };
 
-  const handleAddSubmit = async () => {
+  const sanitizeFields = (data, template) => {
+    const result = {};
+    for (const key in template) {
+      if (template[key] && typeof template[key] === 'object' && !Array.isArray(template[key])) {
+        result[key] = sanitizeFields(data[key] || {}, template[key]);
+      } else if (Array.isArray(data[key])) {
+        result[key] = data[key].join(', ');
+      } else {
+        result[key] = data[key] !== undefined && data[key] !== null ? data[key] : '';
+      }
+    }
+    return result;
+  };
+
+  const handleSaveEdit = async () => {
+    const sanitizedFormData = sanitizeFields(editFormData, initialValues);
+
     const updatedFormValues = {
-      manualRegistration: true,
-      registrationDate: currentDate,
-      ...addFormData,
+      id: editFormData.id,
+      ...sanitizedFormData,
     };
 
     try {
-      await fetcher.post('acampante', updatedFormValues);
-      setFormSubmitted(true);
-      fetchData();
-      setShowAddModal(false);
-      setAddFormData({});
+      const response = await fetcher.put(`acampante/${editFormData.id}`, updatedFormValues);
+      if (response.status === 200) {
+        toast.success('Inscrição alterada com sucesso');
+        setFormSubmitted(true);
+        const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
+        setData(newData);
+        setShowEditModal(false);
+      } else {
+        toast.error('Erro ao editar a inscrição. Verifique os dados e tente novamente');
+      }
+    } catch (error) {
+      console.error('Error updating data:', error);
+      toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
+    }
+  };
+
+  const handleAddSubmit = async () => {
+    const sanitizedFormData = sanitizeFields(addFormData, initialValues);
+
+    const updatedFormValues = {
+      manualRegistration: true,
+      registrationDate: currentDate,
+      ...sanitizedFormData,
+    };
+
+    try {
+      const response = await fetcher.post('acampante', updatedFormValues);
+
+      if (response.status === 200) {
+        toast.success('Inscrição criada com sucesso');
+        setFormSubmitted(true);
+        fetchData();
+        setShowAddModal(false);
+        setAddFormData({});
+      } else {
+        toast.error('Erro ao criar a inscrição. Verifique os dados e tente novamente');
+      }
     } catch (error) {
       console.error('Error adding data:', error);
+      toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
     }
   };
 
