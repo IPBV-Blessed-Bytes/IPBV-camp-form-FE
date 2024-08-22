@@ -22,7 +22,7 @@ const AdminCoupon = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await fetcher.get('cupom');
+      const response = await fetcher.get('coupon');
 
       setCoupons(response.data.coupons);
     } catch (error) {
@@ -34,7 +34,7 @@ const AdminCoupon = () => {
 
   const handleCreateCoupon = async () => {
     try {
-      await fetcher.post('cupom', {
+      await fetcher.post('coupon', {
         ...newCoupon,
         id: Date.now().toString(),
         used: false,
@@ -49,7 +49,7 @@ const AdminCoupon = () => {
 
   const handleEditCoupon = async () => {
     try {
-      await fetcher.put(`cupom/${editingCoupon.id}`, editingCoupon);
+      await fetcher.put(`coupon/${editingCoupon.id}`, editingCoupon);
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
@@ -67,7 +67,7 @@ const AdminCoupon = () => {
         used: true,
         user: '',
       };
-      await fetcher.delete(`cupom/${id}`, { data: requestBody });
+      await fetcher.delete(`coupon/${id}`, { data: requestBody });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();

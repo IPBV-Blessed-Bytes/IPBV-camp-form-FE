@@ -45,7 +45,7 @@ const AdminTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetcher.get('acampante');
+      const response = await fetcher.get('camper');
       if (Array.isArray(response.data.content)) {
         setData(response.data.content);
       } else {
@@ -144,7 +144,7 @@ const AdminTable = () => {
     };
 
     try {
-      const response = await fetcher.put(`acampante/${editFormData.id}`, updatedFormValues);
+      const response = await fetcher.put(`camper/${editFormData.id}`, updatedFormValues);
       if (response.status === 200) {
         toast.success('Inscrição alterada com sucesso');
         setFormSubmitted(true);
@@ -170,7 +170,7 @@ const AdminTable = () => {
     };
 
     try {
-      const response = await fetcher.post('acampante', updatedFormValues);
+      const response = await fetcher.post('camper', updatedFormValues);
 
       if (response.status === 200) {
         toast.success('Inscrição criada com sucesso');
@@ -208,7 +208,7 @@ const AdminTable = () => {
   const handleConfirmDeleteAll = async () => {
     try {
       const idsToDelete = selectedRows.map((index) => data[index].id);
-      await Promise.all(idsToDelete.map((id) => fetcher.delete(`acampante/${id}`)));
+      await Promise.all(idsToDelete.map((id) => fetcher.delete(`camper/${id}`)));
       const newData = data.filter((_, index) => !selectedRows.includes(index));
       setData(newData);
       setSelectedRows([]);
@@ -221,7 +221,7 @@ const AdminTable = () => {
   const handleConfirmDeleteSpecific = async () => {
     try {
       const itemToDelete = data[editRowIndex];
-      await fetcher.delete(`acampante/${itemToDelete.id}`);
+      await fetcher.delete(`camper/${itemToDelete.id}`);
       const newData = data.filter((_, index) => index !== editRowIndex);
       setData(newData);
       setEditRowIndex(null);
