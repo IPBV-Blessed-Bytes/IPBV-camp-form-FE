@@ -14,16 +14,16 @@ const AdminTableField = ({
   formSubmitted,
   oddOrEven,
   errorMessage,
-  missingFields,
+  required,
 }) => {
-  const isFieldMissing = missingFields.includes(name);
+  const isFieldMissing = required && formSubmitted && !value;
 
   return (
     <Col md={12} lg={4} className="mb-3">
       <Form.Group>
         <b>
           <Form.Label>
-            {label}: {isFieldMissing && <span className="text-danger">*</span>}
+            {label}: {required && <span className="text-danger">*</span>}
           </Form.Label>
         </b>
         {type === 'select' ? (
@@ -38,7 +38,7 @@ const AdminTableField = ({
             } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
           >
             <option value="" disabled selected>
-              {placeholder}
+              {addForm ? placeholder : 'Selecione uma opção'}
             </option>
             {options.map((option, index) => (
               <option key={index} value={option.value}>

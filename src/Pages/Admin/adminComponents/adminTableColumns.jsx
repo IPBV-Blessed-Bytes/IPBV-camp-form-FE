@@ -277,7 +277,7 @@ const AdminTableColumns = ({
               : addFormData[field.name.split('.')[0]]?.[field.name.split('.')[1]]
           }
           onChange={handleFormChange}
-          placeholder={addForm ? (field.placeholder ? field.placeholder : 'Selecione uma opção') : ''}
+          placeholder={addForm ? field.placeholder : ''}
           addForm={addForm}
           disabled={field.disabled || false}
           options={field.options || []}
