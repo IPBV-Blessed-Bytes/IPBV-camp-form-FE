@@ -251,7 +251,7 @@ const AdminTable = () => {
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length}
               />
-              &nbsp; Todos:
+              &nbsp;Selecionar Todos
             </span>
           </div>
         ),
