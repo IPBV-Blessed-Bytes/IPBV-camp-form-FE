@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
 import Loading from '../../../components/Loading';
-import fetcher from '../../../fetchers/fetcherWithCredentials'
-
+import fetcher from '../../../fetchers/fetcherWithCredentials';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -19,8 +18,8 @@ const AdminRide = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await fetcher.get(`carona/oferece`);
-        const needRideResponse = await fetcher.get(`carona/precisa`);
+        const rideResponse = await fetcher.get(`ride/offer`);
+        const needRideResponse = await fetcher.get(`ride/need`);
 
         setRideData({
           offerRide: rideResponse.data,
@@ -38,7 +37,7 @@ const AdminRide = () => {
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
-      await fetcher.patch(`carona/${id}`, { checked });
+      await fetcher.patch(`ride/${id}`, { checked });
 
       setRideData((prevData) => ({
         ...prevData,
