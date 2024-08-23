@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Form, Col } from 'react-bootstrap';
 import Icons from '../../../components/Icons';
+import DatePicker from 'react-datepicker';
+import ptBR from 'date-fns/locale/pt';
+import { format, parse } from 'date-fns';
 
 const AdminTableField = ({
   type,
@@ -26,6 +29,20 @@ const AdminTableField = ({
       setShowError(false);
     }
   }, [formSubmitted, value, required]);
+
+  const handleDateChange = (date) => {
+    const formattedDate = format(date, 'dd/MM/yyyy');
+    onChange({
+      target: {
+        name,
+        value: formattedDate,
+      },
+    });
+  };
+
+  const parseDate = (value) => {
+    return value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+  };
 
   return (
     <Col md={12} lg={4} className="mb-3">
@@ -55,18 +72,37 @@ const AdminTableField = ({
               </option>
             ))}
           </Form.Select>
-        ) : (
-          <Form.Control
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
+        ) : type === 'date' ? (
+          <DatePicker
+            selected={parseDate(value)}
+            onChange={handleDateChange}
+            className={`form-control form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
               showError && 'msg-error'
             } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
-            placeholder={placeholder}
+            placeholderText={placeholder}
             disabled={disabled}
+            locale={ptBR}
+            autoComplete="off"
+            dateFormat="dd/MM/yyyy"
+            dropdownMode="select"
+            maxDate={new Date()}
+            showMonthDropdown
+            showYearDropdown
           />
+        ) : (
+          <>
+            <Form.Control
+              type={type}
+              name={name}
+              value={value}
+              onChange={onChange}
+              className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
+                showError && 'msg-error'
+              } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
+              placeholder={placeholder}
+              disabled={disabled}
+            />
+          </>
         )}
         {showError && (
           <div className="invalid-feedback d-block">
