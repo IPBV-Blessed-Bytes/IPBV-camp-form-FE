@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminTableField from './adminTableField';
-import { packages } from '../../../Pages/Routes/constants';
+import { packages, issuingState, rgShipper, food } from '../../../Pages/Routes/constants';
 
 const AdminTableColumns = ({
   addFormData,
@@ -63,8 +63,8 @@ const AdminTableColumns = ({
     {
       label: 'Nascimento',
       name: 'personalInformation.birthday',
-      type: 'text',
-      placeholder: '01/01/1990',
+      type: 'date',
+      placeholder: 'dd/mm/aaaa',
       oddOrEven: 'odd',
       required: true,
       errorMessage: 'Insira uma data de nascimento válida no formato (00/00/0000)',
@@ -82,16 +82,18 @@ const AdminTableColumns = ({
     {
       label: 'Órgão Expedidor',
       name: 'personalInformation.rgShipper',
-      type: 'text',
-      placeholder: 'SDS',
+      type: 'select',
+      placeholder: 'Selecione uma secretaria',
       oddOrEven: 'even',
+      options: rgShipper,
     },
     {
       label: 'Estado Expedidor',
       name: 'personalInformation.rgShipperState',
-      type: 'text',
-      placeholder: 'PE',
+      type: 'select',
+      placeholder: 'Selecione um estado',
       oddOrEven: 'odd',
+      options: issuingState,
     },
     {
       label: 'Vai de Carro',
@@ -199,9 +201,10 @@ const AdminTableColumns = ({
     {
       label: 'Alimentação',
       name: 'package.food',
-      type: 'text',
-      placeholder: 'Café da manhã, almoço e jantar; Almoço e jantar ou Sem Alimentação',
+      type: 'select',
+      placeholder: 'Selecione a alimentação',
       oddOrEven: 'odd',
+      options: food,
     },
     {
       label: 'Alimentação Extra',
