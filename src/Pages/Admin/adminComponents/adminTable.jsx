@@ -155,9 +155,10 @@ const AdminTable = () => {
         toast.error('Erro ao editar a inscrição. Verifique os dados e tente novamente');
       }
     } catch (error) {
+      setFormSubmitted(true);
       console.error('Error updating data:', error);
       toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
-    }
+    } 
   };
 
   const handleAddSubmit = async () => {
@@ -182,9 +183,10 @@ const AdminTable = () => {
         toast.error('Erro ao criar a inscrição. Verifique os dados e tente novamente');
       }
     } catch (error) {
+      setFormSubmitted(true);
       console.error('Error adding data:', error);
       toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
-    }
+    } 
   };
 
   const handleCheckboxChange = (rowIndex) => {
@@ -590,7 +592,14 @@ const AdminTable = () => {
                 </span>
               </Button>
             )}
-            <Button onClick={() => setShowAddModal(true)} className="d-flex align-items-center d-lg-none" size="lg">
+            <Button
+              onClick={() => {
+                setShowAddModal(true);
+                setFormSubmitted(false);
+              }}
+              className="d-flex align-items-center d-lg-none"
+              size="lg"
+            >
               <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
               <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
             </Button>
@@ -599,7 +608,10 @@ const AdminTable = () => {
         <Col xl={3}>
           <div className="table-tools__right-buttons mb-3">
             <Button
-              onClick={() => setShowAddModal(true)}
+              onClick={() => {
+                setShowAddModal(true);
+                setFormSubmitted(false);
+              }}
               className="d-flex align-items-center d-none d-lg-flex"
               size="lg"
             >
