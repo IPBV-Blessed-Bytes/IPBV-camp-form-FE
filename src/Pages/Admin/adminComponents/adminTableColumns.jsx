@@ -157,16 +157,14 @@ const AdminTableColumns = ({
     },
     { label: 'Email', name: 'contact.email', type: 'text', placeholder: 'teste@teste.com', oddOrEven: 'even' },
     { label: 'Preço', name: 'totalPrice', type: 'number', placeholder: '500', oddOrEven: 'odd' },
-    { label: 'Cupom', name: 'package.discountCoupon', type: 'text', placeholder: 'NOMEDAPESSOA100', oddOrEven: 'even' },
-    { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias', oddOrEven: 'odd' },
-    { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'even' },
-    // ==================================================
+    { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias', oddOrEven: 'even' },
+    { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
     {
       label: 'Acomodação',
       name: 'package.accomodation.name',
       type: 'select',
       placeholder: 'Selecione a acomodação',
-      oddOrEven: 'odd',
+      oddOrEven: 'even',
       options: [
         { label: 'Colégio', value: 'Colégio' },
         { label: 'Seminário', value: 'Seminário' },
@@ -178,7 +176,7 @@ const AdminTableColumns = ({
       name: 'package.accomodation.subAccomodation',
       type: 'select',
       placeholder: 'Selecione a sub acomodação',
-      oddOrEven: 'even',
+      oddOrEven: 'odd',
       options: [
         { label: 'Colégio Individual', value: 'Colégio Individual' },
         { label: 'Colégio Família', value: 'Colégio Família' },
@@ -187,13 +185,12 @@ const AdminTableColumns = ({
         { label: 'Outra', value: 'Outra' },
       ],
     },
-    // ==================================================
     {
       label: 'Transporte',
       name: 'package.transportation',
       type: 'select',
       placeholder: 'Selecione tipo de transporte',
-      oddOrEven: 'odd',
+      oddOrEven: 'even',
       options: [
         { label: 'Com Ônibus', value: 'Com Ônibus' },
         { label: 'Sem Ônibus', value: 'Sem Ônibus' },
@@ -204,14 +201,14 @@ const AdminTableColumns = ({
       name: 'package.food',
       type: 'text',
       placeholder: 'Café da manhã, almoço e jantar; Almoço e jantar ou Sem Alimentação',
-      oddOrEven: 'even',
+      oddOrEven: 'odd',
     },
     {
       label: 'Alimentação Extra',
       name: 'extraMeals.someFood',
       type: 'select',
       placeholder: 'Selecione se terá alimentação extra',
-      oddOrEven: 'odd',
+      oddOrEven: 'even',
       options: [
         { label: 'Sim', value: true },
         { label: 'Não', value: false },
@@ -222,14 +219,14 @@ const AdminTableColumns = ({
       name: 'extraMeals.extraMeals',
       type: 'text',
       placeholder: 'Domingo, Segunda, Terça, etc.',
-      oddOrEven: 'even',
+      oddOrEven: 'odd',
     },
     {
       label: 'Observação',
       name: 'observation',
       type: 'text',
       placeholder: 'Observação sobre essa inscrição',
-      oddOrEven: 'odd',
+      oddOrEven: 'even',
     },
   ];
 
@@ -259,6 +256,7 @@ const AdminTableColumns = ({
     }
   }, [addFormData, editFormData]);
 
+  // console.log('field.required:',fields)
   return (
     <Row>
       {fields.map((field, index) => (
