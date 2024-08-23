@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
 import { personalInformationSchema } from '../../form/validations/schema';
-import { issuingState, rgShipper } from './data';
+import { issuingState, rgShipper } from '../Routes/constants';
 
 const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
   const { values, errors, handleChange, submitForm } = useFormik({
