@@ -136,6 +136,8 @@ const AdminTable = () => {
   };
 
   const handleSaveEdit = async () => {
+    setLoading(true);
+
     const sanitizedFormData = sanitizeFields(editFormData, initialValues);
 
     const updatedFormValues = {
@@ -158,10 +160,14 @@ const AdminTable = () => {
       setFormSubmitted(true);
       console.error('Error updating data:', error);
       toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
-    } 
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddSubmit = async () => {
+    setLoading(true);
+
     const sanitizedFormData = sanitizeFields(addFormData, initialValues);
 
     const updatedFormValues = {
@@ -186,7 +192,9 @@ const AdminTable = () => {
       setFormSubmitted(true);
       console.error('Error adding data:', error);
       toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
-    } 
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCheckboxChange = (rowIndex) => {
@@ -208,6 +216,8 @@ const AdminTable = () => {
   };
 
   const handleConfirmDeleteAll = async () => {
+    setLoading(true);
+
     try {
       const idsToDelete = selectedRows.map((index) => data[index].id);
       await Promise.all(idsToDelete.map((id) => fetcher.delete(`camper/${id}`)));
@@ -217,10 +227,14 @@ const AdminTable = () => {
       setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting selected data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleConfirmDeleteSpecific = async () => {
+    setLoading(true);
+
     try {
       const itemToDelete = data[editRowIndex];
       await fetcher.delete(`camper/${itemToDelete.id}`);
@@ -230,6 +244,8 @@ const AdminTable = () => {
       setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting specific data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

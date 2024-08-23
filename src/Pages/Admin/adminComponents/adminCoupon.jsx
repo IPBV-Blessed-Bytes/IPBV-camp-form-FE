@@ -3,7 +3,7 @@ import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap
 import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import fetcher from '../../../fetchers/fetcherWithCredentials'
+import fetcher from '../../../fetchers/fetcherWithCredentials';
 import Loading from '../../../components/Loading';
 
 const AdminCoupon = () => {
@@ -33,6 +33,8 @@ const AdminCoupon = () => {
   };
 
   const handleCreateCoupon = async () => {
+    setLoading(true);
+
     try {
       await fetcher.post('coupon', {
         ...newCoupon,
@@ -44,10 +46,14 @@ const AdminCoupon = () => {
       fetchCoupons();
     } catch (error) {
       toast.error('Erro ao criar cupom');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditCoupon = async () => {
+    setLoading(true);
+
     try {
       await fetcher.put(`coupon/${editingCoupon.id}`, editingCoupon);
       toast.success('Cupom atualizado com sucesso');
@@ -55,10 +61,14 @@ const AdminCoupon = () => {
       fetchCoupons();
     } catch (error) {
       toast.error('Erro ao atualizar cupom');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteCoupon = async (id) => {
+    setLoading(true);
+
     try {
       const requestBody = {
         id: id,
@@ -73,6 +83,8 @@ const AdminCoupon = () => {
       fetchCoupons();
     } catch (error) {
       toast.error('Erro ao excluir cupom');
+    } finally {
+      setLoading(false);
     }
   };
 
