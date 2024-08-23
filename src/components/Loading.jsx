@@ -7,7 +7,7 @@ const Loading = ({ loading }) => {
             <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
             <span>
               <b>
-                <em>Carregando dados</em>
+                <em>Processando dados</em>
               </b>
             </span>
           </div>
