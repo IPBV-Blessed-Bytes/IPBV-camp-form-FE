@@ -165,7 +165,7 @@ const AdminCoupon = () => {
               <tr key={coupon.id}>
                 <td>{coupon.code}</td>
                 <td>{coupon.discount}</td>
-                <td>{coupon.used ? 'Sim' : 'Não'}</td>
+                <td>{coupon.used ? <Icons typeIcon="checked" iconSize={30} fill="#65a300" /> : <Icons typeIcon="not-checked" iconSize={30} fill="#dc3545" />}</td>
                 <td>{coupon.user}</td>
                 <td>
                   <Button variant="outline-success" onClick={() => openModal(coupon)}>
