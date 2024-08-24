@@ -8,6 +8,7 @@ import AdminExternalLinkRow from './adminExternalLinkRow';
 import privateFetcher from '../../../fetchers/fetcherWithCredentials';
 import { BASE_URL } from '../../../config/index';
 import Loading from '../../../components/Loading';
+import Icons from '../../../components/Icons';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -53,21 +54,64 @@ const AdminLoggedIn = ({
 
   return (
     <>
-      <Row>
-        <Col xs={8} md={10}>
-          <Button variant="success" onClick={handleTableClick} className="mb-xs-3">
-            Tabela de Inscritos
-          </Button>
-          &nbsp;
-          <Button variant="warning" onClick={handleRideClick}>
-            Gerenciador de Caronas
-          </Button>
-          &nbsp;
-          <Button variant="primary" onClick={handleCouponsClick}>
-            Cupons de Desconto
-          </Button>
+      <Row className="mb-5 justify-content-center navigation-header">
+        <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Card className="h-100" onClick={handleTableClick}>
+            <Card.Body className="navigation-header__registered-card">
+              <Card.Title className="text-center mb-0">
+                <div className="navigation-header__registered-card__content-wrapper">
+                  <em>
+                    <b>Inscritos</b>
+                  </em>
+                  <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
+                </div>
+              </Card.Title>
+            </Card.Body>
+          </Card>
         </Col>
-        <Col xs={4} md={2} className="text-end mb-2">
+        <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Card className="h-100" onClick={handleRideClick}>
+            <Card.Body className="navigation-header__ride-card">
+              <Card.Title className="text-center mb-0">
+                <div className="navigation-header__ride-card__content-wrapper">
+                  <em>
+                    <b>Caronas</b>
+                  </em>
+                  <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
+                </div>
+              </Card.Title>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6} lg={3} className="mb-3 mb-md-0">
+          <Card className="h-100" onClick={handleCouponsClick}>
+            <Card.Body className="navigation-header__coupons-card">
+              <Card.Title className="text-center mb-0">
+                <div className="navigation-header__coupons-card__content-wrapper">
+                  <em>
+                    <b>Cupons</b>
+                  </em>
+                  <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                </div>
+              </Card.Title>
+            </Card.Body>
+          </Card>
+        </Col>
+        {/* <Col xs={12} md={6} lg={2}>
+          <Card className="h-100">
+            <Card.Body className="navigation-header__new-card">
+              <Card.Title className="text-center">
+                <div className="naviagion-header__new-card__content-wrapper">
+                  <em>
+                    <b>Novo Card</b>
+                  </em>
+                  <Icons typeIcon="add-person" iconSize={50} fill={'#204691'} />
+                </div>
+              </Card.Title>
+            </Card.Body>
+          </Card>
+        </Col> */}
+        <Col xs={12} md={12} lg={3} className="text-end mb-2 mt-3 mt-lg-0">
           <p>
             Bem vindo(a),
             <span>
@@ -106,9 +150,9 @@ const AdminLoggedIn = ({
           </Card>
         </Col>
         <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-light">
+          <Card className="h-100 bg-dark">
             <Card.Body>
-              <Card.Title className="fw-bold text-success">
+              <Card.Title className="fw-bold text-warning">
                 Total de Inscritos válidos <br />
                 (pagantes e não pagantes)
               </Card.Title>
@@ -149,9 +193,9 @@ const AdminLoggedIn = ({
           </Card>
         </Col>
         <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-light">
+          <Card className="h-100 bg-dark">
             <Card.Body>
-              <Card.Title className="fw-bold text-success">Total de Crianças</Card.Title>
+              <Card.Title className="fw-bold text-warning">Total de Crianças</Card.Title>
               <Card.Text>
                 Vagas Totais Preenchidas:{' '}
                 <em>
@@ -164,7 +208,7 @@ const AdminLoggedIn = ({
         <Col className="mb-4" xs={12} md={6} lg={4}>
           <Card className="h-100 bg-dark">
             <Card.Body>
-              <Card.Title className="fw-bold text-warning">Total de Não Pagantes (day use)</Card.Title>
+              <Card.Title className="fw-bold text-warning">Total de Não Pagantes</Card.Title>
               <Card.Text>
                 Vagas Totais Preenchidas:{' '}
                 <em>
@@ -201,10 +245,10 @@ const AdminLoggedIn = ({
           </li>
           <li>
             <em>
-              <b>Não Pagantes (day use)</b>
+              <b>Não Pagantes</b>
             </em>{' '}
-            : Pessoas que não irão dormir, comer ou se transportar no ônibus, apenas assistir aos cultos e(ou)
-            participar das programações
+            : Pessoas que não irão dormir, comer ou se transportar no ônibus, apenas assistir aos cultos e/ou participar
+            das programações
           </li>
           <li>
             <em>
@@ -222,7 +266,7 @@ const AdminLoggedIn = ({
       </div>
 
       <Loading loading={loading} />
-      
+
       <Row>
         <AdminExternalLinkRow />
       </Row>
