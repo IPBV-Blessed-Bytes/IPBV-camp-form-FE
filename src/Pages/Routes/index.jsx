@@ -113,10 +113,9 @@ const FormRoutes = () => {
       setStatus('loading');
       const updatedFormValues = {
         ...formValues,
-        registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        registrationDate: format(new Date(), 'dd/MM/yyyy'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
         manualRegistration: false,
-        observation: '',
       };
 
       const response = await axios.post(`${BASE_URL}/checkout/create`, updatedFormValues);
@@ -130,6 +129,7 @@ const FormRoutes = () => {
       }
     } catch (error) {
       setStatus('error');
+      toast.error('Ocorreu um erro');
     } finally {
       setLoading(false);
     }
