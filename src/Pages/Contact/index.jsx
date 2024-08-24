@@ -281,7 +281,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               )}
             </Row>
             <Row>
-              <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
+              <Col md={values.hasAggregate ? 5 : 6} className="mb-3">
                 <Form.Group className="info-text-wrapper">
                   <Form.Label>
                     <b>Você possui algum agregado?</b>
@@ -313,7 +313,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
 
               {values.hasAggregate && (
-                <Col md={values.hasAggregate ? 6 : 6} className="mb-3">
+                <Col md={values.hasAggregate ? 7 : 6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
                       <b>Nos informe quem são seus agregados:</b>
