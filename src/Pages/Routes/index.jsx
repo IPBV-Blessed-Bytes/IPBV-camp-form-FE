@@ -111,7 +111,7 @@ const FormRoutes = () => {
       setStatus('loading');
       const updatedFormValues = {
         ...formValues,
-        registrationDate: format(new Date(), 'dd/MM/yyyy'),
+        registrationDate: format(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
         manualRegistration: false,
       };
