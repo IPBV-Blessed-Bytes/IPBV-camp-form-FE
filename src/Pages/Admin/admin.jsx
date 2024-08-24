@@ -27,9 +27,11 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 
     scrollUp();
 
-    setTimeout(() => {
-      setLoginData({ username: '', password: '' });
-    }, 1500);
+    setLoginData((prevLoginData) => ({
+      ...prevLoginData,
+
+      password: '',
+    }));
   };
 
   const handleKeyDown = (e) => {
