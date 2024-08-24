@@ -54,6 +54,7 @@ export const initialValues = {
   extraMeals: {
     someFood: '',
     totalPrice: '',
+    extraMeals: [''],
   },
   formPayment: {
     formPayment: '',
