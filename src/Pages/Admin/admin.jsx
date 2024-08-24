@@ -11,6 +11,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [availablePackages, setAvailablePackages] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+
   const navigateTo = useNavigate();
   const { login, logout, user, isLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({
@@ -114,8 +115,8 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       'Colégio XV - Individual',
       'colegioIndividualComOnibus',
       'colegioIndividualSemOnibus',
-      'bg-dark',
-      'text-warning',
+      'bg-light',
+      'text-success',
     ),
     createCardData(
       'Colégio XV - Família',
@@ -128,8 +129,8 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
       'Colégio XV - Camping',
       'colegioCampingSemAlimentacao',
       'colegioCampingComAlimentacao',
-      'bg-dark',
-      'text-warning',
+      'bg-light',
+      'text-success',
     ),
     createCardData(
       'Seminário São José',

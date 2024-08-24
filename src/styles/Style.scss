@@ -391,6 +391,44 @@ body {
       border-color: $primary;
     }
   }
+
+  .navigation-header {
+    &__registered-card {
+      background-color: $turquoise;
+    }
+
+    &__ride-card {
+      background-color: $light-red;
+    }
+
+    &__coupons-card {
+      background-color: $intense-green-light;
+    }
+
+    &__new-card {
+      background-color: $light-yellow;
+    }
+
+    &__registered-card,
+    &__ride-card,
+    &__coupons-card,
+    &__new-card {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+
+      &:hover {
+        transform: scale(1.04);
+      }
+
+      &__content-wrapper {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+      }
+    }
+  }
 }
 
 // Style utility classes
