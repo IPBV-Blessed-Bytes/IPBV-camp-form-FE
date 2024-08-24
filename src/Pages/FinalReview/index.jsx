@@ -71,7 +71,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                       </Card.Text>
                     </Col>
                     <Col md={4} className="fw-bold">
-                      {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && (
+                      {((formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) && formValues.extraMeals.someFood) && (
                         <Card.Text>
                           <span className="form-review__section-title">Alimentação Extra:</span>
                           <br />
