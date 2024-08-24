@@ -60,13 +60,11 @@ const FormRoutes = () => {
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
-      if (formValues.package.food !== 'Sem Alimentação' || formValues.package.food !== '') {
-        setWithFood(true);
-      } else {
-        setWithFood(false);
-      }
+      const hasFood = formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '';
 
-      const shouldSkipToFinalReview = withFood && steps === enumSteps.packages;
+      setWithFood(hasFood);
+
+      const shouldSkipToFinalReview = hasFood && steps === enumSteps.packages;
 
       if (shouldSkipToFinalReview) {
         setSteps(enumSteps.finalReview);
@@ -179,13 +177,6 @@ const FormRoutes = () => {
     navigate('/admin');
   };
 
-  useEffect(() => {
-    if (formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '') {
-      setWithFood(true);
-    } else {
-      setWithFood(false);
-    }
-  }, [formValues.package.food]);
 
   return (
     <div className="form">

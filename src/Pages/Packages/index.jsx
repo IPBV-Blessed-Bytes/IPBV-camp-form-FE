@@ -81,11 +81,13 @@ const FormPackages = ({
   };
 
   const handleClick = (selectedPackage) => {
+    setSelectedPackage(null);
+
+    setSelectedPackage(selectedPackage);
+
     if (hasError) {
       setHasError(false);
     }
-
-    setSelectedPackage(selectedPackage);
 
     const { accomodation, transportation, food, values, title } = selectedPackage;
 
