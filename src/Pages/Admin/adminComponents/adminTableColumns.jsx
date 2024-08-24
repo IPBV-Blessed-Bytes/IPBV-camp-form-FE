@@ -259,7 +259,6 @@ const AdminTableColumns = ({
     }
   }, [addFormData, editFormData]);
 
-  // console.log('field.required:',fields)
   return (
     <Row>
       {fields.map((field, index) => (
