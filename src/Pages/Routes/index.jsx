@@ -23,7 +23,7 @@ import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '../../config/index';
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.packages);
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
