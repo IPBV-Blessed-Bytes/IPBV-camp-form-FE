@@ -117,13 +117,18 @@ const FormRoutes = () => {
       };
 
       const response = await axios.post(`${BASE_URL}/checkout/create`, updatedFormValues);
+      const checkoutUrl = response.data.payment_url;
+      const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
 
-      if (response.data.data.payment_url) {
-        window.open(response.data.data.payment_url, '_self');
+      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
+        window.open(checkoutUrl, '_self');
+        toast.success('Redirecionando para pagamento...');
       } else if (response.status === 201) {
         setFormSubmitted(true);
         toast.success('Inscrição validada com sucesso');
+      } else if (checkoutStatus === 'Checkout Error') {
+        toast.error('Erro ao criar checkout');
       }
     } catch (error) {
       setStatus('error');
