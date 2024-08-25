@@ -313,6 +313,8 @@ const AdminTable = () => {
         accessor: 'formPayment.formPayment',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) =>
+          value === 'creditCard' ? 'Cartão de Crédito' : value === 'pix' ? 'PIX' : 'Boleto Bancário',
       },
       {
         Header: 'Igreja:',
