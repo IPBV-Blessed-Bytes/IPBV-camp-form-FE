@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
+import Loading from '../../components/Loading';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
@@ -31,15 +32,8 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
 
   return (
     <Card className="form__container__general-height">
-      <Card.Body className='choose-form-payment-custom-padding'>
-        {spinnerLoading && (
-          <div className="overlay">
-            <div className="spinner-container">
-              <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-              <span>Carregando dados</span>
-            </div>
-          </div>
-        )}
+      <Card.Body className="choose-form-payment-custom-padding">
+        <Loading loading={spinnerLoading} />
         <Container>
           <Card.Title>Pagamento</Card.Title>
           <Form>
