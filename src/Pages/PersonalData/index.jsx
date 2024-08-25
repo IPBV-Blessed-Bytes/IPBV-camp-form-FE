@@ -1,3 +1,4 @@
+import { format, parse } from 'date-fns';
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
 import { cpf } from 'cpf-cnpj-validator';
@@ -24,6 +25,20 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const handleDateChange = (date) => {
+    const formattedDate = format(date, 'dd/MM/yyyy');
+    handleChange({
+      target: {
+        name: 'birthday',
+        value: formattedDate,
+      },
+    });
+  };
+
+  const parseDate = (value) => {
+    return value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+  };
 
   return (
     <Card className="form__container__general-height">
@@ -84,15 +99,8 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                   <Form.Control
                     isInvalid={!!errors.birthday}
                     as={DatePicker}
-                    selected={values.birthday}
-                    onChange={(date) =>
-                      handleChange({
-                        target: {
-                          name: 'birthday',
-                          value: date,
-                        },
-                      })
-                    }
+                    selected={parseDate(values.birthday)}
+                    onChange={handleDateChange}
                     locale={ptBR}
                     autoComplete="off"
                     dateFormat="dd/MM/yyyy"
