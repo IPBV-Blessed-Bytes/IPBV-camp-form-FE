@@ -252,7 +252,7 @@ FormPersonalData.propTypes = {
   updateForm: PropTypes.func,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
-    birthday: PropTypes.instanceOf(Date),
+    birthday: PropTypes.string,
     cpf: PropTypes.string,
     rg: PropTypes.string,
     rgShipper: PropTypes.string,
