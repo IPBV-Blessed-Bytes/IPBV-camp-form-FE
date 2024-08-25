@@ -1,4 +1,4 @@
-const Loading = ({ loading }) => {
+const Loading = ({ loading, messageText }) => {
   return (
     <>
       {loading && (
@@ -7,7 +7,7 @@ const Loading = ({ loading }) => {
             <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
             <span>
               <b>
-                <em>Processando dados</em>
+                <em>{messageText ? messageText : 'Processando dados'}</em>
               </b>
             </span>
           </div>
