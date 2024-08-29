@@ -1,6 +1,6 @@
 const packageSchool = ({ age, withTransportation, withFood }) => {
   const accomodation = [0];
-  const fixedRate = [50];
+  const fixedRate = age <= 12 ? [0] : [50];
   let food = withFood ? [300] : [0];
   let transportation = withTransportation ? [190] : [0];
 
@@ -45,7 +45,7 @@ const packageSchool = ({ age, withTransportation, withFood }) => {
 
 const packageSeminary = ({ age, withTransportation, withFood }) => {
   let accomodation = [527];
-  const fixedRate = [50];
+  const fixedRate = age <= 12 ? [0] : [50];
   let food = withFood ? [208] : [0];
   let transportation = withTransportation ? [190] : [0];
 
@@ -94,12 +94,13 @@ const packageSeminary = ({ age, withTransportation, withFood }) => {
       transportation: transportationDiscountDescription,
       accomodation: accomodationDiscountDescription,
     },
+    fixedRate,
   };
 };
 
 const packageOther = ({ age, withTransportation, withFood }) => {
   let accomodation = [0];
-  const fixedRate = [50];
+  const fixedRate = age <= 12 ? [0] : [50];
   let food = withFood ? [208] : [0];
   let transportation = withTransportation ? [190] : [0];
 
@@ -145,6 +146,7 @@ const packageOther = ({ age, withTransportation, withFood }) => {
       transportation: transportationDiscountDescription,
       accomodation: accomodationDiscountDescription,
     },
+    fixedRate,
   };
 };
 
