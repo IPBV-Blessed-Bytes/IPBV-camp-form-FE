@@ -49,7 +49,8 @@ const getPackages = (age) => {
       title: 'PACOTE 3 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA COM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation: '* Em salas de aula COM ônibus e SEM alimentação. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...schoolWithBusWithoutFood },
       accomodation: {
         id: 'colegioIndividualComOnibusSemAlimentacao',
@@ -64,7 +65,8 @@ const getPackages = (age) => {
       title: 'PACOTE 4 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA SEM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation: '* Em salas de aula SEM ônibus e SEM alimentação. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioIndividualSemOnibusSemAlimentacao',
@@ -107,7 +109,8 @@ const getPackages = (age) => {
       title: 'PACOTE 7 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL COM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation: '* Em salas de aula COM ônibus e SEM alimentação. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...schoolWithBusWithoutFood },
       accomodation: {
         id: 'colegioFamiliaComOnibusSemAlimentacao',
@@ -122,7 +125,8 @@ const getPackages = (age) => {
       title: 'PACOTE 8 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL SEM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation: '* Em salas de aula SEM ônibus. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioFamiliaSemOnibusSemAlimentacao',
@@ -153,7 +157,8 @@ const getPackages = (age) => {
       subtitle: '• SEM ALIMENTAÇÃO',
       observation:
         '* No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioCampingSemOnibusSemAlimentacao',
@@ -219,7 +224,8 @@ const getPackages = (age) => {
       subtitle: '• SEM ALIMENTAÇÃO',
       observation:
         '* Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
-      observationHighlite: 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
+      observationHighlite:
+        age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...otherWithoutBusWithoutFood },
       accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Outra' },
       transportation: 'Sem Ônibus',
