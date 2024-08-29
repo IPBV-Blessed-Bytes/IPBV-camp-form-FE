@@ -163,7 +163,7 @@ const AdminTableColumns = ({
     { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
     {
       label: 'Acomodação',
-      name: 'package.accomodation.name',
+      name: 'package.accomodationName',
       type: 'select',
       placeholder: 'Selecione a acomodação',
       oddOrEven: 'even',
@@ -175,7 +175,7 @@ const AdminTableColumns = ({
     },
     {
       label: 'Sub Acomodação',
-      name: 'package.accomodation.subAccomodation',
+      name: 'package.subAccomodation',
       type: 'select',
       placeholder: 'Selecione a sub acomodação',
       oddOrEven: 'odd',

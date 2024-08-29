@@ -39,9 +39,9 @@ export const initialValues = {
   package: {
     accomodation: {
       id: '',
-      name: '',
-      subAccomodation: '',
     },
+    accomodationName: '',
+    subAccomodation: '',
     discountCoupon: '',
     discountValue: '',
     transportation: '',

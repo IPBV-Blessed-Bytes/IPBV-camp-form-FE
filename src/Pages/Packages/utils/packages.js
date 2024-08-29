@@ -1,10 +1,10 @@
 import generatePackagesValues from './generatePackagesValues';
 
-const XV_NOVEMBRO = 'Colégio XV de Novembro';
-const SEMINARIO = 'Seminário São José';
+const SCHOOL = 'Colégio XV de Novembro';
+const SEMINARY = 'Seminário São José';
 const OTHER = 'Outra Acomodação Externa';
 
-export const accommodations = [XV_NOVEMBRO, SEMINARIO, OTHER];
+export const accommodations = [SCHOOL, SEMINARY, OTHER];
 
 const getPackages = (age) => {
   const [schoolWithBusWithFood, schoolWithoutBusWithoutFood, schoolWithBusWithoutFood, schoolWithoutBusWithFood] =
@@ -24,9 +24,9 @@ const getPackages = (age) => {
       values: { ...schoolWithBusWithFood },
       accomodation: {
         id: 'colegioIndividualComOnibusComAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Individual',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Individual',
       transportation: 'Com Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -38,9 +38,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithFood },
       accomodation: {
         id: 'colegioIndividualSemOnibusComAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Individual',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Individual',
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -54,9 +54,9 @@ const getPackages = (age) => {
       values: { ...schoolWithBusWithoutFood },
       accomodation: {
         id: 'colegioIndividualComOnibusSemAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Individual',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Individual',
       transportation: 'Com Ônibus',
       food: 'Sem Alimentação',
     },
@@ -70,9 +70,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioIndividualSemOnibusSemAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Individual',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Individual',
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
@@ -84,9 +84,9 @@ const getPackages = (age) => {
       values: { ...schoolWithBusWithFood },
       accomodation: {
         id: 'colegioFamiliaComOnibusComAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Família',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Família',
       transportation: 'Com Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -98,9 +98,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithFood },
       accomodation: {
         id: 'colegioFamiliaSemOnibusComAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Família',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Família',
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -114,9 +114,9 @@ const getPackages = (age) => {
       values: { ...schoolWithBusWithoutFood },
       accomodation: {
         id: 'colegioFamiliaComOnibusSemAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Família',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Família',
       transportation: 'Com Ônibus',
       food: 'Sem Alimentação',
     },
@@ -130,9 +130,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioFamiliaSemOnibusSemAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Família',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Família',
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
@@ -145,9 +145,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithFood },
       accomodation: {
         id: 'colegioCampingSemOnibusComAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Camping',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Camping',
       transportation: 'Sem Ônibus',
       food: 'Café da manhã, almoço e jantar',
     },
@@ -162,9 +162,9 @@ const getPackages = (age) => {
       values: { ...schoolWithoutBusWithoutFood },
       accomodation: {
         id: 'colegioCampingSemOnibusSemAlimentacao',
-        name: XV_NOVEMBRO,
-        subAccomodation: 'Colégio Camping',
       },
+      accomodationName: SCHOOL,
+      subAccomodation: 'Colégio Camping',
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
@@ -176,9 +176,9 @@ const getPackages = (age) => {
       values: { ...seminaryWithBusWithFood },
       accomodation: {
         id: 'seminarioIndividualComOnibusComAlimentacao',
-        name: SEMINARIO,
-        subAccomodation: 'Seminário Individual',
       },
+      accomodationName: SEMINARY,
+      subAccomodation: 'Seminário Individual',
       transportation: 'Com Ônibus',
       food: 'Almoço e jantar',
     },
@@ -190,9 +190,9 @@ const getPackages = (age) => {
       values: { ...seminaryWithoutBusWithFood },
       accomodation: {
         id: 'seminarioIndividualSemOnibusComAlimentacao',
-        name: SEMINARIO,
-        subAccomodation: 'Seminário Individual',
       },
+      accomodationName: SEMINARY,
+      subAccomodation: 'Seminário Individual',
       transportation: 'Sem Ônibus',
       food: 'Almoço e jantar',
     },
@@ -203,7 +203,9 @@ const getPackages = (age) => {
       observation:
         '* COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithBusWithFood },
-      accomodation: { id: 'outroComOnibusComAlimentacao', name: OTHER, subAccomodation: 'Outra' },
+      accomodation: { id: 'outroComOnibusComAlimentacao' },
+      accomodationName: OTHER,
+      subAccomodation: 'Outra',
       transportation: 'Com Ônibus',
       food: 'Almoço e jantar',
     },
@@ -214,7 +216,9 @@ const getPackages = (age) => {
       observation:
         '* SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithoutBusWithFood },
-      accomodation: { id: 'outroSemOnibusSemAlimentacao', name: OTHER, subAccomodation: 'Outra' },
+      accomodation: { id: 'outroSemOnibusSemAlimentacao' },
+      accomodationName: OTHER,
+      subAccomodation: 'Outra',
       transportation: 'Sem Ônibus',
       food: 'Almoço e jantar',
     },
@@ -227,7 +231,9 @@ const getPackages = (age) => {
       observationHighlite:
         age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação',
       values: { ...otherWithoutBusWithoutFood },
-      accomodation: { id: 'usuarioSemCusto', name: OTHER, subAccomodation: 'Outra' },
+      accomodation: { id: 'usuarioSemCusto' },
+      accomodationName: OTHER,
+      subAccomodation: 'Outra',
       transportation: 'Sem Ônibus',
       food: 'Sem Alimentação',
     },
