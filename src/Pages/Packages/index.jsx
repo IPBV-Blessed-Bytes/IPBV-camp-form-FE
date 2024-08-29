@@ -89,13 +89,15 @@ const FormPackages = ({
       setHasError(false);
     }
 
-    const { accomodation, transportation, food, values, title } = selectedPackage;
+    const { accomodation, accomodationName, subAccomodation, transportation, food, values, title } = selectedPackage;
 
     updateForm({
       price: values.total,
       discountCoupon: discountCoupon,
       discountValue: discountValue,
       accomodation: accomodation,
+      accomodationName: accomodationName,
+      subAccomodation: subAccomodation,
       transportation: transportation,
       food: food,
       title: title,
@@ -118,7 +120,7 @@ const FormPackages = ({
       return;
     }
 
-    const { accomodation, transportation, food, values, title } = selectedPackage;
+    const { accomodation, accomodationName, subAccomodation, transportation, food, values, title } = selectedPackage;
     const finalPrice = Math.max(values.total - discountValue, 0);
 
     updateForm({
@@ -127,6 +129,8 @@ const FormPackages = ({
       discountCoupon: discountCoupon,
       discountValue: discountValue,
       accomodation: accomodation,
+      accomodationName: accomodationName,
+      subAccomodation: subAccomodation,
       transportation: transportation,
       food: food,
       title: title,
@@ -234,7 +238,7 @@ const FormPackages = ({
                     <Accordion.Header>{accomodation}</Accordion.Header>
                     <Accordion.Body className="d-grid gap-3">
                       {packages
-                        .filter((element) => element.accomodation.name === accomodation)
+                        .filter((element) => element.accomodationName === accomodation)
                         .map((cards) => {
                           const finalPrice = Math.max(cards.values.total - discountValue, 0);
 

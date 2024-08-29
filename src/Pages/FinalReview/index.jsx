@@ -64,8 +64,8 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     >
                       <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
-                        Nome = {formValues.package.accomodation.name} <br />
-                        Acomodação = {formValues.package.accomodation.subAccomodation}
+                        Nome = {formValues.package.accomodationName} <br />
+                        Acomodação = {formValues.package.subAccomodation}
                         <br />
                         Preço = R$ {formValues.package.finalPrice},00
                       </Card.Text>

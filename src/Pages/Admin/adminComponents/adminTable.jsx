@@ -435,13 +435,13 @@ const AdminTable = () => {
       },
       {
         Header: 'Acomodação:',
-        accessor: 'package.accomodation.name',
+        accessor: 'package.accomodationName',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
       {
         Header: 'Sub Acomodação:',
-        accessor: 'package.accomodation.subAccomodation',
+        accessor: 'package.subAccomodation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
