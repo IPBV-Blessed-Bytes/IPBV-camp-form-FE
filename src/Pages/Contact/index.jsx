@@ -144,7 +144,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.car}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
-                    Possui vagas disponíveis para ceder a outros irmãos que precisam?
+                    <em>Possui vagas disponíveis para ceder a outros irmãos que precisam?</em>
                   </Card.Text>
                 </Form.Group>
               </Col>
@@ -306,8 +306,10 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
-                    Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
-                    etc).
+                    <em>
+                      Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
+                      etc).
+                    </em>
                   </Card.Text>
                 </Form.Group>
               </Col>
