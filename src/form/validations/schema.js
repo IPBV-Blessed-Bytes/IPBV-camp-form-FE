@@ -22,14 +22,14 @@ const additionalInformationSchema = yup.object().shape({
   cellPhone: yup.string().min(10, 'Informe um número de telefone válido').required('Informe o seu número de telefone'),
   isWhatsApp: yup.boolean().required('Informe se o número é whatsapp ou não'),
   church: yup.string().required('Informe sua igreja'),
-  car: yup.string().required('Informe se vai de carro e possui vagas de carona'),
+  car: yup.boolean().required('Informe se vai de carro e possui vagas de carona'),
   numberVacancies: yup.string().when('car', {
-    is: 'sim',
+    is: true,
     then: () => yup.string().required('Informe quantas vagas de carona há'),
     otherwise: () => yup.string().nullable(),
   }),
   needRide: yup.string().when('car', {
-    is: 'nao',
+    is: false,
     then: () => yup.string().required('Informe se precisa de carona'),
     otherwise: () => yup.string().nullable(),
   }),
