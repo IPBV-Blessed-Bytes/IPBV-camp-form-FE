@@ -1,15 +1,8 @@
 import * as yup from 'yup';
-import { parse } from 'date-fns';
 
 const personalInformationSchema = yup.object().shape({
   name: yup.string().required('Informe o seu nome'),
-  birthday: yup
-    .date()
-    .transform(function (value, originalValue) {
-      const parsedDate = parse(originalValue, 'dd/MM/yyyy', new Date());
-      return isNaN(parsedDate) ? new Date('Invalid Date') : parsedDate;
-    })
-    .required('Informe a sua data de nascimento'),
+  birthday: yup.date().required('Informe a sua data de nascimento'),
   rg: yup.string().min(6, 'Informe um RG válido. Mínimo 6 dígitos').required('Informe o seu rg'),
   cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
   rgShipper: yup.string().required('Selecione o órgão expedidor do seu RG'),
