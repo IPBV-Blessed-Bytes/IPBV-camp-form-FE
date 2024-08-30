@@ -386,7 +386,7 @@ const FormPackages = ({
                                         <div className="package-description-container">
                                           <span className="text-warning initialism">Taxa de Manutenção:&nbsp;</span>
                                           <div>
-                                            <div className="text-warning">{formatCurrency(fixedRate)}</div>
+                                            <div className="text-warning font-weight-bold">{formatCurrency(fixedRate)}</div>
                                           </div>
                                         </div>
                                         <div className="packages-horizontal-line"></div>
@@ -485,7 +485,7 @@ const FormPackages = ({
                                 {
                                   <div className="selected-icon-container">
                                     {selectedPackage?.id === cards.id && (
-                                      <Icons typeIcon="selected" iconSize={50} fill="#4267a7" />
+                                      <Icons typeIcon="selected" iconSize={50} fill="#0c9183" />
                                     )}
                                   </div>
                                 }
