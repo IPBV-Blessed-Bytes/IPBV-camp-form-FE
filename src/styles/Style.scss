@@ -5,6 +5,13 @@ body {
   background: $light-gray;
 }
 
+@font-face {
+  font-family: 'Norwester';
+  src: url('../../public//Fonts/norwester.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 // Form Styles
 .form {
   display: flex;
@@ -17,10 +24,21 @@ body {
 
   // Form Header Styles
   &__header {
-    background-color: $primary;
+    background-color: $slime-green;
     color: $white;
     padding: 1.25rem 1.875rem 3rem;
     text-align: center;
+
+    .header-title {
+      font-family: 'Norwester', sans-serif;
+      font-size: 50px;
+      font-weight: normal;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $secondary;
+      }
+    }
 
     &--future-step {
       cursor: default;
@@ -93,6 +111,7 @@ body {
     &__copyright {
       align-items: end;
       display: flex;
+      font-style: italic;
       justify-self: center;
       margin: 0;
 
@@ -119,6 +138,7 @@ body {
     }
 
     &-pointer {
+      border-left: 10px solid $slime-green;
       cursor: pointer;
       display: inline-block;
       overflow: hidden;
@@ -173,7 +193,7 @@ body {
 
       .info-text-wrapper {
         .card-text {
-          color: $dark-green;
+          color: $militar-green;
         }
       }
 
@@ -303,7 +323,7 @@ body {
     // Button Styles
     &__buttons {
       align-items: center;
-      background-color: $primary;
+      background-color: $slime-green;
       border-bottom-left-radius: 0.375rem;
       border-bottom-right-radius: 0.375rem;
       display: flex;
@@ -563,7 +583,7 @@ button.accordion-button:not(.collapsed) {
 }
 
 .date-enphasis {
-  color: $primary;
+  color: $slime-green;
   font-weight: bold;
 }
 
@@ -871,4 +891,12 @@ button.btn.btn-outline-danger:hover svg {
 
 .choose-form-payment-custom-padding {
   padding: 1.875rem !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.font-weight-bold {
+  font-weight: bold;
 }
