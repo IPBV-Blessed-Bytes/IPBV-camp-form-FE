@@ -35,7 +35,7 @@ const AdminLoggedOut = ({
           <h4 className="login-admin-card__title text-center fw-bold mb-5">ACESSO ADMINISTRAÇÃO</h4>
 
           <Form.Group className="input-login-wrapper mb-3" controlId="login">
-            <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
+            <Form.Label className="fw-bold form-label-admin">Nome de Usuário:</Form.Label>
             <Form.Control
               className="admin__user"
               type="text"
@@ -47,7 +47,7 @@ const AdminLoggedOut = ({
           </Form.Group>
 
           <Form.Group className="input-login-wrapper mb-3" controlId="password">
-            <Form.Label className="fw-bold">Senha:</Form.Label>
+            <Form.Label className="fw-bold form-label-admin">Senha:</Form.Label>
             <Form.Control
               className="admin__password"
               type={showPassword ? 'text' : 'password'}
