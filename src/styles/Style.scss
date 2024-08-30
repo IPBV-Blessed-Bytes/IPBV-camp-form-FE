@@ -18,6 +18,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
 
+  &-label {
+    color: $primary;
+  }
+  
   @media (max-width: $lg) {
     display: block;
   }
@@ -138,7 +142,7 @@ body {
     }
 
     &-pointer {
-      border-left: 10px solid $dark-green;
+      border-left: 10px solid $primary;
       cursor: pointer;
       display: inline-block;
       overflow: hidden;
@@ -277,7 +281,7 @@ body {
     }
 
     .card-is-active {
-      background-color: $turquoise;
+      background-color: $minimum-green;
     }
 
     .react-datepicker-wrapper,
@@ -695,7 +699,7 @@ button.accordion-button:not(.collapsed) {
 
 .form-review {
   &__section-title {
-    color: $blue !important;
+    color: $primary !important;
   }
 
   input {
