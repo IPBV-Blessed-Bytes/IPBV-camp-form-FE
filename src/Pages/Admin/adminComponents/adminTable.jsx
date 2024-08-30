@@ -88,19 +88,7 @@ const AdminTable = () => {
 
     const updateState = (setter) => {
       setter((prevData) => {
-        if (keys.length === 3) {
-          const [parentKey, childKey, grandChildKey] = keys;
-          return {
-            ...prevData,
-            [parentKey]: {
-              ...prevData[parentKey],
-              [childKey]: {
-                ...prevData[parentKey]?.[childKey],
-                [grandChildKey]: booleanValue,
-              },
-            },
-          };
-        } else if (keys.length === 2) {
+        if (keys.length === 2) {
           const [parentKey, childKey] = keys;
           return {
             ...prevData,
@@ -146,6 +134,7 @@ const AdminTable = () => {
 
     const updatedFormValues = {
       id: editFormData.id,
+      observation: editFormData.observation,
       ...sanitizedFormData,
     };
 
@@ -178,6 +167,7 @@ const AdminTable = () => {
       ...sanitizedFormData,
       manualRegistration: true,
       registrationDate: currentDate,
+      observation: addFormData.observation,
     };
 
     try {
