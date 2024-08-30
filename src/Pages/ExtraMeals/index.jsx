@@ -112,10 +112,12 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
           </Card.Text>
           <Card.Text>
             <i>
-              Caso opte por não adquirir refeições avulsas nesta etapa, você poderá fazê-lo posteriormente entrando em
-              contato com a secretaria ou pessoalmente no acampamento, <b>até o dia anterior à refeição</b>, caso seja
-              necessário.{' '}
+              Caso opte por não adquirir refeições avulsas nesta etapa, você poderá fazê-lo posteriormente no próprio
+              acampamento, <b>até o dia anterior à refeição</b>, caso seja necessário.{' '}
             </i>
+          </Card.Text>
+          <Card.Text>
+            As senhas de refeição avulsas serão entregues no ato do check-in na sua chegada ao acampamento.
           </Card.Text>
           <hr className="horizontal-line" />
           <Card.Text>
