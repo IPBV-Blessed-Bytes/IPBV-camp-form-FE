@@ -171,7 +171,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
                 </Card.Text>
               </Col>
               <Col md={4} className="d-flex justify-content-center align-items-center">
-                <Icons typeIcon="food" iconSize={100} fill="#204691" />
+                <Icons typeIcon="food" iconSize={100} fill="#0c9183" />
               </Col>
             </Row>
             {values.someFood && (
