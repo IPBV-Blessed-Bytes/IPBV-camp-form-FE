@@ -155,22 +155,11 @@ const FormPackages = ({
         <Container>
           <Card.Title>Pacotes</Card.Title>
           {!isRegistrationClosed && (
-            <>
-              <Card.Text>
-                Vamos começar a seleção dos pacotes. Primeiro de tudo, informe se você possui um cupom de desconto e
-                insira-o no campo abaixo. Certifique-se de validar o cupom apenas quando for concluir a inscrição e
-                realizar o pagamento, pois, após validado, o seu cupom não poderá ser reutilizado. Caso não tenha um
-                cupom, basta pular para a escolha do pacote. Em seguida, escolha o local de hospedagem e o pacote
-                desejado, com ou sem alimentação e transporte, e clique nele para ser redirecionado.
-              </Card.Text>
-              <hr className="horizontal-line" />
-              <Card.Text>
-                Se optar por um pacote SEM alimentação, na próxima etapa do formulário, você poderá selecionar refeições
-                avulsas, escolhendo os dias e refeições específicas. Também será possível fazer essa escolha
-                posteriormente na secretaria da igreja ou no próprio acampamento, respeitando o tempo mínimo de 6 horas
-                de antecedência para a refeição.
-              </Card.Text>
-            </>
+            <Card.Text>
+              Vamos começar a seleção dos pacotes. Primeiro de tudo, escolha o local de hospedagem e o pacote desejado,
+              com ou sem alimentação e transporte, clique no card do pacote pra selecionar e após isso clique em avançar
+              para pular para a etapa seguinte.
+            </Card.Text>
           )}
 
           {isRegistrationClosed ? (
@@ -190,48 +179,6 @@ const FormPackages = ({
                   </div>
                 </div>
               )}
-              <div className="packages-horizontal-line"></div>
-              <Row className="my-4">
-                <Col xs={12} md={5} className="mb-md-5 mb-3">
-                  <Form.Group>
-                    <Form.Check
-                      type="checkbox"
-                      id={'hasCoupon'}
-                      name={'hasCoupon'}
-                      onClick={handleCouponClick}
-                      label={'Possui cupom de desconto?'}
-                    />
-                  </Form.Group>
-                </Col>
-                {showCouponField && (
-                  <>
-                    <Col xs={12} md={4} className="mb-md-0 mb-3">
-                      <Form.Group controlId="formCoupon">
-                        <Form.Label>Cupom de Desconto:</Form.Label>
-                        <Icons typeIcon="money" iconSize={25} fill="#65a300" />
-                        <Form.Control
-                          type="text"
-                          value={discountCoupon}
-                          onChange={handleCouponInputChange}
-                          placeholder="Insira o seu cupom aqui"
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col xs={12} md={3} className="d-flex justify-content-end ">
-                      <Button
-                        variant="success"
-                        onClick={handleCouponChange}
-                        className="d-flex align-items-center"
-                        size="lg"
-                      >
-                        Validar&nbsp;
-                        <Icons typeIcon="coupon" iconSize={25} fill="#fff" />
-                      </Button>
-                    </Col>
-                  </>
-                )}
-              </Row>
-
               <Accordion>
                 {accommodations.map((accomodation, index) => (
                   <Accordion.Item className={hasError ? 'msg-error' : ''} key={index} eventKey={String(index)}>
@@ -386,7 +333,9 @@ const FormPackages = ({
                                         <div className="package-description-container">
                                           <span className="text-warning initialism">Taxa de Manutenção:&nbsp;</span>
                                           <div>
-                                            <div className="text-warning font-weight-bold">{formatCurrency(fixedRate)}</div>
+                                            <div className="text-warning font-weight-bold">
+                                              {formatCurrency(fixedRate)}
+                                            </div>
                                           </div>
                                         </div>
                                         <div className="packages-horizontal-line"></div>

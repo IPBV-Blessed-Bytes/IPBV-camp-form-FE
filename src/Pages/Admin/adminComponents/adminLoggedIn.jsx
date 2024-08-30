@@ -55,7 +55,7 @@ const AdminLoggedIn = ({
   return (
     <>
       <Row className="mb-5 justify-content-center navigation-header">
-        <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleTableClick}>
             <Card.Body className="navigation-header__registered-card">
               <Card.Title className="text-center mb-0">
@@ -69,7 +69,7 @@ const AdminLoggedIn = ({
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleRideClick}>
             <Card.Body className="navigation-header__ride-card">
               <Card.Title className="text-center mb-0">
@@ -83,7 +83,7 @@ const AdminLoggedIn = ({
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={3} className="mb-3 mb-md-0">
+        {/* <Col xs={12} md={6} lg={3} className="mb-3 mb-md-0">
           <Card className="h-100" onClick={handleCouponsClick}>
             <Card.Body className="navigation-header__coupons-card">
               <Card.Title className="text-center mb-0">
@@ -96,7 +96,7 @@ const AdminLoggedIn = ({
               </Card.Title>
             </Card.Body>
           </Card>
-        </Col>
+        </Col> */}
         {/* <Col xs={12} md={6} lg={2}>
           <Card className="h-100">
             <Card.Body className="navigation-header__new-card">
@@ -111,7 +111,7 @@ const AdminLoggedIn = ({
             </Card.Body>
           </Card>
         </Col> */}
-        <Col xs={12} md={12} lg={3} className="text-end mb-2 mt-3 mt-lg-0">
+        <Col xs={12} md={12} lg={4} className="text-end mb-2 mt-3 mt-lg-0">
           <p>
             Bem vindo(a),
             <span>
