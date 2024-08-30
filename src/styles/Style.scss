@@ -407,8 +407,9 @@ body {
 
   .input-login-btn-wrapper {
     button {
-      background-color: $primary;
-      border-color: $primary;
+      background-color: $secondary;
+      border-color: $secondary;
+      color: $black;
     }
   }
 
@@ -594,11 +595,16 @@ button.accordion-button:not(.collapsed) {
 }
 
 .login-admin-card {
-  background: $medium-gray;
+  background: $primary;
+  color: #fff;
   border-radius: 3.125rem 0rem;
   padding: 3.125rem 1.875rem;
   box-shadow: 0.5625rem 0.5625rem 0.625rem rgb(0 0 0 / 21%);
   width: 25rem;
+
+  &__title {
+    color: $secondary;
+  }
 }
 
 .closed-admin {

@@ -32,7 +32,7 @@ const AdminLoggedOut = ({
     <Row className="justify-content-center">
       <Col xs={12} md={6} className="d-flex justify-content-center">
         <Form className="login-admin-card">
-          <h4 className="text-center fw-bold mb-5">LOGIN ADMIN</h4>
+          <h4 className="login-admin-card__title text-center fw-bold mb-5">ACESSO ADMINISTRAÇÃO</h4>
 
           <Form.Group className="input-login-wrapper mb-3" controlId="login">
             <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
