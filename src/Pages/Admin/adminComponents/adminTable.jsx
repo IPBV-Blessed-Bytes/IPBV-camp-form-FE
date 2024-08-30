@@ -33,7 +33,11 @@ const AdminTable = () => {
   const day = now.getDate().toString().padStart(2, '0');
   const month = (now.getMonth() + 1).toString().padStart(2, '0');
   const year = now.getFullYear();
-  const currentDate = `${day}/${month}/${year}`;
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+
+  const currentDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
   useEffect(() => {
     fetchData();
@@ -171,9 +175,9 @@ const AdminTable = () => {
     const sanitizedFormData = sanitizeFields(addFormData, initialValues);
 
     const updatedFormValues = {
+      ...sanitizedFormData,
       manualRegistration: true,
       registrationDate: currentDate,
-      ...sanitizedFormData,
     };
 
     try {
