@@ -219,7 +219,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
               variant="warning"
               onClick={handleClick}
               size="lg"
-              disabled={!isConfirmed}
+              disabled={!isConfirmed || status === 'loading' || status === 'loaded'}
               title={!isConfirmed && `Confirme acima que os dados foram preenchidos corretamente`}
             >
               Avançar
