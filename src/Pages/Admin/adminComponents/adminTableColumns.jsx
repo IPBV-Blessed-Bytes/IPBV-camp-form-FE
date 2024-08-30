@@ -106,6 +106,7 @@ const AdminTableColumns = ({
         { label: 'Não', value: false },
       ],
     },
+    { label: 'Vagas de Carona', name: 'contact.numberVacancies', type: 'number', placeholder: '0', oddOrEven: 'even' },
     {
       label: 'Precisa de Carona',
       name: 'contact.needRide',
@@ -117,7 +118,6 @@ const AdminTableColumns = ({
         { label: 'Não', value: false },
       ],
     },
-    { label: 'Vagas de Carona', name: 'contact.numberVacancies', type: 'number', placeholder: '0', oddOrEven: 'even' },
     {
       label: 'Observação de Carona',
       name: 'contact.rideObservation',
