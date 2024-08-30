@@ -38,7 +38,9 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
           <Card.Title>Pagamento</Card.Title>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Escolha sua forma de pagamento:</Form.Label>
+              <Form.Label>
+                <b>Escolha sua forma de pagamento:</b>
+              </Form.Label>
               <Form.Select
                 id="formPayment"
                 name="formPayment"
