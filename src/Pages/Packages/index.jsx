@@ -331,11 +331,11 @@ const FormPackages = ({
                                     {food === 0 && (
                                       <>
                                         <div className="package-description-container">
-                                          <span className="text-warning initialism">Taxa de Manutenção:&nbsp;</span>
+                                          <span className="initialism">
+                                            <b className="text-danger">*</b> Taxa de Manutenção:&nbsp;
+                                          </span>
                                           <div>
-                                            <div className="text-warning font-weight-bold">
-                                              {formatCurrency(fixedRate)}
-                                            </div>
+                                            <div className="font-weight-bold">{formatCurrency(fixedRate)}</div>
                                           </div>
                                         </div>
                                         <div className="packages-horizontal-line"></div>
