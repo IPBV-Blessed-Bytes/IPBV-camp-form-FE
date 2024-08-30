@@ -18,10 +18,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
 
-  &-label {
+  &-label:not(.form-label-admin) {
     color: $primary;
   }
-  
+
   @media (max-width: $lg) {
     display: block;
   }
