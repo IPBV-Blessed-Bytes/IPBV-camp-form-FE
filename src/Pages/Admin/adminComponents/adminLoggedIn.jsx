@@ -120,7 +120,7 @@ const AdminLoggedIn = ({
             !
           </p>
           <Button variant="danger" onClick={handleLogout}>
-            Sair
+            Desconectar
           </Button>
         </Col>
       </Row>
