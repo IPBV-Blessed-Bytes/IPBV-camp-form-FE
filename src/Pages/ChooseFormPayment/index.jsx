@@ -5,7 +5,7 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '../../form/validations/schema';
 import Loading from '../../components/Loading';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
@@ -63,7 +63,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-        <Button variant="warning" onClick={submitForm} size="lg">
+        <Button variant="warning" onClick={submitForm} size="lg" disabled={status === 'loading' || status === 'loaded'}>
           Avançar
         </Button>
       </div>
