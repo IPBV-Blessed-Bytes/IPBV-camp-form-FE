@@ -726,6 +726,10 @@ button.accordion-button:not(.collapsed) {
   }
 }
 
+.form-control::placeholder {
+  opacity: 0.5;
+}
+
 .btn-wrapper {
   display: flex;
   gap: 1rem;
