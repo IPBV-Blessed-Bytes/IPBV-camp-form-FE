@@ -303,7 +303,7 @@ const AdminTable = () => {
         sortType: alphabeticalSort,
       },
       {
-        Header: 'Pagamento:',
+        Header: 'Forma de Pagamento:',
         accessor: 'formPayment.formPayment',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -317,7 +317,7 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Nascimento:',
+        Header: 'Data de Nascimento:',
         accessor: 'personalInformation.birthday',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -335,13 +335,13 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Órgão Expedidor:',
+        Header: 'Órgão Emissor:',
         accessor: 'personalInformation.rgShipper',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Estado Expedidor:',
+        Header: 'Estado Emissor:',
         accessor: 'personalInformation.rgShipperState',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -354,6 +354,12 @@ const AdminTable = () => {
         Cell: ({ value }) => (value ? 'Sim' : 'Não'),
       },
       {
+        Header: 'Vagas de Carona:',
+        accessor: 'contact.numberVacancies',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
         Header: 'Precisa de Carona:',
         accessor: 'contact.needRide',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -361,13 +367,7 @@ const AdminTable = () => {
         Cell: ({ value }) => (value ? 'Sim' : 'Não'),
       },
       {
-        Header: 'Vagas de Carona:',
-        accessor: 'contact.numberVacancies',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
-        Header: 'Observação de Carona:',
+        Header: 'Observação da Carona:',
         accessor: 'contact.rideObservation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -410,12 +410,6 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Cupom:',
-        accessor: 'package.discountCoupon',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-      },
-      {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -452,14 +446,14 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Alimentação Extra:',
+        Header: 'Refeição Extra:',
         accessor: 'extraMeals.someFood',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? 'Sim' : 'Não'),
       },
       {
-        Header: 'Dias de Alimentação Extra:',
+        Header: 'Dias de Refeição Extra:',
         accessor: 'extraMeals.extraMeals',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -467,6 +461,12 @@ const AdminTable = () => {
       {
         Header: 'Observação:',
         accessor: 'observation',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Cupom:',
+        accessor: 'package.discountCoupon',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
@@ -524,13 +524,116 @@ const AdminTable = () => {
   };
 
   const generateExcel = () => {
+    const fieldMapping = {
+      'package.title': 'Pacote',
+      'personalInformation.name': 'Nome',
+      'formPayment.formPayment': 'Forma de Pagamento',
+      'contact.church': 'Igreja',
+      'personalInformation.birthday': 'Data de Nascimento',
+      'personalInformation.cpf': 'CPF',
+      'personalInformation.rg': 'RG',
+      'personalInformation.rgShipper': 'Orgão Emissor',
+      'personalInformation.rgShipperState': 'Estado Emissor',
+      'contact.car': 'Vai de Carro',
+      'contact.needRide': 'Precisa de Carona',
+      'contact.numberVacancies': 'Vagas de Carona',
+      'contact.rideObservation': 'Observação da Carona',
+      registrationDate: 'Data de Inscrição',
+      'personalInformation.gender': 'Categoria',
+      'contact.cellPhone': 'Celular',
+      'contact.isWhatsApp': 'WhatsApp',
+      'contact.email': 'Email',
+      totalPrice: 'Preço',
+      'contact.hasAllergy': 'Tem Alergia',
+      'contact.allergy': 'Alergia',
+      'contact.hasAggregate': 'Tem Agregados',
+      'contact.aggregate': 'Agregados',
+      'package.accomodationName': 'Acomodação',
+      'package.accomodation.id': 'ID da Acomodação',
+      'package.subAccomodation': 'Sub Acomodação',
+      'package.transportation': 'Transporte',
+      'package.food': 'Alimentação',
+      'package.price': 'Preço do pacote',
+      'extraMeals.someFood': 'Tem Refeição Extra',
+      'extraMeals.extraMeals': 'Refeições Extra',
+      'extraMeals.totalPrice': 'Preço Refeição Extra',
+      observation: 'Observação',
+      manualRegistration: 'Inscrição Manual',
+      'package.discountCoupon': 'Cupom de Desconto',
+      'package.discountValue': 'Valor do Desconto',
+    };
+
+    const orderedFields = [
+      'Pacote',
+      'Nome',
+      'Forma de Pagamento',
+      'Igreja',
+      'Data de Nascimento',
+      'CPF',
+      'RG',
+      'Orgão Emissor',
+      'Estado Emissor',
+      'Vai de Carro',
+      'Precisa de Carona',
+      'Vagas de Carona',
+      'Observação da Carona',
+      'Data de Inscrição',
+      'Categoria',
+      'Celular',
+      'WhatsApp',
+      'Email',
+      'Preço',
+      'Tem Alergia',
+      'Alergia',
+      'Tem Agregados',
+      'Agregados',
+      'Acomodação',
+      'ID da Acomodação',
+      'Sub Acomodação',
+      'Transporte',
+      'Alimentação',
+      'Preço do pacote',
+      'Tem Refeição Extra',
+      'Refeições Extra',
+      'Preço Refeição Extra',
+      'Observação',
+      'Inscrição Manual',
+      'Cupom de Desconto',
+      'Valor do Desconto',
+    ];
+
+    const flattenObject = (obj, parent = '', res = {}) => {
+      for (let key in obj) {
+        let propName = parent ? `${parent}.${key}` : key;
+
+        if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+          flattenObject(obj[key], propName, res);
+        } else {
+          let value = obj[key];
+          if (typeof value === 'boolean') {
+            value = value ? 'Sim' : 'Não';
+          }
+          res[fieldMapping[propName] || propName] = value;
+        }
+      }
+      return res;
+    };
+
     const filteredData = data.map((row) => {
       const newRow = { ...row };
       delete newRow.id;
-      return newRow;
+      return flattenObject(newRow);
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    const orderedData = filteredData.map((row) => {
+      const orderedRow = {};
+      orderedFields.forEach((field) => {
+        orderedRow[field] = row[field] || ''; // Preenche com string vazia se o campo não existir
+      });
+      return orderedRow;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(orderedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Inscrições');
     XLSX.writeFile(workbook, 'planilha_inscricoes.xlsx');
