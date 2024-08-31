@@ -8,9 +8,9 @@ const FormHome = (props) => {
         <Container>
           <div className="row">
             <div className="col">
-              <h3 className="mb-2 text-center">Acampamento no período de carnaval 2025</h3>
+              <h3 className="mb-2 text-center">Acampamento no período de Carnaval 2025</h3>
               <h5 className="mb-2 text-center">
-                IP de Boa Viagem - {' '}
+                IP de Boa Viagem -&nbsp;
                 <span className="date-enphasis fw-bold">
                   01 a 05 de Março - Garanhuns
                   <br /> Colégio XV de Novembro • Preletor: Rev. Valdeci Santos
@@ -19,7 +19,7 @@ const FormHome = (props) => {
               <p className="mb-2 text-center">
                 Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
                 igreja no telefone <em>(81) 9 9839-0194</em> (whatsapp). <br />
-                <b>Vagas Limitadas • Inscrições até 09 de Fevereiro ou até se esgotarem as vagas!</b>
+                <b>Vagas Limitadas • Inscrições até 09/02 ou até se esgotarem as vagas!</b>
               </p>
             </div>
           </div>
@@ -30,7 +30,7 @@ const FormHome = (props) => {
               <ul>
                 <li>
                   <u>
-                    <b>AS INSCRIÇÕES SÃO INDIVIDUAIS! Por favor, preencha todos os campos corretamente.</b>
+                    <b>AS INSCRIÇÕES SÃO INDIVIDUAIS! Preencher os campos corretamente!</b>
                   </u>
                 </li>
                 <li>
@@ -42,6 +42,11 @@ const FormHome = (props) => {
                   Inscrições e pagamentos apenas online.{' '}
                   <u>Caso encontre alguma dificuldade, entre em contato com a secretaria</u> para que possamos lhe
                   ajudar.
+                </li>
+                <li>
+                  Não é necessário enviar comprovantes de pagamento de nenhuma espécie (cartão de crédito, Pix ou
+                  boleto). Uma vez que o pagamento é feito e aprovado, tudo é registrado digitalmente, e não se faz
+                  necessário o envio de comprovante para os meios de comunicação da igreja.
                 </li>
                 <li>
                   Caso algum parente (pai, mãe, esposo, esposa, filhos, etc.) compartilhe o mesmo quarto que você, seja
