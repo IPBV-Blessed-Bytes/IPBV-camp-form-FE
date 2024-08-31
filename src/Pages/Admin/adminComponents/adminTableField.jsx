@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Form, Col } from 'react-bootstrap';
 import Icons from '../../../components/Icons';
 import DatePicker from 'react-datepicker';
@@ -113,6 +114,22 @@ const AdminTableField = ({
       </Form.Group>
     </Col>
   );
+};
+
+AdminTableField.propTypes = {
+  type: PropTypes.string,
+  label: PropTypes.string,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  addForm: PropTypes.bool,
+  options: PropTypes.string,
+  disabled: PropTypes.bool,
+  formSubmitted: PropTypes.bool,
+  oddOrEven: PropTypes.string,
+  errorMessage: PropTypes.string,
+  required: PropTypes.bool,
 };
 
 export default AdminTableField;

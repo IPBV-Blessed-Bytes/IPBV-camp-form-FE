@@ -23,7 +23,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
         formPayment: '',
       });
     }
-  }, [initialValues.formPayment, setValues, values.formPayment]);
+  }, [initialValues.formPayment, setValues, values, values.formPayment]);
 
   const selectChangeHandler = (e) => {
     updateForm(e.target.value);
@@ -78,6 +78,7 @@ ChooseFormPayment.propTypes = {
   updateForm: PropTypes.func,
   sendForm: PropTypes.func,
   spinnerLoading: PropTypes.func,
+  status: PropTypes.string,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
   }),

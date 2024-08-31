@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminTableField from './adminTableField';
@@ -257,7 +258,7 @@ const AdminTableColumns = ({
     if (JSON.stringify(missing) !== JSON.stringify(missingFields)) {
       setMissingFields(missing);
     }
-  }, [addFormData, editFormData]);
+  }, [addFormData, editFormData, missingFields, validateFields]);
 
   return (
     <Row>
@@ -290,6 +291,18 @@ const AdminTableColumns = ({
       ))}
     </Row>
   );
+};
+
+AdminTableColumns.propTypes = {
+  addFormData: PropTypes.string,
+  handleFormChange: PropTypes.func,
+  addForm: PropTypes.bool,
+  editForm: PropTypes.bool,
+  formSubmitted: PropTypes.bool,
+  currentDate: PropTypes.string,
+  editFormData: PropTypes.shape({
+    registrationDate: PropTypes.string,
+  }),
 };
 
 export default AdminTableColumns;
