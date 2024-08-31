@@ -176,7 +176,7 @@ const FormRoutes = () => {
     if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname || isAdminCouponsPathname)) {
       navigate('/admin');
     }
-  }, [isLoggedIn, isAdminPathname, navigate]);
+  }, [isLoggedIn, isAdminPathname, isAdminTablePathname, isAdminRidePathname, isAdminCouponsPathname, navigate]);
 
   const handleAdminClick = () => {
     navigate('/admin');
