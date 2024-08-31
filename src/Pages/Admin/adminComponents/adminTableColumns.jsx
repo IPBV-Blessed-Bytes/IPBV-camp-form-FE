@@ -40,7 +40,7 @@ const AdminTableColumns = ({
       oddOrEven: 'even',
     },
     {
-      label: 'Pagamento',
+      label: 'Forma de Pagamento',
       name: 'formPayment.formPayment',
       type: 'select',
       placeholder: 'Selecione status de pagamento',
@@ -62,7 +62,7 @@ const AdminTableColumns = ({
       ],
     },
     {
-      label: 'Nascimento',
+      label: 'Data de Nascimento',
       name: 'personalInformation.birthday',
       type: 'date',
       placeholder: 'dd/mm/aaaa',
@@ -81,7 +81,7 @@ const AdminTableColumns = ({
     },
     { label: 'RG', name: 'personalInformation.rg', type: 'number', placeholder: '0123456', oddOrEven: 'odd' },
     {
-      label: 'Órgão Expedidor',
+      label: 'Órgão Emissor',
       name: 'personalInformation.rgShipper',
       type: 'select',
       placeholder: 'Selecione uma secretaria',
@@ -89,7 +89,7 @@ const AdminTableColumns = ({
       options: rgShipper,
     },
     {
-      label: 'Estado Expedidor',
+      label: 'Estado Emissor',
       name: 'personalInformation.rgShipperState',
       type: 'select',
       placeholder: 'Selecione um estado',
@@ -120,10 +120,18 @@ const AdminTableColumns = ({
       ],
     },
     {
-      label: 'Observação de Carona',
+      label: 'Observação da Carona',
       name: 'contact.rideObservation',
       type: 'text',
       placeholder: 'Observação de carona',
+      oddOrEven: 'odd',
+    },
+    {
+      label: 'Data de Inscrição',
+      name: 'registrationDate',
+      type: 'text',
+      value: editForm ? editFormData.registrationDate : currentDate,
+      disabled: true,
       oddOrEven: 'odd',
     },
     {
@@ -137,14 +145,6 @@ const AdminTableColumns = ({
         { label: 'Homem', value: 'Homem' },
         { label: 'Mulher', value: 'Mulher' },
       ],
-    },
-    {
-      label: 'Data de Inscrição',
-      name: 'registrationDate',
-      type: 'text',
-      value: editForm ? editFormData.registrationDate : currentDate,
-      disabled: true,
-      oddOrEven: 'odd',
     },
     { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
     {
@@ -208,10 +208,10 @@ const AdminTableColumns = ({
       options: food,
     },
     {
-      label: 'Alimentação Extra',
+      label: 'Refeição Extra',
       name: 'extraMeals.someFood',
       type: 'select',
-      placeholder: 'Selecione se terá alimentação extra',
+      placeholder: 'Selecione se terá refeição extra',
       oddOrEven: 'even',
       options: [
         { label: 'Sim', value: true },
@@ -219,7 +219,7 @@ const AdminTableColumns = ({
       ],
     },
     {
-      label: 'Alimentação Extra (dias)',
+      label: 'Refeição Extra (dias)',
       name: 'extraMeals.extraMeals',
       type: 'text',
       placeholder: 'Domingo, Segunda, Terça, etc.',
