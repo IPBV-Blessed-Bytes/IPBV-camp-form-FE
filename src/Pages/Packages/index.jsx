@@ -332,7 +332,7 @@ const FormPackages = ({
                                       <>
                                         <div className="package-description-container">
                                           <span className="initialism">
-                                            <b className="text-danger">*</b> Taxa de Manutenção:&nbsp;
+                                            <b className="text-danger">*</b> Taxa de Participação:&nbsp;
                                           </span>
                                           <div>
                                             <div className="font-weight-bold">{formatCurrency(fixedRate)}</div>
