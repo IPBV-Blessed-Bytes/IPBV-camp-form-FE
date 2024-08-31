@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
 import Icons from '../../../components/Icons';
 import { toast } from 'react-toastify';
@@ -250,7 +250,7 @@ const AdminCoupon = () => {
           <Modal.Title>Confirmar Exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Você tem certeza de que deseja excluir o cupom com código "{couponToDelete?.code}"?</p>
+          <p>Você tem certeza de que deseja excluir o cupom com código &quot;{couponToDelete?.code}&quot;?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>

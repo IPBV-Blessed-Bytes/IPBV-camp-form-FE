@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const Loading = ({ loading, messageText }) => {
   return (
     <>
@@ -15,6 +17,11 @@ const Loading = ({ loading, messageText }) => {
       )}
     </>
   );
+};
+
+Loading.propTypes = {
+  loading: PropTypes.bool,
+  messageText: PropTypes.string,
 };
 
 export default Loading;

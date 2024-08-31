@@ -380,7 +380,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXLink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 235.517 235.517"
           xmlSpace="preserve"
         >
@@ -407,7 +407,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXLink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 248.774 248.774"
           xmlSpace="preserve"
         >
@@ -457,7 +457,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXLink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 533.973 533.973"
           xmlSpace="preserve"
         >
@@ -480,7 +480,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXLink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 460.775 460.775"
           xmlSpace="preserve"
         >
@@ -502,7 +502,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXLink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 31.445 31.445"
           xmlSpace="preserve"
         >

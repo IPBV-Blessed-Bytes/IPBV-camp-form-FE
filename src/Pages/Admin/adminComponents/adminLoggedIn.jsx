@@ -22,6 +22,7 @@ const AdminLoggedIn = ({
   totalVacanciesWithBuses,
 }) => {
   const [loading, setLoading] = useState(true);
+  const [availablePackages, setAvailablePackages] = useState(true);
   const navigate = useNavigate();
   const splitedUsername = loggedInUsername.split('@')[0];
 
@@ -33,9 +34,9 @@ const AdminLoggedIn = ({
     navigate('/admin/carona');
   };
 
-  const handleCouponsClick = () => {
-    navigate('/admin/cupom');
-  };
+  // const handleCouponsClick = () => {
+  //   navigate('/admin/cupom');
+  // };
 
   useEffect(() => {
     const fetchPackages = async () => {

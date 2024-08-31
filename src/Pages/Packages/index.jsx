@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, Container, Card, Form, Button, Col, Row } from 'react-bootstrap';
+import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import Icons from '../../components/Icons';
 import formatCurrency from '../../utils/formatCurrency';
@@ -480,6 +480,7 @@ FormPackages.propTypes = {
   spinnerLoading: PropTypes.bool,
   availablePackages: PropTypes.bool,
   totalRegistrationsGlobal: PropTypes.bool,
+  formUsername: PropTypes.string,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,
