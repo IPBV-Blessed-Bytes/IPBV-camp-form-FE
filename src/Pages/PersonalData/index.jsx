@@ -27,17 +27,22 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
   });
 
   const handleDateChange = (date) => {
-    const formattedDate = format(date, 'dd/MM/yyyy');
     handleChange({
       target: {
         name: 'birthday',
-        value: formattedDate,
+        value: date,
       },
     });
   };
 
   const parseDate = (value) => {
-    return value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+    if (value instanceof Date && !isNaN(value)) {
+      return value;
+    }
+
+    const parsedDate = value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+
+    return isNaN(parsedDate) ? null : parsedDate;
   };
 
   return (
