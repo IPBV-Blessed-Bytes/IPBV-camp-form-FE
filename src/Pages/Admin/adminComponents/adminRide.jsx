@@ -49,7 +49,32 @@ const AdminRide = () => {
   };
 
   const generateExcel = () => {
-    const combinedData = [...rideData.offerRide, ...rideData.needRide];
+    const fieldMapping = {
+      id: 'ID',
+      type: 'Tipo',
+      name: 'Nome',
+      seatsInTheCar: 'Vagas no Carro',
+      observation: 'Observação',
+      checked: 'Checked',
+    };
+
+    const flattenObject = (obj, parent = '', res = {}) => {
+      for (let key in obj) {
+        let propName = parent ? `${parent}.${key}` : key;
+
+        let value = obj[key];
+        if (typeof value === 'boolean') {
+          value = value ? 'Sim' : 'Não';
+        }
+        res[fieldMapping[propName] || propName] = value;
+      }
+      return res;
+    };
+
+    const combinedData = [...rideData.offerRide, ...rideData.needRide].map((row) => {
+      return flattenObject(row);
+    });
+
     const worksheet = XLSX.utils.json_to_sheet(combinedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Rides');
