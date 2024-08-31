@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
 
   &-label:not(.form-label-admin) {
-    color: $primary;
+    color: $slime-green;
   }
 
   @media (max-width: $lg) {
@@ -142,7 +142,7 @@ body {
     }
 
     &-pointer {
-      border-left: 10px solid $primary;
+      border-left: 10px solid $slime-green;
       cursor: pointer;
       display: inline-block;
       overflow: hidden;
@@ -589,7 +589,7 @@ button.accordion-button:not(.collapsed) {
 }
 
 .date-enphasis {
-  color: $primary;
+  color: $slime-green;
   font-weight: bold;
 }
 
