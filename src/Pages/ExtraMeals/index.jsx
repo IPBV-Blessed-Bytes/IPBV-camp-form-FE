@@ -105,7 +105,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
     <Card className="form__container__general-height">
       <Card.Body>
         <Container>
-          <Card.Title>Alimentação Extra</Card.Title>
+          <Card.Title>Refeição Extra</Card.Title>
           <Card.Text>
             Nesta seção, você escolhe se deseja adquirir refeições adicionais avulsas (café, almoço ou jantar). O valor
             das refeições será adicionado ao valor do seu pacote base.
