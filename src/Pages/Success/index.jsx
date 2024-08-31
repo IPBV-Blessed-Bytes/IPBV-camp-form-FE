@@ -22,6 +22,8 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
             <p className="form__success__message">Obrigado por enviar suas informações.</p>
             <p className="form__success__contact">
               <b>Qualquer dúvida entraremos em contato.</b>
+              <br />
+              <b>Nos vemos em Garanhuns!!!</b>
             </p>
             <small className={`${pathnamePagarme ? 'mt-5' : ''}`}>
               <em>Igreja Presbiteriana de Boa Viagem</em>
