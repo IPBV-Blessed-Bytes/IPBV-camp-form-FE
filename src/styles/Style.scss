@@ -381,6 +381,16 @@ body {
     &__button {
       margin-top: 1.25rem;
     }
+
+    &__logo {
+      margin-top: 2rem;
+      padding: 0 8rem;
+      width: 100%;
+
+      @media (max-width: $md) {
+        padding: 0;
+      }
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Container, Card, Button } from 'react-bootstrap';
+import campLogo from '../../../public/Images/camp_logo.png';
 
 const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
   const pathnamePagarme = window.location.search;
@@ -28,6 +29,7 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
             <small className={`${pathnamePagarme ? 'mt-5' : ''}`}>
               <em>Igreja Presbiteriana de Boa Viagem</em>
             </small>
+            <img src={campLogo} className="form__success__logo" alt="logo" />
           </div>
         </Container>
       </Card.Body>
