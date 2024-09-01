@@ -224,7 +224,7 @@ const getPackages = (age) => {
     },
     {
       id: '15',
-      title: 'PACOTE 15 - ASSISTIR O CULTO',
+      title: 'PACOTE 15 - ASSISTIR O CULTO SEM ÔNIBUS',
       subtitle: '• SEM ALIMENTAÇÃO',
       observation:
         'Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
