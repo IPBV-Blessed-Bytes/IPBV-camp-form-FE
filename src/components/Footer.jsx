@@ -21,7 +21,7 @@ const Footer = ({ onAdminClick }) => {
           </em>
         </p>
         <p className="form__footer__copyright">
-          © {currentYear} Igreja Presbiteriana de Boa Viagem. Todos os Direitos Reservados
+          © {currentYear} Igreja Presbiteriana de Boa Viagem • Todos os Direitos Reservados
         </p>
       </div>
 
