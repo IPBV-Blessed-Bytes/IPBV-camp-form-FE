@@ -18,8 +18,11 @@ const getPackages = (age) => {
   const packages = [
     {
       id: '1',
-      title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA COM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 1 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'Em salas de aula COM ônibus',
       values: { ...schoolWithBusWithFood },
       accomodation: {
@@ -32,8 +35,11 @@ const getPackages = (age) => {
     },
     {
       id: '2',
-      title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA SEM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 2 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'Em salas de aula SEM ônibus',
       values: { ...schoolWithoutBusWithFood },
       accomodation: {
@@ -46,8 +52,11 @@ const getPackages = (age) => {
     },
     {
       id: '3',
-      title: 'PACOTE 3 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA COM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 3 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation: 'Em salas de aula COM ônibus e SEM alimentação. ',
       observationHighlite:
         age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação *',
@@ -62,8 +71,11 @@ const getPackages = (age) => {
     },
     {
       id: '4',
-      title: 'PACOTE 4 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA SEM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 4 - HOSPEDAGEM INDIVIDUAL EM SALA COLETIVA',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation: 'Em salas de aula SEM ônibus e SEM alimentação. ',
       observationHighlite:
         age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação *',
@@ -78,8 +90,11 @@ const getPackages = (age) => {
     },
     {
       id: '5',
-      title: 'PACOTE 5 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL COM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 5 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'Em salas de aula COM ônibus',
       values: { ...schoolWithBusWithFood },
       accomodation: {
@@ -92,8 +107,11 @@ const getPackages = (age) => {
     },
     {
       id: '6',
-      title: 'PACOTE 6 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL SEM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 6 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'Em salas de aula SEM ônibus',
       values: { ...schoolWithoutBusWithFood },
       accomodation: {
@@ -106,8 +124,11 @@ const getPackages = (age) => {
     },
     {
       id: '7',
-      title: 'PACOTE 7 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL COM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 7 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation: 'Em salas de aula COM ônibus e SEM alimentação. ',
       observationHighlite:
         age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação *',
@@ -122,8 +143,11 @@ const getPackages = (age) => {
     },
     {
       id: '8',
-      title: 'PACOTE 8 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL SEM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 8 - HOSPEDAGEM FAMÍLIA EM SALA INDIVIDUAL',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation: 'Em salas de aula SEM ônibus. ',
       observationHighlite:
         age > 12 && 'Taxa fixa de manuteção no valor de 50 reais para adultos que não optarem por alimentação *',
@@ -138,8 +162,11 @@ const getPackages = (age) => {
     },
     {
       id: '9',
-      title: 'PACOTE 9 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 9 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING)',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation:
         'No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e COM ALIMENTAÇÃO',
       values: { ...schoolWithoutBusWithFood },
@@ -153,8 +180,11 @@ const getPackages = (age) => {
     },
     {
       id: '10',
-      title: 'PACOTE 10 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING) SEM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 10 - HOSPEDAGEM INDIVIDUAL OU FAMÍLIA EM BARRACAS (CAMPING)',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation:
         'No espaço no colégio destinado para camping SEM ônibus (levar sua própria barraca) e SEM ALIMENTAÇÃO. ',
       observationHighlite:
@@ -170,8 +200,11 @@ const getPackages = (age) => {
     },
     {
       id: '11',
-      title: 'PACOTE 11 - HOSPEDAGEM INDIVIDUAL COM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 11 - HOSPEDAGEM INDIVIDUAL',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'COM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithBusWithFood },
       accomodation: {
@@ -184,8 +217,11 @@ const getPackages = (age) => {
     },
     {
       id: '12',
-      title: 'PACOTE 12 - HOSPEDAGEM INDIVIDUAL SEM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 12 - HOSPEDAGEM INDIVIDUAL',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation: 'SEM ônibus / Café da manhã incluso no seminário',
       values: { ...seminaryWithoutBusWithFood },
       accomodation: {
@@ -198,8 +234,11 @@ const getPackages = (age) => {
     },
     {
       id: '13',
-      title: 'PACOTE 13 - HOSPEDAGEM EXTERNA COM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 13 - HOSPEDAGEM EXTERNA',
+      secondTitle: '• COM ÔNIBUS',
+      secondTitleFontColor: 'success',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation:
         'COM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithBusWithFood },
@@ -211,8 +250,11 @@ const getPackages = (age) => {
     },
     {
       id: '14',
-      title: 'PACOTE 14 - HOSPEDAGEM EXTERNA SEM ÔNIBUS',
-      subtitle: '• COM ALIMENTAÇÃO',
+      title: 'PACOTE 14 - HOSPEDAGEM EXTERNA',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• COM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'success',
       observation:
         'SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithoutBusWithFood },
@@ -224,8 +266,11 @@ const getPackages = (age) => {
     },
     {
       id: '15',
-      title: 'PACOTE 15 - ASSISTIR O CULTO SEM ÔNIBUS',
-      subtitle: '• SEM ALIMENTAÇÃO',
+      title: 'PACOTE 15 - ASSISTIR O CULTO',
+      secondTitle: '• SEM ÔNIBUS',
+      secondTitleFontColor: 'danger',
+      thirdTitle: '• SEM ALIMENTAÇÃO',
+      thirdTitleFontColor: 'danger',
       observation:
         'Apenas assistir aos cultos ou participar das programações. SEM alimentação, transporte ou hospedagem. ',
       observationHighlite:
