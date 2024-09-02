@@ -317,7 +317,9 @@ const FormPackages = ({
                             >
                               <Card.Body id={cards.id}>
                                 <Card.Title>
-                                  {cards.title} <span className="text-success-custom">{cards.subtitle}</span>
+                                  {cards.title}
+                                  <span className={`text-${cards.secondTitleFontColor}-custom`}> {cards.secondTitle}</span>
+                                  <span className={`text-${cards.thirdTitleFontColor}-custom`}> {cards.thirdTitle}</span>
                                 </Card.Title>
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">
