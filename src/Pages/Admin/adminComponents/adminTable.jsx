@@ -292,7 +292,20 @@ const AdminTable = () => {
       },
       {
         Header: 'Pacote:',
-        accessor: 'package.title',
+        accessor: (row) =>
+          `${row.package.title} ${
+            row.package.transportation === 'Com Ônibus'
+              ? 'COM ÔNIBUS'
+              : row.package.transportation === 'Sem Ônibus'
+              ? 'SEM ÔNIBUS'
+              : ''
+          } ${
+            row.food === 'Café da manhã, almoço e jantar' || row.food === 'Almoço e jantar'
+              ? 'COM ALIMENTAÇÃO'
+              : row.food === ''
+              ? ''
+              : 'SEM ALIMENTAÇÃO'
+          }`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
       },
