@@ -15,6 +15,7 @@ import { initialValues } from '../../../Pages/Routes/constants';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
+  const [name, setName] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState(null);
   const [editFormData, setEditFormData] = useState({});
@@ -68,10 +69,11 @@ const AdminTable = () => {
     setShowEditModal(true);
   };
 
-  const handleDeleteClick = async (index) => {
+  const handleDeleteClick = async (index, row) => {
     handleDeleteSpecific();
     setEditRowIndex(index);
     setShowDeleteModal(true);
+    setName(row.original.personalInformation.name);
   };
 
   const handleFormChange = (e, formType) => {
@@ -525,7 +527,7 @@ const AdminTable = () => {
             <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
               <Icons typeIcon="edit" iconSize={24} />
             </Button>{' '}
-            <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index)}>
+            <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
               <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
             </Button>
           </div>
@@ -899,7 +901,7 @@ const AdminTable = () => {
         <Modal.Body>
           {modalType === 'delete-all'
             ? 'Tem certeza que deseja excluir as inscrições selecionadas?'
-            : 'Tem certeza que deseja excluir essa inscrição?'}
+            : `Tem certeza que deseja excluir a inscrição de ${name}?`}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteModal}>
