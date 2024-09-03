@@ -300,9 +300,9 @@ const AdminTable = () => {
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.food === 'Café da manhã, almoço e jantar' || row.food === 'Almoço e jantar'
+            row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
               ? 'COM ALIMENTAÇÃO'
-              : row.food === ''
+              : row.package.food === ''
               ? ''
               : 'SEM ALIMENTAÇÃO'
           }`,
