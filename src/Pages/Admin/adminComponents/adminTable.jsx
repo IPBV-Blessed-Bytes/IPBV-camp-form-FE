@@ -370,7 +370,7 @@ const AdminTable = () => {
         accessor: 'contact.car',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
       },
       {
         Header: 'Vagas de Carona:',
@@ -383,7 +383,7 @@ const AdminTable = () => {
         accessor: 'contact.needRide',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
       },
       {
         Header: 'Observação da Carona:',
@@ -414,7 +414,7 @@ const AdminTable = () => {
         accessor: 'contact.isWhatsApp',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
       },
       {
         Header: 'Email:',
@@ -469,7 +469,7 @@ const AdminTable = () => {
         accessor: 'extraMeals.someFood',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
       },
       {
         Header: 'Dias de Refeição Extra:',
@@ -493,7 +493,7 @@ const AdminTable = () => {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        Cell: ({ value }) => (value ? 'Sim' : 'Não'),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
         sortType: 'alphanumeric',
       },
       {
