@@ -321,7 +321,13 @@ const AdminTable = () => {
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
         Cell: ({ value }) =>
-          value === 'creditCard' ? 'Cartão de Crédito' : value === 'pix' ? 'PIX' : 'Boleto Bancário',
+          value === 'creditCard'
+            ? 'Cartão de Crédito'
+            : value === 'pix'
+            ? 'PIX'
+            : value === 'boleto'
+            ? 'Boleto Bancário'
+            : 'Não pagante',
       },
       {
         Header: 'Igreja:',
