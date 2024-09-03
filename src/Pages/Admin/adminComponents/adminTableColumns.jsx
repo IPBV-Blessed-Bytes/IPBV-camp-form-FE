@@ -43,11 +43,12 @@ const AdminTableColumns = ({
       label: 'Forma de Pagamento',
       name: 'formPayment.formPayment',
       type: 'select',
-      placeholder: 'Selecione status de pagamento',
+      placeholder: 'Selecione pagamento',
       oddOrEven: 'odd',
       options: [
-        { label: 'Pago', value: 'Pago' },
-        { label: 'Não Pago', value: 'Não Pago' },
+        { label: 'Cartão de Crédito', value: 'creditCard' },
+        { label: 'PIX', value: 'pix' },
+        { label: 'Boleto Bancário', value: 'ticket' },
       ],
     },
     {
