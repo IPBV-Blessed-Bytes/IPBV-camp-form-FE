@@ -298,12 +298,12 @@ const AdminTable = () => {
               ? 'COM ÔNIBUS'
               : row.package.transportation === 'Sem Ônibus'
               ? 'SEM ÔNIBUS'
-              : ''
+              : '-'
           } ${
             row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
               ? 'COM ALIMENTAÇÃO'
               : row.package.food === ''
-              ? ''
+              ? '-'
               : 'SEM ALIMENTAÇÃO'
           }`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -314,6 +314,7 @@ const AdminTable = () => {
         accessor: 'personalInformation.name',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: alphabeticalSort,
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Forma de Pagamento:',
@@ -334,6 +335,7 @@ const AdminTable = () => {
         accessor: 'contact.church',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Data de Nascimento:',
@@ -352,44 +354,49 @@ const AdminTable = () => {
         accessor: 'personalInformation.rg',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Órgão Emissor:',
         accessor: 'personalInformation.rgShipper',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Estado Emissor:',
         accessor: 'personalInformation.rgShipperState',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Vai de Carro:',
         accessor: 'contact.car',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
         Header: 'Vagas de Carona:',
         accessor: 'contact.numberVacancies',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Precisa de Carona:',
         accessor: 'contact.needRide',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
         Header: 'Observação da Carona:',
         accessor: 'contact.rideObservation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Data de Inscrição:',
@@ -408,93 +415,108 @@ const AdminTable = () => {
         accessor: 'contact.cellPhone',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Whatsapp:',
         accessor: 'contact.isWhatsApp',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
         Header: 'Email:',
         accessor: 'contact.email',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Preço:',
         accessor: 'totalPrice',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Agregados:',
         accessor: 'contact.aggregate',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Acomodação:',
         accessor: 'package.accomodationName',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Sub Acomodação:',
         accessor: 'package.subAccomodation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Transporte:',
         accessor: 'package.transportation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Alimentação:',
         accessor: 'package.food',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Refeição Extra:',
         accessor: 'extraMeals.someFood',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
         Header: 'Dias de Refeição Extra:',
         accessor: 'extraMeals.extraMeals',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const isEmpty = !value || (Array.isArray(value) && value.every((item) => item === ''));
+          return isEmpty ? '-' : value;
+        },
       },
       {
         Header: 'Observação:',
         accessor: 'observation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Cupom:',
         accessor: 'package.discountCoupon',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : ''),
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
         Header: 'Editar / Deletar',
@@ -647,7 +669,7 @@ const AdminTable = () => {
     const orderedData = filteredData.map((row) => {
       const orderedRow = {};
       orderedFields.forEach((field) => {
-        orderedRow[field] = row[field] || ''; // Preenche com string vazia se o campo não existir
+        orderedRow[field] = row[field] || '';
       });
       return orderedRow;
     });
