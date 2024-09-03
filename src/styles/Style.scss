@@ -271,12 +271,6 @@ body {
           display: flex;
           flex-direction: column;
         }
-
-        .price-with-discount {
-          color: red;
-          font-style: italic;
-          text-decoration: line-through;
-        }
       }
     }
 
@@ -890,11 +884,11 @@ button.btn.btn-outline-danger:hover svg {
 }
 
 .text-success-custom {
-  color: $dark-green;
+  color: $dark-green !important;
 }
 
 .text-danger-custom {
-  color: $red;
+  color: $red !important;
 }
 
 .custom-new-registration::placeholder {
@@ -928,4 +922,10 @@ button.btn.btn-outline-danger:hover svg {
 
 .font-weight-bold {
   font-weight: bold;
+}
+
+.price-with-discount {
+  color: red !important;
+  font-style: italic;
+  text-decoration: line-through;
 }

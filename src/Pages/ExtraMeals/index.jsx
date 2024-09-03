@@ -176,14 +176,69 @@ const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }
                   <b>Valores:</b> <br />
                   <ul>
                     <li>
-                      Café da manhã: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '12,00' : '23,00'} por refeição</b>
+                      Café da manhã:{' '}
+                      <b>
+                        {age < 7 ? (
+                          <>
+                            <span className="price-with-discount">R$23,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$0,00</span>
+                          </>
+                        ) : age <= 12 ? (
+                          <>
+                            <span className="price-with-discount">R$23,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$12,00</span>
+                          </>
+                        ) : (
+                          'R$ 23,00'
+                        )}{' '}
+                        por refeição
+                      </b>
                     </li>
                     <li>
-                      Almoço: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '13,00' : '26,00'} por refeição</b>
+                      Almoço:{' '}
+                      <b>
+                        {age < 7 ? (
+                          <>
+                            <span className="price-with-discount">R$26,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$0,00</span>
+                          </>
+                        ) : age <= 12 ? (
+                          <>
+                            <span className="price-with-discount">R$26,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$13,00</span>
+                          </>
+                        ) : (
+                          'R$ 26,00'
+                        )}{' '}
+                        por refeição
+                      </b>
                     </li>
                     <li>
-                      Jantar: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '13,00' : '26,00'} por refeição</b>
+                      Jantar:{' '}
+                      <b>
+                        {age < 7 ? (
+                          <>
+                            <span className="price-with-discount">R$26,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$0,00</span>
+                          </>
+                        ) : age <= 12 ? (
+                          <>
+                            <span className="price-with-discount">R$26,00</span>&nbsp;⭢&nbsp;
+                            <span className="text-success-custom">R$13,00</span>
+                          </>
+                        ) : (
+                          'R$ 26,00'
+                        )}{' '}
+                        por refeição
+                      </b>
                     </li>
+                    <br />
+                    <em>
+                      <u className="text-success-custom">
+                        {age < 7 && '⭢ Criança até 6 anos não paga alimentação'}
+                        {age >= 7 && age <= 12 && '⭢ Criança de 7 a 12 anos paga apenas 50% na refeição extra'}
+                      </u>
+                    </em>
                   </ul>
                 </Card.Text>
               </Col>
