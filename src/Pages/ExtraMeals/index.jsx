@@ -176,13 +176,13 @@ const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }
                   <b>Valores:</b> <br />
                   <ul>
                     <li>
-                      Café da manhã: <b>R$ 23,00 por refeição</b>
+                      Café da manhã: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '12,00' : '23,00'} por refeição</b>
                     </li>
                     <li>
-                      Almoço: <b>R$ 26,00 por refeição</b>
+                      Almoço: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '13,00' : '26,00'} por refeição</b>
                     </li>
                     <li>
-                      Jantar: <b>R$ 26,00 por refeição</b>
+                      Jantar: <b>R$ {age < 7 ? '0,00' : age <= 12 ? '13,00' : '26,00'} por refeição</b>
                     </li>
                   </ul>
                 </Card.Text>
