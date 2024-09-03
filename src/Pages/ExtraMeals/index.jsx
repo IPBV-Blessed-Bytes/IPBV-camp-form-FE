@@ -5,6 +5,7 @@ import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootst
 import { toast } from 'react-toastify';
 import Icons from '../../components/Icons';
 import { ExtraMealsSchema } from '../../form/validations/schema';
+import calculateAge from '../Packages/utils/calculateAge';
 
 const mealOptions = [
   { day: 'Sábado', name: 'Sábado - almoço', price: 26, checkboxMargin: '' },
@@ -29,10 +30,11 @@ const groupedMealOptions = mealOptions.reduce((acc, meal) => {
   return acc;
 }, {});
 
-const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
+const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [extraMealSelected, setExtraMealSelected] = useState(false);
+  const age = calculateAge(birthDate);
 
   const { values, handleChange, errors, submitForm, setFieldValue } = useFormik({
     initialValues: { ...initialValues, extraMeals: initialValues.extraMeals || [] },
@@ -41,7 +43,9 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
         setCheckboxHasError(true);
       } else {
         extraMealSelected &&
-          toast.success('Você receberá a senha do almoço adquirido presencialmente, no dia escolhido');
+          toast.success(
+            'Você receberá as senhas das refeições adquiridas presencialmente, no seu checkin no acampamento',
+          );
         values.totalPrice = totalPrice;
         nextStep();
         updateForm(values);
@@ -53,19 +57,30 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
   });
 
   useEffect(() => {
-    if (!values.someFood) {
-      setTotalPrice(0);
-    } else {
-      const calculateTotalPrice = () => {
+    const calculateTotalPrice = () => {
+      if (!values.someFood) {
+        setTotalPrice(0);
+      } else {
         const total = values.extraMeals.reduce((sum, meal) => {
           const mealOption = mealOptions.find((option) => option.name === meal);
-          return sum + (mealOption ? mealOption.price : 0);
+          if (!mealOption) return sum;
+
+          let mealPrice = mealOption.price;
+          if (age <= 6) {
+            mealPrice = 0;
+          } else if (age >= 7 && age <= 12) {
+            mealPrice *= 0.5;
+          }
+
+          return sum + mealPrice;
         }, 0);
-        setTotalPrice(total);
-      };
-      calculateTotalPrice();
-    }
-  }, [values.extraMeals, values.someFood]);
+
+        setTotalPrice(Math.round(total));
+      }
+    };
+
+    calculateTotalPrice();
+  }, [values.extraMeals, values.someFood, age]);
 
   const handleChangeSelect = (event) => {
     const value = event.target.value === 'true';
@@ -113,7 +128,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
           <Card.Text>
             <i>
               Caso opte por não adquirir refeições avulsas nesta etapa, você poderá fazê-lo posteriormente no próprio
-              acampamento, <b>até o dia anterior à refeição</b>, caso seja necessário.{' '}
+              acampamento, <b>até o dia anterior à refeição</b>, caso seja necessário.
             </i>
           </Card.Text>
           <Card.Text>
@@ -216,14 +231,17 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
             )}
           </Form>
           {values.someFood && (
-            <Row>
-              <Col>
-                <Card.Text className="d-flex justify-content-end">
-                  <i>Valor total das refeições selecionadas:</i> &nbsp;
-                  <b className="text-success">R$ {totalPrice},00</b>
-                </Card.Text>
-              </Col>
-            </Row>
+            <>
+              <hr className="horizontal-line" />
+              <Row>
+                <Col>
+                  <Card.Text className="d-flex justify-content-end">
+                    <i>Valor Total das Refeições:</i>&nbsp;
+                    <b className="text-success-custom">R$ {totalPrice.toFixed(2)}</b>
+                  </Card.Text>
+                </Col>
+              </Row>
+            </>
           )}
         </Container>
       </Card.Body>
@@ -241,6 +259,7 @@ const ExtraMeals = ({ backStep, nextStep, initialValues, updateForm }) => {
 };
 
 ExtraMeals.propTypes = {
+  birthDate: PropTypes.instanceOf(Date),
   backStep: PropTypes.func,
   nextStep: PropTypes.func,
   updateForm: PropTypes.func,
