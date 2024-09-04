@@ -24,7 +24,7 @@ import { BASE_URL } from '../../config/index';
 import Icons from '../../components/Icons';
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.finalReview);
+  const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
@@ -293,7 +293,7 @@ const FormRoutes = () => {
             <button
               onClick={() =>
                 window.open(
-                  'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%20https://inscricaoipbv.com.br/',
+                  'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%3A%20https://inscricaoipbv.com.br/',
                   '_blank',
                 )
               }
