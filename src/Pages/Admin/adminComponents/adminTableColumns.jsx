@@ -17,8 +17,8 @@ const AdminTableColumns = ({
   const [missingFields, setMissingFields] = useState([]);
 
   const packageOptions = packages.map((pkg) => ({
-    label: pkg,
-    value: pkg,
+    label: pkg.label,
+    value: pkg.value,
   }));
 
   const fields = [
