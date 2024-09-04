@@ -166,10 +166,10 @@ const AdminTable = () => {
     const sanitizedFormData = sanitizeFields(addFormData, initialValues);
 
     const updatedFormValues = {
-      ...sanitizedFormData,
       manualRegistration: true,
       registrationDate: currentDate,
       observation: addFormData.observation,
+      ...sanitizedFormData,
     };
 
     try {
@@ -300,12 +300,12 @@ const AdminTable = () => {
               ? 'COM ÔNIBUS'
               : row.package.transportation === 'Sem Ônibus'
               ? 'SEM ÔNIBUS'
-              : '-'
+              : ''
           } ${
             row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
               ? 'COM ALIMENTAÇÃO'
               : row.package.food === ''
-              ? '-'
+              ? ''
               : 'SEM ALIMENTAÇÃO'
           }`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
@@ -411,6 +411,7 @@ const AdminTable = () => {
         accessor: 'personalInformation.gender',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Celular:',
