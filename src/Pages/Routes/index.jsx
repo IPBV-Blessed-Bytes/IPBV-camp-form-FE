@@ -21,9 +21,10 @@ import { enumSteps, initialValues } from './constants';
 import useAuth from '../../hooks/useAuth';
 import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '../../config/index';
+import Icons from '../../components/Icons';
 
 const FormRoutes = () => {
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.finalReview);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
@@ -36,6 +37,7 @@ const FormRoutes = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
+  const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
@@ -172,6 +174,10 @@ const FormRoutes = () => {
     fetchTotalRegistrations();
   }, []);
 
+  const toggleWhatsAppButtons = () => {
+    setShowWhatsAppButtons(!showWhatsAppButtons);
+  };
+
   useEffect(() => {
     if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname || isAdminCouponsPathname)) {
       navigate('/admin');
@@ -181,7 +187,6 @@ const FormRoutes = () => {
   const handleAdminClick = () => {
     navigate('/admin');
   };
-
 
   return (
     <div className="form">
@@ -232,6 +237,7 @@ const FormRoutes = () => {
 
             {steps === enumSteps.extraMeals && isNotSuccessPathname && (
               <ExtraMeals
+                birthDate={formValues.personalInformation.birthday}
                 backStep={backStep}
                 nextStep={nextStep}
                 initialValues={formValues.extraMeals}
@@ -274,6 +280,29 @@ const FormRoutes = () => {
               />
             </Routes>
           </div>
+
+          <button className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
+            <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
+          </button>
+
+          <div className={`whatsapp-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
+            <button onClick={() => window.open('https://wa.me/5581998390194', '_blank')}>
+              <Icons typeIcon="arrow-right" iconSize={25} fill={'#fff'} />
+              &nbsp;Fale Conosco
+            </button>
+            <button
+              onClick={() =>
+                window.open(
+                  'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%20https://inscricaoipbv.com.br/',
+                  '_blank',
+                )
+              }
+            >
+              <Icons typeIcon="arrow-right" iconSize={25} fill={'#fff'} />
+              &nbsp;Compartilhar
+            </button>
+          </div>
+
           <Footer onAdminClick={handleAdminClick} />
         </div>
       )}

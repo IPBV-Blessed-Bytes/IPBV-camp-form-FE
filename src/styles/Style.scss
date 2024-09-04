@@ -929,3 +929,54 @@ button.btn.btn-outline-danger:hover svg {
   font-style: italic;
   text-decoration: line-through;
 }
+
+.whatsapp-btn {
+  background-color: #25d366;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  left: 20px;
+  padding: 10px;
+  opacity: 0.8;
+  position: fixed;
+  z-index: 9999;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.whatsapp-floating-buttons {
+  bottom: 66px;
+  display: flex;
+  flex-direction: column;
+  left: 20px;
+  opacity: 0;
+  position: fixed;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  visibility: hidden;
+  z-index: 9999;
+
+  button {
+    background-color: #25d366;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.whatsapp-floating-buttons.show {
+  opacity: 1;
+  visibility: visible;
+}
