@@ -537,6 +537,7 @@ button.accordion-button:not(.collapsed) {
   gap: 0.5rem;
   flex-direction: column;
   justify-content: center;
+  opacity: 0.5;
 
   .spinner-border {
     color: $secondary;
