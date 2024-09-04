@@ -45,6 +45,8 @@ const AdminTableColumns = ({
       type: 'select',
       placeholder: 'Selecione pagamento',
       oddOrEven: 'odd',
+      required: true,
+      errorMessage: 'Selecione a forma de pagamento',
       options: [
         { label: 'Cartão de Crédito', value: 'creditCard' },
         { label: 'PIX', value: 'pix' },
