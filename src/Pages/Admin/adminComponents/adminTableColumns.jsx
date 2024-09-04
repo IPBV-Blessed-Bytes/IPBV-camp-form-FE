@@ -49,6 +49,7 @@ const AdminTableColumns = ({
         { label: 'Cartão de Crédito', value: 'creditCard' },
         { label: 'PIX', value: 'pix' },
         { label: 'Boleto Bancário', value: 'ticket' },
+        { label: 'Não Pagante', value: 'nonPaidChild' },
       ],
     },
     {
@@ -263,33 +264,45 @@ const AdminTableColumns = ({
 
   return (
     <Row>
-      {fields.map((field, index) => (
-        <AdminTableField
-          key={index}
-          label={field.label}
-          type={field.type || 'text'}
-          name={field.name}
-          value={
-            field.name === 'registrationDate'
-              ? editForm
-                ? editFormData.registrationDate
-                : currentDate
-              : editForm
-              ? editFormData[field.name.split('.')[0]]?.[field.name.split('.')[1]]
-              : addFormData[field.name.split('.')[0]]?.[field.name.split('.')[1]]
-          }
-          onChange={handleFormChange}
-          placeholder={addForm ? field.placeholder : ''}
-          addForm={addForm}
-          disabled={field.disabled || false}
-          options={field.options || []}
-          required={field.required}
-          errorMessage={field.errorMessage}
-          oddOrEven={field.oddOrEven}
-          formSubmitted={formSubmitted}
-          missingFields={missingFields}
-        />
-      ))}
+      {fields.map((field, index) => {
+        const isRegistrationDate = field.name === 'registrationDate';
+        const isEditForm = editForm;
+        const isNestedField = field.name.includes('.');
+
+        const getNestedValue = (data) => data[field.name.split('.')[0]]?.[field.name.split('.')[1]];
+
+        const value = isRegistrationDate
+          ? isEditForm
+            ? editFormData.registrationDate
+            : currentDate
+          : isEditForm
+          ? isNestedField
+            ? getNestedValue(editFormData)
+            : editFormData[field.name]
+          : isNestedField
+          ? getNestedValue(addFormData)
+          : addFormData[field.name];
+
+        return (
+          <AdminTableField
+            key={index}
+            label={field.label}
+            type={field.type || 'text'}
+            name={field.name}
+            value={value}
+            onChange={handleFormChange}
+            placeholder={addForm ? field.placeholder : ''}
+            addForm={addForm}
+            disabled={field.disabled || false}
+            options={field.options || []}
+            required={field.required}
+            errorMessage={field.errorMessage}
+            oddOrEven={field.oddOrEven}
+            formSubmitted={formSubmitted}
+            missingFields={missingFields}
+          />
+        );
+      })}
     </Row>
   );
 };
