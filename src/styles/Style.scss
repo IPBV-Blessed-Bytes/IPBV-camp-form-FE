@@ -800,6 +800,7 @@ button.btn.btn-outline-danger:hover svg {
 .table-cells-header {
   background-color: $medium-green !important;
   min-width: 255px;
+  padding: 6px !important;
 
   div .sort-icon {
     display: none;
