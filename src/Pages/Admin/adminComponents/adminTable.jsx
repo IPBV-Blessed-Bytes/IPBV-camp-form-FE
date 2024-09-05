@@ -360,31 +360,26 @@ const AdminTable = () => {
       },
       {
         Header: 'Órgão Emissor:',
-        accessor: 'personalInformation.rgShipper',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? value : '-'),
-      },
-      {
-        Header: 'Estado Emissor:',
-        accessor: 'personalInformation.rgShipperState',
+        accessor: (row) =>
+          `${row.personalInformation.rgShipper} -
+          ${row.personalInformation.rgShipperState}`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? value : '-'),
       },
       {
         Header: 'Vai de Carro:',
-        accessor: 'contact.car',
+        accessor: (row) => ({
+          car: row.contact.car,
+          numberVacancies: row.contact.numberVacancies,
+        }),
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
-      },
-      {
-        Header: 'Vagas de Carona:',
-        accessor: 'contact.numberVacancies',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? value : '-'),
+        Cell: ({ value }) => {
+          const carText = value.car ? 'Sim' : !value.car ? 'Não' : '-';
+          const numberVacanciesText = value.numberVacancies ? value.numberVacancies : '-';
+          return `${carText} | Vagas: ${numberVacanciesText}`;
+        },
       },
       {
         Header: 'Precisa de Carona:',
@@ -415,17 +410,17 @@ const AdminTable = () => {
       },
       {
         Header: 'Celular:',
-        accessor: 'contact.cellPhone',
+        accessor: (row) => ({
+          cellPhone: row.contact.cellPhone,
+          isWhatsApp: row.contact.isWhatsApp,
+        }),
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? value : '-'),
-      },
-      {
-        Header: 'Whatsapp:',
-        accessor: 'contact.isWhatsApp',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+        Cell: ({ value }) => {
+          const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
+          const isWhatsAppText = value.isWhatsApp ? 'Sim' : !value.isWhatsApp ? 'Não' : '-';
+          return `${cellPhoneText} | Wpp: ${isWhatsAppText}`;
+        },
       },
       {
         Header: 'Email:',
@@ -485,19 +480,19 @@ const AdminTable = () => {
       },
       {
         Header: 'Refeição Extra:',
-        accessor: 'extraMeals.someFood',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
-      },
-      {
-        Header: 'Dias de Refeição Extra:',
-        accessor: 'extraMeals.extraMeals',
+        accessor: (row) => ({
+          someFood: row.extraMeals.someFood,
+          extraMeals: row.extraMeals.extraMeals,
+        }),
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const isEmpty = !value || (Array.isArray(value) && value.every((item) => item === ''));
-          return isEmpty ? '-' : value;
+          const someFoodText = value.someFood ? 'Sim' : !value.someFood ? 'Não' : '-';
+          const extraMealsText =
+            !value.extraMeals || (Array.isArray(value.extraMeals) && value.extraMeals.every((item) => item === ''))
+              ? '-'
+              : value.extraMeals.join(', ');
+          return `${someFoodText} | Dias: ${extraMealsText}`;
         },
       },
       {
