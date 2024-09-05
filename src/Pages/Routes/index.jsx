@@ -286,11 +286,15 @@ const FormRoutes = () => {
           </button>
 
           <div className={`whatsapp-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-            <button onClick={() => window.open('https://wa.me/5581998390194', '_blank')}>
-              <Icons typeIcon="arrow-right" iconSize={25} fill={'#fff'} />
-              &nbsp;Fale Conosco
+            <button
+              className="whatsapp-message-button"
+              onClick={() => window.open('https://wa.me/5581998390194', '_blank')}
+            >
+              Fale Conosco&nbsp;
+              <Icons className="whatsapp-icons" typeIcon="message" iconSize={25} fill={'#fff'} />
             </button>
             <button
+              className="whatsapp-share-button"
               onClick={() =>
                 window.open(
                   'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%3A%20https://inscricaoipbv.com.br/',
@@ -298,8 +302,8 @@ const FormRoutes = () => {
                 )
               }
             >
-              <Icons typeIcon="arrow-right" iconSize={25} fill={'#fff'} />
-              &nbsp;Compartilhar
+              Compartilhar&nbsp;
+              <Icons className="whatsapp-icons" typeIcon="share" iconSize={25} fill={'#fff'} />
             </button>
           </div>
 

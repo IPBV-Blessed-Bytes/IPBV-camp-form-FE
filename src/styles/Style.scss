@@ -982,3 +982,10 @@ button.btn.btn-outline-danger:hover svg {
   opacity: 1;
   visibility: visible;
 }
+
+.whatsapp-message-button:hover,
+.whatsapp-share-button:hover {
+  .whatsapp-icons {
+    fill: $light-yellow;
+  }
+}
