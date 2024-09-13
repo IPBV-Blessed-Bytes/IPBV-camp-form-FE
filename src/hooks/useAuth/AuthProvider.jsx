@@ -1,9 +1,9 @@
 import { createContext, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY } from '../../config';
+import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY } from '@/config';
 import { isTokenValid } from './helpers';
-import fetcher from '../../fetchers';
+import fetcher from '@/fetchers';
 
 export const AuthContext = createContext({
   user: {},

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { JWT_LOCAL_STORAGE_KEY, BASE_URL, LOGIN_ROUTE } from '../config';
+import { JWT_LOCAL_STORAGE_KEY, BASE_URL, LOGIN_ROUTE } from '@/config';
 import { isTokenValid } from './helpers';
 
 const fetcherWithCredentials = axios.create({

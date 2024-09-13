@@ -11,6 +11,11 @@ export default defineConfig({
       failOnError: false,
     }),
   ],
+  resolve: {
+    alias: {
+      '@': new URL('./src', import.meta.url),
+    },
+  },
   server: {
     port: 3000,
   },
