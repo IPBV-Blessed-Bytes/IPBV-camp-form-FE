@@ -14,7 +14,8 @@ module.exports = {
   settings: {
     react: { version: 'detect' },
     'import/resolver': {
-      node: {
+      alias: {
+        map: [['@', './src']],
         extensions: ['.js', '.jsx'],
       },
     },
