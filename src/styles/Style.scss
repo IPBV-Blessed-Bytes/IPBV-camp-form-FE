@@ -460,6 +460,62 @@ body {
   }
 }
 
+.admin-card {
+  height: 100%;
+
+  .card-container {
+    border-radius: 0.625rem;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.25rem;
+    transition: transform 0.2s ease-in-out;
+
+    &-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0.625rem;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .package-card {
+    background-color: $light-blue;
+    color: $medium-blue;
+
+    .card-container {
+      &-title {
+        color: $blue;
+      }
+
+      &-content {
+        color: $blue;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .total-card {
+    background-color: $light-brown;
+    color: $medium-brown;
+
+    .card-container {
+      &-title {
+        color: $brown;
+      }
+
+      &-content {
+        font-size: 1.2rem;
+        color: $brown;
+      }
+    }
+  }
+}
+
 // Style utility classes
 input,
 textarea,
