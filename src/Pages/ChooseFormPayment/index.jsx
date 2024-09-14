@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import { formPaymentSchema } from '../../form/validations/schema';
-import Loading from '../../components/Loading';
+import { formPaymentSchema } from '@/form/validations/schema';
+import Loading from '@/components/Loading';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({

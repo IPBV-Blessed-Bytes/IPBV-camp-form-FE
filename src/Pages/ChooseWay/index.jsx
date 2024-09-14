@@ -5,11 +5,11 @@ import { Card, Container, Button, Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
 import { useFormik } from 'formik';
-import Footer from '../../components/Footer';
+import Footer from '@/components/Footer';
 import FormRoutes from '../Routes';
-import { chooseWaySchema } from '../../form/validations/schema';
+import { chooseWaySchema } from '@/form/validations/schema';
 import CpfReview from '../CpfReview';
-import Loading from '../../components/Loading';
+import Loading from '@/components/Loading';
 
 const initialValues = {
   personalInformation: {

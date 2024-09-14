@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import Icons from '../../../components/Icons';
+import Icons from '@/components/Icons';
 import PropTypes from 'prop-types';
 
 const AdminLoggedOut = ({

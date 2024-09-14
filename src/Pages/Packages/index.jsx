@@ -2,13 +2,13 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import Icons from '../../components/Icons';
-import formatCurrency from '../../utils/formatCurrency';
+import Icons from '@/components/Icons';
+import formatCurrency from '@/utils/formatCurrency';
 import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
 import axios from 'axios';
 
-import { BASE_URL } from '../../config/index';
+import { BASE_URL } from '@/config/index';
 
 const FormPackages = ({
   nextStep,
@@ -318,8 +318,14 @@ const FormPackages = ({
                               <Card.Body id={cards.id}>
                                 <Card.Title>
                                   {cards.title}
-                                  <span className={`text-${cards.secondTitleFontColor}-custom`}> {cards.secondTitle}</span>
-                                  <span className={`text-${cards.thirdTitleFontColor}-custom`}> {cards.thirdTitle}</span>
+                                  <span className={`text-${cards.secondTitleFontColor}-custom`}>
+                                    {' '}
+                                    {cards.secondTitle}
+                                  </span>
+                                  <span className={`text-${cards.thirdTitleFontColor}-custom`}>
+                                    {' '}
+                                    {cards.thirdTitle}
+                                  </span>
                                 </Card.Title>
                                 <div className="card-wrapper d-flex justify-content-between">
                                   <div className="card-text w-100">

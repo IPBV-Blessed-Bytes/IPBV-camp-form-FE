@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
-import Icons from '../../../components/Icons';
+import Icons from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import fetcher from '../../../fetchers/fetcherWithCredentials';
-import Loading from '../../../components/Loading';
+import fetcher from '@/fetchers/fetcherWithCredentials';
+import Loading from '@/components/Loading';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -165,7 +165,13 @@ const AdminCoupon = () => {
               <tr key={coupon.id}>
                 <td>{coupon.code}</td>
                 <td>{coupon.discount}</td>
-                <td>{coupon.used ? <Icons typeIcon="checked" iconSize={30} fill="#65a300" /> : <Icons typeIcon="not-checked" iconSize={30} fill="#dc3545" />}</td>
+                <td>
+                  {coupon.used ? (
+                    <Icons typeIcon="checked" iconSize={30} fill="#65a300" />
+                  ) : (
+                    <Icons typeIcon="not-checked" iconSize={30} fill="#dc3545" />
+                  )}
+                </td>
                 <td>{coupon.user}</td>
                 <td>
                   <Button variant="outline-success" onClick={() => openModal(coupon)}>

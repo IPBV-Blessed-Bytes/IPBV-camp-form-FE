@@ -3,15 +3,15 @@ import { Container, Row, Button, Form, Modal, Col, Table } from 'react-bootstrap
 import { useTable, useFilters, useSortBy } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Icons from '../../../components/Icons';
+import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
 import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../../../components/Loading';
-import fetcher from '../../../fetchers/fetcherWithCredentials';
+import Loading from '@/components/Loading';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
-import { initialValues } from '../../../Pages/Routes/constants';
+import { initialValues } from '@/Pages/Routes/constants';
 
 const AdminTable = () => {
   const [data, setData] = useState([]);
@@ -269,8 +269,8 @@ const AdminTable = () => {
               {selectedRows.length === 1
                 ? selectedRows.length + ' selecionado'
                 : selectedRows.length > 1
-                ? selectedRows.length + ' selecionados'
-                : 'Selecionar Todos'}
+                  ? selectedRows.length + ' selecionados'
+                  : 'Selecionar Todos'}
             </span>
           </div>
         ),
@@ -299,14 +299,14 @@ const AdminTable = () => {
             row.package.transportation === 'Com Ônibus'
               ? 'COM ÔNIBUS'
               : row.package.transportation === 'Sem Ônibus'
-              ? 'SEM ÔNIBUS'
-              : ''
+                ? 'SEM ÔNIBUS'
+                : ''
           } ${
             row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
               ? 'COM ALIMENTAÇÃO'
               : row.package.food === ''
-              ? ''
-              : 'SEM ALIMENTAÇÃO'
+                ? ''
+                : 'SEM ALIMENTAÇÃO'
           }`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -327,10 +327,10 @@ const AdminTable = () => {
           value === 'creditCard'
             ? 'Cartão de Crédito'
             : value === 'pix'
-            ? 'PIX'
-            : value === 'boleto'
-            ? 'Boleto Bancário'
-            : 'Não pagante',
+              ? 'PIX'
+              : value === 'boleto'
+                ? 'Boleto Bancário'
+                : 'Não pagante',
       },
       {
         Header: 'Igreja:',

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import Icons from '../../components/Icons';
+import Icons from '@/components/Icons';
 import FormRoutes from '../Routes';
 
 const CloseForm = () => {

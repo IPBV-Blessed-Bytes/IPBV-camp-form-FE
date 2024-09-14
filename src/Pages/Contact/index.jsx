@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
-import { additionalInformationSchema } from '../../form/validations/schema';
+import { additionalInformationSchema } from '@/form/validations/schema';
 
 const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
