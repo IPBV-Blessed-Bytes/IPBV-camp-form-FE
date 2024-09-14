@@ -1,4 +1,4 @@
-import { format, parse } from 'date-fns';
+import { parse } from 'date-fns';
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
 import { cpf } from 'cpf-cnpj-validator';
