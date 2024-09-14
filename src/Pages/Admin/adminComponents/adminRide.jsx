@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Container, Accordion, Table, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Icons from '../../../components/Icons';
+import Icons from '@/components/Icons';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
-import Loading from '../../../components/Loading';
-import fetcher from '../../../fetchers/fetcherWithCredentials';
+import Loading from '@/components/Loading';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });

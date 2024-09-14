@@ -4,8 +4,8 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import ChooseFormPayment from '../ChooseFormPayment';
 import FormContact from '../Contact';
 import FormHome from '../Home';
@@ -18,10 +18,10 @@ import AdminHome from '../Admin/admin';
 import AdminTable from '../Admin/adminComponents/adminTable';
 import AdminRide from '../Admin/adminComponents/adminRide';
 import { enumSteps, initialValues } from './constants';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import AdminCoupon from '../Admin/adminComponents/adminCoupon';
-import { BASE_URL } from '../../config/index';
-import Icons from '../../components/Icons';
+import { BASE_URL } from '@/config/index';
+import Icons from '@/components/Icons';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);

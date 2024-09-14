@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Col } from 'react-bootstrap';
-import Icons from '../../../components/Icons';
+import Icons from '@/components/Icons';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format, parse } from 'date-fns';

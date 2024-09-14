@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminTableField from './adminTableField';
-import { packages, issuingState, rgShipper, food } from '../../../Pages/Routes/constants';
+import { packages, issuingState, rgShipper, food } from '@/Pages/Routes/constants';
 
 const AdminTableColumns = ({
   addFormData,
@@ -278,12 +278,12 @@ const AdminTableColumns = ({
             ? editFormData.registrationDate
             : currentDate
           : isEditForm
-          ? isNestedField
-            ? getNestedValue(editFormData)
-            : editFormData[field.name]
-          : isNestedField
-          ? getNestedValue(addFormData)
-          : addFormData[field.name];
+            ? isNestedField
+              ? getNestedValue(editFormData)
+              : editFormData[field.name]
+            : isNestedField
+              ? getNestedValue(addFormData)
+              : addFormData[field.name];
 
         return (
           <AdminTableField

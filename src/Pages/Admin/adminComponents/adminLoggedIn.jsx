@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AdminPackageCard from './adminPackageCard';
 import AdminExternalLinkRow from './adminExternalLinkRow';
-import privateFetcher from '../../../fetchers/fetcherWithCredentials';
-import { BASE_URL } from '../../../config/index';
-import Loading from '../../../components/Loading';
-import Icons from '../../../components/Icons';
+import privateFetcher from '@/fetchers/fetcherWithCredentials';
+import { BASE_URL } from '@/config/index';
+import Loading from '@/components/Loading';
+import Icons from '@/components/Icons';
 
 const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGlobal }) => {
   const [loading, setLoading] = useState(true);
