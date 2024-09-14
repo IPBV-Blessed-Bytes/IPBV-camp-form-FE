@@ -1,7 +1,20 @@
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Container, Button, Card } from 'react-bootstrap';
 
 const FormHome = (props) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      toast.info(
+        'Favor cadastrar todas as pessoas da sua família, de todas as idades, desde bebês até idosos. Não se esqueça de cadastrar seus filhos, mesmo que sejam muito novos, pois é essencial para o nosso controle de alimentação e para o departamento infantil!',
+      );
+    }
+  }, [location]);
+
   return (
     <Card className="form__container__general-height">
       <Card.Body>
