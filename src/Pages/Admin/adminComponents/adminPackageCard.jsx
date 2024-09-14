@@ -2,21 +2,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const AdminPackageCard = ({ title, remainingVacancies, filledVacancies, background, titleColor }) => (
+const AdminPackageCard = ({ title, remainingVacancies, filledVacancies, cardType }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>
-    <Card className={`h-100 ${background}`}>
-      <Card.Body>
-        <Card.Title className={`fw-bold ${titleColor}`}>{title}</Card.Title>
-        <Card.Text>
-          Vagas Restantes:{' '}
-          <em>
-            <b>{remainingVacancies} </b>
-          </em>
-          <br />
-          Vagas Preenchidas:{' '}
-          <em>
-            <b>{filledVacancies || '0'}</b>
-          </em>
+    <Card className="admin-card">
+      <Card.Body className={`card-container ${cardType}`}>
+        <Card.Title className="card-container-title">{title}</Card.Title>
+        <Card.Text className="card-container-content">
+          <p>
+            Vagas Preenchidas: <b>{filledVacancies || '0'}</b>
+          </p>
+          <p>Vagas Restantes: {remainingVacancies || '0'}</p>
         </Card.Text>
       </Card.Body>
     </Card>
@@ -28,7 +23,7 @@ AdminPackageCard.propTypes = {
   remainingVacancies: PropTypes.string,
   filledVacancies: PropTypes.string,
   background: PropTypes.string,
-  titleColor: PropTypes.string,
+  cardType: PropTypes.string,
 };
 
 export default AdminPackageCard;
