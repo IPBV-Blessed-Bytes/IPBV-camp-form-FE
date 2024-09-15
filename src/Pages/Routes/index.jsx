@@ -1,5 +1,5 @@
 import 'react-datepicker/dist/react-datepicker.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -38,8 +38,29 @@ const FormRoutes = () => {
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
+  const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const whatsappButtonRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWhatsAppIcon(true);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (whatsappButtonRef.current && !whatsappButtonRef.current.contains(event.target)) {
+        setShowWhatsAppButtons(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [whatsappButtonRef]);
 
   const updateFormValues = (key) => (value) => {
     setFormValues({
@@ -281,9 +302,11 @@ const FormRoutes = () => {
             </Routes>
           </div>
 
-          <button className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
-            <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
-          </button>
+          {showWhatsAppIcon && (
+            <button ref={whatsappButtonRef} className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
+              <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
+            </button>
+          )}
 
           <div className={`whatsapp-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
             <button
