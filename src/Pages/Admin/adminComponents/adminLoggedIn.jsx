@@ -65,6 +65,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
           availablePackagesUsed?.colegioIndividualComOnibusSemAlimentacao +
           availablePackagesUsed?.colegioIndividualSemOnibusComAlimentacao +
           availablePackagesUsed?.colegioIndividualSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
     },
     {
       title: 'Colégio Família',
@@ -74,6 +75,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
           availablePackagesUsed?.colegioFamiliaComOnibusSemAlimentacao +
           availablePackagesUsed?.colegioFamiliaSemOnibusComAlimentacao +
           availablePackagesUsed?.colegioFamiliaSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
     },
     {
       title: 'Colégio Camping',
@@ -81,6 +83,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
       filledVacancies:
         availablePackagesUsed?.colegioCampingSemOnibusComAlimentacao +
           availablePackagesUsed?.colegioCampingSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
     },
     {
       title: 'Seminário',
@@ -88,6 +91,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
       filledVacancies:
         availablePackagesUsed?.seminarioIndividualComOnibusComAlimentacao +
           availablePackagesUsed?.seminarioIndividualSemOnibusComAlimentacao || '0',
+      showRemainingVacancies: true,
     },
     {
       title: 'Outra Acomodação',
@@ -95,34 +99,38 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
       filledVacancies:
         availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao ||
         '0',
+      showRemainingVacancies: true,
     },
     {
       title: 'Usuário Sem Custo',
       remainingVacancies: availablePackagesTotal?.usuarioSemCusto || '0',
       filledVacancies: availablePackagesUsed?.usuarioSemCusto || '0',
+      showRemainingVacancies: true,
     },
   ];
 
   const totalCardsData = [
     {
-      title: 'Total de Inscritos Geral',
-      remainingVacancies: 600 - totalRegistrations || '0',
-      filledVacancies: totalRegistrations || '0',
-    },
-    {
       title: 'Total de Inscritos Válidos',
       remainingVacancies: 600 - totalValidRegistrations || '0',
       filledVacancies: totalValidRegistrations || '0',
+      showRemainingVacancies: true,
     },
     {
-      title: 'Total de Crianças',
-      remainingVacancies: 'Ilimitado',
-      filledVacancies: totalChildren || '0',
+      title: 'Total de Inscritos Geral',
+      filledVacancies: totalRegistrations || '0',
+      showRemainingVacancies: false,
     },
     {
       title: 'Total de Inscritos com Ônibus',
       remainingVacancies: 98 - totalVacanciesWithBuses || '0',
       filledVacancies: totalVacanciesWithBuses || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Total de Crianças',
+      filledVacancies: totalChildren || '0',
+      showRemainingVacancies: false,
     },
   ];
 
@@ -223,27 +231,27 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
         <ul>
           <li>
             <em>
-              <b>Total de Inscritos Geral</b>
-            </em>
-            : Contagem de adultos e crianças
-          </li>
-          <li>
-            <em>
               <b>Total de Inscritos Válidos</b>
             </em>
             : Contagem de adultos pagantes
           </li>
           <li>
             <em>
-              <b>Total de Crianças</b>
+              <b>Total de Inscritos Geral</b>
             </em>
-            : Contagem de crianças
+            : Contagem de adultos e crianças
           </li>
           <li>
             <em>
               <b>Total de Inscritos Com Ônibus</b>
             </em>
             : Contagem de pessoas válidas que irão de ônibus
+          </li>
+          <li>
+            <em>
+              <b>Total de Crianças</b>
+            </em>
+            : Contagem de crianças
           </li>
         </ul>
       </div>
