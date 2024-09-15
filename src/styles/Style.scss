@@ -814,7 +814,9 @@ button.accordion-button:not(.collapsed) {
   background-color: $alternate-dark-gray;
   border-color: $alternate-dark-gray;
 
-  &:hover {
+  &:hover,
+  &:active,
+  &:focus-visible {
     background-color: $dark-gray;
     border-color: $dark-gray;
   }
