@@ -111,14 +111,19 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
 
   const totalCardsData = [
     {
-      title: 'Total de Inscritos Válidos',
+      title: 'Total de Inscritos Geral',
+      filledVacancies: totalRegistrations || '0',
+      showRemainingVacancies: false,
+    },
+    {
+      title: 'Total de Adultos',
       remainingVacancies: 600 - totalValidRegistrations || '0',
       filledVacancies: totalValidRegistrations || '0',
       showRemainingVacancies: true,
     },
     {
-      title: 'Total de Inscritos Geral',
-      filledVacancies: totalRegistrations || '0',
+      title: 'Total de Crianças',
+      filledVacancies: totalChildren || '0',
       showRemainingVacancies: false,
     },
     {
@@ -126,11 +131,6 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
       remainingVacancies: 98 - totalVacanciesWithBuses || '0',
       filledVacancies: totalVacanciesWithBuses || '0',
       showRemainingVacancies: true,
-    },
-    {
-      title: 'Total de Crianças',
-      filledVacancies: totalChildren || '0',
-      showRemainingVacancies: false,
     },
   ];
 
@@ -231,27 +231,27 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
         <ul>
           <li>
             <em>
-              <b>Total de Inscritos Válidos</b>
-            </em>
-            : Contagem de adultos pagantes
-          </li>
-          <li>
-            <em>
               <b>Total de Inscritos Geral</b>
             </em>
             : Contagem de adultos e crianças
           </li>
           <li>
             <em>
-              <b>Total de Inscritos Com Ônibus</b>
+              <b>Total de Adultos</b>
             </em>
-            : Contagem de pessoas válidas que irão de ônibus
+            : Contagem de adultos
           </li>
           <li>
             <em>
               <b>Total de Crianças</b>
             </em>
             : Contagem de crianças
+          </li>
+          <li>
+            <em>
+              <b>Total de Inscritos Com Ônibus</b>
+            </em>
+            : Contagem de pessoas válidas que irão de ônibus
           </li>
         </ul>
       </div>
