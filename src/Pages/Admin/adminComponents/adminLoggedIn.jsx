@@ -136,8 +136,33 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
 
   return (
     <>
-      <Row className="mb-5 justify-content-center navigation-header">
-        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
+      <Row className="mb-3">
+        <Col>
+          <Button
+            variant="warning"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            <Icons typeIcon="arrow-left" iconSize={30} fill="#000" />
+            &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
+          </Button>
+        </Col>
+        <Col className="text-end mb-2 mt-3 mt-lg-0">
+          <p>
+            Bem vindo(a),
+            <span>
+              <strong className="text-uppercase"> {splitedUsername}</strong>
+            </span>
+            !
+          </p>
+          <Button variant="danger" onClick={handleLogout}>
+            Desconectar
+          </Button>
+        </Col>
+      </Row>
+      <Row className="mb-5 navigation-header">
+        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleTableClick}>
             <Card.Body className="navigation-header__registered-card">
               <Card.Title className="text-center mb-0">
@@ -151,7 +176,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
+        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleRideClick}>
             <Card.Body className="navigation-header__ride-card">
               <Card.Title className="text-center mb-0">
@@ -193,18 +218,6 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col> */}
-        <Col xs={12} md={12} lg={4} className="text-end mb-2 mt-3 mt-lg-0">
-          <p>
-            Bem vindo(a),
-            <span>
-              <strong className="text-uppercase"> {splitedUsername}</strong>
-            </span>
-            !
-          </p>
-          <Button variant="danger" onClick={handleLogout}>
-            Desconectar
-          </Button>
-        </Col>
       </Row>
 
       {!loading && (
