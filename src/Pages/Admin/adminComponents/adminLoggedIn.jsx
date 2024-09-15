@@ -137,18 +137,18 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
   return (
     <>
       <Row className="mb-3">
-        <Col>
+        <Col className='admin-custom-col'>
           <Button
-            variant="warning"
+            variant="danger"
             onClick={() => {
               navigate('/');
             }}
           >
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#000" />
+            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
           </Button>
         </Col>
-        <Col className="text-end mb-2 mt-3 mt-lg-0">
+        <Col className="admin-custom-col text-end mb-2 mt-3 mt-lg-0">
           <p>
             Bem vindo(a),
             <span>
@@ -156,8 +156,9 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </span>
             !
           </p>
-          <Button variant="danger" onClick={handleLogout}>
-            Desconectar
+          <Button variant="secondary" onClick={handleLogout}>
+            <Icons typeIcon="logout" iconSize={20} fill="#fff" />
+            &nbsp;Desconectar
           </Button>
         </Col>
       </Row>

@@ -1046,3 +1046,10 @@ button.btn.btn-outline-danger:hover svg {
     fill: $light-yellow;
   }
 }
+
+.admin-custom-col {
+  @media (max-width: $sm) {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
