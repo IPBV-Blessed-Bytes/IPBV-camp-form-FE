@@ -10,17 +10,7 @@ import { BASE_URL } from '@/config/index';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
 
-const AdminLoggedIn = ({
-  loggedInUsername,
-  handleLogout,
-  firstRowCards,
-  totalValidRegistrationsPaied,
-  totalValidRegistrationsGlobal,
-  totalRegistrations,
-  totalChildren,
-  totalNonPaied,
-  totalVacanciesWithBuses,
-}) => {
+const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGlobal }) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
   const navigate = useNavigate();
@@ -53,10 +43,127 @@ const AdminLoggedIn = ({
     fetchPackages();
   }, []);
 
+  const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
+  const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
+  const totalChildren = totalRegistrationsGlobal.totalChildren;
+  const availablePackagesTotal = availablePackages.totalPackages || {};
+  const availablePackagesUsed = availablePackages.usedPackages || {};
+  const totalVacanciesWithBuses =
+    availablePackagesUsed.colegioFamiliaComOnibusComAlimentacao +
+      availablePackagesUsed.colegioFamiliaComOnibusSemAlimentacao +
+      availablePackagesUsed.colegioIndividualComOnibusComAlimentacao +
+      availablePackagesUsed.colegioIndividualComOnibusSemAlimentacao +
+      availablePackagesUsed.outroComOnibusComAlimentacao +
+      availablePackagesUsed.seminarioIndividualComOnibusComAlimentacao || {};
+
+  const packageCardsData = [
+    {
+      title: 'Colégio Individual',
+      remainingVacancies: availablePackagesTotal?.colegioIndividual || '0',
+      filledVacancies:
+        availablePackagesUsed?.colegioIndividualComOnibusComAlimentacao +
+          availablePackagesUsed?.colegioIndividualComOnibusSemAlimentacao +
+          availablePackagesUsed?.colegioIndividualSemOnibusComAlimentacao +
+          availablePackagesUsed?.colegioIndividualSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Colégio Família',
+      remainingVacancies: availablePackagesTotal?.colegioFamilia || '0',
+      filledVacancies:
+        availablePackagesUsed?.colegioFamiliaComOnibusComAlimentacao +
+          availablePackagesUsed?.colegioFamiliaComOnibusSemAlimentacao +
+          availablePackagesUsed?.colegioFamiliaSemOnibusComAlimentacao +
+          availablePackagesUsed?.colegioFamiliaSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Colégio Camping',
+      remainingVacancies: availablePackagesTotal?.colegioCamping || '0',
+      filledVacancies:
+        availablePackagesUsed?.colegioCampingSemOnibusComAlimentacao +
+          availablePackagesUsed?.colegioCampingSemOnibusSemAlimentacao || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Seminário',
+      remainingVacancies: availablePackagesTotal?.seminario || '0',
+      filledVacancies:
+        availablePackagesUsed?.seminarioIndividualComOnibusComAlimentacao +
+          availablePackagesUsed?.seminarioIndividualSemOnibusComAlimentacao || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Outra Acomodação',
+      remainingVacancies: availablePackagesTotal?.outro || '0',
+      filledVacancies:
+        availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao ||
+        '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Usuário Sem Custo',
+      remainingVacancies: availablePackagesTotal?.usuarioSemCusto || '0',
+      filledVacancies: availablePackagesUsed?.usuarioSemCusto || '0',
+      showRemainingVacancies: true,
+    },
+  ];
+
+  const totalCardsData = [
+    {
+      title: 'Total de Inscritos Geral',
+      filledVacancies: totalRegistrations || '0',
+      showRemainingVacancies: false,
+    },
+    {
+      title: 'Total de Adultos',
+      remainingVacancies: 600 - totalValidRegistrations || '0',
+      filledVacancies: totalValidRegistrations || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Total de Crianças',
+      filledVacancies: totalChildren || '0',
+      showRemainingVacancies: false,
+    },
+    {
+      title: 'Total de Inscritos com Ônibus',
+      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
+      filledVacancies: totalVacanciesWithBuses || '0',
+      showRemainingVacancies: true,
+    },
+  ];
+
   return (
     <>
-      <Row className="mb-5 justify-content-center navigation-header">
-        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
+      <Row className="mb-3">
+        <Col className='admin-custom-col'>
+          <Button
+            variant="danger"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
+            &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
+          </Button>
+        </Col>
+        <Col className="admin-custom-col text-end mb-2 mt-3 mt-lg-0">
+          <p>
+            Bem vindo(a),
+            <span>
+              <strong className="text-uppercase"> {splitedUsername}</strong>
+            </span>
+            !
+          </p>
+          <Button variant="secondary" onClick={handleLogout}>
+            <Icons typeIcon="logout" iconSize={20} fill="#fff" />
+            &nbsp;Desconectar
+          </Button>
+        </Col>
+      </Row>
+      <Row className="mb-5 navigation-header">
+        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleTableClick}>
             <Card.Body className="navigation-header__registered-card">
               <Card.Title className="text-center mb-0">
@@ -70,7 +177,7 @@ const AdminLoggedIn = ({
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={4} className="mb-3 mb-lg-0">
+        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleRideClick}>
             <Card.Body className="navigation-header__ride-card">
               <Card.Title className="text-center mb-0">
@@ -112,127 +219,25 @@ const AdminLoggedIn = ({
             </Card.Body>
           </Card>
         </Col> */}
-        <Col xs={12} md={12} lg={4} className="text-end mb-2 mt-3 mt-lg-0">
-          <p>
-            Bem vindo(a),
-            <span>
-              <strong className="text-uppercase"> {splitedUsername}</strong>
-            </span>
-            !
-          </p>
-          <Button variant="danger" onClick={handleLogout}>
-            Desconectar
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
-        {firstRowCards.map((card) => (
-          <AdminPackageCard key={card.title} {...card} />
-        ))}
       </Row>
 
-      <Row className="mt-4">
-        <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
-      </Row>
+      {!loading && (
+        <>
+          <Row>
+            <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
+            {packageCardsData.map((card) => (
+              <AdminPackageCard key={card.title} {...card} cardType="package-card" />
+            ))}
+          </Row>
 
-      <Row>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-dark">
-            <Card.Body>
-              <Card.Title className="fw-bold text-warning">Total de Inscritos válidos (pagantes)</Card.Title>
-              <Card.Text>
-                Vagas Totais Preenchidas:{' '}
-                <em>
-                  <b>{isNaN(totalValidRegistrationsPaied) ? 'Indefinido' : totalValidRegistrationsPaied.toString()}</b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-dark">
-            <Card.Body>
-              <Card.Title className="fw-bold text-warning">
-                Total de Inscritos válidos <br />
-                (pagantes e não pagantes)
-              </Card.Title>
-              <Card.Text>
-                Vagas Totais Preenchidas:{' '}
-                <em>
-                  <b>
-                    {isNaN(totalValidRegistrationsGlobal) ? 'Indefinido' : totalValidRegistrationsGlobal.toString()}
-                  </b>
-                </em>
-                <br />
-                Vagas Totais Restantes:{' '}
-                <em>
-                  <b>
-                    {isNaN(375 - totalValidRegistrationsGlobal)
-                      ? 'Indefinido'
-                      : (375 - totalValidRegistrationsGlobal).toString()}
-                  </b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-dark">
-            <Card.Body>
-              <Card.Title className="fw-bold text-warning">
-                Total de Inscritos geral <br />
-                (adultos e crianças)
-              </Card.Title>
-              <Card.Text>
-                Vagas Totais Preenchidas:{' '}
-                <em>
-                  <b>{isNaN(totalRegistrations) ? 'Indefinido' : totalRegistrations.toString()}</b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-dark">
-            <Card.Body>
-              <Card.Title className="fw-bold text-warning">Total de Crianças</Card.Title>
-              <Card.Text>
-                Vagas Totais Preenchidas:{' '}
-                <em>
-                  <b>{isNaN(totalChildren) ? 'Indefinido' : totalChildren.toString()}</b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-dark">
-            <Card.Body>
-              <Card.Title className="fw-bold text-warning">Total de Não Pagantes</Card.Title>
-              <Card.Text>
-                Vagas Totais Preenchidas:{' '}
-                <em>
-                  <b>{isNaN(totalNonPaied) ? 'Indefinido' : totalNonPaied.toString()}</b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="mb-4" xs={12} md={6} lg={4}>
-          <Card className="h-100 bg-warning">
-            <Card.Body>
-              <Card.Title className="fw-bold text-dark">Ônibus Preenchidos</Card.Title>
-              <Card.Text>
-                Vagas Preenchidas com Ônibus:{' '}
-                <em>
-                  <b>{isNaN(totalVacanciesWithBuses) ? 'Indefinido' : totalVacanciesWithBuses.toString()}</b>
-                </em>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+          <Row className="mt-4">
+            <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
+            {totalCardsData.map((card) => (
+              <AdminPackageCard key={card.title} {...card} cardType="total-card" />
+            ))}
+          </Row>
+        </>
+      )}
 
       <div className="packages-horizontal-line" />
       <h4>Notas:</h4>
@@ -240,28 +245,27 @@ const AdminLoggedIn = ({
         <ul>
           <li>
             <em>
-              <b>Inscritos Válidos</b>
-            </em>{' '}
-            : Contagem de adultos que contam como uma inscrição válida
+              <b>Total de Inscritos Geral</b>
+            </em>
+            : Contagem de adultos e crianças
           </li>
           <li>
             <em>
-              <b>Não Pagantes</b>
-            </em>{' '}
-            : Pessoas que não irão dormir, comer ou se transportar no ônibus, apenas assistir aos cultos e/ou participar
-            das programações
+              <b>Total de Adultos</b>
+            </em>
+            : Contagem de adultos
           </li>
           <li>
             <em>
-              <b>Total de inscritos geral</b>
-            </em>{' '}
-            : Contagem de inscritos válidos (pagantes ou não) e crianças
+              <b>Total de Crianças</b>
+            </em>
+            : Contagem de crianças
           </li>
           <li>
             <em>
-              <b>Ônibus Preenchidos</b>
-            </em>{' '}
-            : Contagem de pessoas inscritas nos ônibus
+              <b>Total de Inscritos Com Ônibus</b>
+            </em>
+            : Contagem de pessoas válidas que irão de ônibus
           </li>
         </ul>
       </div>
@@ -276,15 +280,14 @@ const AdminLoggedIn = ({
 };
 
 AdminLoggedIn.propTypes = {
-  loggedInUsername: PropTypes.bool,
-  handleLogout: PropTypes.func,
-  firstRowCards: PropTypes.bool,
-  totalValidRegistrationsPaied: PropTypes.bool,
-  totalValidRegistrationsGlobal: PropTypes.bool,
-  totalRegistrations: PropTypes.bool,
-  totalChildren: PropTypes.bool,
-  totalNonPaied: PropTypes.bool,
-  totalVacanciesWithBuses: PropTypes.bool,
+  loggedInUsername: PropTypes.string.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+  totalRegistrationsGlobal: PropTypes.shape({
+    totalRegistrations: PropTypes.number,
+    totalChildren: PropTypes.number,
+    totalFilledVacancies: PropTypes.number,
+    totalValidRegistrations: PropTypes.number,
+  }).isRequired,
 };
 
 export default AdminLoggedIn;

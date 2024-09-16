@@ -1,5 +1,5 @@
 import 'react-datepicker/dist/react-datepicker.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -29,17 +29,35 @@ const FormRoutes = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
-  const isAdminPathname = window.location.pathname === '/admin';
-  const isAdminTablePathname = window.location.pathname === '/admin/tabela';
-  const isAdminRidePathname = window.location.pathname === '/admin/carona';
-  const isAdminCouponsPathname = window.location.pathname === '/admin/cupom';
+  const adminPages = window.location.pathname.startsWith('/admin');
   const [availablePackages, setAvailablePackages] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
+  const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const whatsappButtonRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWhatsAppIcon(true);
+    }, 6000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (whatsappButtonRef.current && !whatsappButtonRef.current.contains(event.target)) {
+        setShowWhatsAppButtons(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [whatsappButtonRef]);
 
   const updateFormValues = (key) => (value) => {
     setFormValues({
@@ -179,10 +197,10 @@ const FormRoutes = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn && (isAdminPathname || isAdminTablePathname || isAdminRidePathname || isAdminCouponsPathname)) {
+    if (!isLoggedIn && adminPages) {
       navigate('/admin');
     }
-  }, [isLoggedIn, isAdminPathname, isAdminTablePathname, isAdminRidePathname, isAdminCouponsPathname, navigate]);
+  }, [isLoggedIn, adminPages, navigate]);
 
   const handleAdminClick = () => {
     navigate('/admin');
@@ -190,15 +208,9 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!isAdminPathname && !isAdminTablePathname && !isAdminRidePathname && !isAdminCouponsPathname && (
+      {!adminPages && (
         <div className="components-container">
-          <Header
-            className={isAdminPathname && 'd-none'}
-            currentStep={steps}
-            goBackToStep={goBackToStep}
-            formSubmitted={formSubmitted}
-            showNavMenu={true}
-          />
+          <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
           <div className="form__container">
             {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
@@ -281,9 +293,11 @@ const FormRoutes = () => {
             </Routes>
           </div>
 
-          <button className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
-            <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
-          </button>
+          {showWhatsAppIcon && (
+            <button ref={whatsappButtonRef} className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
+              <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
+            </button>
+          )}
 
           <div className={`whatsapp-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
             <button

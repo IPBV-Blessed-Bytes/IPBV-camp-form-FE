@@ -25,7 +25,7 @@ const AdminLoggedOut = ({
             navigateTo('/');
           }}
         >
-          Voltar para Formulário
+          Voltar pro Formulário
         </Button>
       </Col>
     </Row>

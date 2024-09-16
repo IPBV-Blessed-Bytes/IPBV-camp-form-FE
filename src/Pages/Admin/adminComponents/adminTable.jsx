@@ -726,7 +726,7 @@ const AdminTable = () => {
         <Col xl={9}>
           <div className="table-tools__left-buttons d-flex mb-3 gap-3">
             <Button
-              variant="warning"
+              variant="light"
               onClick={handleFilterClick}
               className="filter-btn text-light d-flex align-items-center"
               size="lg"
