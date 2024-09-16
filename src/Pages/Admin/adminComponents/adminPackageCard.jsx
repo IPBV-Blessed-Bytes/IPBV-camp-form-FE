@@ -24,6 +24,7 @@ AdminPackageCard.propTypes = {
   filledVacancies: PropTypes.string,
   background: PropTypes.string,
   cardType: PropTypes.string,
+  showRemainingVacancies: PropTypes.bool,
 };
 
 export default AdminPackageCard;
