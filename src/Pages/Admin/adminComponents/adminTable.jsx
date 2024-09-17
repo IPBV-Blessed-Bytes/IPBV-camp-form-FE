@@ -269,8 +269,8 @@ const AdminTable = () => {
               {selectedRows.length === 1
                 ? selectedRows.length + ' selecionado'
                 : selectedRows.length > 1
-                  ? selectedRows.length + ' selecionados'
-                  : 'Selecionar Todos'}
+                ? selectedRows.length + ' selecionados'
+                : 'Selecionar Todos'}
             </span>
           </div>
         ),
@@ -299,14 +299,14 @@ const AdminTable = () => {
             row.package.transportation === 'Com Ônibus'
               ? 'COM ÔNIBUS'
               : row.package.transportation === 'Sem Ônibus'
-                ? 'SEM ÔNIBUS'
-                : ''
+              ? 'SEM ÔNIBUS'
+              : ''
           } ${
             row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
               ? 'COM ALIMENTAÇÃO'
               : row.package.food === ''
-                ? ''
-                : 'SEM ALIMENTAÇÃO'
+              ? ''
+              : 'SEM ALIMENTAÇÃO'
           }`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -327,10 +327,10 @@ const AdminTable = () => {
           value === 'creditCard'
             ? 'Cartão de Crédito'
             : value === 'pix'
-              ? 'PIX'
-              : value === 'boleto'
-                ? 'Boleto Bancário'
-                : 'Não pagante',
+            ? 'PIX'
+            : value === 'boleto'
+            ? 'Boleto Bancário'
+            : 'Não pagante',
       },
       {
         Header: 'Igreja:',
@@ -510,12 +510,23 @@ const AdminTable = () => {
         Cell: ({ value }) => (value ? value : '-'),
       },
       {
-        Header: 'ID do Pedido:',
+        Header: 'Chave do Pedido:',
         accessor: 'orderId',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? value : '-'),
+        Cell: ({ value }) => {
+          const orderUrl = `https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/${value}`;
+
+          return value ? (
+            <a href={orderUrl} className="order-url" target="_blank" rel="noopener noreferrer">
+              {value}
+            </a>
+          ) : (
+            '-'
+          );
+        },
       },
+
       {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',

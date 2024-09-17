@@ -525,12 +525,13 @@ select {
   width: 100%;
 }
 
-.mail-to {
+.mail-to,
+.order-url {
   color: inherit;
   text-decoration: none;
 }
 
-a:not(.form-success__button, .mail-to) {
+a:not(.form-success__button, .mail-to, .order-url) {
   color: $white;
   text-decoration: none;
 }
