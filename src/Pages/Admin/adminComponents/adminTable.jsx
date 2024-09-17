@@ -510,6 +510,13 @@ const AdminTable = () => {
         Cell: ({ value }) => (value ? value : '-'),
       },
       {
+        Header: 'ID do Pedido:',
+        accessor: 'orderId',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? value : '-'),
+      },
+      {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
