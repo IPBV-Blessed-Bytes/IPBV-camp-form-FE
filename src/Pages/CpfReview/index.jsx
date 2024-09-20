@@ -32,7 +32,7 @@ const CpfReview = ({ formValues }) => {
         <Container>
           <div className="form-review">
             <Card.Title>Consulta de Dados</Card.Title>
-            <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dados.</Card.Text>
+            <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dadoss.</Card.Text>
             <Form>
               <Row className="row-gap">
                 <Col md={6} className=" fw-bold">
