@@ -221,6 +221,7 @@ const AdminTable = () => {
       setData(newData);
       setSelectedRows([]);
       setShowDeleteModal(false);
+      toast.success('Inscrições deletadas com sucesso');
     } catch (error) {
       console.error('Error deleting selected data:', error);
     } finally {
@@ -238,6 +239,7 @@ const AdminTable = () => {
       setData(newData);
       setEditRowIndex(null);
       setShowDeleteModal(false);
+      toast.success('Inscrição deletada com sucesso');
     } catch (error) {
       console.error('Error deleting specific data:', error);
     } finally {
