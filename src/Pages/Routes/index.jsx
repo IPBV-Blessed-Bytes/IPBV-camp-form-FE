@@ -23,6 +23,7 @@ import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '@/config/index';
 import Icons from '@/components/Icons';
 import calculateAge from '../Packages/utils/calculateAge';
+import AdminUserLogs from '../Admin/adminUserLogs';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -346,6 +347,7 @@ const FormRoutes = () => {
         <Route path="/admin/tabela" element={<AdminTable />} />
         <Route path="/admin/carona" element={<AdminRide />} />
         <Route path="/admin/cupom" element={<AdminCoupon />} />
+        <Route path="/admin/logs" element={<AdminUserLogs />} />
       </Routes>
     </div>
   );
