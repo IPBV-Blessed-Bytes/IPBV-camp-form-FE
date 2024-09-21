@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { parse } from 'date-fns';
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
@@ -7,16 +8,30 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../Routes/constants';
+import { BASE_URL } from '@/config';
 
-const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
+const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
   const { values, errors, handleChange, submitForm } = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
-        nextStep();
-        updateForm(values);
+        try {
+          const response = await axios.post(`${BASE_URL}/coupon/check`, { cpf: values.cpf });
+
+          if (onDiscountChange) {
+            onDiscountChange(response.data.discount);
+          }
+
+          fetchCoupons();
+          nextStep();
+          updateForm(values);
+        } catch (error) {
+          console.error('Erro ao verificar o CPF:', error);
+          toast.error('Erro ao verificar o CPF. Por favor, tente novamente.');
+        }
       } else {
         toast.error('CPF inválido! Por favor, insira um CPF válido.');
       }
@@ -25,6 +40,21 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const fetchCoupons = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/coupon`);
+      const coupon = response.data.coupons;
+      if (coupon) {
+        await axios.put(`${BASE_URL}/coupon/${coupon.id}`, {
+          ...coupon,
+          user: formUsername,
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao verificar o cupom:', error);
+    }
+  };
 
   const handleDateChange = (date) => {
     handleChange({

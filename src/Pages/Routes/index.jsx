@@ -22,6 +22,7 @@ import useAuth from '@/hooks/useAuth';
 import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '@/config/index';
 import Icons from '@/components/Icons';
+import calculateAge from '../Packages/utils/calculateAge';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -36,6 +37,9 @@ const FormRoutes = () => {
   const [withFood, setWithFood] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
+  const [hasDiscount, setHasDiscount] = useState(false);
+  const [discount, setDiscount] = useState(0);
+
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const whatsappButtonRef = useRef(null);
@@ -206,6 +210,17 @@ const FormRoutes = () => {
     navigate('/admin');
   };
 
+  const age = calculateAge(formValues.personalInformation.birthday);
+
+  const handleDiscountChange = (discountValue) => {
+    setDiscount(discountValue);
+    if (discountValue !== 0 && discountValue !== '') {
+      setHasDiscount(true);
+    } else {
+      setHasDiscount(false);
+    }
+  };
+
   return (
     <div className="form">
       {!adminPages && (
@@ -221,6 +236,8 @@ const FormRoutes = () => {
                 nextStep={nextStep}
                 backStep={backStep}
                 updateForm={updateFormValues('personalInformation')}
+                onDiscountChange={handleDiscountChange}
+                formUsername={formValues.personalInformation.name}
               />
             )}
 
@@ -235,15 +252,15 @@ const FormRoutes = () => {
 
             {steps === enumSteps.packages && isNotSuccessPathname && (
               <FormPackages
-                birthDate={formValues.personalInformation.birthday}
+                age={age}
                 nextStep={nextStep}
                 backStep={backStep}
                 updateForm={updateFormValues('package')}
                 sendForm={sendForm}
-                spinnerLoading={loading}
                 availablePackages={availablePackages}
                 totalRegistrationsGlobal={totalRegistrations}
-                formUsername={formValues.personalInformation.name}
+                discountValue={discount}
+                hasDiscount={hasDiscount}
               />
             )}
 
