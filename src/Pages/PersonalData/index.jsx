@@ -25,7 +25,30 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
             onDiscountChange(response.data.discount);
           }
 
-          fetchCoupons();
+          if (response.data.discount && response.data.discount !== 0) {
+            const fetchCoupons = async () => {
+              try {
+                const couponResponse = await axios.get(`${BASE_URL}/coupon`);
+                const coupons = couponResponse.data.coupons;
+
+                if (coupons && coupons.length > 0) {
+                  const matchingCoupon = coupons.find((coupon) => coupon.cpf === values.cpf);
+
+                  if (matchingCoupon) {
+                    await axios.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
+                      ...matchingCoupon,
+                      user: formUsername,
+                    });
+                  }
+                }
+              } catch (error) {
+                console.error('Erro ao verificar os cupons:', error);
+              }
+            };
+
+            await fetchCoupons();
+          }
+
           nextStep();
           updateForm(values);
         } catch (error) {
@@ -40,21 +63,6 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
     validateOnBlur: false,
     validateOnChange: false,
   });
-
-  const fetchCoupons = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/coupon`);
-      const coupon = response.data.coupons;
-      if (coupon) {
-        await axios.put(`${BASE_URL}/coupon/${coupon.id}`, {
-          ...coupon,
-          user: formUsername,
-        });
-      }
-    } catch (error) {
-      console.error('Erro ao verificar o cupom:', error);
-    }
-  };
 
   const handleDateChange = (date) => {
     handleChange({
@@ -96,7 +104,10 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
                     id="name"
                     isInvalid={!!errors.name}
                     value={values.name}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      updateForm({ ...values, name: e.target.value });
+                    }}
                   />
                   <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                 </Form.Group>
@@ -285,6 +296,7 @@ FormPersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
+  formUsername: PropTypes.string,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
     birthday: PropTypes.string,
