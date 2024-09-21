@@ -51,7 +51,7 @@ describe('AuthProvider', () => {
 
     expect(fetcher.post).toHaveBeenCalledWith('/auth/login', { login: 'test@example.com', password: 'wrong-password' });
     expect(result.current.isLoggedIn).toBe(false);
-    expect(result.current.user).toBe(null);
+    expect(result.current.user).toBe(undefined);
     expect(window.localStorage.setItem).not.toHaveBeenCalled();
     expect(toast.error).toHaveBeenCalledWith('Erro ao fazer login. Tente novamente.');
   });
