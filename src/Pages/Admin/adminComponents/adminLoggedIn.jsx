@@ -24,9 +24,9 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
     navigate('/admin/carona');
   };
 
-  // const handleCouponsClick = () => {
-  //   navigate('/admin/cupom');
-  // };
+  const handleCouponsClick = () => {
+    navigate('/admin/cupom');
+  };
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -163,7 +163,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
         </Col>
       </Row>
       <Row className="mb-5 navigation-header">
-        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleTableClick}>
             <Card.Body className="navigation-header__registered-card">
               <Card.Title className="text-center mb-0">
@@ -177,7 +177,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleRideClick}>
             <Card.Body className="navigation-header__ride-card">
               <Card.Title className="text-center mb-0">
@@ -191,7 +191,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        {/* <Col xs={12} md={6} lg={3} className="mb-3 mb-md-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-md-0">
           <Card className="h-100" onClick={handleCouponsClick}>
             <Card.Body className="navigation-header__coupons-card">
               <Card.Title className="text-center mb-0">
@@ -204,7 +204,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
               </Card.Title>
             </Card.Body>
           </Card>
-        </Col> */}
+        </Col>
         {/* <Col xs={12} md={6} lg={2}>
           <Card className="h-100">
             <Card.Body className="navigation-header__new-card">

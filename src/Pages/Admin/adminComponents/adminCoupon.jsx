@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
+import axios from 'axios';
+import { BASE_URL } from '@/config';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
@@ -13,7 +15,7 @@ const AdminCoupon = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [couponToDelete, setCouponToDelete] = useState(null);
-  const [newCoupon, setNewCoupon] = useState({ code: '', discount: '', used: false, user: '' });
+  const [newCoupon, setNewCoupon] = useState({ cpf: '', discount: '', user: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +24,7 @@ const AdminCoupon = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await fetcher.get('coupon');
+      const response = await axios.get(`${BASE_URL}/coupon`);
 
       setCoupons(response.data.coupons);
     } catch (error) {
@@ -36,10 +38,9 @@ const AdminCoupon = () => {
     setLoading(true);
 
     try {
-      await fetcher.post('coupon', {
+      await fetcher.post('coupon/create', {
         ...newCoupon,
         id: Date.now().toString(),
-        used: false,
       });
       toast.success('Cupom criado com sucesso');
       setShowModal(false);
@@ -72,9 +73,8 @@ const AdminCoupon = () => {
     try {
       const requestBody = {
         id: id,
-        code: '',
+        cpf: '',
         discount: '',
-        used: true,
         user: '',
       };
       await fetcher.delete(`coupon/${id}`, { data: requestBody });
@@ -90,7 +90,7 @@ const AdminCoupon = () => {
 
   const openModal = (coupon) => {
     setEditingCoupon(coupon);
-    setNewCoupon({ code: '', discount: '' });
+    setNewCoupon({ cpf: '', discount: '' });
     setShowModal(true);
   };
 
@@ -133,13 +133,7 @@ const AdminCoupon = () => {
       <hr className="horizontal-line" />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col lg={2} md={3} xs={6}>
-          Exemplo de cupom:{' '}
-          <em>
-            <b>NOMEDAPESSOA100</b>
-          </em>
-        </Col>
-        <Col lg={10} md={9} xs={6}>
+        <Col lg={12} md={12} xs={12}>
           <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
             <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
               <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
@@ -153,9 +147,8 @@ const AdminCoupon = () => {
         <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">Código:</th>
+              <th className="table-cells-header">CPF atrelado:</th>
               <th className="table-cells-header">Desconto:</th>
-              <th className="table-cells-header">Usado:</th>
               <th className="table-cells-header">Usuário:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
@@ -163,15 +156,8 @@ const AdminCoupon = () => {
           <tbody>
             {coupons.map((coupon) => (
               <tr key={coupon.id}>
-                <td>{coupon.code}</td>
+                <td>{coupon.cpf}</td>
                 <td>{coupon.discount}</td>
-                <td>
-                  {coupon.used ? (
-                    <Icons typeIcon="checked" iconSize={30} fill="#65a300" />
-                  ) : (
-                    <Icons typeIcon="not-checked" iconSize={30} fill="#dc3545" />
-                  )}
-                </td>
                 <td>{coupon.user}</td>
                 <td>
                   <Button variant="outline-success" onClick={() => openModal(coupon)}>
@@ -197,16 +183,16 @@ const AdminCoupon = () => {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Código:</b>
+                <b>CPF atrelado:</b>
               </Form.Label>
               <Form.Control
-                type="text"
-                value={editingCoupon ? editingCoupon.code : newCoupon.code}
+                type="number"
+                value={editingCoupon ? editingCoupon.cpf : newCoupon.cpf}
                 size="lg"
                 onChange={(e) =>
                   editingCoupon
-                    ? setEditingCoupon({ ...editingCoupon, code: e.target.value })
-                    : setNewCoupon({ ...newCoupon, code: e.target.value })
+                    ? setEditingCoupon({ ...editingCoupon, cpf: e.target.value })
+                    : setNewCoupon({ ...newCoupon, cpf: e.target.value })
                 }
               />
             </Form.Group>
@@ -226,19 +212,6 @@ const AdminCoupon = () => {
                 }
               />
             </Form.Group>
-
-            {editingCoupon && (
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  name="usedCoupon"
-                  id="usedCoupon"
-                  label="Cupom usado"
-                  checked={editingCoupon.used}
-                  onChange={(e) => setEditingCoupon({ ...editingCoupon, used: e.target.checked })}
-                />
-              </Form.Group>
-            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -256,7 +229,7 @@ const AdminCoupon = () => {
           <Modal.Title>Confirmar Exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Você tem certeza de que deseja excluir o cupom com código &quot;{couponToDelete?.code}&quot;?</p>
+          <p>Você tem certeza de que deseja excluir o cupom do CPF &quot;{couponToDelete?.cpf}&quot;?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
