@@ -10,6 +10,7 @@ import { BASE_URL } from '@/config';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
+  const [paidUsers, setPaidUsers] = useState([]); // Para armazenar os usuários com formPayment
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -20,18 +21,39 @@ const AdminCoupon = () => {
 
   useEffect(() => {
     fetchCoupons();
+    fetchPaidUsers();
   }, []);
 
   const fetchCoupons = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/coupon`);
-
       setCoupons(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchPaidUsers = async () => {
+    try {
+      const response = await fetcher.get('camper', { params: { size: 100000 } });
+      if (Array.isArray(response.data.content)) {
+        setPaidUsers(response.data.content);
+      } else {
+        console.error('Erro: Dados não estão no formato esperado.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar usuários pagos:', error);
+    }
+  };
+
+  const registeredUser = (cpf) => {
+    const isValid = paidUsers.some((user) => {
+      return user.personalInformation.cpf === cpf;
+    });
+
+    return isValid;
   };
 
   const handleCreateCoupon = async () => {
@@ -154,21 +176,25 @@ const AdminCoupon = () => {
             </tr>
           </thead>
           <tbody>
-            {coupons.map((coupon) => (
-              <tr key={coupon.id}>
-                <td>{coupon.cpf}</td>
-                <td>{coupon.discount}</td>
-                <td>{coupon.user}</td>
-                <td>
-                  <Button variant="outline-success" onClick={() => openModal(coupon)}>
-                    <Icons typeIcon="edit" iconSize={24} />
-                  </Button>{' '}
-                  <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(coupon)}>
-                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {coupons.map((coupon) => {
+              const registeredUser = registeredUser(coupon.cpf);
+
+              return (
+                <tr key={coupon.id}>
+                  <td>{coupon.cpf}</td>
+                  <td>{coupon.discount}</td>
+                  <td>{registeredUser ? coupon.user : ''}</td>
+                  <td>
+                    <Button variant="outline-success" onClick={() => openModal(coupon)}>
+                      <Icons typeIcon="edit" iconSize={24} />
+                    </Button>{' '}
+                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(coupon)}>
+                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>
@@ -226,10 +252,13 @@ const AdminCoupon = () => {
 
       <Modal show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão</Modal.Title>
+          <Modal.Title>
+            <b>Excluir Cupom</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Você tem certeza de que deseja excluir o cupom do CPF &quot;{couponToDelete?.cpf}&quot;?</p>
+          Tem certeza que deseja excluir o cupom vinculado ao CPF <b>{couponToDelete?.cpf}</b>? Essa ação é
+          irreversível.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
