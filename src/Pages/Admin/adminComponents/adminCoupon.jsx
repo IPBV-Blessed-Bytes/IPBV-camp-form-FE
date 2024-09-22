@@ -10,7 +10,7 @@ import { BASE_URL } from '@/config';
 
 const AdminCoupon = () => {
   const [coupons, setCoupons] = useState([]);
-  const [paidUsers, setPaidUsers] = useState([]); // Para armazenar os usuários com formPayment
+  const [paidUsers, setPaidUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -177,13 +177,13 @@ const AdminCoupon = () => {
           </thead>
           <tbody>
             {coupons.map((coupon) => {
-              const registeredUser = registeredUser(coupon.cpf);
+              const isUserRegistered = registeredUser(coupon.cpf);
 
               return (
                 <tr key={coupon.id}>
                   <td>{coupon.cpf}</td>
                   <td>{coupon.discount}</td>
-                  <td>{registeredUser ? coupon.user : ''}</td>
+                  <td>{isUserRegistered ? coupon.user : ''}</td>
                   <td>
                     <Button variant="outline-success" onClick={() => openModal(coupon)}>
                       <Icons typeIcon="edit" iconSize={24} />
