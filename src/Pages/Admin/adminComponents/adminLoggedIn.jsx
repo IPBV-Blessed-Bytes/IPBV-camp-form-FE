@@ -190,7 +190,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={4} lg={4} className="mb-3 mb-md-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleCouponsClick}>
             <Card.Body className="navigation-header__coupons-card">
               <Card.Title className="text-center mb-0">
