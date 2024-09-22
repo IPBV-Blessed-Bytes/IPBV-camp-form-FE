@@ -14,7 +14,6 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
   const navigate = useNavigate();
-  const splitedUsername = loggedInUsername.split('@')[0];
 
   const handleTableClick = () => {
     navigate('/admin/tabela');
@@ -137,7 +136,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
   return (
     <>
       <Row className="mb-3">
-        <Col className='admin-custom-col'>
+        <Col className="admin-custom-col">
           <Button
             variant="danger"
             onClick={() => {
@@ -152,7 +151,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
           <p>
             Bem vindo(a),
             <span>
-              <strong className="text-uppercase"> {splitedUsername}</strong>
+              <strong className="text-uppercase"> {loggedInUsername}</strong>
             </span>
             !
           </p>
@@ -205,20 +204,6 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        {/* <Col xs={12} md={6} lg={2}>
-          <Card className="h-100">
-            <Card.Body className="navigation-header__new-card">
-              <Card.Title className="text-center">
-                <div className="naviagion-header__new-card__content-wrapper">
-                  <em>
-                    <b>Novo Card</b>
-                  </em>
-                  <Icons typeIcon="add-person" iconSize={50} fill={'#204691'} />
-                </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-        </Col> */}
       </Row>
 
       {!loading && (
