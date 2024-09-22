@@ -50,7 +50,11 @@ const AdminTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetcher.get('camper');
+      const response = await fetcher.get('camper', {
+        params: {
+          size: 100000,
+        },
+      });
       if (Array.isArray(response.data.content)) {
         setData(response.data.content);
       } else {
