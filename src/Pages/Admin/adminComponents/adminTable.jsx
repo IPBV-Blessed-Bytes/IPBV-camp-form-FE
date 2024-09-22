@@ -513,7 +513,11 @@ const AdminTable = () => {
         accessor: 'package.discountCoupon',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? value : '-'),
+        Cell: ({ value }) => {
+          const hasDiscount = value.package.discountCoupon ? 'Sim' : !value.package.discountCoupon ? 'Não' : '-';
+          const discountValueText = value.package.discountValue ? value.package.discountValue : '-';
+          return `${hasDiscount} | Valor: ${discountValueText}`;
+        },
       },
       {
         Header: 'Chave do Pedido:',
