@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -38,11 +38,13 @@ const FormPackages = ({
     15: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
-  if (hasDiscount) {
-    toast.info(
-      `Foi gerado um cupom de desconto no valor de ${discountValue} em seu nome. O desconto já está aplicado ao valor final dos pacotes`,
-    );
-  }
+  useEffect(() => {
+    if (hasDiscount) {
+      toast.info(
+        `Foi gerado um cupom de desconto no valor de ${discountValue} em seu nome. O desconto já está aplicado ao valor final dos pacotes`,
+      );
+    }
+  }, [hasDiscount]);
 
   const handleClick = (selectedPackage) => {
     setSelectedPackage(null);
@@ -350,7 +352,9 @@ const FormPackages = ({
                                             {formatCurrency(cards.values.total)}
                                           </u>
                                           {hasDiscount && (
-                                            <span className="card-text fw-normal">Valor com desconto = R$&nbsp;{finalPrice}</span>
+                                            <span className="card-text fw-normal">
+                                              Valor com desconto = R$&nbsp;{finalPrice}
+                                            </span>
                                           )}
                                         </div>
                                       </em>
