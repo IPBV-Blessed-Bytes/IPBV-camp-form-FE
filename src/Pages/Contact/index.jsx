@@ -120,7 +120,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
               <Col md={8} className="mb-3">
                 <Form.Group className="info-text-wrapper">
                   <Form.Label>
-                    <b>Vai de carro e possui vagas de carona?</b>
+                    <b>Tem vagas de carona a oferecer?</b>
                   </Form.Label>
                   <Form.Select
                     id="car"
