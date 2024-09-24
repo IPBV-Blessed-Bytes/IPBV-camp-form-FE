@@ -12,9 +12,10 @@ import axios from 'axios';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../Routes/constants';
 import { BASE_URL } from '@/config';
+import calculateAge from '../Packages/utils/calculateAge';
 
 const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
-  const { values, errors, handleChange, submitForm } = useFormik({
+  const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({
     initialValues,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
@@ -65,12 +66,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
   });
 
   const handleDateChange = (date) => {
-    handleChange({
-      target: {
-        name: 'birthday',
-        value: date,
-      },
-    });
+    setFieldValue('birthday', date);
   };
 
   const parseDate = (value) => {
@@ -82,6 +78,19 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
 
     return isNaN(parsedDate) ? null : parsedDate;
   };
+
+  useEffect(() => {
+    if (values.birthday) {
+      const age = calculateAge(values.birthday);
+      if (age !== null) {
+        toast.info(
+          `A idade informada foi ${
+            age > 0 ? `de ${age} anos` : 'menor que 1 ano'
+          }. Confira se a data e idade informada está correta e caso não esteja, ajuste.`,
+        );
+      }
+    }
+  }, [values.birthday]);
 
   return (
     <Card className="form__container__general-height">
