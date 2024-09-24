@@ -84,9 +84,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
       const age = calculateAge(values.birthday);
       if (age !== null) {
         toast.info(
-          `A idade informada foi ${
+          `A idade informada é ${
             age > 0 ? `de ${age} anos` : 'menor que 1 ano'
-          }. Confira se a data e idade informada está correta e caso não esteja, ajuste.`,
+          }. Verifique se a data e a idade informadas estão corretas. Caso não estejam, ajuste-as.`,
         );
       }
     }
