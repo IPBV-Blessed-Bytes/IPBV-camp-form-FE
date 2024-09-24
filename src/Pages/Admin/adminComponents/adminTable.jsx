@@ -508,17 +508,20 @@ const AdminTable = () => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? value : '-'),
       },
-      // {
-      //   Header: 'Cupom:',
-      //   accessor: 'package.discountCoupon',
-      //   Filter: ({ column }) => <AdminColumnFilter column={column} />,
-      //   sortType: 'alphanumeric',
-      //   Cell: ({ value }) => {
-      //     const hasDiscount = value.package.discountCoupon ? 'Sim' : !value.package.discountCoupon ? 'Não' : '-';
-      //     const discountValueText = value.package.discountValue ? value.package.discountValue : '-';
-      //     return `${hasDiscount} | Valor: ${discountValueText}`;
-      //   },
-      // },
+      {
+        Header: 'Cupom:',
+        accessor: (row) => ({
+          discountCoupon: row.package.discountCoupon,
+          discountValue: row.package.discountValue,
+        }),
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
+          const discountValueText = value.discountValue ? value.discountValue : '-';
+          return `${hasDiscount} | Valor: ${discountValueText}`;
+        },
+      },
       {
         Header: 'Chave do Pedido:',
         accessor: 'orderId',
