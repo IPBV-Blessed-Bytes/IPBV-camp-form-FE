@@ -96,6 +96,8 @@ const FormPackages = ({
       transportation: transportation,
       food: food,
       title: title,
+      discountCoupon: hasDiscount,
+      discountValue: discountValue,
     });
 
     nextStep();
