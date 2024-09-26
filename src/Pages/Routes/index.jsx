@@ -23,7 +23,8 @@ import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '@/config/index';
 import Icons from '@/components/Icons';
 import calculateAge from '../Packages/utils/calculateAge';
-import AdminUserLogs from '../Admin/adminUserLogs';
+import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
+import { USER_STORAGE_KEY } from '@/config';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -222,6 +223,9 @@ const FormRoutes = () => {
     }
   };
 
+  const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+  const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
+
   return (
     <div className="form">
       {!adminPages && (
@@ -343,11 +347,21 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
-        <Route path="/admin/tabela" element={<AdminTable />} />
-        <Route path="/admin/carona" element={<AdminRide />} />
-        <Route path="/admin/cupom" element={<AdminCoupon />} />
-        <Route path="/admin/logs" element={<AdminUserLogs />} />
+        <Route
+          path="/admin"
+          element={<AdminHome totalRegistrationsGlobal={totalRegistrations}  />}
+        />
+        <Route
+          path="/admin/tabela"
+          element={<AdminTable loggedUsername={splitedLoggedUsername}  />}
+        />
+        <Route path="/admin/carona" element={<AdminRide />}  />
+        <Route
+          path="/admin/cupom"
+          element={<AdminCoupon loggedUsername={splitedLoggedUsername} />}
+          
+        />
+        <Route path="/admin/logs" element={<AdminUserLogs />}  />
       </Routes>
     </div>
   );

@@ -1043,6 +1043,65 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
+.settings-btn {
+  background-color: $alternate-dark-gray;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  padding: 10px;
+  opacity: 0.8;
+  position: fixed;
+  right: 20px;
+  z-index: 9000;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.settings-floating-buttons {
+  bottom: 86px;
+  display: flex;
+  flex-direction: column;
+  right: 16px;
+  opacity: 0;
+  position: fixed;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  visibility: hidden;
+  z-index: 9999;
+
+  button {
+    background-color: $alternate-dark-gray;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: transform 0.3s ease;
+    text-align: end;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.settings-floating-buttons.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.settings-message-button:hover,
+.settings-share-button:hover {
+  .settings-icons {
+    fill: $light-yellow;
+  }
+}
+
 .admin-custom-col {
   @media (max-width: $sm) {
     flex: 0 0 auto;

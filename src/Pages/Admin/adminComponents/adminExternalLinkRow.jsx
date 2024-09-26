@@ -14,7 +14,7 @@ const AdminExternalLinkRow = () => {
       <Col xs={12} className="text-center" style={{ padding: '0 0 0 1.25rem' }}>
         <Card>
           <Card.Body>
-            <Card.Title className="fw-bold text-success">Link da Planilha</Card.Title>
+            <Card.Title className="fw-bold text-success">Utilitários</Card.Title>
             <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições de 2024 e Pagar.me</Card.Text>
             <div className="btn-wrapper">
               <Button variant="info" href={PAGARME} target="_blank">
@@ -22,9 +22,6 @@ const AdminExternalLinkRow = () => {
               </Button>
               <Button variant="warning" href={OLD_SPREADSHEET_URL} target="_blank">
                 <strong>PLANILHA ANTIGA</strong>
-              </Button>
-              <Button variant="success" onClick={() => navigate('/admin/logs')}>
-                <strong>LOGS DE USUÁRIOS</strong>
               </Button>
             </div>
           </Card.Body>

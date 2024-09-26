@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Container, Col, Row, Button } from 'react-bootstrap';
-import axios from 'axios';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import Icons from '@/components/Icons';
 import { useNavigate } from 'react-router-dom';
 
-const AdminUserLogs = () => {
+const AdminUserLogs = ({}) => {
   const [userLogs, setUserLogs] = useState([]);
   const navigate = useNavigate();
 
   const fetchLogs = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/logs');
+      const response = await fetcher.get('logs');
       setUserLogs(response.data);
     } catch (error) {
       console.error('Erro ao buscar logs:', error);
@@ -36,11 +36,30 @@ const AdminUserLogs = () => {
 
       <Row>
         <ul>
-          {userLogs.map((log, index) => (
-            <li key={index}>
-              <b>{log.user}</b>: {log.action} em {new Date(log.timestamp).toLocaleString()}
-            </li>
-          ))}
+          {userLogs.map((log, index) => {
+            const splitedUsernameLog = log.user?.split('@')[0];
+
+            return (
+              <>
+                <li key={index}>
+                  <b>
+                    <em>{index}:&nbsp;</em>
+                    {splitedUsernameLog}
+                  </b>
+                  : {log.action} em{' '}
+                  {new Date(log.timestamp).toLocaleString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}{' '}
+                  | <em>(IP: {log.ip})</em>
+                </li>
+                <hr className="horizontal-line" />
+              </>
+            );
+          })}
         </ul>
       </Row>
     </Container>
