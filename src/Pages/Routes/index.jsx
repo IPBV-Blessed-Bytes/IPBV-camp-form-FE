@@ -347,21 +347,11 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route
-          path="/admin"
-          element={<AdminHome totalRegistrationsGlobal={totalRegistrations}  />}
-        />
-        <Route
-          path="/admin/tabela"
-          element={<AdminTable loggedUsername={splitedLoggedUsername}  />}
-        />
-        <Route path="/admin/carona" element={<AdminRide />}  />
-        <Route
-          path="/admin/cupom"
-          element={<AdminCoupon loggedUsername={splitedLoggedUsername} />}
-          
-        />
-        <Route path="/admin/logs" element={<AdminUserLogs />}  />
+        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
+        <Route path="/admin/tabela" element={<AdminTable loggedUsername={splitedLoggedUsername} />} />
+        <Route path="/admin/carona" element={<AdminRide />} />
+        <Route path="/admin/cupom" element={<AdminCoupon loggedUsername={splitedLoggedUsername} />} />
+        <Route path="/admin/logs" element={<AdminUserLogs loggedUsername={splitedLoggedUsername} />} />
       </Routes>
     </div>
   );
