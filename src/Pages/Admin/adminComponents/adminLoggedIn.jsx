@@ -295,12 +295,6 @@ const AdminLoggedIn = ({
         </ul>
       </div>
 
-      {showSettingsIcon && (
-        <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
-          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
-        </button>
-      )}
-
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
         <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
           Logs de Usuários&nbsp;
