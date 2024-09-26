@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { parse } from 'date-fns';
 import ptBR from 'date-fns/locale/pt';
 import { useFormik } from 'formik';
@@ -7,16 +8,54 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../Routes/constants';
+import { BASE_URL } from '@/config';
+import calculateAge from '../Packages/utils/calculateAge';
 
-const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => {
-  const { values, errors, handleChange, submitForm } = useFormik({
+const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
+  const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({
     initialValues,
-    onSubmit: () => {
+    onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
-        nextStep();
-        updateForm(values);
+        try {
+          const response = await axios.post(`${BASE_URL}/coupon/check`, { cpf: values.cpf });
+
+          if (onDiscountChange) {
+            onDiscountChange(response.data.discount);
+          }
+
+          if (response.data.discount && response.data.discount !== 0) {
+            const fetchCoupons = async () => {
+              try {
+                const couponResponse = await axios.get(`${BASE_URL}/coupon`);
+                const coupons = couponResponse.data.coupons;
+
+                if (coupons && coupons.length > 0) {
+                  const matchingCoupon = coupons.find((coupon) => coupon.cpf === values.cpf);
+
+                  if (matchingCoupon) {
+                    await axios.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
+                      ...matchingCoupon,
+                      user: formUsername,
+                    });
+                  }
+                }
+              } catch (error) {
+                console.error('Erro ao verificar os cupons:', error);
+              }
+            };
+
+            await fetchCoupons();
+          }
+
+          nextStep();
+          updateForm(values);
+        } catch (error) {
+          console.error('Erro ao verificar o CPF:', error);
+          toast.error('Erro ao verificar o CPF. Por favor, tente novamente.');
+        }
       } else {
         toast.error('CPF inválido! Por favor, insira um CPF válido.');
       }
@@ -27,12 +66,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
   });
 
   const handleDateChange = (date) => {
-    handleChange({
-      target: {
-        name: 'birthday',
-        value: date,
-      },
-    });
+    setFieldValue('birthday', date);
   };
 
   const parseDate = (value) => {
@@ -44,6 +78,19 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
 
     return isNaN(parsedDate) ? null : parsedDate;
   };
+
+  useEffect(() => {
+    if (values.birthday) {
+      const age = calculateAge(values.birthday);
+      if (age !== null) {
+        toast.info(
+          `A idade informada é ${
+            age > 0 ? `de ${age} anos` : 'menor que 1 ano'
+          }. Verifique se a data e a idade informadas estão corretas. Caso não estejam, ajuste-as.`,
+        );
+      }
+    }
+  }, [values.birthday]);
 
   return (
     <Card className="form__container__general-height">
@@ -66,7 +113,10 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues }) => 
                     id="name"
                     isInvalid={!!errors.name}
                     value={values.name}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      updateForm({ ...values, name: e.target.value });
+                    }}
                   />
                   <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                 </Form.Group>
@@ -255,6 +305,7 @@ FormPersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
+  formUsername: PropTypes.string,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
     birthday: PropTypes.string,

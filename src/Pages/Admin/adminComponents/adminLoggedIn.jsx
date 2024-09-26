@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +9,24 @@ import privateFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config/index';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
+import { registerLog } from '@/fetchers/userLogs';
 
-const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGlobal }) => {
+const AdminLoggedIn = ({
+  loggedInUsername,
+  handleLogout,
+  totalRegistrationsGlobal,
+  sendLoggedMessage,
+  setSendLoggedMessage,
+  user,
+}) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
+  const [showSettingsButtons, setShowSettingsButtons] = useState(false);
+  const [showSettingsIcon, setShowSettingsIcon] = useState(false);
+  const settingsButtonRef = useRef(null);
+  const splitedLoggedInUsername = loggedInUsername.split('@')[0];
+
   const navigate = useNavigate();
-  const splitedUsername = loggedInUsername.split('@')[0];
 
   const handleTableClick = () => {
     navigate('/admin/tabela');
@@ -24,9 +36,21 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
     navigate('/admin/carona');
   };
 
-  // const handleCouponsClick = () => {
-  //   navigate('/admin/cupom');
-  // };
+  const handleCouponsClick = () => {
+    navigate('/admin/cupom');
+  };
+
+  useEffect(() => {
+    setShowSettingsIcon(true);
+  }, []);
+
+  useEffect(() => {
+    if (sendLoggedMessage) {
+      registerLog('Usuário logou', user);
+
+      setSendLoggedMessage(false);
+    }
+  }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -42,6 +66,21 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
 
     fetchPackages();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (settingsButtonRef.current && !settingsButtonRef.current.contains(event.target)) {
+        setShowSettingsButtons(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [settingsButtonRef]);
+
+  const toggleSettingsButtons = () => {
+    setShowSettingsButtons(!showSettingsButtons);
+  };
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
@@ -137,7 +176,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
   return (
     <>
       <Row className="mb-3">
-        <Col className='admin-custom-col'>
+        <Col className="admin-custom-col">
           <Button
             variant="danger"
             onClick={() => {
@@ -152,7 +191,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
           <p>
             Bem vindo(a),
             <span>
-              <strong className="text-uppercase"> {splitedUsername}</strong>
+              <strong className="text-uppercase"> {splitedLoggedInUsername}</strong>
             </span>
             !
           </p>
@@ -163,7 +202,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
         </Col>
       </Row>
       <Row className="mb-5 navigation-header">
-        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleTableClick}>
             <Card.Body className="navigation-header__registered-card">
               <Card.Title className="text-center mb-0">
@@ -177,7 +216,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={6} className="mb-3 mb-lg-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleRideClick}>
             <Card.Body className="navigation-header__ride-card">
               <Card.Title className="text-center mb-0">
@@ -191,7 +230,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             </Card.Body>
           </Card>
         </Col>
-        {/* <Col xs={12} md={6} lg={3} className="mb-3 mb-md-0">
+        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
           <Card className="h-100" onClick={handleCouponsClick}>
             <Card.Body className="navigation-header__coupons-card">
               <Card.Title className="text-center mb-0">
@@ -204,21 +243,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
               </Card.Title>
             </Card.Body>
           </Card>
-        </Col> */}
-        {/* <Col xs={12} md={6} lg={2}>
-          <Card className="h-100">
-            <Card.Body className="navigation-header__new-card">
-              <Card.Title className="text-center">
-                <div className="naviagion-header__new-card__content-wrapper">
-                  <em>
-                    <b>Novo Card</b>
-                  </em>
-                  <Icons typeIcon="add-person" iconSize={50} fill={'#204691'} />
-                </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-        </Col> */}
+        </Col>
       </Row>
 
       {!loading && (
@@ -268,6 +293,13 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             : Contagem de pessoas válidas que irão de ônibus
           </li>
         </ul>
+      </div>
+
+      <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
+          Logs de Usuários&nbsp;
+          <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
+        </button>
       </div>
 
       <Loading loading={loading} />

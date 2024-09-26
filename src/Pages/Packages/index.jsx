@@ -1,32 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import Icons from '@/components/Icons';
 import formatCurrency from '@/utils/formatCurrency';
-import calculateAge from './utils/calculateAge';
 import getPackages, { accommodations } from './utils/packages';
-import axios from 'axios';
-
-import { BASE_URL } from '@/config/index';
 
 const FormPackages = ({
   nextStep,
   backStep,
-  birthDate,
+  age,
   updateForm,
-  spinnerLoading,
   availablePackages,
   totalRegistrationsGlobal,
-  formUsername,
+  discountValue,
+  hasDiscount,
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
-  const [showCouponField, setShowCouponField] = useState(false);
-  const [discountCoupon, setDiscountCoupon] = useState('');
-  const [discountValue, setDiscountValue] = useState(0);
-  const [hasDiscount, setHasDiscount] = useState(false);
-  const age = calculateAge(birthDate);
   const packages = getPackages(age);
 
   const packageMapping = {
@@ -47,38 +38,13 @@ const FormPackages = ({
     15: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
   };
 
-  const handleCouponChange = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/cupom`);
-      const coupons = response.data.coupons;
-      const validCoupon = coupons.find((coupon) => coupon.code === discountCoupon && !coupon.used);
-      if (validCoupon) {
-        await axios.put(`${BASE_URL}/cupom/${validCoupon.id}`, {
-          ...validCoupon,
-          used: true,
-          user: formUsername,
-        });
-
-        setDiscountValue(validCoupon.discount);
-        setHasDiscount(true);
-        toast.success('Cupom validado com sucesso');
-      } else if (discountCoupon === '') {
-        toast.warn('Insira um cupom válido no campo ao lado');
-      } else {
-        setDiscountValue(0);
-        setHasDiscount(false);
-        toast.error('Cupom inválido ou já utilizado');
-      }
-    } catch (error) {
-      console.error('Erro ao verificar o cupom:', error);
-      setDiscountValue(0);
-      setHasDiscount(false);
+  useEffect(() => {
+    if (hasDiscount) {
+      toast.info(
+        `Foi gerado um cupom de desconto no valor de ${discountValue} em seu nome. O desconto já está aplicado ao valor final dos pacotes`,
+      );
     }
-  };
-
-  const handleCouponInputChange = (e) => {
-    setDiscountCoupon(e.target.value);
-  };
+  }, [hasDiscount]);
 
   const handleClick = (selectedPackage) => {
     setSelectedPackage(null);
@@ -93,8 +59,6 @@ const FormPackages = ({
 
     updateForm({
       price: values.total,
-      discountCoupon: discountCoupon,
-      discountValue: discountValue,
       accomodation: accomodation,
       accomodationName: accomodationName,
       subAccomodation: subAccomodation,
@@ -126,21 +90,17 @@ const FormPackages = ({
     updateForm({
       price: values.total,
       finalPrice: finalPrice,
-      discountCoupon: discountCoupon,
-      discountValue: discountValue,
       accomodation: accomodation,
       accomodationName: accomodationName,
       subAccomodation: subAccomodation,
       transportation: transportation,
       food: food,
       title: title,
+      discountCoupon: hasDiscount,
+      discountValue: discountValue,
     });
 
     nextStep();
-  };
-
-  const handleCouponClick = () => {
-    setShowCouponField((prevState) => !prevState);
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
@@ -171,14 +131,6 @@ const FormPackages = ({
             </div>
           ) : (
             <Form>
-              {spinnerLoading && (
-                <div className="overlay">
-                  <div className="spinner-container">
-                    <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
-                    <span>Carregando dados</span>
-                  </div>
-                </div>
-              )}
               <Accordion>
                 {accommodations.map((accomodation, index) => (
                   <Accordion.Item className={hasError ? 'msg-error' : ''} key={index} eventKey={String(index)}>
@@ -397,14 +349,16 @@ const FormPackages = ({
                                     <div className="package-description-container">
                                       <em className="d-flex gap-1 info-text-wrapper">
                                         <span>Total:</span>{' '}
-                                        <u className={`card-text ${hasDiscount ? 'price-with-discount' : ''}`}>
-                                          {formatCurrency(cards.values.total)}
-                                        </u>
-                                        {hasDiscount && (
-                                          <u className="card-text">
-                                            <b>*Valor com desconto = ${finalPrice}</b>
+                                        <div className="d-flex flex-column gap-1">
+                                          <u className={`card-text ${hasDiscount ? 'price-with-discount' : ''}`}>
+                                            {formatCurrency(cards.values.total)}
                                           </u>
-                                        )}
+                                          {hasDiscount && (
+                                            <span className="card-text fw-normal">
+                                              Valor com desconto = R$&nbsp;{finalPrice}
+                                            </span>
+                                          )}
+                                        </div>
                                       </em>
                                     </div>
                                     {!isPackageAvailable && (

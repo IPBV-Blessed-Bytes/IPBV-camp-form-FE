@@ -22,6 +22,9 @@ import useAuth from '@/hooks/useAuth';
 import AdminCoupon from '../Admin/adminComponents/adminCoupon';
 import { BASE_URL } from '@/config/index';
 import Icons from '@/components/Icons';
+import calculateAge from '../Packages/utils/calculateAge';
+import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
+import { USER_STORAGE_KEY } from '@/config';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -36,6 +39,9 @@ const FormRoutes = () => {
   const [withFood, setWithFood] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
+  const [hasDiscount, setHasDiscount] = useState(false);
+  const [discount, setDiscount] = useState(0);
+
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const whatsappButtonRef = useRef(null);
@@ -206,6 +212,20 @@ const FormRoutes = () => {
     navigate('/admin');
   };
 
+  const age = calculateAge(formValues.personalInformation.birthday);
+
+  const handleDiscountChange = (discountValue) => {
+    setDiscount(discountValue);
+    if (discountValue !== 0 && discountValue !== '') {
+      setHasDiscount(true);
+    } else {
+      setHasDiscount(false);
+    }
+  };
+
+  const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+  const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
+
   return (
     <div className="form">
       {!adminPages && (
@@ -221,6 +241,8 @@ const FormRoutes = () => {
                 nextStep={nextStep}
                 backStep={backStep}
                 updateForm={updateFormValues('personalInformation')}
+                onDiscountChange={handleDiscountChange}
+                formUsername={formValues.personalInformation.name}
               />
             )}
 
@@ -235,15 +257,15 @@ const FormRoutes = () => {
 
             {steps === enumSteps.packages && isNotSuccessPathname && (
               <FormPackages
-                birthDate={formValues.personalInformation.birthday}
+                age={age}
                 nextStep={nextStep}
                 backStep={backStep}
                 updateForm={updateFormValues('package')}
                 sendForm={sendForm}
-                spinnerLoading={loading}
                 availablePackages={availablePackages}
                 totalRegistrationsGlobal={totalRegistrations}
-                formUsername={formValues.personalInformation.name}
+                discountValue={discount}
+                hasDiscount={hasDiscount}
               />
             )}
 
@@ -326,9 +348,10 @@ const FormRoutes = () => {
       )}
       <Routes>
         <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
-        <Route path="/admin/tabela" element={<AdminTable />} />
+        <Route path="/admin/tabela" element={<AdminTable loggedUsername={splitedLoggedUsername} />} />
         <Route path="/admin/carona" element={<AdminRide />} />
-        <Route path="/admin/cupom" element={<AdminCoupon />} />
+        <Route path="/admin/cupom" element={<AdminCoupon loggedUsername={splitedLoggedUsername} />} />
+        <Route path="/admin/logs" element={<AdminUserLogs loggedUsername={splitedLoggedUsername} />} />
       </Routes>
     </div>
   );

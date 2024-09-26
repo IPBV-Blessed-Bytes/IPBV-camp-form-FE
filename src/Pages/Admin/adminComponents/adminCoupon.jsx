@@ -5,25 +5,29 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
+import axios from 'axios';
+import { BASE_URL } from '@/config';
+import { registerLog } from '@/fetchers/userLogs';
 
-const AdminCoupon = () => {
+const AdminCoupon = ({ loggedUsername }) => {
   const [coupons, setCoupons] = useState([]);
+  const [paidUsers, setPaidUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [couponToDelete, setCouponToDelete] = useState(null);
-  const [newCoupon, setNewCoupon] = useState({ code: '', discount: '', used: false, user: '' });
+  const [newCoupon, setNewCoupon] = useState({ cpf: '', discount: '', user: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchCoupons();
+    fetchPaidUsers();
   }, []);
 
   const fetchCoupons = async () => {
     try {
-      const response = await fetcher.get('coupon');
-
+      const response = await axios.get(`${BASE_URL}/coupon`);
       setCoupons(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
@@ -32,18 +36,39 @@ const AdminCoupon = () => {
     }
   };
 
+  const fetchPaidUsers = async () => {
+    try {
+      const response = await fetcher.get('camper', { params: { size: 100000 } });
+      if (Array.isArray(response.data.content)) {
+        setPaidUsers(response.data.content);
+      } else {
+        console.error('Erro: Dados não estão no formato esperado.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar usuários pagos:', error);
+    }
+  };
+
+  const registeredUser = (cpf) => {
+    const isValid = paidUsers.some((user) => {
+      return user.personalInformation.cpf === cpf;
+    });
+
+    return isValid;
+  };
+
   const handleCreateCoupon = async () => {
     setLoading(true);
 
     try {
-      await fetcher.post('coupon', {
+      await fetcher.post('coupon/create', {
         ...newCoupon,
         id: Date.now().toString(),
-        used: false,
       });
       toast.success('Cupom criado com sucesso');
       setShowModal(false);
       fetchCoupons();
+      registerLog(`Criou o cupom atrelado ao CPF ${newCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao criar cupom');
     } finally {
@@ -59,6 +84,7 @@ const AdminCoupon = () => {
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
+      registerLog(`Editou o cupom atrelado ao CPF ${editingCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao atualizar cupom');
     } finally {
@@ -66,21 +92,18 @@ const AdminCoupon = () => {
     }
   };
 
-  const handleDeleteCoupon = async (id) => {
+  const handleDeleteCoupon = async (couponToDelete) => {
     setLoading(true);
 
     try {
-      const requestBody = {
-        id: id,
-        code: '',
-        discount: '',
-        used: true,
-        user: '',
+      const deleteCoupon = {
+        ...couponToDelete,
       };
-      await fetcher.delete(`coupon/${id}`, { data: requestBody });
+      await fetcher.delete(`coupon/${couponToDelete.id}`, { data: deleteCoupon });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();
+      registerLog(`Excluiu o cupom atrelado ao CPF ${deleteCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao excluir cupom');
     } finally {
@@ -90,7 +113,7 @@ const AdminCoupon = () => {
 
   const openModal = (coupon) => {
     setEditingCoupon(coupon);
-    setNewCoupon({ code: '', discount: '' });
+    setNewCoupon({ cpf: '', discount: '' });
     setShowModal(true);
   };
 
@@ -133,13 +156,7 @@ const AdminCoupon = () => {
       <hr className="horizontal-line" />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col lg={2} md={3} xs={6}>
-          Exemplo de cupom:{' '}
-          <em>
-            <b>NOMEDAPESSOA100</b>
-          </em>
-        </Col>
-        <Col lg={10} md={9} xs={6}>
+        <Col lg={12} md={12} xs={12}>
           <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
             <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
               <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
@@ -153,36 +170,32 @@ const AdminCoupon = () => {
         <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">Código:</th>
+              <th className="table-cells-header">CPF atrelado:</th>
               <th className="table-cells-header">Desconto:</th>
-              <th className="table-cells-header">Usado:</th>
               <th className="table-cells-header">Usuário:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
           <tbody>
-            {coupons.map((coupon) => (
-              <tr key={coupon.id}>
-                <td>{coupon.code}</td>
-                <td>{coupon.discount}</td>
-                <td>
-                  {coupon.used ? (
-                    <Icons typeIcon="checked" iconSize={30} fill="#65a300" />
-                  ) : (
-                    <Icons typeIcon="not-checked" iconSize={30} fill="#dc3545" />
-                  )}
-                </td>
-                <td>{coupon.user}</td>
-                <td>
-                  <Button variant="outline-success" onClick={() => openModal(coupon)}>
-                    <Icons typeIcon="edit" iconSize={24} />
-                  </Button>{' '}
-                  <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(coupon)}>
-                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {coupons.map((coupon) => {
+              const isUserRegistered = registeredUser(coupon.cpf);
+
+              return (
+                <tr key={coupon.id}>
+                  <td>{coupon.cpf}</td>
+                  <td>{coupon.discount}</td>
+                  <td>{isUserRegistered ? coupon.user : ''}</td>
+                  <td>
+                    <Button variant="outline-success" onClick={() => openModal(coupon)}>
+                      <Icons typeIcon="edit" iconSize={24} />
+                    </Button>{' '}
+                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(coupon)}>
+                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>
@@ -197,16 +210,16 @@ const AdminCoupon = () => {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Código:</b>
+                <b>CPF atrelado:</b>
               </Form.Label>
               <Form.Control
-                type="text"
-                value={editingCoupon ? editingCoupon.code : newCoupon.code}
+                type="number"
+                value={editingCoupon ? editingCoupon.cpf : newCoupon.cpf}
                 size="lg"
                 onChange={(e) =>
                   editingCoupon
-                    ? setEditingCoupon({ ...editingCoupon, code: e.target.value })
-                    : setNewCoupon({ ...newCoupon, code: e.target.value })
+                    ? setEditingCoupon({ ...editingCoupon, cpf: e.target.value })
+                    : setNewCoupon({ ...newCoupon, cpf: e.target.value })
                 }
               />
             </Form.Group>
@@ -226,19 +239,6 @@ const AdminCoupon = () => {
                 }
               />
             </Form.Group>
-
-            {editingCoupon && (
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  name="usedCoupon"
-                  id="usedCoupon"
-                  label="Cupom usado"
-                  checked={editingCoupon.used}
-                  onChange={(e) => setEditingCoupon({ ...editingCoupon, used: e.target.checked })}
-                />
-              </Form.Group>
-            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -253,16 +253,19 @@ const AdminCoupon = () => {
 
       <Modal show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão</Modal.Title>
+          <Modal.Title>
+            <b>Excluir Cupom</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Você tem certeza de que deseja excluir o cupom com código &quot;{couponToDelete?.code}&quot;?</p>
+          Tem certeza que deseja excluir o cupom vinculado ao CPF <b>{couponToDelete?.cpf}</b>? Essa ação é
+          irreversível.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => couponToDelete && handleDeleteCoupon(couponToDelete.id)}>
+          <Button variant="danger" onClick={() => couponToDelete && handleDeleteCoupon(couponToDelete)}>
             Excluir
           </Button>
         </Modal.Footer>
