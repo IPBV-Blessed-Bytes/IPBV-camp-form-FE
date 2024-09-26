@@ -7,8 +7,9 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import axios from 'axios';
 import { BASE_URL } from '@/config';
+import { registerLog } from '@/fetchers/userLogs';
 
-const AdminCoupon = () => {
+const AdminCoupon = ({ loggedUsername }) => {
   const [coupons, setCoupons] = useState([]);
   const [paidUsers, setPaidUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -67,6 +68,7 @@ const AdminCoupon = () => {
       toast.success('Cupom criado com sucesso');
       setShowModal(false);
       fetchCoupons();
+      registerLog(`Criou o cupom atrelado ao CPF ${newCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao criar cupom');
     } finally {
@@ -82,6 +84,7 @@ const AdminCoupon = () => {
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
       fetchCoupons();
+      registerLog(`Editou o cupom atrelado ao CPF ${editingCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao atualizar cupom');
     } finally {
@@ -89,20 +92,18 @@ const AdminCoupon = () => {
     }
   };
 
-  const handleDeleteCoupon = async (id) => {
+  const handleDeleteCoupon = async (couponToDelete) => {
     setLoading(true);
 
     try {
-      const requestBody = {
-        id: id,
-        cpf: '',
-        discount: '',
-        user: '',
+      const deleteCoupon = {
+        ...couponToDelete,
       };
-      await fetcher.delete(`coupon/${id}`, { data: requestBody });
+      await fetcher.delete(`coupon/${couponToDelete.id}`, { data: deleteCoupon });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
       fetchCoupons();
+      registerLog(`Excluiu o cupom atrelado ao CPF ${deleteCoupon.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao excluir cupom');
     } finally {
@@ -264,7 +265,7 @@ const AdminCoupon = () => {
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => couponToDelete && handleDeleteCoupon(couponToDelete.id)}>
+          <Button variant="danger" onClick={() => couponToDelete && handleDeleteCoupon(couponToDelete)}>
             Excluir
           </Button>
         </Modal.Footer>

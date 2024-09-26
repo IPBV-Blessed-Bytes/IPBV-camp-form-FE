@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +9,23 @@ import privateFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config/index';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
+import { registerLog } from '@/fetchers/userLogs';
 
-const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGlobal }) => {
+const AdminLoggedIn = ({
+  loggedInUsername,
+  handleLogout,
+  totalRegistrationsGlobal,
+  sendLoggedMessage,
+  setSendLoggedMessage,
+  user,
+}) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
+  const [showSettingsButtons, setShowSettingsButtons] = useState(false);
+  const [showSettingsIcon, setShowSettingsIcon] = useState(false);
+  const settingsButtonRef = useRef(null);
+  const splitedLoggedInUsername = loggedInUsername.split('@')[0];
+
   const navigate = useNavigate();
 
   const handleTableClick = () => {
@@ -28,6 +41,18 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
   };
 
   useEffect(() => {
+    setShowSettingsIcon(true);
+  }, []);
+
+  useEffect(() => {
+    if (sendLoggedMessage) {
+      registerLog('Usuário logou', user);
+
+      setSendLoggedMessage(false);
+    }
+  }, [sendLoggedMessage, setSendLoggedMessage, user]);
+
+  useEffect(() => {
     const fetchPackages = async () => {
       try {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
@@ -41,6 +66,21 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
 
     fetchPackages();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (settingsButtonRef.current && !settingsButtonRef.current.contains(event.target)) {
+        setShowSettingsButtons(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [settingsButtonRef]);
+
+  const toggleSettingsButtons = () => {
+    setShowSettingsButtons(!showSettingsButtons);
+  };
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
@@ -151,7 +191,7 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
           <p>
             Bem vindo(a),
             <span>
-              <strong className="text-uppercase"> {loggedInUsername}</strong>
+              <strong className="text-uppercase"> {splitedLoggedInUsername}</strong>
             </span>
             !
           </p>
@@ -253,6 +293,19 @@ const AdminLoggedIn = ({ loggedInUsername, handleLogout, totalRegistrationsGloba
             : Contagem de pessoas válidas que irão de ônibus
           </li>
         </ul>
+      </div>
+
+      {showSettingsIcon && (
+        <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
+          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
+        </button>
+      )}
+
+      <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
+          Logs de Usuários&nbsp;
+          <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
+        </button>
       </div>
 
       <Loading loading={loading} />

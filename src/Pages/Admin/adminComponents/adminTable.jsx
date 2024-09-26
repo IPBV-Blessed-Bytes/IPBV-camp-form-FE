@@ -12,8 +12,9 @@ import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
 import { initialValues } from '@/Pages/Routes/constants';
+import { registerLog } from '@/fetchers/userLogs';
 
-const AdminTable = () => {
+const AdminTable = ({ loggedUsername }) => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
@@ -152,6 +153,10 @@ const AdminTable = () => {
         const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
         setData(newData);
         setShowEditModal(false);
+        registerLog(
+          `Editou a inscrição de ${updatedFormValues.personalInformation.name}`,
+          loggedUsername,
+        );
       } else {
         toast.error('Erro ao editar a inscrição. Verifique os dados e tente novamente');
       }
@@ -185,6 +190,10 @@ const AdminTable = () => {
         fetchData();
         setShowAddModal(false);
         setAddFormData({});
+        registerLog(
+          `Adicionou manualmente inscrição de ${updatedFormValues.personalInformation.name}`,
+          loggedUsername,
+        );
       } else {
         toast.error('Erro ao criar a inscrição. Verifique os dados e tente novamente');
       }
@@ -197,11 +206,12 @@ const AdminTable = () => {
     }
   };
 
-  const handleCheckboxChange = (rowIndex) => {
-    if (selectedRows.includes(rowIndex)) {
-      setSelectedRows(selectedRows.filter((row) => row !== rowIndex));
+  const handleCheckboxChange = (rowIndex, rowName) => {
+    const selectedRow = { index: rowIndex, name: rowName };
+    if (selectedRows.some((row) => row.index === rowIndex)) {
+      setSelectedRows(selectedRows.filter((row) => row.index !== rowIndex));
     } else {
-      setSelectedRows([...selectedRows, rowIndex]);
+      setSelectedRows([...selectedRows, selectedRow]);
     }
   };
 
@@ -219,12 +229,17 @@ const AdminTable = () => {
     setLoading(true);
 
     try {
-      const idsToDelete = selectedRows.map((index) => data[index].id);
+      const idsToDelete = selectedRows.map((row) => data[row.index].id);
+      const namesToDelete = selectedRows.map((row) => row.name);
       await Promise.all(idsToDelete.map((id) => fetcher.delete(`camper/${id}`)));
-      const newData = data.filter((_, index) => !selectedRows.includes(index));
+      const newData = data.filter((_, index) => !selectedRows.some((row) => row.index === index));
       setData(newData);
       setSelectedRows([]);
       setShowDeleteModal(false);
+
+      const deletedNames = namesToDelete.join(', ');
+      registerLog(`Deletou inscrições de {${deletedNames}}`, loggedUsername);
+
       toast.success('Inscrições deletadas com sucesso');
     } catch (error) {
       console.error('Error deleting selected data:', error);
@@ -243,6 +258,7 @@ const AdminTable = () => {
       setData(newData);
       setEditRowIndex(null);
       setShowDeleteModal(false);
+      registerLog(`Deletou inscrição de ${itemToDelete.personalInformation.name}`, loggedUsername);
       toast.success('Inscrição deletada com sucesso');
     } catch (error) {
       console.error('Error deleting specific data:', error);
@@ -287,8 +303,8 @@ const AdminTable = () => {
           <Form.Check
             className="table-checkbox"
             type="checkbox"
-            onChange={() => handleCheckboxChange(row.index)}
-            checked={selectedRows.includes(row.index)}
+            onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
+            checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
           />
         ),
       },

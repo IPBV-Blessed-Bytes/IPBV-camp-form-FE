@@ -13,6 +13,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
   const navigateTo = useNavigate();
   const { login, logout, user, isLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
 
   const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -20,6 +21,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
     login(loginData.login, loginData.password);
     scrollUp();
     setLoginData((prevLoginData) => ({ ...prevLoginData, password: '' }));
+    setSendLoggedMessage(true);
   };
 
   const handleKeyDown = (e) => e.key === 'Enter' && handleLogin();
@@ -48,6 +50,9 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
               loggedInUsername={user ? user : 'Usuário não identificado'}
               handleLogout={logout}
               totalRegistrationsGlobal={totalRegistrationsGlobal}
+              sendLoggedMessage={sendLoggedMessage}
+              setSendLoggedMessage={setSendLoggedMessage}
+              user={user}
             />
           )}
         </Container>
