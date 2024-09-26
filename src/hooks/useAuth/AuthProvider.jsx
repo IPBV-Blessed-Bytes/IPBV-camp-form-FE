@@ -15,7 +15,7 @@ export const AuthContext = createContext({
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const userData = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+    const userData = localStorage.getItem(USER_STORAGE_KEY);
     if (userData) return userData;
   });
 
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
     } catch (error) {
       console.error(error.message);
-      toast.error('Erro ao buscar credenciais. Tente novamente mais tarde');
+      toast.error('Erro ao fazer login. Tente novamente.');
     }
   }, []);
 
@@ -58,6 +58,8 @@ const AuthProvider = ({ children }) => {
 
     setIsLoggedIn(false);
     setUser(undefined);
+
+    toast.success('Logout realizado com sucesso!');
   }, []);
 
   return <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>{children}</AuthContext.Provider>;
