@@ -5,3 +5,5 @@ export const BASE_URL = 'https://wilsondev.com.br';
 export const LOGIN_ROUTE = '/admin';
 
 export const USER_STORAGE_KEY = 'user-data';
+
+export const USER_STORAGE_ROLE = 'user-role'
