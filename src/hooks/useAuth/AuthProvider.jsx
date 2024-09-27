@@ -1,7 +1,7 @@
 import { createContext, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY } from '@/config';
+import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { isTokenValid } from './helpers';
 import fetcher from '@/fetchers';
 
@@ -46,6 +46,7 @@ const AuthProvider = ({ children }) => {
 
       localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
+      localStorage.setItem(USER_STORAGE_ROLE, response.data.role);
     } catch (error) {
       console.error(error.message);
       toast.error('Erro ao fazer login. Tente novamente.');
@@ -55,6 +56,7 @@ const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_KEY);
+    localStorage.removeItem(USER_STORAGE_ROLE);
 
     setIsLoggedIn(false);
     setUser(undefined);
