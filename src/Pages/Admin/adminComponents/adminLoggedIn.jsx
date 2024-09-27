@@ -10,11 +10,13 @@ import { BASE_URL } from '@/config/index';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
 import { registerLog } from '@/fetchers/userLogs';
+import { permissions } from '@/fetchers/permissions';
 
 const AdminLoggedIn = ({
   loggedInUsername,
   handleLogout,
   totalRegistrationsGlobal,
+  userRole,
   sendLoggedMessage,
   setSendLoggedMessage,
   user,
@@ -22,8 +24,9 @@ const AdminLoggedIn = ({
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
-  const [showSettingsIcon, setShowSettingsIcon] = useState(false);
   const settingsButtonRef = useRef(null);
+  const mainButtonsHomePermissions = permissions(userRole, 'main-button-home');
+  const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const navigate = useNavigate();
@@ -39,10 +42,6 @@ const AdminLoggedIn = ({
   const handleCouponsClick = () => {
     navigate('/admin/cupom');
   };
-
-  useEffect(() => {
-    setShowSettingsIcon(true);
-  }, []);
 
   useEffect(() => {
     if (sendLoggedMessage) {
@@ -202,48 +201,52 @@ const AdminLoggedIn = ({
         </Col>
       </Row>
       <Row className="mb-5 navigation-header">
-        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-          <Card className="h-100" onClick={handleTableClick}>
-            <Card.Body className="navigation-header__registered-card">
-              <Card.Title className="text-center mb-0">
-                <div className="navigation-header__registered-card__content-wrapper">
-                  <em>
-                    <b>Inscritos</b>
-                  </em>
-                  <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
-                </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-          <Card className="h-100" onClick={handleRideClick}>
-            <Card.Body className="navigation-header__ride-card">
-              <Card.Title className="text-center mb-0">
-                <div className="navigation-header__ride-card__content-wrapper">
-                  <em>
-                    <b>Caronas</b>
-                  </em>
-                  <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
-                </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-          <Card className="h-100" onClick={handleCouponsClick}>
-            <Card.Body className="navigation-header__coupons-card">
-              <Card.Title className="text-center mb-0">
-                <div className="navigation-header__coupons-card__content-wrapper">
-                  <em>
-                    <b>Cupons</b>
-                  </em>
-                  <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
-                </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-        </Col>
+        {mainButtonsHomePermissions && (
+          <>
+            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+              <Card className="h-100" onClick={handleTableClick}>
+                <Card.Body className="navigation-header__registered-card">
+                  <Card.Title className="text-center mb-0">
+                    <div className="navigation-header__registered-card__content-wrapper">
+                      <em>
+                        <b>Inscritos</b>
+                      </em>
+                      <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
+                    </div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+              <Card className="h-100" onClick={handleRideClick}>
+                <Card.Body className="navigation-header__ride-card">
+                  <Card.Title className="text-center mb-0">
+                    <div className="navigation-header__ride-card__content-wrapper">
+                      <em>
+                        <b>Caronas</b>
+                      </em>
+                      <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
+                    </div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+              <Card className="h-100" onClick={handleCouponsClick}>
+                <Card.Body className="navigation-header__coupons-card">
+                  <Card.Title className="text-center mb-0">
+                    <div className="navigation-header__coupons-card__content-wrapper">
+                      <em>
+                        <b>Cupons</b>
+                      </em>
+                      <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                    </div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Col>
+          </>
+        )}
       </Row>
 
       {!loading && (
@@ -294,6 +297,12 @@ const AdminLoggedIn = ({
           </li>
         </ul>
       </div>
+
+      {settingsButtonPermissions && (
+        <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
+          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
+        </button>
+      )}
 
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
         <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>

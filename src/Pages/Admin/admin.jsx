@@ -7,7 +7,7 @@ import AdminLoggedOut from './adminComponents/adminLoggedOut';
 import AdminLoggedIn from './adminComponents/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
 
-const AdminHome = ({ totalRegistrationsGlobal }) => {
+const AdminHome = ({ totalRegistrationsGlobal, userRole }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
@@ -50,6 +50,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
               loggedInUsername={user ? user : 'Usuário não identificado'}
               handleLogout={logout}
               totalRegistrationsGlobal={totalRegistrationsGlobal}
+              userRole={userRole}
               sendLoggedMessage={sendLoggedMessage}
               setSendLoggedMessage={setSendLoggedMessage}
               user={user}
@@ -63,6 +64,7 @@ const AdminHome = ({ totalRegistrationsGlobal }) => {
 
 AdminHome.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
+  permissions: PropTypes.array.isRequired,
 };
 
 export default AdminHome;
