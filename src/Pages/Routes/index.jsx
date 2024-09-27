@@ -24,7 +24,8 @@ import { BASE_URL } from '@/config/index';
 import Icons from '@/components/Icons';
 import calculateAge from '../Packages/utils/calculateAge';
 import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
-import { USER_STORAGE_KEY } from '@/config';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -32,7 +33,7 @@ const FormRoutes = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
-  const adminPages = window.location.pathname.startsWith('/admin');
+  const adminPages = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
@@ -41,6 +42,7 @@ const FormRoutes = () => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
+  const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
 
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
@@ -347,11 +349,47 @@ const FormRoutes = () => {
         </div>
       )}
       <Routes>
-        <Route path="/admin" element={<AdminHome totalRegistrationsGlobal={totalRegistrations} />} />
-        <Route path="/admin/tabela" element={<AdminTable loggedUsername={splitedLoggedUsername} />} />
-        <Route path="/admin/carona" element={<AdminRide />} />
-        <Route path="/admin/cupom" element={<AdminCoupon loggedUsername={splitedLoggedUsername} />} />
-        <Route path="/admin/logs" element={<AdminUserLogs loggedUsername={splitedLoggedUsername} />} />
+        <Route
+          path="/admin"
+          element={<AdminHome totalRegistrationsGlobal={totalRegistrations} userRole={loggedUserRole} />}
+        />
+        <Route
+          path="/admin/tabela"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+              <AdminTable loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/carona"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+              <AdminRide userRole={loggedUserRole} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/cupom"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+              <AdminCoupon loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/logs"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <AdminUserLogs loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/unauthorized"
+          element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
+        />
       </Routes>
     </div>
   );
