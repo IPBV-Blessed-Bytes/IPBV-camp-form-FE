@@ -1095,8 +1095,7 @@ button.btn.btn-outline-danger:hover svg {
   visibility: visible;
 }
 
-.settings-message-button:hover,
-.settings-share-button:hover {
+.settings-message-button:hover {
   .settings-icons {
     fill: $light-yellow;
   }
