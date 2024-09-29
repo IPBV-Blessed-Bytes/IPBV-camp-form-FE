@@ -356,7 +356,7 @@ const FormRoutes = () => {
         <Route
           path="/admin/tabela"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
               <AdminTable loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
             </ProtectedRoute>
           }
@@ -364,7 +364,7 @@ const FormRoutes = () => {
         <Route
           path="/admin/carona"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
               <AdminRide userRole={loggedUserRole} />
             </ProtectedRoute>
           }
@@ -372,7 +372,7 @@ const FormRoutes = () => {
         <Route
           path="/admin/cupom"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'controller']}>
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
               <AdminCoupon loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
             </ProtectedRoute>
           }

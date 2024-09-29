@@ -13,8 +13,9 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
 import { initialValues } from '@/Pages/Routes/constants';
 import { registerLog } from '@/fetchers/userLogs';
+import { permissions } from '@/fetchers/permissions';
 
-const AdminTable = ({ loggedUsername }) => {
+const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
@@ -29,6 +30,7 @@ const AdminTable = ({ loggedUsername }) => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const adminTableAdvancedOptionsPermissions = permissions(userRole, 'advanced-options-admin-table');
   const navigate = useNavigate();
 
   const now = new Date();
@@ -153,10 +155,7 @@ const AdminTable = ({ loggedUsername }) => {
         const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
         setData(newData);
         setShowEditModal(false);
-        registerLog(
-          `Editou a inscrição de ${updatedFormValues.personalInformation.name}`,
-          loggedUsername,
-        );
+        registerLog(`Editou a inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
       } else {
         toast.error('Erro ao editar a inscrição. Verifique os dados e tente novamente');
       }
@@ -190,10 +189,7 @@ const AdminTable = ({ loggedUsername }) => {
         fetchData();
         setShowAddModal(false);
         setAddFormData({});
-        registerLog(
-          `Adicionou manualmente inscrição de ${updatedFormValues.personalInformation.name}`,
-          loggedUsername,
-        );
+        registerLog(`Adicionou manualmente inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
       } else {
         toast.error('Erro ao criar a inscrição. Verifique os dados e tente novamente');
       }
@@ -534,7 +530,7 @@ const AdminTable = ({ loggedUsername }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
-          const discountValueText = value.discountValue ? value.discountValue : '-';
+          const discountValueText = value.discountValue !== '0' ? value.discountValue : '-';
           return `${hasDiscount} | Valor: ${discountValueText}`;
         },
       },
@@ -564,16 +560,22 @@ const AdminTable = ({ loggedUsername }) => {
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
-        Header: 'Editar / Deletar',
+        Header: `${adminTableAdvancedOptionsPermissions ? 'Editar / Deletar' : '-'}`,
         Cell: ({ row }) => (
-          <div>
-            <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
-              <Icons typeIcon="edit" iconSize={24} />
-            </Button>{' '}
-            <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
-              <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-            </Button>
-          </div>
+          <>
+            {adminTableAdvancedOptionsPermissions ? (
+              <div>
+                <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
+                  <Icons typeIcon="edit" iconSize={24} />
+                </Button>{' '}
+                <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
+                  <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                </Button>
+              </div>
+            ) : (
+              '-'
+            )}
+          </>
         ),
         disableFilters: true,
       },
@@ -798,34 +800,38 @@ const AdminTable = ({ loggedUsername }) => {
                 </span>
               </Button>
             )}
-            <Button
-              onClick={() => {
-                setShowAddModal(true);
-                setFormSubmitted(false);
-              }}
-              className="d-flex align-items-center d-lg-none"
-              size="lg"
-            >
-              <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
-              <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
-            </Button>
+            {adminTableAdvancedOptionsPermissions && (
+              <Button
+                onClick={() => {
+                  setShowAddModal(true);
+                  setFormSubmitted(false);
+                }}
+                className="d-flex align-items-center d-lg-none"
+                size="lg"
+              >
+                <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
+                <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
+              </Button>
+            )}
           </div>
         </Col>
-        <Col xl={3}>
-          <div className="table-tools__right-buttons mb-3">
-            <Button
-              onClick={() => {
-                setShowAddModal(true);
-                setFormSubmitted(false);
-              }}
-              className="d-flex align-items-center d-none d-lg-flex"
-              size="lg"
-            >
-              <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
-              <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
-            </Button>
-          </div>
-        </Col>
+        {adminTableAdvancedOptionsPermissions && (
+          <Col xl={3}>
+            <div className="table-tools__right-buttons mb-3">
+              <Button
+                onClick={() => {
+                  setShowAddModal(true);
+                  setFormSubmitted(false);
+                }}
+                className="d-flex align-items-center d-none d-lg-flex"
+                size="lg"
+              >
+                <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
+                <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
+              </Button>
+            </div>
+          </Col>
+        )}
       </Row>
 
       <Row>
