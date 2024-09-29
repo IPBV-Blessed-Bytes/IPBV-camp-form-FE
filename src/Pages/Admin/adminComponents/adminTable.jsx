@@ -275,33 +275,45 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     return [
       {
         Header: () => (
-          <div className="d-flex justify-content-between w-100">
-            <span className="d-flex">
-              <Form.Check
-                className="table-checkbox"
-                type="checkbox"
-                onChange={handleSelectAll}
-                checked={selectedRows.length === data.length}
-              />
-              &nbsp;
-              {selectedRows.length === 1
-                ? selectedRows.length + ' selecionado'
-                : selectedRows.length > 1
-                ? selectedRows.length + ' selecionados'
-                : 'Selecionar Todos'}
-            </span>
-          </div>
+          <>
+            {adminTableAdvancedOptionsPermissions ? (
+              <div className="d-flex justify-content-between w-100">
+                <span className="d-flex">
+                  <Form.Check
+                    className="table-checkbox"
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={selectedRows.length === data.length}
+                  />
+                  &nbsp;
+                  {selectedRows.length === 1
+                    ? selectedRows.length + ' selecionado'
+                    : selectedRows.length > 1
+                    ? selectedRows.length + ' selecionados'
+                    : 'Selecionar Todos'}
+                </span>
+              </div>
+            ) : (
+              '-'
+            )}
+          </>
         ),
         accessor: 'selection',
         Filter: '',
         sortType: 'alphanumeric',
         Cell: ({ row }) => (
-          <Form.Check
-            className="table-checkbox"
-            type="checkbox"
-            onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
-            checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
-          />
+          <>
+            {adminTableAdvancedOptionsPermissions ? (
+              <Form.Check
+                className="table-checkbox"
+                type="checkbox"
+                onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
+                checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
+              />
+            ) : (
+              '-'
+            )}
+          </>
         ),
       },
       {
@@ -788,17 +800,21 @@ const AdminTable = ({ loggedUsername, userRole }) => {
               <span className="table-tools__button-name">&nbsp;Baixar Excel</span>
             </Button>
             {selectedRows.length > 0 && (
-              <Button
-                variant="danger"
-                onClick={handleDeleteWithCheckbox}
-                className="d-flex align-items-center"
-                size="lg"
-              >
-                <Icons typeIcon="delete" iconSize={30} fill="#fff" />{' '}
-                <span className="table-tools__button-name">
-                  &nbsp;{selectedRows.length === 1 ? 'Deletar' : 'Deletar Selecionados'}
-                </span>
-              </Button>
+              <>
+                {adminTableAdvancedOptionsPermissions && (
+                  <Button
+                    variant="danger"
+                    onClick={handleDeleteWithCheckbox}
+                    className="d-flex align-items-center"
+                    size="lg"
+                  >
+                    <Icons typeIcon="delete" iconSize={30} fill="#fff" />{' '}
+                    <span className="table-tools__button-name">
+                      &nbsp;{selectedRows.length === 1 ? 'Deletar' : 'Deletar Selecionados'}
+                    </span>
+                  </Button>
+                )}
+              </>
             )}
             {adminTableAdvancedOptionsPermissions && (
               <Button
