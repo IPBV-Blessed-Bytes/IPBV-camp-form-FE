@@ -46,6 +46,10 @@ const AdminLoggedIn = ({
     navigate('/admin/cupom');
   };
 
+  const handleAggregateClick = () => {
+    navigate('/admin/agregado');
+  };
+
   useEffect(() => {
     if (sendLoggedMessage) {
       registerLog('Usuário logou', user);
@@ -206,7 +210,7 @@ const AdminLoggedIn = ({
       <Row className="mb-5 navigation-header">
         {mainButtonsHomePermissions && (
           <>
-            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+            <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
               <Card className="h-100" onClick={handleTableClick}>
                 <Card.Body className="navigation-header__registered-card">
                   <Card.Title className="text-center mb-0">
@@ -222,7 +226,7 @@ const AdminLoggedIn = ({
             </Col>
             {rideAndCouponHomePermissions && (
               <>
-                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+                <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
                   <Card className="h-100" onClick={handleRideClick}>
                     <Card.Body className="navigation-header__ride-card">
                       <Card.Title className="text-center mb-0">
@@ -236,7 +240,7 @@ const AdminLoggedIn = ({
                     </Card.Body>
                   </Card>
                 </Col>
-                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+                <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
                   <Card className="h-100" onClick={handleCouponsClick}>
                     <Card.Body className="navigation-header__coupons-card">
                       <Card.Title className="text-center mb-0">
@@ -245,6 +249,20 @@ const AdminLoggedIn = ({
                             <b>Cupons</b>
                           </em>
                           <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                        </div>
+                      </Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+                  <Card className="h-100" onClick={handleAggregateClick}>
+                    <Card.Body className="navigation-header__aggregate-card">
+                      <Card.Title className="text-center mb-0">
+                        <div className="navigation-header__aggregate-card__content-wrapper">
+                          <em>
+                            <b>Agregados</b>
+                          </em>
+                          <Icons typeIcon="aggregate" iconSize={50} fill={'#204691'} />
                         </div>
                       </Card.Title>
                     </Card.Body>

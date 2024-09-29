@@ -26,6 +26,7 @@ import calculateAge from '../Packages/utils/calculateAge';
 import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import AdminAggregate from '../Admin/adminComponents/adminAggregate';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -385,6 +386,7 @@ const FormRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin/agregado" element={<AdminAggregate />} />
 
         <Route
           path="/unauthorized"
