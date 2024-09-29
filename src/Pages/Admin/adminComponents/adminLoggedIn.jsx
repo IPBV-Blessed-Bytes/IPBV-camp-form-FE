@@ -26,7 +26,10 @@ const AdminLoggedIn = ({
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonRef = useRef(null);
   const mainButtonsHomePermissions = permissions(userRole, 'main-button-home');
+  const rideAndCouponHomePermissions = permissions(userRole, 'ride-and-coupon-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
+  const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
+  const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const navigate = useNavigate();
@@ -217,86 +220,94 @@ const AdminLoggedIn = ({
                 </Card.Body>
               </Card>
             </Col>
-            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-              <Card className="h-100" onClick={handleRideClick}>
-                <Card.Body className="navigation-header__ride-card">
-                  <Card.Title className="text-center mb-0">
-                    <div className="navigation-header__ride-card__content-wrapper">
-                      <em>
-                        <b>Caronas</b>
-                      </em>
-                      <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
-                    </div>
-                  </Card.Title>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-              <Card className="h-100" onClick={handleCouponsClick}>
-                <Card.Body className="navigation-header__coupons-card">
-                  <Card.Title className="text-center mb-0">
-                    <div className="navigation-header__coupons-card__content-wrapper">
-                      <em>
-                        <b>Cupons</b>
-                      </em>
-                      <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
-                    </div>
-                  </Card.Title>
-                </Card.Body>
-              </Card>
-            </Col>
+            {rideAndCouponHomePermissions && (
+              <>
+                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+                  <Card className="h-100" onClick={handleRideClick}>
+                    <Card.Body className="navigation-header__ride-card">
+                      <Card.Title className="text-center mb-0">
+                        <div className="navigation-header__ride-card__content-wrapper">
+                          <em>
+                            <b>Caronas</b>
+                          </em>
+                          <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
+                        </div>
+                      </Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+                  <Card className="h-100" onClick={handleCouponsClick}>
+                    <Card.Body className="navigation-header__coupons-card">
+                      <Card.Title className="text-center mb-0">
+                        <div className="navigation-header__coupons-card__content-wrapper">
+                          <em>
+                            <b>Cupons</b>
+                          </em>
+                          <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                        </div>
+                      </Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </>
+            )}
           </>
         )}
       </Row>
 
-      {!loading && (
+      {packagesAndTotalCardsPermissions && (
         <>
-          <Row>
-            <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
-            {packageCardsData.map((card) => (
-              <AdminPackageCard key={card.title} {...card} cardType="package-card" />
-            ))}
-          </Row>
+          {!loading && (
+            <>
+              <Row>
+                <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
+                {packageCardsData.map((card) => (
+                  <AdminPackageCard key={card.title} {...card} cardType="package-card" />
+                ))}
+              </Row>
 
-          <Row className="mt-4">
-            <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
-            {totalCardsData.map((card) => (
-              <AdminPackageCard key={card.title} {...card} cardType="total-card" />
-            ))}
-          </Row>
+              <Row className="mt-4">
+                <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
+                {totalCardsData.map((card) => (
+                  <AdminPackageCard key={card.title} {...card} cardType="total-card" />
+                ))}
+              </Row>
+            </>
+          )}
+
+          <div className="packages-horizontal-line" />
+          <h4>Notas:</h4>
+          <div>
+            <ul>
+              <li>
+                <em>
+                  <b>Total de Inscritos Geral</b>
+                </em>
+                : Contagem de adultos e crianças
+              </li>
+              <li>
+                <em>
+                  <b>Total de Adultos</b>
+                </em>
+                : Contagem de adultos
+              </li>
+              <li>
+                <em>
+                  <b>Total de Crianças</b>
+                </em>
+                : Contagem de crianças
+              </li>
+              <li>
+                <em>
+                  <b>Total de Inscritos Com Ônibus</b>
+                </em>
+                : Contagem de pessoas válidas que irão de ônibus
+              </li>
+            </ul>
+          </div>
         </>
       )}
-
-      <div className="packages-horizontal-line" />
-      <h4>Notas:</h4>
-      <div>
-        <ul>
-          <li>
-            <em>
-              <b>Total de Inscritos Geral</b>
-            </em>
-            : Contagem de adultos e crianças
-          </li>
-          <li>
-            <em>
-              <b>Total de Adultos</b>
-            </em>
-            : Contagem de adultos
-          </li>
-          <li>
-            <em>
-              <b>Total de Crianças</b>
-            </em>
-            : Contagem de crianças
-          </li>
-          <li>
-            <em>
-              <b>Total de Inscritos Com Ônibus</b>
-            </em>
-            : Contagem de pessoas válidas que irão de ônibus
-          </li>
-        </ul>
-      </div>
 
       {settingsButtonPermissions && (
         <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
@@ -313,9 +324,11 @@ const AdminLoggedIn = ({
 
       <Loading loading={loading} />
 
-      <Row>
-        <AdminExternalLinkRow />
-      </Row>
+      {utilitiesLinksPermissions && (
+        <Row>
+          <AdminExternalLinkRow />
+        </Row>
+      )}
     </>
   );
 };
