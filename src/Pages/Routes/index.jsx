@@ -372,7 +372,7 @@ const FormRoutes = () => {
         <Route
           path="/admin/cupom"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
               <AdminCoupon loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
             </ProtectedRoute>
           }

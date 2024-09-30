@@ -25,8 +25,9 @@ const AdminLoggedIn = ({
   const [availablePackages, setAvailablePackages] = useState(true);
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonRef = useRef(null);
-  const mainButtonsHomePermissions = permissions(userRole, 'main-button-home');
-  const rideAndCouponHomePermissions = permissions(userRole, 'ride-and-coupon-home');
+  const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
+  const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
+  const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
@@ -203,56 +204,55 @@ const AdminLoggedIn = ({
           </Button>
         </Col>
       </Row>
+
       <Row className="mb-5 navigation-header">
-        {mainButtonsHomePermissions && (
-          <>
-            <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-              <Card className="h-100" onClick={handleTableClick}>
-                <Card.Body className="navigation-header__registered-card">
-                  <Card.Title className="text-center mb-0">
-                    <div className="navigation-header__registered-card__content-wrapper">
-                      <em>
-                        <b>Inscritos</b>
-                      </em>
-                      <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
-                    </div>
-                  </Card.Title>
-                </Card.Body>
-              </Card>
-            </Col>
-            {rideAndCouponHomePermissions && (
-              <>
-                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-                  <Card className="h-100" onClick={handleRideClick}>
-                    <Card.Body className="navigation-header__ride-card">
-                      <Card.Title className="text-center mb-0">
-                        <div className="navigation-header__ride-card__content-wrapper">
-                          <em>
-                            <b>Caronas</b>
-                          </em>
-                          <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
-                        </div>
-                      </Card.Title>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
-                  <Card className="h-100" onClick={handleCouponsClick}>
-                    <Card.Body className="navigation-header__coupons-card">
-                      <Card.Title className="text-center mb-0">
-                        <div className="navigation-header__coupons-card__content-wrapper">
-                          <em>
-                            <b>Cupons</b>
-                          </em>
-                          <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
-                        </div>
-                      </Card.Title>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </>
-            )}
-          </>
+        {registeredButtonHomePermissions && (
+          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+            <Card className="h-100" onClick={handleTableClick}>
+              <Card.Body className="navigation-header__registered-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__registered-card__content-wrapper">
+                    <em>
+                      <b>Inscritos</b>
+                    </em>
+                    <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
+        {rideButtonHomePermissions && (
+          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+            <Card className="h-100" onClick={handleRideClick}>
+              <Card.Body className="navigation-header__ride-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__ride-card__content-wrapper">
+                    <em>
+                      <b>Caronas</b>
+                    </em>
+                    <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
+        {couponButtonHomePermissions && (
+          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+            <Card className="h-100" onClick={handleCouponsClick}>
+              <Card.Body className="navigation-header__coupons-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__coupons-card__content-wrapper">
+                    <em>
+                      <b>Cupons</b>
+                    </em>
+                    <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
         )}
       </Row>
 
