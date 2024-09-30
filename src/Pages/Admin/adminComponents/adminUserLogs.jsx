@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Container, Col, Row, Button, Modal } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Col, Row, Button, Modal, Accordion, Card } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Icons from '@/components/Icons';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import Loading from '@/components/Loading';
 
 const AdminUserLogs = ({ loggedUsername }) => {
-  const [userLogs, setUserLogs] = useState([]);
+  const [groupedLogs, setGroupedLogs] = useState({});
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
@@ -16,13 +16,28 @@ const AdminUserLogs = ({ loggedUsername }) => {
   const fetchLogs = async () => {
     try {
       const response = await fetcher.get('logs');
-      setUserLogs(response.data);
+      const logs = response.data;
+      const grouped = groupByUser(logs);
+      setGroupedLogs(grouped);
     } catch (error) {
       console.error('Erro ao buscar logs:', error);
     }
   };
 
-  fetchLogs();
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const groupByUser = (logs) => {
+    return logs.reduce((acc, log) => {
+      const username = log.user?.split('@')[0] || 'Desconhecido';
+      if (!acc[username]) {
+        acc[username] = [];
+      }
+      acc[username].push(log);
+      return acc;
+    }, {});
+  };
 
   const handleDeleteLogs = async () => {
     setLoading(true);
@@ -34,6 +49,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
         toast.success('Todos os logs foram deletados com sucesso');
         registerLog(`Deletou todos os logs`, loggedUsername);
         setShowDeleteModal(false);
+        setGroupedLogs({});
       }
     } catch (error) {
       console.error('Error adding data:', error);
@@ -74,32 +90,34 @@ const AdminUserLogs = ({ loggedUsername }) => {
         </Col>
       </Row>
       <Row>
-        <ul>
-          {userLogs.map((log, index) => {
-            const splitedUsernameLog = log.user?.split('@')[0];
-
-            return (
-              <>
-                <li key={index}>
-                  <b>
-                    <em>{index}:&nbsp;</em>
-                    {splitedUsernameLog}
-                  </b>
-                  : {log.action} em{' '}
-                  {new Date(log.timestamp).toLocaleString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}{' '}
-                  | <em>(IP: {log.ip})</em>
-                </li>
-                <hr className="horizontal-line" />
-              </>
-            );
-          })}
-        </ul>
+        <Accordion defaultActiveKey="0">
+          {Object.entries(groupedLogs).map(([username, logs], index) => (
+            <Accordion.Item eventKey={index.toString()} key={index}>
+              <Accordion.Header>{username.toUpperCase()}</Accordion.Header>
+              <Accordion.Body>
+                <ul>
+                  {logs.map((log, logIndex) => (
+                    <li key={logIndex}>
+                      <b>
+                        <em>{logIndex + 1}:&nbsp;</em>
+                        {username}
+                      </b>
+                      : {log.action} em{' '}
+                      {new Date(log.timestamp).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}{' '}
+                      | <em>(IP: {log.ip})</em>
+                    </li>
+                  ))}
+                </ul>
+              </Accordion.Body>
+            </Accordion.Item>
+          ))}
+        </Accordion>
       </Row>
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
