@@ -584,11 +584,11 @@ button.accordion-button:not(.collapsed) {
 
 .spinner-container {
   align-items: center;
+  color: $alternate-dark-gray;
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
   justify-content: center;
-  opacity: 0.5;
 
   .spinner-border {
     color: $secondary;
