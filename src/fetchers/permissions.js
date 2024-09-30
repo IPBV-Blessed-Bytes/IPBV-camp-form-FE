@@ -6,8 +6,9 @@ const CHECKER = 'checker';
 export const permissions = (userRole, context) => {
   const permissionsMap = {
     'settings-button-home': userRole === ADMIN,
-    'main-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
-    'ride-and-coupon-home': userRole === ADMIN || userRole === COLLABORATOR,
+    'registered-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
+    'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR,
+    'coupon-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'packages-and-totals-cards-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'utilities-links-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'advanced-options-admin-table': userRole === ADMIN || userRole === COLLABORATOR,
