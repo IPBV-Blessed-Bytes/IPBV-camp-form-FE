@@ -26,6 +26,7 @@ import calculateAge from '../Packages/utils/calculateAge';
 import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import AdminAggregate from '../Admin/adminComponents/adminAggregate';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -365,7 +366,7 @@ const FormRoutes = () => {
           path="/admin/carona"
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-              <AdminRide userRole={loggedUserRole} />
+              <AdminRide />
             </ProtectedRoute>
           }
         />
@@ -373,7 +374,7 @@ const FormRoutes = () => {
           path="/admin/cupom"
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
-              <AdminCoupon loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+              <AdminCoupon loggedUsername={splitedLoggedUsername} />
             </ProtectedRoute>
           }
         />
@@ -381,7 +382,15 @@ const FormRoutes = () => {
           path="/admin/logs"
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-              <AdminUserLogs loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+              <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/agregado"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <AdminAggregate />
             </ProtectedRoute>
           }
         />

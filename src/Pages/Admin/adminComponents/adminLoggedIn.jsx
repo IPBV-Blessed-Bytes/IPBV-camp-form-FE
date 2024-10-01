@@ -28,6 +28,7 @@ const AdminLoggedIn = ({
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
+  const aggregateButtonHomePermissions = permissions(userRole, 'aggregate-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
@@ -46,6 +47,11 @@ const AdminLoggedIn = ({
   const handleCouponsClick = () => {
     navigate('/admin/cupom');
   };
+
+  const handleAggregateClick = () => {
+    navigate('/admin/agregado');
+  };
+
 
   useEffect(() => {
     if (sendLoggedMessage) {
@@ -248,6 +254,22 @@ const AdminLoggedIn = ({
                       <b>Cupons</b>
                     </em>
                     <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
+        {aggregateButtonHomePermissions && (
+          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+            <Card className="h-100" onClick={handleAggregateClick}>
+              <Card.Body className="navigation-header__aggregate-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__aggregate-card__content-wrapper">
+                    <em>
+                      <b>Agregados</b>
+                    </em>
+                    <Icons typeIcon="aggregate" iconSize={50} fill={'#204691'} />
                   </div>
                 </Card.Title>
               </Card.Body>
