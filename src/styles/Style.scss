@@ -434,9 +434,19 @@ body {
       background-color: $light-green;
     }
 
+    &__checkin-card {
+      background-color: $medium-gray;
+    }
+
+    &__aggregate-card {
+      background-color: $light-yellow;
+    }
+
     &__registered-card,
     &__ride-card,
-    &__coupons-card {
+    &__coupons-card,
+    &__checkin-card,
+    &__aggregate-card {
       align-items: center;
       cursor: pointer;
       display: flex;
