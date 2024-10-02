@@ -897,8 +897,8 @@ button.btn.btn-outline-danger:hover svg {
 
 .table-tools {
   &__left-buttons,
-  &__left-buttons-ride,
-  &__right-buttons-ride {
+  &__left-buttons-generic,
+  &__right-buttons-generic {
     @media (max-width: $md) {
       button {
         justify-content: center;
