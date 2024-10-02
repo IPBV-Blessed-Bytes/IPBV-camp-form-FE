@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import Loading from '@/components/Loading';
+import { toast } from 'react-toastify';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
@@ -25,6 +26,12 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
     }
   }, [initialValues.formPayment, setValues, values, values.formPayment]);
 
+  useEffect(() => {
+    toast.info(
+      'Importante: não é necessário enviar comprovante de pagamento! Todo o processo é digital e registrado automaticamente em nossa base de dados',
+    );
+  }, []);
+
   const selectChangeHandler = (e) => {
     updateForm(e.target.value);
     handleChange(e);
@@ -33,9 +40,15 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
   return (
     <Card className="form__container__general-height">
       <Card.Body className="choose-form-payment-custom-padding">
-        <Loading loading={spinnerLoading} />
         <Container>
           <Card.Title>Pagamento</Card.Title>
+          <Card.Text>
+            Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você será
+            redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção. Certifique-se
+            de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
+            <em>não é necessário enviar comprovante de pagamento!</em>{' '}
+            Todo o processo é digital e registrado automaticamente em nossa base de dados.
+          </Card.Text>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -58,6 +71,8 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
           </Form>
+
+          <Loading loading={spinnerLoading} />
         </Container>
       </Card.Body>
 
