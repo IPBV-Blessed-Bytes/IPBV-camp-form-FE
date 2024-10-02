@@ -380,10 +380,10 @@ const FormRoutes = () => {
           }
         />
         <Route
-          path="/admin/logs"
+          path="/admin/agregado"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-              <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <AdminAggregate />
             </ProtectedRoute>
           }
         />
@@ -396,10 +396,10 @@ const FormRoutes = () => {
           }
         />
         <Route
-          path="/admin/agregado"
+          path="/admin/logs"
           element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-              <AdminAggregate />
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <AdminUserLogs loggedUsername={splitedLoggedUsername} />
             </ProtectedRoute>
           }
         />
