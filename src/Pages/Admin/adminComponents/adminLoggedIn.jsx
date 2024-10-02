@@ -216,7 +216,7 @@ const AdminLoggedIn = ({
         </Col>
       </Row>
 
-      <Row className="mb-5 navigation-header">
+      <Row className="mb-md-5 navigation-header">
         {registeredButtonHomePermissions && (
           <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
             <Card className="h-100" onClick={handleTableClick}>
@@ -226,7 +226,7 @@ const AdminLoggedIn = ({
                     <em>
                       <b>Inscritos</b>
                     </em>
-                    <Icons typeIcon="add-person" iconSize={40} fill={'#204691'} />
+                    <Icons typeIcon="add-person" iconSize={50} fill={'#204691'} />
                   </div>
                 </Card.Title>
               </Card.Body>
@@ -293,7 +293,7 @@ const AdminLoggedIn = ({
                     <em>
                       <b>Check-in</b>
                     </em>
-                    <Icons typeIcon="checkin" iconSize={35} fill={'#204691'} />
+                    <Icons typeIcon="checkin" iconSize={50} fill={'#204691'} />
                   </div>
                 </Card.Title>
               </Card.Body>

@@ -91,6 +91,7 @@ const AdminCheckin = ({ loggedUsername }) => {
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
           <h4 className="fw-bold m-0">Check-in de Usuário:</h4>
+          <Icons typeIcon="checkin" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
       <hr className="horizontal-line" />

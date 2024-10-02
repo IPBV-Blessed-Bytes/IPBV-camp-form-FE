@@ -151,13 +151,14 @@ const AdminCoupon = ({ loggedUsername }) => {
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
           <h4 className="fw-bold m-0">Gerenciamento de Cupons de Desconto:</h4>
+          <Icons typeIcon="coupon" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
       <hr className="horizontal-line" />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
         <Col lg={12} md={12} xs={12}>
-          <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
+          <div className="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2">
             <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
               <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
               <span className="table-tools__button-name">&nbsp;Criar Novo Cupom</span>

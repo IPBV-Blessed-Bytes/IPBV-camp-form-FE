@@ -76,7 +76,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
         <Col lg={12} md={12} xs={12}>
-          <div className="table-tools__right-buttons-ride flex-sm-column flex-md-row  d-flex gap-2">
+          <div className="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2">
             <Button
               variant="warning"
               onClick={() => setShowDeleteModal(true)}
