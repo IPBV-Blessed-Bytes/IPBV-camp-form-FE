@@ -563,7 +563,13 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           );
         },
       },
-
+      {
+        Header: 'Check-in:',
+        accessor: 'checkin',
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+      },
       {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
