@@ -1117,3 +1117,8 @@ button.btn.btn-outline-danger:hover svg {
     width: 100%;
   }
 }
+
+.btn-success:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}

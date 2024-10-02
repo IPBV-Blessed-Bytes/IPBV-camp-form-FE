@@ -26,6 +26,7 @@ import calculateAge from '../Packages/utils/calculateAge';
 import AdminUserLogs from '../Admin/adminComponents/adminUserLogs';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import AdminCheckin from '../Admin/adminComponents/adminCheckin';
 import AdminAggregate from '../Admin/adminComponents/adminAggregate';
 
 const FormRoutes = () => {
@@ -383,6 +384,14 @@ const FormRoutes = () => {
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
               <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/checkin"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'checker']}>
+              <AdminCheckin loggedUsername={splitedLoggedUsername} />
             </ProtectedRoute>
           }
         />

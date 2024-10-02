@@ -1,0 +1,194 @@
+import { useState } from 'react';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import fetcher from '@/fetchers/fetcherWithCredentials';
+import { useNavigate } from 'react-router-dom';
+import { registerLog } from '@/fetchers/userLogs';
+import Icons from '@/components/Icons';
+import Loading from '@/components/Loading';
+import calculateAge from '@/Pages/Packages/utils/calculateAge';
+
+const AdminCheckin = ({ loggedUsername }) => {
+  const [cpf, setCpf] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [checkinStatus, setCheckinStatus] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSearchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await fetcher.get('camper', {
+        params: {
+          size: 100000,
+        },
+      });
+
+      if (response.status === 200) {
+        const user = response.data.content.find((u) => u.personalInformation.cpf === cpf);
+
+        if (user) {
+          setUserInfo(user);
+          toast.success('Usuário encontrado com sucesso');
+
+          const [day, month, year] = user.personalInformation.birthday.split('/');
+          const birthDate = new Date(`${year}-${month}-${day}`);
+          const age = calculateAge(birthDate);
+
+          if (age <= 10) {
+            toast.warn(`Usuário tem ${age} anos de idade. Atenção ao revisar os dados!`);
+            toast.warn(`Usuário tem ${age < 2 ? `${age} ano` : `${age} anos`} de idade. Atenção ao revisar os dados!`);
+          }
+        } else {
+          toast.error('Usuário não encontrado');
+          setUserInfo(null);
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar usuário:', error);
+      toast.error('Erro ao buscar usuário');
+      setUserInfo(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckin = async () => {
+    if (!userInfo) {
+      toast.error('Primeiro busque por um usuário antes de realizar o check-in');
+      return;
+    }
+
+    if (checkinStatus) {
+      try {
+        setLoading(true);
+        await fetcher.patch(`camper/checkin/${userInfo.id}`, { checkin: checkinStatus });
+
+        if (checkinStatus === 'true') {
+          toast.success('Check-in realizado com sucesso');
+          registerLog(`Fez check-in para o usuário ${userInfo.name}`, loggedUsername);
+        } else {
+          toast.success('Status de Check-in atualizado para negativo');
+          registerLog(`Atualizou o status de checkin do usuário ${userInfo.name} para negativo`, loggedUsername);
+        }
+      } catch (error) {
+        console.error('Erro ao fazer check-in:', error);
+        toast.error('Erro ao realizar check-in');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  return (
+    <Container fluid>
+      <Row className="mt-3">
+        <Col>
+          <Button variant="danger" onClick={() => navigate('/admin')}>
+            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
+            &nbsp;Voltar
+          </Button>
+        </Col>
+        <Col className="d-flex justify-content-end align-items-center">
+          <h4 className="fw-bold m-0">Check-in de Usuário:</h4>
+        </Col>
+      </Row>
+      <hr className="horizontal-line" />
+
+      <Row className="mb-3">
+        <Col lg={8} md={8} xs={8}>
+          <Form.Group controlId="cpf">
+            <Form.Label>
+              <b>CPF do Usuário:</b>
+            </Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Digite o CPF"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              size="lg"
+            />
+          </Form.Group>
+        </Col>
+        <Col lg={4} md={4} xs={4} className="d-flex align-items-end">
+          <Button onClick={handleSearchUser} size="lg">
+            <Icons typeIcon="m-glass" iconSize={25} fill="#fff" />
+            <span className="d-none d-md-inline">&nbsp;Buscar Usuário</span>
+          </Button>
+        </Col>
+      </Row>
+
+      {userInfo && (
+        <>
+          <Row className="mb-3 mt-5">
+            <Col className="form-label">
+              <b>Informações do Usuário:</b>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={6} md={6} xs={12}>
+              <p>
+                <strong>Nome:</strong> {userInfo.personalInformation.name}
+              </p>
+              <p>
+                <strong>Pacote:</strong> {userInfo.package.title}
+              </p>
+              <p>
+                <strong>Forma de Pagamento:</strong>{' '}
+                {userInfo.formPayment.formPayment ? userInfo.formPayment.formPayment : '-'}
+              </p>
+              <p>
+                <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
+              </p>
+            </Col>
+            <Col lg={6} md={6} xs={12}>
+              <p>
+                <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
+              </p>
+              <p>
+                <strong>Acomodação:</strong> {userInfo.package.accomodationName}
+              </p>
+              <p>
+                <strong>Sub Acomodação:</strong> {userInfo.package.subAccomodation}
+              </p>
+              <p>
+                <strong>Alimentação:</strong> {userInfo.package.food ? userInfo.package.food : '-'}
+              </p>
+              <p>
+                <strong>Dias de Refeição Extra:</strong>{' '}
+                {userInfo.extraMeals.extraMeals ? userInfo.extraMeals.extraMeals : '-'}
+              </p>
+              <p>
+                <strong>Observação:</strong> {userInfo.observation}
+              </p>
+            </Col>
+          </Row>
+
+          <Row className="mt-4">
+            <Col lg={8} md={7} xs={8} className="mb-2">
+              <Form.Group controlId="checkinStatus">
+                <Form.Label>
+                  <b>Confirmar Check-in:</b>
+                </Form.Label>
+                <Form.Select value={checkinStatus} onChange={(e) => setCheckinStatus(e.target.value)} size="lg">
+                  <option value={false}>Não</option>
+                  <option value={true}>Sim</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
+              <Button variant="success" onClick={handleCheckin} size="lg" disabled={!checkinStatus}>
+                <Icons typeIcon="checked" iconSize={20} fill="#fff" />
+                <span className="d-none d-md-inline">&nbsp;Confirmar Check-in</span>
+              </Button>
+            </Col>
+          </Row>
+        </>
+      )}
+
+      <Loading loading={loading} />
+    </Container>
+  );
+};
+
+export default AdminCheckin;

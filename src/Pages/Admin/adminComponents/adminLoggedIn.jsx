@@ -32,6 +32,7 @@ const AdminLoggedIn = ({
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
+  const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const navigate = useNavigate();
@@ -50,6 +51,10 @@ const AdminLoggedIn = ({
 
   const handleAggregateClick = () => {
     navigate('/admin/agregado');
+  };
+  
+  const handleCheckinClick = () => {
+    navigate('/admin/checkin');
   };
 
 
@@ -213,7 +218,7 @@ const AdminLoggedIn = ({
 
       <Row className="mb-5 navigation-header">
         {registeredButtonHomePermissions && (
-          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
             <Card className="h-100" onClick={handleTableClick}>
               <Card.Body className="navigation-header__registered-card">
                 <Card.Title className="text-center mb-0">
@@ -229,7 +234,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {rideButtonHomePermissions && (
-          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
             <Card className="h-100" onClick={handleRideClick}>
               <Card.Body className="navigation-header__ride-card">
                 <Card.Title className="text-center mb-0">
@@ -245,7 +250,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {couponButtonHomePermissions && (
-          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
             <Card className="h-100" onClick={handleCouponsClick}>
               <Card.Body className="navigation-header__coupons-card">
                 <Card.Title className="text-center mb-0">
@@ -261,7 +266,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {aggregateButtonHomePermissions && (
-          <Col xs={12} md={4} lg={4} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
             <Card className="h-100" onClick={handleAggregateClick}>
               <Card.Body className="navigation-header__aggregate-card">
                 <Card.Title className="text-center mb-0">
@@ -277,6 +282,25 @@ const AdminLoggedIn = ({
           </Col>
         )}
       </Row>
+
+      {checkinPermissions && (
+        <Row className="mb-5 navigation-header">
+          <Col className="mb-3 mb-lg-0">
+            <Card className="h-100" onClick={handleCheckinClick}>
+              <Card.Body className="navigation-header__checkin-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__checkin-card__content-wrapper">
+                    <em>
+                      <b>Check-in</b>
+                    </em>
+                    <Icons typeIcon="checkin" iconSize={35} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      )}
 
       {packagesAndTotalCardsPermissions && (
         <>
