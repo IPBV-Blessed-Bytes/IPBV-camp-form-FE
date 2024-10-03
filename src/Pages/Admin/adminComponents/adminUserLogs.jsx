@@ -69,7 +69,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Logs de Usuários:</h4>
+          <h4 className="fw-bold m-0">Logs de Usuários</h4>
+          <Icons typeIcon="settings" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
       <hr className="horizontal-line" />
