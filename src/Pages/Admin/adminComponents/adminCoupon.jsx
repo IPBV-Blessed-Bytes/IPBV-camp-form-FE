@@ -151,7 +151,7 @@ const AdminCoupon = ({ loggedUsername }) => {
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
           <h4 className="fw-bold m-0">Gerenciamento de Cupons de Desconto</h4>
-          <Icons typeIcon="coupon" iconSize={80} fill={'#204691'} />
+          <Icons className="m-left" typeIcon="coupon" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
       <hr className="horizontal-line" />
