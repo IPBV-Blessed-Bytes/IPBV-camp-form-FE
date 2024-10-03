@@ -29,6 +29,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
         if (user) {
           setUserInfo(user);
+          setCheckinStatus(user.checkin);
           toast.success('Usuário encontrado com sucesso');
 
           const [day, month, year] = user.personalInformation.birthday.split('/');
@@ -36,21 +37,32 @@ const AdminCheckin = ({ loggedUsername }) => {
           const age = calculateAge(birthDate);
 
           if (age <= 10) {
-            toast.warn(`Usuário tem ${age} anos de idade. Atenção ao revisar os dados!`);
             toast.warn(`Usuário tem ${age < 2 ? `${age} ano` : `${age} anos`} de idade. Atenção ao revisar os dados!`);
           }
         } else {
           toast.error('Usuário não encontrado');
           setUserInfo(null);
+          setCheckinStatus(false);
         }
       }
     } catch (error) {
       console.error('Erro ao buscar usuário:', error);
       toast.error('Erro ao buscar usuário');
       setUserInfo(null);
+      setCheckinStatus(false);
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDateTimeBR = () => {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
   const handleCheckin = async () => {
@@ -59,24 +71,30 @@ const AdminCheckin = ({ loggedUsername }) => {
       return;
     }
 
-    if (checkinStatus) {
-      try {
-        setLoading(true);
-        await fetcher.patch(`camper/checkin/${userInfo.id}`, { checkin: checkinStatus });
+    try {
+      setLoading(true);
+      const dateTimeBR = formatDateTimeBR();
 
-        if (checkinStatus === 'true') {
-          toast.success('Check-in realizado com sucesso');
-          registerLog(`Fez check-in para o usuário ${userInfo.name}`, loggedUsername);
-        } else {
-          toast.success('Status de Check-in atualizado para negativo');
-          registerLog(`Atualizou o status de checkin do usuário ${userInfo.name} para negativo`, loggedUsername);
-        }
-      } catch (error) {
-        console.error('Erro ao fazer check-in:', error);
-        toast.error('Erro ao realizar check-in');
-      } finally {
-        setLoading(false);
+      await fetcher.patch(`camper/checkin/${userInfo.id}`, {
+        checkin: checkinStatus + dateTimeBR,
+        checkinTime: dateTimeBR,
+      });
+
+      if (checkinStatus === true) {
+        toast.success('Check-in realizado com sucesso');
+        registerLog(`Fez check-in para o usuário ${userInfo.personalInformation.name}`, loggedUsername);
+      } else {
+        toast.success('Status de Check-in atualizado para não checado');
+        registerLog(
+          `Atualizou o status de checkin do usuário ${userInfo.personalInformation.name} para não checado`,
+          loggedUsername,
+        );
       }
+    } catch (error) {
+      console.error('Erro ao fazer check-in:', error);
+      toast.error('Erro ao realizar check-in');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,7 +108,7 @@ const AdminCheckin = ({ loggedUsername }) => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Check-in de Usuário:</h4>
+          <h4 className="fw-bold m-0">Check-in de Usuário</h4>
           <Icons typeIcon="checkin" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
@@ -112,7 +130,7 @@ const AdminCheckin = ({ loggedUsername }) => {
           </Form.Group>
         </Col>
         <Col lg={4} md={4} xs={4} className="d-flex align-items-end">
-          <Button onClick={handleSearchUser} size="lg">
+          <Button onClick={handleSearchUser} size="lg" disabled={!cpf}>
             <Icons typeIcon="m-glass" iconSize={25} fill="#fff" />
             <span className="d-none d-md-inline">&nbsp;Buscar Usuário</span>
           </Button>
@@ -171,14 +189,18 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <Form.Label>
                   <b>Confirmar Check-in:</b>
                 </Form.Label>
-                <Form.Select value={checkinStatus} onChange={(e) => setCheckinStatus(e.target.value)} size="lg">
+                <Form.Select
+                  value={checkinStatus}
+                  onChange={(e) => setCheckinStatus(e.target.value === 'true')}
+                  size="lg"
+                >
                   <option value={false}>Não</option>
                   <option value={true}>Sim</option>
                 </Form.Select>
               </Form.Group>
             </Col>
             <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
-              <Button variant="success" onClick={handleCheckin} size="lg" disabled={!checkinStatus}>
+              <Button variant="success" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
                 <Icons typeIcon="checked" iconSize={20} fill="#fff" />
                 <span className="d-none d-md-inline">&nbsp;Confirmar Check-in</span>
               </Button>
