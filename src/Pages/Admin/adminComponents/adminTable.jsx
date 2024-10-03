@@ -398,7 +398,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => (value ? value : '-'),
       },
       {
-        Header: 'Vai de Carro:',
+        Header: 'Tem Vaga de Carona:',
         accessor: (row) => ({
           car: row.contact.car,
           numberVacancies: row.contact.numberVacancies,
@@ -648,7 +648,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       'personalInformation.rg': 'RG',
       'personalInformation.rgShipper': 'Orgão Emissor',
       'personalInformation.rgShipperState': 'Estado Emissor',
-      'contact.car': 'Vai de Carro',
+      'contact.car': 'Tem Vaga de Carona',
       'contact.needRide': 'Precisa de Carona',
       'contact.numberVacancies': 'Vagas de Carona',
       'contact.rideObservation': 'Observação da Carona',
@@ -675,6 +675,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       manualRegistration: 'Inscrição Manual',
       'package.discountCoupon': 'Cupom de Desconto',
       'package.discountValue': 'Valor do Desconto',
+      'orderId': 'Chave do Pedido',
+      'checkin': 'Checkin',
+      'checkinTime': 'Hora do Checkin'
     };
 
     const orderedFields = [
@@ -687,7 +690,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       'RG',
       'Orgão Emissor',
       'Estado Emissor',
-      'Vai de Carro',
+      'Tem Vaga de Carona',
       'Precisa de Carona',
       'Vagas de Carona',
       'Observação da Carona',
@@ -714,6 +717,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       'Inscrição Manual',
       'Cupom de Desconto',
       'Valor do Desconto',
+      'Chave do Pedido',
+      'Checkin',
+      'Hora do Checkin'
     ];
 
     const flattenObject = (obj, parent = '', res = {}) => {
