@@ -408,7 +408,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const carText = value.car ? 'Sim' : !value.car ? 'Não' : '-';
           const numberVacanciesText = value.numberVacancies ? value.numberVacancies : '-';
-          return `${carText} | Vagas: ${numberVacanciesText}`;
+          return `${carText} ${numberVacanciesText !== '-' ? `| Vagas: ${numberVacanciesText}` : ''}`;
         },
       },
       {
@@ -449,7 +449,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
           const isWhatsAppText = value.isWhatsApp ? 'Sim' : !value.isWhatsApp ? 'Não' : '-';
-          return `${cellPhoneText} | Wpp: ${isWhatsAppText}`;
+          return `${cellPhoneText} ${isWhatsAppText !== '-' ? `| Wpp: ${isWhatsAppText}` : ''}`;
         },
       },
       {
@@ -522,7 +522,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
             !value.extraMeals || (Array.isArray(value.extraMeals) && value.extraMeals.every((item) => item === ''))
               ? '-'
               : value.extraMeals.join(', ');
-          return `${someFoodText} | Dias: ${extraMealsText}`;
+          return `${someFoodText} ${extraMealsText !== '-' ? `| Dias: ${extraMealsText}` : ''}`;
         },
       },
       {
@@ -543,7 +543,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
           const discountValueText = value.discountValue !== '0' ? value.discountValue : '-';
-          return `${hasDiscount} | Valor: ${discountValueText}`;
+          return `${hasDiscount} ${discountValueText !== '-' ? `| Valor: ${discountValueText}` : ''}`;
         },
       },
       {
@@ -575,7 +575,14 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const checkinText = value.checkin ? 'Sim' : !value.checkin ? 'Não' : '-';
           const checkinTimeText = value.checkinTime ? value.checkinTime : '-';
-          return `${checkinText} | Hora: ${checkinTimeText}`;
+
+          const checkinTimeTextSplited = checkinTimeText && value.checkinTime.split(' ');
+          const checkinTimeTextPt1 = checkinTimeTextSplited[0];
+          const checkinTimeTextPt2 = checkinTimeTextSplited[1];
+
+          return `${checkinText} ${
+            checkinTimeText !== '-' ? `| Em ${checkinTimeTextPt1} às ${checkinTimeTextPt2}` : ''
+          }`;
         },
       },
       {
@@ -675,9 +682,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       manualRegistration: 'Inscrição Manual',
       'package.discountCoupon': 'Cupom de Desconto',
       'package.discountValue': 'Valor do Desconto',
-      'orderId': 'Chave do Pedido',
-      'checkin': 'Checkin',
-      'checkinTime': 'Hora do Checkin'
+      orderId: 'Chave do Pedido',
+      checkin: 'Checkin',
+      checkinTime: 'Hora do Checkin',
     };
 
     const orderedFields = [
@@ -719,7 +726,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       'Valor do Desconto',
       'Chave do Pedido',
       'Checkin',
-      'Hora do Checkin'
+      'Hora do Checkin',
     ];
 
     const flattenObject = (obj, parent = '', res = {}) => {
