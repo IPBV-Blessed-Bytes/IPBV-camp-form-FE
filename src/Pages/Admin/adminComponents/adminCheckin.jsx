@@ -73,11 +73,11 @@ const AdminCheckin = ({ loggedUsername }) => {
 
     try {
       setLoading(true);
-      const dateTimeBR = formatDateTimeBR();
+      const checkinTime = formatDateTimeBR();
 
       await fetcher.patch(`camper/checkin/${userInfo.id}`, {
-        checkin: checkinStatus + dateTimeBR,
-        checkinTime: dateTimeBR,
+        checkin: checkinStatus,
+        checkinTime: checkinTime,
       });
 
       if (checkinStatus === true) {
