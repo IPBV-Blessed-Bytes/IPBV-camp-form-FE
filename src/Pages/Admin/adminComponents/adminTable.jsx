@@ -566,9 +566,17 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Check-in:',
         accessor: 'checkin',
+        accessor: (row) => ({
+          checkin: row.checkin,
+          checkinTime: row.checkinTime,
+        }),
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+        Cell: ({ value }) => {
+          const checkinText = value.checkin ? 'Sim' : !value.checkin ? 'Não' : '-';
+          const checkinTimeText = value.checkinTime ? value.checkinTime : '-';
+          return `${checkinText} | Hora: ${checkinTimeText}`;
+        },
       },
       {
         Header: 'Inscrição Manual:',
@@ -784,7 +792,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Inscritos:</h4>
+          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Inscritos</h4>
           <Icons typeIcon="add-person" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
