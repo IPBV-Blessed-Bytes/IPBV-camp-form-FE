@@ -28,6 +28,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import AdminCheckin from '../Admin/adminComponents/adminCheckin';
 import AdminAggregate from '../Admin/adminComponents/adminAggregate';
+import AdminSeatManagement from '../Admin/adminComponents/adminSeatManagement';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -400,6 +401,14 @@ const FormRoutes = () => {
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
               <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/admin/vagas"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <AdminSeatManagement loggedUsername={splitedLoggedUsername} />
             </ProtectedRoute>
           }
         />
