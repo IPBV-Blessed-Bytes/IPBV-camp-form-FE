@@ -576,9 +576,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           const checkinText = value.checkin ? 'Sim' : !value.checkin ? 'Não' : '-';
           const checkinTimeText = value.checkinTime ? value.checkinTime : '-';
 
-          const checkinTimeTextSplited = checkinTimeText && value.checkinTime.split(' ');
-          const checkinTimeTextPt1 = checkinTimeTextSplited[0];
-          const checkinTimeTextPt2 = checkinTimeTextSplited[1];
+          const checkinTimeTextSplited = checkinTimeText !== '-' ? checkinTimeText.split(' ') : null;
+          const checkinTimeTextPt1 = checkinTimeTextSplited ? checkinTimeTextSplited[0] : '-';
+          const checkinTimeTextPt2 = checkinTimeTextSplited ? checkinTimeTextSplited[1] : '-';
 
           return `${checkinText} ${
             checkinTimeText !== '-' ? `| Em ${checkinTimeTextPt1} às ${checkinTimeTextPt2}` : ''
