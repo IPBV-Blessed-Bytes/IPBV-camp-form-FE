@@ -326,13 +326,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Header: 'Pacote:',
         accessor: (row) =>
           `${row.package.title} ${
-            row.package.transportation === 'Com Ônibus'
+            row.package.transportation === 'Com Ônibus' || row.package.transportation === 'Com Onibus'
               ? 'COM ÔNIBUS'
-              : row.package.transportation === 'Sem Ônibus'
+              : row.package.transportation === 'Sem Ônibus' || row.package.transportation === 'Sem Onibus'
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.food === 'Café da manhã, almoço e jantar' || row.package.food === 'Almoço e jantar'
+            row.package.food === 'Café da manhã, almoço e jantar' ||
+            row.package.food === 'Cafe da manha, almoco e jantar' ||
+            row.package.food === 'Almoço e jantar' ||
+            row.package.food === 'Almoco e jantar'
               ? 'COM ALIMENTAÇÃO'
               : row.package.food === ''
               ? ''
