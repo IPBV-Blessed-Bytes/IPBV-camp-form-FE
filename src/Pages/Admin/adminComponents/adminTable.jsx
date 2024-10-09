@@ -87,14 +87,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
   const handleFormChange = (e, formType) => {
     const { name, value } = e.target;
     const keys = name.split('.');
+    const adjustedValue = value === '' ? '' : value;
 
     const booleanValue =
       name === 'extraMeals.someFood' ||
       name === 'contact.car' ||
       name === 'contact.needRide' ||
       name === 'contact.isWhatsApp'
-        ? value === 'true'
-        : value;
+        ? adjustedValue === 'true'
+        : adjustedValue;
 
     const updateState = (setter) => {
       setter((prevData) => {
