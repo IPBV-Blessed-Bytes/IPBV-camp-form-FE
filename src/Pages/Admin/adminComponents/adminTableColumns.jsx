@@ -101,7 +101,7 @@ const AdminTableColumns = ({
       options: issuingState,
     },
     {
-      label: 'Vai de Carro e tem vaga de carona',
+      label: 'Tem Carona a oferecer',
       name: 'contact.car',
       type: 'select',
       placeholder: 'Selecione se vai de carro',
