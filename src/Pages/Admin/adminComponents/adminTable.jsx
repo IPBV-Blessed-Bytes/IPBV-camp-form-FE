@@ -101,18 +101,20 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       setter((prevData) => {
         if (keys.length === 2) {
           const [parentKey, childKey] = keys;
-          return {
+          const newState = {
             ...prevData,
             [parentKey]: {
               ...prevData[parentKey],
               [childKey]: booleanValue,
             },
           };
+          return newState;
         } else {
-          return {
+          const newState = {
             ...prevData,
             [name]: booleanValue,
           };
+          return newState;
         }
       });
     };
@@ -178,7 +180,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     const updatedFormValues = {
       manualRegistration: true,
       registrationDate: currentDate,
-      observation: addFormData.observation,
+      observation: addFormData.observation ? addFormData.observation : '',
       ...sanitizedFormData,
     };
 
