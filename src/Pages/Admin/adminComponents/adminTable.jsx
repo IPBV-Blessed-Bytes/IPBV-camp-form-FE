@@ -24,6 +24,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addFormData, setAddFormData] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAllRows, setSelectAllRows] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
@@ -202,13 +203,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     }
   };
 
-  const handleCheckboxChange = (rowIndex, rowName) => {
-    const selectedRow = { index: rowIndex, name: rowName };
-    if (selectedRows.some((row) => row.index === rowIndex)) {
-      setSelectedRows(selectedRows.filter((row) => row.index !== rowIndex));
-    } else {
-      setSelectedRows([...selectedRows, selectedRow]);
-    }
+  const handleCheckboxChange = (index, name) => {
+    setSelectedRows((prevSelectedRows) => {
+      const isAlreadySelected = prevSelectedRows.some((row) => row.index === index);
+      if (isAlreadySelected) {
+        return prevSelectedRows.filter((row) => row.index !== index);
+      } else {
+        return [...prevSelectedRows, { index, name }];
+      }
+    });
   };
 
   const handleDeleteWithCheckbox = () => {
@@ -283,7 +286,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
                     className="table-checkbox"
                     type="checkbox"
                     onChange={handleSelectAll}
-                    checked={selectedRows.length === data.length}
+                    checked={selectAllRows || selectedRows.length === rows.length}
                   />
                   &nbsp;
                   {selectedRows.length === 1
@@ -638,13 +641,17 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     useSortBy,
   );
 
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      const indices = data.map((_, index) => index);
-      setSelectedRows(indices);
-    } else {
+  const handleSelectAll = () => {
+    if (selectAllRows) {
       setSelectedRows([]);
+    } else {
+      const allRows = rows.map((row, index) => ({
+        index,
+        name: row.original.personalInformation.name,
+      }));
+      setSelectedRows(allRows);
     }
+    setSelectAllRows(!selectAllRows);
   };
 
   const generateExcel = () => {
@@ -915,11 +922,14 @@ const AdminTable = ({ loggedUsername, userRole }) => {
             <tbody {...getTableBodyProps()}>
               {rows.map((row) => {
                 prepareRow(row);
+
                 return (
                   <tr {...row.getRowProps()} key={row.id}>
                     {row.cells.map((cell) => (
                       <td
-                        className={`table-cells-cols${selectedRows.includes(row.index) ? ' selected-row' : ''}`}
+                        className={`table-cells-cols${
+                          selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
+                        }`}
                         key={cell.id}
                         {...cell.getCellProps()}
                       >
