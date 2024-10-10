@@ -51,7 +51,7 @@ const AdminTableColumns = ({
         { label: 'Cartão de Crédito', value: 'creditCard' },
         { label: 'PIX', value: 'pix' },
         { label: 'Boleto Bancário', value: 'ticket' },
-        { label: 'Não Pagante', value: 'nonPaidChild' },
+        { label: 'Não Pagante', value: 'nonPaid' },
       ],
     },
     {
