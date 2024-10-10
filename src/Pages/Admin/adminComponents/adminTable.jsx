@@ -179,9 +179,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 
     const updatedFormValues = {
       manualRegistration: true,
-      registrationDate: currentDate,
       observation: addFormData.observation ? addFormData.observation : '',
       ...sanitizedFormData,
+      registrationDate: currentDate,
     };
 
     try {
