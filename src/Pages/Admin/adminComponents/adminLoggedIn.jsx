@@ -98,6 +98,7 @@ const AdminLoggedIn = ({
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
+  const totalAdultsNonPaid = totalRegistrationsGlobal.totalAdultsNonPaid;
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
   const totalVacanciesWithBuses =
@@ -147,11 +148,10 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Outra Acomodação',
-      remainingVacancies: availablePackagesTotal?.outro + availablePackagesTotal?.usuarioSemCusto || '0',
+      remainingVacancies: availablePackagesTotal?.outro || '0',
       filledVacancies:
-        availablePackagesUsed?.outroComOnibusComAlimentacao +
-          availablePackagesUsed?.outroSemOnibusSemAlimentacao +
-          availablePackagesUsed?.usuarioSemCusto || '0',
+        availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao ||
+        '0',
       showRemainingVacancies: true,
     },
   ];
@@ -169,15 +169,20 @@ const AdminLoggedIn = ({
       showRemainingVacancies: true,
     },
     {
+      title: 'Total de Inscritos com Ônibus',
+      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
+      filledVacancies: totalVacanciesWithBuses || '0',
+      showRemainingVacancies: true,
+    },
+    {
       title: 'Total de Crianças',
       filledVacancies: totalChildren || '0',
       showRemainingVacancies: false,
     },
     {
-      title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
-      filledVacancies: totalVacanciesWithBuses || '0',
-      showRemainingVacancies: true,
+      title: 'Total de Adultos Não Pagantes',
+      filledVacancies: totalAdultsNonPaid || '0',
+      showRemainingVacancies: false,
     },
   ];
 
