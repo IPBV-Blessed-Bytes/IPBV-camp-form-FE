@@ -52,11 +52,10 @@ const AdminLoggedIn = ({
   const handleAggregateClick = () => {
     navigate('/admin/agregado');
   };
-  
+
   const handleCheckinClick = () => {
     navigate('/admin/checkin');
   };
-
 
   useEffect(() => {
     if (sendLoggedMessage) {
@@ -148,16 +147,11 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Outra Acomodação',
-      remainingVacancies: availablePackagesTotal?.outro || '0',
+      remainingVacancies: availablePackagesTotal?.outro + availablePackagesTotal?.usuarioSemCusto || '0',
       filledVacancies:
-        availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao ||
-        '0',
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Usuário Sem Custo',
-      remainingVacancies: availablePackagesTotal?.usuarioSemCusto || '0',
-      filledVacancies: availablePackagesUsed?.usuarioSemCusto || '0',
+        availablePackagesUsed?.outroComOnibusComAlimentacao +
+          availablePackagesUsed?.outroSemOnibusSemAlimentacao +
+          availablePackagesUsed?.usuarioSemCusto || '0',
       showRemainingVacancies: true,
     },
   ];
