@@ -521,7 +521,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Header: 'Refeição Extra:',
         accessor: (row) => ({
           someFood: row.extraMeals.someFood,
-          extraMeals: row.extraMeals.extraMeals,
+          extraMeals: Array.isArray(row.extraMeals.extraMeals)
+            ? row.extraMeals.extraMeals
+            : [row.extraMeals.extraMeals],
         }),
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
@@ -530,7 +532,10 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           const extraMealsText =
             !value.extraMeals || (Array.isArray(value.extraMeals) && value.extraMeals.every((item) => item === ''))
               ? '-'
-              : value.extraMeals.join(', ');
+              : Array.isArray(value.extraMeals)
+              ? value.extraMeals.filter(Boolean).join(', ')
+              : '-';
+
           return `${someFoodText} ${extraMealsText !== '-' ? `| Dias: ${extraMealsText}` : ''}`;
         },
       },
