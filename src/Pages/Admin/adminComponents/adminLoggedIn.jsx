@@ -52,11 +52,10 @@ const AdminLoggedIn = ({
   const handleAggregateClick = () => {
     navigate('/admin/agregado');
   };
-  
+
   const handleCheckinClick = () => {
     navigate('/admin/checkin');
   };
-
 
   useEffect(() => {
     if (sendLoggedMessage) {
@@ -99,6 +98,7 @@ const AdminLoggedIn = ({
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
+  const totalAdultsNonPaid = totalRegistrationsGlobal.totalAdultsNonPaid;
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
   const totalVacanciesWithBuses =
@@ -154,12 +154,6 @@ const AdminLoggedIn = ({
         '0',
       showRemainingVacancies: true,
     },
-    {
-      title: 'Usuário Sem Custo',
-      remainingVacancies: availablePackagesTotal?.usuarioSemCusto || '0',
-      filledVacancies: availablePackagesUsed?.usuarioSemCusto || '0',
-      showRemainingVacancies: true,
-    },
   ];
 
   const totalCardsData = [
@@ -175,15 +169,20 @@ const AdminLoggedIn = ({
       showRemainingVacancies: true,
     },
     {
+      title: 'Total de Inscritos com Ônibus',
+      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
+      filledVacancies: totalVacanciesWithBuses || '0',
+      showRemainingVacancies: true,
+    },
+    {
       title: 'Total de Crianças',
       filledVacancies: totalChildren || '0',
       showRemainingVacancies: false,
     },
     {
-      title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
-      filledVacancies: totalVacanciesWithBuses || '0',
-      showRemainingVacancies: true,
+      title: 'Total de Adultos Não Pagantes',
+      filledVacancies: totalAdultsNonPaid || '0',
+      showRemainingVacancies: false,
     },
   ];
 
