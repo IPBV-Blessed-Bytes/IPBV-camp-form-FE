@@ -640,7 +640,27 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     {
       columns,
       data,
-      defaultColumn: { Filter: ({ column }) => <AdminColumnFilter column={column} /> },
+      defaultColumn: {
+        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        filter: (rows, id, filterValue) => {
+          if (!filterValue) return rows;
+  
+          const trimmedFilter = filterValue.trim();
+          const isExactMatch =
+            (trimmedFilter.startsWith('"') && trimmedFilter.endsWith('"')) ||
+            (trimmedFilter.startsWith("'") && trimmedFilter.endsWith("'"));
+  
+          const searchValue = isExactMatch
+            ? trimmedFilter.slice(1, -1).toLowerCase()
+            : trimmedFilter.toLowerCase();
+  
+          return rows.filter((row) => {
+            const rowValue = row.values[id]?.toLowerCase() || '';
+  
+            return isExactMatch ? rowValue === searchValue : rowValue.includes(searchValue);
+          });
+        },
+      },
       initialState: {
         sortBy: JSON.parse(sessionStorage.getItem('sortBy')) || [],
       },
