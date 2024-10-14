@@ -109,49 +109,69 @@ const AdminLoggedIn = ({
       availablePackagesUsed.outroComOnibusComAlimentacao +
       availablePackagesUsed.seminarioIndividualComOnibusComAlimentacao || {};
 
+  const individualSchoolFilledVacanciesSum =
+    availablePackagesUsed?.colegioIndividualComOnibusComAlimentacao +
+    availablePackagesUsed?.colegioIndividualComOnibusSemAlimentacao +
+    availablePackagesUsed?.colegioIndividualSemOnibusComAlimentacao +
+    availablePackagesUsed?.colegioIndividualSemOnibusSemAlimentacao;
+
+  const individualSchoolRemainingVacanciesSum =
+    availablePackagesTotal?.colegioIndividual - individualSchoolFilledVacanciesSum;
+
+  const familySchoolFilledVacanciesSum =
+    availablePackagesUsed?.colegioFamiliaComOnibusComAlimentacao +
+    availablePackagesUsed?.colegioFamiliaComOnibusSemAlimentacao +
+    availablePackagesUsed?.colegioFamiliaSemOnibusComAlimentacao +
+    availablePackagesUsed?.colegioFamiliaSemOnibusSemAlimentacao;
+
+  const familySchoolRemainingVacanciesSum = availablePackagesTotal?.colegioFamilia - familySchoolFilledVacanciesSum;
+
+  const campingSchoolFilledVacanciesSum =
+    availablePackagesUsed?.colegioCampingSemOnibusComAlimentacao +
+    availablePackagesUsed?.colegioCampingSemOnibusSemAlimentacao;
+
+  const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.colegioCamping - campingSchoolFilledVacanciesSum;
+
+  const seminaryFilledVacanciesSum =
+    availablePackagesUsed?.seminarioIndividualComOnibusComAlimentacao +
+    availablePackagesUsed?.seminarioIndividualSemOnibusComAlimentacao;
+
+  const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminario - seminaryFilledVacanciesSum;
+
+  const otherFilledVacanciesSum =
+    availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao;
+
+  const otherRemainingVacanciesSum = availablePackagesTotal?.outro - otherFilledVacanciesSum;
+
   const packageCardsData = [
     {
       title: 'Colégio Individual',
-      remainingVacancies: availablePackagesTotal?.colegioIndividual || '0',
-      filledVacancies:
-        availablePackagesUsed?.colegioIndividualComOnibusComAlimentacao +
-          availablePackagesUsed?.colegioIndividualComOnibusSemAlimentacao +
-          availablePackagesUsed?.colegioIndividualSemOnibusComAlimentacao +
-          availablePackagesUsed?.colegioIndividualSemOnibusSemAlimentacao || '0',
+      remainingVacancies: individualSchoolRemainingVacanciesSum || '0',
+      filledVacancies: individualSchoolFilledVacanciesSum || '0',
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Família',
-      remainingVacancies: availablePackagesTotal?.colegioFamilia || '0',
-      filledVacancies:
-        availablePackagesUsed?.colegioFamiliaComOnibusComAlimentacao +
-          availablePackagesUsed?.colegioFamiliaComOnibusSemAlimentacao +
-          availablePackagesUsed?.colegioFamiliaSemOnibusComAlimentacao +
-          availablePackagesUsed?.colegioFamiliaSemOnibusSemAlimentacao || '0',
+      remainingVacancies: familySchoolRemainingVacanciesSum || '0',
+      filledVacancies: familySchoolFilledVacanciesSum || '0',
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Camping',
-      remainingVacancies: availablePackagesTotal?.colegioCamping || '0',
-      filledVacancies:
-        availablePackagesUsed?.colegioCampingSemOnibusComAlimentacao +
-          availablePackagesUsed?.colegioCampingSemOnibusSemAlimentacao || '0',
+      remainingVacancies: campingSchoolRemainingVacanciesSum || '0',
+      filledVacancies: campingSchoolFilledVacanciesSum || '0',
       showRemainingVacancies: true,
     },
     {
       title: 'Seminário',
-      remainingVacancies: availablePackagesTotal?.seminario || '0',
-      filledVacancies:
-        availablePackagesUsed?.seminarioIndividualComOnibusComAlimentacao +
-          availablePackagesUsed?.seminarioIndividualSemOnibusComAlimentacao || '0',
+      remainingVacancies: seminaryRemainingVacanciesSum || '0',
+      filledVacancies: seminaryFilledVacanciesSum || '0',
       showRemainingVacancies: true,
     },
     {
       title: 'Outra Acomodação',
-      remainingVacancies: availablePackagesTotal?.outro || '0',
-      filledVacancies:
-        availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao ||
-        '0',
+      remainingVacancies: otherRemainingVacanciesSum || '0',
+      filledVacancies: otherFilledVacanciesSum || '0',
       showRemainingVacancies: true,
     },
   ];
