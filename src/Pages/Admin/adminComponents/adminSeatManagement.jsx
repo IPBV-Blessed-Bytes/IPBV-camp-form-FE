@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import privateFetcher from '@/fetchers/fetcherWithCredentials';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
 import { registerLog } from '@/fetchers/userLogs';
 import { useNavigate } from 'react-router-dom';
 
 const AdminSeatManagement = ({ loggedUsername }) => {
-  const [seats, setSeats] = useState();
   const [totalPackages, setTotalPackages] = useState({});
   const [inputSeats, setInputSeats] = useState();
+  // const [totalBusVacancies, setTotalBusVacancies] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const packageLabels = {
-    colegioIndividual: 'Colégio Individual',
-    colegioFamilia: 'Colégio Família',
-    colegioCamping: 'Colégio Camping',
-    seminario: 'Seminário',
-    outro: 'Outro',
+    schoolIndividual: 'Colégio Individual',
+    schoolFamily: 'Colégio Família',
+    schoolCamping: 'Colégio Camping',
+    seminary: 'Seminário',
+    other: 'Outra Acomodação Externa',
   };
 
-  const packageOrder = ['colegioIndividual', 'colegioFamilia', 'colegioCamping', 'seminario', 'outro'];
+  const packageOrder = ['schoolIndividual', 'schoolFamily', 'schoolCamping', 'seminary', 'other'];
 
   useEffect(() => {
     fetchAvailableSeats();
@@ -31,12 +32,13 @@ const AdminSeatManagement = ({ loggedUsername }) => {
   const fetchAvailableSeats = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3001/seats');
-      setSeats(response.data.seats);
-      setInputSeats(response.data.seats);
+      const response = await privateFetcher.get('package-count');
+      setInputSeats(response.data.totalSeats);
+      // setTotalBusVacancies(response.data.totalBusVacancies);
       setTotalPackages(response.data.totalPackages);
     } catch (error) {
       console.error(error);
+      toast.error(error);
     } finally {
       setLoading(false);
     }
@@ -53,15 +55,33 @@ const AdminSeatManagement = ({ loggedUsername }) => {
     }
 
     try {
-      await axios.put('http://localhost:3001/seats', {
-        seats: inputSeats,
+      await fetcher.put('package-count', {
+        totalSeats: inputSeats,
         totalPackages,
       });
-      setSeats(inputSeats);
       toast.success(`Quantidade de vagas totais e por pacote ajustadas com sucesso`);
       registerLog(`Ajustou a quantidade de vagas totais e por pacote`, loggedUsername);
     } catch (error) {
       console.error(error);
+      toast.error(error);
+    }
+  };
+
+  const updateBusVacancies = async () => {
+    if (totalBusVacancies < 0) {
+      toast.error(`A quantidade de vagas de ônibus não pode ser menor que 0!`);
+      return;
+    }
+
+    try {
+      await fetcher.put('package-count/total-bus-vacancies', {
+        totalBusVacancies: totalBusVacancies,
+      });
+      toast.success(`Quantidade de vagas totais do ônibus ajustadas com sucesso`);
+      registerLog(`Ajustou a quantidade de vagas totais do ônibus para ${totalBusVacancies}`, loggedUsername);
+    } catch (error) {
+      console.error(error);
+      toast.error(error);
     }
   };
 
@@ -90,10 +110,10 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
       <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
-          <Form className="my-4 text-center">
+          <Form className="my-4">
             <Form.Group controlId="inputSeats">
               <Form.Label>
-                <b>Ajustar Vagas Totais:</b>
+                <b>Vagas Totais Inscritos:</b>
               </Form.Label>
               <Form.Control
                 type="number"
@@ -117,7 +137,29 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
             <div className="d-flex mt-3 justify-content-end">
               <Button variant="primary" onClick={updateSeats}>
-                Ajustar Vagas
+                Ajustar Vagas Pacotes
+              </Button>
+            </div>
+          </Form>
+        </Col>
+
+        <Col xs={12} md={6} lg={4}>
+          <Form className="my-4">
+            <Form.Group controlId="inputSeats">
+              <Form.Label>
+                <b>Vagas Totais no Ônibus:</b>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min="1"
+                // value={totalBusVacaciones}
+                // onChange={(e) => setTotalBusVacaciones(Number(e.target.value))}
+              />
+            </Form.Group>
+
+            <div className="d-flex mt-3 justify-content-end">
+              <Button variant="primary" onClick={updateBusVacancies}>
+                Ajustar Vagas Ônibus
               </Button>
             </div>
           </Form>
