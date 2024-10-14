@@ -22,7 +22,7 @@ const AdminLoggedIn = ({
   user,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [availablePackages, setAvailablePackages] = useState(true);
+  const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState();
   const [totalBusVacancies, setTotalBusVacancies] = useState();
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
@@ -72,8 +72,8 @@ const AdminLoggedIn = ({
       try {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response.data);
-        setTotalSeats(response.data.totalSeats)
-        setTotalBusVacancies(response.data.totalBusVacancies)
+        setTotalSeats(response.data.totalSeats);
+        setTotalBusVacancies(response.data.totalBusVacancies);
       } catch (error) {
         console.error('Erro ao buscar os pacotes:', error);
       } finally {
@@ -103,6 +103,8 @@ const AdminLoggedIn = ({
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
   const totalAdultsNonPaid = totalRegistrationsGlobal.totalAdultsNonPaid;
+
+  const availablePackagesUsedValid = availablePackages.usedValidPackages;
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
   const totalVacanciesWithBuses =
@@ -114,36 +116,36 @@ const AdminLoggedIn = ({
       availablePackagesUsed.seminaryIndividualWithBusWithFood || {};
 
   const individualSchoolFilledVacanciesSum =
-    availablePackagesUsed?.schoolIndividualWithBusWithFood +
-    availablePackagesUsed?.schoolIndividualWithBusWithoutFood +
-    availablePackagesUsed?.schoolIndividualWithoutBusWithFood +
-    availablePackagesUsed?.schoolIndividualWithoutBusWithoutFood;
+    availablePackagesUsedValid?.schoolIndividualWithBusWithFood +
+    availablePackagesUsedValid?.schoolIndividualWithBusWithoutFood +
+    availablePackagesUsedValid?.schoolIndividualWithoutBusWithFood +
+    availablePackagesUsedValid?.schoolIndividualWithoutBusWithoutFood;
 
   const individualSchoolRemainingVacanciesSum =
     availablePackagesTotal?.schoolIndividual - individualSchoolFilledVacanciesSum;
 
   const familySchoolFilledVacanciesSum =
-    availablePackagesUsed?.schoolFamilyWithBusWithFood +
-    availablePackagesUsed?.schoolFamilyWithBusWithoutFood +
-    availablePackagesUsed?.schoolFamilyWithoutBusWithFood +
-    availablePackagesUsed?.schoolFamilyWithoutBusWithoutFood;
+    availablePackagesUsedValid?.schoolFamilyWithBusWithFood +
+    availablePackagesUsedValid?.schoolFamilyWithBusWithoutFood +
+    availablePackagesUsedValid?.schoolFamilyWithoutBusWithFood +
+    availablePackagesUsedValid?.schoolFamilyWithoutBusWithoutFood;
 
   const familySchoolRemainingVacanciesSum = availablePackagesTotal?.schoolFamily - familySchoolFilledVacanciesSum;
 
   const campingSchoolFilledVacanciesSum =
-    availablePackagesUsed?.schoolCampingWithoutBusWithFood +
-    availablePackagesUsed?.schoolCampingWithoutBusWithoutFood;
+    availablePackagesUsedValid?.schoolCampingWithoutBusWithFood +
+    availablePackagesUsedValid?.schoolCampingWithoutBusWithoutFood;
 
   const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.schoolCamping - campingSchoolFilledVacanciesSum;
 
   const seminaryFilledVacanciesSum =
-    availablePackagesUsed?.seminaryIndividualWithBusWithFood +
-    availablePackagesUsed?.seminaryIndividualWithoutBusWithFood;
+    availablePackagesUsedValid?.seminaryIndividualWithBusWithFood +
+    availablePackagesUsedValid?.seminaryIndividualWithoutBusWithFood;
 
   const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminary - seminaryFilledVacanciesSum;
 
   const otherFilledVacanciesSum =
-    availablePackagesUsed?.otherWithBusWithFood + availablePackagesUsed?.otherWithoutBusWithoutFood;
+    availablePackagesUsedValid?.otherWithBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithoutFood;
 
   const otherRemainingVacanciesSum = availablePackagesTotal?.other - otherFilledVacanciesSum;
 
