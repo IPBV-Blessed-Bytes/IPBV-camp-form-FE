@@ -6,12 +6,17 @@ const AdminColumnFilter = ({ column }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
 
+  const handleFilterChange = (e) => {
+    const value = e.target.value || undefined;
+    setFilter(value);
+  };
+
   return (
     <div className="d-flex position-relative">
       <input
         className={`filter-input ${filterValue && 'actived-filter'}`}
         value={filterValue}
-        onChange={(e) => setFilter(e.target.value || undefined)}
+        onChange={handleFilterChange}
         placeholder="Pesquise ..."
       />
       {filterValue && <Icons className="filter-icon" typeIcon="filter" iconSize={24} fill="#4267a7" />}
@@ -21,7 +26,7 @@ const AdminColumnFilter = ({ column }) => {
 
 AdminColumnFilter.propTypes = {
   column: PropTypes.shape({
-    filterValue: PropTypes.bool,
+    filterValue: PropTypes.string,
     setFilter: PropTypes.func,
   }),
 };
