@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import Icons from '@/components/Icons';
 import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
+import privateFetcher from '@/fetchers/fetcherWithCredentials';
+import { BASE_URL } from '@/config/index';
+import Loading from '@/components/Loading';
 
 const FormPackages = ({
   nextStep,
@@ -18,24 +21,26 @@ const FormPackages = ({
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [totalSeats, setTotalSeats] = useState();
   const packages = getPackages(age);
 
   const packageMapping = {
-    1: { available: 'colegioIndividual', used: 'colegioIndividualComOnibusComAlimentacao' },
-    2: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibusComAlimentacao' },
-    3: { available: 'colegioIndividual', used: 'colegioIndividualComOnibusSemAlimentacao' },
-    4: { available: 'colegioIndividual', used: 'colegioIndividualSemOnibusSemAlimentacao' },
-    5: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibusComAlimentacao' },
-    6: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibusComAlimentacao' },
-    7: { available: 'colegioFamilia', used: 'colegioFamiliaComOnibusSemAlimentacao' },
-    8: { available: 'colegioFamilia', used: 'colegioFamiliaSemOnibusSemAlimentacao' },
-    9: { available: 'colegioCamping', used: 'colegioCampingSemOnibusComAlimentacao' },
-    10: { available: 'colegioCamping', used: 'colegioCampingSemOnibusSemAlimentacao' },
-    11: { available: 'seminario', used: 'seminarioIndividualComOnibusComAlimentacao' },
-    12: { available: 'seminario', used: 'seminarioIndividualSemOnibusComAlimentacao' },
-    13: { available: 'outro', used: 'outroComOnibusComAlimentacao' },
-    14: { available: 'outro', used: 'outroSemOnibusSemAlimentacao' },
-    15: { available: 'usuarioSemCusto', used: 'usuarioSemCusto' },
+    1: { available: 'schoolIndividual', used: 'schoolIndividualWithBusWithFood' },
+    2: { available: 'schoolIndividual', used: 'schoolIndividualWithoutBusWithFood' },
+    3: { available: 'schoolIndividual', used: 'schoolIndividualWithBusWithoutFood' },
+    4: { available: 'schoolIndividual', used: 'schoolIndividualWithoutBusWithoutFood' },
+    5: { available: 'schoolFamily', used: 'schoolFamilyWithBusWithFood' },
+    6: { available: 'schoolFamily', used: 'schoolFamilyWithoutBusWithFood' },
+    7: { available: 'schoolFamily', used: 'schoolFamilyWithBusWithoutFood' },
+    8: { available: 'schoolFamily', used: 'schoolFamilyWithoutBusWithoutFood' },
+    9: { available: 'schoolCamping', used: 'schoolCampingWithoutBusWithFood' },
+    10: { available: 'schoolCamping', used: 'schoolCampingWithoutBusWithoutFood' },
+    11: { available: 'seminary', used: 'seminaryIndividualWithBusWithFood' },
+    12: { available: 'seminary', used: 'seminaryIndividualWithoutBusWithFood' },
+    13: { available: 'other', used: 'otherWithBusWithFood' },
+    14: { available: 'other', used: 'otherWithoutBusWithoutFood' },
+    15: { available: 'other', used: 'otherWithoutBusWithoutFood' },
   };
 
   useEffect(() => {
@@ -103,11 +108,26 @@ const FormPackages = ({
     nextStep();
   };
 
+  useEffect(() => {
+    const fetchTotalSeats = async () => {
+      try {
+        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
+        setTotalSeats(response.data.totalSeats)
+      } catch (error) {
+        console.error('Erro ao buscar total de vagas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTotalSeats();
+  }, []);
+
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
 
   const isChild = age < 11;
 
-  const isRegistrationClosed = validRegistrations >= 600 && !isChild;
+  const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
   return (
     <Card className="form__container__general-height">
@@ -157,93 +177,93 @@ const FormPackages = ({
                           const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
                           const usedValidPackagesMapping = {
                             1: {
-                              colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
+                              schoolIndividual:
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithoutFood,
                             },
                             2: {
-                              colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
+                              schoolIndividual:
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithoutFood,
                             },
                             3: {
-                              colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
+                              schoolIndividual:
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithoutFood,
                             },
                             4: {
-                              colegioIndividual:
-                                usedValidPackagesPath?.colegioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioIndividualSemOnibusSemAlimentacao,
+                              schoolIndividual:
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolIndividualWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolIndividualWithoutBusWithoutFood,
                             },
                             5: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
+                              schoolFamily:
+                                usedValidPackagesPath?.schoolFamilyWithBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithoutFood,
                             },
                             6: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
+                              schoolFamily:
+                                usedValidPackagesPath?.schoolFamilyWithBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithoutFood,
                             },
                             7: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
+                              schoolFamily:
+                                usedValidPackagesPath?.schoolFamilyWithBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithoutFood,
                             },
                             8: {
-                              colegioFamilia:
-                                usedValidPackagesPath?.colegioFamiliaComOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaComOnibusSemAlimentacao +
-                                usedValidPackagesPath?.colegioFamiliaSemOnibusSemAlimentacao,
+                              schoolFamily:
+                                usedValidPackagesPath?.schoolFamilyWithBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolFamilyWithBusWithoutFood +
+                                usedValidPackagesPath?.schoolFamilyWithoutBusWithoutFood,
                             },
                             9: {
-                              colegioCamping:
-                                usedValidPackagesPath?.colegioCampingSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioCampingSemOnibusSemAlimentacao,
+                              schoolCamping:
+                                usedValidPackagesPath?.schoolCampingWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolCampingWithoutBusWithoutFood,
                             },
                             10: {
-                              colegioCamping:
-                                usedValidPackagesPath?.colegioCampingSemOnibusComAlimentacao +
-                                usedValidPackagesPath?.colegioCampingSemOnibusSemAlimentacao,
+                              schoolCamping:
+                                usedValidPackagesPath?.schoolCampingWithoutBusWithFood +
+                                usedValidPackagesPath?.schoolCampingWithoutBusWithoutFood,
                             },
                             11: {
-                              seminario:
-                                usedValidPackagesPath?.seminarioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.seminarioIndividualSemOnibusComAlimentacao,
+                              seminary:
+                                usedValidPackagesPath?.seminaryIndividualWithBusWithFood +
+                                usedValidPackagesPath?.seminaryIndividualWithoutBusWithFood,
                             },
                             12: {
-                              seminario:
-                                usedValidPackagesPath?.seminarioIndividualComOnibusComAlimentacao +
-                                usedValidPackagesPath?.seminarioIndividualSemOnibusComAlimentacao,
+                              seminary:
+                                usedValidPackagesPath?.seminaryIndividualWithBusWithFood +
+                                usedValidPackagesPath?.seminaryIndividualWithoutBusWithFood,
                             },
                             13: {
-                              outro:
-                                usedValidPackagesPath?.outroComOnibusComAlimentacao +
-                                usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                              other:
+                                usedValidPackagesPath?.otherWithBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                             14: {
-                              outro:
-                                usedValidPackagesPath?.outroComOnibusComAlimentacao +
-                                usedValidPackagesPath?.outroSemOnibusSemAlimentacao,
+                              other:
+                                usedValidPackagesPath?.otherWithBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                             15: {
-                              usuarioSemCusto: usedValidPackagesPath?.usuarioSemCusto,
+                              other: usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                           };
 
@@ -416,6 +436,7 @@ const FormPackages = ({
               )}
             </Form>
           )}
+          <Loading loading={loading} />
         </Container>
       </Card.Body>
 
