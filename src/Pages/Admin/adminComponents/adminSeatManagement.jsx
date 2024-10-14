@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 const AdminSeatManagement = ({ loggedUsername }) => {
   const [totalPackages, setTotalPackages] = useState({});
   const [inputSeats, setInputSeats] = useState();
-  // const [totalBusVacancies, setTotalBusVacancies] = useState();
+  const [totalBusVacancies, setTotalBusVacancies] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
     try {
       const response = await privateFetcher.get('package-count');
       setInputSeats(response.data.totalSeats);
-      // setTotalBusVacancies(response.data.totalBusVacancies);
+      setTotalBusVacancies(response.data.totalBusVacancies);
       setTotalPackages(response.data.totalPackages);
     } catch (error) {
       console.error(error);
@@ -152,8 +152,8 @@ const AdminSeatManagement = ({ loggedUsername }) => {
               <Form.Control
                 type="number"
                 min="1"
-                // value={totalBusVacaciones}
-                // onChange={(e) => setTotalBusVacaciones(Number(e.target.value))}
+                value={totalBusVacancies}
+                onChange={(e) => setTotalBusVacancies(Number(e.target.value))}
               />
             </Form.Group>
 
