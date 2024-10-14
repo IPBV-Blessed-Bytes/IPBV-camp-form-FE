@@ -24,6 +24,7 @@ const AdminLoggedIn = ({
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
   const [totalSeats, setTotalSeats] = useState();
+  const [totalBusVacancies, setTotalBusVacancies] = useState();
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonRef = useRef(null);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
@@ -72,6 +73,7 @@ const AdminLoggedIn = ({
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response.data);
         setTotalSeats(response.data.totalSeats)
+        setTotalBusVacancies(response.data.totalBusVacancies)
       } catch (error) {
         console.error('Erro ao buscar os pacotes:', error);
       } finally {
@@ -192,7 +194,7 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: 98 - totalVacanciesWithBuses || '0',
+      remainingVacancies: totalBusVacancies - totalVacanciesWithBuses || '0',
       filledVacancies: totalVacanciesWithBuses || '0',
       showRemainingVacancies: true,
     },
