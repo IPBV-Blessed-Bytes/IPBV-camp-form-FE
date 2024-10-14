@@ -1,7 +1,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import privateFetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import Footer from '@/components/Footer';
@@ -28,6 +28,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import AdminCheckin from '../Admin/adminComponents/adminCheckin';
 import AdminAggregate from '../Admin/adminComponents/adminAggregate';
+import AdminSeatManagement from '../Admin/adminComponents/adminSeatManagement';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -146,7 +147,7 @@ const FormRoutes = () => {
         manualRegistration: false,
       };
 
-      const response = await axios.post(`${BASE_URL}/checkout/create`, updatedFormValues);
+      const response = await privateFetcher.post(`${BASE_URL}/checkout/create`, updatedFormValues);
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
@@ -171,7 +172,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/package-count`);
+        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
       } catch (error) {
         console.error(
@@ -188,7 +189,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/total-registrations`);
+        const response = await privateFetcher.get(`${BASE_URL}/total-registrations`);
         setTotalRegistrations(response.data);
       } catch (error) {
         console.error(
@@ -400,6 +401,14 @@ const FormRoutes = () => {
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
               <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/admin/vagas"
+          element={
+            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <AdminSeatManagement loggedUsername={splitedLoggedUsername} />
             </ProtectedRoute>
           }
         />

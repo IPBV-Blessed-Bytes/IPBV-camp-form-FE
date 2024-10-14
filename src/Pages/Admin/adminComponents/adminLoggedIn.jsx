@@ -385,6 +385,11 @@ const AdminLoggedIn = ({
           Logs de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
         </button>
+
+        <button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
+          Controle de Vagas&nbsp;
+          <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
+        </button>
       </div>
 
       <Loading loading={loading} />
