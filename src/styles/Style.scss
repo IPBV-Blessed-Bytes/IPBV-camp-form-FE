@@ -1108,6 +1108,10 @@ button.btn.btn-outline-danger:hover svg {
 .settings-message-button:hover {
   .settings-icons {
     fill: $light-yellow;
+
+    path {
+      fill: $light-yellow;
+    }
   }
 }
 
