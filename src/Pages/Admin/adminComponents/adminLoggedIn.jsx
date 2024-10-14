@@ -23,6 +23,7 @@ const AdminLoggedIn = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState(true);
+  const [totalSeats, setTotalSeats] = useState();
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonRef = useRef(null);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
@@ -70,6 +71,7 @@ const AdminLoggedIn = ({
       try {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response.data);
+        setTotalSeats(response.data.totalSeats)
       } catch (error) {
         console.error('Erro ao buscar os pacotes:', error);
       } finally {
@@ -102,46 +104,46 @@ const AdminLoggedIn = ({
   const availablePackagesTotal = availablePackages.totalPackages || {};
   const availablePackagesUsed = availablePackages.usedPackages || {};
   const totalVacanciesWithBuses =
-    availablePackagesUsed.colegioFamiliaComOnibusComAlimentacao +
-      availablePackagesUsed.colegioFamiliaComOnibusSemAlimentacao +
-      availablePackagesUsed.colegioIndividualComOnibusComAlimentacao +
-      availablePackagesUsed.colegioIndividualComOnibusSemAlimentacao +
-      availablePackagesUsed.outroComOnibusComAlimentacao +
-      availablePackagesUsed.seminarioIndividualComOnibusComAlimentacao || {};
+    availablePackagesUsed.schoolFamilyWithBusWithFood +
+      availablePackagesUsed.schoolFamilyWithBusWithoutFood +
+      availablePackagesUsed.schoolIndividualWithBusWithFood +
+      availablePackagesUsed.schoolIndividualWithBusWithoutFood +
+      availablePackagesUsed.otherWithBusWithFood +
+      availablePackagesUsed.seminaryIndividualWithBusWithFood || {};
 
   const individualSchoolFilledVacanciesSum =
-    availablePackagesUsed?.colegioIndividualComOnibusComAlimentacao +
-    availablePackagesUsed?.colegioIndividualComOnibusSemAlimentacao +
-    availablePackagesUsed?.colegioIndividualSemOnibusComAlimentacao +
-    availablePackagesUsed?.colegioIndividualSemOnibusSemAlimentacao;
+    availablePackagesUsed?.schoolIndividualWithBusWithFood +
+    availablePackagesUsed?.schoolIndividualWithBusWithoutFood +
+    availablePackagesUsed?.schoolIndividualWithoutBusWithFood +
+    availablePackagesUsed?.schoolIndividualWithoutBusWithoutFood;
 
   const individualSchoolRemainingVacanciesSum =
-    availablePackagesTotal?.colegioIndividual - individualSchoolFilledVacanciesSum;
+    availablePackagesTotal?.schoolIndividual - individualSchoolFilledVacanciesSum;
 
   const familySchoolFilledVacanciesSum =
-    availablePackagesUsed?.colegioFamiliaComOnibusComAlimentacao +
-    availablePackagesUsed?.colegioFamiliaComOnibusSemAlimentacao +
-    availablePackagesUsed?.colegioFamiliaSemOnibusComAlimentacao +
-    availablePackagesUsed?.colegioFamiliaSemOnibusSemAlimentacao;
+    availablePackagesUsed?.schoolFamilyWithBusWithFood +
+    availablePackagesUsed?.schoolFamilyWithBusWithoutFood +
+    availablePackagesUsed?.schoolFamilyWithoutBusWithFood +
+    availablePackagesUsed?.schoolFamilyWithoutBusWithoutFood;
 
-  const familySchoolRemainingVacanciesSum = availablePackagesTotal?.colegioFamilia - familySchoolFilledVacanciesSum;
+  const familySchoolRemainingVacanciesSum = availablePackagesTotal?.schoolFamily - familySchoolFilledVacanciesSum;
 
   const campingSchoolFilledVacanciesSum =
-    availablePackagesUsed?.colegioCampingSemOnibusComAlimentacao +
-    availablePackagesUsed?.colegioCampingSemOnibusSemAlimentacao;
+    availablePackagesUsed?.schoolCampingWithoutBusWithFood +
+    availablePackagesUsed?.schoolCampingWithoutBusWithoutFood;
 
-  const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.colegioCamping - campingSchoolFilledVacanciesSum;
+  const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.schoolCamping - campingSchoolFilledVacanciesSum;
 
   const seminaryFilledVacanciesSum =
-    availablePackagesUsed?.seminarioIndividualComOnibusComAlimentacao +
-    availablePackagesUsed?.seminarioIndividualSemOnibusComAlimentacao;
+    availablePackagesUsed?.seminaryIndividualWithBusWithFood +
+    availablePackagesUsed?.seminaryIndividualWithoutBusWithFood;
 
-  const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminario - seminaryFilledVacanciesSum;
+  const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminary - seminaryFilledVacanciesSum;
 
   const otherFilledVacanciesSum =
-    availablePackagesUsed?.outroComOnibusComAlimentacao + availablePackagesUsed?.outroSemOnibusSemAlimentacao;
+    availablePackagesUsed?.otherWithBusWithFood + availablePackagesUsed?.otherWithoutBusWithoutFood;
 
-  const otherRemainingVacanciesSum = availablePackagesTotal?.outro - otherFilledVacanciesSum;
+  const otherRemainingVacanciesSum = availablePackagesTotal?.other - otherFilledVacanciesSum;
 
   const packageCardsData = [
     {
@@ -184,7 +186,7 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Total de Adultos',
-      remainingVacancies: 600 - totalValidRegistrations || '0',
+      remainingVacancies: totalSeats - totalValidRegistrations || '0',
       filledVacancies: totalValidRegistrations || '0',
       showRemainingVacancies: true,
     },
