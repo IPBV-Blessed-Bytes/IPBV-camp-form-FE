@@ -5,9 +5,6 @@ import { toast } from 'react-toastify';
 import Icons from '@/components/Icons';
 import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
-import privateFetcher from '@/fetchers/fetcherWithCredentials';
-import { BASE_URL } from '@/config/index';
-import Loading from '@/components/Loading';
 
 const FormPackages = ({
   nextStep,
@@ -18,11 +15,10 @@ const FormPackages = ({
   totalRegistrationsGlobal,
   discountValue,
   hasDiscount,
+  totalSeats
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [totalSeats, setTotalSeats] = useState();
   const packages = getPackages(age);
 
   const packageMapping = {
@@ -108,20 +104,6 @@ const FormPackages = ({
     nextStep();
   };
 
-  useEffect(() => {
-    const fetchTotalSeats = async () => {
-      try {
-        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
-        setTotalSeats(response.data.totalSeats)
-      } catch (error) {
-        console.error('Erro ao buscar total de vagas:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTotalSeats();
-  }, []);
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
 
@@ -436,7 +418,6 @@ const FormPackages = ({
               )}
             </Form>
           )}
-          <Loading loading={loading} />
         </Container>
       </Card.Body>
 
@@ -460,7 +441,6 @@ FormPackages.propTypes = {
   backStep: PropTypes.func,
   birthDate: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
-  spinnerLoading: PropTypes.bool,
   availablePackages: PropTypes.bool,
   totalRegistrationsGlobal: PropTypes.bool,
   formUsername: PropTypes.string,
