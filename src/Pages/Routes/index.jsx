@@ -39,6 +39,7 @@ const FormRoutes = () => {
   const adminPages = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
+  const [totalBusVacancies, setTotalBusVacancies] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
@@ -175,7 +176,8 @@ const FormRoutes = () => {
       try {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
-        setTotalSeats(response.data.totalSeats)
+        setTotalSeats(response.data.totalSeats);
+        setTotalBusVacancies(response.data.totalBusVacancies)
       } catch (error) {
         console.error(
           error.message === 'Request failed with status code 503'
@@ -274,6 +276,8 @@ const FormRoutes = () => {
                 discountValue={discount}
                 hasDiscount={hasDiscount}
                 totalSeats={totalSeats}
+                totalBusVacancies={totalBusVacancies}
+                totalValidWithBus={totalRegistrations.totalValidWithBus}
               />
             )}
 
@@ -407,7 +411,7 @@ const FormRoutes = () => {
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/admin/vagas"
           element={
             <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>

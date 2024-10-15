@@ -15,7 +15,9 @@ const FormPackages = ({
   totalRegistrationsGlobal,
   discountValue,
   hasDiscount,
-  totalSeats
+  totalSeats,
+  totalBusVacancies,
+  totalValidWithBus,
 }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasError, setHasError] = useState(false);
@@ -103,7 +105,6 @@ const FormPackages = ({
 
     nextStep();
   };
-
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
 
@@ -255,16 +256,22 @@ const FormPackages = ({
 
                           const isPackageAvailable = openPackages > 0 || isChild;
 
+                          const busIsNotAvailable = totalValidWithBus >= totalBusVacancies;
+                          const packageIsWithBus = cards.transportation.includes('Com Ônibus');
+
+                          const cardsClass = `form__container-pointer
+                                ${selectedPackage?.id === cards.id ? ' card-is-active' : ''}
+                                ${!isPackageAvailable ? 'card-disabled not-available' : ''} 
+                                ${busIsNotAvailable && packageIsWithBus ? 'card-disabled not-available' : ''}
+                                `
+
                           return (
                             <Card
                               key={cards.id}
-                              className={`form__container-pointer${
-                                selectedPackage?.id === cards.id ? ' card-is-active' : ''
-                              }${!isPackageAvailable ? ' not-available' : ''} ${
-                                !isPackageAvailable ? 'card-disabled' : ''
-                              }`}
+                              className={cardsClass.trim()}
                               onClick={() => {
-                                if (isPackageAvailable) {
+                                if (isPackageAvailable && !(busIsNotAvailable && packageIsWithBus)) {
+                                  console.log('click');
                                   handleClick(cards);
                                 }
                               }}
@@ -363,14 +370,14 @@ const FormPackages = ({
                                         </div>
                                       </em>
                                     </div>
-                                    {!isPackageAvailable && (
+                                    {(!isPackageAvailable || (busIsNotAvailable && packageIsWithBus)) && (
                                       <div className="package-description-container justify-content-end">
                                         <span className="no-vacancy text-danger text-decoration-underline mt-3">
                                           Sem Vagas Disponíveis
                                         </span>
                                       </div>
                                     )}
-                                    {isPackageAvailable && (
+                                    {isPackageAvailable && !(busIsNotAvailable && packageIsWithBus) && (
                                       <div className="package-description-container package-available mt-3 justify-content-end">
                                         <span className="text-success">
                                           Vagas Disponíveis:
