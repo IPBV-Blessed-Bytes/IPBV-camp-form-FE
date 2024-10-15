@@ -177,7 +177,7 @@ const FormRoutes = () => {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
         setTotalSeats(response.data.totalSeats);
-        setTotalBusVacancies(response.data.totalBusVacancies)
+        setTotalBusVacancies(response.data.totalBusVacancies);
       } catch (error) {
         console.error(
           error.message === 'Request failed with status code 503'
@@ -361,7 +361,13 @@ const FormRoutes = () => {
       <Routes>
         <Route
           path="/admin"
-          element={<AdminHome totalRegistrationsGlobal={totalRegistrations} userRole={loggedUserRole} />}
+          element={
+            <AdminHome
+              totalRegistrationsGlobal={totalRegistrations}
+              userRole={loggedUserRole}
+              totalValidWithBus={totalRegistrations.totalValidWithBus}
+            />
+          }
         />
         <Route
           path="/admin/tabela"

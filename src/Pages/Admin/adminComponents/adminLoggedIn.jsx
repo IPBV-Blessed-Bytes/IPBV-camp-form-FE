@@ -20,6 +20,7 @@ const AdminLoggedIn = ({
   sendLoggedMessage,
   setSendLoggedMessage,
   user,
+  totalValidWithBus
 }) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState({});
@@ -106,14 +107,6 @@ const AdminLoggedIn = ({
 
   const availablePackagesUsedValid = availablePackages.usedValidPackages;
   const availablePackagesTotal = availablePackages.totalPackages || {};
-  const availablePackagesUsed = availablePackages.usedPackages || {};
-  const totalVacanciesWithBuses =
-    availablePackagesUsed.schoolFamilyWithBusWithFood +
-      availablePackagesUsed.schoolFamilyWithBusWithoutFood +
-      availablePackagesUsed.schoolIndividualWithBusWithFood +
-      availablePackagesUsed.schoolIndividualWithBusWithoutFood +
-      availablePackagesUsed.otherWithBusWithFood +
-      availablePackagesUsed.seminaryIndividualWithBusWithFood || {};
 
   const individualSchoolFilledVacanciesSum =
     availablePackagesUsedValid?.schoolIndividualWithBusWithFood +
@@ -196,8 +189,8 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: totalBusVacancies - totalVacanciesWithBuses || '0',
-      filledVacancies: totalVacanciesWithBuses || '0',
+      remainingVacancies: totalBusVacancies - totalValidWithBus || '0',
+      filledVacancies: totalValidWithBus || '0',
       showRemainingVacancies: true,
     },
     {
