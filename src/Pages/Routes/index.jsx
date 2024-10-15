@@ -38,6 +38,7 @@ const FormRoutes = () => {
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const adminPages = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
+  const [totalSeats, setTotalSeats] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
@@ -174,6 +175,7 @@ const FormRoutes = () => {
       try {
         const response = await privateFetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
+        setTotalSeats(response.data.totalSeats)
       } catch (error) {
         console.error(
           error.message === 'Request failed with status code 503'
@@ -271,6 +273,7 @@ const FormRoutes = () => {
                 totalRegistrationsGlobal={totalRegistrations}
                 discountValue={discount}
                 hasDiscount={hasDiscount}
+                totalSeats={totalSeats}
               />
             )}
 
