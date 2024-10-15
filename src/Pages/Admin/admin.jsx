@@ -7,7 +7,7 @@ import AdminLoggedOut from './adminComponents/adminLoggedOut';
 import AdminLoggedIn from './adminComponents/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
 
-const AdminHome = ({ totalRegistrationsGlobal, userRole }) => {
+const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
@@ -54,6 +54,7 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole }) => {
               sendLoggedMessage={sendLoggedMessage}
               setSendLoggedMessage={setSendLoggedMessage}
               user={user}
+              totalValidWithBus={totalValidWithBus}
             />
           )}
         </Container>
