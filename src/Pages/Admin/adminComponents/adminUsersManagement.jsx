@@ -227,14 +227,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <b>Senha:</b>
               </Form.Label>
               <Form.Control
-                className="user-management-password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Digite a senha"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
               <Icons
-                className="user-management-password-icon"
+                className="user-management-icon"
                 typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
                 onClick={handleShowPassword}
               />
