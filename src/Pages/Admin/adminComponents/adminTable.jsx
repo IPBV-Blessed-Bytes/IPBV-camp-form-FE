@@ -595,7 +595,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           const checkinTimeTextPt2 = checkinTimeTextSplited ? checkinTimeTextSplited[1] : '-';
 
           return `${checkinText} ${
-            checkinTimeText !== '-' ? `| Em ${checkinTimeTextPt1} às ${checkinTimeTextPt2}` : ''
+            checkinText !== 'Não' && checkinTimeText !== '-'
+              ? `| Em ${checkinTimeTextPt1} às ${checkinTimeTextPt2}`
+              : ''
           }`;
         },
       },
