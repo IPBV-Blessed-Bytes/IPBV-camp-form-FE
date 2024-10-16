@@ -265,6 +265,29 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
         </svg>
       )}
 
+      {typeIcon === 'person' && (
+        <svg
+          className={className}
+          onClick={onClick}
+          height={iconSize ? iconSize + 'px' : '30px'}
+          fill={fill ? fill : ''}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXllink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 60.671 60.671"
+          xmlSpace="preserve"
+        >
+          <g>
+            <g>
+              <ellipse cx="30.336" cy="12.097" rx="11.997" ry="12.097" />
+              <path
+                d="M35.64,30.079H25.031c-7.021,0-12.714,5.739-12.714,12.821v17.771h36.037V42.9
+			C48.354,35.818,42.661,30.079,35.64,30.079z"
+              />
+            </g>
+          </g>
+        </svg>
+      )}
+
       {typeIcon === 'add-person' && (
         <svg
           className={className}
@@ -293,21 +316,6 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
 			c-31.796,0-57.663-25.868-57.663-57.663S170.825,48.515,202.621,48.515z"
               />
             </g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
-            <g></g>
           </g>
         </svg>
       )}
