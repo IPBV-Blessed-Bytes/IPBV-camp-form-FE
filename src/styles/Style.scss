@@ -1132,18 +1132,7 @@ button.btn.btn-outline-danger:hover svg {
   margin-left: 1rem;
 }
 
-.user-management-password {
-  border-color: $blue;
-  color: $blue;
-  font-weight: bold;
-
-  &::placeholder {
-    color: $blue;
-    font-weight: normal;
-  }
-}
-
-.user-management-password-icon {
+.user-management-icon {
   padding: 0.25rem;
   position: absolute;
   right: 0;
