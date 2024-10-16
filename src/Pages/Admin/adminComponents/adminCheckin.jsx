@@ -202,7 +202,7 @@ const AdminCheckin = ({ loggedUsername }) => {
             <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
               <Button variant="success" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
                 <Icons typeIcon="checked" iconSize={20} fill="#fff" />
-                <span className="d-none d-md-inline">&nbsp;Confirmar Check-in</span>
+                <span className="d-none d-md-inline">&nbsp;Atualizar Check-in</span>
               </Button>
             </Col>
           </Row>
