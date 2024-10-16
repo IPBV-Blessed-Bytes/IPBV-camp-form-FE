@@ -244,7 +244,7 @@ const AdminLoggedIn = ({
                     <em>
                       <b>Inscritos</b>
                     </em>
-                    <Icons typeIcon="add-person" iconSize={50} fill={'#204691'} />
+                    <Icons typeIcon="person" iconSize={40} fill={'#204691'} />
                   </div>
                 </Card.Title>
               </Card.Body>
@@ -388,6 +388,11 @@ const AdminLoggedIn = ({
         <button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
           Controle de Vagas&nbsp;
           <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
+          Controle de Usuários&nbsp;
+          <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
         </button>
       </div>
 
