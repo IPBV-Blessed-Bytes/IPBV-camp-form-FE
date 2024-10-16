@@ -98,6 +98,8 @@ const AdminCheckin = ({ loggedUsername }) => {
     }
   };
 
+  const handleKeyDown = (e) => e.key === 'Enter' && handleSearchUser();
+
   return (
     <Container fluid>
       <Row className="mt-3">
@@ -126,6 +128,7 @@ const AdminCheckin = ({ loggedUsername }) => {
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}
               size="lg"
+              onKeyDown={handleKeyDown}
             />
           </Form.Group>
         </Col>
