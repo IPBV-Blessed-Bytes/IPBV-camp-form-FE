@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
-import AdminColumnFilter from './adminColumnFilter';
+import AdminColumnFilter from '../AdminComponents/adminColumnFilter';
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -13,8 +13,8 @@ import { toast } from 'react-toastify';
 import { initialValues } from '@/Pages/Routes/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
-import AdminTableIndeed from './adminTableIndeed';
-import AdminTableModal from './adminTableModal';
+import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
+import AdminTableModal from '../AdminComponents/adminTableModal';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
