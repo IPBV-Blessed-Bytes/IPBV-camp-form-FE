@@ -582,7 +582,6 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Check-in:',
-        accessor: 'checkin',
         accessor: (row) => ({
           checkin: row.checkin,
           checkinTime: row.checkinTime,
