@@ -23,6 +23,7 @@ const AdminCoupon = ({ loggedUsername }) => {
   useEffect(() => {
     fetchCoupons();
     fetchPaidUsers();
+    scrollUp();
   }, []);
 
   const fetchCoupons = async () => {
@@ -48,6 +49,8 @@ const AdminCoupon = ({ loggedUsername }) => {
       console.error('Erro ao buscar usuários pagos:', error);
     }
   };
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const registeredUser = (cpf) => {
     const isValid = paidUsers.some((user) => {

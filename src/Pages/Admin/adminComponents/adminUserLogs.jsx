@@ -26,7 +26,10 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchLogs();
+    scrollUp();
   }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const groupByUser = (logs) => {
     return logs.reduce((acc, log) => {

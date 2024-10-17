@@ -33,7 +33,10 @@ const AdminRide = () => {
     };
 
     fetchData();
+    scrollUp();
   }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
