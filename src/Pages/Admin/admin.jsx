@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
-import AdminLoggedOut from './adminComponents/adminLoggedOut';
-import AdminLoggedIn from './adminComponents/adminLoggedIn';
+import AdminLoggedOut from './AdminPages/adminLoggedOut';
+import AdminLoggedIn from './AdminPages/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
 
 const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
