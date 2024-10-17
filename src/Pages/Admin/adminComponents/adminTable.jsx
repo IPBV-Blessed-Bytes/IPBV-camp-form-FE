@@ -825,7 +825,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Inscritos</h4>
+          <h4 className="fw-bold m-0">Gerenciamento de Inscritos</h4>
           <Icons className="m-left" typeIcon="person" iconSize={70} fill={'#204691'} />
         </Col>
       </Row>

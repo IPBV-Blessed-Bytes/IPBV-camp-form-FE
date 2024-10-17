@@ -193,7 +193,7 @@ const AdminRide = () => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Caronas</h4>
+          <h4 className="fw-bold m-0">Gerenciamento de Caronas</h4>
           <Icons className="m-left" typeIcon="ride" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
