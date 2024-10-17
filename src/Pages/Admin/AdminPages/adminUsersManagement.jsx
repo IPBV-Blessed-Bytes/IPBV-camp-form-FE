@@ -4,7 +4,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
-import { useNavigate } from 'react-router-dom';
+import AdminHeader from '../AdminComponents/adminHeader';
 import { registerLog } from '@/fetchers/userLogs';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
@@ -16,7 +16,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -135,19 +134,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Gerenciamento de Usuários</h4>
-          <Icons className="m-left" typeIcon="add-person" iconSize={80} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Gerenciamento de Usuários" typeIcon="add-person" iconSize={80} fill={'#204691'} />
 
       <Row className="table-tools--rides-buttons-wrapper">
         <Col lg={12} md={12} xs={12}>

@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import { useNavigate } from 'react-router-dom';
 import { registerLog } from '@/fetchers/userLogs';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
+import AdminHeader from '../AdminComponents/adminHeader';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 
 const AdminCheckin = ({ loggedUsername }) => {
@@ -13,7 +13,6 @@ const AdminCheckin = ({ loggedUsername }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     scrollUp();
@@ -108,19 +107,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Check-in de Usuário</h4>
-          <Icons className="m-left" typeIcon="checkin" iconSize={80} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Check-in de Usuário" typeIcon="checkin" iconSize={80} fill={'#204691'} />
 
       <Row className="mb-3">
         <Col lg={8} md={8} xs={8}>
