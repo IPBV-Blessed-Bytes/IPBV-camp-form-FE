@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from '../AdminComponents/adminTableColumnFilter';
-import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
@@ -15,6 +14,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
 import AdminTableModal from '../AdminComponents/adminTableModal';
+import AdminHeader from '../AdminComponents/adminHeader';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -33,7 +33,6 @@ const AdminTable = ({ loggedUsername, userRole }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const adminTableAdvancedOptionsPermissions = permissions(userRole, 'advanced-options-admin-table');
-  const navigate = useNavigate();
 
   const now = new Date();
   const day = now.getDate().toString().padStart(2, '0');
@@ -820,19 +819,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Gerenciamento de Inscritos</h4>
-          <Icons className="m-left" typeIcon="person" iconSize={70} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Gerenciamento de Inscritos" typeIcon="person" iconSize={70} fill={'#204691'} />
 
       <Row className="table-tools">
         <Col xl={9}>

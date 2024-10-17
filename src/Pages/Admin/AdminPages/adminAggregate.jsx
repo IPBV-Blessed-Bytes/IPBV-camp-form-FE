@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Table, Button, Container, Row, Col } from 'react-bootstrap';
+import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
+import AdminHeader from '../AdminComponents/adminHeader';
 
 const AdminAggregate = () => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -70,19 +68,7 @@ const AdminAggregate = () => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Gerenciamento de Agregados</h4>
-          <Icons className="m-left" typeIcon="aggregate" iconSize={80} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Gerenciamento de Agregados" typeIcon="aggregate" iconSize={80} fill={'#204691'} />
 
       <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
         <thead>

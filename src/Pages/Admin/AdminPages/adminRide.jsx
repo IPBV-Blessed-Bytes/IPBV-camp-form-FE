@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import { Form, Container, Accordion, Table, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
-import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
+import AdminHeader from '../AdminComponents/adminHeader';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -188,19 +187,7 @@ const AdminRide = () => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Gerenciamento de Caronas</h4>
-          <Icons className="m-left" typeIcon="ride" iconSize={80} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Gerenciamento de Caronas" typeIcon="ride" iconSize={80} fill={'#204691'} />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
         <Col xs={6}>

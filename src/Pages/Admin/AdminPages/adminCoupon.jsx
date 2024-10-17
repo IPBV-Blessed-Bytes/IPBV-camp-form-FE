@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
 import Icons from '@/components/Icons';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
+import AdminHeader from '../AdminComponents/adminHeader';
 import axios from 'axios';
 import { BASE_URL } from '@/config';
 import { registerLog } from '@/fetchers/userLogs';
@@ -18,7 +18,6 @@ const AdminCoupon = ({ loggedUsername }) => {
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [couponToDelete, setCouponToDelete] = useState(null);
   const [newCoupon, setNewCoupon] = useState({ cpf: '', discount: '', user: '' });
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCoupons();
@@ -145,19 +144,7 @@ const AdminCoupon = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Gerenciamento de Cupons de Desconto</h4>
-          <Icons className="m-left" typeIcon="coupon" iconSize={80} fill={'#204691'} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
+      <AdminHeader pageName="Gerenciamento de Cupons" typeIcon="coupon" iconSize={80} fill={'#204691'} />
 
       <Row className="table-tools--rides-buttons-wrapper mb-4">
         <Col lg={12} md={12} xs={12}>
