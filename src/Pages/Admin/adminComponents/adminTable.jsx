@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Container, Row, Button, Form, Modal, Col, Table } from 'react-bootstrap';
+import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
 import AdminColumnFilter from './adminColumnFilter';
-import AdminTableColumns from './adminTableColumns';
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -14,6 +13,8 @@ import { toast } from 'react-toastify';
 import { initialValues } from '@/Pages/Routes/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
+import AdminTableIndeed from './adminTableIndeed';
+import AdminTableModal from './adminTableModal';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -901,140 +902,38 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       </Row>
 
       <Row>
-        <div className="table-responsive">
-          <Table striped bordered hover {...getTableProps()} className="custom-table">
-            <thead>
-              {headerGroups.map((headerGroup) => (
-                <React.Fragment key={headerGroup.id}>
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th className="table-cells-header" key={column.id}>
-                        <div className="d-flex justify-content-between align-items-center">
-                          {column.render('Header')}
-                          <span
-                            className="sort-icon-wrapper px-3"
-                            {...column.getHeaderProps(column.getSortByToggleProps())}
-                          >
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
-                          </span>
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                  {showFilters && (
-                    <tr>
-                      {headerGroup.headers.map((column) => (
-                        <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
-                      ))}
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-
-                return (
-                  <tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map((cell) => (
-                      <td
-                        className={`table-cells-cols${
-                          selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
-                        }`}
-                        key={cell.id}
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </div>
+        <AdminTableIndeed
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={rows}
+          prepareRow={prepareRow}
+          showFilters={showFilters}
+          selectedRows={selectedRows}
+        />
       </Row>
 
-      <Modal show={showEditModal} size="xl" onHide={() => setShowEditModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>Editar Inscrição</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <AdminTableColumns
-              editFormData={editFormData}
-              handleFormChange={(e) => handleFormChange(e, 'edit')}
-              formSubmitted={formSubmitted}
-              currentDate={currentDate}
-              editForm
-            />
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleSaveEdit}>
-            Salvar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <AdminTableModal
+        name={name}
+        showEditModal={showEditModal}
+        setShowEditModal={setShowEditModal}
+        showAddModal={showAddModal}
+        setShowAddModal={setShowAddModal}
+        showDeleteModal={showDeleteModal}
+        modalType={modalType}
+        formSubmitted={formSubmitted}
+        editFormData={editFormData}
+        currentDate={currentDate}
+        handleSaveEdit={handleSaveEdit}
+        addFormData={addFormData}
+        handleFormChange={handleFormChange}
+        handleAddSubmit={handleAddSubmit}
+        handleCloseDeleteModal={handleCloseDeleteModal}
+        handleConfirmDeleteAll={handleConfirmDeleteAll}
+        handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
+      />
 
-      <Modal show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>Nova Inscrição</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <AdminTableColumns
-              addFormData={addFormData}
-              handleFormChange={(e) => handleFormChange(e, 'add')}
-              formSubmitted={formSubmitted}
-              currentDate={currentDate}
-              addForm
-            />
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleAddSubmit}>
-            Adicionar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modalType === 'delete-all'
-            ? 'Tem certeza que deseja excluir as inscrições selecionadas?'
-            : `Tem certeza que deseja excluir a inscrição de ${name}?`}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal}>
-            Cancelar
-          </Button>
-          <Button
-            variant="danger"
-            onClick={modalType === 'delete-all' ? handleConfirmDeleteAll : handleConfirmDeleteSpecific}
-          >
-            Deletar
-          </Button>
-        </Modal.Footer>
-      </Modal>
       {showScrollButton && <Icons className="scroll-to-top" typeIcon="arrow-top" onClick={scrollToTop} iconSize={30} />}
-
       <Loading loading={loading} />
     </Container>
   );
