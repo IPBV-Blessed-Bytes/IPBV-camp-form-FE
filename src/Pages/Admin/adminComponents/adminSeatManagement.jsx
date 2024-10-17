@@ -27,6 +27,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchAvailableSeats();
+    scrollUp();
   }, []);
 
   const fetchAvailableSeats = async () => {
@@ -43,6 +44,8 @@ const AdminSeatManagement = ({ loggedUsername }) => {
       setLoading(false);
     }
   };
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const updateSeats = async () => {
     const currentTotalPackages = Object.values(totalPackages).reduce((acc, curr) => acc + curr, 0);

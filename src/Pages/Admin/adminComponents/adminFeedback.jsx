@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Icons from '@/components/Icons';
@@ -8,6 +8,12 @@ import { useNavigate } from 'react-router-dom';
 const AdminFeedback = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    scrollUp();
+  }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
     <Container fluid>

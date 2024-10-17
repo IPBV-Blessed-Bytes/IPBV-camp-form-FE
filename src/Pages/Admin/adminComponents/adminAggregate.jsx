@@ -44,7 +44,10 @@ const AdminAggregate = () => {
     };
 
     fetchUsers();
+    scrollUp();
   }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const columns = useMemo(
     () => [

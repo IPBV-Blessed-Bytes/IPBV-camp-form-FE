@@ -46,11 +46,14 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 
   useEffect(() => {
     fetchData();
+    scrollUp();
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const fetchData = async () => {
     try {

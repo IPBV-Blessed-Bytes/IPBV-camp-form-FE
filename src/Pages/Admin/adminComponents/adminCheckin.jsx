@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -14,6 +14,12 @@ const AdminCheckin = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    scrollUp();
+  }, []);
+
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const handleSearchUser = async () => {
     try {

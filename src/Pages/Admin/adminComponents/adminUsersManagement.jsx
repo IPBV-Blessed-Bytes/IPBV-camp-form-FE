@@ -30,6 +30,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     }
   };
 
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   const validateForm = () => {
     const { login, password, role } = formData;
     if (!login || !password || !role) {
@@ -128,6 +130,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchUsers();
+    scrollUp();
   }, []);
 
   return (
