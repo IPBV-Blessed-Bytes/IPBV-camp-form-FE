@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
-import AdminColumnFilter from '../AdminComponents/adminColumnFilter';
+import AdminColumnFilter from '../AdminComponents/adminTableColumnFilter';
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
