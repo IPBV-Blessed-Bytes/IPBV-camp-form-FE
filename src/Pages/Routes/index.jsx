@@ -38,9 +38,9 @@ const FormRoutes = () => {
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
-  const isNotSuccessAndFeedbackPathname = window.location.pathname !== '/sucesso';
-  const adminPages = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
-  const isFeedbackPage = window.location.pathname !== '/opiniao';
+  const isNotSuccessPathname = window.location.pathname !== '/sucesso';
+  const isNotFeedbackPathname = window.location.pathname !== '/opiniao';
+  const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
   const [totalBusVacancies, setTotalBusVacancies] = useState({});
@@ -216,10 +216,10 @@ const FormRoutes = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn && adminPages) {
+    if (!isLoggedIn && adminPathname) {
       navigate('/admin');
     }
-  }, [isLoggedIn, adminPages, navigate]);
+  }, [isLoggedIn, adminPathname, navigate]);
 
   const handleAdminClick = () => {
     navigate('/admin');
@@ -241,16 +241,16 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!adminPages && isFeedbackPage && (
+      {!adminPathname && isNotFeedbackPathname && (
         <div className="components-container">
           <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
           <div className="form__container">
-            {steps === enumSteps.home && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.home && isNotSuccessPathname && (
               <FormHome nextStep={nextStep} backStep={backStep} />
             )}
 
-            {steps === enumSteps.personalData && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.personalData && isNotSuccessPathname && (
               <FormPersonalData
                 initialValues={formValues.personalInformation}
                 nextStep={nextStep}
@@ -261,7 +261,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.contact && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.contact && isNotSuccessPathname && (
               <FormContact
                 initialValues={formValues.contact}
                 nextStep={nextStep}
@@ -270,7 +270,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.packages && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.packages && isNotSuccessPathname && (
               <FormPackages
                 age={age}
                 nextStep={nextStep}
@@ -287,7 +287,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.extraMeals && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.extraMeals && isNotSuccessPathname && (
               <ExtraMeals
                 birthDate={formValues.personalInformation.birthday}
                 backStep={backStep}
@@ -297,7 +297,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.finalReview && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.finalReview && isNotSuccessPathname && (
               <FinalReview
                 nextStep={nextStep}
                 backStep={backStep}
@@ -307,7 +307,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.formPayment && isNotSuccessAndFeedbackPathname && (
+            {steps === enumSteps.formPayment && isNotSuccessPathname && (
               <ChooseFormPayment
                 initialValues={formValues}
                 skipTwoSteps={skipTwoSteps}
