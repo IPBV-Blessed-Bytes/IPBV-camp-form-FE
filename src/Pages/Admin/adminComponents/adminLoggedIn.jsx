@@ -20,7 +20,7 @@ const AdminLoggedIn = ({
   sendLoggedMessage,
   setSendLoggedMessage,
   user,
-  totalValidWithBus
+  totalValidWithBus,
 }) => {
   const [loading, setLoading] = useState(true);
   const [availablePackages, setAvailablePackages] = useState({});
@@ -32,6 +32,7 @@ const AdminLoggedIn = ({
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
   const aggregateButtonHomePermissions = permissions(userRole, 'aggregate-button-home');
+  const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
@@ -58,6 +59,10 @@ const AdminLoggedIn = ({
 
   const handleCheckinClick = () => {
     navigate('/admin/checkin');
+  };
+
+  const handleFeedbackClick = () => {
+    navigate('/admin/opiniao');
   };
 
   useEffect(() => {
@@ -236,7 +241,7 @@ const AdminLoggedIn = ({
 
       <Row className="mb-md-5 navigation-header">
         {registeredButtonHomePermissions && (
-          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={4} className="mb-3">
             <Card className="h-100" onClick={handleTableClick}>
               <Card.Body className="navigation-header__registered-card">
                 <Card.Title className="text-center mb-0">
@@ -252,7 +257,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {rideButtonHomePermissions && (
-          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={4} className="mb-3">
             <Card className="h-100" onClick={handleRideClick}>
               <Card.Body className="navigation-header__ride-card">
                 <Card.Title className="text-center mb-0">
@@ -268,7 +273,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {couponButtonHomePermissions && (
-          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={4} className="mb-3">
             <Card className="h-100" onClick={handleCouponsClick}>
               <Card.Body className="navigation-header__coupons-card">
                 <Card.Title className="text-center mb-0">
@@ -284,7 +289,7 @@ const AdminLoggedIn = ({
           </Col>
         )}
         {aggregateButtonHomePermissions && (
-          <Col xs={12} md={6} lg={3} className="mb-3 mb-lg-0">
+          <Col xs={12} md={6} lg={4} className="mb-3">
             <Card className="h-100" onClick={handleAggregateClick}>
               <Card.Body className="navigation-header__aggregate-card">
                 <Card.Title className="text-center mb-0">
@@ -299,11 +304,24 @@ const AdminLoggedIn = ({
             </Card>
           </Col>
         )}
-      </Row>
-
-      {checkinPermissions && (
-        <Row className="mb-5 navigation-header">
-          <Col className="mb-3 mb-lg-0">
+        {feedbackButtonHomePermissions && (
+          <Col xs={12} md={6} lg={4} className="mb-3">
+            <Card className="h-100" onClick={handleFeedbackClick}>
+              <Card.Body className="navigation-header__feedback-card">
+                <Card.Title className="text-center mb-0">
+                  <div className="navigation-header__feedback-card__content-wrapper">
+                    <em>
+                      <b>Feedbacks</b>
+                    </em>
+                    <Icons typeIcon="feedback" iconSize={50} fill={'#204691'} />
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
+        {checkinPermissions && (
+          <Col xs={12} md={6} lg={4} className="mb-3">
             <Card className="h-100" onClick={handleCheckinClick}>
               <Card.Body className="navigation-header__checkin-card">
                 <Card.Title className="text-center mb-0">
@@ -317,8 +335,8 @@ const AdminLoggedIn = ({
               </Card.Body>
             </Card>
           </Col>
-        </Row>
-      )}
+        )}
+      </Row>
 
       {packagesAndTotalCardsPermissions && (
         <>

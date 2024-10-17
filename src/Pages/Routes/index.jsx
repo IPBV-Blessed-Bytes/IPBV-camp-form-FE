@@ -30,14 +30,17 @@ import AdminCheckin from '../Admin/adminComponents/adminCheckin';
 import AdminAggregate from '../Admin/adminComponents/adminAggregate';
 import AdminSeatManagement from '../Admin/adminComponents/adminSeatManagement';
 import AdminUsersManagement from '../Admin/adminComponents/adminUsersManagement';
+import AdminFeedback from '../Admin/adminComponents/adminFeedback';
+import FormFeedback from '../Feedback';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState({});
-  const isNotSuccessPathname = window.location.pathname !== '/sucesso';
+  const isNotSuccessAndFeedbackPathname = window.location.pathname !== '/sucesso';
   const adminPages = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
+  const isFeedbackPage = window.location.pathname !== '/opiniao';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
   const [totalBusVacancies, setTotalBusVacancies] = useState({});
@@ -238,14 +241,16 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!adminPages && (
+      {!adminPages && isFeedbackPage && (
         <div className="components-container">
           <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
           <div className="form__container">
-            {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
+            {steps === enumSteps.home && isNotSuccessAndFeedbackPathname && (
+              <FormHome nextStep={nextStep} backStep={backStep} />
+            )}
 
-            {steps === enumSteps.personalData && isNotSuccessPathname && (
+            {steps === enumSteps.personalData && isNotSuccessAndFeedbackPathname && (
               <FormPersonalData
                 initialValues={formValues.personalInformation}
                 nextStep={nextStep}
@@ -256,7 +261,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.contact && isNotSuccessPathname && (
+            {steps === enumSteps.contact && isNotSuccessAndFeedbackPathname && (
               <FormContact
                 initialValues={formValues.contact}
                 nextStep={nextStep}
@@ -265,7 +270,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.packages && isNotSuccessPathname && (
+            {steps === enumSteps.packages && isNotSuccessAndFeedbackPathname && (
               <FormPackages
                 age={age}
                 nextStep={nextStep}
@@ -282,7 +287,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+            {steps === enumSteps.extraMeals && isNotSuccessAndFeedbackPathname && (
               <ExtraMeals
                 birthDate={formValues.personalInformation.birthday}
                 backStep={backStep}
@@ -292,7 +297,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.finalReview && isNotSuccessPathname && (
+            {steps === enumSteps.finalReview && isNotSuccessAndFeedbackPathname && (
               <FinalReview
                 nextStep={nextStep}
                 backStep={backStep}
@@ -302,7 +307,7 @@ const FormRoutes = () => {
               />
             )}
 
-            {steps === enumSteps.formPayment && isNotSuccessPathname && (
+            {steps === enumSteps.formPayment && isNotSuccessAndFeedbackPathname && (
               <ChooseFormPayment
                 initialValues={formValues}
                 skipTwoSteps={skipTwoSteps}
@@ -359,87 +364,99 @@ const FormRoutes = () => {
           <Footer onAdminClick={handleAdminClick} />
         </div>
       )}
-      <Routes>
-        <Route
-          path="/admin"
-          element={
-            <AdminHome
-              totalRegistrationsGlobal={totalRegistrations}
-              userRole={loggedUserRole}
-              totalValidWithBus={totalRegistrations.totalValidWithBus}
-            />
-          }
-        />
-        <Route
-          path="/admin/tabela"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
-              <AdminTable loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/carona"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-              <AdminRide />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/cupom"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
-              <AdminCoupon loggedUsername={splitedLoggedUsername} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/agregado"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-              <AdminAggregate />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/checkin"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'checker']}>
-              <AdminCheckin loggedUsername={splitedLoggedUsername} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/logs"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-              <AdminUserLogs loggedUsername={splitedLoggedUsername} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/vagas"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-              <AdminSeatManagement loggedUsername={splitedLoggedUsername} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/usuarios"
-          element={
-            <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-              <AdminUsersManagement loggedUsername={splitedLoggedUsername} />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/unauthorized"
-          element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
-        />
-      </Routes>
+      <div className="routes">
+        <Routes>
+          <Route
+            path="/admin"
+            element={
+              <AdminHome
+                totalRegistrationsGlobal={totalRegistrations}
+                userRole={loggedUserRole}
+                totalValidWithBus={totalRegistrations.totalValidWithBus}
+              />
+            }
+          />
+          <Route
+            path="/admin/tabela"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
+                <AdminTable loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/carona"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+                <AdminRide />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/cupom"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
+                <AdminCoupon loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/agregado"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+                <AdminAggregate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/checkin"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'checker']}>
+                <AdminCheckin loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/logs"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+                <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/vagas"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+                <AdminSeatManagement loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/usuarios"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+                <AdminUsersManagement loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/opiniao"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+                <AdminFeedback />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/opiniao" element={<FormFeedback />} />
+          <Route
+            path="/unauthorized"
+            element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
+          />
+        </Routes>
+      </div>
     </div>
   );
 };

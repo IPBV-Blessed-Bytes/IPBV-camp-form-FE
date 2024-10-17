@@ -442,11 +442,16 @@ body {
       background-color: $light-yellow;
     }
 
+    &__feedback-card {
+      background-color: $light-orange;
+    }
+
     &__registered-card,
     &__ride-card,
     &__coupons-card,
     &__checkin-card,
-    &__aggregate-card {
+    &__aggregate-card,
+    &__feedback-card {
       align-items: center;
       cursor: pointer;
       display: flex;
