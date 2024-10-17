@@ -102,7 +102,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">Tabela de Gerenciamento de Vagas</h4>
+          <h4 className="fw-bold m-0">Gerenciamento de Vagas</h4>
           <Icons className="m-left" typeIcon="camp" iconSize={80} fill={'#204691'} />
         </Col>
       </Row>
