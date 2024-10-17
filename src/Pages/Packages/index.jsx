@@ -271,7 +271,6 @@ const FormPackages = ({
                               className={cardsClass.trim()}
                               onClick={() => {
                                 if (isPackageAvailable && !(busIsNotAvailable && packageIsWithBus)) {
-                                  console.log('click');
                                   handleClick(cards);
                                 }
                               }}
