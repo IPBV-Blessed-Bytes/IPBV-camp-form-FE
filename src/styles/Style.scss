@@ -867,7 +867,7 @@ button.btn.btn-outline-danger:hover svg {
 
 .table-cells-header {
   background-color: $medium-green !important;
-  min-width: 255px;
+  min-width: 275px;
   padding: 6px !important;
 
   div .sort-icon {
@@ -1142,4 +1142,11 @@ button.btn.btn-outline-danger:hover svg {
   position: absolute;
   right: 0;
   transform: translate(-1.125rem, -2.0625rem);
+}
+
+.form-select-lg-custom {
+  border: 0.125rem solid $black;
+  background: #f3f3f3;
+  font-size: 1.1875rem !important;
+  padding: 0.375rem;
 }
