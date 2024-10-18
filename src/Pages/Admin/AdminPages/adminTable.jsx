@@ -15,6 +15,7 @@ import { permissions } from '@/fetchers/permissions';
 import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
 import AdminTableModal from '../AdminComponents/adminTableModal';
 import AdminHeader from '../AdminComponents/adminHeader';
+import AdminTableSelectFilter from '../AdminComponents/adminTableSelectFilter';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -363,7 +364,17 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Forma de Pagamento:',
         accessor: 'formPayment.formPayment',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'creditCard', label: 'Cartão de Crédito' },
+              { value: 'pix', label: 'PIX' },
+              { value: 'boleto', label: 'Boleto Bancário' },
+              { value: 'nonPaid' || 'nonPaidChild', label: 'Não pagante' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) =>
           value === 'creditCard'
@@ -426,7 +437,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Precisa de Carona:',
         accessor: 'contact.needRide',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: true, label: 'Sim' },
+              { value: false, label: 'Não' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
@@ -461,7 +480,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
           const isWhatsAppText = value.isWhatsApp ? 'Sim' : !value.isWhatsApp ? 'Não' : '-';
-          return `${cellPhoneText} ${isWhatsAppText !== '-' ? `| Wpp: ${isWhatsAppText}` : ''}`;
+          return `${cellPhoneText} ${cellPhoneText !== '-' ? `| Wpp: ${isWhatsAppText}` : ''}`;
         },
       },
       {
