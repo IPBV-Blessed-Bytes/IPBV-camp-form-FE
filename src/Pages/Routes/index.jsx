@@ -146,8 +146,12 @@ const FormRoutes = () => {
   const sendFormValues = async () => {
     try {
       setStatus('loading');
+
+      const paymentMethod = formValues.formPayment || 'nonPaid';
+
       const updatedFormValues = {
         ...formValues,
+        formPayment: paymentMethod,
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
         manualRegistration: false,
@@ -246,9 +250,7 @@ const FormRoutes = () => {
           <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
           <div className="form__container">
-            {steps === enumSteps.home && isNotSuccessPathname && (
-              <FormHome nextStep={nextStep} backStep={backStep} />
-            )}
+            {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
 
             {steps === enumSteps.personalData && isNotSuccessPathname && (
               <FormPersonalData
