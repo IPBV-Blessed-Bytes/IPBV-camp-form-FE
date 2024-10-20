@@ -306,6 +306,7 @@ FormPersonalData.propTypes = {
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
   formUsername: PropTypes.string,
+  onDiscountChange: PropTypes.bool,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
     birthday: PropTypes.string,

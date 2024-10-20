@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTable, useSortBy } from 'react-table';
@@ -72,10 +72,10 @@ const AdminAggregate = () => {
 
       <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())} className="table-cells-header">
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} className="table-cells-header" key={index}>
                   <div className="d-flex justify-content-between align-items-center">
                     {column.render('Header')}
                     <span className="sort-icon-wrapper">
@@ -95,12 +95,12 @@ const AdminAggregate = () => {
               </td>
             </tr>
           ) : (
-            rows.map((row) => {
+            rows.map((row, index) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                <tr {...row.getRowProps()} key={index}>
+                  {row.cells.map((cell, index) => (
+                    <td {...cell.getCellProps()} key={index}>{cell.render('Cell')}</td>
                   ))}
                 </tr>
               );

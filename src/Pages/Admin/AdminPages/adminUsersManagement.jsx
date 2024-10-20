@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import { registerLog } from '@/fetchers/userLogs';
+import PropTypes from 'prop-types';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -276,6 +277,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminUsersManagement.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminUsersManagement;

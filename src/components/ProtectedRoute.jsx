@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ userRole, allowedRoles, children }) => {
   if (!allowedRoles.includes(userRole)) {
@@ -6,6 +7,12 @@ const ProtectedRoute = ({ userRole, allowedRoles, children }) => {
   }
 
   return children;
+};
+
+ProtectedRoute.propTypes = {
+  userRole: PropTypes.string,
+  allowedRoles: PropTypes.string,
+  children: PropTypes.element,
 };
 
 export default ProtectedRoute;

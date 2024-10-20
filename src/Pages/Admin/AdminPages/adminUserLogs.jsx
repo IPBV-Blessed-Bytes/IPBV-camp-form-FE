@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { registerLog } from '@/fetchers/userLogs';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
+import PropTypes from 'prop-types';
 
 const AdminUserLogs = ({ loggedUsername }) => {
   const [groupedLogs, setGroupedLogs] = useState({});
@@ -13,6 +14,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const fetchLogs = async () => {
+    setLoading(true);
+
     try {
       const response = await fetcher.get('logs');
       const logs = response.data;
@@ -20,6 +23,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
       setGroupedLogs(grouped);
     } catch (error) {
       console.error('Erro ao buscar logs:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,6 +141,10 @@ const AdminUserLogs = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminUserLogs.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminUserLogs;

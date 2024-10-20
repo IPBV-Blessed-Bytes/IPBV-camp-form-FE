@@ -7,6 +7,7 @@ import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
+import PropTypes from 'prop-types';
 
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');
@@ -208,6 +209,10 @@ const AdminCheckin = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminCheckin.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminCheckin;

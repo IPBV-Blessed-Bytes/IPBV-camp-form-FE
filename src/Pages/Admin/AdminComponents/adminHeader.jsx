@@ -1,6 +1,7 @@
 import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Icons';
+import PropTypes from 'prop-types';
 
 const AdminHeader = ({ pageName, typeIcon, iconSize, fill }) => {
   const navigate = useNavigate();
@@ -22,6 +23,13 @@ const AdminHeader = ({ pageName, typeIcon, iconSize, fill }) => {
       <hr className="horizontal-line" />
     </>
   );
+};
+
+AdminHeader.propTypes = {
+  pageName: PropTypes.string,
+  typeIcon: PropTypes.string,
+  iconSize: PropTypes.number,
+  fill: PropTypes.string,
 };
 
 export default AdminHeader;

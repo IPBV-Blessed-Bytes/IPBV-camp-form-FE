@@ -1,5 +1,5 @@
-import React from 'react';
 import { Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const AdminTableSelectFilter = ({ column: { setFilter, filterValue }, options }) => {
   return (
@@ -20,6 +20,16 @@ const AdminTableSelectFilter = ({ column: { setFilter, filterValue }, options })
       ))}
     </Form.Select>
   );
+};
+
+AdminTableSelectFilter.propTypes = {
+  column: PropTypes.shape({
+    setFilter: PropTypes.func,
+    filterValue: PropTypes.string,
+  }),
+  options: PropTypes.shape({
+    map: PropTypes.func,
+  }),
 };
 
 export default AdminTableSelectFilter;

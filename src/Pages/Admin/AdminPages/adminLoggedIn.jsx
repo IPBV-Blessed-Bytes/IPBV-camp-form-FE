@@ -428,11 +428,17 @@ const AdminLoggedIn = ({
 AdminLoggedIn.propTypes = {
   loggedInUsername: PropTypes.string.isRequired,
   handleLogout: PropTypes.func.isRequired,
+  userRole: PropTypes.string,
+  sendLoggedMessage: PropTypes.bool,
+  setSendLoggedMessage: PropTypes.func,
+  user: PropTypes.string,
+  totalValidWithBus: PropTypes.number,
   totalRegistrationsGlobal: PropTypes.shape({
     totalRegistrations: PropTypes.number,
     totalChildren: PropTypes.number,
     totalFilledVacancies: PropTypes.number,
     totalValidRegistrations: PropTypes.number,
+    totalAdultsNonPaid: PropTypes.number,
   }).isRequired,
 };
 
