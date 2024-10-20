@@ -47,7 +47,7 @@ const FormPackages = ({
         `Foi gerado um cupom de desconto no valor de ${discountValue} em seu nome. O desconto já está aplicado ao valor final dos pacotes`,
       );
     }
-  }, [hasDiscount]);
+  }, [hasDiscount, discountValue]);
 
   const handleClick = (selectedPackage) => {
     setSelectedPackage(null);
@@ -450,6 +450,12 @@ FormPackages.propTypes = {
   availablePackages: PropTypes.bool,
   totalRegistrationsGlobal: PropTypes.bool,
   formUsername: PropTypes.string,
+  age: PropTypes.string,
+  discountValue: PropTypes.string,
+  hasDiscount: PropTypes.bool,
+  totalSeats: PropTypes.string,
+  totalBusVacancies: PropTypes.string,
+  totalValidWithBus: PropTypes.string,
   initialValues: PropTypes.shape({
     price: PropTypes.string,
     accomodation: PropTypes.string,

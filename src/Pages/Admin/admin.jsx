@@ -66,6 +66,8 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
 AdminHome.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
   permissions: PropTypes.array.isRequired,
+  userRole: PropTypes.string, 
+  totalValidWithBus: PropTypes.number,
 };
 
 export default AdminHome;

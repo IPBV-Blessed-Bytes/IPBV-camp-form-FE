@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import privateFetcher from '@/fetchers/fetcherWithCredentials';
@@ -6,6 +6,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import { registerLog } from '@/fetchers/userLogs';
+import PropTypes from 'prop-types';
 
 const AdminSeatManagement = ({ loggedUsername }) => {
   const [totalPackages, setTotalPackages] = useState({});
@@ -157,6 +158,10 @@ const AdminSeatManagement = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminSeatManagement.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminSeatManagement;

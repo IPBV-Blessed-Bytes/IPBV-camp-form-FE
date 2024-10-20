@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Table } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Row, Table } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';

@@ -272,7 +272,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
-          xmlnsXllink="http://www.w3.org/1999/xlink"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 60.671 60.671"
           xmlSpace="preserve"
         >
@@ -762,15 +762,15 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
             height="36"
             rx="3"
             stroke="#000000"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
-          <path d="M4 14H44" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M20 24H36" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M20 32H36" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M12 24H14" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M12 32H14" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M4 14H44" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M20 24H36" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M20 32H36" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 24H14" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 32H14" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
 
@@ -804,7 +804,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           fill={fill ? fill : ''}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 52 52"
-          enable-background="new 0 0 52 52"
+          enableBackground="new 0 0 52 52"
           xmlSpace="preserve"
         >
           <path
@@ -897,7 +897,6 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           fill={fill ? fill : ''}
           viewBox="0 0 18 18"
           xmlns="http://www.w3.org/2000/svg"
-          mirror-in-rtl="true"
         >
           <path
             fill={fill ? fill : ''}

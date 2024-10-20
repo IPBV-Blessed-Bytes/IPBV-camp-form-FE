@@ -8,6 +8,7 @@ import AdminHeader from '../AdminComponents/adminHeader';
 import axios from 'axios';
 import { BASE_URL } from '@/config';
 import { registerLog } from '@/fetchers/userLogs';
+import PropTypes from 'prop-types';
 
 const AdminCoupon = ({ loggedUsername }) => {
   const [coupons, setCoupons] = useState([]);
@@ -265,6 +266,10 @@ const AdminCoupon = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminCoupon.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminCoupon;

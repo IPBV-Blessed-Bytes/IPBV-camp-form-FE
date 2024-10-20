@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
 import PropTypes from 'prop-types';
@@ -948,10 +948,14 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 AdminTable.propTypes = {
   row: PropTypes.shape({
     index: PropTypes.string,
+    original: PropTypes.string,
   }),
   column: PropTypes.shape({
     index: PropTypes.string,
   }),
+  loggedUsername: PropTypes.string,
+  userRole: PropTypes.string,
+  value: PropTypes.string
 };
 
 export default AdminTable;

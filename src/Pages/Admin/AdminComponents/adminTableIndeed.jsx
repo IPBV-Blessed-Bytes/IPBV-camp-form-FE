@@ -1,6 +1,7 @@
 import React from 'react';
 import Icons from '@/components/Icons';
 import { Table } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const AdminTableIndeed = ({
   getTableProps,
@@ -66,6 +67,16 @@ const AdminTableIndeed = ({
       </Table>
     </div>
   );
+};
+
+AdminTableIndeed.propTypes = {
+  getTableProps: PropTypes.func,
+  getTableBodyProps: PropTypes.func,
+  headerGroups: PropTypes.object,
+  rows: PropTypes.object,
+  prepareRow: PropTypes.func,
+  showFilters: PropTypes.bool,
+  selectedRows: PropTypes.array,
 };
 
 export default AdminTableIndeed;

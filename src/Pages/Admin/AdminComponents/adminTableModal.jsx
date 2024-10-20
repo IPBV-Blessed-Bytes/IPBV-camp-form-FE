@@ -1,6 +1,6 @@
-import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import AdminTableColumns from './adminTableColumns';
+import PropTypes from 'prop-types';
 
 const AdminTableModal = ({
   name,
@@ -102,6 +102,26 @@ const AdminTableModal = ({
       </Modal>
     </>
   );
+};
+
+AdminTableModal.propTypes = {
+  name: PropTypes.string,
+  showEditModal: PropTypes.bool,
+  setShowEditModal: PropTypes.func,
+  showAddModal: PropTypes.bool,
+  setShowAddModal: PropTypes.func,
+  showDeleteModal: PropTypes.bool,
+  modalType: PropTypes.string,
+  formSubmitted: PropTypes.bool,
+  editFormData: PropTypes.array,
+  currentDate: PropTypes.object,
+  handleSaveEdit: PropTypes.func,
+  addFormData: PropTypes.array,
+  handleFormChange: PropTypes.func,
+  handleAddSubmit: PropTypes.func,
+  handleCloseDeleteModal: PropTypes.func,
+  handleConfirmDeleteAll: PropTypes.func,
+  handleConfirmDeleteSpecific: PropTypes.func,
 };
 
 export default AdminTableModal;
