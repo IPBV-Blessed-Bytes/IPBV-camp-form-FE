@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AdminPackageCard from '../AdminComponents/adminPackageCard';
@@ -12,6 +12,7 @@ import Icons from '@/components/Icons';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import AdminSessionCard from '../AdminComponents/adminSessionCard';
+import AdminSettingsButton from '../AdminComponents/adminSettingsButton';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -27,8 +28,6 @@ const AdminLoggedIn = ({
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState();
   const [totalBusVacancies, setTotalBusVacancies] = useState();
-  const [showSettingsButtons, setShowSettingsButtons] = useState(false);
-  const settingsButtonRef = useRef(null);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
@@ -90,21 +89,6 @@ const AdminLoggedIn = ({
 
     fetchPackages();
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (settingsButtonRef.current && !settingsButtonRef.current.contains(event.target)) {
-        setShowSettingsButtons(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [settingsButtonRef]);
-
-  const toggleSettingsButtons = () => {
-    setShowSettingsButtons(!showSettingsButtons);
-  };
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
@@ -349,28 +333,7 @@ const AdminLoggedIn = ({
         </>
       )}
 
-      {settingsButtonPermissions && (
-        <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
-          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
-        </button>
-      )}
-
-      <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
-        <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
-          Logs de Usuários&nbsp;
-          <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
-        </button>
-
-        <button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
-          Controle de Vagas&nbsp;
-          <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
-        </button>
-
-        <button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
-          Controle de Usuários&nbsp;
-          <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
-        </button>
-      </div>
+      <AdminSettingsButton permission={settingsButtonPermissions}/>
 
       <Loading loading={loading} />
 
