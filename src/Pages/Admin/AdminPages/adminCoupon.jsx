@@ -145,18 +145,21 @@ const AdminCoupon = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Cupons" typeIcon="coupon" iconSize={80} fill={'#204691'} />
-
-      <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col lg={12} md={12} xs={12}>
-          <div className="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2">
-            <Button variant="primary" onClick={() => openModal(null)} className="d-flex align-items-center" size="lg">
-              <Icons typeIcon="coupon" iconSize={30} fill="#fff" />
-              <span className="table-tools__button-name">&nbsp;Criar Novo Cupom</span>
-            </Button>
-          </div>
-        </Col>
-      </Row>
+      <AdminHeader
+        pageName="Gerenciamento de Cupons"
+        sessionTypeIcon="coupon"
+        iconSize={80}
+        fill={'#204691'}
+        showHeaderTools
+        colLg={12}
+        colMd={12}
+        colXs={12}
+        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
+        headerToolsTypeButton="primary"
+        headerToolsOpenModal={() => openModal(null)}
+        headerToolsButtonIcon="coupon"
+        headerToolsButtonName="Criar Novo Cupom"
+      />
 
       <div className="table-responsive">
         <Table striped bordered hover className="custom-table">

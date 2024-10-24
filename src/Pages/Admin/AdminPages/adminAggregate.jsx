@@ -68,7 +68,7 @@ const AdminAggregate = () => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Agregados" typeIcon="aggregate" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Agregados" sessionTypeIcon="aggregate" iconSize={80} fill={'#204691'} />
 
       <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
         <thead>

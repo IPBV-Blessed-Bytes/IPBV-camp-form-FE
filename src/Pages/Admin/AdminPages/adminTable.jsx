@@ -838,7 +838,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Inscritos" typeIcon="person" iconSize={70} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Inscritos" sessionTypeIcon="person" iconSize={70} fill={'#204691'} />
 
       <Row className="table-tools">
         <Col xl={9}>

@@ -135,23 +135,21 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Usuários" typeIcon="add-person" iconSize={80} fill={'#204691'} />
-
-      <Row className="table-tools--rides-buttons-wrapper">
-        <Col lg={12} md={12} xs={12}>
-          <div className="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2">
-            <Button
-              variant="primary"
-              onClick={() => handleCreateClick()}
-              className="d-flex align-items-center"
-              size="lg"
-            >
-              <Icons typeIcon="add-person" iconSize={30} fill="#fff" />
-              <span className="table-tools__button-name">&nbsp;Criar Novo Usuário</span>
-            </Button>
-          </div>
-        </Col>
-      </Row>
+      <AdminHeader
+        pageName="Gerenciamento de Usuários"
+        sessionTypeIcon="add-person"
+        iconSize={80}
+        fill={'#204691'}
+        showHeaderTools
+        colLg={12}
+        colMd={12}
+        colXs={12}
+        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2"
+        headerToolsTypeButton="primary"
+        headerToolsOpenModal={() => handleCreateClick()}
+        headerToolsButtonIcon="add-person"
+        headerToolsButtonName="Criar Novo Usuário"
+      />
 
       <Row>
         <Col>
