@@ -68,23 +68,24 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Logs de Usuários" typeIcon="logs" iconSize={80} fill={'#204691'} />
+      <AdminHeader
+        pageName="Logs de Usuários"
+        sessionTypeIcon="logs"
+        iconSize={80}
+        fill={'#204691'}
+        showHeaderTools
+        colLg={12}
+        colMd={12}
+        colXs={12}
+        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
+        headerToolsTypeButton="warning"
+        headerToolsOpenModal={() => setShowDeleteModal(true)}
+        headerToolsButtonIcon="danger"
+        headerToolsButtonSize={20}
+        headerToolsButtonFill={'#000'}
+        headerToolsButtonName="Deletar Todos Logs"
+      />
 
-      <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col lg={12} md={12} xs={12}>
-          <div className="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2">
-            <Button
-              variant="warning"
-              onClick={() => setShowDeleteModal(true)}
-              className="d-flex align-items-center"
-              size="lg"
-            >
-              <Icons typeIcon="danger" iconSize={20} fill="#000" />
-              <span>&nbsp;Deletar Todos Logs</span>
-            </Button>
-          </div>
-        </Col>
-      </Row>
       <Row>
         <Accordion defaultActiveKey="0">
           {Object.entries(groupedLogs).map(([username, logs], index) => (

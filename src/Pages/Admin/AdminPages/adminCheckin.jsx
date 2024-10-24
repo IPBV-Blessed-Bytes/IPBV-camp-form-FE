@@ -108,7 +108,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Check-in de Usuário" typeIcon="checkin" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#204691'} />
 
       <Row className="mb-3">
         <Col lg={8} md={8} xs={8}>

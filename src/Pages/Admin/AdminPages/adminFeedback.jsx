@@ -15,7 +15,7 @@ const AdminFeedback = () => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Feedbacks" typeIcon="add-person" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Feedbacks" sessionTypeIcon="add-person" iconSize={80} fill={'#204691'} />
 
       <Row>
         <Table striped bordered hover responsive className="custom-table">

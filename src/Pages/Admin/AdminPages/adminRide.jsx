@@ -187,18 +187,19 @@ const AdminRide = () => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Caronas" typeIcon="ride" iconSize={80} fill={'#204691'} />
-
-      <Row className="table-tools--rides-buttons-wrapper mb-4">
-        <Col xs={6}>
-          <div className="table-tools__left-buttons-generic d-flex gap-2">
-            <Button variant="success" onClick={generateExcel} className="d-flex align-items-center" size="lg">
-              <Icons typeIcon="excel" iconSize={30} fill="#fff" />
-              <span className="table-tools__button-name">&nbsp;Baixar Excel</span>
-            </Button>
-          </div>
-        </Col>
-      </Row>
+      <AdminHeader
+        pageName="Gerenciamento de Caronas"
+        sessionTypeIcon="ride"
+        iconSize={80}
+        fill={'#204691'}
+        showHeaderTools
+        colXs={6}
+        headerToolsClassname="table-tools__left-buttons-generic d-flex gap-2"
+        headerToolsTypeButton="success"
+        headerToolsOpenModal={generateExcel}
+        headerToolsButtonIcon="excel"
+        headerToolsButtonName="Baixar Excel"
+      />
 
       <Accordion className="mb-3">
         <Accordion.Header>Oferecem Carona</Accordion.Header>

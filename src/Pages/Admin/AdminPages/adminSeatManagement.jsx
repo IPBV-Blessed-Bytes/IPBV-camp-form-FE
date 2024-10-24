@@ -96,7 +96,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Vagas" typeIcon="camp" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Vagas" sessionTypeIcon="camp" iconSize={80} fill={'#204691'} />
 
       <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
