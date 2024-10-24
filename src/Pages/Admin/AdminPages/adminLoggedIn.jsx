@@ -11,6 +11,7 @@ import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
+import AdminSessionCard from '../AdminComponents/adminSessionCard';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -240,102 +241,59 @@ const AdminLoggedIn = ({
       </Row>
 
       <Row className="mb-md-5 navigation-header">
-        {registeredButtonHomePermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleTableClick}>
-              <Card.Body className="navigation-header__registered-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__registered-card__content-wrapper">
-                    <em>
-                      <b>Inscritos</b>
-                    </em>
-                    <Icons typeIcon="person" iconSize={40} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
-        {rideButtonHomePermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleRideClick}>
-              <Card.Body className="navigation-header__ride-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__ride-card__content-wrapper">
-                    <em>
-                      <b>Caronas</b>
-                    </em>
-                    <Icons typeIcon="ride" iconSize={50} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
-        {couponButtonHomePermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleCouponsClick}>
-              <Card.Body className="navigation-header__coupons-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__coupons-card__content-wrapper">
-                    <em>
-                      <b>Cupons</b>
-                    </em>
-                    <Icons typeIcon="coupon" iconSize={50} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
-        {aggregateButtonHomePermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleAggregateClick}>
-              <Card.Body className="navigation-header__aggregate-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__aggregate-card__content-wrapper">
-                    <em>
-                      <b>Agregados</b>
-                    </em>
-                    <Icons typeIcon="aggregate" iconSize={50} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
-        {feedbackButtonHomePermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleFeedbackClick}>
-              <Card.Body className="navigation-header__feedback-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__feedback-card__content-wrapper">
-                    <em>
-                      <b>Feedbacks</b>
-                    </em>
-                    <Icons typeIcon="feedback" iconSize={50} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
-        {checkinPermissions && (
-          <Col xs={12} md={6} lg={4} className="mb-3">
-            <Card className="h-100" onClick={handleCheckinClick}>
-              <Card.Body className="navigation-header__checkin-card">
-                <Card.Title className="text-center mb-0">
-                  <div className="navigation-header__checkin-card__content-wrapper">
-                    <em>
-                      <b>Check-in</b>
-                    </em>
-                    <Icons typeIcon="checkin" iconSize={50} fill={'#204691'} />
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
+        <AdminSessionCard
+          permission={registeredButtonHomePermissions}
+          onClick={handleTableClick}
+          cardType="registered-card"
+          title="Inscritos"
+          typeIcon="person"
+          iconSize={40}
+        />
+
+        <AdminSessionCard
+          permission={rideButtonHomePermissions}
+          onClick={handleRideClick}
+          cardType="ride-card"
+          title="Caronas"
+          typeIcon="ride"
+          iconSize={50}
+        />
+
+        <AdminSessionCard
+          permission={couponButtonHomePermissions}
+          onClick={handleCouponsClick}
+          cardType="coupons-card"
+          title="Cupons"
+          typeIcon="coupon"
+          iconSize={50}
+        />
+
+        <AdminSessionCard
+          permission={aggregateButtonHomePermissions}
+          onClick={handleAggregateClick}
+          cardType="aggregate-card"
+          title="Agregados"
+          typeIcon="aggregate"
+          iconSize={50}
+        />
+
+        <AdminSessionCard
+          permission={feedbackButtonHomePermissions}
+          onClick={handleFeedbackClick}
+          cardType="feedback-card"
+          title="Feedbacks"
+          typeIcon="feedback"
+          iconSize={50}
+        />
+
+        <AdminSessionCard
+          permission={checkinPermissions}
+          onClick={handleCheckinClick}
+          cardType="checkin-card"
+          title="Check-in"
+          typeIcon="checkin"
+          iconSize={50}
+        />
       </Row>
 
       {packagesAndTotalCardsPermissions && (
