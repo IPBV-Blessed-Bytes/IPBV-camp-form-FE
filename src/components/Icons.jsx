@@ -9,19 +9,19 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           height={iconSize ? iconSize + 'px' : '30px'}
           onClick={onClick}
           viewBox="0 0 24 24"
-          fill={fill ? fill : 'none'}
+          fill={fill || 'none'}
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12"
-            stroke={stroke ? stroke : '#000000'}
+            stroke={stroke || '#000000'}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
             d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12"
-            stroke={stroke ? stroke : '#000000'}
+            stroke={stroke || '#000000'}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -30,7 +30,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
             cx="12"
             cy="12"
             r="3"
-            stroke={stroke ? stroke : '#000000'}
+            stroke={stroke || '#000000'}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -44,7 +44,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
           viewBox="0 0 28 28"
-          fill={fill ? fill : 'none'}
+          fill={fill || 'none'}
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -67,7 +67,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <g id="Reject">
             <path
@@ -85,7 +85,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <path
             fillRule="evenodd"
@@ -100,7 +100,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <path
             id="XMLID_197_"
@@ -123,7 +123,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <path d="m14.523 18.787s4.501-4.505 6.255-6.26c.146-.146.219-.338.219-.53s-.073-.383-.219-.53c-1.753-1.754-6.255-6.258-6.255-6.258-.144-.145-.334-.217-.524-.217-.193 0-.385.074-.532.221-.293.292-.295.766-.004 1.056l4.978 4.978h-14.692c-.414 0-.75.336-.75.75s.336.75.75.75h14.692l-4.979 4.979c-.289.289-.286.762.006 1.054.148.148.341.222.533.222.19 0 .378-.072.522-.215z" />
         </svg>
@@ -135,7 +135,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <path d="m9.474 5.209s-4.501 4.505-6.254 6.259c-.147.146-.22.338-.22.53s.073.384.22.53c1.752 1.754 6.252 6.257 6.252 6.257.145.145.336.217.527.217.191-.001.383-.074.53-.221.293-.293.294-.766.004-1.057l-4.976-4.976h14.692c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-14.692l4.978-4.979c.289-.289.287-.761-.006-1.054-.147-.147-.339-.221-.53-.221-.191-.001-.38.071-.525.215z" />
         </svg>
@@ -147,7 +147,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <path d="M23.334 11.96c-.713-.726-.872-1.829-.393-2.727.342-.64.366-1.401.064-2.062-.301-.66-.893-1.142-1.601-1.302-.991-.225-1.722-1.067-1.803-2.081-.059-.723-.451-1.378-1.062-1.77-.609-.393-1.367-.478-2.05-.229-.956.347-2.026.032-2.642-.776-.44-.576-1.124-.915-1.85-.915-.725 0-1.409.339-1.849.915-.613.809-1.683 1.124-2.639.777-.682-.248-1.44-.163-2.05.229-.61.392-1.003 1.047-1.061 1.77-.082 1.014-.812 1.857-1.803 2.081-.708.16-1.3.642-1.601 1.302s-.277 1.422.065 2.061c.479.897.32 2.001-.392 2.727-.509.517-.747 1.242-.644 1.96s.536 1.347 1.17 1.7c.888.495 1.352 1.51 1.144 2.505-.147.71.044 1.448.519 1.996.476.549 1.18.844 1.902.798 1.016-.063 1.953.54 2.317 1.489.259.678.82 1.195 1.517 1.399.695.204 1.447.072 2.031-.357.819-.603 1.936-.603 2.754 0 .584.43 1.336.562 2.031.357.697-.204 1.258-.722 1.518-1.399.363-.949 1.301-1.553 2.316-1.489.724.046 1.427-.249 1.902-.798.475-.548.667-1.286.519-1.996-.207-.995.256-2.01 1.145-2.505.633-.354 1.065-.982 1.169-1.7s-.135-1.443-.643-1.96zm-12.584 5.43l-4.5-4.364 1.857-1.857 2.643 2.506 5.643-5.784 1.857 1.857-7.5 7.642z" />
         </svg>
@@ -159,7 +159,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
         >
           <g>
             <g>
@@ -184,7 +184,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 1792 1792"
         >
           <path d="M1595 295q17 41-14 70l-493 493v742q0 42-39 59-13 5-25 5-27 0-45-19l-256-256q-19-19-19-45v-486l-493-493q-31-29-14-70 17-39 59-39h1280q42 0 59 39z" />
@@ -196,7 +196,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : 'none'}
+          fill={fill || 'none'}
           stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -213,7 +213,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           id="delete"
           x="0"
           y="0"
@@ -231,7 +231,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           version="1.1"
           id="Capa_1"
           viewBox="0 0 490 490"
@@ -255,7 +255,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 24 24"
         >
           <path
@@ -270,7 +270,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 60.671 60.671"
@@ -293,7 +293,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 328.5 328.5"
@@ -325,7 +325,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 50 50"
         >
           <path d="M 28.875 0 C 28.855469 0.0078125 28.832031 0.0195313 28.8125 0.03125 L 0.8125 5.34375 C 0.335938 5.433594 -0.0078125 5.855469 0 6.34375 L 0 43.65625 C -0.0078125 44.144531 0.335938 44.566406 0.8125 44.65625 L 28.8125 49.96875 C 29.101563 50.023438 29.402344 49.949219 29.632813 49.761719 C 29.859375 49.574219 29.996094 49.296875 30 49 L 30 44 L 47 44 C 48.09375 44 49 43.09375 49 42 L 49 8 C 49 6.90625 48.09375 6 47 6 L 30 6 L 30 1 C 30.003906 0.710938 29.878906 0.4375 29.664063 0.246094 C 29.449219 0.0546875 29.160156 -0.0351563 28.875 0 Z M 28 2.1875 L 28 6.53125 C 27.867188 6.808594 27.867188 7.128906 28 7.40625 L 28 42.8125 C 27.972656 42.945313 27.972656 43.085938 28 43.21875 L 28 47.8125 L 2 42.84375 L 2 7.15625 Z M 30 8 L 47 8 L 47 42 L 30 42 L 30 37 L 34 37 L 34 35 L 30 35 L 30 29 L 34 29 L 34 27 L 30 27 L 30 22 L 34 22 L 34 20 L 30 20 L 30 15 L 34 15 L 34 13 L 30 13 Z M 36 13 L 36 15 L 44 15 L 44 13 Z M 6.6875 15.6875 L 12.15625 25.03125 L 6.1875 34.375 L 11.1875 34.375 L 14.4375 28.34375 C 14.664063 27.761719 14.8125 27.316406 14.875 27.03125 L 14.90625 27.03125 C 15.035156 27.640625 15.160156 28.054688 15.28125 28.28125 L 18.53125 34.375 L 23.5 34.375 L 17.75 24.9375 L 23.34375 15.6875 L 18.65625 15.6875 L 15.6875 21.21875 C 15.402344 21.941406 15.199219 22.511719 15.09375 22.875 L 15.0625 22.875 C 14.898438 22.265625 14.710938 21.722656 14.5 21.28125 L 11.8125 15.6875 Z M 36 20 L 36 22 L 44 22 L 44 20 Z M 36 27 L 36 29 L 44 29 L 44 27 Z M 36 35 L 36 37 L 44 37 L 44 35 Z" />
@@ -337,7 +337,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 60 60"
@@ -386,7 +386,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 235.517 235.517"
@@ -413,7 +413,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 248.774 248.774"
@@ -463,7 +463,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 533.973 533.973"
@@ -486,7 +486,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 460.775 460.775"
@@ -508,7 +508,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 31.445 31.445"
@@ -546,7 +546,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 308 308"
@@ -585,7 +585,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 458 458"
@@ -611,7 +611,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 458.624 458.624"
@@ -637,7 +637,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 384.971 384.971"
@@ -671,7 +671,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 54 54"
@@ -716,7 +716,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 512 512"
@@ -751,7 +751,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 48 48"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -761,16 +761,46 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
             width="40"
             height="36"
             rx="3"
-            stroke="#000000"
+            stroke={stroke || '#000000'}
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path d="M4 14H44" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M20 24H36" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M20 32H36" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 24H14" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 32H14" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M4 14H44"
+            stroke={stroke || '#000000'}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M20 24H36"
+            stroke={stroke || '#000000'}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M20 32H36"
+            stroke={stroke || '#000000'}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M12 24H14"
+            stroke={stroke || '#000000'}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M12 32H14"
+            stroke={stroke || '#000000'}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       )}
 
@@ -779,7 +809,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 460.775 460.775"
@@ -801,7 +831,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 52 52"
           enableBackground="new 0 0 52 52"
@@ -819,7 +849,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 25.274 25.274"
@@ -858,7 +888,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 490.4 490.4"
           xmlSpace="preserve"
@@ -878,12 +908,12 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill={fill ? fill : ''}
+            fill={fill || ''}
             d="M361.155 91.245l-18 .193.42 38.98c-45.773 13.285-108.533 19.738-166.474 23.573 35.097 96.284 99.357 173.77 157.845 257.13 20.718-19.655 51.11-31.983 83.46-36.01-20.8-18.109-36.634-27.966-58.833-70.438 31.27 37.085 52.579 48.467 77.623 62.006 3.263-13.094 8.938-24.638 18.721-32.674 8.667-7.12 20.026-10.654 33.53-10.344-46.874-59.763-101.67-117.054-127.83-189.435l-.462-42.98zM163.25 102.92l-17.998.244s.25 18.34.56 36.97c.156 9.316.325 18.703.489 25.929.06 2.636.117 4.58.174 6.542-34.378 83.733-69.154 160.993-123.92 233.442 33.635-1.387 66.326-1.203 98.552-.041 22.263-62.617 23.346-134.855 35.627-202.006 11.417 68.562 10.566 139.445 33.483 205.83 42.962 3.082 85.69 7.198 129.35 10.926-55.67-79.151-118.213-155.037-155.118-249.365-.05-1.782-.1-3.396-.152-5.737-.162-7.156-.333-16.523-.488-25.82-.31-18.594-.559-36.914-.559-36.914z"
           />
         </svg>
@@ -894,12 +924,12 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           className={className}
           onClick={onClick}
           height={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill ? fill : ''}
+          fill={fill || ''}
           viewBox="0 0 18 18"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill={fill ? fill : ''}
+            fill={fill || ''}
             d="M4.1 2h-.2A2.906 2.906 0 0 0 1 4.9v1.2A2.906 2.906 0 0 0 3.9 9h.2A2.906 2.906 0 0 0 7 6.1V4.9A2.906 2.906 0 0 0 4.1 2zM4 10a4.012 4.012 0 0 0-4 4v2.667a1.326 1.326 0 0 0 1.333 1.324l5.333.01A1.337 1.337 0 0 0 8 16.667V14a4.01 4.01 0 0 0-4-4zM18 1v4a1 1 0 0 1-1 1h-3.99l-1.19 1.88a.47.47 0 0 1-.32.12.538.538 0 0 1-.21-.05.493.493 0 0 1-.29-.45V6h-1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1z"
           />
         </svg>
