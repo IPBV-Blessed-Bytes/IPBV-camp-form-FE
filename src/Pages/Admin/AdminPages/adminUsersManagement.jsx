@@ -141,9 +141,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         iconSize={80}
         fill={'#204691'}
         showHeaderTools
-        colLg={12}
-        colMd={12}
-        colXs={12}
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2"
         headerToolsTypeButton="primary"
         headerToolsOpenModal={() => handleCreateClick()}

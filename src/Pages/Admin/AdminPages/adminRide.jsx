@@ -193,8 +193,7 @@ const AdminRide = () => {
         iconSize={80}
         fill={'#204691'}
         showHeaderTools
-        colXs={6}
-        headerToolsClassname="table-tools__left-buttons-generic d-flex gap-2"
+        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
         headerToolsButtonIcon="excel"

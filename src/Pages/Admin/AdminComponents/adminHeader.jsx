@@ -9,9 +9,7 @@ const AdminHeader = ({
   iconSize,
   fill,
   showHeaderTools,
-  colLg,
-  colMd,
-  colXs,
+  headerToolsCols,
   headerToolsTypeButton,
   headerToolsOpenModal,
   headerToolsClassname,
@@ -40,7 +38,7 @@ const AdminHeader = ({
 
       {showHeaderTools && (
         <Row className="mb-4">
-          <Col lg={colLg} md={colMd} xs={colXs}>
+          <Col lg={headerToolsCols?.lg || 12} md={headerToolsCols?.md || 12} xs={headerToolsCols?.xs || 12}>
             <div className={headerToolsClassname}>
               <Button
                 variant={headerToolsTypeButton}
@@ -50,8 +48,8 @@ const AdminHeader = ({
               >
                 <Icons
                   typeIcon={headerToolsButtonIcon}
-                  iconSize={headerToolsButtonSize ? headerToolsButtonSize : 30}
-                  fill={headerToolsButtonFill ? headerToolsButtonFill : '#fff'}
+                  iconSize={headerToolsButtonSize || 30}
+                  fill={headerToolsButtonFill || '#fff'}
                 />
                 <span>&nbsp;{headerToolsButtonName}</span>
               </Button>
@@ -69,9 +67,7 @@ AdminHeader.propTypes = {
   iconSize: PropTypes.number,
   fill: PropTypes.string,
   showHeaderTools: PropTypes.bool,
-  colLg: PropTypes.number,
-  colMd: PropTypes.number,
-  colXs: PropTypes.number,
+  headerToolsCols: PropTypes.object,
   headerToolsTypeButton: PropTypes.string,
   headerToolsOpenModal: PropTypes.func,
   headerToolsClassname: PropTypes.string,
