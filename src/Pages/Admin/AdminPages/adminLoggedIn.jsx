@@ -94,6 +94,7 @@ const AdminLoggedIn = ({
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
   const totalChildren = totalRegistrationsGlobal.totalChildren;
   const totalAdultsNonPaid = totalRegistrationsGlobal.totalAdultsNonPaid;
+  const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
 
   const availablePackagesUsedValid = availablePackages.usedValidPackages;
   const availablePackagesTotal = availablePackages.totalPackages || {};
@@ -172,12 +173,6 @@ const AdminLoggedIn = ({
       showRemainingVacancies: false,
     },
     {
-      title: 'Total de Adultos',
-      remainingVacancies: totalSeats - totalValidRegistrations || '0',
-      filledVacancies: totalValidRegistrations || '0',
-      showRemainingVacancies: true,
-    },
-    {
       title: 'Total de Inscritos com Ônibus',
       remainingVacancies: totalBusVacancies - totalValidWithBus || '0',
       filledVacancies: totalValidWithBus || '0',
@@ -189,9 +184,20 @@ const AdminLoggedIn = ({
       showRemainingVacancies: false,
     },
     {
+      title: 'Total de Adultos Pagantes',
+      filledVacancies: totalAdultsPaid || '0',
+      showRemainingVacancies: false,
+    },
+    {
       title: 'Total de Adultos Não Pagantes',
       filledVacancies: totalAdultsNonPaid || '0',
       showRemainingVacancies: false,
+    },
+    {
+      title: 'Total de Adultos',
+      remainingVacancies: totalSeats - totalValidRegistrations || '0',
+      filledVacancies: totalValidRegistrations || '0',
+      showRemainingVacancies: true,
     },
   ];
 
@@ -333,7 +339,7 @@ const AdminLoggedIn = ({
         </>
       )}
 
-      <AdminSettingsButton permission={settingsButtonPermissions}/>
+      <AdminSettingsButton permission={settingsButtonPermissions} />
 
       <Loading loading={loading} />
 
