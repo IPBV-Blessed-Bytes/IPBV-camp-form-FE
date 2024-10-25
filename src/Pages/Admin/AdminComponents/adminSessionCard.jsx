@@ -14,7 +14,7 @@ const AdminSessionCard = ({ permission, onClick, cardType, title, typeIcon, icon
                 <em>
                   <b>{title}</b>
                 </em>
-                <Icons typeIcon={typeIcon} iconSize={iconSize} fill={iconFill ? iconFill : '#204691'} />
+                <Icons typeIcon={typeIcon} iconSize={iconSize} fill={iconFill || '#204691'} />
               </div>
             </Card.Title>
           </Card.Body>
