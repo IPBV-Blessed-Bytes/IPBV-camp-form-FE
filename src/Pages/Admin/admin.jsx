@@ -49,7 +49,7 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
 
           {isLoggedIn && (
             <AdminLoggedIn
-              loggedInUsername={user ? user : 'Usuário não identificado'}
+              loggedInUsername={user || 'Usuário não identificado'}
               handleLogout={logout}
               totalRegistrationsGlobal={totalRegistrationsGlobal}
               userRole={userRole}
