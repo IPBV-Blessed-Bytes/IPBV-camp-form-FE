@@ -34,7 +34,7 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
     <>
       {isAdminPathname && (
         <Container className="p-4 admin" fluid>
-          {!isLoggedIn ? (
+          {!isLoggedIn && (
             <AdminLoggedOut
               handleLogout={logout}
               loginData={loginData}
@@ -45,7 +45,9 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
               navigateTo={navigateTo}
               setLoginData={setLoginData}
             />
-          ) : (
+          )}
+
+          {isLoggedIn && (
             <AdminLoggedIn
               loggedInUsername={user ? user : 'Usuário não identificado'}
               handleLogout={logout}
@@ -66,7 +68,7 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
 AdminHome.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
   permissions: PropTypes.array.isRequired,
-  userRole: PropTypes.string, 
+  userRole: PropTypes.string,
   totalValidWithBus: PropTypes.number,
 };
 
