@@ -1,132 +1,150 @@
+import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '@/config';
+import { toast } from 'react-toastify';
+import DatePicker from 'react-datepicker';
+import ptBR from 'date-fns/locale/pt';
+import { format } from 'date-fns';
+import fetcherWithCredentials from '@/fetchers/fetcherWithCredentials';
+import Loading from '@/components/Loading';
+import Footer from '@/components/Footer';
 import PropTypes from 'prop-types';
+import Header from '@/components/Header';
+import InputMask from 'react-input-mask';
+import CpfData from './CpfData';
+import InfoBtn from '../Routes/InfoBtn';
 
-const CpfReview = ({ formValues }) => {
-  if (!formValues || !formValues.data) {
-    return (
-      <>
-        <p className="text-center">
-          Nenhum dado relativo ao seu CPF foi encontrado. Por favor, verifique o número do seu CPF e tente novamente.
-          Caso ainda não esteja inscrito, faça a sua inscrição ou procure a secretaria da IPBV para obter mais
-          informações.
-        </p>
+const CpfReview = ({ onAdminClick }) => {
+  const [loading, setLoading] = useState(false);
+  const [personData, setPersonData] = useState('');
+  const [showCpfData, setShowCpfData] = useState(false);
+  const [displayedCpf, setDisplayedCpf] = useState('');
+  const [displayedBirthday, setDisplayedBirthday] = useState('');
+  const navigate = useNavigate();
 
-        <div className="justify-content-end d-flex mt-5">
-          <Button
-            variant="warning"
-            onClick={() => {
-              window.location.reload();
-            }}
-            size="lg"
-          >
-            Voltar para Início
-          </Button>
-        </div>
-      </>
-    );
-  }
+  const fetchPersonData = async () => {
+    setLoading(true);
+
+    try {
+      const formattedBirthday = displayedBirthday ? format(new Date(displayedBirthday), 'dd/MM/yyyy') : '';
+
+      const payload = {
+        personalInformation: {
+          cpf: displayedCpf,
+          birthday: formattedBirthday,
+        },
+      };
+
+      const response = await fetcherWithCredentials.post(`${BASE_URL}/camper/get-person-data`, payload);
+
+      if (response.status === 200) {
+        setPersonData(response);
+        setShowCpfData(true);
+        toast.success('Usuário encontrado com sucesso');
+      }
+    } catch (error) {
+      toast.error('CPF não cadastrado em nossa base de dados');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCpfChange = (event) => {
+    const rawCpf = event.target.value.replace(/\D/g, '');
+    setDisplayedCpf(rawCpf);
+  };
+
+  const handleDateChange = (event) => {
+    const rawBirthday = event;
+    setDisplayedBirthday(rawBirthday);
+  };
+
+  const parseDate = (value) => {
+    if (value instanceof Date && !isNaN(value)) {
+      return value;
+    }
+
+    const parsedDate = value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+
+    return isNaN(parsedDate) ? null : parsedDate;
+  };
 
   return (
-    <Card className="form__container__general-height fix-positioning">
-      <Card.Body>
-        <Container>
-          <div className="form-review">
-            <Card.Title>Consulta de Dados</Card.Title>
-            <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dados.</Card.Text>
-            <Form>
-              <Row className="row-gap">
-                <Col md={6} className=" fw-bold">
+    <div className="components-container">
+      <Header />
+      <div className="form__container">
+        {!showCpfData && (
+          <Card className="form__container__general-height">
+            <Card.Body>
+              <Container>
+                <Row className="mb-4">
+                  <Card.Title>Consulte Status da sua Inscrição:</Card.Title>
                   <Card.Text>
-                    <span className="form-review__section-title">Nome:</span> <br />
-                    {formValues.data.name}
+                    Insira seu CPF e data de nascimento abaixo caso você deseje consultar o status da sua inscrição.
+                    Você obterá os dados de inscrição como nome, pacote cadastrado e demais informações relevantes.
                   </Card.Text>
-                </Col>
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Agregado:</span> <br />
-                    {formValues.data.aggregate}
-                  </Card.Text>
-                </Col>
-              </Row>{' '}
-              <div className="packages-horizontal-line" />
-              <Row className="row-gap">
-                <Col md={6} className=" fw-bold">
-                  <Card.Text className="text-success">
-                    <span className="form-review__section-title"> Status de Pagamento:</span> <br />{' '}
-                    <em>{formValues.data.payment}</em>
-                  </Card.Text>
-                </Col>
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Cadastrado em: </span>
-                    <br />
-                    {formValues.data.registrationDate}
-                  </Card.Text>
-                </Col>
-              </Row>{' '}
-              <div className="packages-horizontal-line" />
-              <Row className="row-gap">
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Categoria do Pacote:</span> <br />
-                    {formValues.data.packageTitle} <br />
-                  </Card.Text>
-                </Col>
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Acomodação</span>
-                    <br />
-                    {formValues.data.accomodation} |{' '}
-                    {formValues.data.subAccomodation
-                      ? formValues.data.subAccomodation !== 'Outro' && 'Externo'
-                        ? formValues.data.subAccomodation.split(' ')[1]
-                        : formValues.data.subAccomodation
-                      : 'vazio'}
-                  </Card.Text>
-                </Col>
-              </Row>
-              <Row className="row-gap mt-3">
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Transporte: </span>
-                    <br />
-                    {formValues.data.transport}
-                  </Card.Text>
-                </Col>
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Alimentação: </span>
-                    <br />
-                    {formValues.data.food}
-                  </Card.Text>
-                </Col>
-              </Row>
-              <Row className="row-gap mt-3">
-                <Col md={6} className=" fw-bold">
-                  <Card.Text>
-                    <span className="form-review__section-title">Preço: </span>
-                    <br />
-                    R$ {formValues.data.price},00
-                  </Card.Text>
-                </Col>
-              </Row>
-            </Form>
-          </div>
-        </Container>
-      </Card.Body>
+                </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>
+                        <b>CPF:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as={InputMask}
+                        mask="999.999.999-99"
+                        value={displayedCpf}
+                        onChange={handleCpfChange}
+                        placeholder="000.000.000-00"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>
+                        <b>Data de Nascimento:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as={DatePicker}
+                        selected={parseDate(displayedBirthday)}
+                        onChange={handleDateChange}
+                        locale={ptBR}
+                        autoComplete="off"
+                        dateFormat="dd/MM/yyyy"
+                        dropdownMode="select"
+                        id="birthDay"
+                        maxDate={new Date()}
+                        name="birthDay"
+                        placeholderText="dd/mm/aaaa"
+                        showMonthDropdown={true}
+                        showYearDropdown={true}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row className="justify-content-end align-items-center mt-4">
+                  <Col className="justify-content-end d-flex" md={6}>
+                    <Button variant="warning" onClick={fetchPersonData} size="lg">
+                      Consultar
+                    </Button>
+                  </Col>
+                </Row>
 
-      <div className="form__container__buttons">
-        <Button
-          variant="light"
-          onClick={() => {
-            window.location.reload();
-          }}
-          size="lg"
-        >
-          Voltar
-        </Button>
+                <Loading loading={loading} />
+              </Container>
+            </Card.Body>
+          </Card>
+        )}
+
+        <InfoBtn />
+
+        {showCpfData && (
+          <CpfData onAdminClick={onAdminClick} cpfValues={personData} loading={loading} voltar={setShowCpfData} />
+        )}
       </div>
-    </Card>
+      <Footer onAdminClick={() => navigate('/admin')} />
+    </div>
   );
 };
 
