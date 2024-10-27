@@ -1,5 +1,5 @@
 import 'react-datepicker/dist/react-datepicker.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import privateFetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
@@ -21,7 +21,6 @@ import { enumSteps, initialValues } from './constants';
 import useAuth from '@/hooks/useAuth';
 import AdminCoupon from '../Admin/AdminPages/adminCoupon';
 import { BASE_URL } from '@/config/index';
-import Icons from '@/components/Icons';
 import calculateAge from '../Packages/utils/calculateAge';
 import AdminUserLogs from '../Admin/AdminPages/adminUserLogs';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -32,6 +31,8 @@ import AdminSeatManagement from '../Admin/AdminPages/adminSeatManagement';
 import AdminUsersManagement from '../Admin/AdminPages/adminUsersManagement';
 import AdminFeedback from '../Admin/AdminPages/adminFeedback';
 import FormFeedback from '../Feedback';
+import CpfReview from '../CpfReview';
+import InfoBtn from './InfoBtn';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -40,6 +41,7 @@ const FormRoutes = () => {
   const [totalRegistrations, setTotalRegistrations] = useState({});
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const isNotFeedbackPathname = window.location.pathname !== '/opiniao';
+  const isNotVerifyingPathname = window.location.pathname !== '/verificacao';
   const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
@@ -47,34 +49,12 @@ const FormRoutes = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
-  const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
-  const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
 
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-  const whatsappButtonRef = useRef(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWhatsAppIcon(true);
-    }, 6000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (whatsappButtonRef.current && !whatsappButtonRef.current.contains(event.target)) {
-        setShowWhatsAppButtons(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [whatsappButtonRef]);
 
   const updateFormValues = (key) => (value) => {
     setFormValues({
@@ -215,10 +195,6 @@ const FormRoutes = () => {
     fetchTotalRegistrations();
   }, []);
 
-  const toggleWhatsAppButtons = () => {
-    setShowWhatsAppButtons(!showWhatsAppButtons);
-  };
-
   useEffect(() => {
     if (!isLoggedIn && adminPathname) {
       navigate('/admin');
@@ -245,7 +221,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
-      {!adminPathname && isNotFeedbackPathname && (
+      {!adminPathname && isNotFeedbackPathname && isNotVerifyingPathname && (
         <div className="components-container">
           <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
@@ -335,33 +311,7 @@ const FormRoutes = () => {
             </Routes>
           </div>
 
-          {showWhatsAppIcon && (
-            <button ref={whatsappButtonRef} className="whatsapp-btn" onClick={toggleWhatsAppButtons}>
-              <Icons typeIcon="whatsapp" iconSize={25} fill={'#fff'} />
-            </button>
-          )}
-
-          <div className={`whatsapp-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-            <button
-              className="whatsapp-message-button"
-              onClick={() => window.open('https://wa.me/5581998390194', '_blank')}
-            >
-              Fale Conosco&nbsp;
-              <Icons className="whatsapp-icons" typeIcon="message" iconSize={25} fill={'#fff'} />
-            </button>
-            <button
-              className="whatsapp-share-button"
-              onClick={() =>
-                window.open(
-                  'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%3A%20https://inscricaoipbv.com.br/',
-                  '_blank',
-                )
-              }
-            >
-              Compartilhar&nbsp;
-              <Icons className="whatsapp-icons" typeIcon="share" iconSize={25} fill={'#fff'} />
-            </button>
-          </div>
+          <InfoBtn timeout/>
 
           <Footer onAdminClick={handleAdminClick} />
         </div>
@@ -453,6 +403,7 @@ const FormRoutes = () => {
           />
 
           <Route path="/opiniao" element={<FormFeedback />} />
+          <Route path="/verificacao" element={<CpfReview onAdminClick={handleAdminClick} />} />
           <Route
             path="/unauthorized"
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
