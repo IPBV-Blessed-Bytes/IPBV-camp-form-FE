@@ -36,7 +36,6 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
         <Container className="p-4 admin" fluid>
           {!isLoggedIn && (
             <AdminLoggedOut
-              handleLogout={logout}
               loginData={loginData}
               handleKeyDown={handleKeyDown}
               showPassword={showPassword}
