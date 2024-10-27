@@ -51,7 +51,7 @@ const InfoBtn = ({ timeout }) => {
           onClick={() => window.open('https://wa.me/5581998390194', '_blank')}
         >
           Fale Conosco&nbsp;
-          <Icons className="whatsapp-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
+          <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
         </button>
         <button
           className="whatsapp-share-button"
@@ -63,11 +63,11 @@ const InfoBtn = ({ timeout }) => {
           }
         >
           Compartilhar&nbsp;
-          <Icons className="whatsapp-icons" typeIcon="share" iconSize={25} fill={'#000'} />
+          <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />
         </button>
         <button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
           Verificar Inscrição&nbsp;
-          <Icons className="whatsapp-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
+          <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
         </button>
       </div>
     </>
