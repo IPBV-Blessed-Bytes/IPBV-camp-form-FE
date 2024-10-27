@@ -1,4 +1,3 @@
-import ChooseWay from './Pages/ChooseWay';
 import CloseForm from './Pages/CloseForm';
 import Offline from './Pages/Offline';
 import FormRoutes from './Pages/Routes';
@@ -14,7 +13,6 @@ function App() {
 
   return (
     <>
-      {toggleSite === 'choose-way' && <ChooseWay />}
       {toggleSite === 'form-on' && <FormRoutes />}
       {toggleSite === 'form-off' && <Offline />}
       {toggleSite === 'form-closed' && <CloseForm />}
