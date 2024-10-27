@@ -1000,8 +1000,8 @@ button.btn.btn-outline-danger:hover svg {
   text-decoration: line-through;
 }
 
-.whatsapp-btn {
-  background-color: #25d366;
+.info-btn {
+  background-color: $primary;
   border: none;
   border-radius: 50%;
   bottom: 20px;
@@ -1017,7 +1017,7 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
-.whatsapp-floating-buttons {
+.info-floating-buttons {
   bottom: 66px;
   display: flex;
   flex-direction: column;
@@ -1031,11 +1031,13 @@ button.btn.btn-outline-danger:hover svg {
   z-index: 9999;
 
   button {
-    background-color: #25d366;
+    background-color: $light-yellow;
     border: none;
     border-radius: 5px;
-    color: white;
+    color: $black;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 10px;
     padding: 10px 15px;
     transition: transform 0.3s ease;
@@ -1052,9 +1054,10 @@ button.btn.btn-outline-danger:hover svg {
 }
 
 .whatsapp-message-button:hover,
-.whatsapp-share-button:hover {
+.whatsapp-share-button:hover,
+.verify-registration-button:hover {
   .whatsapp-icons {
-    fill: $light-yellow;
+    fill: $primary;
   }
 }
 
