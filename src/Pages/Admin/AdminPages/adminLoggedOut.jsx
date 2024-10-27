@@ -21,7 +21,6 @@ const AdminLoggedOut = ({
           className="fw-bold"
           variant="danger"
           onClick={() => {
-            handleLogout();
             navigateTo('/');
           }}
         >
