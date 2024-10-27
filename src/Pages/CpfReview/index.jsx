@@ -44,7 +44,7 @@ const CpfReview = ({ onAdminClick }) => {
         toast.success('Usuário encontrado com sucesso');
       }
     } catch (error) {
-      toast.error('CPF não cadastrado em nossa base de dados');
+      toast.error('Usuário não encontrado');
     } finally {
       setLoading(false);
     }
