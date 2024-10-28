@@ -14,61 +14,47 @@ import Header from '@/components/Header';
 import InputMask from 'react-input-mask';
 import CpfData from './CpfData';
 import InfoButton from '../../components/InfoButton';
+import { useFormik } from 'formik';
+import { cpfReviewSchema } from '@/form/validations/schema';
 
 const CpfReview = ({ onAdminClick }) => {
   const [loading, setLoading] = useState(false);
   const [personData, setPersonData] = useState('');
   const [showCpfData, setShowCpfData] = useState(false);
-  const [displayedCpf, setDisplayedCpf] = useState('');
-  const [displayedBirthday, setDisplayedBirthday] = useState('');
   const navigate = useNavigate();
 
-  const fetchPersonData = async () => {
-    setLoading(true);
+  const formik = useFormik({
+    initialValues: {
+      cpf: '',
+      birthday: null,
+    },
+    validationSchema: cpfReviewSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const formattedBirthday = values.birthday ? format(new Date(values.birthday), 'dd/MM/yyyy') : '';
 
-    try {
-      const formattedBirthday = displayedBirthday ? format(new Date(displayedBirthday), 'dd/MM/yyyy') : '';
+        const payload = {
+          personalInformation: {
+            cpf: values.cpf,
+            birthday: formattedBirthday,
+          },
+        };
 
-      const payload = {
-        personalInformation: {
-          cpf: displayedCpf,
-          birthday: formattedBirthday,
-        },
-      };
+        const response = await fetcherWithCredentials.post(`${BASE_URL}/camper/get-person-data`, payload);
 
-      const response = await fetcherWithCredentials.post(`${BASE_URL}/camper/get-person-data`, payload);
-
-      if (response.status === 200) {
-        setPersonData(response);
-        setShowCpfData(true);
-        toast.success('Usuário encontrado com sucesso');
+        if (response.status === 200) {
+          setPersonData(response);
+          setShowCpfData(true);
+          toast.success('Usuário encontrado com sucesso');
+        }
+      } catch (error) {
+        toast.error('Usuário não encontrado');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error('Usuário não encontrado');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCpfChange = (event) => {
-    const rawCpf = event.target.value.replace(/\D/g, '');
-    setDisplayedCpf(rawCpf);
-  };
-
-  const handleDateChange = (event) => {
-    const rawBirthday = event;
-    setDisplayedBirthday(rawBirthday);
-  };
-
-  const parseDate = (value) => {
-    if (value instanceof Date && !isNaN(value)) {
-      return value;
-    }
-
-    const parsedDate = value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
-
-    return isNaN(parsedDate) ? null : parsedDate;
-  };
+    },
+  });
 
   return (
     <div className="components-container">
@@ -85,52 +71,63 @@ const CpfReview = ({ onAdminClick }) => {
                     Você obterá os dados de inscrição como nome, pacote cadastrado e demais informações relevantes.
                   </Card.Text>
                 </Row>
-                <Row>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label>
-                        <b>CPF:</b>
-                      </Form.Label>
-                      <Form.Control
-                        as={InputMask}
-                        mask="999.999.999-99"
-                        value={displayedCpf}
-                        onChange={handleCpfChange}
-                        placeholder="000.000.000-00"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label>
-                        <b>Data de Nascimento:</b>
-                      </Form.Label>
-                      <Form.Control
-                        as={DatePicker}
-                        selected={parseDate(displayedBirthday)}
-                        onChange={handleDateChange}
-                        locale={ptBR}
-                        autoComplete="off"
-                        dateFormat="dd/MM/yyyy"
-                        dropdownMode="select"
-                        id="birthDay"
-                        maxDate={new Date()}
-                        name="birthDay"
-                        placeholderText="dd/mm/aaaa"
-                        showMonthDropdown={true}
-                        showYearDropdown={true}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row className="justify-content-end align-items-center mt-4">
-                  <Col className="justify-content-end d-flex" md={6}>
-                    <Button variant="warning" onClick={fetchPersonData} size="lg">
-                      Consultar
-                    </Button>
-                  </Col>
-                </Row>
-
+                <Form onSubmit={formik.handleSubmit}>
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>
+                          <b>CPF:</b>
+                        </Form.Label>
+                        <Form.Control
+                          as={InputMask}
+                          isInvalid={formik.errors.cpf}
+                          mask="999.999.999-99"
+                          name="cpf"
+                          id="cpf"
+                          className="cpf-container"
+                          value={formik.values.cpf}
+                          onChange={(e) => formik.setFieldValue('cpf', e.target.value.replace(/\D/g, ''))}
+                          placeholder="000.000000-00"
+                          title="Preencher CPF válido"
+                        />
+                        <Form.Control.Feedback type="invalid">{formik.errors.cpf}</Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>
+                          <b>Data de Nascimento:</b>
+                        </Form.Label>
+                        <Form.Control
+                          selected={formik.values.birthday}
+                          onChange={(date) => formik.setFieldValue('birthday', date)}
+                          isInvalid={formik.errors.birthday}
+                          as={DatePicker}
+                          locale={ptBR}
+                          autoComplete="off"
+                          dateFormat="dd/MM/yyyy"
+                          dropdownMode="select"
+                          id="birthDay"
+                          maxDate={new Date()}
+                          name="birthDay"
+                          placeholderText="dd/mm/aaaa"
+                          showMonthDropdown={true}
+                          showYearDropdown={true}
+                        />
+                        <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+                          {formik.errors.birthday}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row className="justify-content-end align-items-center mt-4">
+                    <Col className="justify-content-end d-flex" md={6}>
+                      <Button type="submit" variant="warning" size="lg">
+                        Consultar
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
                 <Loading loading={loading} />
               </Container>
             </Card.Body>
