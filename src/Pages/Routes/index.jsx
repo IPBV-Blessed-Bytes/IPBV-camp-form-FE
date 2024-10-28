@@ -32,7 +32,7 @@ import AdminUsersManagement from '../Admin/AdminPages/adminUsersManagement';
 import AdminFeedback from '../Admin/AdminPages/adminFeedback';
 import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
-import InfoBtn from './InfoBtn';
+import InfoButton from '../../components/InfoButton';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -311,7 +311,7 @@ const FormRoutes = () => {
             </Routes>
           </div>
 
-          <InfoBtn timeout/>
+          <InfoButton timeout />
 
           <Footer onAdminClick={handleAdminClick} />
         </div>
