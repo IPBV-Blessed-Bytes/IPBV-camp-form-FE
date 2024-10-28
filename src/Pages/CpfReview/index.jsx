@@ -16,7 +16,7 @@ import CpfData from './CpfData';
 import InfoButton from '../../components/InfoButton';
 import { useFormik } from 'formik';
 import { cpfReviewSchema } from '@/form/validations/schema';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const CpfReview = () => {
   const [loading, setLoading] = useState(false);

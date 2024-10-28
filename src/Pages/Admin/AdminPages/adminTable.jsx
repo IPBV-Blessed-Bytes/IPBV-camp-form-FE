@@ -16,7 +16,7 @@ import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
 import AdminTableModal from '../AdminComponents/adminTableModal';
 import AdminHeader from '../AdminComponents/adminHeader';
 import AdminTableSelectFilter from '../AdminComponents/adminTableSelectFilter';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
