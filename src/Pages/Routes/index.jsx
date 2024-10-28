@@ -1,7 +1,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import privateFetcher from '@/fetchers/fetcherWithCredentials';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import Footer from '@/components/Footer';
@@ -137,7 +137,7 @@ const FormRoutes = () => {
         manualRegistration: false,
       };
 
-      const response = await privateFetcher.post(`${BASE_URL}/checkout/create`, updatedFormValues);
+      const response = await fetcher.post(`${BASE_URL}/checkout/create`, updatedFormValues);
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
@@ -162,7 +162,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
+        const response = await fetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response);
         setTotalSeats(response.data.totalSeats);
         setTotalBusVacancies(response.data.totalBusVacancies);
@@ -181,7 +181,7 @@ const FormRoutes = () => {
   useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await privateFetcher.get(`${BASE_URL}/total-registrations`);
+        const response = await fetcher.get(`${BASE_URL}/total-registrations`);
         setTotalRegistrations(response.data);
       } catch (error) {
         console.error(

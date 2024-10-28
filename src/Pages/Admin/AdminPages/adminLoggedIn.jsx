@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AdminPackageCard from '../AdminComponents/adminPackageCard';
 import AdminExternalLinkRow from '../AdminComponents/adminExternalLinkRow';
-import privateFetcher from '@/fetchers/fetcherWithCredentials';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config/index';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
@@ -79,7 +79,7 @@ const AdminLoggedIn = ({
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await privateFetcher.get(`${BASE_URL}/package-count`);
+        const response = await fetcher.get(`${BASE_URL}/package-count`);
         setAvailablePackages(response.data);
         setTotalSeats(response.data.totalSeats);
         setTotalBusVacancies(response.data.totalBusVacancies);

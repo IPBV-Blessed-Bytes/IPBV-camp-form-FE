@@ -15,10 +15,11 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
   const { login, logout, user, isLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
+  
+  scrollUp();
 
   const handleLogin = () => {
     login(loginData.login, loginData.password);
-    scrollUp();
     setLoginData((prevLoginData) => ({ ...prevLoginData, password: '' }));
     setSendLoggedMessage(true);
   };
