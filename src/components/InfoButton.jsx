@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Icons';
+import PropTypes from 'prop-types';
 
 const InfoButton = ({ timeout }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
@@ -8,19 +9,17 @@ const InfoButton = ({ timeout }) => {
   const whatsappButtonRef = useRef(null);
   const navigate = useNavigate();
 
-  if (timeout) {
-    useEffect(() => {
+  useEffect(() => {
+    if (timeout) {
       const timer = setTimeout(() => {
         setShowWhatsAppIcon(true);
       }, 6000);
 
       return () => clearTimeout(timer);
-    }, []);
-  } else {
-    useEffect(() => {
+    } else {
       setShowWhatsAppIcon(true);
-    }, []);
-  }
+    }
+  }, [timeout]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -72,6 +71,10 @@ const InfoButton = ({ timeout }) => {
       </div>
     </>
   );
+};
+
+InfoButton.propTypes = {
+  timeout: PropTypes.bool,
 };
 
 export default InfoButton;
