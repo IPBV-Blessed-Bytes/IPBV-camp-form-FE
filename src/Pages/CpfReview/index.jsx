@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import Header from '@/components/Header';
 import InputMask from 'react-input-mask';
 import CpfData from './CpfData';
-import InfoBtn from '../Routes/InfoBtn';
+import InfoButton from '../../components/InfoButton';
 
 const CpfReview = ({ onAdminClick }) => {
   const [loading, setLoading] = useState(false);
@@ -137,7 +137,7 @@ const CpfReview = ({ onAdminClick }) => {
           </Card>
         )}
 
-        <InfoBtn />
+        <InfoButton />
 
         {showCpfData && (
           <CpfData onAdminClick={onAdminClick} cpfValues={personData} loading={loading} voltar={setShowCpfData} />

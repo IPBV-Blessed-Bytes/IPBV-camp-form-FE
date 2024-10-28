@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Icons';
 
-const InfoBtn = ({ timeout }) => {
+const InfoButton = ({ timeout }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const whatsappButtonRef = useRef(null);
@@ -74,4 +74,4 @@ const InfoBtn = ({ timeout }) => {
   );
 };
 
-export default InfoBtn;
+export default InfoButton;
