@@ -13,7 +13,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import AdminSessionCard from '../AdminComponents/adminSessionCard';
 import AdminSettingsButton from '../AdminComponents/adminSettingsButton';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const AdminLoggedIn = ({
   loggedInUsername,

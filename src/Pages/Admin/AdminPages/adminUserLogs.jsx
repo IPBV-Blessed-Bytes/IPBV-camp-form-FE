@@ -6,7 +6,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import PropTypes from 'prop-types';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const AdminUserLogs = ({ loggedUsername }) => {
   const [groupedLogs, setGroupedLogs] = useState({});

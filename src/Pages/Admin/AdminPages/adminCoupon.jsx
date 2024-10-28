@@ -9,7 +9,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/config';
 import { registerLog } from '@/fetchers/userLogs';
 import PropTypes from 'prop-types';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const AdminCoupon = ({ loggedUsername }) => {
   const [coupons, setCoupons] = useState([]);

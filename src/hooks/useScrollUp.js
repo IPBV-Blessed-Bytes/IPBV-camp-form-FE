@@ -1,9 +1,10 @@
+// src/hooks/useScrollUp.js
 import { useEffect } from 'react';
 
-const scrollUp = () => {
+const useScrollUp = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 };
 
-export default scrollUp;
+export default useScrollUp;

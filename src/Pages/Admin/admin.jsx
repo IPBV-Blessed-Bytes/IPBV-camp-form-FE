@@ -6,7 +6,7 @@ import { Container } from 'react-bootstrap';
 import AdminLoggedOut from './AdminPages/adminLoggedOut';
 import AdminLoggedIn from './AdminPages/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
   const isAdminPathname = window.location.pathname === '/admin';

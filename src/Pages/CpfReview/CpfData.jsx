@@ -1,6 +1,6 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import scrollUp from '@/fetchers/scrollUp';
+import scrollUp from '@/hooks/useScrollUp';
 
 const CpfData = ({ cpfValues }) => {
   const paymentMethodMapping = {
