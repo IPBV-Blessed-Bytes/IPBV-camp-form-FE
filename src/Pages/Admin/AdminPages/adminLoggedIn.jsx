@@ -13,6 +13,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import AdminSessionCard from '../AdminComponents/adminSessionCard';
 import AdminSettingsButton from '../AdminComponents/adminSettingsButton';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -64,6 +65,8 @@ const AdminLoggedIn = ({
   const handleFeedbackClick = () => {
     navigate('/admin/opiniao');
   };
+
+  scrollUp();
 
   useEffect(() => {
     if (sendLoggedMessage) {

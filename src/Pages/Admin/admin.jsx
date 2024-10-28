@@ -6,6 +6,7 @@ import { Container } from 'react-bootstrap';
 import AdminLoggedOut from './AdminPages/adminLoggedOut';
 import AdminLoggedIn from './AdminPages/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
   const isAdminPathname = window.location.pathname === '/admin';
@@ -14,8 +15,6 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
   const { login, logout, user, isLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const handleLogin = () => {
     login(loginData.login, loginData.password);

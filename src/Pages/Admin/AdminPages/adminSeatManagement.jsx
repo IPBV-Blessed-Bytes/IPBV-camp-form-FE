@@ -7,6 +7,7 @@ import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import { registerLog } from '@/fetchers/userLogs';
 import PropTypes from 'prop-types';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminSeatManagement = ({ loggedUsername }) => {
   const [totalPackages, setTotalPackages] = useState({});
@@ -24,9 +25,10 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
   const packageOrder = ['schoolIndividual', 'schoolFamily', 'schoolCamping', 'seminary', 'other'];
 
+  scrollUp();
+
   useEffect(() => {
     fetchAvailableSeats();
-    scrollUp();
   }, []);
 
   const fetchAvailableSeats = async () => {
@@ -43,8 +45,6 @@ const AdminSeatManagement = ({ loggedUsername }) => {
       setLoading(false);
     }
   };
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const updateSeats = async () => {
     const currentTotalPackages = Object.values(totalPackages).reduce((acc, curr) => acc + curr, 0);

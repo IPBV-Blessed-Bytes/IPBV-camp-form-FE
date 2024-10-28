@@ -16,6 +16,7 @@ import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
 import AdminTableModal from '../AdminComponents/adminTableModal';
 import AdminHeader from '../AdminComponents/adminHeader';
 import AdminTableSelectFilter from '../AdminComponents/adminTableSelectFilter';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -45,16 +46,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
 
   const currentDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
+  scrollUp();
+
   useEffect(() => {
     fetchData();
-    scrollUp();
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const fetchData = async () => {
     try {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '@/config';
@@ -16,6 +16,7 @@ import CpfData from './CpfData';
 import InfoButton from '../../components/InfoButton';
 import { useFormik } from 'formik';
 import { cpfReviewSchema } from '@/form/validations/schema';
+import scrollUp from '@/fetchers/scrollUp';
 
 const CpfReview = ({ onAdminClick }) => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const CpfReview = ({ onAdminClick }) => {
   const [showCpfData, setShowCpfData] = useState(false);
   const navigate = useNavigate();
 
-  const formik = useFormik({
+  const { values, errors, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
       cpf: '',
       birthday: null,
@@ -58,6 +59,8 @@ const CpfReview = ({ onAdminClick }) => {
     },
   });
 
+  scrollUp();
+
   return (
     <div className="components-container">
       <Header />
@@ -73,7 +76,7 @@ const CpfReview = ({ onAdminClick }) => {
                     Você obterá os dados de inscrição como nome, pacote cadastrado e demais informações relevantes.
                   </Card.Text>
                 </Row>
-                <Form onSubmit={formik.handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md={6}>
                       <Form.Group>
@@ -82,17 +85,17 @@ const CpfReview = ({ onAdminClick }) => {
                         </Form.Label>
                         <Form.Control
                           as={InputMask}
-                          isInvalid={formik.errors.cpf}
+                          value={values.cpf}
+                          isInvalid={errors.cpf}
+                          onChange={(e) => setFieldValue('cpf', e.target.value.replace(/\D/g, ''))}
                           mask="999.999.999-99"
                           name="cpf"
                           id="cpf"
                           className="cpf-container"
-                          value={formik.values.cpf}
-                          onChange={(e) => formik.setFieldValue('cpf', e.target.value.replace(/\D/g, ''))}
                           placeholder="000.000000-00"
                           title="Preencher CPF válido"
                         />
-                        <Form.Control.Feedback type="invalid">{formik.errors.cpf}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
@@ -101,10 +104,10 @@ const CpfReview = ({ onAdminClick }) => {
                           <b>Data de Nascimento:</b>
                         </Form.Label>
                         <Form.Control
-                          selected={formik.values.birthday}
-                          onChange={(date) => formik.setFieldValue('birthday', date)}
-                          isInvalid={formik.errors.birthday}
                           as={DatePicker}
+                          selected={values.birthday}
+                          isInvalid={errors.birthday}
+                          onChange={(date) => setFieldValue('birthday', date)}
                           locale={ptBR}
                           autoComplete="off"
                           dateFormat="dd/MM/yyyy"
@@ -117,7 +120,7 @@ const CpfReview = ({ onAdminClick }) => {
                           showYearDropdown={true}
                         />
                         <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
-                          {formik.errors.birthday}
+                          {errors.birthday}
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>

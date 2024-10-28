@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Container, Col, Row, Button, Modal, Accordion } from 'react-bootstrap';
+import { Container, Row, Button, Modal, Accordion } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import Icons from '@/components/Icons';
 import { toast } from 'react-toastify';
 import { registerLog } from '@/fetchers/userLogs';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import PropTypes from 'prop-types';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminUserLogs = ({ loggedUsername }) => {
   const [groupedLogs, setGroupedLogs] = useState({});
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  scrollUp();
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -30,10 +32,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchLogs();
-    scrollUp();
   }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const groupByUser = (logs) => {
     return logs.reduce((acc, log) => {
