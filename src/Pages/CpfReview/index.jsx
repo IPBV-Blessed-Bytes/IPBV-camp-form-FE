@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
-import fetcherWithCredentials from '@/fetchers/fetcherWithCredentials';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import Footer from '@/components/Footer';
 import PropTypes from 'prop-types';
@@ -44,7 +44,7 @@ const CpfReview = () => {
           },
         };
 
-        const response = await fetcherWithCredentials.post(`${BASE_URL}/camper/get-person-data`, payload);
+        const response = await fetcher.post(`${BASE_URL}/camper/get-person-data`, payload);
 
         if (response.status === 200) {
           setPersonData(response);

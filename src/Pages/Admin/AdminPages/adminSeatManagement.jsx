@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import privateFetcher from '@/fetchers/fetcherWithCredentials';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
@@ -34,7 +33,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
   const fetchAvailableSeats = async () => {
     setLoading(true);
     try {
-      const response = await privateFetcher.get('package-count');
+      const response = await fetcher.get('package-count');
       setInputSeats(response.data.totalSeats);
       setTotalBusVacancies(response.data.totalBusVacancies);
       setTotalPackages(response.data.totalPackages);
