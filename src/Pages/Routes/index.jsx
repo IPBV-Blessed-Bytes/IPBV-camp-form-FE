@@ -33,6 +33,7 @@ import AdminFeedback from '../Admin/AdminPages/adminFeedback';
 import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
 import InfoButton from '../../components/InfoButton';
+import CpfData from '../CpfReview/CpfData';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -42,6 +43,7 @@ const FormRoutes = () => {
   const isNotSuccessPathname = window.location.pathname !== '/sucesso';
   const isNotFeedbackPathname = window.location.pathname !== '/opiniao';
   const isNotVerifyingPathname = window.location.pathname !== '/verificacao';
+  const isNotVerifyingDataPathname = window.location.pathname !== '/verificacao/dados';
   const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
@@ -51,6 +53,7 @@ const FormRoutes = () => {
   const [withFood, setWithFood] = useState(false);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
+  const [personData, setPersonData] = useState(null);
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
 
   const navigate = useNavigate();
@@ -219,9 +222,13 @@ const FormRoutes = () => {
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
   const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
 
+  const handlePersonData = (data) => {
+    setPersonData(data);
+  };
+  
   return (
     <div className="form">
-      {!adminPathname && isNotFeedbackPathname && isNotVerifyingPathname && (
+      {!adminPathname && isNotFeedbackPathname && isNotVerifyingPathname && isNotVerifyingDataPathname && (
         <div className="components-container">
           <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
@@ -403,7 +410,11 @@ const FormRoutes = () => {
           />
 
           <Route path="/opiniao" element={<FormFeedback />} />
-          <Route path="/verificacao" element={<CpfReview onAdminClick={handleAdminClick} />} />
+          <Route
+            path="/verificacao"
+            element={<CpfReview onAdminClick={handleAdminClick} onPersonDataFetch={handlePersonData} />}
+          />
+          <Route path="/verificacao/dados" element={<CpfData cpfValues={personData} />} />
           <Route
             path="/unauthorized"
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
