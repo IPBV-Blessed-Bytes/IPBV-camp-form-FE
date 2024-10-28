@@ -1,6 +1,5 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Icons from '@/components/Icons';
 import scrollUp from '@/fetchers/scrollUp';
 
 const CpfData = ({ cpfValues }) => {
@@ -187,12 +186,16 @@ CpfData.propTypes = {
     data: PropTypes.shape({
       name: PropTypes.string,
       aggregate: PropTypes.string,
-      payment: PropTypes.string,
+      formPayment: PropTypes.string,
       registrationDate: PropTypes.string,
       packageTitle: PropTypes.string,
-      accomodation: PropTypes.string,
+      accomodationName: PropTypes.string,
+      extraMeals: PropTypes.string,
       subAccomodation: PropTypes.string,
-      transport: PropTypes.string,
+      transportation: PropTypes.string,
+      allergy: PropTypes.string,
+      numberVacancies: PropTypes.string,
+      needRide: PropTypes.bool,
       food: PropTypes.string,
       price: PropTypes.number,
     }),

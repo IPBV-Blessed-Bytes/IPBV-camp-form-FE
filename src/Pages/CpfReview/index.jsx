@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '@/config';
@@ -18,7 +18,7 @@ import { useFormik } from 'formik';
 import { cpfReviewSchema } from '@/form/validations/schema';
 import scrollUp from '@/fetchers/scrollUp';
 
-const CpfReview = ({ onAdminClick }) => {
+const CpfReview = () => {
   const [loading, setLoading] = useState(false);
   const [personData, setPersonData] = useState('');
   const [showCpfData, setShowCpfData] = useState(false);
@@ -142,7 +142,7 @@ const CpfReview = ({ onAdminClick }) => {
         <InfoButton />
 
         {showCpfData && (
-          <CpfData onAdminClick={onAdminClick} cpfValues={personData} loading={loading} voltar={setShowCpfData} />
+          <CpfData cpfValues={personData} />
         )}
       </div>
       <Footer onAdminClick={() => navigate('/admin')} />

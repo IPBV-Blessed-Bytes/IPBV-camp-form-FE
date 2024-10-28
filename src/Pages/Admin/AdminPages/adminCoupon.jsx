@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
+import { Table, Button, Form, Modal, Container } from 'react-bootstrap';
 import Icons from '@/components/Icons';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
