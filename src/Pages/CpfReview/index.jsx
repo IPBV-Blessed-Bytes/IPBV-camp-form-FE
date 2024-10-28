@@ -29,6 +29,8 @@ const CpfReview = ({ onAdminClick }) => {
       birthday: null,
     },
     validationSchema: cpfReviewSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async (values) => {
       setLoading(true);
       try {
