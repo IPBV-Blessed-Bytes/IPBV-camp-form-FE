@@ -7,6 +7,7 @@ import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import { registerLog } from '@/fetchers/userLogs';
 import PropTypes from 'prop-types';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  scrollUp();
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -29,8 +32,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       setLoading(false);
     }
   };
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const validateForm = () => {
     const { login, password, role } = formData;
@@ -130,7 +131,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchUsers();
-    scrollUp();
   }, []);
 
   return (

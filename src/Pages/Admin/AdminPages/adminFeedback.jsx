@@ -3,15 +3,12 @@ import { Container, Row, Table } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminFeedback = () => {
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    scrollUp();
-  }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  scrollUp();
 
   return (
     <Container fluid>

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/config';
 import { registerLog } from '@/fetchers/userLogs';
 import PropTypes from 'prop-types';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminCoupon = ({ loggedUsername }) => {
   const [coupons, setCoupons] = useState([]);
@@ -20,10 +21,11 @@ const AdminCoupon = ({ loggedUsername }) => {
   const [couponToDelete, setCouponToDelete] = useState(null);
   const [newCoupon, setNewCoupon] = useState({ cpf: '', discount: '', user: '' });
 
+  scrollUp();
+
   useEffect(() => {
     fetchCoupons();
     fetchPaidUsers();
-    scrollUp();
   }, []);
 
   const fetchCoupons = async () => {
@@ -49,8 +51,6 @@ const AdminCoupon = ({ loggedUsername }) => {
       console.error('Erro ao buscar usuários pagos:', error);
     }
   };
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const registeredUser = (cpf) => {
     const isValid = paidUsers.some((user) => {

@@ -6,10 +6,13 @@ import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import AdminHeader from '../AdminComponents/adminHeader';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminAggregate = () => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  scrollUp();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -42,10 +45,7 @@ const AdminAggregate = () => {
     };
 
     fetchUsers();
-    scrollUp();
   }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const columns = useMemo(
     () => [
@@ -75,7 +75,11 @@ const AdminAggregate = () => {
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())} className="table-cells-header" key={index}>
+                <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  className="table-cells-header"
+                  key={index}
+                >
                   <div className="d-flex justify-content-between align-items-center">
                     {column.render('Header')}
                     <span className="sort-icon-wrapper">
@@ -100,7 +104,9 @@ const AdminAggregate = () => {
               return (
                 <tr {...row.getRowProps()} key={index}>
                   {row.cells.map((cell, index) => (
-                    <td {...cell.getCellProps()} key={index}>{cell.render('Cell')}</td>
+                    <td {...cell.getCellProps()} key={index}>
+                      {cell.render('Cell')}
+                    </td>
                   ))}
                 </tr>
               );

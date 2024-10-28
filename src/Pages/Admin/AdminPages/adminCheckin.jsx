@@ -8,6 +8,7 @@ import Loading from '@/components/Loading';
 import AdminHeader from '../AdminComponents/adminHeader';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import PropTypes from 'prop-types';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');
@@ -15,11 +16,7 @@ const AdminCheckin = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
 
-  useEffect(() => {
-    scrollUp();
-  }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  scrollUp();
 
   const handleSearchUser = async () => {
     try {

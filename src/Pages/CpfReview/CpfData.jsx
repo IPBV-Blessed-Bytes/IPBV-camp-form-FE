@@ -1,6 +1,7 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Icons';
+import scrollUp from '@/fetchers/scrollUp';
 
 const CpfData = ({ cpfValues }) => {
   const paymentMethodMapping = {
@@ -8,6 +9,8 @@ const CpfData = ({ cpfValues }) => {
     pix: 'PIX',
     ticket: 'Boleto Bancário',
   };
+
+  scrollUp();
 
   const paymentMethodLabel = paymentMethodMapping[cpfValues?.data.formPayment] || 'Não Pagante';
 
@@ -172,8 +175,7 @@ const CpfData = ({ cpfValues }) => {
           }}
           size="lg"
         >
-          <Icons typeIcon="arrow-left" iconSize={30} fill="#000" />
-          &nbsp;Voltar
+          Voltar
         </Button>
       </div>
     </Card>

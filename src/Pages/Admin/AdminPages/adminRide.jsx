@@ -8,11 +8,13 @@ import { useTable, useSortBy } from 'react-table';
 import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import AdminHeader from '../AdminComponents/adminHeader';
+import scrollUp from '@/fetchers/scrollUp';
 
 const AdminRide = () => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
 
+  scrollUp();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,10 +34,7 @@ const AdminRide = () => {
     };
 
     fetchData();
-    scrollUp();
   }, []);
-
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
