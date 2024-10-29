@@ -8,6 +8,7 @@ import fetcher from '@/fetchers';
 export const AuthContext = createContext({
   user: {},
   isLoggedIn: false,
+  loading: false,
   login: () => {},
   logout: () => {},
 });
@@ -34,7 +35,10 @@ const AuthProvider = ({ children }) => {
     }
   });
 
+  const [loading, setLoading] = useState(false);
+
   const login = useCallback(async (userName, passWord) => {
+    setLoading(true); 
     try {
       const response = await fetcher.post('/auth/login', {
         login: userName,
@@ -50,6 +54,8 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error(error.message);
       toast.error('Erro ao fazer login. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -64,7 +70,7 @@ const AuthProvider = ({ children }) => {
     toast.success('Logout realizado com sucesso!');
   }, []);
 
-  return <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

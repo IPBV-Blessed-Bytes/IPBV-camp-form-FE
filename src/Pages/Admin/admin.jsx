@@ -7,12 +7,13 @@ import AdminLoggedOut from './AdminPages/adminLoggedOut';
 import AdminLoggedIn from './AdminPages/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
 import scrollUp from '@/hooks/useScrollUp';
+import Loading from '@/components/Loading';
 
 const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
-  const { login, logout, user, isLoggedIn } = useAuth();
+  const { login, logout, user, isLoggedIn, loading } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
   
@@ -58,6 +59,8 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
               totalValidWithBus={totalValidWithBus}
             />
           )}
+
+          <Loading loading={loading} />
         </Container>
       )}
     </>
