@@ -50,7 +50,24 @@ const formPaymentSchema = yup.object().shape({
 
 const cpfReviewSchema = yup.object().shape({
   cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
-  birthday: yup.date().required('Informe sua data de nascimento')
+  birthday: yup.date().required('Informe sua data de nascimento'),
 });
 
-export { personalInformationSchema, additionalInformationSchema, ExtraMealsSchema, formPaymentSchema, cpfReviewSchema };
+const formFeedbackSchema = yup.object().shape({
+  organization: yup.string().required('Selecione uma opção'),
+  experience: yup.string().required('Selecione uma opção'),
+  meals: yup.string().required('Selecione uma opção'),
+  schedule: yup.string().required('Selecione uma opção'),
+  structure: yup.string().required('Selecione uma opção'),
+  reception: yup.string().required('Selecione uma opção'),
+  probability: yup.string().required('Selecione uma opção'),
+});
+
+export {
+  personalInformationSchema,
+  additionalInformationSchema,
+  ExtraMealsSchema,
+  formPaymentSchema,
+  cpfReviewSchema,
+  formFeedbackSchema,
+};
