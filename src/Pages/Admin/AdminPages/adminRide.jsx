@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Container, Accordion, Table } from 'react-bootstrap';
+import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
@@ -9,8 +9,10 @@ import Loading from '@/components/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import AdminHeader from '../AdminComponents/adminHeader';
 import scrollUp from '@/hooks/useScrollUp';
+import { registerLog } from '@/fetchers/userLogs';
+import { toast } from 'react-toastify';
 
-const AdminRide = () => {
+const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +51,40 @@ const AdminRide = () => {
     }
   };
 
+  const handleCreateRelationship = async (offerRideId, needRideId) => {
+    try {
+      const needRide = rideData.needRide.find((ride) => ride.id === needRideId);
+      const offerRide = rideData.offerRide.find((ride) => ride.id === offerRideId);
+
+      await fetcher.put(`ride/${offerRideId}/${needRideId}`);
+      setRideData((prevData) => {
+        const updatedOfferRide = prevData.offerRide.map((offer) => {
+          if (offer.id === offerRideId) {
+            return {
+              ...offer,
+              relationship: [...(offer.relationship || []), { id: needRideId, name: needRide.name }],
+            };
+          }
+          return offer;
+        });
+
+        const updatedNeedRide = prevData.needRide.filter((ride) => ride.id !== needRideId);
+        toast.success('Carona vinculada com sucesso');
+
+        if (needRide && offerRide) {
+          registerLog(
+            `Criou o relacionamento de carona entre ${offerRide.name} (oferecendo) e ${needRide.name} (solicitando)`,
+            loggedUsername,
+          );
+        }
+
+        return { offerRide: updatedOfferRide, needRide: updatedNeedRide };
+      });
+    } catch (error) {
+      console.error('Erro ao criar relacionamento:', error);
+    }
+  };
+
   const generateExcel = () => {
     const fieldMapping = {
       id: 'ID',
@@ -82,6 +118,42 @@ const AdminRide = () => {
     XLSX.writeFile(workbook, 'rides_data.xlsx');
   };
 
+  const handleDeleteRelationship = async (needRideId) => {
+    try {
+      await fetcher.delete(`ride/${needRideId}`);
+
+      const removedNeedRide = rideData.offerRide
+        .flatMap((offer) => offer.relationship)
+        .find((related) => related.id === needRideId);
+
+      const offerWithRelationship = rideData.offerRide.find((offer) =>
+        offer.relationship.some((related) => related.id === needRideId),
+      );
+
+      setRideData((prevData) => {
+        const updatedOfferRide = prevData.offerRide.map((offer) => ({
+          ...offer,
+          relationship: offer.relationship.filter((related) => related.id !== needRideId),
+        }));
+
+        const updatedNeedRide = removedNeedRide ? [...prevData.needRide, removedNeedRide] : prevData.needRide;
+
+        toast.success('Carona desvinculada com sucesso');
+
+        if (offerWithRelationship && removedNeedRide) {
+          registerLog(
+            `Deletou o relacionamento de carona entre ${offerWithRelationship.name} (oferecendo) e ${removedNeedRide.name} (necessitando)`,
+            loggedUsername,
+          );
+        }
+
+        return { offerRide: updatedOfferRide, needRide: updatedNeedRide };
+      });
+    } catch (error) {
+      console.error('Erro ao desvincular carona:', error);
+    }
+  };
+
   const offerRideColumns = useMemo(
     () => [
       {
@@ -100,15 +172,55 @@ const AdminRide = () => {
         accessor: 'name',
       },
       {
-        Header: 'Vagas no Carro:',
+        Header: 'Vagas Disponibilizadas:',
         accessor: 'seatsInTheCar',
+      },
+      {
+        Header: 'Status:',
+        accessor: 'status',
+        Cell: ({ row }) => {
+          const availableSeats = row.original.seatsInTheCar - (row.original.relationship?.length || 0);
+          return availableSeats > 0 ? `${availableSeats} vagas disponíveis` : <b>CARRO LOTADO</b>;
+        },
       },
       {
         Header: 'Observação:',
         accessor: 'observation',
       },
+      {
+        Header: 'Caronas Relacionadas:',
+        accessor: 'relationship',
+        Cell: ({ row }) => {
+          return (
+            <Accordion>
+              <Accordion.Header>Vínculos</Accordion.Header>
+              <Accordion.Body className="accordion-body-custom">
+                <ul>
+                  {row.original.relationship && row.original.relationship.length > 0 ? (
+                    row.original.relationship.map((relatedRide) =>
+                      relatedRide ? (
+                        <li key={relatedRide.id}>
+                          <div className="d-flex justify-content-between">
+                            <span>{relatedRide.name}</span>&nbsp;
+                            <Button variant="danger" size="sm" onClick={() => handleDeleteRelationship(relatedRide.id)}>
+                              <Icons typeIcon="delete" iconSize={24} fill="#fff" />
+                            </Button>
+                          </div>
+                          <hr className="horizontal-line" />
+                        </li>
+                      ) : null,
+                    )
+                  ) : (
+                    <span>Sem caronas relacionadas</span>
+                  )}
+                </ul>
+              </Accordion.Body>
+            </Accordion>
+          );
+        },
+      },
     ],
-    [],
+    [rideData.needRide],
   );
 
   const needRideColumns = useMemo(
@@ -132,8 +244,31 @@ const AdminRide = () => {
         Header: 'Observação:',
         accessor: 'observation',
       },
+      {
+        Header: 'Caronas Disponíveis:',
+        accessor: 'offerSelect',
+        Cell: ({ row }) => {
+          return (
+            <Form.Select onChange={(e) => handleCreateRelationship(e.target.value, row.original.id)} defaultValue="">
+              <option value="" disabled>
+                Selecione uma carona...
+              </option>
+              {rideData.offerRide
+                .filter((offer) => {
+                  const availableSeats = offer.seatsInTheCar - offer.relationship.length;
+                  return availableSeats >= 1;
+                })
+                .map((offer) => (
+                  <option key={offer.id} value={offer.id}>
+                    {offer.name}
+                  </option>
+                ))}
+            </Form.Select>
+          );
+        },
+      },
     ],
-    [],
+    [rideData.offerRide],
   );
 
   const offerRideTableInstance = useTable({ columns: offerRideColumns, data: rideData.offerRide }, useSortBy);
@@ -200,31 +335,64 @@ const AdminRide = () => {
       />
 
       <Accordion className="mb-3">
-        <Accordion.Header>Oferecem Carona</Accordion.Header>
-        <Accordion.Body>
-          <div className="table-responsive">{renderTable(offerRideTableInstance)}</div>
-        </Accordion.Body>
+        <Accordion.Header>Oferecem Carona:</Accordion.Header>
+        <Accordion.Body>{renderTable(offerRideTableInstance)}</Accordion.Body>
       </Accordion>
 
       <Accordion>
-        <Accordion.Header>Solicitam Carona</Accordion.Header>
-        <Accordion.Body>
-          <div className="table-responsive">{renderTable(needRideTableInstance)}</div>
-        </Accordion.Body>
+        <Accordion.Header>Precisam de Carona:</Accordion.Header>
+        <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
       </Accordion>
-
       <Loading loading={loading} />
     </Container>
   );
 };
 
 AdminRide.propTypes = {
+  loggedUsername: PropTypes.string,
+  rideData: PropTypes.shape({
+    offerRide: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        relationship: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.string,
+            name: PropTypes.string,
+          }),
+        ),
+        seatsInTheCar: PropTypes.number,
+        checked: PropTypes.bool,
+      }),
+    ),
+    needRide: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string,
+      }),
+    ),
+  }),
   row: PropTypes.shape({
     original: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
       checked: PropTypes.bool,
-      id: PropTypes.string.isRequired,
-    }).isRequired,
+      seatsInTheCar: PropTypes.number,
+      relationship: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string,
+          name: PropTypes.string,
+        }),
+      ),
+    }),
+    getRowProps: PropTypes.func,
+    id: PropTypes.string,
+    cells: PropTypes.arrayOf(PropTypes.object),
   }),
+  handleCreateRelationship: PropTypes.func,
+  handleDeleteRelationship: PropTypes.func,
+  handleCheckboxChange: PropTypes.func,
+  registerLog: PropTypes.func,
 };
 
 export default AdminRide;
