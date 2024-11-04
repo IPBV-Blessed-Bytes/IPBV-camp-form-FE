@@ -10,6 +10,7 @@ import Loading from '@/components/Loading';
 import InfoButton from '@/components/InfoButton';
 import { toast } from 'react-toastify';
 import useScrollUp from '@/hooks/useScrollUp';
+import Icons from '@/components/Icons';
 
 const FormFeedback = () => {
   const [loading, setLoading] = useState(false);
@@ -107,6 +108,14 @@ const FormFeedback = () => {
                       Como você avaliaria a organização geral do acampamento?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.organization && errors.organization && (
+                      <>
+                        <div className="invalid-feedback d-block">
+                          {errors.organization}&nbsp;
+                          <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                        </div>
+                      </>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {['Excelente', 'Boa', 'Regular', 'Precisa melhorar', 'Não quero opinar'].map((option, index) => (
@@ -120,7 +129,6 @@ const FormFeedback = () => {
                         checked={values.organization === option}
                         onChange={handleChange}
                         isInvalid={touched.organization && errors.organization}
-                        feedback={errors.organization}
                       />
                     ))}
                   </Col>
@@ -132,6 +140,12 @@ const FormFeedback = () => {
                       Como foi a sua experiência com o processo de inscrição?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.experience && errors.experience && (
+                      <div className="invalid-feedback d-block">
+                        {errors.experience}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {['Muito fácil', 'Fácil', 'Um pouco difícil', 'Difícil', 'Não quero opinar'].map(
@@ -146,7 +160,6 @@ const FormFeedback = () => {
                           checked={values.experience === option}
                           onChange={handleChange}
                           isInvalid={touched.experience && errors.experience}
-                          feedback={errors.experience}
                         />
                       ),
                     )}
@@ -156,9 +169,15 @@ const FormFeedback = () => {
                 <Form.Group as={Row} className="mb-3">
                   <Form.Label column sm="6">
                     <b>
-                      A qualidade das refeições oferecidas no acampamento foi:
+                      Como foi a qualidade das refeições oferecidas no acampamento?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.meals && errors.meals && (
+                      <div className="invalid-feedback d-block">
+                        {errors.meals}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {['Excelente', 'Boa', 'Regular', 'Ruim', 'Não quero opinar'].map((option, index) => (
@@ -172,7 +191,6 @@ const FormFeedback = () => {
                         checked={values.meals === option}
                         onChange={handleChange}
                         isInvalid={touched.meals && errors.meals}
-                        feedback={errors.meals}
                       />
                     ))}
                   </Col>
@@ -183,6 +201,12 @@ const FormFeedback = () => {
                     <b>
                       A programação de atividades foi adequada?<span className="required-field"> *</span>
                     </b>
+                    {touched.schedule && errors.schedule && (
+                      <div className="invalid-feedback d-block">
+                        {errors.schedule}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {[
@@ -202,7 +226,6 @@ const FormFeedback = () => {
                         checked={values.schedule === option}
                         onChange={handleChange}
                         isInvalid={touched.schedule && errors.schedule}
-                        feedback={errors.schedule}
                       />
                     ))}
                   </Col>
@@ -214,6 +237,12 @@ const FormFeedback = () => {
                       A estrutura e acomodações do acampamento atenderam suas expectativas?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.structure && errors.structure && (
+                      <div className="invalid-feedback d-block">
+                        {errors.structure}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {[
@@ -233,7 +262,6 @@ const FormFeedback = () => {
                         checked={values.structure === option}
                         onChange={handleChange}
                         isInvalid={touched.structure && errors.structure}
-                        feedback={errors.structure}
                       />
                     ))}
                   </Col>
@@ -245,6 +273,12 @@ const FormFeedback = () => {
                       Você se sentiu acolhido e integrado durante o período de acampamento?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.reception && errors.reception && (
+                      <div className="invalid-feedback d-block">
+                        {errors.reception}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {[
@@ -264,7 +298,6 @@ const FormFeedback = () => {
                         checked={values.reception === option}
                         onChange={handleChange}
                         isInvalid={touched.reception && errors.reception}
-                        feedback={errors.reception}
                       />
                     ))}
                   </Col>
@@ -276,6 +309,12 @@ const FormFeedback = () => {
                       Qual é a probabilidade de você participar acampamento de 2026?
                       <span className="required-field"> *</span>
                     </b>
+                    {touched.probability && errors.probability && (
+                      <div className="invalid-feedback d-block">
+                        {errors.probability}&nbsp;
+                        <Icons className="ml-3" typeIcon="warn" iconSize={25} fill="#c92432" />
+                      </div>
+                    )}
                   </Form.Label>
                   <Col sm="6">
                     {['Muito provável', 'Provável', 'Pouco provável', 'Improvável', 'Não quero opinar'].map(
@@ -290,7 +329,6 @@ const FormFeedback = () => {
                           checked={values.probability === option}
                           onChange={handleChange}
                           isInvalid={touched.probability && errors.probability}
-                          feedback={errors.probability}
                         />
                       ),
                     )}
