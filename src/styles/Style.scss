@@ -1154,3 +1154,13 @@ button.btn.btn-outline-danger:hover svg {
   font-size: 1.1875rem !important;
   padding: 0.375rem;
 }
+
+.accordion-body-custom {
+  border: 2px solid $alternate-dark-gray;
+  border-top: 0; 
+
+  ul {
+    padding-left: 1rem !important;
+    margin: 0;
+  }
+}
