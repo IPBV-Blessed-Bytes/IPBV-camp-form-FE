@@ -348,7 +348,7 @@ const FormRoutes = () => {
             path="/admin/carona"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-                <AdminRide />
+                <AdminRide loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
