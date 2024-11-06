@@ -203,7 +203,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
               </Col>
 
               <Col md={4} className="mb-3">
-                <Form.Group>
+                <Form.Group className="info-text-wrapper">
                   <Form.Label>
                     <b>RG:</b>
                   </Form.Label>
@@ -224,6 +224,9 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
                   />
 
                   <Form.Control.Feedback type="invalid">{errors.rg}</Form.Control.Feedback>
+                  <Card.Text className="mt-2 mb-0">
+                    <em>Caso não possua RG, preencher 0000000</em>
+                  </Card.Text>
                 </Form.Group>
               </Col>
             </Row>
