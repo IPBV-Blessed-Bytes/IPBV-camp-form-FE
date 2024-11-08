@@ -17,6 +17,7 @@ import AdminTableModal from '../AdminComponents/adminTableModal';
 import AdminHeader from '../AdminComponents/adminHeader';
 import AdminTableSelectFilter from '../AdminComponents/adminTableSelectFilter';
 import scrollUp from '@/hooks/useScrollUp';
+import AdminColumnFilterWithTwoValues from '../AdminComponents/adminTableColumnFilterWithTwoValues';
 
 const AdminTable = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -359,7 +360,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'personalInformation.name',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: alphabeticalSort,
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Forma de Pagamento:',
@@ -390,7 +391,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'contact.church',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Data de Nascimento:',
@@ -409,7 +410,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'personalInformation.rg',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Órgão Emissor:',
@@ -418,7 +419,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           ${row.personalInformation.rgShipperState}`,
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Tem Vaga de Carona:',
@@ -454,7 +455,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'contact.rideObservation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Data de Inscrição:',
@@ -467,7 +468,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'personalInformation.gender',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Celular:',
@@ -488,56 +489,56 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'contact.email',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Preço:',
         accessor: 'totalPrice',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Agregados:',
         accessor: 'contact.aggregate',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Acomodação:',
         accessor: 'package.accomodationName',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Sub Acomodação:',
         accessor: 'package.subAccomodation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Transporte:',
         accessor: 'package.transportation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Alimentação:',
         accessor: 'package.food',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Refeição Extra:',
@@ -566,7 +567,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'observation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value || '-'),
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Cupom:',
@@ -605,10 +606,19 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           checkin: row.checkin,
           checkinTime: row.checkinTime,
         }),
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithTwoValues',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const checkinText = value.checkin ? 'Sim' : !value.checkin ? 'Não' : '-';
+          const checkinText = value.checkin ? 'Sim' : 'Não';
           const checkinTimeText = value.checkinTime ? value.checkinTime : '-';
 
           const checkinTimeTextSplited = checkinTimeText !== '-' ? checkinTimeText.split(' ') : null;
@@ -652,6 +662,13 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     ];
   }, [data, selectedRows]);
 
+  const selectWithTwoValues = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.checkin === filterValue;
+    });
+  };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -666,6 +683,9 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       defaultColumn: { Filter: ({ column }) => <AdminColumnFilter column={column} /> },
       initialState: {
         sortBy: JSON.parse(sessionStorage.getItem('sortBy')) || [],
+      },
+      filterTypes: {
+        selectWithTwoValues,
       },
     },
     useFilters,
@@ -955,7 +975,7 @@ AdminTable.propTypes = {
   }),
   loggedUsername: PropTypes.string,
   userRole: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.string,
 };
 
 export default AdminTable;
