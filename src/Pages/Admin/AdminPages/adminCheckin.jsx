@@ -148,7 +148,13 @@ const AdminCheckin = ({ loggedUsername }) => {
               </p>
               <p>
                 <strong>Forma de Pagamento:</strong>{' '}
-                {userInfo.formPayment.formPayment ? userInfo.formPayment.formPayment : '-'}
+                {userInfo.formPayment.formPayment === 'creditCard'
+                  ? 'Cartão de Credito'
+                  : userInfo.formPayment.formPayment === 'pix'
+                  ? 'PIX'
+                  : userInfo.formPayment.formPayment === 'boleto'
+                  ? 'Boleto Bancário'
+                  : 'Não Pagante'}
               </p>
               <p>
                 <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
