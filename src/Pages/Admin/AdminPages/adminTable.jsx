@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
@@ -311,6 +311,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         ),
         accessor: 'selection',
         Filter: '',
+        filter: '',
         sortType: 'alphanumeric',
         Cell: ({ row }) => (
           <>
@@ -427,7 +428,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           car: row.contact.car,
           numberVacancies: row.contact.numberVacancies,
         }),
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithRide',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const carText = value.car ? 'Sim' : !value.car ? 'Não' : '-';
@@ -476,7 +486,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           cellPhone: row.contact.cellPhone,
           isWhatsApp: row.contact.isWhatsApp,
         }),
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithCellphone',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
@@ -548,7 +567,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
             ? row.extraMeals.extraMeals
             : [row.extraMeals.extraMeals],
         }),
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithExtraMeals',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const someFoodText = value.someFood ? 'Sim' : !value.someFood ? 'Não' : '-';
@@ -575,7 +603,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           discountCoupon: row.package.discountCoupon,
           discountValue: row.package.discountValue,
         }),
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithCoupon',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
@@ -615,7 +652,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
             ]}
           />
         ),
-        filter: 'selectWithTwoValues',
+        filter: 'selectWithCheckin',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const checkinText = value.checkin ? 'Sim' : 'Não';
@@ -635,7 +672,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+          />
+        ),
+        filter: 'selectWithManualRegistration',
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
@@ -662,10 +708,45 @@ const AdminTable = ({ loggedUsername, userRole }) => {
     ];
   }, [data, selectedRows]);
 
-  const selectWithTwoValues = (rows, id, filterValue) => {
+  const selectWithRide = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.car === filterValue;
+    });
+  };
+
+  const selectWithCellphone = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.isWhatsApp === filterValue;
+    });
+  };
+
+  const selectWithExtraMeals = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.someFood === filterValue;
+    });
+  };
+
+  const selectWithCoupon = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.discountCoupon === filterValue;
+    });
+  };
+
+  const selectWithCheckin = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const checkinData = row.values[id];
       return filterValue === undefined || checkinData.checkin === filterValue;
+    });
+  };
+
+  const selectWithManualRegistration = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData === filterValue;
     });
   };
 
@@ -685,7 +766,12 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         sortBy: JSON.parse(sessionStorage.getItem('sortBy')) || [],
       },
       filterTypes: {
-        selectWithTwoValues,
+        selectWithRide,
+        selectWithCellphone,
+        selectWithExtraMeals,
+        selectWithCoupon,
+        selectWithCheckin,
+        selectWithManualRegistration,
       },
     },
     useFilters,
