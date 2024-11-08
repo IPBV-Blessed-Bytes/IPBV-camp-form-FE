@@ -390,7 +390,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Igreja:',
         accessor: 'contact.church',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Boa Viagem', label: 'Boa Viagem' },
+              { value: 'Outra', label: 'Outra' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
@@ -476,7 +484,16 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Categoria:',
         accessor: 'personalInformation.gender',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Homem', label: 'Adulto Masculino' },
+              { value: 'Mulher', label: 'Adulto Feminimo' },
+              { value: 'Crianca', label: 'Criança (até 10 anos)' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
@@ -534,21 +551,49 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Acomodação:',
         accessor: 'package.accomodationName',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Colegio XV de Novembro', label: 'Colégio XV de Novembro' },
+              { value: 'Seminario Sao Jose', label: 'Seminário São José' },
+              { value: 'Outra Acomodacao Externa', label: 'Outra Acomodação Externa' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Sub Acomodação:',
         accessor: 'package.subAccomodation',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Colegio Individual', label: 'Colégio Individual' },
+              { value: 'Colegio Familia', label: 'Colégio Família' },
+              { value: 'Colegio Camping', label: 'Colégio Camping' },
+              { value: 'Seminario', label: 'Seminário' },
+              { value: 'Outra', label: 'Outra' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Transporte:',
         accessor: 'package.transportation',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Com Onibus', label: 'Com Ônibus' },
+              { value: 'Sem Onibus', label: 'Sem Ônibus' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
