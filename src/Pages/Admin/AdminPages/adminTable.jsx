@@ -600,7 +600,15 @@ const AdminTable = ({ loggedUsername, userRole }) => {
       {
         Header: 'Alimentação:',
         accessor: 'package.food',
-        Filter: ({ column }) => <AdminColumnFilter column={column} />,
+        Filter: ({ column }) => (
+          <AdminTableSelectFilter
+            column={column}
+            options={[
+              { value: 'Almoco e jantar', label: 'Com Alimentação' },
+              { value: 'Sem Alimentacao', label: 'Sem Alimentação' },
+            ]}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
