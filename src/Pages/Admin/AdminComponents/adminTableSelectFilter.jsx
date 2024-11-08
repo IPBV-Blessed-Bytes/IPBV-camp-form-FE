@@ -2,16 +2,13 @@ import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 const AdminTableSelectFilter = ({ column: { setFilter, filterValue }, options }) => {
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setFilter(value === 'all' ? undefined : value);
+  };
+
   return (
-    <Form.Select
-      className="form-select-lg-custom"
-      value={filterValue || 'all'}
-      onChange={(e) => {
-        const value = e.target.value;
-        setFilter(value === 'all' ? undefined : value);
-      }}
-      size="lg"
-    >
+    <Form.Select className="form-select-lg-custom" value={filterValue || 'all'} onChange={handleChange} size="lg">
       <option value="all">Todos</option>
       {options.map((option, index) => (
         <option key={index} value={option.value}>
