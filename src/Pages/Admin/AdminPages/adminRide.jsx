@@ -193,7 +193,7 @@ const AdminRide = ({ loggedUsername }) => {
         Cell: ({ row }) => {
           return (
             <Accordion>
-              <Accordion.Header>Vínculos</Accordion.Header>
+              <Accordion.Header className="accordion-header-custom">Vínculos</Accordion.Header>
               <Accordion.Body className="accordion-body-custom">
                 <ul>
                   {row.original.relationship && row.original.relationship.length > 0 ? (
@@ -335,12 +335,12 @@ const AdminRide = ({ loggedUsername }) => {
       />
 
       <Accordion className="mb-3">
-        <Accordion.Header>Oferecem Carona:</Accordion.Header>
+        <Accordion.Header>Oferecem Carona</Accordion.Header>
         <Accordion.Body>{renderTable(offerRideTableInstance)}</Accordion.Body>
       </Accordion>
 
       <Accordion>
-        <Accordion.Header>Precisam de Carona:</Accordion.Header>
+        <Accordion.Header>Precisam de Carona</Accordion.Header>
         <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
       </Accordion>
       <Loading loading={loading} />

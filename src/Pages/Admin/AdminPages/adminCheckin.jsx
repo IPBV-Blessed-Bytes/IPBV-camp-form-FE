@@ -187,7 +187,7 @@ const AdminCheckin = ({ loggedUsername }) => {
             <Col lg={8} md={7} xs={8} className="mb-2">
               <Form.Group controlId="checkinStatus">
                 <Form.Label>
-                  <b>Atualizar Check-in:</b>
+                  <b>Check-in realizado?</b>
                 </Form.Label>
                 <Form.Select
                   value={checkinStatus}

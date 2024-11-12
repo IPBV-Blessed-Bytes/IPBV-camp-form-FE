@@ -213,6 +213,7 @@ const AdminCoupon = ({ loggedUsername }) => {
                     ? setEditingCoupon({ ...editingCoupon, cpf: e.target.value })
                     : setNewCoupon({ ...newCoupon, cpf: e.target.value })
                 }
+                placeholder="00000000000"
               />
             </Form.Group>
 
@@ -229,6 +230,7 @@ const AdminCoupon = ({ loggedUsername }) => {
                     ? setEditingCoupon({ ...editingCoupon, discount: e.target.value })
                     : setNewCoupon({ ...newCoupon, discount: e.target.value })
                 }
+                placeholder="000"
               />
             </Form.Group>
           </Form>
