@@ -473,7 +473,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'contact.rideObservation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Data de Inscrição:',
@@ -539,14 +539,14 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'contact.allergy',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Agregados:',
         accessor: 'contact.aggregate',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Acomodação:',
@@ -610,7 +610,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Refeição Extra:',
@@ -648,7 +648,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
         accessor: 'observation',
         Filter: ({ column }) => <AdminColumnFilter column={column} />,
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Cupom:',
