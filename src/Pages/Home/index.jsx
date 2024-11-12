@@ -57,14 +57,17 @@ const FormHome = (props) => {
                   ajudar.
                 </li>
                 <li>
-                  Não é necessário enviar comprovantes de pagamento de nenhuma espécie (cartão de crédito, Pix ou
-                  boleto). Uma vez que o pagamento é feito e aprovado, tudo é registrado digitalmente, e não se faz
-                  necessário o envio de comprovante para os meios de comunicação da igreja.
+                  <b>
+                    Não é necessário enviar comprovantes de pagamento de nenhuma espécie (cartão de crédito, Pix ou
+                    boleto).
+                  </b>{' '}
+                  Uma vez que o pagamento é feito e aprovado, tudo é registrado digitalmente, e não se faz necessário o
+                  envio de comprovante para os meios de comunicação da igreja.
                 </li>
                 <li>
                   Caso algum parente (pai, mãe, esposo, esposa, filhos, etc.) compartilhe o mesmo quarto que você, seja
-                  no colégio ou seminário, por favor, informe-nos na seção de contato. Isso nos permitirá organizar os
-                  quartos para todos.
+                  no colégio ou seminário, por favor, informe-nos na seção de contato no campo de agregados. Isso nos
+                  permitirá organizar os quartos para todos.
                 </li>
               </ul>
             </div>

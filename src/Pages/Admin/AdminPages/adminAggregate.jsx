@@ -261,7 +261,8 @@ const AdminAggregate = () => {
               type="text"
               value={newRoomName}
               onChange={(e) => setNewRoomName(e.target.value)}
-              placeholder="Digite o nome do novo quarto"
+              placeholder="Nome do novo quarto"
+              size="lg"
             />
           </Form.Group>
         </Modal.Body>

@@ -1145,7 +1145,7 @@ button.btn.btn-outline-danger:hover svg {
   padding: 0.25rem;
   position: absolute;
   right: 0;
-  transform: translate(-1.125rem, -2.0625rem);
+  transform: translate(-1.25rem, -2.375rem);
 }
 
 .form-select-lg-custom {
@@ -1163,4 +1163,8 @@ button.btn.btn-outline-danger:hover svg {
     padding-left: 1rem !important;
     margin: 0;
   }
+}
+
+.accordion-header-custom {
+  border: 2px solid $alternate-dark-gray;
 }

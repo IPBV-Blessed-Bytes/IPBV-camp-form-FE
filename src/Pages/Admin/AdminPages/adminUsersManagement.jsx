@@ -206,6 +206,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 placeholder="Digite o login"
                 value={formData.login}
                 onChange={(e) => setFormData({ ...formData, login: e.target.value })}
+                size="lg"
               />
             </Form.Group>
             <Form.Group controlId="formPassword" className="mt-3">
@@ -217,6 +218,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 placeholder="Digite a senha"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                size="lg"
               />
               <Icons
                 className="user-management-icon"
@@ -228,7 +230,11 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               <Form.Label>
                 <b>Função:</b>
               </Form.Label>
-              <Form.Select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })}>
+              <Form.Select
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                size="lg"
+              >
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
