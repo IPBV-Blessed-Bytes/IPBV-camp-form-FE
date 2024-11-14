@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
