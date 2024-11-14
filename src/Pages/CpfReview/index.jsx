@@ -88,7 +88,7 @@ const CpfReview = ({ onPersonDataFetch }) => {
                         name="cpf"
                         id="cpf"
                         className="cpf-container"
-                        placeholder="000.000000-00"
+                        placeholder="000.000.000-00"
                         title="Preencher CPF válido"
                       />
                       <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
