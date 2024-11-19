@@ -204,7 +204,7 @@ const AdminAggregate = () => {
         </Button>
       </div>
 
-      <Accordion defaultActiveKey="1">
+      <Accordion className="mb-4" defaultActiveKey="1">
         {rooms.map((room) => (
           <Accordion.Item eventKey={room.id} key={room.id}>
             <Accordion.Header>{room.name}</Accordion.Header>
