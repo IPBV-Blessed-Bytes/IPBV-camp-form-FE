@@ -12,7 +12,7 @@ import scrollUp from '@/hooks/useScrollUp';
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [formData, setFormData] = useState({ login: '', password: '', role: '' });
+  const [formData, setFormData] = useState({ userName: '', password: '', role: '' });
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -34,8 +34,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const validateForm = () => {
-    const { login, password, role } = formData;
-    if (!login || !password || !role) {
+    const { userName, password, role } = formData;
+    if (!userName || !password || !role) {
       toast.error('Todos os campos são obrigatórios');
       return false;
     }
@@ -49,9 +49,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       return;
     }
 
-    const existingUser = users.find((user) => user.login === formData.login);
-    if (existingUser && (!editingUser || editingUser.login !== formData.login)) {
-      toast.error('Este login já está em uso. Escolha outro login');
+    const existingUser = users.find((user) => user.userName === formData.userName);
+    if (existingUser && (!editingUser || editingUser.userName !== formData.userName)) {
+      toast.error('Este nome de usuário já está em uso. Escolha outro nome');
       return;
     }
 
@@ -61,13 +61,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       if (editingUser) {
         await fetcher.put(`users/${editingUser.id}`, formData);
         toast.success('Usuário editado com sucesso');
-        registerLog(`Editou usuário ${editingUser.login}`, loggedUsername);
+        registerLog(`Editou usuário ${editingUser.userName}`, loggedUsername);
       } else {
         await fetcher.post('users', formData);
         toast.success('Usuário criado com sucesso');
-        registerLog(`Criou usuário ${formData.login}`, loggedUsername);
+        registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
       }
-      setFormData({ login: '', password: '', role: '' });
+      setFormData({ userName: '', password: '', role: '' });
       setEditingUser(null);
       fetchUsers();
       setShowModal(false);
@@ -84,7 +84,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       await fetcher.delete(`users/${userToDelete.id}`);
       toast.success('Usuário deletado com sucesso');
       fetchUsers();
-      registerLog(`Deletou usuário ${userToDelete.login}`, loggedUsername);
+      registerLog(`Deletou usuário ${userToDelete.userName}`, loggedUsername);
       setShowDeleteModal(false);
     } catch (error) {
       toast.error('Erro ao deletar usuário');
@@ -94,13 +94,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const handleCreateClick = () => {
-    setFormData({ login: '', password: '', role: '' });
+    setFormData({ userName: '', password: '', role: '' });
     setEditingUser(false);
     setShowModal(true);
   };
 
   const handleEditClick = (user) => {
-    setFormData({ login: user.login, password: user.password, role: user.role });
+    setFormData({ userName: user.userName, password: user.password, role: user.role });
     setEditingUser(user);
     setShowModal(true);
   };
@@ -153,7 +153,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Login:</th>
+                <th className="table-cells-header">Usuário:</th>
                 <th className="table-cells-header">Senha:</th>
                 <th className="table-cells-header">Função:</th>
                 <th className="table-cells-header">Ações:</th>
@@ -162,7 +162,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.login}</td>
+                  <td>{user.userName}</td>
                   <td>{user.password}</td>
                   <td>{translateRole(user.role)}</td>
                   <td>
@@ -170,14 +170,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                       variant="outline-success"
                       className="me-2"
                       onClick={() => handleEditClick(user)}
-                      disabled={user.login === 'admin@ipbv'}
+                      disabled={user.userName === 'admin@ipbv'}
                     >
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>
                     <Button
                       variant="outline-danger"
                       onClick={() => handleDeleteClick(user)}
-                      disabled={user.login === 'admin@ipbv'}
+                      disabled={user.userName === 'admin@ipbv'}
                     >
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
@@ -199,13 +199,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           <Form>
             <Form.Group controlId="formLogin">
               <Form.Label>
-                <b>Login:</b>
+                <b>Usuário:</b>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite o login"
-                value={formData.login}
-                onChange={(e) => setFormData({ ...formData, login: e.target.value })}
+                placeholder="Digite o nome de usuário"
+                value={formData.userName}
+                onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                 size="lg"
               />
             </Form.Group>
@@ -250,7 +250,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" type="submit" onClick={handleSubmit} disabled={editingUser?.login === 'admin@ipbv'}>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={handleSubmit}
+            disabled={editingUser?.userName === 'admin@ipbv'}
+          >
             {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
           </Button>
         </Modal.Footer>
@@ -263,7 +268,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja excluir o usuário <strong>{userToDelete?.login}</strong>?
+          Tem certeza que deseja excluir o usuário <strong>{userToDelete?.userName}</strong>?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
