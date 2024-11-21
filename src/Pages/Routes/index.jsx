@@ -34,6 +34,7 @@ import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
 import InfoButton from '../../components/InfoButton';
 import CpfData from '../CpfReview/CpfData';
+import AdminExtraMeals from '../Admin/AdminPages/adminExtraMeals';
 
 const FormRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -365,6 +366,14 @@ const FormRoutes = () => {
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
                 <AdminAggregate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/alimentacao"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+                <AdminExtraMeals />
               </ProtectedRoute>
             }
           />
