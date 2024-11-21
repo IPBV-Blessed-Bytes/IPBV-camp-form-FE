@@ -431,27 +431,33 @@ body {
     }
 
     &__coupons-card {
+      background-color: $light-orange;
+    }
+
+    &__aggregate-card {
+      background-color: $intense-green-light;
+    }
+
+    &__feedback-card {
       background-color: $light-green;
+    }
+
+    &__extra-meals-card {
+      background-color: $light-yellow;
     }
 
     &__checkin-card {
       background-color: $medium-gray;
     }
 
-    &__aggregate-card {
-      background-color: $light-yellow;
-    }
-
-    &__feedback-card {
-      background-color: $light-orange;
-    }
 
     &__registered-card,
     &__ride-card,
     &__coupons-card,
     &__checkin-card,
     &__aggregate-card,
-    &__feedback-card {
+    &__feedback-card,
+    &__extra-meals-card {
       align-items: center;
       cursor: pointer;
       display: flex;
@@ -1157,7 +1163,7 @@ button.btn.btn-outline-danger:hover svg {
 
 .accordion-body-custom {
   border: 2px solid $alternate-dark-gray;
-  border-top: 0; 
+  border-top: 0;
 
   ul {
     padding-left: 1rem !important;

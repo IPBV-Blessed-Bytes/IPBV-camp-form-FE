@@ -34,6 +34,7 @@ const AdminLoggedIn = ({
   const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
   const aggregateButtonHomePermissions = permissions(userRole, 'aggregate-button-home');
   const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
+  const extraMealsButtonHomePermissions = permissions(userRole, 'extra-meals-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
@@ -66,6 +67,9 @@ const AdminLoggedIn = ({
     navigate('/admin/opiniao');
   };
 
+  const handleExtraMealsClick = () => {
+    navigate('/admin/alimentacao');
+  };
   scrollUp();
 
   useEffect(() => {
@@ -276,6 +280,15 @@ const AdminLoggedIn = ({
           cardType="feedback-card"
           title="Feedbacks"
           typeIcon="feedback"
+          iconSize={50}
+        />
+
+        <AdminSessionCard
+          permission={extraMealsButtonHomePermissions}
+          onClick={handleExtraMealsClick}
+          cardType="extra-meals-card"
+          title="Alimentação Extra"
+          typeIcon="food"
           iconSize={50}
         />
 
