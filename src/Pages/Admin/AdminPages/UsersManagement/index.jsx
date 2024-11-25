@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap';
-import fetcher from '@/fetchers/fetcherWithCredentials';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+import { registerLog } from '@/fetchers/userLogs';
+import fetcher from '@/fetchers/fetcherWithCredentials';
+import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
-import AdminHeader from '../AdminComponents/adminHeader';
-import { registerLog } from '@/fetchers/userLogs';
-import PropTypes from 'prop-types';
-import scrollUp from '@/hooks/useScrollUp';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);

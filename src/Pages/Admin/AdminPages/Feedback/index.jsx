@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import Loading from '@/components/Loading';
-import AdminHeader from '../AdminComponents/adminHeader';
 import scrollUp from '@/hooks/useScrollUp';
+import Loading from '@/components/Loading';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const TABLE_HEADERS = [
   'ID',
@@ -23,8 +23,6 @@ const AdminFeedback = () => {
   const [loading, setLoading] = useState(true);
 
   scrollUp();
-
-  console.log(feedbacks);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {

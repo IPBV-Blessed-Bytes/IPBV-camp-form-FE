@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container } from 'react-bootstrap';
-import AdminLoggedOut from './AdminPages/adminLoggedOut';
-import AdminLoggedIn from './AdminPages/adminLoggedIn';
 import useAuth from '@/hooks/useAuth';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Loading';
+import AdminLoggedOut from '../LoggedOut';
+import AdminLoggedIn from '../LoggedIn';
 
-const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
+const Login = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
@@ -67,11 +67,11 @@ const AdminHome = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) =>
   );
 };
 
-AdminHome.propTypes = {
+Login.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
   permissions: PropTypes.array.isRequired,
   userRole: PropTypes.string,
   totalValidWithBus: PropTypes.number,
 };
 
-export default AdminHome;
+export default Login;

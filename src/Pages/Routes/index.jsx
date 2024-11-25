@@ -1,42 +1,42 @@
-import 'react-datepicker/dist/react-datepicker.css';
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { enumSteps, initialValues } from './constants';
+import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import { BASE_URL } from '@/config/index';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import ChooseFormPayment from '../ChooseFormPayment';
-import FormContact from '../Contact';
+import useAuth from '@/hooks/useAuth';
+import calculateAge from '../Packages/utils/calculateAge';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import InfoButton from '../../components/InfoButton';
 import FormHome from '../Home';
-import FormPackages from '../Packages';
 import FormPersonalData from '../PersonalData';
-import FormSuccess from '../Success';
+import FormContact from '../Contact';
+import FormPackages from '../Packages';
 import ExtraMeals from '../ExtraMeals';
 import FinalReview from '../FinalReview';
-import AdminHome from '../Admin/admin';
-import AdminTable from '../Admin/AdminPages/adminTable';
-import AdminRide from '../Admin/AdminPages/adminRide';
-import { enumSteps, initialValues } from './constants';
-import useAuth from '@/hooks/useAuth';
-import AdminCoupon from '../Admin/AdminPages/adminCoupon';
-import { BASE_URL } from '@/config/index';
-import calculateAge from '../Packages/utils/calculateAge';
-import AdminUserLogs from '../Admin/AdminPages/adminUserLogs';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
-import AdminCheckin from '../Admin/AdminPages/adminCheckin';
-import AdminAggregate from '../Admin/AdminPages/adminAggregate';
-import AdminSeatManagement from '../Admin/AdminPages/adminSeatManagement';
-import AdminUsersManagement from '../Admin/AdminPages/adminUsersManagement';
-import AdminFeedback from '../Admin/AdminPages/adminFeedback';
+import ChooseFormPayment from '../ChooseFormPayment';
+import FormSuccess from '../Success';
 import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
-import InfoButton from '../../components/InfoButton';
 import CpfData from '../CpfReview/CpfData';
-import AdminExtraMeals from '../Admin/AdminPages/adminExtraMeals';
+import Login from '../Admin/AdminPages/Login';
+import AdminCampers from '../Admin/AdminPages/Campers';
+import AdminRide from '../Admin/AdminPages/Ride';
+import AdminCoupon from '../Admin/AdminPages/Coupon';
+import AdminAggregate from '../Admin/AdminPages/Aggregate';
+import AdminExtraMeals from '../Admin/AdminPages/ExtraMeals';
+import AdminCheckin from '../Admin/AdminPages/Checkin';
+import AdminUserLogs from '../Admin/AdminPages/UserLogs';
+import AdminSeatManagement from '../Admin/AdminPages/SeatManagement';
+import AdminUsersManagement from '../Admin/AdminPages/UsersManagement';
+import AdminFeedback from '../Admin/AdminPages/Feedback';
 
-const FormRoutes = () => {
+const SiteRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -330,7 +330,7 @@ const FormRoutes = () => {
           <Route
             path="/admin"
             element={
-              <AdminHome
+              <Login
                 totalRegistrationsGlobal={totalRegistrations}
                 userRole={loggedUserRole}
                 totalValidWithBus={totalRegistrations.totalValidWithBus}
@@ -338,10 +338,10 @@ const FormRoutes = () => {
             }
           />
           <Route
-            path="/admin/tabela"
+            path="/admin/acampantes"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
-                <AdminTable loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+                <AdminCampers loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
               </ProtectedRoute>
             }
           />
@@ -434,4 +434,4 @@ const FormRoutes = () => {
   );
 };
 
-export default FormRoutes;
+export default SiteRoutes;

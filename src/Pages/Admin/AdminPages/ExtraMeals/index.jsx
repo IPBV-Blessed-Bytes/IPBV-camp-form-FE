@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import Loading from '@/components/Loading';
-import AdminHeader from '../AdminComponents/adminHeader';
 import scrollUp from '@/hooks/useScrollUp';
+import Loading from '@/components/Loading';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const AdminExtraMeals = () => {
   const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);
