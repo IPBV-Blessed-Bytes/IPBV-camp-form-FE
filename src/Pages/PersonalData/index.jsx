@@ -14,7 +14,7 @@ import { issuingState, rgShipper } from '../Routes/constants';
 import { BASE_URL } from '@/config';
 import calculateAge from '../Packages/utils/calculateAge';
 
-const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
+const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
   const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({
     initialValues,
     onSubmit: async () => {
@@ -304,7 +304,7 @@ const FormPersonalData = ({ nextStep, backStep, updateForm, initialValues, onDis
   );
 };
 
-FormPersonalData.propTypes = {
+PersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
@@ -321,4 +321,4 @@ FormPersonalData.propTypes = {
   }),
 };
 
-export default FormPersonalData;
+export default PersonalData;

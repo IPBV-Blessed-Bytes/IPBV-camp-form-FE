@@ -5,7 +5,7 @@ import InputMask from 'react-input-mask';
 
 import { additionalInformationSchema } from '@/form/validations/schema';
 
-const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
+const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -356,7 +356,7 @@ const FormContact = ({ nextStep, backStep, initialValues, updateForm }) => {
   );
 };
 
-FormContact.propTypes = {
+Contact.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
@@ -371,4 +371,4 @@ FormContact.propTypes = {
   }),
 };
 
-export default FormContact;
+export default Contact;

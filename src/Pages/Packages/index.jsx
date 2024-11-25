@@ -6,7 +6,7 @@ import Icons from '@/components/Icons';
 import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
 
-const FormPackages = ({
+const Packages = ({
   nextStep,
   backStep,
   age,
@@ -442,7 +442,7 @@ const FormPackages = ({
   );
 };
 
-FormPackages.propTypes = {
+Packages.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   birthDate: PropTypes.string.isRequired,
@@ -465,4 +465,4 @@ FormPackages.propTypes = {
   }),
 };
 
-export default FormPackages;
+export default Packages;

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import useScrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Icons';
 
-const FormFeedback = () => {
+const Feedback = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -368,4 +368,4 @@ const FormFeedback = () => {
   );
 };
 
-export default FormFeedback;
+export default Feedback;
