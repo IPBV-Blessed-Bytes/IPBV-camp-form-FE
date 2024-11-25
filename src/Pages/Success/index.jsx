@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Container, Card, Button } from 'react-bootstrap';
 import campLogo from '../../../public/Images/camp_logo.png';
 
-const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
+const Success = ({ initialStep, resetForm, resetFormSubmitted }) => {
   const pathnamePagarme = window.location.search;
 
   const handleNewRegistration = () => {
@@ -43,7 +43,7 @@ const FormSuccess = ({ initialStep, resetForm, resetFormSubmitted }) => {
   );
 };
 
-FormSuccess.propTypes = {
+Success.propTypes = {
   formPayment: PropTypes.string,
   initialStep: PropTypes.func,
   resetForm: PropTypes.func,
@@ -51,4 +51,4 @@ FormSuccess.propTypes = {
   noPaymentRequired: PropTypes.bool,
 };
 
-export default FormSuccess;
+export default Success;
