@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
+import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
-import AdminHeader from '../AdminComponents/adminHeader';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import PropTypes from 'prop-types';
-import scrollUp from '@/hooks/useScrollUp';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');

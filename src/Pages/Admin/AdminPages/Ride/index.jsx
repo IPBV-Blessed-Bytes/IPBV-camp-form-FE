@@ -1,16 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Icons from '@/components/Icons';
-import * as XLSX from 'xlsx';
 import { useTable, useSortBy } from 'react-table';
-import Loading from '@/components/Loading';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import AdminHeader from '../AdminComponents/adminHeader';
-import scrollUp from '@/hooks/useScrollUp';
-import { registerLog } from '@/fetchers/userLogs';
+import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import * as XLSX from 'xlsx';
+import { registerLog } from '@/fetchers/userLogs';
+import fetcher from '@/fetchers/fetcherWithCredentials';
+import scrollUp from '@/hooks/useScrollUp';
+import Icons from '@/components/Icons';
+import Loading from '@/components/Loading';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });

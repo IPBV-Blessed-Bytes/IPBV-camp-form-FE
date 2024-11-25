@@ -1,25 +1,25 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
+import { initialValues } from '@/Pages/Routes/constants';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Icons from '@/components/Icons';
 import * as XLSX from 'xlsx';
-import AdminColumnFilter from '../AdminComponents/adminTableColumnFilter';
-import Loading from '@/components/Loading';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { toast } from 'react-toastify';
-import { initialValues } from '@/Pages/Routes/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
-import AdminTableIndeed from '../AdminComponents/adminTableIndeed';
-import AdminTableModal from '../AdminComponents/adminTableModal';
-import AdminHeader from '../AdminComponents/adminHeader';
-import AdminTableSelectFilter from '../AdminComponents/adminTableSelectFilter';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import AdminColumnFilterWithTwoValues from '../AdminComponents/adminTableColumnFilterWithTwoValues';
+import Icons from '@/components/Icons';
+import Loading from '@/components/Loading';
+import AdminColumnFilter from '../../AdminComponents/adminTableColumnFilter';
+import AdminTableIndeed from '../../AdminComponents/adminTableIndeed';
+import AdminTableModal from '../../AdminComponents/adminTableModal';
+import AdminHeader from '../../AdminComponents/adminHeader';
+import AdminTableSelectFilter from '../../AdminComponents/adminTableSelectFilter';
+import AdminColumnFilterWithTwoValues from '../../AdminComponents/adminTableColumnFilterWithTwoValues';
 
-const AdminTable = ({ loggedUsername, userRole }) => {
+const AdminCampers = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
@@ -1104,7 +1104,7 @@ const AdminTable = ({ loggedUsername, userRole }) => {
   );
 };
 
-AdminTable.propTypes = {
+AdminCampers.propTypes = {
   row: PropTypes.shape({
     index: PropTypes.string,
     original: PropTypes.string,
@@ -1117,4 +1117,4 @@ AdminTable.propTypes = {
   value: PropTypes.string,
 };
 
-export default AdminTable;
+export default AdminCampers;

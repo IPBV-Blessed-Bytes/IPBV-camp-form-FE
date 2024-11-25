@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import AdminPackageCard from '../AdminComponents/adminPackageCard';
-import AdminExternalLinkRow from '../AdminComponents/adminExternalLinkRow';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { Row, Col, Button } from 'react-bootstrap';
 import { BASE_URL } from '@/config/index';
-import Loading from '@/components/Loading';
-import Icons from '@/components/Icons';
+import PropTypes from 'prop-types';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
-import AdminSessionCard from '../AdminComponents/adminSessionCard';
-import AdminSettingsButton from '../AdminComponents/adminSettingsButton';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
+import Loading from '@/components/Loading';
+import Icons from '@/components/Icons';
+import AdminPackageCard from '../../AdminComponents/adminPackageCard';
+import AdminExternalLinkRow from '../../AdminComponents/adminExternalLinkRow';
+import AdminSessionCard from '../../AdminComponents/adminSessionCard';
+import AdminSettingsButton from '../../AdminComponents/adminSettingsButton';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -44,7 +44,7 @@ const AdminLoggedIn = ({
   const navigate = useNavigate();
 
   const handleTableClick = () => {
-    navigate('/admin/tabela');
+    navigate('/admin/acampantes');
   };
 
   const handleRideClick = () => {

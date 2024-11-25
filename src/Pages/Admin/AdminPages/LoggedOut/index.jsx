@@ -1,7 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import Icons from '@/components/Icons';
 import PropTypes from 'prop-types';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Icons from '@/components/Icons';
 import scrollUp from '@/hooks/useScrollUp';
 
 const AdminLoggedOut = ({

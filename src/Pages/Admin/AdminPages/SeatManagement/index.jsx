@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import Loading from '@/components/Loading';
-import AdminHeader from '../AdminComponents/adminHeader';
-import { registerLog } from '@/fetchers/userLogs';
 import PropTypes from 'prop-types';
+import { registerLog } from '@/fetchers/userLogs';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
+import Loading from '@/components/Loading';
+import AdminHeader from '../../AdminComponents/adminHeader';
 
 const AdminSeatManagement = ({ loggedUsername }) => {
   const [totalPackages, setTotalPackages] = useState({});
