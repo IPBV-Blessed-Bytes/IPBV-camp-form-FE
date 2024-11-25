@@ -431,19 +431,19 @@ body {
     }
 
     &__coupons-card {
-      background-color: $light-orange;
-    }
-
-    &__aggregate-card {
       background-color: $intense-green-light;
     }
 
+    &__aggregate-card {
+      background-color: $light-yellow;
+    }
+
     &__feedback-card {
-      background-color: $light-green;
+      background-color: $light-orange;
     }
 
     &__extra-meals-card {
-      background-color: $light-yellow;
+      background-color: $light-green;
     }
 
     &__checkin-card {
