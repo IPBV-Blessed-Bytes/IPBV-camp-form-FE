@@ -3,7 +3,7 @@ import { Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Icons';
 
-const AdminSessionCard = ({ permission, onClick, cardType, title, typeIcon, iconSize, iconFill }) => (
+const SessionCard = ({ permission, onClick, cardType, title, typeIcon, iconSize, iconFill }) => (
   <>
     {permission && (
       <Col xs={12} md={6} lg={4} className="mb-3">
@@ -24,7 +24,7 @@ const AdminSessionCard = ({ permission, onClick, cardType, title, typeIcon, icon
   </>
 );
 
-AdminSessionCard.propTypes = {
+SessionCard.propTypes = {
   permission: PropTypes.bool,
   onClick: PropTypes.func,
   cardType: PropTypes.string,
@@ -34,4 +34,4 @@ AdminSessionCard.propTypes = {
   iconFill: PropTypes.string,
 };
 
-export default AdminSessionCard;
+export default SessionCard;

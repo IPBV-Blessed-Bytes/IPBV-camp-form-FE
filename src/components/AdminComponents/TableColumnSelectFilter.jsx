@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const AdminTableSelectFilter = ({ column: { setFilter, filterValue }, options }) => {
+const TableColumnSelectFilter = ({ column: { setFilter, filterValue }, options }) => {
   const handleChange = (e) => {
     const value = e.target.value;
     setFilter(value === 'all' ? undefined : value);
@@ -19,7 +19,7 @@ const AdminTableSelectFilter = ({ column: { setFilter, filterValue }, options })
   );
 };
 
-AdminTableSelectFilter.propTypes = {
+TableColumnSelectFilter.propTypes = {
   column: PropTypes.shape({
     setFilter: PropTypes.func,
     filterValue: PropTypes.string,
@@ -29,4 +29,4 @@ AdminTableSelectFilter.propTypes = {
   }),
 };
 
-export default AdminTableSelectFilter;
+export default TableColumnSelectFilter;

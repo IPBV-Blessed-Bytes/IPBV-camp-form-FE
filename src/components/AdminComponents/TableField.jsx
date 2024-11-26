@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format, parse } from 'date-fns';
 
-const AdminTableField = ({
+const TableField = ({
   type,
   label,
   name,
@@ -117,7 +117,7 @@ const AdminTableField = ({
   );
 };
 
-AdminTableField.propTypes = {
+TableField.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
@@ -133,4 +133,4 @@ AdminTableField.propTypes = {
   required: PropTypes.bool,
 };
 
-export default AdminTableField;
+export default TableField;

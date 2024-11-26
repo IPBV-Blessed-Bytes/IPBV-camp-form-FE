@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const AdminColumnFilterWithTwoValues = ({ column: { setFilter }, options }) => {
+const TableColumnFilterWithTwoValues = ({ column: { setFilter }, options }) => {
   const handleChange = (e) => {
     const value = e.target.value;
     if (value === 'sim') {
@@ -25,7 +25,7 @@ const AdminColumnFilterWithTwoValues = ({ column: { setFilter }, options }) => {
   );
 };
 
-AdminColumnFilterWithTwoValues.propTypes = {
+TableColumnFilterWithTwoValues.propTypes = {
   column: PropTypes.shape({
     setFilter: PropTypes.func,
   }),
@@ -37,4 +37,4 @@ AdminColumnFilterWithTwoValues.propTypes = {
   ).isRequired,
 };
 
-export default AdminColumnFilterWithTwoValues;
+export default TableColumnFilterWithTwoValues;

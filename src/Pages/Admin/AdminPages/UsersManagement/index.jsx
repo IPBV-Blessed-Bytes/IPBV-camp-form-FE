@@ -7,7 +7,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Icons';
 import Loading from '@/components/Loading';
-import AdminHeader from '../../AdminComponents/adminHeader';
+import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
