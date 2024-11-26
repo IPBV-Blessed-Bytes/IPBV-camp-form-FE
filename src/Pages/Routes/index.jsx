@@ -24,17 +24,17 @@ import FormSuccess from '../Success';
 import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
 import CpfData from '../CpfReview/CpfData';
-import Login from '../Admin/AdminPages/Login';
-import AdminCampers from '../Admin/AdminPages/Campers';
-import AdminRide from '../Admin/AdminPages/Ride';
-import AdminCoupon from '../Admin/AdminPages/Coupon';
-import AdminAggregate from '../Admin/AdminPages/Aggregate';
-import AdminExtraMeals from '../Admin/AdminPages/ExtraMeals';
-import AdminCheckin from '../Admin/AdminPages/Checkin';
-import AdminUserLogs from '../Admin/AdminPages/UserLogs';
-import AdminSeatManagement from '../Admin/AdminPages/SeatManagement';
-import AdminUsersManagement from '../Admin/AdminPages/UsersManagement';
-import AdminFeedback from '../Admin/AdminPages/Feedback';
+import Login from '../Admin/Login';
+import AdminCampers from '../Admin/Campers';
+import AdminRide from '../Admin/Ride';
+import AdminCoupon from '../Admin/Coupon';
+import AdminAggregate from '../Admin/Aggregate';
+import AdminExtraMeals from '../Admin/ExtraMeals';
+import AdminCheckin from '../Admin/Checkin';
+import AdminUserLogs from '../Admin/UserLogs';
+import AdminSeatManagement from '../Admin/SeatManagement';
+import AdminUsersManagement from '../Admin/UsersManagement';
+import AdminFeedback from '../Admin/Feedback';
 
 const SiteRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);

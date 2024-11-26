@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { BASE_URL } from '@/config/index';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../LoggedIn/style.scss'
+import './style.scss'
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import fetcher from '@/fetchers/fetcherWithCredentials';
