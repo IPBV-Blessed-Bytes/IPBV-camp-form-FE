@@ -4,6 +4,7 @@ import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss'
 import * as XLSX from 'xlsx';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';

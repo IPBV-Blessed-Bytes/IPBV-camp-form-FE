@@ -1,9 +1,10 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import './style.scss';
+import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/GlobalComponents/Header';
 import Footer from '@/components/GlobalComponents/Footer';
-import PropTypes from 'prop-types';
-import scrollUp from '@/hooks/useScrollUp';
 
 const CpfData = ({ cpfValues }) => {
   const navigateTo = useNavigate();

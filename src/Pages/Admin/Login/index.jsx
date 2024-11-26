@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/GlobalComponents/Loading';

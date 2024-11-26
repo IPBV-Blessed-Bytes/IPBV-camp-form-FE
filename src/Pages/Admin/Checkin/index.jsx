@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/GlobalComponents/Icons';
 import Loading from '@/components/GlobalComponents/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import './style.scss';
 import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminCheckin = ({ loggedUsername }) => {

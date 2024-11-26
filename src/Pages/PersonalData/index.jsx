@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
+import { useFormik } from 'formik';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { parse } from 'date-fns';
 import ptBR from 'date-fns/locale/pt';
-import { useFormik } from 'formik';
-import { cpf } from 'cpf-cnpj-validator';
-import PropTypes from 'prop-types';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../Routes/constants';
-import { BASE_URL } from '@/config';
 import calculateAge from '../Packages/utils/calculateAge';
+import { BASE_URL } from '@/config';
+import axios from 'axios';
+import './style.scss';
 
 const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
   const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({

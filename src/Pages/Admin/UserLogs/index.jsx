@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Button, Modal, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';

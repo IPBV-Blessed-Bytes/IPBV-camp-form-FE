@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { Container, Card, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import campLogo from '../../../public/Images/camp_logo.png';
 import './style.scss'
 

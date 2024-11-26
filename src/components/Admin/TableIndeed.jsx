@@ -34,7 +34,7 @@ const TableIndeed = ({
                 ))}
               </tr>
               {showFilters && (
-                <tr>
+                <tr className="filter">
                   {headerGroup.headers.map((column) => (
                     <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
                   ))}

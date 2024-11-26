@@ -1,4 +1,5 @@
 import { Container, Card } from 'react-bootstrap';
+import './style.scss';
 import Header from '@/components/GlobalComponents/Header';
 import Footer from '@/components/GlobalComponents/Footer';
 

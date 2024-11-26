@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Container, Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { formFeedbackSchema } from '@/form/validations/schema';
+import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
+import useScrollUp from '@/hooks/useScrollUp';
+import './style.scss';
+import InfoButton from '@/components/GlobalComponents/InfoButton';
 import Header from '@/components/GlobalComponents/Header';
 import Footer from '@/components/GlobalComponents/Footer';
 import Loading from '@/components/GlobalComponents/Loading';
-import InfoButton from '@/components/GlobalComponents/InfoButton';
-import { toast } from 'react-toastify';
-import useScrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/GlobalComponents/Icons';
 
 const Feedback = () => {

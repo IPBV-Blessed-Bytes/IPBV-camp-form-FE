@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Form, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import Icons from '@/components/GlobalComponents/Icons';
 import FormRoutes from '../Routes';
 
