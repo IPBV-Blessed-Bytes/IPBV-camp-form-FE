@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { format, isValid } from 'date-fns';
+import PropTypes from 'prop-types';
+import './style.scss';
 
 const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);

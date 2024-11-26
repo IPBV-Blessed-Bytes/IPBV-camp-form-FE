@@ -237,6 +237,11 @@ button.btn.btn-outline-danger:hover svg {
   user-select: none;
 }
 
+.text-danger-custom,
+.required-field {
+  color: $red !important;
+}
+
 // Admin table
 .table-hover > tbody > tr:hover > * {
   --bs-table-bg-state: #b2dfb2;
@@ -260,7 +265,7 @@ button.btn.btn-outline-danger:hover svg {
   height: 100vh;
 }
 
-.table thead tr {
+.table thead tr:not(.filter) {
   position: sticky;
   top: -1px;
 }

@@ -1,9 +1,9 @@
 import { useFormik } from 'formik';
-import PropTypes from 'prop-types';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
-
 import { additionalInformationSchema } from '@/form/validations/schema';
+import './style.scss';
 
 const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
   const { values, handleChange, errors, submitForm } = useFormik({

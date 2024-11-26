@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Table } from 'react-bootstrap';
+import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/GlobalComponents/Loading';

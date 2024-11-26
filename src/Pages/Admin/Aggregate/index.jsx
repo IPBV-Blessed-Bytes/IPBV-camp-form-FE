@@ -3,6 +3,7 @@ import { Table, Container, Accordion, Button, Form, Row, Col, Modal } from 'reac
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
+import './style.scss';
 import Icons from '@/components/GlobalComponents/Icons';
 import Loading from '@/components/GlobalComponents/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';

@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '@/config';
-import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+import InputMask from 'react-input-mask';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
+import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers/fetcherWithCredentials';
+import scrollUp from '@/hooks/useScrollUp';
+import './style.scss';
+import { cpfReviewSchema } from '@/form/validations/schema';
+import InfoButton from '../../components/GlobalComponents/InfoButton';
 import Loading from '@/components/GlobalComponents/Loading';
 import Footer from '@/components/GlobalComponents/Footer';
-import PropTypes from 'prop-types';
 import Header from '@/components/GlobalComponents/Header';
-import InputMask from 'react-input-mask';
-import InfoButton from '../../components/GlobalComponents/InfoButton';
 import { useFormik } from 'formik';
-import { cpfReviewSchema } from '@/form/validations/schema';
-import scrollUp from '@/hooks/useScrollUp';
 
 const CpfReview = ({ onPersonDataFetch }) => {
   const [loading, setLoading] = useState(false);

@@ -4,6 +4,7 @@ import { BASE_URL } from '@/config';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
