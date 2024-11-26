@@ -6,7 +6,7 @@ import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/GlobalComponents/Loading';
+import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminUserLogs = ({ loggedUsername }) => {

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/GlobalComponents/Loading';
+import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminExtraMeals = () => {

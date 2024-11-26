@@ -8,8 +8,8 @@ import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/GlobalComponents/Icons';
-import Loading from '@/components/GlobalComponents/Loading';
+import Icons from '@/components/Global/Icons';
+import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminCoupon = ({ loggedUsername }) => {

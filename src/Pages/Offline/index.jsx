@@ -1,7 +1,7 @@
 import { Container, Card } from 'react-bootstrap';
 import './style.scss';
-import Header from '@/components/GlobalComponents/Header';
-import Footer from '@/components/GlobalComponents/Footer';
+import Header from '@/components/Global/Header';
+import Footer from '@/components/Global/Footer';
 
 const Offline = () => {
   return (

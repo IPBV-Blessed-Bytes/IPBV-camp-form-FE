@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import calculateAge from '../Packages/utils/calculateAge';
 import { ExtraMealsSchema } from '@/form/validations/schema';
 import './style.scss'
-import Icons from '@/components/GlobalComponents/Icons';
+import Icons from '@/components/Global/Icons';
 
 const mealOptions = [
   { day: 'Sábado', name: 'Sábado - almoço', price: 26, checkboxMargin: '' },

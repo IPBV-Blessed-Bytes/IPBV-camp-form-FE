@@ -1,5 +1,5 @@
 import React from 'react';
-import Icons from '@/components/GlobalComponents/Icons';
+import Icons from '@/components/Global/Icons';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 

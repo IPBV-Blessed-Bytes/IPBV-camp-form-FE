@@ -5,7 +5,7 @@ import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import Loading from '@/components/GlobalComponents/Loading';
+import Loading from '@/components/Global/Loading';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
