@@ -1,0 +1,47 @@
+@import '../../../../styles/Variables.scss';
+
+.admin {
+  .input-login-wrapper {
+    position: relative;
+  }
+
+  &__user,
+  &__password {
+    border-color: $blue;
+    color: $blue;
+    font-weight: bold;
+
+    &::placeholder {
+      color: $blue;
+      font-weight: normal;
+    }
+  }
+
+  .login-icon {
+    padding: 0.25rem;
+    position: absolute;
+    right: 0;
+    transform: translate(-0.625rem, -2.1875rem);
+  }
+
+  .input-login-btn-wrapper {
+    button {
+      background-color: $secondary;
+      border-color: $secondary;
+      color: $black;
+    }
+  }
+  
+  .login-admin-card {
+    background: $blue;
+    color: #fff;
+    border-radius: 3.125rem 0rem;
+    padding: 3.125rem 1.875rem;
+    box-shadow: 0.5625rem 0.5625rem 0.625rem rgb(0 0 0 / 21%);
+    width: 25rem;
+  
+    &__title {
+      color: $secondary;
+    }
+  }
+}

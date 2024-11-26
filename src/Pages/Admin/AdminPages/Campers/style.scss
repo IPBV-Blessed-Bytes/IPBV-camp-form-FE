@@ -1,0 +1,40 @@
+@import '../../../../styles/Variables.scss';
+
+.scroll-to-top {
+  align-items: center;
+  background-color: $light-yellow;
+  border-radius: 50%;
+  bottom: 1.25rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.5rem;
+  height: 5rem;
+  justify-content: center;
+  opacity: 0.6;
+  position: fixed;
+  right: 1.25rem;
+  width: 5rem;
+  z-index: 1000;
+
+ &:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: $md) {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+.filter-btn {
+  background-color: $alternate-dark-gray;
+  border-color: $alternate-dark-gray;
+
+  &:hover,
+  &:active,
+  &:focus-visible {
+    background-color: $dark-gray;
+    border-color: $dark-gray;
+  }
+}

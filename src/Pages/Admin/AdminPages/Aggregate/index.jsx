@@ -7,7 +7,7 @@ import Icons from '@/components/GlobalComponents/Icons';
 import Loading from '@/components/GlobalComponents/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import AdminHeader from '../../../../components/AdminComponents/adminHeader';
+import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminAggregate = () => {
   const [dropdownCampers, setDropdownCampers] = useState([]);

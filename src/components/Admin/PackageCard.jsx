@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import '../Style/style.scss';
 
 const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, showRemainingVacancies }) => (
   <Col className="mb-4" xs={12} md={6} lg={4}>

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Container, Card, Button } from 'react-bootstrap';
 import campLogo from '../../../public/Images/camp_logo.png';
+import './style.scss'
 
 const Success = ({ initialStep, resetForm, resetFormSubmitted }) => {
   const pathnamePagarme = window.location.search;

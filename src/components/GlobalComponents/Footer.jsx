@@ -1,5 +1,6 @@
 import { PropTypes } from 'prop-types';
-import logoFooter from '../../public/Images/logo_50.png';
+import '../Style/style.scss';
+import logoFooter from '../../../public/Images/logo_50.png';
 
 const Footer = ({ onAdminClick }) => {
 

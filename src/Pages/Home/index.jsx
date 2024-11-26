@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Button, Card } from 'react-bootstrap';
+import './style.scss';
 
 const FormHome = (props) => {
   const location = useLocation();

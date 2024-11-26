@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import './style.scss'
 import { toast } from 'react-toastify';
 import Icons from '@/components/GlobalComponents/Icons';
 import formatCurrency from '@/utils/formatCurrency';

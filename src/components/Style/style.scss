@@ -1,0 +1,354 @@
+@import '../../styles/Variables.scss';
+
+// Header
+.form__header {
+  background-color: $primary;
+  color: $white;
+  padding: 1.25rem 1.875rem 3rem;
+  text-align: center;
+
+  .header-title {
+    font-family: 'Norwester', sans-serif;
+    font-size: 50px;
+    font-weight: normal;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $secondary;
+    }
+  }
+
+  &--future-step {
+    cursor: default;
+
+    a {
+      cursor: default;
+    }
+  }
+
+  &--previous-step a {
+    color: $secondary !important;
+  }
+
+  h2 {
+    font-weight: bold;
+  }
+
+  nav {
+    ol {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        &:hover,
+        &.active {
+          color: $secondary;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.active {
+          font-weight: bold;
+        }
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Footer
+.form__footer {
+  &-logo {
+    cursor: pointer;
+    height: 6.25rem;
+  }
+
+  &__powered {
+    @media (max-width: $md) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: $sm) {
+      display: flex;
+      flex-direction: column;
+
+      span {
+        display: none;
+      }
+    }
+  }
+
+  &__copyright {
+    align-items: end;
+    display: flex;
+    font-style: italic;
+    justify-self: center;
+    margin: 0;
+
+    @media (max-width: $md) {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Package Card
+.admin-card {
+  height: 100%;
+
+  .card-container {
+    border-radius: 0.625rem;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    transition: transform 0.2s ease-in-out;
+
+    &-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0.625rem;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .package-card {
+    background-color: $light-blue;
+    color: $medium-blue;
+
+    .card-container {
+      &-title {
+        color: $blue;
+      }
+
+      &-content {
+        color: $blue;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .total-card {
+    background-color: $light-brown;
+    color: $medium-brown;
+
+    .card-container {
+      &-title {
+        color: $brown;
+      }
+
+      &-content {
+        font-size: 1.2rem;
+        color: $brown;
+      }
+    }
+  }
+}
+
+// Loading
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner-container {
+  align-items: center;
+  color: $alternate-dark-gray;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  justify-content: center;
+
+  .spinner-border {
+    color: $secondary;
+  }
+}
+
+// External Link Row
+.btn-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  a {
+    align-items: center;
+    display: flex;
+
+    &:hover {
+      color: $blue;
+    }
+  }
+}
+
+// Table Column Filter
+.filter-icon {
+  margin: 0.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.filter-input {
+  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
+}
+
+.actived-filter {
+  background-color: $turquoise !important;
+}
+
+// Table Field
+.custom-new-registration::placeholder {
+  opacity: 0.5;
+}
+
+.admin-field {
+  &--odd {
+    background-color: $intense-green-light;
+  }
+
+  &--even {
+    background-color: $light-green;
+  }
+}
+
+// Info Button
+.info-btn {
+  background-color: $primary;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  left: 20px;
+  padding: 10px;
+  opacity: 0.8;
+  position: fixed;
+  z-index: 9000;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.info-floating-buttons {
+  bottom: 66px;
+  display: flex;
+  flex-direction: column;
+  left: 20px;
+  opacity: 0;
+  position: fixed;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  visibility: hidden;
+  z-index: 9999;
+
+  button {
+    background-color: $light-yellow;
+    border: none;
+    border-radius: 5px;
+    color: $black;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.info-floating-buttons.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.whatsapp-message-button:hover,
+.whatsapp-share-button:hover,
+.verify-registration-button:hover {
+  .info-icons {
+    fill: $primary;
+  }
+}
+
+// Settings Button
+.settings-btn {
+  background-color: $alternate-dark-gray;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  padding: 10px;
+  opacity: 0.8;
+  position: fixed;
+  right: 20px;
+  z-index: 9000;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.settings-floating-buttons {
+  bottom: 86px;
+  display: flex;
+  flex-direction: column;
+  right: 16px;
+  opacity: 0;
+  position: fixed;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  visibility: hidden;
+  z-index: 9999;
+
+  button {
+    background-color: $alternate-dark-gray;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: transform 0.3s ease;
+    text-align: end;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.settings-floating-buttons.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.settings-message-button:hover {
+  .settings-icons {
+    fill: $light-yellow;
+
+    path {
+      fill: $light-yellow;
+    }
+  }
+}
