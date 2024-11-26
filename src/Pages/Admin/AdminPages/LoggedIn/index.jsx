@@ -10,10 +10,10 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Loading';
 import Icons from '@/components/Icons';
-import AdminPackageCard from '../../AdminComponents/adminPackageCard';
-import AdminExternalLinkRow from '../../AdminComponents/adminExternalLinkRow';
-import AdminSessionCard from '../../AdminComponents/adminSessionCard';
-import AdminSettingsButton from '../../AdminComponents/adminSettingsButton';
+import PackageCard from '../../../../components/AdminComponents/PackageCard';
+import ExternalLinkRow from '../../../../components/AdminComponents/ExternalLinkRow';
+import SessionCard from '../../../../components/AdminComponents/SessionCard';
+import SettingsButton from '../../../../components/AdminComponents/SettingsButton';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -238,7 +238,7 @@ const AdminLoggedIn = ({
       </Row>
 
       <Row className="mb-md-5 navigation-header">
-        <AdminSessionCard
+        <SessionCard
           permission={registeredButtonHomePermissions}
           onClick={handleTableClick}
           cardType="registered-card"
@@ -247,7 +247,7 @@ const AdminLoggedIn = ({
           iconSize={40}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={rideButtonHomePermissions}
           onClick={handleRideClick}
           cardType="ride-card"
@@ -256,7 +256,7 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={couponButtonHomePermissions}
           onClick={handleCouponsClick}
           cardType="coupons-card"
@@ -265,7 +265,7 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={aggregateButtonHomePermissions}
           onClick={handleAggregateClick}
           cardType="aggregate-card"
@@ -274,7 +274,7 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={feedbackButtonHomePermissions}
           onClick={handleFeedbackClick}
           cardType="feedback-card"
@@ -283,7 +283,7 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={extraMealsButtonHomePermissions}
           onClick={handleExtraMealsClick}
           cardType="extra-meals-card"
@@ -292,7 +292,7 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <AdminSessionCard
+        <SessionCard
           permission={checkinPermissions}
           onClick={handleCheckinClick}
           cardType="checkin-card"
@@ -309,14 +309,14 @@ const AdminLoggedIn = ({
               <Row>
                 <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
                 {packageCardsData.map((card) => (
-                  <AdminPackageCard key={card.title} {...card} cardType="package-card" />
+                  <PackageCard key={card.title} {...card} cardType="package-card" />
                 ))}
               </Row>
 
               <Row className="mt-4">
                 <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
                 {totalCardsData.map((card) => (
-                  <AdminPackageCard key={card.title} {...card} cardType="total-card" />
+                  <PackageCard key={card.title} {...card} cardType="total-card" />
                 ))}
               </Row>
             </>
@@ -355,13 +355,13 @@ const AdminLoggedIn = ({
         </>
       )}
 
-      <AdminSettingsButton permission={settingsButtonPermissions} />
+      <SettingsButton permission={settingsButtonPermissions} />
 
       <Loading loading={loading} />
 
       {utilitiesLinksPermissions && (
         <Row>
-          <AdminExternalLinkRow />
+          <ExternalLinkRow />
         </Row>
       )}
     </>

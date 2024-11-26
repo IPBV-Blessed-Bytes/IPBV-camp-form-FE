@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminTableField from './adminTableField';
+import TableField from './TableField';
 import { packages, issuingState, rgShipper, food } from '@/Pages/Routes/constants';
 
-const AdminTableColumns = ({
+const TableColumns = ({
   addFormData,
   editFormData,
   handleFormChange,
@@ -286,7 +286,7 @@ const AdminTableColumns = ({
               : addFormData[field.name];
 
         return (
-          <AdminTableField
+          <TableField
             key={index}
             label={field.label}
             type={field.type || 'text'}
@@ -309,7 +309,7 @@ const AdminTableColumns = ({
   );
 };
 
-AdminTableColumns.propTypes = {
+TableColumns.propTypes = {
   addFormData: PropTypes.string,
   handleFormChange: PropTypes.func,
   addForm: PropTypes.bool,
@@ -321,4 +321,4 @@ AdminTableColumns.propTypes = {
   }),
 };
 
-export default AdminTableColumns;
+export default TableColumns;

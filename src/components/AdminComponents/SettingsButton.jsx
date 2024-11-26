@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Icons';
 
-const AdminSettingsButton = ({ permission }) => {
+const SettingsButton = ({ permission }) => {
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonRef = useRef(null);
   const navigate = useNavigate();
@@ -52,8 +52,8 @@ const AdminSettingsButton = ({ permission }) => {
   );
 };
 
-AdminSettingsButton.propTypes = {
+SettingsButton.propTypes = {
   permission: PropTypes.bool,
 };
 
-export default AdminSettingsButton;
+export default SettingsButton;

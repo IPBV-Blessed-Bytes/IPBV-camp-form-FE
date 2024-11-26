@@ -6,7 +6,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Loading';
-import AdminHeader from '../../AdminComponents/adminHeader';
+import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const AdminSeatManagement = ({ loggedUsername }) => {
   const [totalPackages, setTotalPackages] = useState({});

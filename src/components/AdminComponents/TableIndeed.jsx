@@ -3,7 +3,7 @@ import Icons from '@/components/Icons';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const AdminTableIndeed = ({
+const TableIndeed = ({
   getTableProps,
   getTableBodyProps,
   headerGroups,
@@ -69,7 +69,7 @@ const AdminTableIndeed = ({
   );
 };
 
-AdminTableIndeed.propTypes = {
+TableIndeed.propTypes = {
   getTableProps: PropTypes.func,
   getTableBodyProps: PropTypes.func,
   headerGroups: PropTypes.object,
@@ -79,4 +79,4 @@ AdminTableIndeed.propTypes = {
   selectedRows: PropTypes.array,
 };
 
-export default AdminTableIndeed;
+export default TableIndeed;

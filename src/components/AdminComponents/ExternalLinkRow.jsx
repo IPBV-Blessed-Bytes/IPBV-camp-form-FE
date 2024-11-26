@@ -5,7 +5,7 @@ const OLD_SPREADSHEET_URL =
   'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
 const PAGARME = 'https://id.pagar.me/signin';
 
-const AdminExternalLinkRow = () => {
+const ExternalLinkRow = () => {
   return (
     <Row className="mt-4 p-0">
       <Col xs={12} className="text-center" style={{ padding: '0 0 0 1.25rem' }}>
@@ -28,4 +28,4 @@ const AdminExternalLinkRow = () => {
   );
 };
 
-export default AdminExternalLinkRow;
+export default ExternalLinkRow;

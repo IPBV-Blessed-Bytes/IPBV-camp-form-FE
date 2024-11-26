@@ -1,8 +1,8 @@
 import { Modal, Button, Form } from 'react-bootstrap';
-import AdminTableColumns from './adminTableColumns';
+import TableColumns from './TableColumns';
 import PropTypes from 'prop-types';
 
-const AdminTableModal = ({
+const TableModal = ({
   name,
   showEditModal,
   setShowEditModal,
@@ -31,7 +31,7 @@ const AdminTableModal = ({
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <AdminTableColumns
+            <TableColumns
               editFormData={editFormData}
               handleFormChange={(e) => handleFormChange(e, 'edit')}
               formSubmitted={formSubmitted}
@@ -58,7 +58,7 @@ const AdminTableModal = ({
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <AdminTableColumns
+            <TableColumns
               addFormData={addFormData}
               handleFormChange={(e) => handleFormChange(e, 'add')}
               formSubmitted={formSubmitted}
@@ -104,7 +104,7 @@ const AdminTableModal = ({
   );
 };
 
-AdminTableModal.propTypes = {
+TableModal.propTypes = {
   name: PropTypes.string,
   showEditModal: PropTypes.bool,
   setShowEditModal: PropTypes.func,
@@ -124,4 +124,4 @@ AdminTableModal.propTypes = {
   handleConfirmDeleteSpecific: PropTypes.func,
 };
 
-export default AdminTableModal;
+export default TableModal;
