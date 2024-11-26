@@ -98,3 +98,14 @@
   margin-top: 12.5rem;
   text-align: center;
 }
+
+.selected-icon-container {
+  display: flex;
+  flex-direction: row-reverse;
+
+  svg {
+    @media (max-width: $md) {
+      height: 2.25rem;
+    }
+  }
+}
