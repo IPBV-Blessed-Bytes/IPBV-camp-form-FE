@@ -6,8 +6,8 @@ import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/GlobalComponents/Icons';
-import Loading from '@/components/GlobalComponents/Loading';
+import Icons from '@/components/Global/Icons';
+import Loading from '@/components/Global/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import AdminHeader from '@/components/Admin/adminHeader';
 

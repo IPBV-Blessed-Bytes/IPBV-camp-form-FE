@@ -7,11 +7,11 @@ import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import useScrollUp from '@/hooks/useScrollUp';
 import './style.scss';
-import InfoButton from '@/components/GlobalComponents/InfoButton';
-import Header from '@/components/GlobalComponents/Header';
-import Footer from '@/components/GlobalComponents/Footer';
-import Loading from '@/components/GlobalComponents/Loading';
-import Icons from '@/components/GlobalComponents/Icons';
+import InfoButton from '@/components/Global/InfoButton';
+import Header from '@/components/Global/Header';
+import Footer from '@/components/Global/Footer';
+import Loading from '@/components/Global/Loading';
+import Icons from '@/components/Global/Icons';
 
 const Feedback = () => {
   const [loading, setLoading] = useState(false);

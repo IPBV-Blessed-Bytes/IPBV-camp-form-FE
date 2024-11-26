@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/GlobalComponents/Loading';
+import Loading from '@/components/Global/Loading';
 import AdminLoggedOut from '../LoggedOut';
 import AdminLoggedIn from '../LoggedIn';
 

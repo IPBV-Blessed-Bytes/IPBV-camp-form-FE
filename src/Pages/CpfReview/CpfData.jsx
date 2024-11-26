@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './style.scss';
 import scrollUp from '@/hooks/useScrollUp';
-import Header from '@/components/GlobalComponents/Header';
-import Footer from '@/components/GlobalComponents/Footer';
+import Header from '@/components/Global/Header';
+import Footer from '@/components/Global/Footer';
 
 const CpfData = ({ cpfValues }) => {
   const navigateTo = useNavigate();

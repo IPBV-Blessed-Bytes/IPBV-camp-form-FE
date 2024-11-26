@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Icons from '@/components/GlobalComponents/Icons';
+import Icons from '@/components/Global/Icons';
 
 const SessionCard = ({ permission, onClick, cardType, title, typeIcon, iconSize, iconFill }) => (
   <>

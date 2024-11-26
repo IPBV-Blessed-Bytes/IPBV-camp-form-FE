@@ -12,10 +12,10 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import { cpfReviewSchema } from '@/form/validations/schema';
-import InfoButton from '../../components/GlobalComponents/InfoButton';
-import Loading from '@/components/GlobalComponents/Loading';
-import Footer from '@/components/GlobalComponents/Footer';
-import Header from '@/components/GlobalComponents/Header';
+import InfoButton from '../../components/Global/InfoButton';
+import Loading from '@/components/Global/Loading';
+import Footer from '@/components/Global/Footer';
+import Header from '@/components/Global/Header';
 import { useFormik } from 'formik';
 
 const CpfReview = ({ onPersonDataFetch }) => {

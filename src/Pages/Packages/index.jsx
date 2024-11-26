@@ -5,7 +5,7 @@ import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
 import { toast } from 'react-toastify';
 import './style.scss'
-import Icons from '@/components/GlobalComponents/Icons';
+import Icons from '@/components/Global/Icons';
 
 const Packages = ({
   nextStep,

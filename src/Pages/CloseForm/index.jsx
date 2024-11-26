@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import Icons from '@/components/GlobalComponents/Icons';
+import Icons from '@/components/Global/Icons';
 import FormRoutes from '../Routes';
 
 const CloseForm = () => {
