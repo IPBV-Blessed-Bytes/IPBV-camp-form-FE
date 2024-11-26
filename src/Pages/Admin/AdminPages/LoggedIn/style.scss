@@ -1,0 +1,63 @@
+@import '../../../../styles/Variables.scss';
+
+.admin {
+  .navigation-header {
+    &__registered-card {
+      background-color: $turquoise;
+    }
+
+    &__ride-card {
+      background-color: $light-red;
+    }
+
+    &__coupons-card {
+      background-color: $intense-green-light;
+    }
+
+    &__aggregate-card {
+      background-color: $light-yellow;
+    }
+
+    &__feedback-card {
+      background-color: $light-orange;
+    }
+
+    &__extra-meals-card {
+      background-color: $light-green;
+    }
+
+    &__checkin-card {
+      background-color: $medium-gray;
+    }
+
+    &__registered-card,
+    &__ride-card,
+    &__coupons-card,
+    &__checkin-card,
+    &__aggregate-card,
+    &__feedback-card,
+    &__extra-meals-card {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+
+      &:hover {
+        transform: scale(1.04);
+      }
+
+      &__content-wrapper {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+      }
+    }
+  }
+
+  .admin-custom-col {
+    @media (max-width: $sm) {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+}

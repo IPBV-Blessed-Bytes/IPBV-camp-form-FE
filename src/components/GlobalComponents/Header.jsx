@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import '../Style/style.scss';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 

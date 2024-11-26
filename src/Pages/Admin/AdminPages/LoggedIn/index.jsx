@@ -4,16 +4,17 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { BASE_URL } from '@/config/index';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../LoggedIn/style.scss'
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/GlobalComponents/Loading';
 import Icons from '@/components/GlobalComponents/Icons';
-import PackageCard from '../../../../components/AdminComponents/PackageCard';
-import ExternalLinkRow from '../../../../components/AdminComponents/ExternalLinkRow';
-import SessionCard from '../../../../components/AdminComponents/SessionCard';
-import SettingsButton from '../../../../components/AdminComponents/SettingsButton';
+import PackageCard from '@/components/Admin/PackageCard';
+import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
+import SessionCard from '@/components/Admin/SessionCard';
+import SettingsButton from '@/components/Admin/SettingsButton';
 
 const AdminLoggedIn = ({
   loggedInUsername,

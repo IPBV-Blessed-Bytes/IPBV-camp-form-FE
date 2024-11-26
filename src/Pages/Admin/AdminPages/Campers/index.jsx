@@ -5,6 +5,7 @@ import { initialValues } from '@/Pages/Routes/constants';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss'
 import * as XLSX from 'xlsx';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
@@ -12,12 +13,12 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/GlobalComponents/Icons';
 import Loading from '@/components/GlobalComponents/Loading';
-import AdminHeader from '../../../../components/AdminComponents/adminHeader';
-import TableColumnFilter from '../../../../components/AdminComponents/TableColumnFilter';
-import TableIndeed from '../../../../components/AdminComponents/TableIndeed';
-import TableModal from '../../../../components/AdminComponents/TableModal';
-import TableColumnSelectFilter from '../../../../components/AdminComponents/TableColumnSelectFilter';
-import TableColumnFilterWithTwoValues from '../../../../components/AdminComponents/TableColumnFilterWithTwoValues';
+import AdminHeader from '@/components/Admin/adminHeader';
+import TableColumnFilter from '@/components/Admin/TableColumnFilter';
+import TableIndeed from '@/components/Admin/TableIndeed';
+import TableModal from '@/components/Admin/TableModal';
+import TableColumnSelectFilter from '@/components/Admin/TableColumnSelectFilter';
+import TableColumnFilterWithTwoValues from '@/components/Admin/TableColumnFilterWithTwoValues';
 
 const AdminCampers = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);

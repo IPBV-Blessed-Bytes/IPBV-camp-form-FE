@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootstrap';
+import './style.scss'
 import { toast } from 'react-toastify';
 import Icons from '@/components/GlobalComponents/Icons';
 import { ExtraMealsSchema } from '@/form/validations/schema';

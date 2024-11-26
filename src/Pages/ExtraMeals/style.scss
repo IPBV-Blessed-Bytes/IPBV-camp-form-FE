@@ -1,0 +1,19 @@
+@import '../../styles/Variables.scss';
+
+.checkbox-error {
+  input {
+    border-color: $red;
+  }
+
+  label {
+    color: $red;
+  }
+}
+
+.checkbox-label {
+  user-select: none;
+}
+
+.text-success-custom {
+  color: $dark-green !important;
+}

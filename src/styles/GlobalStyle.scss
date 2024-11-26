@@ -1,0 +1,378 @@
+@import './Variables.scss';
+
+// Body
+body {
+  background: $light-gray;
+}
+
+@font-face {
+  font-family: 'Norwester';
+  src: url('../../public//Fonts/norwester.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Form
+.form {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @media (max-width: $lg) {
+    display: block;
+  }
+
+  // Form Container
+  &__container {
+    flex: 1 1 auto;
+    max-width: 50rem;
+    margin-inline: auto;
+    margin-top: -2.5rem;
+
+    &__general-height {
+      min-height: 41.625rem;
+      width: 50rem;
+
+      @media (max-width: $lg) {
+        width: 100%;
+      }
+    }
+
+    // Card
+    .card {
+      height: fit-content;
+
+      .card-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 1.25rem;
+      }
+
+      .card-body {
+        padding: 1.875rem;
+
+        @media (max-width: $sm) {
+          padding: 1rem 0.75rem;
+        }
+
+        textarea {
+          height: 6.25rem;
+          resize: none;
+        }
+      }
+    }
+
+    .react-datepicker-wrapper,
+    .cpf-container {
+      width: 100%;
+    }
+
+    // Button
+    &__buttons {
+      align-items: center;
+      background-color: $primary;
+      border-bottom-left-radius: 0.375rem;
+      border-bottom-right-radius: 0.375rem;
+      display: flex;
+      height: 6.25rem;
+      justify-content: space-between;
+      padding-inline: 1.25rem;
+
+      button {
+        width: 8.125rem;
+      }
+
+      @media (min-width: $md) {
+        padding-inline: 1.875rem;
+
+        button {
+          width: 12.5rem;
+        }
+      }
+    }
+  }
+
+  &__success {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &__title {
+      color: $dark-green;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.25rem;
+    }
+
+    &__message {
+      font-size: 1.125rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    &__contact {
+      font-weight: bold;
+    }
+
+    &__button {
+      margin-top: 1.25rem;
+    }
+
+    &__logo {
+      margin-top: 2rem;
+      padding: 0 8rem;
+      width: 100%;
+
+      @media (max-width: $md) {
+        padding: 0;
+      }
+    }
+  }
+}
+
+// Form Control
+.form-control:focus {
+  color: $blue !important;
+}
+
+.form-control-bg:focus {
+  color: $blue !important;
+  font-weight: bold;
+
+  &::placeholder {
+    font-weight: normal;
+  }
+}
+
+.form-control::placeholder {
+  opacity: 0.5;
+}
+
+// Utility classes
+input,
+textarea,
+select {
+  background-color: $light-gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.mail-to,
+.order-url {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not(.form-success__button, .mail-to, .order-url) {
+  color: $white;
+  text-decoration: none;
+}
+
+.horizontal-line {
+  background-color: $blue;
+  border: none;
+  height: 0.125rem;
+  margin: 0.75rem 0;
+}
+
+.packages-horizontal-line {
+  background-color: $medium-gray;
+  border: none;
+  height: 0.125rem;
+  margin: 1rem 0;
+}
+
+.msg-error {
+  border-color: $red;
+}
+
+button.accordion-button:not(.collapsed) {
+  background-color: $primary;
+  color: $white;
+  font-weight: bold;
+}
+
+::selection {
+  background-color: $light-yellow;
+}
+
+.components-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.bg-dark.card {
+  color: $white;
+}
+
+.row-gap {
+  @media (max-width: $md) {
+    gap: 0.5rem;
+  }
+}
+
+.form-review {
+  &__section-title {
+    color: $primary !important;
+  }
+
+  input {
+    width: auto;
+  }
+}
+
+.btn.btn-outline-success,
+.btn.btn-outline-danger {
+  border-width: 3px !important;
+}
+
+button.btn.btn-outline-danger:hover svg {
+  fill: #fff;
+}
+
+.sort-icon,
+.sort-icon-wrapper {
+  user-select: none;
+}
+
+// Admin table
+.table-hover > tbody > tr:hover > * {
+  --bs-table-bg-state: #b2dfb2;
+}
+
+.table-cells-header {
+  background-color: $medium-green !important;
+  min-width: 275px;
+  padding: 6px !important;
+
+  div .sort-icon {
+    display: none;
+  }
+
+  &:hover div .sort-icon {
+    display: block;
+  }
+}
+
+.table-responsive {
+  height: 100vh;
+}
+
+.table thead tr {
+  position: sticky;
+  top: -1px;
+}
+
+.custom-table {
+  --bs-border-color: #000;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-bg-type: rgba(var(--bs-emphasis-color-rgb), 0.1);
+}
+
+.table > tbody > tr > td.selected-row {
+  background-color: $light-green;
+}
+
+.table-checkbox .form-check-input {
+  width: auto;
+}
+
+.form-check-input:checked {
+  background-color: $dark-green;
+  border-color: $dark-green;
+}
+
+.table-tools {
+  &__left-buttons,
+  &__left-buttons-generic,
+  &__right-buttons-generic {
+    @media (max-width: $md) {
+      button {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__right-buttons,
+  &__right-buttons-ride {
+    display: flex;
+    justify-content: end;
+
+    @media (max-width: $xxxl) {
+      flex-direction: column;
+    }
+  }
+
+  &__left-buttons,
+  &__right-buttons,
+  &__right-buttons-right {
+    @media (max-width: $md) {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__right-buttons-ride {
+    b {
+      @media (min-width: $md) {
+        display: none;
+      }
+    }
+  }
+
+  &__button-name {
+    @media (max-width: $xxxl) {
+      width: 100%;
+    }
+
+    @media (max-width: $md) {
+      display: none;
+    }
+  }
+}
+
+.form-check-input {
+  border: 1px solid $black;
+  box-shadow:
+    2px 6px 8px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.price-with-discount {
+  color: $red !important;
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.btn-success:disabled,
+.btn-primary:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+.m-left {
+  margin-left: 1rem;
+}
+
+.form-select-lg-custom {
+  border: 0.125rem solid $black;
+  background: #f3f3f3;
+  font-size: 1.1875rem !important;
+  padding: 0.375rem;
+}

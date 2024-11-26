@@ -1,6 +1,7 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../LoggedOut/style.scss'
 import Icons from '@/components/GlobalComponents/Icons';
 import scrollUp from '@/hooks/useScrollUp';
 

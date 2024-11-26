@@ -9,7 +9,7 @@ import Icons from '@/components/GlobalComponents/Icons';
 import Loading from '@/components/GlobalComponents/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import './style.scss';
-import AdminHeader from '../../../../components/AdminComponents/adminHeader';
+import AdminHeader from '@/components/Admin/adminHeader';
 
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');

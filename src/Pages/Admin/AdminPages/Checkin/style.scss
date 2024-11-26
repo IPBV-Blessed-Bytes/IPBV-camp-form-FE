@@ -1,0 +1,5 @@
+@import '../../../../styles/Variables.scss';
+
+.form-label:not(.form-label-admin) {
+  color: $slime-green !important;
+}
