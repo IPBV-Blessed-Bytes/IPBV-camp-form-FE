@@ -1,7 +1,7 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '@/components/GlobalComponents/Header';
+import Footer from '@/components/GlobalComponents/Footer';
 import PropTypes from 'prop-types';
 import scrollUp from '@/hooks/useScrollUp';
 

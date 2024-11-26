@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Table } from 'react-bootstrap';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/Loading';
+import Loading from '@/components/GlobalComponents/Loading';
 import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const TABLE_HEADERS = [

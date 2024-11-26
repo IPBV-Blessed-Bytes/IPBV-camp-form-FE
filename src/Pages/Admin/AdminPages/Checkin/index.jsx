@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Icons';
-import Loading from '@/components/Loading';
+import Icons from '@/components/GlobalComponents/Icons';
+import Loading from '@/components/GlobalComponents/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
+import './style.scss';
 import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const AdminCheckin = ({ loggedUsername }) => {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import Icons from '@/components/Icons';
+import Icons from '@/components/GlobalComponents/Icons';
 import { ExtraMealsSchema } from '@/form/validations/schema';
 import calculateAge from '../Packages/utils/calculateAge';
 
