@@ -3,8 +3,8 @@ import { Table, Container, Accordion, Button, Form, Row, Col, Modal } from 'reac
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
-import Icons from '@/components/Icons';
-import Loading from '@/components/Loading';
+import Icons from '@/components/GlobalComponents/Icons';
+import Loading from '@/components/GlobalComponents/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminHeader from '../../../../components/AdminComponents/adminHeader';

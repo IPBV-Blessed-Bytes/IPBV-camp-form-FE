@@ -3,7 +3,7 @@ import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/Loading';
+import Loading from '@/components/GlobalComponents/Loading';
 import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const AdminExtraMeals = () => {

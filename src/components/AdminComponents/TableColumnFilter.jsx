@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
-import Icons from '@/components/Icons';
+import Icons from '@/components/GlobalComponents/Icons';
 
 const TableColumnFilter = ({ column }) => {
   const filterValue = column?.filterValue || '';

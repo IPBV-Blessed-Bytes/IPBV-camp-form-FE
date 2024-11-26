@@ -4,13 +4,13 @@ import { useFormik } from 'formik';
 import { Container, Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { formFeedbackSchema } from '@/form/validations/schema';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Loading from '@/components/Loading';
-import InfoButton from '@/components/InfoButton';
+import Header from '@/components/GlobalComponents/Header';
+import Footer from '@/components/GlobalComponents/Footer';
+import Loading from '@/components/GlobalComponents/Loading';
+import InfoButton from '@/components/GlobalComponents/InfoButton';
 import { toast } from 'react-toastify';
 import useScrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Icons';
+import Icons from '@/components/GlobalComponents/Icons';
 
 const Feedback = () => {
   const [loading, setLoading] = useState(false);

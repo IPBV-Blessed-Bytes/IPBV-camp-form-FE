@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useAuth from '@/hooks/useAuth';
 import scrollUp from '@/hooks/useScrollUp';
-import Loading from '@/components/Loading';
+import Loading from '@/components/GlobalComponents/Loading';
 import AdminLoggedOut from '../LoggedOut';
 import AdminLoggedIn from '../LoggedIn';
 

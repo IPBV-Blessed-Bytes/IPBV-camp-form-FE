@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Icons from '@/components/Icons';
+import Icons from '@/components/GlobalComponents/Icons';
 
 const SettingsButton = ({ permission }) => {
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);

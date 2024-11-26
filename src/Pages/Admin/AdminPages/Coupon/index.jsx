@@ -7,8 +7,8 @@ import axios from 'axios';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Icons';
-import Loading from '@/components/Loading';
+import Icons from '@/components/GlobalComponents/Icons';
+import Loading from '@/components/GlobalComponents/Loading';
 import AdminHeader from '../../../../components/AdminComponents/adminHeader';
 
 const AdminCoupon = ({ loggedUsername }) => {

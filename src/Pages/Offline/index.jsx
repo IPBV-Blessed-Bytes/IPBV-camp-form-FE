@@ -1,6 +1,6 @@
 import { Container, Card } from 'react-bootstrap';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '@/components/GlobalComponents/Header';
+import Footer from '@/components/GlobalComponents/Footer';
 
 const Offline = () => {
   return (

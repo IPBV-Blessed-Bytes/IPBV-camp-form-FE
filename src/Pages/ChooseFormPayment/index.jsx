@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
-import Loading from '@/components/Loading';
+import Loading from '@/components/GlobalComponents/Loading';
 import { toast } from 'react-toastify';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {

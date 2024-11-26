@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Container, Card, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import Icons from '@/components/Icons';
+import Icons from '@/components/GlobalComponents/Icons';
 import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
 
