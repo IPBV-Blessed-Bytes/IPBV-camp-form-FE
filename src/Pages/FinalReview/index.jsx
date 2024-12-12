@@ -84,7 +84,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                         <Card.Text>
                           <span className="form-review__section-title">Cupom:</span>
                           <br />
-                          {formValues.package.discountCoupon} <br /> R$ {formValues.package.discountValue},00
+                          R$ {formValues.package.discountValue},00
                         </Card.Text>
                       )}
                     </Col>
