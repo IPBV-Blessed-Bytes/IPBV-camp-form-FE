@@ -46,7 +46,7 @@ const AdminAggregate = () => {
 
     const fetchRooms = async () => {
       try {
-        const response = await fetcher.get('aggregate/rooms');
+        const response = await fetcher.get('aggregate/room');
         setRooms(response.data);
       } catch (error) {
         toast.error('Erro ao carregar quartos');
@@ -72,8 +72,8 @@ const AdminAggregate = () => {
 
     const newRoom = { id: uuidv4(), name: newRoomName, campers: [] };
     try {
-      const response = await fetcher.post('aggregate/rooms', newRoom);
-      setRooms([...rooms, response.data]);
+      const response = await fetcher.post('aggregate', newRoom);
+      setRooms([...rooms, { ...response.data, name: newRoomName }]);
       handleCloseModal();
     } catch (error) {
       toast.error('Erro ao criar quarto');
@@ -94,7 +94,7 @@ const AdminAggregate = () => {
   const confirmDeleteRoom = async () => {
     if (roomIdToDelete) {
       try {
-        await fetcher.delete(`aggregate/rooms/${roomIdToDelete}`);
+        await fetcher.delete(`aggregate/${roomIdToDelete}`);
         setRooms(rooms.filter((room) => room.id !== roomIdToDelete));
         handleCloseDeleteModal();
       } catch (error) {
@@ -109,7 +109,7 @@ const AdminAggregate = () => {
     if (room) {
       const updatedRoom = { ...room, campers: [...room.campers, camper] };
       try {
-        await fetcher.put(`aggregate/rooms/${roomId}`, updatedRoom);
+        await fetcher.put(`aggregate/${roomId}`, updatedRoom);
         setRooms(rooms.map((r) => (r.id === roomId ? updatedRoom : r)));
       } catch (error) {
         toast.error('Erro ao adicionar pessoa ao quarto');
@@ -238,8 +238,8 @@ const AdminAggregate = () => {
                 </Col>
               </Row>
               <ul>
-                {room.campers.map((camper, index) => (
-                  <li key={index}>{camper.personalInformation.name}</li>
+                {(room.campers || []).map((camper, index) => (
+                  <li key={index}>{camper.name}</li>
                 ))}
               </ul>
             </Accordion.Body>
