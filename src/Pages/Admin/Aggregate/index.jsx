@@ -18,7 +18,7 @@ const AdminAggregate = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
-  const [roomIdToDelete, setRoomIdToDelete] = useState(null);
+  const [roomToDelete, setRoomToDelete] = useState(null);
 
   scrollUp();
 
@@ -81,21 +81,28 @@ const AdminAggregate = () => {
     }
   };
 
-  const handleShowDeleteModal = (roomId) => {
-    setRoomIdToDelete(roomId);
+  const handleShowDeleteModal = (room) => {
+    setRoomToDelete(room);
     setShowDeleteModal(true);
   };
 
   const handleCloseDeleteModal = () => {
-    setRoomIdToDelete(null);
+    setRoomToDelete(null);
     setShowDeleteModal(false);
   };
 
   const confirmDeleteRoom = async () => {
-    if (roomIdToDelete) {
+    console.log(roomToDelete);
+    if (roomToDelete) {
+      const roomData = {
+        id: roomToDelete.id,
+        name: roomToDelete.name,
+        campers: roomToDelete.campers || [],
+      };
+
       try {
-        await fetcher.delete(`aggregate/${roomIdToDelete}`);
-        setRooms(rooms.filter((room) => room.id !== roomIdToDelete));
+        await fetcher.delete(`aggregate/${roomToDelete.id}`, { data: roomData });
+        setRooms(rooms.filter((room) => room.id !== roomToDelete.id));
         handleCloseDeleteModal();
       } catch (error) {
         toast.error('Erro ao excluir quarto');
@@ -105,9 +112,19 @@ const AdminAggregate = () => {
   };
 
   const addCamperToRoom = async (roomId, camper) => {
+    const formattedCamper = {
+      name: camper.personalInformation.name,
+      birthday: camper.personalInformation.birthday,
+      cpf: camper.personalInformation.cpf,
+      rg: camper.personalInformation.rg,
+      rgShipper: camper.personalInformation.rgShipper,
+      rgShipperState: camper.personalInformation.rgShipperState,
+      gender: camper.personalInformation.gender,
+    };
+
     const room = rooms.find((room) => room.id === roomId);
     if (room) {
-      const updatedRoom = { ...room, campers: [...room.campers, camper] };
+      const updatedRoom = { ...room, campers: [...room.campers, formattedCamper] };
       try {
         await fetcher.put(`aggregate/${roomId}`, updatedRoom);
         setRooms(rooms.map((r) => (r.id === roomId ? updatedRoom : r)));
@@ -211,7 +228,7 @@ const AdminAggregate = () => {
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
               <div className="d-flex justify-content-end mb-3">
-                <Button variant="danger" onClick={() => handleShowDeleteModal(room.id)}>
+                <Button variant="danger" onClick={() => handleShowDeleteModal(room)}>
                   <Icons typeIcon="delete" iconSize={24} fill="#fff" />
                   &nbsp;Excluir Quarto
                 </Button>
