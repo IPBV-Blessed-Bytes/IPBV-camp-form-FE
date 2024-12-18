@@ -14,7 +14,7 @@ const AdminAggregate = () => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [selectedCamper, setSelectedCamper] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
@@ -23,22 +23,34 @@ const AdminAggregate = () => {
   scrollUp();
 
   useEffect(() => {
+    // const fetchUsers = async () => {
+    //   try {
+    //     const response = await fetcher.get('camper', { params: { size: 100000 } });
+    //     const campers = Object.entries(response.data.content).map(([key, camper]) => ({
+    //       id: key,
+    //       personalInformation: camper.personalInformation,
+    //       contact: camper.contact,
+    //     }));
+    //     const sortedCampers = campers.sort((a, b) =>
+    //       a.personalInformation.name.localeCompare(b.personalInformation.name),
+    //     );
+    //     const filteredCampers = sortedCampers.filter((camper) => camper.contact.hasAggregate);
+    //     setDropdownCampers(filteredCampers);
+    //   } catch (error) {
+    //     toast.error('Erro ao carregar usuários');
+    //     console.error('Erro ao buscar campers:', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
     const fetchUsers = async () => {
+      setLoading(true);
       try {
-        const response = await fetcher.get('camper', { params: { size: 100000 } });
-        const campers = Object.entries(response.data.content).map(([key, camper]) => ({
-          id: key,
-          personalInformation: camper.personalInformation,
-          contact: camper.contact,
-        }));
-        const sortedCampers = campers.sort((a, b) =>
-          a.personalInformation.name.localeCompare(b.personalInformation.name),
-        );
-        const filteredCampers = sortedCampers.filter((camper) => camper.contact.hasAggregate);
-        setDropdownCampers(filteredCampers);
+        const response = await fetcher.get('aggregate');
+        setDropdownCampers(response.data);
       } catch (error) {
         toast.error('Erro ao carregar usuários');
-        console.error('Erro ao buscar campers:', error);
+        console.error('Erro ao buscar usuários:', error);
       } finally {
         setLoading(false);
       }
@@ -71,6 +83,8 @@ const AdminAggregate = () => {
     }
 
     const newRoom = { id: uuidv4(), name: newRoomName, campers: [] };
+    setLoading(true);
+
     try {
       const response = await fetcher.post('aggregate', newRoom);
       setRooms([...rooms, { ...response.data, name: newRoomName }]);
@@ -78,6 +92,8 @@ const AdminAggregate = () => {
     } catch (error) {
       toast.error('Erro ao criar quarto');
       console.error('Erro ao criar quarto:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,13 +108,13 @@ const AdminAggregate = () => {
   };
 
   const confirmDeleteRoom = async () => {
-    console.log(roomToDelete);
     if (roomToDelete) {
       const roomData = {
         id: roomToDelete.id,
         name: roomToDelete.name,
         campers: roomToDelete.campers || [],
       };
+      setLoading(true);
 
       try {
         await fetcher.delete(`aggregate/${roomToDelete.id}`, { data: roomData });
@@ -107,6 +123,8 @@ const AdminAggregate = () => {
       } catch (error) {
         toast.error('Erro ao excluir quarto');
         console.error('Erro ao excluir quarto:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -125,12 +143,16 @@ const AdminAggregate = () => {
     const room = rooms.find((room) => room.id === roomId);
     if (room) {
       const updatedRoom = { ...room, campers: [...room.campers, formattedCamper] };
+      setLoading(true);
+
       try {
         await fetcher.put(`aggregate/${roomId}`, updatedRoom);
         setRooms(rooms.map((r) => (r.id === roomId ? updatedRoom : r)));
       } catch (error) {
         toast.error('Erro ao adicionar pessoa ao quarto');
         console.error('Erro ao adicionar pessoa ao quarto:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -242,7 +264,7 @@ const AdminAggregate = () => {
                     <option value="">Selecione um agregado para adicionar</option>
                     {dropdownCampers.map((camper) => (
                       <option key={camper.id} value={camper.id}>
-                        {camper.personalInformation.name}
+                        {camper.name}
                       </option>
                     ))}
                   </Form.Select>
