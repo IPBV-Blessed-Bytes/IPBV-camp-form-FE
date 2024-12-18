@@ -14,31 +14,43 @@ const AdminAggregate = () => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [selectedCamper, setSelectedCamper] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
-  const [roomIdToDelete, setRoomIdToDelete] = useState(null);
+  const [roomToDelete, setRoomToDelete] = useState(null);
 
   scrollUp();
 
   useEffect(() => {
+    // const fetchUsers = async () => {
+    //   try {
+    //     const response = await fetcher.get('camper', { params: { size: 100000 } });
+    //     const campers = Object.entries(response.data.content).map(([key, camper]) => ({
+    //       id: key,
+    //       personalInformation: camper.personalInformation,
+    //       contact: camper.contact,
+    //     }));
+    //     const sortedCampers = campers.sort((a, b) =>
+    //       a.personalInformation.name.localeCompare(b.personalInformation.name),
+    //     );
+    //     const filteredCampers = sortedCampers.filter((camper) => camper.contact.hasAggregate);
+    //     setDropdownCampers(filteredCampers);
+    //   } catch (error) {
+    //     toast.error('Erro ao carregar usuários');
+    //     console.error('Erro ao buscar campers:', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
     const fetchUsers = async () => {
+      setLoading(true);
       try {
-        const response = await fetcher.get('camper', { params: { size: 100000 } });
-        const campers = Object.entries(response.data.content).map(([key, camper]) => ({
-          id: key,
-          personalInformation: camper.personalInformation,
-          contact: camper.contact,
-        }));
-        const sortedCampers = campers.sort((a, b) =>
-          a.personalInformation.name.localeCompare(b.personalInformation.name),
-        );
-        const filteredCampers = sortedCampers.filter((camper) => camper.contact.hasAggregate);
-        setDropdownCampers(filteredCampers);
+        const response = await fetcher.get('aggregate');
+        setDropdownCampers(response.data);
       } catch (error) {
         toast.error('Erro ao carregar usuários');
-        console.error('Erro ao buscar campers:', error);
+        console.error('Erro ao buscar usuários:', error);
       } finally {
         setLoading(false);
       }
@@ -46,7 +58,7 @@ const AdminAggregate = () => {
 
     const fetchRooms = async () => {
       try {
-        const response = await fetcher.get('aggregate/rooms');
+        const response = await fetcher.get('aggregate/room');
         setRooms(response.data);
       } catch (error) {
         toast.error('Erro ao carregar quartos');
@@ -71,49 +83,76 @@ const AdminAggregate = () => {
     }
 
     const newRoom = { id: uuidv4(), name: newRoomName, campers: [] };
+    setLoading(true);
+
     try {
-      const response = await fetcher.post('aggregate/rooms', newRoom);
-      setRooms([...rooms, response.data]);
+      const response = await fetcher.post('aggregate', newRoom);
+      setRooms([...rooms, { ...response.data, name: newRoomName }]);
       handleCloseModal();
     } catch (error) {
       toast.error('Erro ao criar quarto');
       console.error('Erro ao criar quarto:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleShowDeleteModal = (roomId) => {
-    setRoomIdToDelete(roomId);
+  const handleShowDeleteModal = (room) => {
+    setRoomToDelete(room);
     setShowDeleteModal(true);
   };
 
   const handleCloseDeleteModal = () => {
-    setRoomIdToDelete(null);
+    setRoomToDelete(null);
     setShowDeleteModal(false);
   };
 
   const confirmDeleteRoom = async () => {
-    if (roomIdToDelete) {
+    if (roomToDelete) {
+      const roomData = {
+        id: roomToDelete.id,
+        name: roomToDelete.name,
+        campers: roomToDelete.campers || [],
+      };
+      setLoading(true);
+
       try {
-        await fetcher.delete(`aggregate/rooms/${roomIdToDelete}`);
-        setRooms(rooms.filter((room) => room.id !== roomIdToDelete));
+        await fetcher.delete(`aggregate/${roomToDelete.id}`, { data: roomData });
+        setRooms(rooms.filter((room) => room.id !== roomToDelete.id));
         handleCloseDeleteModal();
       } catch (error) {
         toast.error('Erro ao excluir quarto');
         console.error('Erro ao excluir quarto:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const addCamperToRoom = async (roomId, camper) => {
+    const formattedCamper = {
+      name: camper.personalInformation.name,
+      birthday: camper.personalInformation.birthday,
+      cpf: camper.personalInformation.cpf,
+      rg: camper.personalInformation.rg,
+      rgShipper: camper.personalInformation.rgShipper,
+      rgShipperState: camper.personalInformation.rgShipperState,
+      gender: camper.personalInformation.gender,
+    };
+
     const room = rooms.find((room) => room.id === roomId);
     if (room) {
-      const updatedRoom = { ...room, campers: [...room.campers, camper] };
+      const updatedRoom = { ...room, campers: [...room.campers, formattedCamper] };
+      setLoading(true);
+
       try {
-        await fetcher.put(`aggregate/rooms/${roomId}`, updatedRoom);
+        await fetcher.put(`aggregate/${roomId}`, updatedRoom);
         setRooms(rooms.map((r) => (r.id === roomId ? updatedRoom : r)));
       } catch (error) {
         toast.error('Erro ao adicionar pessoa ao quarto');
         console.error('Erro ao adicionar pessoa ao quarto:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -211,7 +250,7 @@ const AdminAggregate = () => {
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
               <div className="d-flex justify-content-end mb-3">
-                <Button variant="danger" onClick={() => handleShowDeleteModal(room.id)}>
+                <Button variant="danger" onClick={() => handleShowDeleteModal(room)}>
                   <Icons typeIcon="delete" iconSize={24} fill="#fff" />
                   &nbsp;Excluir Quarto
                 </Button>
@@ -225,7 +264,7 @@ const AdminAggregate = () => {
                     <option value="">Selecione um agregado para adicionar</option>
                     {dropdownCampers.map((camper) => (
                       <option key={camper.id} value={camper.id}>
-                        {camper.personalInformation.name}
+                        {camper.name}
                       </option>
                     ))}
                   </Form.Select>
@@ -238,8 +277,8 @@ const AdminAggregate = () => {
                 </Col>
               </Row>
               <ul>
-                {room.campers.map((camper, index) => (
-                  <li key={index}>{camper.personalInformation.name}</li>
+                {(room.campers || []).map((camper, index) => (
+                  <li key={index}>{camper.name}</li>
                 ))}
               </ul>
             </Accordion.Body>
