@@ -362,7 +362,7 @@ const SiteRoutes = () => {
             }
           />
           <Route
-            path="/admin/agregado"
+            path="/admin/quartos"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
                 <AdminAggregate loggedUsername={splitedLoggedUsername} />
