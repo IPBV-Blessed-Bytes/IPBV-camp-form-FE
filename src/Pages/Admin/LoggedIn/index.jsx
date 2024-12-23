@@ -57,7 +57,7 @@ const AdminLoggedIn = ({
   };
 
   const handleAggregateClick = () => {
-    navigate('/admin/agregado');
+    navigate('/admin/quartos');
   };
 
   const handleCheckinClick = () => {
@@ -270,7 +270,7 @@ const AdminLoggedIn = ({
           permission={aggregateButtonHomePermissions}
           onClick={handleAggregateClick}
           cardType="aggregate-card"
-          title="Agregados"
+          title="Quartos"
           typeIcon="aggregate"
           iconSize={50}
         />
