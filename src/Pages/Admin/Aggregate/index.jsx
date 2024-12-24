@@ -299,11 +299,11 @@ const AdminAggregate = ({ loggedUsername }) => {
                   </Button>
                 </Col>
               </Row>
-              <ul>
+              <ol>
                 {(room.campers || []).map((camper, index) => (
                   <li key={index}>{camper.name}</li>
                 ))}
-              </ul>
+              </ol>
             </Accordion.Body>
           </Accordion.Item>
         ))}
