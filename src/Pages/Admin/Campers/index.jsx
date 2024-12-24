@@ -652,7 +652,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
-        Header: 'Cupom:',
+        Header: 'Desconto:',
         accessor: (row) => ({
           discountCoupon: row.package.discountCoupon,
           discountValue: row.package.discountValue,

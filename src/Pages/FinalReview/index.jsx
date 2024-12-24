@@ -82,7 +82,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                         )}
                       {formValues.package.discountCoupon && (
                         <Card.Text>
-                          <span className="form-review__section-title">Cupom:</span>
+                          <span className="form-review__section-title">Desconto:</span>
                           <br />
                           R$ {formValues.package.discountValue},00
                         </Card.Text>

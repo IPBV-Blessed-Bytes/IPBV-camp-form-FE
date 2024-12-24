@@ -12,27 +12,27 @@ import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/adminHeader';
 
-const AdminCoupon = ({ loggedUsername }) => {
-  const [coupons, setCoupons] = useState([]);
+const AdminDiscount = ({ loggedUsername }) => {
+  const [discount, setDiscount] = useState([]);
   const [paidUsers, setPaidUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [editingCoupon, setEditingCoupon] = useState(null);
-  const [couponToDelete, setCouponToDelete] = useState(null);
-  const [newCoupon, setNewCoupon] = useState({ cpf: '', discount: '', user: '' });
+  const [editingDiscount, setEditingDiscount] = useState(null);
+  const [discountToDelete, setDiscountToDelete] = useState(null);
+  const [newDiscount, setNewDiscount] = useState({ cpf: '', discount: '', user: '' });
 
   scrollUp();
 
   useEffect(() => {
-    fetchCoupons();
+    fetchDiscounts();
     fetchPaidUsers();
   }, []);
 
-  const fetchCoupons = async () => {
+  const fetchDiscounts = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/coupon`);
-      setCoupons(response.data.coupons);
+      setDiscount(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar cupons');
     } finally {
@@ -61,18 +61,18 @@ const AdminCoupon = ({ loggedUsername }) => {
     return isValid;
   };
 
-  const handleCreateCoupon = async () => {
+  const handleCreateDiscount = async () => {
     setLoading(true);
 
     try {
       await fetcher.post('coupon/create', {
-        ...newCoupon,
+        ...newDiscount,
         id: Date.now().toString(),
       });
       toast.success('Cupom criado com sucesso');
       setShowModal(false);
-      fetchCoupons();
-      registerLog(`Criou o cupom atrelado ao CPF ${newCoupon.cpf}`, loggedUsername);
+      fetchDiscounts();
+      registerLog(`Criou o cupom atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao criar cupom');
     } finally {
@@ -80,15 +80,15 @@ const AdminCoupon = ({ loggedUsername }) => {
     }
   };
 
-  const handleEditCoupon = async () => {
+  const handleEditDiscount = async () => {
     setLoading(true);
 
     try {
-      await fetcher.put(`coupon/${editingCoupon.id}`, editingCoupon);
+      await fetcher.put(`coupon/${editingDiscount.id}`, editingDiscount);
       toast.success('Cupom atualizado com sucesso');
       setShowModal(false);
-      fetchCoupons();
-      registerLog(`Editou o cupom atrelado ao CPF ${editingCoupon.cpf}`, loggedUsername);
+      fetchDiscounts();
+      registerLog(`Editou o cupom atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao atualizar cupom');
     } finally {
@@ -96,18 +96,18 @@ const AdminCoupon = ({ loggedUsername }) => {
     }
   };
 
-  const handleDeleteCoupon = async (couponToDelete) => {
+  const handleDeleteDiscount = async (discountToDelete) => {
     setLoading(true);
 
     try {
-      const deleteCoupon = {
-        ...couponToDelete,
+      const deleteDiscount = {
+        ...discountToDelete,
       };
-      await fetcher.delete(`coupon/${couponToDelete.id}`, { data: deleteCoupon });
+      await fetcher.delete(`coupon/${discountToDelete.id}`, { data: deleteDiscount });
       toast.success('Cupom excluído com sucesso');
       setShowConfirmDelete(false);
-      fetchCoupons();
-      registerLog(`Excluiu o cupom atrelado ao CPF ${deleteCoupon.cpf}`, loggedUsername);
+      fetchDiscounts();
+      registerLog(`Excluiu o cupom atrelado ao CPF ${deleteDiscount.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao excluir cupom');
     } finally {
@@ -115,32 +115,32 @@ const AdminCoupon = ({ loggedUsername }) => {
     }
   };
 
-  const openModal = (coupon) => {
-    setEditingCoupon(coupon);
-    setNewCoupon({ cpf: '', discount: '' });
+  const openModal = (discount) => {
+    setEditingDiscount(discount);
+    setNewDiscount({ cpf: '', discount: '' });
     setShowModal(true);
   };
 
   const closeModal = () => {
-    setEditingCoupon(null);
+    setEditingDiscount(null);
     setShowModal(false);
   };
 
-  const openConfirmDeleteModal = (coupon) => {
-    setCouponToDelete(coupon);
+  const openConfirmDeleteModal = (discount) => {
+    setDiscountToDelete(discount);
     setShowConfirmDelete(true);
   };
 
   const closeConfirmDeleteModal = () => {
-    setCouponToDelete(null);
+    setDiscountToDelete(null);
     setShowConfirmDelete(false);
   };
 
   const handleSubmit = () => {
-    if (editingCoupon) {
-      handleEditCoupon();
+    if (editingDiscount) {
+      handleEditDiscount();
     } else {
-      handleCreateCoupon();
+      handleCreateDiscount();
     }
   };
 
@@ -148,14 +148,14 @@ const AdminCoupon = ({ loggedUsername }) => {
     <Container fluid>
       <AdminHeader
         pageName="Gerenciamento de Cupons"
-        sessionTypeIcon="coupon"
+        sessionTypeIcon="discount"
         iconSize={80}
         fill={'#204691'}
         showHeaderTools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="primary"
         headerToolsOpenModal={() => openModal(null)}
-        headerToolsButtonIcon="coupon"
+        headerToolsButtonIcon="discount"
         headerToolsButtonName="Criar Novo Cupom"
       />
 
@@ -170,19 +170,19 @@ const AdminCoupon = ({ loggedUsername }) => {
             </tr>
           </thead>
           <tbody>
-            {coupons.map((coupon) => {
-              const isUserRegistered = registeredUser(coupon.cpf);
+            {discount.map((discount) => {
+              const isUserRegistered = registeredUser(discount.cpf);
 
               return (
-                <tr key={coupon.id}>
-                  <td>{coupon.cpf}</td>
-                  <td>{coupon.discount}</td>
-                  <td>{isUserRegistered ? coupon.user : ''}</td>
+                <tr key={discount.id}>
+                  <td>{discount.cpf}</td>
+                  <td>{discount.discount}</td>
+                  <td>{isUserRegistered ? discount.user : ''}</td>
                   <td>
-                    <Button variant="outline-success" onClick={() => openModal(coupon)}>
+                    <Button variant="outline-success" onClick={() => openModal(discount)}>
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>{' '}
-                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(coupon)}>
+                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(discount)}>
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
                   </td>
@@ -196,7 +196,7 @@ const AdminCoupon = ({ loggedUsername }) => {
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <b>{editingCoupon ? 'Editar Cupom' : 'Criar Novo Cupom'}</b>
+            <b>{editingDiscount ? 'Editar Cupom' : 'Criar Novo Cupom'}</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -207,12 +207,12 @@ const AdminCoupon = ({ loggedUsername }) => {
               </Form.Label>
               <Form.Control
                 type="number"
-                value={editingCoupon ? editingCoupon.cpf : newCoupon.cpf}
+                value={editingDiscount ? editingDiscount.cpf : newDiscount.cpf}
                 size="lg"
                 onChange={(e) =>
-                  editingCoupon
-                    ? setEditingCoupon({ ...editingCoupon, cpf: e.target.value })
-                    : setNewCoupon({ ...newCoupon, cpf: e.target.value })
+                  editingDiscount
+                    ? setEditingDiscount({ ...editingDiscount, cpf: e.target.value })
+                    : setNewDiscount({ ...newDiscount, cpf: e.target.value })
                 }
                 placeholder="00000000000"
               />
@@ -224,12 +224,12 @@ const AdminCoupon = ({ loggedUsername }) => {
               </Form.Label>
               <Form.Control
                 type="number"
-                value={editingCoupon ? editingCoupon.discount : newCoupon.discount}
+                value={editingDiscount ? editingDiscount.discount : newDiscount.discount}
                 size="lg"
                 onChange={(e) =>
-                  editingCoupon
-                    ? setEditingCoupon({ ...editingCoupon, discount: e.target.value })
-                    : setNewCoupon({ ...newCoupon, discount: e.target.value })
+                  editingDiscount
+                    ? setEditingDiscount({ ...editingDiscount, discount: e.target.value })
+                    : setNewDiscount({ ...newDiscount, discount: e.target.value })
                 }
                 placeholder="000"
               />
@@ -241,7 +241,7 @@ const AdminCoupon = ({ loggedUsername }) => {
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            {editingCoupon ? 'Salvar Alterações' : 'Criar Cupom'}
+            {editingDiscount ? 'Salvar Alterações' : 'Criar Cupom'}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -253,14 +253,14 @@ const AdminCoupon = ({ loggedUsername }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja excluir o cupom vinculado ao CPF <b>{couponToDelete?.cpf}</b>? Essa ação é
+          Tem certeza que deseja excluir o cupom vinculado ao CPF <b>{discountToDelete?.cpf}</b>? Essa ação é
           irreversível.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => couponToDelete && handleDeleteCoupon(couponToDelete)}>
+          <Button variant="danger" onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}>
             Excluir
           </Button>
         </Modal.Footer>
@@ -271,8 +271,8 @@ const AdminCoupon = ({ loggedUsername }) => {
   );
 };
 
-AdminCoupon.propTypes = {
+AdminDiscount.propTypes = {
   loggedUsername: PropTypes.string,
 };
 
-export default AdminCoupon;
+export default AdminDiscount;

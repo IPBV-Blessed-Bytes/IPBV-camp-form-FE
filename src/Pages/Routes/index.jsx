@@ -27,7 +27,7 @@ import CpfData from '../CpfReview/CpfData';
 import Login from '../Admin/Login';
 import AdminCampers from '../Admin/Campers';
 import AdminRide from '../Admin/Ride';
-import AdminCoupon from '../Admin/Coupon';
+import AdminDiscount from '../Admin/Discount';
 import AdminRooms from '../Admin/Rooms';
 import AdminExtraMeals from '../Admin/ExtraMeals';
 import AdminCheckin from '../Admin/Checkin';
@@ -357,7 +357,7 @@ const SiteRoutes = () => {
             path="/admin/cupom"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
-                <AdminCoupon loggedUsername={splitedLoggedUsername} />
+                <AdminDiscount loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
