@@ -32,8 +32,8 @@ const AdminLoggedIn = ({
   const [totalBusVacancies, setTotalBusVacancies] = useState();
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
-  const couponButtonHomePermissions = permissions(userRole, 'coupon-button-home');
-  const aggregateButtonHomePermissions = permissions(userRole, 'aggregate-button-home');
+  const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
+  const roomsButtonHomePermissions = permissions(userRole, 'rooms-button-home');
   const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
   const extraMealsButtonHomePermissions = permissions(userRole, 'extra-meals-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
@@ -52,11 +52,11 @@ const AdminLoggedIn = ({
     navigate('/admin/carona');
   };
 
-  const handleCouponsClick = () => {
+  const handleDiscountClick = () => {
     navigate('/admin/cupom');
   };
 
-  const handleAggregateClick = () => {
+  const handleRoomsClick = () => {
     navigate('/admin/quartos');
   };
 
@@ -258,20 +258,20 @@ const AdminLoggedIn = ({
         />
 
         <SessionCard
-          permission={couponButtonHomePermissions}
-          onClick={handleCouponsClick}
-          cardType="coupons-card"
+          permission={discountButtonHomePermissions}
+          onClick={handleDiscountClick}
+          cardType="discount-card"
           title="Cupons"
-          typeIcon="coupon"
+          typeIcon="discount"
           iconSize={50}
         />
 
         <SessionCard
-          permission={aggregateButtonHomePermissions}
-          onClick={handleAggregateClick}
-          cardType="aggregate-card"
+          permission={roomsButtonHomePermissions}
+          onClick={handleRoomsClick}
+          cardType="rooms-card"
           title="Quartos"
-          typeIcon="aggregate"
+          typeIcon="rooms"
           iconSize={50}
         />
 
