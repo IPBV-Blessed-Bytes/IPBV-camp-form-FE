@@ -10,11 +10,11 @@
       background-color: $light-red;
     }
 
-    &__coupons-card {
+    &__discount-card {
       background-color: $intense-green-light;
     }
 
-    &__aggregate-card {
+    &__rooms-card {
       background-color: $light-yellow;
     }
 
@@ -32,9 +32,9 @@
 
     &__registered-card,
     &__ride-card,
-    &__coupons-card,
+    &__discount-card,
     &__checkin-card,
-    &__aggregate-card,
+    &__rooms-card,
     &__feedback-card,
     &__extra-meals-card {
       align-items: center;
