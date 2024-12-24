@@ -12,7 +12,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminHeader from '@/components/Admin/adminHeader';
 
-const AdminAggregate = ({ loggedUsername }) => {
+const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [selectedCamper, setSelectedCamper] = useState({});
@@ -361,8 +361,8 @@ const AdminAggregate = ({ loggedUsername }) => {
   );
 };
 
-AdminAggregate.propTypes = {
+AdminRooms.propTypes = {
   loggedUsername: PropTypes.string,
 };
 
-export default AdminAggregate;
+export default AdminRooms;
