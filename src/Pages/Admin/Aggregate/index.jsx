@@ -164,6 +164,7 @@ const AdminAggregate = ({ loggedUsername }) => {
 
   const handleAddCamperToRoom = (roomId, roomName) => {
     if (selectedCamper[roomId]) {
+      setSelectedCamper({});
       const camperId = selectedCamper[roomId];
       const camper = dropdownCampers.find((c) => {
         return String(c.id) === String(camperId);
@@ -278,7 +279,7 @@ const AdminAggregate = ({ loggedUsername }) => {
                     size="md"
                   >
                     <option value="" disabled selected>
-                      Selecione um agregado para adicionar
+                      Selecione um acampante para adicionar ao quarto
                     </option>
                     {dropdownCampers
                       .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
