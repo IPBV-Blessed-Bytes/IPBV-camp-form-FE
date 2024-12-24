@@ -3,6 +3,7 @@ import { Table, Container, Accordion, Button, Form, Row, Col, Modal } from 'reac
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -358,6 +359,10 @@ const AdminAggregate = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminAggregate.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminAggregate;
