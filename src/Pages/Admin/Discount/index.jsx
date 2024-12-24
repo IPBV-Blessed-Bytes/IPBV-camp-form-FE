@@ -164,7 +164,7 @@ const AdminDiscount = ({ loggedUsername }) => {
           <thead>
             <tr>
               <th className="table-cells-header">CPF atrelado:</th>
-              <th className="table-cells-header">Desconto:</th>
+              <th className="table-cells-header">Valor:</th>
               <th className="table-cells-header">Usuário:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
@@ -220,7 +220,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Desconto:</b>
+                <b>Valor:</b>
               </Form.Label>
               <Form.Control
                 type="number"
