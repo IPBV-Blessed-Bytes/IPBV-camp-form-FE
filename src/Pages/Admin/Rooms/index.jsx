@@ -199,7 +199,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="aggregate" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#204691'} />
 
       <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
