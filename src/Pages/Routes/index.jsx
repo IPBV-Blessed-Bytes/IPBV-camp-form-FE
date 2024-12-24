@@ -28,7 +28,7 @@ import Login from '../Admin/Login';
 import AdminCampers from '../Admin/Campers';
 import AdminRide from '../Admin/Ride';
 import AdminCoupon from '../Admin/Coupon';
-import AdminAggregate from '../Admin/Aggregate';
+import AdminRooms from '../Admin/Rooms';
 import AdminExtraMeals from '../Admin/ExtraMeals';
 import AdminCheckin from '../Admin/Checkin';
 import AdminUserLogs from '../Admin/UserLogs';
@@ -365,7 +365,7 @@ const SiteRoutes = () => {
             path="/admin/quartos"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-                <AdminAggregate loggedUsername={splitedLoggedUsername} />
+                <AdminRooms loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
