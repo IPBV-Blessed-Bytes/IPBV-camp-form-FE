@@ -44,7 +44,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                   }
                 }
               } catch (error) {
-                console.error('Erro ao verificar os cupons:', error);
+                console.error('Erro ao verificar os descontos:', error);
               }
             };
 

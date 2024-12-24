@@ -261,7 +261,7 @@ const AdminLoggedIn = ({
           permission={discountButtonHomePermissions}
           onClick={handleDiscountClick}
           cardType="discount-card"
-          title="Cupons"
+          title="Descontos"
           typeIcon="discount"
           iconSize={50}
         />

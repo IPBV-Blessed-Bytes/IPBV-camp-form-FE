@@ -34,7 +34,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       const response = await axios.get(`${BASE_URL}/coupon`);
       setDiscount(response.data.coupons);
     } catch (error) {
-      toast.error('Erro ao buscar cupons');
+      toast.error('Erro ao buscar descontos');
     } finally {
       setLoading(false);
     }
@@ -147,7 +147,7 @@ const AdminDiscount = ({ loggedUsername }) => {
   return (
     <Container fluid>
       <AdminHeader
-        pageName="Gerenciamento de Cupons"
+        pageName="Gerenciamento de Descontos"
         sessionTypeIcon="discount"
         iconSize={80}
         fill={'#204691'}
