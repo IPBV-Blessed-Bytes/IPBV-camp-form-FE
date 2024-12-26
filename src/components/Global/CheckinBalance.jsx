@@ -64,7 +64,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
   const renderTotalProgressBar = () => (
     <Box mb={3}>
-      <Typography variant="h6">{`Total (${totalCheckins}/${totalUsed})`}</Typography>
+      <Typography variant="h6">{`Total: (${totalCheckins}/${totalUsed})`}</Typography>
       <Box display="flex" alignItems="center">
         <Box width="100%" mr={2}>
           <LinearProgress
@@ -87,8 +87,8 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
   return (
     <Box>
-      {renderProgressBar('Colégio:', schoolDetails, usedSchool, '#4caf50')}
-      {renderProgressBar('Seminário:', seminaryDetails, usedSeminary, '#2196f3')}
+      {renderProgressBar('Colégio XV de Novembro:', schoolDetails, usedSchool, '#4caf50')}
+      {renderProgressBar('Seminário São José:', seminaryDetails, usedSeminary, '#2196f3')}
       {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#ff9800')}
       {renderTotalProgressBar()}
     </Box>
