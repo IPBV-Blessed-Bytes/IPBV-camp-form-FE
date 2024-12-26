@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { BASE_URL } from '@/config/index';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.scss'
+import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -15,6 +15,7 @@ import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SettingsButton from '@/components/Admin/SettingsButton';
+import CheckinBalance from '@/components/Global/CheckinBalance';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -30,6 +31,8 @@ const AdminLoggedIn = ({
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState();
   const [totalBusVacancies, setTotalBusVacancies] = useState();
+  const [usedPackages, setUsedPackages] = useState();
+  const [fillingVacancies, setFillingVacancies] = useState();
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -38,6 +41,7 @@ const AdminLoggedIn = ({
   const extraMealsButtonHomePermissions = permissions(userRole, 'extra-meals-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
+  const checkinBalancePermissions = permissions(userRole, 'checkin-balance-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
   const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
@@ -88,6 +92,7 @@ const AdminLoggedIn = ({
         setAvailablePackages(response.data);
         setTotalSeats(response.data.totalSeats);
         setTotalBusVacancies(response.data.totalBusVacancies);
+        setUsedPackages(response.data.usedPackages);
       } catch (error) {
         console.error('Erro ao buscar os pacotes:', error);
       } finally {
@@ -95,7 +100,43 @@ const AdminLoggedIn = ({
       }
     };
 
+    const extractCheckinAndAccommodation = (data) => {
+      if (!Array.isArray(data)) {
+        console.error('Data received is not an array:', data);
+        return [];
+      }
+
+      return data
+        .filter((camper) => camper.checkin === true)
+        .map((camper) => ({
+          checkin: camper.checkin,
+          accomodationName: camper.package?.accomodationName || 'Desconhecido',
+        }));
+    };
+
+    const fetchCampers = async () => {
+      try {
+        const response = await fetcher.get('camper', {
+          params: {
+            size: 100000,
+          },
+        });
+
+        if (Array.isArray(response.data.content)) {
+          const checkinData = extractCheckinAndAccommodation(response.data.content);
+          setFillingVacancies(checkinData);
+        } else {
+          console.error('Data received is not an array:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPackages();
+    fetchCampers();
   }, []);
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
@@ -354,6 +395,14 @@ const AdminLoggedIn = ({
             </ul>
           </div>
         </>
+      )}
+
+      {checkinBalancePermissions && (
+        <Row className="mt-5">
+          <h4 className="text-center fw-bold mb-4">BALANÇO DE CHECK-INS:</h4>
+
+          <CheckinBalance fillingVacancies={fillingVacancies} usedPackages={usedPackages} />
+        </Row>
       )}
 
       <SettingsButton permission={settingsButtonPermissions} />
