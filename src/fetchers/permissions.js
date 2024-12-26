@@ -13,6 +13,7 @@ export const permissions = (userRole, context) => {
     'feedback-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'extra-meals-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'packages-and-totals-cards-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
+    'checkin-balance-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === CHECKER,
     'utilities-links-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'advanced-options-admin-table': userRole === ADMIN || userRole === COLLABORATOR,
     'checkin': userRole === ADMIN || userRole === CHECKER,
