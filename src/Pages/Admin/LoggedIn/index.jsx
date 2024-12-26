@@ -394,6 +394,7 @@ const AdminLoggedIn = ({
               </li>
             </ul>
           </div>
+          <div className="packages-horizontal-line" />
         </>
       )}
 
