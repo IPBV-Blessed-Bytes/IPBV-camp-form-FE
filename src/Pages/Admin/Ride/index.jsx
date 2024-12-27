@@ -279,7 +279,7 @@ const AdminRide = ({ loggedUsername }) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
     return (
-      <div className="table-responsive">
+      <div className="table-responsive ride">
         <Table striped bordered hover className="custom-table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (

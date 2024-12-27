@@ -261,7 +261,7 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
-.table-responsive {
+.table-responsive:not(.ride) {
   height: 100vh;
 }
 
