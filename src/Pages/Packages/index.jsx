@@ -256,16 +256,10 @@ const Packages = ({
                             },
                           };
 
-                          // console.log(usedValidPackagesPath)
-
                           const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
-                          console.log(usedValidPackagesPath)
 
                           const openPackages = availableSlots - usedValidPackagesSum;
 
-                          // console.log('availableSlots:',availableSlots)
-                          // console.log('usedValidPackagesSum:',usedValidPackagesSum)
-                          // console.log('openPackages:',openPackages)
                           const isPackageAvailable = openPackages > 0 || isChild;
 
                           const busIsNotAvailable = totalValidWithBus >= totalBusVacancies;
