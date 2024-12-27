@@ -173,9 +173,9 @@ const TableColumns = ({
       placeholder: 'Selecione a acomodação',
       oddOrEven: 'even',
       options: [
-        { label: 'Colégio', value: 'Colégio' },
-        { label: 'Seminário', value: 'Seminário' },
-        { label: 'Outro', value: 'Outro' },
+        { label: 'Colegio XV de Novembro', value: 'Colegio XV de Novembro' },
+        { label: 'Seminario Sao Jose', value: 'Seminario Sao Jose' },
+        { label: 'Outra Acomodacao Externa', value: 'Outra Acomodacao Externa' },
       ],
     },
     {
