@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import formatCurrency from '@/utils/formatCurrency';
 import getPackages, { accommodations } from './utils/packages';
 import { toast } from 'react-toastify';
-import './style.scss'
+import './style.scss';
 import Icons from '@/components/Global/Icons';
 
 const Packages = ({
@@ -35,10 +35,10 @@ const Packages = ({
     8: { available: 'schoolFamily', used: 'schoolFamilyWithoutBusWithoutFood' },
     9: { available: 'schoolCamping', used: 'schoolCampingWithoutBusWithFood' },
     10: { available: 'schoolCamping', used: 'schoolCampingWithoutBusWithoutFood' },
-    11: { available: 'seminary', used: 'seminaryIndividualWithBusWithFood' },
-    12: { available: 'seminary', used: 'seminaryIndividualWithoutBusWithFood' },
+    11: { available: 'seminary', used: 'seminaryWithBusWithFood' },
+    12: { available: 'seminary', used: 'seminaryWithoutBusWithFood' },
     13: { available: 'other', used: 'otherWithBusWithFood' },
-    14: { available: 'other', used: 'otherWithoutBusWithoutFood' },
+    14: { available: 'other', used: 'otherWithoutBusWithFood' },
     15: { available: 'other', used: 'otherWithoutBusWithoutFood' },
   };
 
@@ -228,33 +228,44 @@ const Packages = ({
                             },
                             11: {
                               seminary:
-                                usedValidPackagesPath?.seminaryIndividualWithBusWithFood +
-                                usedValidPackagesPath?.seminaryIndividualWithoutBusWithFood,
+                                usedValidPackagesPath?.seminaryWithBusWithFood +
+                                usedValidPackagesPath?.seminaryWithoutBusWithFood,
                             },
                             12: {
                               seminary:
-                                usedValidPackagesPath?.seminaryIndividualWithBusWithFood +
-                                usedValidPackagesPath?.seminaryIndividualWithoutBusWithFood,
+                                usedValidPackagesPath?.seminaryWithBusWithFood +
+                                usedValidPackagesPath?.seminaryWithoutBusWithFood,
                             },
                             13: {
                               other:
                                 usedValidPackagesPath?.otherWithBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithFood +
                                 usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                             14: {
                               other:
                                 usedValidPackagesPath?.otherWithBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithFood +
                                 usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                             15: {
-                              other: usedValidPackagesPath?.otherWithoutBusWithoutFood,
+                              other:
+                                usedValidPackagesPath?.otherWithBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithFood +
+                                usedValidPackagesPath?.otherWithoutBusWithoutFood,
                             },
                           };
 
+                          // console.log(usedValidPackagesPath)
+
                           const usedValidPackagesSum = usedValidPackagesMapping[cards.id][availablePackageName];
+                          console.log(usedValidPackagesPath)
 
                           const openPackages = availableSlots - usedValidPackagesSum;
 
+                          // console.log('availableSlots:',availableSlots)
+                          // console.log('usedValidPackagesSum:',usedValidPackagesSum)
+                          // console.log('openPackages:',openPackages)
                           const isPackageAvailable = openPackages > 0 || isChild;
 
                           const busIsNotAvailable = totalValidWithBus >= totalBusVacancies;
@@ -264,7 +275,7 @@ const Packages = ({
                                 ${selectedPackage?.id === cards.id ? ' card-is-active' : ''}
                                 ${!isPackageAvailable ? 'card-disabled not-available' : ''} 
                                 ${busIsNotAvailable && packageIsWithBus ? 'card-disabled not-available' : ''}
-                                `
+                                `;
 
                           return (
                             <Card

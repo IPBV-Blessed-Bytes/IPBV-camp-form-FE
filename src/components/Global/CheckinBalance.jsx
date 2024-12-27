@@ -26,10 +26,12 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
     usedPackages?.schoolIndividualWithoutBusWithFood +
     usedPackages?.schoolIndividualWithoutBusWithoutFood;
 
-  const usedSeminary =
-    usedPackages?.seminaryIndividualWithBusWithFood + usedPackages?.seminaryIndividualWithoutBusWithFood;
+  const usedSeminary = usedPackages?.seminaryWithBusWithFood + usedPackages?.seminaryWithoutBusWithFood;
 
-  const usedOther = usedPackages?.otherWithBusWithFood + usedPackages?.otherWithoutBusWithoutFood;
+  const usedOther =
+    usedPackages?.otherWithBusWithFood +
+    usedPackages?.otherWithoutBusWithFood +
+    usedPackages?.otherWithoutBusWithoutFood;
 
   const schoolDetails = calculateCheckinDetails('Colegio XV de Novembro', usedSchool);
   const seminaryDetails = calculateCheckinDetails('Seminario Sao Jose', usedSeminary);

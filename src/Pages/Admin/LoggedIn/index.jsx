@@ -172,13 +172,13 @@ const AdminLoggedIn = ({
   const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.schoolCamping - campingSchoolFilledVacanciesSum;
 
   const seminaryFilledVacanciesSum =
-    availablePackagesUsedValid?.seminaryIndividualWithBusWithFood +
-    availablePackagesUsedValid?.seminaryIndividualWithoutBusWithFood;
+    availablePackagesUsedValid?.seminaryWithBusWithFood +
+    availablePackagesUsedValid?.seminaryWithoutBusWithFood;
 
   const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminary - seminaryFilledVacanciesSum;
 
   const otherFilledVacanciesSum =
-    availablePackagesUsedValid?.otherWithBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithoutFood;
+    availablePackagesUsedValid?.otherWithBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithoutFood;
 
   const otherRemainingVacanciesSum = availablePackagesTotal?.other - otherFilledVacanciesSum;
 

@@ -258,7 +258,7 @@ const getPackages = (age) => {
       observation:
         'SEM ônibus / Hospedagem em outro local que não os listados acima (por sua conta e responsabilidade)',
       values: { ...otherWithoutBusWithFood },
-      accomodation: { id: 'otherWithoutBusWithoutFood' },
+      accomodation: { id: 'otherWithoutBusWithFood' },
       accomodationName: OTHER,
       subAccomodation: 'Outra',
       transportation: 'Sem Ônibus',
