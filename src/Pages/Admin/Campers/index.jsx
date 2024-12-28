@@ -359,29 +359,27 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               ? ''
               : 'SEM ALIMENTAÇÃO'
           }`,
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
       },
       {
         Header: 'Nome:',
         accessor: 'personalInformation.name',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: alphabeticalSort,
         Cell: ({ value }) => value || '-',
       },
@@ -427,43 +425,40 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Data de Nascimento:',
         accessor: 'personalInformation.birthday',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
       },
       {
         Header: 'CPF:',
         accessor: 'personalInformation.cpf',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
       },
       {
         Header: 'RG:',
         accessor: 'personalInformation.rg',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
@@ -472,15 +467,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         accessor: (row) =>
           `${row.personalInformation.rgShipper} -
           ${row.personalInformation.rgShipperState}`,
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
@@ -525,30 +519,28 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Observação da Carona:',
         accessor: 'contact.rideObservation',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Data de Inscrição:',
         accessor: 'registrationDate',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
       },
       {
@@ -593,60 +585,56 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Email:',
         accessor: 'contact.email',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Preço:',
         accessor: 'totalPrice',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Agregados:',
         accessor: 'contact.aggregate',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
@@ -748,15 +736,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Observação:',
         accessor: 'observation',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
@@ -786,15 +773,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Chave do Pedido:',
         accessor: 'orderId',
-        Filter: ({ column }) => {
-          useEffect(() => {
-            if (column.filteredRows) {
-              setFilteredRows([...column.filteredRows]);
-            }
-          }, [column.filteredRows]);
-
-          return <TableColumnFilter column={column} />;
-        },
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const orderUrl = `https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/${value}`;
@@ -1238,6 +1224,7 @@ AdminCampers.propTypes = {
   }),
   column: PropTypes.shape({
     index: PropTypes.string,
+    filteredRows: PropTypes.array, 
   }),
   loggedUsername: PropTypes.string,
   userRole: PropTypes.string,
