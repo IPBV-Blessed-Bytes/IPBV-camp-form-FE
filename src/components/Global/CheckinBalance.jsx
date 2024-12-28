@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, Typography, LinearProgress } from '@mui/material';
+import PropTypes from 'prop-types';
 
 const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
   const calculateCheckinDetails = (packageNameKeyword, totalUsed) => {
@@ -95,6 +95,32 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
       {renderTotalProgressBar()}
     </Box>
   );
+};
+
+CheckinBalance.propTypes = {
+  fillingVacancies: PropTypes.arrayOf(
+    PropTypes.shape({
+      accomodationName: PropTypes.string,
+      checkin: PropTypes.bool,
+    }),
+  ),
+  usedPackages: PropTypes.shape({
+    schoolCampingWithoutBusWithFood: PropTypes.number,
+    schoolCampingWithoutBusWithoutFood: PropTypes.number,
+    schoolFamilyWithBusWithFood: PropTypes.number,
+    schoolFamilyWithBusWithoutFood: PropTypes.number,
+    schoolFamilyWithoutBusWithFood: PropTypes.number,
+    schoolFamilyWithoutBusWithoutFood: PropTypes.number,
+    schoolIndividualWithBusWithFood: PropTypes.number,
+    schoolIndividualWithBusWithoutFood: PropTypes.number,
+    schoolIndividualWithoutBusWithFood: PropTypes.number,
+    schoolIndividualWithoutBusWithoutFood: PropTypes.number,
+    seminaryWithBusWithFood: PropTypes.number,
+    seminaryWithoutBusWithFood: PropTypes.number,
+    otherWithBusWithFood: PropTypes.number,
+    otherWithoutBusWithFood: PropTypes.number,
+    otherWithoutBusWithoutFood: PropTypes.number,
+  }),
 };
 
 export default CheckinBalance;
