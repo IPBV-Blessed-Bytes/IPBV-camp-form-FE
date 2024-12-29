@@ -1,7 +1,15 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
-const TableColumnSelectFilter = ({ column: { setFilter, filterValue }, options }) => {
+const TableColumnSelectFilter = ({ column, options, onFilterChange }) => {
+  const filterValue = column?.filterValue || '';
+  const setFilter = column?.setFilter || (() => {});
+
+  useEffect(() => {
+    onFilterChange();
+  }, [filterValue]);
+
   const handleChange = (e) => {
     const value = e.target.value;
     setFilter(value === 'all' ? undefined : value);
@@ -24,9 +32,13 @@ TableColumnSelectFilter.propTypes = {
     setFilter: PropTypes.func,
     filterValue: PropTypes.string,
   }),
-  options: PropTypes.shape({
-    map: PropTypes.func,
-  }),
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    }),
+  ).isRequired,
+  onFilterChange: PropTypes.func,
 };
 
 export default TableColumnSelectFilter;
