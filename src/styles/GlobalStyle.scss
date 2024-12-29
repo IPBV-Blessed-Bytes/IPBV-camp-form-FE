@@ -268,6 +268,7 @@ button.btn.btn-outline-danger:hover svg {
 .table thead tr:not(.filter) {
   position: sticky;
   top: -1px;
+  z-index: 9999;
 }
 
 .custom-table {
