@@ -271,6 +271,16 @@ button.btn.btn-outline-danger:hover svg {
   z-index: 9999;
 }
 
+.table thead tr.filter {
+  position: sticky;
+  top: 35px;
+  z-index: 9999;
+
+  th {
+    background-color: $medium-green;
+  }
+}
+
 .custom-table {
   --bs-border-color: #000;
 }
