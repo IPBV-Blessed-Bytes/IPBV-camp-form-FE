@@ -393,8 +393,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'creditCard', label: 'Cartão de Crédito' },
               { value: 'pix', label: 'PIX' },
               { value: 'boleto', label: 'Boleto Bancário' },
-              { value: 'nonPaid' || 'nonPaidChild', label: 'Não pagante' },
+              { value: 'nonPaid', label: 'Não Pagante' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -417,6 +420,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Boa Viagem', label: 'Boa Viagem' },
               { value: 'Outra', label: 'Outra' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -491,6 +497,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithRide',
@@ -511,6 +520,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: true, label: 'Sim' },
               { value: false, label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -554,6 +566,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Mulher', label: 'Adulto Feminimo' },
               { value: 'Crianca', label: 'Criança (até 10 anos)' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -572,6 +587,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithCellphone',
@@ -649,6 +667,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Seminario Sao Jose', label: 'Seminário São José' },
               { value: 'Outra Acomodacao Externa', label: 'Outra Acomodação Externa' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -667,6 +688,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Seminario', label: 'Seminário' },
               { value: 'Outra', label: 'Outra' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -682,6 +706,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Com Onibus', label: 'Com Ônibus' },
               { value: 'Sem Onibus', label: 'Sem Ônibus' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -697,6 +724,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'Almoco e jantar', label: 'Com Alimentação' },
               { value: 'Sem Alimentacao', label: 'Sem Alimentação' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         sortType: 'alphanumeric',
@@ -717,6 +747,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithExtraMeals',
@@ -760,6 +793,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithCoupon',
@@ -807,6 +843,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithCheckin',
@@ -836,6 +875,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               { value: 'sim', label: 'Sim' },
               { value: 'não', label: 'Não' },
             ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
           />
         ),
         filter: 'selectWithManualRegistration',
@@ -918,7 +960,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     {
       columns,
       data,
-      defaultColumn: { Filter: ({ column }) => <TableColumnFilter column={column} /> },
+      defaultColumn: {
+        Filter: ({ column }) => (
+          <TableColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+      },
 
       initialState: {
         sortBy: JSON.parse(sessionStorage.getItem('sortBy')) || [],
@@ -1059,13 +1110,15 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       return res;
     };
 
-    const filteredData = data.map((row) => {
+    const isFilterApplied = filteredRowsRef.current.length > 0;
+
+    const dataToExport = (isFilterApplied ? filteredRowsRef.current.map((row) => row.original) : data).map((row) => {
       const newRow = { ...row };
       delete newRow.id;
       return flattenObject(newRow);
     });
 
-    const orderedData = filteredData.map((row) => {
+    const orderedData = dataToExport.map((row) => {
       const orderedRow = {};
       orderedFields.forEach((field) => {
         orderedRow[field] = row[field] || '';
@@ -1224,7 +1277,7 @@ AdminCampers.propTypes = {
   }),
   column: PropTypes.shape({
     index: PropTypes.string,
-    filteredRows: PropTypes.array, 
+    filteredRows: PropTypes.array,
   }),
   loggedUsername: PropTypes.string,
   userRole: PropTypes.string,
