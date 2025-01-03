@@ -324,7 +324,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       isInvalid={!!errors.aggregate}
                       as="textarea"
                       name="aggregate"
-                      placeholder="Nome e sobrenome dos agregados APENAS QUE IRÃO DORMIR NO MESMO QUARTO para fins de alocação e organização"
+                      placeholder="NOME e SOBRENOME dos agregados APENAS QUE IRÃO DORMIR NO MESMO QUARTO para fins de alocação e organização"
                       value={values.aggregate}
                       onChange={handleChange}
                       style={{ resize: 'none' }}
