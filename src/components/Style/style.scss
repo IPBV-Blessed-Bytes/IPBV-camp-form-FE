@@ -295,7 +295,7 @@
   background-color: $alternate-dark-gray;
   border: none;
   border-radius: 50%;
-  bottom: 20px;
+  bottom: 94px;
   cursor: pointer;
   padding: 10px;
   opacity: 0.8;
@@ -309,7 +309,7 @@
 }
 
 .settings-floating-buttons {
-  bottom: 86px;
+  bottom: 160px;
   display: flex;
   flex-direction: column;
   right: 16px;
@@ -350,5 +350,23 @@
     path {
       fill: $light-yellow;
     }
+  }
+}
+
+// Data Panel Button
+.data-panel-btn {
+  background-color: $alternate-dark-gray;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  padding: 10px;
+  opacity: 0.8;
+  position: fixed;
+  right: 20px;
+  z-index: 9000;
+
+  &:hover {
+    opacity: 1;
   }
 }

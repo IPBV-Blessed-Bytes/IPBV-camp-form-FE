@@ -35,6 +35,7 @@ import AdminUserLogs from '../Admin/UserLogs';
 import AdminSeatManagement from '../Admin/SeatManagement';
 import AdminUsersManagement from '../Admin/UsersManagement';
 import AdminFeedback from '../Admin/Feedback';
+import AdminDataPanel from '../Admin/DataPanel';
 
 const SiteRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -382,6 +383,17 @@ const SiteRoutes = () => {
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'checker']}>
                 <AdminCheckin loggedUsername={splitedLoggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/painel"
+            element={
+              <ProtectedRoute
+                userRole={loggedUserRole}
+                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
+              >
+                <AdminDataPanel userRole={loggedUserRole} />
               </ProtectedRoute>
             }
           />
