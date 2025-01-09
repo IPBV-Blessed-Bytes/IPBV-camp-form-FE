@@ -355,7 +355,7 @@
 
 // Data Panel Button
 .data-panel-btn {
-  background-color: $alternate-dark-gray;
+  background-color: $primary;
   border: none;
   border-radius: 50%;
   bottom: 20px;
@@ -368,5 +368,9 @@
 
   &:hover {
     opacity: 1;
+  }
+
+  svg {
+    padding: 4px;
   }
 }
