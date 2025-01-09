@@ -14,8 +14,7 @@ import Icons from '@/components/Global/Icons';
 import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
-import SettingsButton from '@/components/Admin/SettingsButton';
-import CheckinBalance from '@/components/Global/CheckinBalance';
+import SideButtons from '@/components/Admin/SideButtons';
 
 const AdminLoggedIn = ({
   loggedInUsername,
@@ -31,8 +30,6 @@ const AdminLoggedIn = ({
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalSeats, setTotalSeats] = useState();
   const [totalBusVacancies, setTotalBusVacancies] = useState();
-  const [usedPackages, setUsedPackages] = useState();
-  const [fillingVacancies, setFillingVacancies] = useState();
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -41,7 +38,7 @@ const AdminLoggedIn = ({
   const extraMealsButtonHomePermissions = permissions(userRole, 'extra-meals-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
-  const checkinBalancePermissions = permissions(userRole, 'checkin-balance-home');
+  const dataPanelButtonPermissions = permissions(userRole, 'data-panel-button-home');
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
   const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
@@ -92,7 +89,6 @@ const AdminLoggedIn = ({
         setAvailablePackages(response.data);
         setTotalSeats(response.data.totalSeats);
         setTotalBusVacancies(response.data.totalBusVacancies);
-        setUsedPackages(response.data.usedPackages);
       } catch (error) {
         console.error('Erro ao buscar os pacotes:', error);
       } finally {
@@ -172,13 +168,14 @@ const AdminLoggedIn = ({
   const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.schoolCamping - campingSchoolFilledVacanciesSum;
 
   const seminaryFilledVacanciesSum =
-    availablePackagesUsedValid?.seminaryWithBusWithFood +
-    availablePackagesUsedValid?.seminaryWithoutBusWithFood;
+    availablePackagesUsedValid?.seminaryWithBusWithFood + availablePackagesUsedValid?.seminaryWithoutBusWithFood;
 
   const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminary - seminaryFilledVacanciesSum;
 
   const otherFilledVacanciesSum =
-    availablePackagesUsedValid?.otherWithBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithFood + availablePackagesUsedValid?.otherWithoutBusWithoutFood;
+    availablePackagesUsedValid?.otherWithBusWithFood +
+    availablePackagesUsedValid?.otherWithoutBusWithFood +
+    availablePackagesUsedValid?.otherWithoutBusWithoutFood;
 
   const otherRemainingVacanciesSum = availablePackagesTotal?.other - otherFilledVacanciesSum;
 
@@ -398,15 +395,7 @@ const AdminLoggedIn = ({
         </>
       )}
 
-      {checkinBalancePermissions && (
-        <Row className="mt-5">
-          <h4 className="text-center fw-bold mb-4">BALANÇO DE CHECK-INS:</h4>
-
-          <CheckinBalance fillingVacancies={fillingVacancies} usedPackages={usedPackages} />
-        </Row>
-      )}
-
-      <SettingsButton permission={settingsButtonPermissions} />
+      <SideButtons primaryPermission={dataPanelButtonPermissions} secondaryPermission={settingsButtonPermissions} />
 
       <Loading loading={loading} />
 

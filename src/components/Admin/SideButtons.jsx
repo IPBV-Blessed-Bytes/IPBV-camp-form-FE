@@ -4,21 +4,21 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 
-const SettingsButton = ({ permission }) => {
+const SideButtons = ({ primaryPermission, secondaryPermission }) => {
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
-  const settingsButtonRef = useRef(null);
+  const settingsButtonsRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (settingsButtonRef.current && !settingsButtonRef.current.contains(event.target)) {
+      if (settingsButtonsRef.current && !settingsButtonsRef.current.contains(event.target)) {
         setShowSettingsButtons(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [settingsButtonRef]);
+  }, [settingsButtonsRef]);
 
   const toggleSettingsButtons = () => {
     setShowSettingsButtons((prevState) => !prevState);
@@ -26,8 +26,14 @@ const SettingsButton = ({ permission }) => {
 
   return (
     <>
-      {permission && (
-        <button ref={settingsButtonRef} className="settings-btn" onClick={toggleSettingsButtons}>
+      {primaryPermission && (
+        <button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
+          <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
+        </button>
+      )}
+
+      {secondaryPermission && (
+        <button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
           <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
         </button>
       )}
@@ -52,8 +58,8 @@ const SettingsButton = ({ permission }) => {
   );
 };
 
-SettingsButton.propTypes = {
+SideButtons.propTypes = {
   permission: PropTypes.bool,
 };
 
-export default SettingsButton;
+export default SideButtons;
