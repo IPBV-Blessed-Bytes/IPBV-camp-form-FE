@@ -9,31 +9,15 @@ import AdminHeader from '@/components/Admin/adminHeader';
 import CheckinBalance from '@/components/Admin/CheckinBalance';
 import VacanciesProgression from '@/components/Admin/VacanciesProgression';
 
-const AdminDataPanel = ({ userRole }) => {
+const AdminDataPanel = ({ userRole, totalPackages, usedPackages, usedValidPackages }) => {
   const [loading, setLoading] = useState(true);
-  const [usedValidPackages, setUsedValidPackages] = useState({});
-  const [totalPackages, setTotalPackages] = useState(null);
   const [fillingVacancies, setFillingVacancies] = useState();
-  const [usedPackages, setUsedPackages] = useState();
   const vacanciesProgressionPermissions = permissions(userRole, 'vacancies-progression-panel');
   const checkinBalancePermissions = permissions(userRole, 'checkin-balance-panel');
 
   scrollUp();
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await fetcher.get(`${BASE_URL}/package-count`);
-        setTotalPackages(response.data?.totalPackages || {});
-        setUsedPackages(response.data?.usedPackages || {});
-        setUsedValidPackages(response.data?.usedValidPackages || {});
-      } catch (error) {
-        console.error('Erro ao buscar os pacotes:', error.response?.data || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     const extractCheckinAndAccommodation = (data) => {
       if (!Array.isArray(data)) {
         console.error('Data received is not an array:', data);
@@ -69,7 +53,6 @@ const AdminDataPanel = ({ userRole }) => {
       }
     };
 
-    fetchPackages();
     fetchCampers();
   }, []);
 

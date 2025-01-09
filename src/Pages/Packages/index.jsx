@@ -154,11 +154,11 @@ const Packages = ({
                           const [transportation, transportationWithDiscount] = cards.values.transportation;
                           const hasTransportationDiscount = typeof transportationWithDiscount === 'number';
 
-                          const usedValidPackagesPath = availablePackages?.data?.usedValidPackages;
+                          const usedValidPackagesPath = availablePackages?.usedValidPackages;
 
                           const { available: availablePackageName } = packageMapping[cards.id] || {};
 
-                          const availableSlots = availablePackages?.data?.totalPackages?.[availablePackageName] || 0;
+                          const availableSlots = availablePackages?.totalPackages?.[availablePackageName] || 0;
                           const usedValidPackagesMapping = {
                             1: {
                               schoolIndividual:

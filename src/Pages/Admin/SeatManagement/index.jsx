@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -9,12 +8,16 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/adminHeader';
 
-const AdminSeatManagement = ({ loggedUsername }) => {
-  const [totalPackages, setTotalPackages] = useState({});
-  const [inputSeats, setInputSeats] = useState();
-  const [totalBusVacancies, setTotalBusVacancies] = useState();
-  const [loading, setLoading] = useState(false);
-
+const AdminSeatManagement = ({
+  loggedUsername,
+  totalSeats,
+  onUpdateTotalSeats,
+  totalBusVacancies,
+  onUpdateTotalBusVacancies,
+  totalPackages,
+  onUpdateTotalPackages,
+  loading,
+}) => {
   const packageLabels = {
     schoolIndividual: 'Colégio Individual',
     schoolFamily: 'Colégio Família',
@@ -27,29 +30,10 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
   scrollUp();
 
-  useEffect(() => {
-    fetchAvailableSeats();
-  }, []);
-
-  const fetchAvailableSeats = async () => {
-    setLoading(true);
-    try {
-      const response = await fetcher.get('package-count');
-      setInputSeats(response.data.totalSeats);
-      setTotalBusVacancies(response.data.totalBusVacancies);
-      setTotalPackages(response.data.totalPackages);
-    } catch (error) {
-      console.error(error);
-      toast.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const updateSeats = async () => {
     const currentTotalPackages = Object.values(totalPackages).reduce((acc, curr) => acc + curr, 0);
 
-    if (inputSeats < currentTotalPackages) {
+    if (totalSeats < currentTotalPackages) {
       toast.error(
         `A quantidade de vagas totais não pode ser inferior à soma das vagas por pacotes que é de ${currentTotalPackages}!`,
       );
@@ -58,7 +42,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
     try {
       await fetcher.put('package-count', {
-        totalSeats: inputSeats,
+        totalSeats: totalSeats,
         totalPackages,
       });
       toast.success(`Quantidade de vagas totais e por pacote ajustadas com sucesso`);
@@ -88,10 +72,10 @@ const AdminSeatManagement = ({ loggedUsername }) => {
   };
 
   const handlePackageChange = (packageType, newPackageValue) => {
-    setTotalPackages((prevTotalPackages) => ({
-      ...prevTotalPackages,
+    onUpdateTotalPackages({
+      ...totalPackages,
       [packageType]: newPackageValue,
-    }));
+    });
   };
 
   return (
@@ -108,8 +92,8 @@ const AdminSeatManagement = ({ loggedUsername }) => {
               <Form.Control
                 type="number"
                 min="1"
-                value={inputSeats}
-                onChange={(e) => setInputSeats(Number(e.target.value))}
+                value={totalSeats}
+                onChange={(e) => onUpdateTotalSeats(Number(e.target.value))}
               />
             </Form.Group>
 
@@ -119,7 +103,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
                 <Form.Control
                   type="number"
                   min="0"
-                  value={totalPackages[packageType]}
+                  value={totalPackages[packageType] || 0}
                   onChange={(e) => handlePackageChange(packageType, Number(e.target.value))}
                 />
               </Form.Group>
@@ -143,7 +127,7 @@ const AdminSeatManagement = ({ loggedUsername }) => {
                 type="number"
                 min="1"
                 value={totalBusVacancies}
-                onChange={(e) => setTotalBusVacancies(Number(e.target.value))}
+                onChange={(e) => onUpdateTotalBusVacancies(Number(e.target.value))}
               />
             </Form.Group>
 
@@ -162,6 +146,13 @@ const AdminSeatManagement = ({ loggedUsername }) => {
 
 AdminSeatManagement.propTypes = {
   loggedUsername: PropTypes.string,
+  totalSeats: PropTypes.number.isRequired,
+  onUpdateTotalSeats: PropTypes.func.isRequired,
+  totalBusVacancies: PropTypes.number.isRequired,
+  onUpdateTotalBusVacancies: PropTypes.func.isRequired,
+  totalPackages: PropTypes.object.isRequired,
+  onUpdateTotalPackages: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default AdminSeatManagement;

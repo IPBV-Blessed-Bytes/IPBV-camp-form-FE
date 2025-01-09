@@ -10,7 +10,14 @@ import Loading from '@/components/Global/Loading';
 import AdminLoggedOut from '../LoggedOut';
 import AdminLoggedIn from '../LoggedIn';
 
-const Login = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
+const Login = ({
+  totalRegistrationsGlobal,
+  userRole,
+  totalValidWithBus,
+  availablePackages,
+  totalSeats,
+  totalBusVacancies,
+}) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
@@ -58,6 +65,9 @@ const Login = ({ totalRegistrationsGlobal, userRole, totalValidWithBus }) => {
               setSendLoggedMessage={setSendLoggedMessage}
               user={user}
               totalValidWithBus={totalValidWithBus}
+              availablePackages={availablePackages}
+              totalSeats={totalSeats}
+              totalBusVacancies={totalBusVacancies}
             />
           )}
 

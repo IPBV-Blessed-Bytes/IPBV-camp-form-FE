@@ -48,6 +48,9 @@ const SiteRoutes = () => {
   const isNotVerifyingDataPathname = window.location.pathname !== '/verificacao/dados';
   const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
+  const [totalPackages, setTotalPackages] = useState({});
+  const [usedPackages, setUsedPackages] = useState();
+  const [usedValidPackages, setUsedValidPackages] = useState({});
   const [totalSeats, setTotalSeats] = useState({});
   const [totalBusVacancies, setTotalBusVacancies] = useState({});
   const [loading, setLoading] = useState(false);
@@ -166,17 +169,20 @@ const SiteRoutes = () => {
 
   useEffect(() => {
     const fetchPackages = async () => {
+      setLoading(true);
+
       try {
         const response = await fetcher.get(`${BASE_URL}/package-count`);
-        setAvailablePackages(response);
-        setTotalSeats(response.data.totalSeats);
-        setTotalBusVacancies(response.data.totalBusVacancies);
+        setAvailablePackages(response.data);
+        setTotalSeats(response.data?.totalSeats || 0);
+        setTotalBusVacancies(response.data?.totalBusVacancies || 0);
+        setTotalPackages(response.data?.totalPackages || {});
+        setUsedPackages(response.data?.usedPackages || {});
+        setUsedValidPackages(response.data?.usedValidPackages || {});
       } catch (error) {
-        console.error(
-          error.message === 'Request failed with status code 503'
-            ? 'Banco de dados fora do ar. Tente novamente mais tarde'
-            : error.message,
-        );
+        console.error('Erro ao buscar os pacotes:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -199,6 +205,18 @@ const SiteRoutes = () => {
 
     fetchTotalRegistrations();
   }, []);
+
+  const handleUpdateTotalSeats = (newTotalSeats) => {
+    setTotalSeats(newTotalSeats);
+  };
+
+  const handleUpdateTotalBusVacancies = (newTotalBusVacancies) => {
+    setTotalBusVacancies(newTotalBusVacancies);
+  };
+
+  const handleUpdateTotalPackages = (updatedPackages) => {
+    setTotalPackages(updatedPackages);
+  };
 
   useEffect(() => {
     if (!isLoggedIn && adminPathname) {
@@ -301,7 +319,7 @@ const SiteRoutes = () => {
                 backStep={backStep}
                 updateForm={updateFormValues('formPayment')}
                 sendForm={sendForm}
-                spinnerLoading={loading}
+                loading={loading}
                 status={status}
               />
             )}
@@ -335,6 +353,9 @@ const SiteRoutes = () => {
                 totalRegistrationsGlobal={totalRegistrations}
                 userRole={loggedUserRole}
                 totalValidWithBus={totalRegistrations.totalValidWithBus}
+                availablePackages={availablePackages}
+                totalSeats={totalSeats}
+                totalBusVacancies={totalBusVacancies}
               />
             }
           />
@@ -393,7 +414,12 @@ const SiteRoutes = () => {
                 userRole={loggedUserRole}
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
               >
-                <AdminDataPanel userRole={loggedUserRole} />
+                <AdminDataPanel
+                  userRole={loggedUserRole}
+                  totalPackages={totalPackages}
+                  usedPackages={usedPackages}
+                  usedValidPackages={usedValidPackages}
+                />
               </ProtectedRoute>
             }
           />
@@ -409,7 +435,16 @@ const SiteRoutes = () => {
             path="/admin/vagas"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
-                <AdminSeatManagement loggedUsername={splitedLoggedUsername} />
+                <AdminSeatManagement
+                  loggedUsername={splitedLoggedUsername}
+                  totalSeats={totalSeats}
+                  onUpdateTotalSeats={handleUpdateTotalSeats}
+                  totalBusVacancies={totalBusVacancies}
+                  onUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
+                  totalPackages={totalPackages}
+                  onUpdateTotalPackages={handleUpdateTotalPackages}
+                  loading={loading}
+                />
               </ProtectedRoute>
             }
           />

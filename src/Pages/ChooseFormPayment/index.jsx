@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spinnerLoading, status }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
     onSubmit: () => {
@@ -47,8 +47,8 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
             Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você será
             redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção. Certifique-se
             de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
-            <em>não é necessário enviar comprovante de pagamento!</em>{' '}
-            Todo o processo é digital e registrado automaticamente em nossa base de dados.
+            <em>não é necessário enviar comprovante de pagamento!</em> Todo o processo é digital e registrado
+            automaticamente em nossa base de dados.
           </Card.Text>
           <Form>
             <Form.Group className="mb-3">
@@ -73,7 +73,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, spin
             </Form.Group>
           </Form>
 
-          <Loading loading={spinnerLoading} />
+          <Loading loading={loading} />
         </Container>
       </Card.Body>
 
@@ -93,7 +93,7 @@ ChooseFormPayment.propTypes = {
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
   sendForm: PropTypes.func,
-  spinnerLoading: PropTypes.func,
+  loading: PropTypes.func,
   status: PropTypes.string,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,

@@ -25,11 +25,11 @@ const AdminLoggedIn = ({
   setSendLoggedMessage,
   user,
   totalValidWithBus,
+  availablePackages,
+  totalSeats,
+  totalBusVacancies,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [availablePackages, setAvailablePackages] = useState({});
-  const [totalSeats, setTotalSeats] = useState();
-  const [totalBusVacancies, setTotalBusVacancies] = useState();
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -83,19 +83,6 @@ const AdminLoggedIn = ({
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await fetcher.get(`${BASE_URL}/package-count`);
-        setAvailablePackages(response.data);
-        setTotalSeats(response.data.totalSeats);
-        setTotalBusVacancies(response.data.totalBusVacancies);
-      } catch (error) {
-        console.error('Erro ao buscar os pacotes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     const extractCheckinAndAccommodation = (data) => {
       if (!Array.isArray(data)) {
         console.error('Data received is not an array:', data);
@@ -131,7 +118,6 @@ const AdminLoggedIn = ({
       }
     };
 
-    fetchPackages();
     fetchCampers();
   }, []);
 
