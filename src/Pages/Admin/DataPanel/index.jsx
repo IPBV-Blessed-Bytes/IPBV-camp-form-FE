@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/adminHeader';
+import AdminHeader from '@/components/Admin/AdminHeader';
 import CheckinBalance from '@/components/Admin/CheckinBalance';
 import VacanciesProgression from '@/components/Admin/VacanciesProgression';
 

@@ -5,7 +5,7 @@ import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/adminHeader';
+import AdminHeader from '@/components/Admin/AdminHeader';
 
 const AdminExtraMeals = () => {
   const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);

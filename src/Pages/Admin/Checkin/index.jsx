@@ -9,7 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import AdminHeader from '@/components/Admin/adminHeader';
+import AdminHeader from '@/components/Admin/AdminHeader';
 
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');

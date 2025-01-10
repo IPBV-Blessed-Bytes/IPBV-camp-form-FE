@@ -10,7 +10,7 @@ import Loading from '@/components/Global/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
-import AdminHeader from '@/components/Admin/adminHeader';
+import AdminHeader from '@/components/Admin/AdminHeader';
 
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);

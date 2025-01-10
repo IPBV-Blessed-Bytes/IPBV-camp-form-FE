@@ -10,7 +10,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/adminHeader';
+import AdminHeader from '@/components/Admin/AdminHeader';
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
