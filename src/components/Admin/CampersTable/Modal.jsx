@@ -1,8 +1,8 @@
 import { Modal, Button, Form } from 'react-bootstrap';
-import TableColumns from './TableColumns';
+import Columns from './Columns';
 import PropTypes from 'prop-types';
 
-const TableModal = ({
+const Modal = ({
   name,
   showEditModal,
   setShowEditModal,
@@ -31,7 +31,7 @@ const TableModal = ({
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <TableColumns
+            <Columns
               editFormData={editFormData}
               handleFormChange={(e) => handleFormChange(e, 'edit')}
               formSubmitted={formSubmitted}
@@ -58,7 +58,7 @@ const TableModal = ({
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <TableColumns
+            <Columns
               addFormData={addFormData}
               handleFormChange={(e) => handleFormChange(e, 'add')}
               formSubmitted={formSubmitted}
@@ -104,7 +104,7 @@ const TableModal = ({
   );
 };
 
-TableModal.propTypes = {
+Modal.propTypes = {
   name: PropTypes.string,
   showEditModal: PropTypes.bool,
   setShowEditModal: PropTypes.func,
@@ -124,4 +124,4 @@ TableModal.propTypes = {
   handleConfirmDeleteSpecific: PropTypes.func,
 };
 
-export default TableModal;
+export default Modal;

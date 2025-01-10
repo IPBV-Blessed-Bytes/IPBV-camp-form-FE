@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
 
-const TableColumnFilter = ({ column, onFilterChange }) => {
+const ColumnFilter = ({ column, onFilterChange }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
 
@@ -31,7 +31,7 @@ const TableColumnFilter = ({ column, onFilterChange }) => {
   );
 };
 
-TableColumnFilter.propTypes = {
+ColumnFilter.propTypes = {
   column: PropTypes.shape({
     filterValue: PropTypes.string,
     setFilter: PropTypes.func,
@@ -39,4 +39,4 @@ TableColumnFilter.propTypes = {
   onFilterChange: PropTypes.func,
 };
 
-export default TableColumnFilter;
+export default ColumnFilter;

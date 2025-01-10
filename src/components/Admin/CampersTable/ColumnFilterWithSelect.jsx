@@ -2,7 +2,7 @@ import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
-const TableColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
+const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
 
@@ -12,18 +12,12 @@ const TableColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => 
 
   const handleChange = (e) => {
     const value = e.target.value;
-    if (value === 'sim') {
-      setFilter(true);
-    } else if (value === 'não') {
-      setFilter(false);
-    } else {
-      setFilter(undefined);
-    }
+    setFilter(value === 'all' ? undefined : value);
   };
 
   return (
-    <Form.Select className="form-select-lg-custom" value={filterValue || ''} onChange={handleChange} size="lg">
-      <option value="">Todos</option>
+    <Form.Select className="form-select-lg-custom" value={filterValue || 'all'} onChange={handleChange} size="lg">
+      <option value="all">Todos</option>
       {options.map((option, index) => (
         <option key={index} value={option.value}>
           {option.label}
@@ -33,7 +27,7 @@ const TableColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => 
   );
 };
 
-TableColumnFilterWithTwoValues.propTypes = {
+ColumnFilterWithSelect.propTypes = {
   column: PropTypes.shape({
     setFilter: PropTypes.func,
     filterValue: PropTypes.string,
@@ -47,4 +41,4 @@ TableColumnFilterWithTwoValues.propTypes = {
   onFilterChange: PropTypes.func,
 };
 
-export default TableColumnFilterWithTwoValues;
+export default ColumnFilterWithSelect;

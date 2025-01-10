@@ -13,12 +13,12 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/adminHeader';
-import TableColumnFilter from '@/components/Admin/TableColumnFilter';
-import TableIndeed from '@/components/Admin/TableIndeed';
-import TableModal from '@/components/Admin/TableModal';
-import TableColumnSelectFilter from '@/components/Admin/TableColumnSelectFilter';
-import TableColumnFilterWithTwoValues from '@/components/Admin/TableColumnFilterWithTwoValues';
+import AdminHeader from '@/components/Admin/AdminHeader';
+import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
+import CoreTable from '@/components/Admin/CampersTable/CoreTable';
+import Modal from '@/components/Admin/CampersTable/Modal';
+import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
+import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
 
 const AdminCampers = ({ loggedUsername, userRole }) => {
   const [data, setData] = useState([]);
@@ -360,7 +360,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               : 'SEM ALIMENTAÇÃO'
           }`,
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -373,7 +373,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Nome:',
         accessor: 'personalInformation.name',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -387,7 +387,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Forma de Pagamento:',
         accessor: 'formPayment.formPayment',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'creditCard', label: 'Cartão de Crédito' },
@@ -414,7 +414,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Igreja:',
         accessor: 'contact.church',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Boa Viagem', label: 'Boa Viagem' },
@@ -432,7 +432,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Data de Nascimento:',
         accessor: 'personalInformation.birthday',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -445,7 +445,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'CPF:',
         accessor: 'personalInformation.cpf',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -458,7 +458,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'RG:',
         accessor: 'personalInformation.rg',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -474,7 +474,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           `${row.personalInformation.rgShipper} -
           ${row.personalInformation.rgShipperState}`,
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -491,7 +491,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           numberVacancies: row.contact.numberVacancies,
         }),
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -514,7 +514,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Precisa de Carona:',
         accessor: 'contact.needRide',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: true, label: 'Sim' },
@@ -532,7 +532,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Observação da Carona:',
         accessor: 'contact.rideObservation',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -546,7 +546,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Data de Inscrição:',
         accessor: 'registrationDate',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -559,7 +559,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Categoria:',
         accessor: 'personalInformation.gender',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Homem', label: 'Adulto Masculino' },
@@ -581,7 +581,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           isWhatsApp: row.contact.isWhatsApp,
         }),
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -604,7 +604,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Email:',
         accessor: 'contact.email',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -618,7 +618,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Preço:',
         accessor: 'totalPrice',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -632,7 +632,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -646,7 +646,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Agregados:',
         accessor: 'contact.aggregate',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -660,7 +660,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Acomodação:',
         accessor: 'package.accomodationName',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Colegio XV de Novembro', label: 'Colégio XV de Novembro' },
@@ -679,7 +679,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Sub Acomodação:',
         accessor: 'package.subAccomodation',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Colegio Individual', label: 'Colégio Individual' },
@@ -700,7 +700,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Transporte:',
         accessor: 'package.transportation',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Com Onibus', label: 'Com Ônibus' },
@@ -718,7 +718,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Alimentação:',
         accessor: 'package.food',
         Filter: ({ column }) => (
-          <TableColumnSelectFilter
+          <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Almoco e jantar', label: 'Com Alimentação' },
@@ -741,7 +741,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             : [row.extraMeals.extraMeals],
         }),
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -770,7 +770,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Observação:',
         accessor: 'observation',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -787,7 +787,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           discountValue: row.package.discountValue,
         }),
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -810,7 +810,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Chave do Pedido:',
         accessor: 'orderId',
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -837,7 +837,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           checkinTime: row.checkinTime,
         }),
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -869,7 +869,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
         Filter: ({ column }) => (
-          <TableColumnFilterWithTwoValues
+          <ColumnFilterWithTwoValues
             column={column}
             options={[
               { value: 'sim', label: 'Sim' },
@@ -962,7 +962,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       data,
       defaultColumn: {
         Filter: ({ column }) => (
-          <TableColumnFilter
+          <ColumnFilter
             column={column}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -1233,7 +1233,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       </Row>
 
       <Row>
-        <TableIndeed
+        <CoreTable
           getTableProps={getTableProps}
           getTableBodyProps={getTableBodyProps}
           headerGroups={headerGroups}
@@ -1244,7 +1244,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         />
       </Row>
 
-      <TableModal
+      <Modal
         name={name}
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}
