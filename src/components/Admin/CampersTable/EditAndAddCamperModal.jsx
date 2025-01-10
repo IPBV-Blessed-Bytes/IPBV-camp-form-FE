@@ -2,7 +2,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import Columns from './Columns';
 import PropTypes from 'prop-types';
 
-const Modal = ({
+const EditAndAddCamperModal = ({
   name,
   showEditModal,
   setShowEditModal,
@@ -104,7 +104,7 @@ const Modal = ({
   );
 };
 
-Modal.propTypes = {
+EditAndAddCamperModal.propTypes = {
   name: PropTypes.string,
   showEditModal: PropTypes.bool,
   setShowEditModal: PropTypes.func,
@@ -124,4 +124,4 @@ Modal.propTypes = {
   handleConfirmDeleteSpecific: PropTypes.func,
 };
 
-export default Modal;
+export default EditAndAddCamperModal;

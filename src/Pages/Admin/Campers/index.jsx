@@ -16,7 +16,7 @@ import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/AdminHeader';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
-import Modal from '@/components/Admin/CampersTable/Modal';
+import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
 import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
 
@@ -1244,7 +1244,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         />
       </Row>
 
-      <Modal
+      <EditAndAddCamperModal
         name={name}
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}
