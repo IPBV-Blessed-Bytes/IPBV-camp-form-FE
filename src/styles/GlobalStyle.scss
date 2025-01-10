@@ -268,13 +268,13 @@ button.btn.btn-outline-danger:hover svg {
 .table thead tr:not(.filter) {
   position: sticky;
   top: -1px;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .table thead tr.filter {
   position: sticky;
   top: 35px;
-  z-index: 9999;
+  z-index: 1000;
 
   th {
     background-color: $medium-green;
