@@ -17,6 +17,7 @@ const Login = ({
   availablePackages,
   totalSeats,
   totalBusVacancies,
+  spinnerLoading,
 }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +69,7 @@ const Login = ({
               availablePackages={availablePackages}
               totalSeats={totalSeats}
               totalBusVacancies={totalBusVacancies}
+              spinnerLoading={spinnerLoading}
             />
           )}
 
@@ -80,9 +82,12 @@ const Login = ({
 
 Login.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
-  permissions: PropTypes.array.isRequired,
   userRole: PropTypes.string,
   totalValidWithBus: PropTypes.number,
+  availablePackages: PropTypes.array,
+  totalSeats: PropTypes.number,
+  totalBusVacancies: PropTypes.number,
+  spinnerLoading: PropTypes.bool,
 };
 
 export default Login;

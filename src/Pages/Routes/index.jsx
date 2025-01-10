@@ -356,6 +356,7 @@ const SiteRoutes = () => {
                 availablePackages={availablePackages}
                 totalSeats={totalSeats}
                 totalBusVacancies={totalBusVacancies}
+                spinnerLoading={loading}
               />
             }
           />

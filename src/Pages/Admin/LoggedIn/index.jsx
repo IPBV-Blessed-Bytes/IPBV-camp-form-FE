@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
-import { BASE_URL } from '@/config/index';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
-import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -28,8 +26,8 @@ const AdminLoggedIn = ({
   availablePackages,
   totalSeats,
   totalBusVacancies,
+  spinnerLoading,
 }) => {
-  const [loading, setLoading] = useState(true);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -81,45 +79,6 @@ const AdminLoggedIn = ({
       setSendLoggedMessage(false);
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
-
-  useEffect(() => {
-    const extractCheckinAndAccommodation = (data) => {
-      if (!Array.isArray(data)) {
-        console.error('Data received is not an array:', data);
-        return [];
-      }
-
-      return data
-        .filter((camper) => camper.checkin === true)
-        .map((camper) => ({
-          checkin: camper.checkin,
-          accomodationName: camper.package?.accomodationName || 'Desconhecido',
-        }));
-    };
-
-    const fetchCampers = async () => {
-      try {
-        const response = await fetcher.get('camper', {
-          params: {
-            size: 100000,
-          },
-        });
-
-        if (Array.isArray(response.data.content)) {
-          const checkinData = extractCheckinAndAccommodation(response.data.content);
-          setFillingVacancies(checkinData);
-        } else {
-          console.error('Data received is not an array:', response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCampers();
-  }, []);
 
   const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
   const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
@@ -329,7 +288,7 @@ const AdminLoggedIn = ({
 
       {packagesAndTotalCardsPermissions && (
         <>
-          {!loading && (
+          {!spinnerLoading && (
             <>
               <Row>
                 <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
@@ -383,7 +342,7 @@ const AdminLoggedIn = ({
 
       <SideButtons primaryPermission={dataPanelButtonPermissions} secondaryPermission={settingsButtonPermissions} />
 
-      <Loading loading={loading} />
+      <Loading loading={spinnerLoading} />
 
       {utilitiesLinksPermissions && (
         <Row>
@@ -409,6 +368,29 @@ AdminLoggedIn.propTypes = {
     totalValidRegistrations: PropTypes.number,
     totalAdultsNonPaid: PropTypes.number,
   }).isRequired,
+  availablePackages: PropTypes.shape({
+    usedValidPackages: PropTypes.shape({
+      schoolIndividualWithBusWithFood: PropTypes.number,
+      schoolIndividualWithBusWithoutFood: PropTypes.number,
+      schoolIndividualWithoutBusWithFood: PropTypes.number,
+      schoolIndividualWithoutBusWithoutFood: PropTypes.number,
+      schoolFamilyWithBusWithFood: PropTypes.number,
+      schoolFamilyWithBusWithoutFood: PropTypes.number,
+      schoolFamilyWithoutBusWithFood: PropTypes.number,
+      schoolFamilyWithoutBusWithoutFood: PropTypes.number,
+      schoolCampingWithoutBusWithFood: PropTypes.number,
+      schoolCampingWithoutBusWithoutFood: PropTypes.number,
+      seminaryWithBusWithFood: PropTypes.number,
+      seminaryWithoutBusWithFood: PropTypes.number,
+      otherWithBusWithFood: PropTypes.number,
+      otherWithoutBusWithFood: PropTypes.number,
+      otherWithoutBusWithoutFood: PropTypes.number,
+    }).isRequired,
+    totalPackages: PropTypes.number.isRequired,
+  }).isRequired,
+  totalSeats: PropTypes.number.isRequired,
+  totalBusVacancies: PropTypes.number.isRequired,
+  spinnerLoading: PropTypes.bool.isRequired,
 };
 
 export default AdminLoggedIn;
