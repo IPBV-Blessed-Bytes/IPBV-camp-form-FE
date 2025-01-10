@@ -1,5 +1,5 @@
+import PropTypes from 'prop-types';
 import scrollUp from '@/hooks/useScrollUp';
-
 import { Box, Typography, LinearProgress } from '@mui/material';
 
 const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
@@ -102,6 +102,17 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
       </Box>
     </>
   );
+};
+
+VacanciesProgression.propTypes = {
+  usedValidPackages: PropTypes.objectOf(PropTypes.number),
+  totalPackages: PropTypes.shape({
+    schoolIndividual: PropTypes.number,
+    schoolFamily: PropTypes.number,
+    schoolCamping: PropTypes.number,
+    seminary: PropTypes.number,
+    other: PropTypes.number,
+  }).isRequired,
 };
 
 export default VacanciesProgression;

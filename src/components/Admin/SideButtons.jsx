@@ -59,7 +59,8 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 };
 
 SideButtons.propTypes = {
-  permission: PropTypes.bool,
+  primaryPermission: PropTypes.bool,
+  secondaryPermission: PropTypes.bool,
 };
 
 export default SideButtons;

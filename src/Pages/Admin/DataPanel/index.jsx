@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Accordion } from 'react-bootstrap';
-import { BASE_URL } from '@/config/index';
 import { permissions } from '@/fetchers/permissions';
+import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -81,6 +81,13 @@ const AdminDataPanel = ({ userRole, totalPackages, usedPackages, usedValidPackag
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminDataPanel.propTypes = {
+  userRole: PropTypes.string,
+  totalPackages: PropTypes.number,
+  usedPackages: PropTypes.number,
+  usedValidPackages: PropTypes.number,
 };
 
 export default AdminDataPanel;
