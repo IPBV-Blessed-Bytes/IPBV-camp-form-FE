@@ -351,7 +351,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               : ''
           } ${
             row.package.food === 'Café da manhã, almoço e jantar' ||
+            row.package.food === 'Café da manhã| almoço e jantar' ||
             row.package.food === 'Cafe da manha, almoco e jantar' ||
+            row.package.food === 'Cafe da manha| almoco e jantar' ||
+            row.package.food === 'Cafe da manha  almoco e jantar' ||
             row.package.food === 'Almoço e jantar' ||
             row.package.food === 'Almoco e jantar'
               ? 'COM ALIMENTAÇÃO'
