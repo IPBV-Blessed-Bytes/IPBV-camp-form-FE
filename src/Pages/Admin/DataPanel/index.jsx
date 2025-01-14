@@ -28,7 +28,7 @@ const AdminDataPanel = ({ userRole, totalPackages, usedPackages, usedValidPackag
         .filter((camper) => camper.checkin === true)
         .map((camper) => ({
           checkin: camper.checkin,
-          accomodationName: camper.package?.accomodationName || 'Desconhecido',
+          accomodationName: camper.package?.subAccomodation || 'Desconhecido',
         }));
     };
 

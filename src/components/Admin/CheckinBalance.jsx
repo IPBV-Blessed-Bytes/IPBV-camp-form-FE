@@ -14,17 +14,20 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
     return { percentage, checkins };
   };
 
-  const usedSchool =
-    usedPackages?.schoolCampingWithoutBusWithFood +
-    usedPackages?.schoolCampingWithoutBusWithoutFood +
-    usedPackages?.schoolFamilyWithBusWithFood +
-    usedPackages?.schoolFamilyWithBusWithoutFood +
-    usedPackages?.schoolFamilyWithoutBusWithFood +
-    usedPackages?.schoolFamilyWithoutBusWithoutFood +
+  const usedIndividualSchool =
     usedPackages?.schoolIndividualWithBusWithFood +
     usedPackages?.schoolIndividualWithBusWithoutFood +
     usedPackages?.schoolIndividualWithoutBusWithFood +
     usedPackages?.schoolIndividualWithoutBusWithoutFood;
+
+  const usedFamilySchool =
+    usedPackages?.schoolFamilyWithBusWithFood +
+    usedPackages?.schoolFamilyWithBusWithoutFood +
+    usedPackages?.schoolFamilyWithoutBusWithFood +
+    usedPackages?.schoolFamilyWithoutBusWithoutFood;
+
+  const usedCampingSchool =
+    usedPackages?.schoolCampingWithoutBusWithFood + usedPackages?.schoolCampingWithoutBusWithoutFood;
 
   const usedSeminary = usedPackages?.seminaryWithBusWithFood + usedPackages?.seminaryWithoutBusWithFood;
 
@@ -33,12 +36,19 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
     usedPackages?.otherWithoutBusWithFood +
     usedPackages?.otherWithoutBusWithoutFood;
 
-  const schoolDetails = calculateCheckinDetails('Colegio XV de Novembro', usedSchool);
-  const seminaryDetails = calculateCheckinDetails('Seminario Sao Jose', usedSeminary);
-  const otherDetails = calculateCheckinDetails('Outra Acomodacao Externa', usedOther);
+  const schoolIndividualDetails = calculateCheckinDetails('Colegio Individual', usedIndividualSchool);
+  const schoolFamilyDetails = calculateCheckinDetails('Colegio Familia', usedFamilySchool);
+  const schoolCampingDetails = calculateCheckinDetails('Colegio Camping', usedCampingSchool);
+  const seminaryDetails = calculateCheckinDetails('Seminario Individual', usedSeminary);
+  const otherDetails = calculateCheckinDetails('Outra', usedOther);
 
-  const totalUsed = usedSchool + usedSeminary + usedOther;
-  const totalCheckins = schoolDetails.checkins + seminaryDetails.checkins + otherDetails.checkins;
+  const totalUsed = usedIndividualSchool + usedFamilySchool + usedCampingSchool + usedSeminary + usedOther;
+  const totalCheckins =
+    schoolIndividualDetails.checkins +
+    schoolFamilyDetails.checkins +
+    schoolCampingDetails.checkins +
+    seminaryDetails.checkins +
+    otherDetails.checkins;
   const totalPercentage = totalUsed ? ((totalCheckins / totalUsed) * 100).toFixed(0) : 0;
 
   const renderProgressBar = (label, details, usedByPackage, color) => (
@@ -89,7 +99,9 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
   return (
     <Box>
-      {renderProgressBar('Colégio XV de Novembro:', schoolDetails, usedSchool, '#4caf50')}
+      {renderProgressBar('Colégio - Individual:', schoolIndividualDetails, usedIndividualSchool, '#4caf50')}
+      {renderProgressBar('Colégio - Família:', schoolFamilyDetails, usedFamilySchool, '#cfe2ff')}
+      {renderProgressBar('Colégio - Camping:', schoolCampingDetails, usedCampingSchool, '#ffcccc')}
       {renderProgressBar('Seminário São José:', seminaryDetails, usedSeminary, '#2196f3')}
       {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#ff9800')}
       {renderTotalProgressBar()}
