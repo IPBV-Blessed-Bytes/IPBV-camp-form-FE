@@ -1,6 +1,7 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import Icons from '@/components/Global/Icons';
 
 const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
   const filterValue = column?.filterValue || '';
@@ -16,14 +17,22 @@ const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
   };
 
   return (
-    <Form.Select className="form-select-lg-custom" value={filterValue || 'all'} onChange={handleChange} size="lg">
-      <option value="all">Todos</option>
-      {options.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </Form.Select>
+    <div className="d-flex position-relative">
+      <Form.Select
+        className={`form-select-lg-custom ${filterValue && 'actived-filter'}`}
+        value={filterValue || 'all'}
+        onChange={handleChange}
+        size="lg"
+      >
+        <option value="all">Todos</option>
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </Form.Select>
+      {filterValue && <Icons className="filter-icon" typeIcon="filter" iconSize={24} fill="#4267a7" />}
+    </div>
   );
 };
 
