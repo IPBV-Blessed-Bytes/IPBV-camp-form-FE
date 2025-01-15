@@ -18,7 +18,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
 
   scrollUp();
 
@@ -26,7 +25,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       const response = await fetcher.get('users');
-      setUsers(response.data);
+      const sortedUsers = response.data.sort((a, b) => a.userName.localeCompare(b.userName));
+      setUsers(sortedUsers);
     } catch (error) {
       toast.error('Erro ao buscar usuários');
     } finally {
@@ -126,10 +126,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     }
   };
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -215,16 +211,11 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <b>Senha:</b>
               </Form.Label>
               <Form.Control
-                type={showPassword ? 'text' : 'password'}
+                type="text"
                 placeholder="Digite a senha"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 size="lg"
-              />
-              <Icons
-                className="user-management-icon"
-                typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
-                onClick={handleShowPassword}
               />
             </Form.Group>
             <Form.Group controlId="formRole" className="mt-3">
