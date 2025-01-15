@@ -151,7 +151,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <thead>
               <tr>
                 <th className="table-cells-header">Usuário:</th>
-                <th className="table-cells-header">Senha:</th>
                 <th className="table-cells-header">Função:</th>
                 <th className="table-cells-header">Ações:</th>
               </tr>
@@ -159,8 +158,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.userName}</td>
-                  <td>{user.password}</td>
+                  <td>
+                    <em>{user.userName}</em>
+                  </td>
                   <td>{translateRole(user.role)}</td>
                   <td>
                     <Button
@@ -208,7 +208,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             </Form.Group>
             <Form.Group controlId="formPassword" className="mt-3">
               <Form.Label>
-                <b>Senha:</b>
+                {editingUser ? (
+                  <b>
+                    Nova Senha: <span className="text-danger">* (Irá substituir a senha anterior)</span>
+                  </b>
+                ) : (
+                  <b>Senha:</b>
+                )}
               </Form.Label>
               <Form.Control
                 type="text"
