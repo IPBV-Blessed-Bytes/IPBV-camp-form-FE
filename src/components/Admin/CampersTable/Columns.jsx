@@ -145,7 +145,7 @@ const Columns = ({
       placeholder: 'Selecione sua categoria/gênero',
       oddOrEven: 'even',
       options: [
-        { label: 'Criança', value: 'Criança' },
+        { label: 'Criança', value: 'Crianca' },
         { label: 'Homem', value: 'Homem' },
         { label: 'Mulher', value: 'Mulher' },
       ],
@@ -185,10 +185,10 @@ const Columns = ({
       placeholder: 'Selecione a sub acomodação',
       oddOrEven: 'odd',
       options: [
-        { label: 'Colégio Individual', value: 'Colégio Individual' },
-        { label: 'Colégio Família', value: 'Colégio Família' },
-        { label: 'Colégio Camping', value: 'Colégio Camping' },
-        { label: 'Seminário Individual', value: 'Seminário Individual' },
+        { label: 'Colégio Individual', value: 'Colegio Individual' },
+        { label: 'Colégio Família', value: 'Colegio Familia' },
+        { label: 'Colégio Camping', value: 'Colegio Camping' },
+        { label: 'Seminário Individual', value: 'Seminario Individual' },
         { label: 'Outra', value: 'Outra' },
       ],
     },
@@ -199,8 +199,8 @@ const Columns = ({
       placeholder: 'Selecione tipo de transporte',
       oddOrEven: 'even',
       options: [
-        { label: 'Com Ônibus', value: 'Com Ônibus' },
-        { label: 'Sem Ônibus', value: 'Sem Ônibus' },
+        { label: 'Com Ônibus', value: 'Com Onibus' },
+        { label: 'Sem Ônibus', value: 'Sem Onibus' },
       ],
     },
     {
