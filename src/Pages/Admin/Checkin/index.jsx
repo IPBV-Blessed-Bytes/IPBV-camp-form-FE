@@ -142,7 +142,8 @@ const AdminCheckin = ({ loggedUsername }) => {
           <Row>
             <Col lg={6} md={6} xs={12}>
               <p>
-                <strong>Nome:</strong> {userInfo.personalInformation.name}
+                <strong>Nome:</strong>{' '}
+                <span className="emphasize-checkin-username">{userInfo.personalInformation.name}</span>
               </p>
               <p>
                 <strong>Pacote:</strong> {userInfo.package.title}{' '}
