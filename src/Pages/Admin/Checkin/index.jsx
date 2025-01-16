@@ -145,7 +145,14 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Nome:</strong> {userInfo.personalInformation.name}
               </p>
               <p>
-                <strong>Pacote:</strong> {userInfo.package.title}
+                <strong>Pacote:</strong> {userInfo.package.title}{' '}
+                <u>
+                  {userInfo.package.accomodationName === 'Colegio XV de Novembro'
+                    ? '(COLÉGIO)'
+                    : userInfo.package.accomodationName === 'Seminario Sao Jose'
+                    ? '(SEMINÁRIO)'
+                    : ''}
+                </u>
               </p>
               <p>
                 <strong>Forma de Pagamento:</strong>{' '}

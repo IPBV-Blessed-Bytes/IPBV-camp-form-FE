@@ -344,6 +344,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Pacote:',
         accessor: (row) =>
           `${row.package.title} ${
+            row.package.accomodationName === 'Colegio XV de Novembro'
+              ? '[COLÉGIO]'
+              : row.package.accomodationName === 'Seminario Sao Jose'
+              ? '[SEMINÁRIO]'
+              : ''
+          } ${
             row.package.transportation === 'Com Ônibus' || row.package.transportation === 'Com Onibus'
               ? 'COM ÔNIBUS'
               : row.package.transportation === 'Sem Ônibus' || row.package.transportation === 'Sem Onibus'
