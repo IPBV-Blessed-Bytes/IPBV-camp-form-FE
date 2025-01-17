@@ -104,6 +104,15 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const handleKeyDown = (e) => e.key === 'Enter' && handleSearchUser();
 
+  const userColor =
+    userInfo?.package.accomodationName === 'Colegio XV de Novembro'
+      ? '#ffcccc'
+      : userInfo?.package.accomodationName === 'Seminario Sao Jose'
+      ? '#cfe2ff'
+      : userInfo?.package.accomodationName === 'Outra Acomodacao Externa'
+      ? '#b2dfb2'
+      : '#fff';
+
   return (
     <Container fluid>
       <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#204691'} />
@@ -134,7 +143,14 @@ const AdminCheckin = ({ loggedUsername }) => {
 
       {userInfo && (
         <>
-          <Row className="mb-3 mt-5">
+          <Row className="my-3 checkin-color-status-wrapper">
+            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+          </Row>
+          <Row className="mb-2">
             <Col className="form-label">
               <b>Informações do Usuário:</b>
             </Col>

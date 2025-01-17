@@ -7,3 +7,20 @@
 .emphasize-checkin-username {
   font-size: 1.5rem;
 }
+
+.checkin-color-status-wrapper {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+
+  @media (min-width: $xl) {
+    justify-content: start;
+    padding: 0 0.75rem;
+  }
+
+  &__circle {
+    border-radius: 50%;
+    height: 3.125rem;
+    width: 3.125rem;
+  }
+}
