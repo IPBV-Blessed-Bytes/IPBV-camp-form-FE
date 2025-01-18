@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -14,10 +14,27 @@ import AdminHeader from '@/components/Admin/AdminHeader';
 const AdminCheckin = ({ loggedUsername }) => {
   const [cpf, setCpf] = useState('');
   const [userInfo, setUserInfo] = useState(null);
+  const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
 
   scrollUp();
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetcher.get('aggregate/room');
+        if (response.status === 200) {
+          setRooms(response.data);
+        }
+      } catch (error) {
+        toast.error('Erro ao carregar quartos');
+        console.error('Erro ao buscar quartos:', error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
 
   const handleSearchUser = async () => {
     try {
@@ -104,14 +121,19 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const handleKeyDown = (e) => e.key === 'Enter' && handleSearchUser();
 
+  const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
+
   const userColor =
-    userInfo?.package.accomodationName === 'Colegio XV de Novembro'
-      ? '#ffcccc'
-      : userInfo?.package.accomodationName === 'Seminario Sao Jose'
-      ? '#cfe2ff'
-      : userInfo?.package.accomodationName === 'Outra Acomodacao Externa'
+    userInfo?.package.food === 'Café da manhã, almoço e jantar' ||
+    userInfo?.package.food === 'Café da manhã| almoço e jantar' ||
+    userInfo?.package.food === 'Café da manha  almoço e jantar' ||
+    userInfo?.package.food === 'Cafe da manha, almoco e jantar' ||
+    userInfo?.package.food === 'Cafe da manha| almoco e jantar' ||
+    userInfo?.package.food === 'Cafe da manha  almoco e jantar' ||
+    userInfo?.package.food === 'Almoço e jantar' ||
+    userInfo?.package.food === 'Almoco e jantar'
       ? '#b2dfb2'
-      : '#fff';
+      : '#ffcccc';
 
   return (
     <Container fluid>
@@ -174,7 +196,7 @@ const AdminCheckin = ({ loggedUsername }) => {
               <p>
                 <strong>Forma de Pagamento:</strong>{' '}
                 {userInfo.formPayment.formPayment === 'creditCard'
-                  ? 'Cartão de Credito'
+                  ? 'Cartão de Crédito'
                   : userInfo.formPayment.formPayment === 'pix'
                   ? 'PIX'
                   : userInfo.formPayment.formPayment === 'boleto'
@@ -183,6 +205,9 @@ const AdminCheckin = ({ loggedUsername }) => {
               </p>
               <p>
                 <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
+              </p>
+              <p>
+                <strong>Observação:</strong> {userInfo.observation}
               </p>
             </Col>
             <Col lg={6} md={6} xs={12}>
@@ -196,14 +221,14 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Sub Acomodação:</strong> {userInfo.package.subAccomodation}
               </p>
               <p>
+                <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
+              </p>
+              <p>
                 <strong>Alimentação:</strong> {userInfo.package.food ? userInfo.package.food : '-'}
               </p>
               <p>
                 <strong>Dias de Refeição Extra:</strong>{' '}
                 {userInfo.extraMeals.extraMeals ? userInfo.extraMeals.extraMeals : '-'}
-              </p>
-              <p>
-                <strong>Observação:</strong> {userInfo.observation}
               </p>
             </Col>
           </Row>
