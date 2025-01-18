@@ -13,14 +13,9 @@
   gap: 2rem;
   justify-content: center;
 
-  @media (min-width: $xl) {
-    justify-content: start;
-    padding: 0 0.75rem;
-  }
-
-  &__circle {
-    border-radius: 50%;
-    height: 3.125rem;
-    width: 3.125rem;
+  &__line {
+    border-bottom: 1px solid $black;
+    border-top: 1px solid $black;
+    height: 2.5rem;
   }
 }

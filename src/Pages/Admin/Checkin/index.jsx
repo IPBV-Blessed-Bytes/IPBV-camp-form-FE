@@ -165,12 +165,8 @@ const AdminCheckin = ({ loggedUsername }) => {
 
       {userInfo && (
         <>
-          <Row className="my-3 checkin-color-status-wrapper">
-            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
-            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
-            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
-            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
-            <div className="checkin-color-status-wrapper__circle" style={{ background: userColor }} />
+          <Row className="my-3 p-0 checkin-color-status-wrapper">
+            <div className="checkin-color-status-wrapper__line" style={{ background: userColor }} />
           </Row>
           <Row className="mb-2">
             <Col className="form-label">
