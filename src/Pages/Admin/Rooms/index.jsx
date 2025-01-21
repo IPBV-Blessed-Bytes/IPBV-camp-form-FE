@@ -109,6 +109,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
         if (response.data === 'Quarto removido com sucesso.') {
           fetchRooms();
+          fetchUsers();
           setRooms(rooms.filter((room) => room.id !== roomToDelete.id));
           toast.success('Quarto excluido com sucesso');
           registerLog(`Excluiu o quarto com nome ${roomToDelete.name}`, loggedUsername);
