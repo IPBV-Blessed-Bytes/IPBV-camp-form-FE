@@ -33,7 +33,7 @@ const FormHome = (props) => {
               <p className="mb-2 text-center">
                 Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
                 igreja no telefone <em>(81) 9 9839-0194</em> (whatsapp). <br />
-                <b>Vagas Limitadas • Inscrições até 02/02 ou até se esgotarem as vagas!</b>
+                <b>Vagas Limitadas • Inscrições até 23/02 ou até se esgotarem as vagas!</b>
               </p>
             </div>
           </div>
