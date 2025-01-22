@@ -227,22 +227,27 @@ const AdminRooms = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#204691'} />
-
-      <Row className="table-tools">
-        <Col xl={9}>
-          <div className="table-tools__left-buttons d-flex mb-3 gap-3">
-            <Button variant="success" onClick={generateAggregateExcel} className="d-flex align-items-center" size="lg">
-              <Icons typeIcon="excel" iconSize={30} fill="#fff" />
-              <span className="table-tools__button-name">&nbsp;Baixar Excel Agregados</span>
-            </Button>
-            <Button variant="warning" onClick={generateRoomExcel} className="d-flex align-items-center" size="lg">
-              <Icons typeIcon="excel" iconSize={30} fill="#000" />{' '}
-              <span className="table-tools__button-name">&nbsp;Baixar Excel Quartos</span>
-            </Button>
-          </div>
-        </Col>
-      </Row>
+      <AdminHeader
+        pageName="Gerenciamento de Quartos"
+        sessionTypeIcon="rooms"
+        iconSize={80}
+        fill={'#204691'}
+        headerToolsCols={{ xl: 8 }}
+        showHeaderTools
+        headerToolsClassname="table-tools__left-buttons d-flex"
+        headerToolsTypeButton="success"
+        headerToolsOpenModal={generateAggregateExcel}
+        headerToolsButtonIcon="excel"
+        headerToolsButtonName="Baixar Excel Agregados"
+        showSecondaryButton
+        secondaryButtonCols={{ xl: 4 }}
+        secondaryButtonTypeButton="warning"
+        secondaryButtonOpenModal={generateRoomExcel}
+        secondaryButtonClassname="table-tools__right-buttons"
+        secondaryButtonIcon="excel"
+        secondaryButtonFill={'#000'}
+        secondaryButtonName="Baixar Excel Quartos"
+      />
 
       <Accordion className="mb-3">
         <Accordion.Item eventKey="0">

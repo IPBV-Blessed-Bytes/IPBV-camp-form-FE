@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import './style.scss';
+import * as XLSX from 'xlsx';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
@@ -144,6 +145,19 @@ const AdminDiscount = ({ loggedUsername }) => {
     }
   };
 
+  const generateExcel = () => {
+    const fieldMapping = discount.map((discount) => ({
+      CPF: discount.cpf,
+      Valor: discount.discount,
+      Usuáro: discount.user,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Descontos');
+    XLSX.writeFile(workbook, 'descontos.xlsx');
+  };
+
   return (
     <Container fluid>
       <AdminHeader
@@ -152,11 +166,19 @@ const AdminDiscount = ({ loggedUsername }) => {
         iconSize={80}
         fill={'#204691'}
         showHeaderTools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="primary"
-        headerToolsOpenModal={() => openModal(null)}
-        headerToolsButtonIcon="discount"
-        headerToolsButtonName="Criar Novo Cupom"
+        headerToolsCols={{ xl: 8 }}
+        headerToolsClassname="table-tools__left-buttons d-flex"
+        headerToolsTypeButton="success"
+        headerToolsOpenModal={generateExcel}
+        headerToolsButtonIcon="excel"
+        headerToolsButtonName="Baixar Excel"
+        showSecondaryButton
+        secondaryButtonCols={{ xl: 4 }}
+        secondaryButtonClassname="table-tools__right-buttons"
+        secondaryButtonTypeButton="primary"
+        secondaryButtonOpenModal={() => openModal(null)}
+        secondaryButtonIcon="discount"
+        secondaryButtonName="Criar Novo Cupom"
       />
 
       <div className="table-responsive">
