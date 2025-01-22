@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
+import * as XLSX from 'xlsx';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -34,9 +35,32 @@ const AdminExtraMeals = () => {
     }
   };
 
+  const generateExcel = () => {
+    const fieldMapping = usersWithExtraMeals.flatMap((users) => ({
+      Acampante: users.personalInformation.name,
+      Refeições: users.extraMeals.extraMeals[0],
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Alimentação');
+    XLSX.writeFile(workbook, 'alimentacao.xlsx');
+  };
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Usuários com Refeições Extras" sessionTypeIcon="food" iconSize={80} fill={'#204691'} />
+      <AdminHeader
+        pageName="Usuários com Refeições Extras"
+        sessionTypeIcon="food"
+        iconSize={80}
+        fill={'#204691'}
+        showHeaderTools
+        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
+        headerToolsTypeButton="success"
+        headerToolsOpenModal={generateExcel}
+        headerToolsButtonIcon="excel"
+        headerToolsButtonName="Baixar Excel"
+      />
 
       <Table striped bordered hover responsive className="custom-table">
         <thead>
