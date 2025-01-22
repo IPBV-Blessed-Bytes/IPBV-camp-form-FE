@@ -17,6 +17,15 @@ const AdminHeader = ({
   headerToolsButtonSize,
   headerToolsButtonFill,
   headerToolsButtonName,
+  showSecondaryButton,
+  secondaryButtonCols,
+  secondaryButtonTypeButton,
+  secondaryButtonOpenModal,
+  secondaryButtonClassname,
+  secondaryButtonIcon,
+  secondaryButtonSize,
+  secondaryButtonFill,
+  secondaryButtonName,
 }) => {
   const navigate = useNavigate();
 
@@ -38,7 +47,13 @@ const AdminHeader = ({
 
       {showHeaderTools && (
         <Row className="mb-4">
-          <Col lg={headerToolsCols?.lg || 12} md={headerToolsCols?.md || 12} xs={headerToolsCols?.xs || 12}>
+          <Col
+            className={showSecondaryButton && 'mb-3 mb-xl-0'}
+            xl={headerToolsCols?.xl || 12}
+            lg={headerToolsCols?.lg || 12}
+            md={headerToolsCols?.md || 12}
+            xs={headerToolsCols?.xs || 12}
+          >
             <div className={headerToolsClassname}>
               <Button
                 variant={headerToolsTypeButton}
@@ -51,10 +66,35 @@ const AdminHeader = ({
                   iconSize={headerToolsButtonSize || 30}
                   fill={headerToolsButtonFill || '#fff'}
                 />
-                <span>&nbsp;{headerToolsButtonName}</span>
+                <span className="table-tools__button-name">&nbsp;{headerToolsButtonName}</span>
               </Button>
             </div>
           </Col>
+
+          {showSecondaryButton && (
+            <Col
+              xl={secondaryButtonCols?.xl || 12}
+              lg={secondaryButtonCols?.lg || 12}
+              md={secondaryButtonCols?.md || 12}
+              xs={secondaryButtonCols?.xs || 12}
+            >
+              <div className={secondaryButtonClassname}>
+                <Button
+                  variant={secondaryButtonTypeButton}
+                  onClick={secondaryButtonOpenModal}
+                  className="d-flex align-items-center justify-content-center"
+                  size="lg"
+                >
+                  <Icons
+                    typeIcon={secondaryButtonIcon}
+                    iconSize={secondaryButtonSize || 30}
+                    fill={secondaryButtonFill || '#fff'}
+                  />
+                  <span className="table-tools__button-name">&nbsp;{secondaryButtonName}</span>
+                </Button>
+              </div>
+            </Col>
+          )}
         </Row>
       )}
     </>
