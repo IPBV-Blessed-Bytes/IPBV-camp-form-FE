@@ -123,17 +123,33 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
+  const validatePackageTitle = (title) => {
+    const match = title?.match(/^PACOTE \d+/i);
+    return match ? match[0] : null;
+  };
+
   const userColor =
-    userInfo?.package.food === 'Café da manhã, almoço e jantar' ||
-    userInfo?.package.food === 'Café da manhã| almoço e jantar' ||
-    userInfo?.package.food === 'Café da manha  almoço e jantar' ||
-    userInfo?.package.food === 'Cafe da manha, almoco e jantar' ||
-    userInfo?.package.food === 'Cafe da manha| almoco e jantar' ||
-    userInfo?.package.food === 'Cafe da manha  almoco e jantar' ||
-    userInfo?.package.food === 'Almoço e jantar' ||
-    userInfo?.package.food === 'Almoco e jantar'
-      ? '#b2dfb2'
-      : '#ffcccc';
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 1' ||
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 2' ||
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 5' ||
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 6'
+      ? '#FF7F50'
+      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 9'
+      ? '#dc3545'
+      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 11' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 12'
+      ? '#65a300'
+      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 13' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 14'
+      ? '#ffc107'
+      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 3' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 4' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 7' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 8' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 10' ||
+        validatePackageTitle(userInfo?.package.title) === 'PACOTE 15'
+      ? '#000'
+      : '';
 
   return (
     <Container fluid>
