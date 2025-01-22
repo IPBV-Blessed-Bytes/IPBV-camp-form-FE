@@ -322,7 +322,7 @@ const AdminRooms = ({ loggedUsername }) => {
                     }}
                     size="md"
                   >
-                    <option value="" disabled selected>
+                    <option value="" selected>
                       Selecione um acampante para adicionar ao quarto
                     </option>
                     {dropdownCampers
