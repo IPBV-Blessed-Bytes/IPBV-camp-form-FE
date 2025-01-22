@@ -107,7 +107,12 @@ AdminHeader.propTypes = {
   iconSize: PropTypes.number,
   fill: PropTypes.string,
   showHeaderTools: PropTypes.bool,
-  headerToolsCols: PropTypes.object,
+  headerToolsCols: PropTypes.shape({
+    xl: PropTypes.number,
+    lg: PropTypes.number,
+    md: PropTypes.number,
+    xs: PropTypes.number,
+  }),
   headerToolsTypeButton: PropTypes.string,
   headerToolsOpenModal: PropTypes.func,
   headerToolsClassname: PropTypes.string,
@@ -115,6 +120,20 @@ AdminHeader.propTypes = {
   headerToolsButtonSize: PropTypes.number,
   headerToolsButtonFill: PropTypes.string,
   headerToolsButtonName: PropTypes.string,
+  showSecondaryButton: PropTypes.bool,
+  secondaryButtonCols: PropTypes.shape({
+    xl: PropTypes.number,
+    lg: PropTypes.number,
+    md: PropTypes.number,
+    xs: PropTypes.number,
+  }),
+  secondaryButtonTypeButton: PropTypes.string,
+  secondaryButtonOpenModal: PropTypes.func,
+  secondaryButtonClassname: PropTypes.string,
+  secondaryButtonIcon: PropTypes.string,
+  secondaryButtonSize: PropTypes.number,
+  secondaryButtonFill: PropTypes.string,
+  secondaryButtonName: PropTypes.string,
 };
 
 export default AdminHeader;
