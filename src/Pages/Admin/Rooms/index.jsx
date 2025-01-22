@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
+import * as XLSX from 'xlsx';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -198,9 +199,50 @@ const AdminRooms = ({ loggedUsername }) => {
   const tableInstance = useTable({ columns, data: dropdownCampers }, useSortBy);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
+  const generateAggregateExcel = () => {
+    const fieldMapping = dropdownCampers.map((camper) => ({
+      Nome: camper.personalInformation.name,
+      Agregados: camper.contact.aggregate ? camper.contact.aggregate.split('|').join(', ') : 'Nenhum agregado',
+      Gênero: camper.personalInformation.gender,
+      'Data de Nascimento': camper.personalInformation.birthday,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Agregados');
+    XLSX.writeFile(workbook, 'agregados.xlsx');
+  };
+
+  const generateRoomExcel = () => {
+    const fieldMapping = rooms.flatMap((room) => ({
+      Quarto: room.name,
+      Acampantes: room.campers.map((campers) => campers.name).join(', '),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Quartos');
+    XLSX.writeFile(workbook, 'quartos.xlsx');
+  };
+
   return (
     <Container fluid>
       <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#204691'} />
+
+      <Row className="table-tools">
+        <Col xl={9}>
+          <div className="table-tools__left-buttons d-flex mb-3 gap-3">
+            <Button variant="success" onClick={generateAggregateExcel} className="d-flex align-items-center" size="lg">
+              <Icons typeIcon="excel" iconSize={30} fill="#fff" />
+              <span className="table-tools__button-name">&nbsp;Baixar Excel Agregados</span>
+            </Button>
+            <Button variant="warning" onClick={generateRoomExcel} className="d-flex align-items-center" size="lg">
+              <Icons typeIcon="excel" iconSize={30} fill="#000" />{' '}
+              <span className="table-tools__button-name">&nbsp;Baixar Excel Quartos</span>
+            </Button>
+          </div>
+        </Col>
+      </Row>
 
       <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
