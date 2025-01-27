@@ -9,10 +9,10 @@ const packageSchool = ({ age, withTransportation, withFood }) => {
 
   // Alimentação
   if (age <= 6) {
-    food = [300, 0];
+    food = withFood ? [300, 0] : [0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
   } else if (age >= 7 && age <= 12) {
-    food = [300, 150];
+    food = withFood ? [300, 150] : [0];
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
@@ -55,10 +55,10 @@ const packageSeminary = ({ age, withTransportation, withFood }) => {
 
   // Alimentação
   if (age <= 6) {
-    food = [208, 0];
+    food = withFood ? [208, 0] : [0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
   } else if (age >= 7 && age <= 12) {
-    food = [208, 104];
+    food = withFood ? [208, 104] : [0];
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
@@ -110,10 +110,10 @@ const packageOther = ({ age, withTransportation, withFood }) => {
 
   // Alimentação
   if (age <= 6) {
-    food = [208, 0];
+    food = withFood ? [208, 0] : [0];
     foodDiscountDescription = 'Criança até 6 anos não paga alimentação';
   } else if (age >= 7 && age <= 12) {
-    food = [208, 104];
+    food = withFood ? [208, 104] : [0];
     foodDiscountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
   }
 
