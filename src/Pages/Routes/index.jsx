@@ -153,7 +153,7 @@ const SiteRoutes = () => {
       if (checkoutUrl && checkoutStatus === 'Checkout generated') {
         window.open(checkoutUrl, '_self');
         toast.success('Redirecionando para pagamento...');
-      } else if (response.status === 201) {
+      } else if (response.status === 201 || response.status === 200) {
         setFormSubmitted(true);
         toast.success('Inscrição validada com sucesso');
       } else if (checkoutStatus === 'Checkout Error') {
@@ -245,7 +245,7 @@ const SiteRoutes = () => {
   const handlePersonData = (data) => {
     setPersonData(data);
   };
-  
+
   return (
     <div className="form">
       {!adminPathname && isNotFeedbackPathname && isNotVerifyingPathname && isNotVerifyingDataPathname && (

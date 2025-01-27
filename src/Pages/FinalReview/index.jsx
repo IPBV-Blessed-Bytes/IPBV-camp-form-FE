@@ -15,7 +15,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
   };
 
   const handleClick = () => {
-    if (formValues.package.price === 0) {
+    if (formValues.package.finalPrice === 0) {
       sendForm();
     } else {
       nextStep();
