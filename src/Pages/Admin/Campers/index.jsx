@@ -516,7 +516,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const carText = value.car ? 'Sim' : !value.car ? 'Não' : '-';
           const numberVacanciesText = value.numberVacancies ? value.numberVacancies : '-';
-          return `${carText} ${numberVacanciesText !== '-' ? `| Vagas: ${numberVacanciesText}` : ''}`;
+          return `${carText} ${
+            numberVacanciesText !== '-' && numberVacanciesText !== '' && numberVacanciesText !== '0'
+              ? `| Vagas: ${numberVacanciesText}`
+              : ''
+          }`;
         },
       },
       {
@@ -812,7 +816,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => {
           const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
           const discountValueText = value.discountValue !== '0' ? value.discountValue : '-';
-          return `${hasDiscount} ${discountValueText !== '-' ? `| Valor: ${discountValueText}` : ''}`;
+          return `${hasDiscount} ${
+            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
+          }`;
         },
       },
       {
