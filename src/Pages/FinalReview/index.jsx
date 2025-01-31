@@ -191,7 +191,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> Agregados:</span> <br />
+                        <span className="form-review__section-title"> Acompanhantes:</span> <br />
                         {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
                       </Card.Text>
                     </Col>

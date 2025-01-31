@@ -75,7 +75,7 @@ const CpfData = ({ cpfValues }) => {
                     </Col>
                     <Col md={6} className=" fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Agregado:</span> <br />
+                        <span className="form-review__section-title">Acompanhantes:</span> <br />
                         {cpfValues?.data.aggregate}
                       </Card.Text>
                     </Col>

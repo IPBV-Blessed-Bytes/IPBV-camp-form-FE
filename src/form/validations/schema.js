@@ -32,10 +32,10 @@ const additionalInformationSchema = yup.object().shape({
     then: () => yup.string().required('Informe mais sobre a sua alergia'),
     otherwise: () => yup.string().nullable(),
   }),
-  hasAggregate: yup.boolean().required('Informe se você tem algum agregado'),
+  hasAggregate: yup.boolean().required('Informe se você tem algum acompanhante'),
   aggregate: yup.string().when('hasAggregate', {
     is: true,
-    then: () => yup.string().required('Informe quais são seus agregados (esposo, esposa, filhos, etc)'),
+    then: () => yup.string().required('Informe quais são seus acompanhantes (esposo, esposa, filhos, etc)'),
     otherwise: () => yup.string().nullable(),
   }),
 });

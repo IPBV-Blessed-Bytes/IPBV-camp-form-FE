@@ -284,7 +284,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
               <Col md={values.hasAggregate ? 5 : 6} className="mb-3">
                 <Form.Group className="info-text-wrapper">
                   <Form.Label>
-                    <b>Você possui algum agregado?</b>
+                    <b>Você possui algum acompanhante?</b>
                   </Form.Label>
                   <Form.Select
                     id="hasAggregate"
@@ -307,7 +307,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
                     <em>
-                      Nos informe se você possui algum agregado que irá dividir quarto com você (esposo, esposa, filhos,
+                      Nos informe se você possui algum acompanhante que irá dividir quarto com você (esposo, esposa, filhos,
                       etc).
                     </em>
                   </Card.Text>
@@ -318,13 +318,13 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                 <Col md={values.hasAggregate ? 7 : 6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
-                      <b>Nos informe quem são seus agregados:</b>
+                      <b>Nos informe quem são seus acompanhantes:</b>
                     </Form.Label>
                     <Form.Control
                       isInvalid={!!errors.aggregate}
                       as="textarea"
                       name="aggregate"
-                      placeholder="NOME e SOBRENOME dos agregados APENAS QUE IRÃO DORMIR NO MESMO QUARTO para fins de alocação e organização"
+                      placeholder="NOME e SOBRENOME dos acompanhantes APENAS QUE IRÃO DORMIR NO MESMO QUARTO para fins de alocação e organização"
                       value={values.aggregate}
                       onChange={handleChange}
                       style={{ resize: 'none' }}

@@ -67,7 +67,7 @@ const FormHome = (props) => {
                 </li>
                 <li>
                   Caso algum parente (pai, mãe, esposo, esposa, filhos, etc.) compartilhe o mesmo quarto que você, seja
-                  no colégio ou seminário, por favor, informe-nos na seção de contato no campo de agregados. Isso nos
+                  no colégio ou seminário, por favor, informe-nos na seção de contato no campo de acompanhantes. Isso nos
                   permitirá organizar os quartos para todos.
                 </li>
               </ul>
