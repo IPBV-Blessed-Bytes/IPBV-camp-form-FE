@@ -212,7 +212,7 @@ const AdminLoggedIn = ({
             <span>
               <strong className="text-uppercase"> {splitedLoggedInUsername}</strong>
             </span>
-            !
+            &ldquo;
           </p>
           <Button variant="secondary" onClick={handleLogout}>
             <Icons typeIcon="logout" iconSize={20} fill="#fff" />
