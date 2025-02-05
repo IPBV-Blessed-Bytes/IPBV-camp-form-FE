@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 import { config as authentication } from 'tests/test-cases/authentication/config';
+import { config as common } from 'tests/test-cases/common/config';
 
 export default defineConfig({
   testDir: './tests',
@@ -19,5 +20,5 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  projects: [authentication],
+  projects: [authentication, common],
 });
