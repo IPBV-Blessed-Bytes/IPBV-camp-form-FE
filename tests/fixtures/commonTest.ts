@@ -1,17 +1,17 @@
 import { test } from '@playwright/test';
 import { PermissionsComponent } from 'tests/pages/PermissionPage';
-import { BypassComponent } from 'tests/pages/BypassPage';
+import { AvoidBypassComponent } from 'tests/pages/AvoidBypassPage';
 
 interface CommonTest {
   permission: PermissionsComponent;
-  bypass: BypassComponent;
+  avoidBypass: AvoidBypassComponent;
 }
 
 export const commonTest = test.extend<CommonTest>({
   permission: async ({ page }, use) => {
     await use(new PermissionsComponent(page));
   },
-  bypass: async ({ page }, use) => {
-    await use(new BypassComponent(page));
+  avoidBypass: async ({ page }, use) => {
+    await use(new AvoidBypassComponent(page));
   },
 });
