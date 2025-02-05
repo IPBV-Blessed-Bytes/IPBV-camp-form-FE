@@ -10,6 +10,7 @@ import { config as discount } from 'tests/test-cases/discount/config'
 import { config as room } from 'tests/test-cases/room/config'
 import { config as feedback } from 'tests/test-cases/feedback/config'
 import { config as userLogs } from 'tests/test-cases/userLogs/config'
+import { config as vacanciesNumber } from 'tests/test-cases/vacanciesNumber/config'
 
 export default defineConfig({
   testDir: './tests',
@@ -28,5 +29,5 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  projects: [authentication, common, form, camperTable, adminHome, ride, discount, room, feedback, userLogs],
+  projects: [authentication, common, form, camperTable, adminHome, ride, discount, room, feedback, userLogs, vacanciesNumber],
 });
