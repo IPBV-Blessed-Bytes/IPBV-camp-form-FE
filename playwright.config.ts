@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 import { config as authentication } from 'tests/test-cases/authentication/config';
 import { config as common } from 'tests/test-cases/common/config';
 import { config as form } from 'tests/test-cases/form/config'
+import { config as camperTable } from 'tests/test-cases/camperTable/config'
 
 export default defineConfig({
   testDir: './tests',
@@ -21,5 +22,5 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  projects: [authentication, common, form],
+  projects: [authentication, common, form, camperTable],
 });
