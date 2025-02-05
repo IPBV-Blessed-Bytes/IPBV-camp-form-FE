@@ -27,7 +27,7 @@ test.describe('Authentication flow', () => {
   });
 
   test('Log the user into the systemwith common user credentials', async ({ authentication }) => {
-    const commonUser = testsConfig.users.commonUser;
+    const commonUser = testsConfig.users.checkerUser;
 
     await authentication.login(commonUser);
     await authentication.logout();

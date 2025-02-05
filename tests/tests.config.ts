@@ -13,9 +13,9 @@ export const testsConfig = {
 			password: process.env.ADMIN_PASSWORD!,
 		},
 
-		commonUser: {
-			email: process.env.COMMON_EMAIL!,
-			password: process.env.COMMON_PASSWORD!,
+		checkerUser: {
+			email: process.env.CHECKER_EMAIL!,
+			password: process.env.CHECKER_PASSWORD!,
 		},
 	},
 };
