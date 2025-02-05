@@ -7,6 +7,7 @@ import { config as camperTable } from 'tests/test-cases/camperTable/config'
 import { config as adminHome } from 'tests/test-cases/adminHome/config'
 import { config as ride } from 'tests/test-cases/ride/config'
 import { config as discount } from 'tests/test-cases/discount/config'
+import { config as room } from 'tests/test-cases/room/config'
 
 export default defineConfig({
   testDir: './tests',
@@ -25,5 +26,5 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  projects: [authentication, common, form, camperTable, adminHome, ride, discount],
+  projects: [authentication, common, form, camperTable, adminHome, ride, discount, room],
 });
