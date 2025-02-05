@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { authenticationTest as test } from 'tests/fixtures/authentication/authenticationTest';
+import { authenticationTest as test } from 'tests/fixtures/authenticationTest';
 import { testsConfig } from 'tests/tests.config';
 
 test.describe('Authentication flow', () => {

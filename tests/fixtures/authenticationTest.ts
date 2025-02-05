@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { AuthenticationComponent } from 'tests/pages/authentication/AuthenticationPage';
+import { AuthenticationComponent } from 'tests/pages/AuthenticationPage';
 
 interface AuthenticationTest {
   authentication: AuthenticationComponent;
