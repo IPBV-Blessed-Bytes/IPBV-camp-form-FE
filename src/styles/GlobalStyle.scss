@@ -92,6 +92,16 @@ body {
     }
   }
 
+  &__container.faq {
+    min-width: 50rem;
+  }
+
+  @media (max-width: $lg) {
+    &__container.faq {
+      min-width: auto;
+    }
+  }
+
   &__success {
     display: flex;
     flex-direction: column;

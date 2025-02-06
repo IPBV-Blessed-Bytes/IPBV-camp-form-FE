@@ -36,6 +36,7 @@ import AdminSeatManagement from '../Admin/SeatManagement';
 import AdminUsersManagement from '../Admin/UsersManagement';
 import AdminFeedback from '../Admin/Feedback';
 import AdminDataPanel from '../Admin/DataPanel';
+import FAQ from '../FAQ';
 
 const SiteRoutes = () => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -46,6 +47,7 @@ const SiteRoutes = () => {
   const isNotFeedbackPathname = window.location.pathname !== '/opiniao';
   const isNotVerifyingPathname = window.location.pathname !== '/verificacao';
   const isNotVerifyingDataPathname = window.location.pathname !== '/verificacao/dados';
+  const isNotFaqPathname = window.location.pathname !== '/perguntas';
   const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalPackages, setTotalPackages] = useState({});
@@ -248,101 +250,105 @@ const SiteRoutes = () => {
 
   return (
     <div className="form">
-      {!adminPathname && isNotFeedbackPathname && isNotVerifyingPathname && isNotVerifyingDataPathname && (
-        <div className="components-container">
-          <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
+      {!adminPathname &&
+        isNotFeedbackPathname &&
+        isNotVerifyingPathname &&
+        isNotVerifyingDataPathname &&
+        isNotFaqPathname && (
+          <div className="components-container">
+            <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
 
-          <div className="form__container">
-            {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
+            <div className="form__container">
+              {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
 
-            {steps === enumSteps.personalData && isNotSuccessPathname && (
-              <FormPersonalData
-                initialValues={formValues.personalInformation}
-                nextStep={nextStep}
-                backStep={backStep}
-                updateForm={updateFormValues('personalInformation')}
-                onDiscountChange={handleDiscountChange}
-                formUsername={formValues.personalInformation.name}
-              />
-            )}
+              {steps === enumSteps.personalData && isNotSuccessPathname && (
+                <FormPersonalData
+                  initialValues={formValues.personalInformation}
+                  nextStep={nextStep}
+                  backStep={backStep}
+                  updateForm={updateFormValues('personalInformation')}
+                  onDiscountChange={handleDiscountChange}
+                  formUsername={formValues.personalInformation.name}
+                />
+              )}
 
-            {steps === enumSteps.contact && isNotSuccessPathname && (
-              <FormContact
-                initialValues={formValues.contact}
-                nextStep={nextStep}
-                backStep={backStep}
-                updateForm={updateFormValues('contact')}
-              />
-            )}
+              {steps === enumSteps.contact && isNotSuccessPathname && (
+                <FormContact
+                  initialValues={formValues.contact}
+                  nextStep={nextStep}
+                  backStep={backStep}
+                  updateForm={updateFormValues('contact')}
+                />
+              )}
 
-            {steps === enumSteps.packages && isNotSuccessPathname && (
-              <FormPackages
-                age={age}
-                nextStep={nextStep}
-                backStep={backStep}
-                updateForm={updateFormValues('package')}
-                sendForm={sendForm}
-                availablePackages={availablePackages}
-                totalRegistrationsGlobal={totalRegistrations}
-                discountValue={discount}
-                hasDiscount={hasDiscount}
-                totalSeats={totalSeats}
-                totalBusVacancies={totalBusVacancies}
-                totalValidWithBus={totalRegistrations.totalValidWithBus}
-              />
-            )}
+              {steps === enumSteps.packages && isNotSuccessPathname && (
+                <FormPackages
+                  age={age}
+                  nextStep={nextStep}
+                  backStep={backStep}
+                  updateForm={updateFormValues('package')}
+                  sendForm={sendForm}
+                  availablePackages={availablePackages}
+                  totalRegistrationsGlobal={totalRegistrations}
+                  discountValue={discount}
+                  hasDiscount={hasDiscount}
+                  totalSeats={totalSeats}
+                  totalBusVacancies={totalBusVacancies}
+                  totalValidWithBus={totalRegistrations.totalValidWithBus}
+                />
+              )}
 
-            {steps === enumSteps.extraMeals && isNotSuccessPathname && (
-              <ExtraMeals
-                birthDate={formValues.personalInformation.birthday}
-                backStep={backStep}
-                nextStep={nextStep}
-                initialValues={formValues.extraMeals}
-                updateForm={updateFormValues('extraMeals')}
-              />
-            )}
+              {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+                <ExtraMeals
+                  birthDate={formValues.personalInformation.birthday}
+                  backStep={backStep}
+                  nextStep={nextStep}
+                  initialValues={formValues.extraMeals}
+                  updateForm={updateFormValues('extraMeals')}
+                />
+              )}
 
-            {steps === enumSteps.finalReview && isNotSuccessPathname && (
-              <FinalReview
-                nextStep={nextStep}
-                backStep={backStep}
-                formValues={formValues}
-                sendForm={sendForm}
-                status={status}
-              />
-            )}
+              {steps === enumSteps.finalReview && isNotSuccessPathname && (
+                <FinalReview
+                  nextStep={nextStep}
+                  backStep={backStep}
+                  formValues={formValues}
+                  sendForm={sendForm}
+                  status={status}
+                />
+              )}
 
-            {steps === enumSteps.formPayment && isNotSuccessPathname && (
-              <ChooseFormPayment
-                initialValues={formValues}
-                skipTwoSteps={skipTwoSteps}
-                backStep={backStep}
-                updateForm={updateFormValues('formPayment')}
-                sendForm={sendForm}
-                loading={loading}
-                status={status}
-              />
-            )}
+              {steps === enumSteps.formPayment && isNotSuccessPathname && (
+                <ChooseFormPayment
+                  initialValues={formValues}
+                  skipTwoSteps={skipTwoSteps}
+                  backStep={backStep}
+                  updateForm={updateFormValues('formPayment')}
+                  sendForm={sendForm}
+                  loading={loading}
+                  status={status}
+                />
+              )}
 
-            <Routes>
-              <Route
-                path="/sucesso"
-                element={
-                  <FormSuccess
-                    initialStep={initialStep}
-                    resetForm={resetFormValues}
-                    resetFormSubmitted={resetFormSubmitted}
-                  />
-                }
-              />
-            </Routes>
+              <Routes>
+                <Route
+                  path="/sucesso"
+                  element={
+                    <FormSuccess
+                      initialStep={initialStep}
+                      resetForm={resetFormValues}
+                      resetFormSubmitted={resetFormSubmitted}
+                    />
+                  }
+                />
+              </Routes>
+            </div>
+
+            <InfoButton timeout />
+
+            <Footer onAdminClick={handleAdminClick} />
           </div>
-
-          <InfoButton timeout />
-
-          <Footer onAdminClick={handleAdminClick} />
-        </div>
-      )}
+        )}
 
       <div className="routes">
         <Routes>
@@ -472,6 +478,7 @@ const SiteRoutes = () => {
             element={<CpfReview onAdminClick={handleAdminClick} onPersonDataFetch={handlePersonData} />}
           />
           <Route path="/verificacao/dados" element={<CpfData cpfValues={personData} />} />
+          <Route path="/perguntas" element={<FAQ />} />
           <Route
             path="/unauthorized"
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
