@@ -1,12 +1,17 @@
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './style.scss';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import Loading from '@/components/Global/Loading';
 
 const CpfData = ({ cpfValues }) => {
+  const [caronaOfferer, setCaronaOfferer] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigateTo = useNavigate();
 
   const paymentMethodMapping = {
@@ -18,6 +23,29 @@ const CpfData = ({ cpfValues }) => {
   scrollUp();
 
   const paymentMethodLabel = paymentMethodMapping[cpfValues?.data.formPayment] || 'Não Pagante';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const rideResponse = await fetcher.get(`ride/offer`);
+        const ride = rideResponse.data.find((offer) =>
+          offer.relationship.some((rider) => rider.name === cpfValues?.data.name),
+        );
+
+        if (ride) {
+          setCaronaOfferer(ride.name);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar os dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [cpfValues]);
+
+  console.log(cpfValues?.data.subAccomodation);
 
   if (!cpfValues || !cpfValues?.data) {
     return (
@@ -67,47 +95,46 @@ const CpfData = ({ cpfValues }) => {
                 <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dados.</Card.Text>
                 <Form className="mt-4">
                   <Row className="row-gap">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Nome:</span> <br />
                         {cpfValues?.data.name}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Acompanhantes:</span> <br />
                         {cpfValues?.data.aggregate}
                       </Card.Text>
                     </Col>
-                  </Row>{' '}
+                  </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text className="text-success">
-                        <span className="form-review__section-title"> Status de Pagamento:</span> <br />{' '}
+                        <span className="form-review__section-title"> Status de Pagamento:</span> <br />
                         <em>{paymentMethodLabel}</em>
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Cadastrado em: </span>
                         <br />
                         {cpfValues?.data.registrationDate}
                       </Card.Text>
                     </Col>
-                  </Row>{' '}
+                  </Row>
                   <div className="packages-horizontal-line" />
-                  <Row className="row-gap">
-                    <Col md={6} className=" fw-bold">
+                  <Row className="row-gap mt-3">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Categoria do Pacote:</span> <br />
-                        {cpfValues?.data.packageTitle} <br />
+                        {cpfValues?.data.packageTitle}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Acomodação</span>
-                        <br />
+                        <span className="form-review__section-title">Acomodação:</span> <br />
                         {cpfValues?.data.accomodationName} |{' '}
                         {cpfValues?.data.subAccomodation
                           ? cpfValues?.data.subAccomodation !== 'Outra'
@@ -118,30 +145,28 @@ const CpfData = ({ cpfValues }) => {
                     </Col>
                   </Row>
                   <Row className="row-gap mt-3">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Alimentação: </span>
-                        <br />
+                        <span className="form-review__section-title">Alimentação:</span> <br />
                         {cpfValues?.data.food}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Alimentação Extra: </span>
-                        <br />
+                        <span className="form-review__section-title">Alimentação Extra:</span> <br />
                         {cpfValues?.data.extraMeals || 'Nenhuma'}
                       </Card.Text>
                     </Col>
                   </Row>
                   <Row className="row-gap mt-3">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Transporte: </span>
+                        <span className="form-review__section-title">Transporte:</span>
                         <br />
                         {cpfValues?.data.transportation}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
                         <br />
@@ -151,27 +176,42 @@ const CpfData = ({ cpfValues }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap mt-3">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Tem vaga de carona:</span>
-                        <br />
+                        <span className="form-review__section-title">Tem vaga de carona:</span> <br />
                         {cpfValues?.data.numberVacancies || 'Nenhuma vaga'}
                       </Card.Text>
                     </Col>
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Precisa de carona:</span>
-                        <br />
+                        <span className="form-review__section-title">Precisa de carona:</span> <br />
                         {cpfValues?.data.needRide ? 'Sim' : 'Não'}
                       </Card.Text>
                     </Col>
                   </Row>
+
+                  {caronaOfferer && (
+                    <Row className="row-gap mt-3">
+                      <Col md={6} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">Carona com:</span> <br />
+                          {caronaOfferer}
+                        </Card.Text>
+                      </Col>
+                      <Col md={6} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">Telefone de contato da carona:</span> <br />
+                          {caronaOfferer}
+                        </Card.Text>
+                      </Col>
+                    </Row>
+                  )}
+
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap mt-3">
-                    <Col md={6} className=" fw-bold">
+                    <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Preço: </span>
-                        <br />
+                        <span className="form-review__section-title">Preço:</span> <br />
                         R$ {cpfValues?.data.price},00
                       </Card.Text>
                     </Col>
@@ -194,6 +234,7 @@ const CpfData = ({ cpfValues }) => {
           </div>
         </Card>
       </div>
+      <Loading loading={loading} />
       <Footer />
     </div>
   );
