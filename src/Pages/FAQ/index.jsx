@@ -161,7 +161,8 @@ const FAQ = () => {
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc).
+                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
+                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                     <li className="mb-2">
                       <b>Seminário:</b> <br />
@@ -169,7 +170,8 @@ const FAQ = () => {
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc).
+                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
+                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                     <li>
                       <b>Externo:</b>
@@ -178,7 +180,8 @@ const FAQ = () => {
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc).
+                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
+                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                   </ul>
                   <span className="text-danger">
