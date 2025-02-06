@@ -68,6 +68,10 @@ const InfoButton = ({ timeout }) => {
           Verificar Inscrição&nbsp;
           <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
         </button>
+        <button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+          Perguntas Frequentes&nbsp;
+          <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
+        </button>
       </div>
     </>
   );
