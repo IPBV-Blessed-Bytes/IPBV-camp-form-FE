@@ -207,7 +207,7 @@ const FAQ = () => {
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="17">
-                <Accordion.Header>15. Posso escolher meu quarto?</Accordion.Header>
+                <Accordion.Header>18. Posso escolher meu quarto?</Accordion.Header>
                 <Accordion.Body>
                   Não é possível escolher quartos específicos. A divisão será feita pela equipe de organização visando
                   melhor acomodação para todos, baseado nos nomes informados no campo acompanhantes.
