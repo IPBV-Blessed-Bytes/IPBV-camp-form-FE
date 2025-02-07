@@ -22,7 +22,6 @@ const CpfData = ({ cpfValues }) => {
   };
 
   scrollUp();
-  console.log(cpfValues)
 
   const paymentMethodLabel = paymentMethodMapping[cpfValues?.data.formPayment] || 'Não Pagante';
 
@@ -209,7 +208,7 @@ const CpfData = ({ cpfValues }) => {
                     </Col>
                   </Row>
 
-                  {rideNeed && (
+                  {rideNeed.length > 0 && (
                     <Row className="row-gap mt-3">
                       <Col md={12}>
                         <Card.Text className="fw-bold">
