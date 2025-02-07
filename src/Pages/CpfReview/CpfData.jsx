@@ -10,7 +10,8 @@ import Footer from '@/components/Global/Footer';
 import Loading from '@/components/Global/Loading';
 
 const CpfData = ({ cpfValues }) => {
-  const [caronaOfferer, setCaronaOfferer] = useState(null);
+  const [rideOffer, setRideOffer] = useState(null);
+  const [rideNeed, setRideNeed] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigateTo = useNavigate();
 
@@ -21,19 +22,39 @@ const CpfData = ({ cpfValues }) => {
   };
 
   scrollUp();
+  console.log(cpfValues)
 
   const paymentMethodLabel = paymentMethodMapping[cpfValues?.data.formPayment] || 'Não Pagante';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await fetcher.get(`ride/offer`);
-        const ride = rideResponse.data.find((offer) =>
-          offer.relationship.some((rider) => rider.name === cpfValues?.data.name),
-        );
+        const rideResponse = await fetcher.get('ride/offer');
 
-        if (ride) {
-          setCaronaOfferer(ride.name);
+        const rideOfferVacancies = rideResponse.data.find((offer) => offer.name === cpfValues?.data.name);
+
+        if (rideOfferVacancies) {
+          setRideOffer(rideOfferVacancies);
+
+          const relatedNeedRides = rideOfferVacancies.relationship.filter((rider) => rider.type === 'needRide');
+
+          if (relatedNeedRides.length > 0) {
+            setRideNeed(relatedNeedRides.map(({ name, cellPhone }) => ({ name, cellPhone })));
+          } else {
+            setRideNeed([]);
+          }
+        } else {
+          const rideNeedVacancies = rideResponse.data.find((offer) =>
+            offer.relationship.some((rider) => rider.name === cpfValues?.data.name && rider.type === 'needRide'),
+          );
+
+          if (rideNeedVacancies) {
+            setRideOffer({ name: rideNeedVacancies.name, cellPhone: rideNeedVacancies.cellPhone });
+            setRideNeed([]);
+          } else {
+            setRideOffer(null);
+            setRideNeed([]);
+          }
         }
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
@@ -44,8 +65,6 @@ const CpfData = ({ cpfValues }) => {
 
     fetchData();
   }, [cpfValues]);
-
-  console.log(cpfValues?.data.subAccomodation);
 
   if (!cpfValues || !cpfValues?.data) {
     return (
@@ -190,18 +209,30 @@ const CpfData = ({ cpfValues }) => {
                     </Col>
                   </Row>
 
-                  {caronaOfferer && (
+                  {rideNeed && (
                     <Row className="row-gap mt-3">
-                      <Col md={6} className="fw-bold">
-                        <Card.Text>
-                          <span className="form-review__section-title">Carona com:</span> <br />
-                          {caronaOfferer}
+                      <Col md={12}>
+                        <Card.Text className="fw-bold">
+                          <span className="form-review__section-title">Vai oferecer carona para:</span>
+                          <Card.Text>
+                            {rideNeed.map((ride, index) => (
+                              <li key={index} className="mt-2">
+                                {ride.name} | Contato: {ride.cellPhone}
+                              </li>
+                            ))}
+                          </Card.Text>
                         </Card.Text>
                       </Col>
-                      <Col md={6} className="fw-bold">
+                    </Row>
+                  )}
+
+                  {rideOffer && rideNeed.length === 0 && (
+                    <Row className="row-gap mt-3">
+                      <Col md={12} className="fw-bold">
                         <Card.Text>
-                          <span className="form-review__section-title">Telefone de contato da carona:</span> <br />
-                          {caronaOfferer}
+                          <span className="form-review__section-title">Vai de carona com:</span>
+                          <br />
+                          {rideOffer.name} | Contato: {rideOffer.cellPhone}
                         </Card.Text>
                       </Col>
                     </Row>
@@ -241,24 +272,7 @@ const CpfData = ({ cpfValues }) => {
 };
 
 CpfData.propTypes = {
-  cpfValues: PropTypes.shape({
-    data: PropTypes.shape({
-      name: PropTypes.string,
-      aggregate: PropTypes.string,
-      formPayment: PropTypes.string,
-      registrationDate: PropTypes.string,
-      packageTitle: PropTypes.string,
-      accomodationName: PropTypes.string,
-      extraMeals: PropTypes.string,
-      subAccomodation: PropTypes.string,
-      transportation: PropTypes.string,
-      allergy: PropTypes.string,
-      numberVacancies: PropTypes.string,
-      needRide: PropTypes.bool,
-      food: PropTypes.string,
-      price: PropTypes.number,
-    }),
-  }),
+  cpfValues: PropTypes.object,
 };
 
 export default CpfData;
