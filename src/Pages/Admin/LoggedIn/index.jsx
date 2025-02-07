@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
@@ -28,6 +29,7 @@ const AdminLoggedIn = ({
   totalBusVacancies,
   spinnerLoading,
 }) => {
+  const [filteredCampersCount, setFilteredCampersCount] = useState([]);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -40,6 +42,27 @@ const AdminLoggedIn = ({
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
   const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
+
+  useEffect(() => {
+    const fetchCampers = async () => {
+      try {
+        const response = await fetcher.get('camper', { params: { size: 100000 } });
+        if (Array.isArray(response.data.content)) {
+          const filteredCampers = response.data.content.filter(
+            (camper) =>
+              camper.formPayment?.formPayment !== 'nonPaid' && camper.personalInformation?.gender === 'Crianca',
+          );
+
+          setFilteredCampersCount(filteredCampers.length);
+        } else {
+          console.error('Erro: Dados não estão no formato esperado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar usuários pagos:', error);
+      }
+    };
+    fetchCampers();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -159,15 +182,14 @@ const AdminLoggedIn = ({
 
   const totalCardsData = [
     {
-      title: 'Total de Inscritos Geral',
-      filledVacancies: totalRegistrations || '0',
+      title: 'Total de Crianças Pagantes',
+      filledVacancies: filteredCampersCount || '0',
       showRemainingVacancies: false,
     },
     {
-      title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: totalBusVacancies - totalValidWithBus || '0',
-      filledVacancies: totalValidWithBus || '0',
-      showRemainingVacancies: true,
+      title: 'Total de Crianças Não Pagantes',
+      filledVacancies: totalChildren - filteredCampersCount || '0',
+      showRemainingVacancies: false,
     },
     {
       title: 'Total de Crianças',
@@ -188,6 +210,17 @@ const AdminLoggedIn = ({
       title: 'Total de Adultos',
       remainingVacancies: totalSeats - totalValidRegistrations || '0',
       filledVacancies: totalValidRegistrations || '0',
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Total de Inscritos Geral',
+      filledVacancies: totalRegistrations || '0',
+      showRemainingVacancies: false,
+    },
+    {
+      title: 'Total de Inscritos com Ônibus',
+      remainingVacancies: totalBusVacancies - totalValidWithBus || '0',
+      filledVacancies: totalValidWithBus || '0',
       showRemainingVacancies: true,
     },
   ];
