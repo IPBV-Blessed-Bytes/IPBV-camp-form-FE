@@ -93,6 +93,7 @@ const AdminRide = ({ loggedUsername }) => {
       name: 'Nome',
       seatsInTheCar: 'Vagas no Carro',
       observation: 'Observação',
+      cellPhone: 'Contato',
       checked: 'Checked',
     };
 
@@ -185,6 +186,10 @@ const AdminRide = ({ loggedUsername }) => {
         },
       },
       {
+        Header: 'Contato:',
+        accessor: 'cellPhone',
+      },
+      {
         Header: 'Observação:',
         accessor: 'observation',
       },
@@ -240,6 +245,10 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Nome:',
         accessor: 'name',
+      },
+      {
+        Header: 'Contato:',
+        accessor: 'cellPhone',
       },
       {
         Header: 'Observação:',
