@@ -38,7 +38,7 @@ const FAQ = () => {
                   Como todas as inscrições são feitas pelo sistema, aceitamos uma ampla variedade de formas de
                   pagamento: cartão de crédito (em até 12 vezes), PIX e boleto bancário. Certifique-se de seguir as
                   instruções até a etapa final para confirmar seu pagamento. Após a validação do pagamento, você
-                  receberá um email de confirmação, que provavelmente chegará na sua caixa de entrada ou span.
+                  receberá um email de confirmação, que provavelmente chegará na sua caixa de entrada ou spam.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="2">
