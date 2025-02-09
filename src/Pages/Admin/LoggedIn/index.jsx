@@ -29,7 +29,7 @@ const AdminLoggedIn = ({
   totalBusVacancies,
   spinnerLoading,
 }) => {
-  const [filteredCampersCount, setFilteredCampersCount] = useState([]);
+  const [filteredChildrenCount, setFilteredChildrenCount] = useState([]);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -50,10 +50,10 @@ const AdminLoggedIn = ({
         if (Array.isArray(response.data.content)) {
           const filteredCampers = response.data.content.filter(
             (camper) =>
-              camper.formPayment?.formPayment !== 'nonPaid' && camper.personalInformation?.gender === 'Crianca',
+              camper.formPayment?.formPayment === 'nonPaid' && camper.personalInformation?.gender === 'Crianca',
           );
 
-          setFilteredCampersCount(filteredCampers.length);
+          setFilteredChildrenCount(filteredCampers.length);
         } else {
           console.error('Erro: Dados não estão no formato esperado.');
         }
@@ -183,12 +183,12 @@ const AdminLoggedIn = ({
   const totalCardsData = [
     {
       title: 'Total de Crianças Pagantes',
-      filledVacancies: filteredCampersCount || '0',
+      filledVacancies: totalChildren - filteredChildrenCount || '0',
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Crianças Não Pagantes',
-      filledVacancies: totalChildren - filteredCampersCount || '0',
+      filledVacancies: filteredChildrenCount || '0',
       showRemainingVacancies: false,
     },
     {
