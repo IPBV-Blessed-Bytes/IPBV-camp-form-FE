@@ -322,12 +322,22 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ row }) => (
           <>
             {adminTableAdvancedOptionsPermissions ? (
-              <Form.Check
-                className="table-checkbox"
-                type="checkbox"
-                onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
-                checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
-              />
+              <div className="d-flex gap-5">
+                <Form.Check
+                  className="table-checkbox"
+                  type="checkbox"
+                  onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
+                  checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
+                />
+                <div>
+                  <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
+                    <Icons typeIcon="edit" iconSize={24} />
+                  </Button>{' '}
+                  <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
+                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                  </Button>
+                </div>
+              </div>
             ) : (
               '-'
             )}
