@@ -13,6 +13,11 @@ export const testsConfig = {
 			password: process.env.ADMIN_PASSWORD!,
 		},
 
+		testUser: {
+			email: process.env.TEST_EMAIL!,
+			password: process.env.TEST_PASSWORD!,
+		},
+
 		collaboratorUser: {
 			email: process.env.COLLABORATOR_EMAIL!,
 			password: process.env.COLLABORATOR_PASSWORD!,
