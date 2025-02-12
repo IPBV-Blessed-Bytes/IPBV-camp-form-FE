@@ -8,7 +8,6 @@ import { config as adminHome } from 'tests/test-cases/adminHome/config';
 // import { config as ride } from 'tests/test-cases/ride/config';
 import { config as discount } from 'tests/test-cases/discount/config';
 import { config as room } from 'tests/test-cases/room/config';
-// import { config as feedback } from 'tests/test-cases/feedback/config';
 import { config as checkRegistration } from 'tests/test-cases/checkRegistration/config';
 import { config as faq } from 'tests/test-cases/faq/config';
 // import { config as userLogs } from 'tests/test-cases/userLogs/config';
@@ -43,7 +42,6 @@ export default defineConfig({
     // ride,
     discount,
     room,
-    // feedback,
     checkRegistration,
     faq,
     // userLogs,
