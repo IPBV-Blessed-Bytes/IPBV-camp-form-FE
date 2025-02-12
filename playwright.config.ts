@@ -13,7 +13,7 @@ import { config as faq } from 'tests/test-cases/faq/config';
 import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
 // import { config as userLogs } from 'tests/test-cases/userLogs/config';
 // import { config as vacanciesNumber } from 'tests/test-cases/vacanciesNumber/config';
-// import { config as userCreation } from 'tests/test-cases/userCreation/config';
+import { config as userCreation } from 'tests/test-cases/userCreation/config';
 // import { config as checkin } from 'tests/test-cases/checkin/config';
 // import { config as dataPanel } from 'tests/test-cases/dataPanel/config';
 
@@ -48,7 +48,7 @@ export default defineConfig({
     extraMeals,
     // userLogs,
     // vacanciesNumber,
-    // userCreation,
+    userCreation,
     // checkin,
     // dataPanel,
   ],
