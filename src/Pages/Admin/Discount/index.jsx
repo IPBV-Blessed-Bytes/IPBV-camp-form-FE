@@ -70,12 +70,12 @@ const AdminDiscount = ({ loggedUsername }) => {
         ...newDiscount,
         id: Date.now().toString(),
       });
-      toast.success('Cupom criado com sucesso');
+      toast.success('Desconto criado com sucesso');
       setShowModal(false);
       fetchDiscounts();
-      registerLog(`Criou o cupom atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
+      registerLog(`Criou o desconto atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
     } catch (error) {
-      toast.error('Erro ao criar cupom');
+      toast.error('Erro ao criar desconto');
     } finally {
       setLoading(false);
     }
@@ -86,12 +86,12 @@ const AdminDiscount = ({ loggedUsername }) => {
 
     try {
       await fetcher.put(`coupon/${editingDiscount.id}`, editingDiscount);
-      toast.success('Cupom atualizado com sucesso');
+      toast.success('Desconto atualizado com sucesso');
       setShowModal(false);
       fetchDiscounts();
-      registerLog(`Editou o cupom atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
+      registerLog(`Editou o desconto atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
     } catch (error) {
-      toast.error('Erro ao atualizar cupom');
+      toast.error('Erro ao atualizar desconto');
     } finally {
       setLoading(false);
     }
@@ -105,12 +105,12 @@ const AdminDiscount = ({ loggedUsername }) => {
         ...discountToDelete,
       };
       await fetcher.delete(`coupon/${discountToDelete.id}`, { data: deleteDiscount });
-      toast.success('Cupom excluído com sucesso');
+      toast.success('Desconto excluído com sucesso');
       setShowConfirmDelete(false);
       fetchDiscounts();
-      registerLog(`Excluiu o cupom atrelado ao CPF ${deleteDiscount.cpf}`, loggedUsername);
+      registerLog(`Excluiu o desconto atrelado ao CPF ${deleteDiscount.cpf}`, loggedUsername);
     } catch (error) {
-      toast.error('Erro ao excluir cupom');
+      toast.error('Erro ao excluir desconto');
     } finally {
       setLoading(false);
     }
@@ -178,7 +178,7 @@ const AdminDiscount = ({ loggedUsername }) => {
         secondaryButtonTypeButton="primary"
         secondaryButtonOpenModal={() => openModal(null)}
         secondaryButtonIcon="discount"
-        secondaryButtonName="Criar Novo Cupom"
+        secondaryButtonName="Criar Novo Desconto"
       />
 
       <div className="table-responsive">
@@ -218,7 +218,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <b>{editingDiscount ? 'Editar Cupom' : 'Criar Novo Cupom'}</b>
+            <b>{editingDiscount ? 'Editar Desconto' : 'Criar Novo Desconto'}</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -263,7 +263,7 @@ const AdminDiscount = ({ loggedUsername }) => {
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            {editingDiscount ? 'Salvar Alterações' : 'Criar Cupom'}
+            {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -271,11 +271,11 @@ const AdminDiscount = ({ loggedUsername }) => {
       <Modal show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <b>Excluir Cupom</b>
+            <b>Excluir Desconto</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja excluir o cupom vinculado ao CPF <b>{discountToDelete?.cpf}</b>? Essa ação é
+          Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>? Essa ação é
           irreversível.
         </Modal.Body>
         <Modal.Footer>
