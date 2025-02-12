@@ -10,6 +10,7 @@ import { config as discount } from 'tests/test-cases/discount/config';
 import { config as room } from 'tests/test-cases/room/config';
 import { config as checkRegistration } from 'tests/test-cases/checkRegistration/config';
 import { config as faq } from 'tests/test-cases/faq/config';
+import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
 // import { config as userLogs } from 'tests/test-cases/userLogs/config';
 // import { config as vacanciesNumber } from 'tests/test-cases/vacanciesNumber/config';
 // import { config as userCreation } from 'tests/test-cases/userCreation/config';
@@ -44,6 +45,7 @@ export default defineConfig({
     room,
     checkRegistration,
     faq,
+    extraMeals,
     // userLogs,
     // vacanciesNumber,
     // userCreation,
