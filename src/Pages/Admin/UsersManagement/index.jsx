@@ -64,9 +64,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         toast.success('Usuário editado com sucesso');
         registerLog(`Editou usuário ${editingUser.userName}`, loggedUsername);
       } else {
-        await fetcher.post('users', formData);
-        toast.success('Usuário criado com sucesso');
-        registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
+        const response = await fetcher.post('users', formData);
+
+        if (response.status === 200) {
+          toast.success('Usuário criado com sucesso');
+          registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
+        } else {
+          toast.error('Erro ao criar usuário');
+        }
       }
       setFormData({ userName: '', password: '', role: '' });
       setEditingUser(null);
@@ -121,6 +126,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         return 'Colaborador Visualizador';
       case 'checker':
         return 'Checker';
+      case 'ride-manager':
+        return 'Gerenciador de Caronas';
       default:
         return role;
     }
@@ -240,6 +247,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <option value="collaborator">Colaborador</option>
                 <option value="collaborator-viewer">Colaborador Visualizador</option>
                 <option value="checker">Checker</option>
+                <option value="ride-manager">Gerenciador das Caronas</option>
               </Form.Select>
             </Form.Group>
           </Form>
