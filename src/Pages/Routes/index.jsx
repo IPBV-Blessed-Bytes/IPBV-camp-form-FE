@@ -467,7 +467,7 @@ const SiteRoutes = () => {
             path="/admin/opiniao"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
-                <AdminFeedback />
+                <AdminFeedback loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
