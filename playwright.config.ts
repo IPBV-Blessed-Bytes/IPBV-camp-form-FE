@@ -15,7 +15,6 @@ import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
 // import { config as vacanciesNumber } from 'tests/test-cases/vacanciesNumber/config';
 import { config as userCreation } from 'tests/test-cases/userCreation/config';
 import { config as checkin } from 'tests/test-cases/checkin/config';
-// import { config as dataPanel } from 'tests/test-cases/dataPanel/config';
 
 export default defineConfig({
   testDir: './tests',
@@ -50,6 +49,5 @@ export default defineConfig({
     // vacanciesNumber,
     userCreation,
     checkin,
-    // dataPanel,
   ],
 });
