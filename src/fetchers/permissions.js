@@ -2,13 +2,14 @@ const ADMIN = 'admin';
 const COLLABORATOR = 'collaborator';
 const COLLABORATOR_VIEWER = 'collaborator-viewer';
 const CHECKER = 'checker';
+const RIDE_MANAGER = 'ride-manager';
 
 export const permissions = (userRole, context) => {
   const permissionsMap = {
     'settings-button-home': userRole === ADMIN,
     'data-panel-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === CHECKER,
     'registered-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
-    'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR,
+    'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === RIDE_MANAGER,
     'discount-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'rooms-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'feedback-button-home': userRole === ADMIN || userRole === COLLABORATOR,
