@@ -33,7 +33,7 @@ const AdminHeader = ({
     <>
       <Row className="mt-3">
         <Col>
-          <Button variant="danger" onClick={() => navigate('/admin')}>
+          <Button variant="secondary" onClick={() => navigate('/admin')}>
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar
           </Button>

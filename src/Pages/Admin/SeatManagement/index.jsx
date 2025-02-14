@@ -110,7 +110,7 @@ const AdminSeatManagement = ({
             ))}
 
             <div className="d-flex mt-3 justify-content-end">
-              <Button variant="primary" onClick={updateSeats}>
+              <Button variant="success" onClick={updateSeats}>
                 Ajustar Vagas Pacotes
               </Button>
             </div>
@@ -132,7 +132,7 @@ const AdminSeatManagement = ({
             </Form.Group>
 
             <div className="d-flex mt-3 justify-content-end">
-              <Button variant="primary" onClick={updateBusVacancies}>
+              <Button variant="success" onClick={updateBusVacancies}>
                 Ajustar Vagas Ônibus
               </Button>
             </div>

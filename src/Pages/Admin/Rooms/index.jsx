@@ -398,7 +398,7 @@ const AdminRooms = ({ loggedUsername }) => {
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
               <div className="d-flex justify-content-end mb-3 gap-3">
-                <Button variant="warning" onClick={() => handleShowEditModal(room)}>
+                <Button variant="success" onClick={() => handleShowEditModal(room)}>
                   <Icons typeIcon="edit" iconSize={24} />
                   &nbsp;Renomear Quarto
                 </Button>

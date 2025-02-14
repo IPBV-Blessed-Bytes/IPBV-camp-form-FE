@@ -230,7 +230,7 @@ const AdminLoggedIn = ({
       <Row className="mb-3">
         <Col className="admin-custom-col">
           <Button
-            variant="danger"
+            variant="secondary"
             onClick={() => {
               navigate('/');
             }}
@@ -247,7 +247,7 @@ const AdminLoggedIn = ({
             </span>
             &ldquo;
           </p>
-          <Button variant="secondary" onClick={handleLogout}>
+          <Button variant="danger" onClick={handleLogout}>
             <Icons typeIcon="logout" iconSize={20} fill="#fff" />
             &nbsp;Desconectar
           </Button>

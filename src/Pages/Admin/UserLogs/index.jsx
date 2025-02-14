@@ -75,11 +75,11 @@ const AdminUserLogs = ({ loggedUsername }) => {
         fill={'#204691'}
         showHeaderTools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="warning"
+        headerToolsTypeButton="danger"
         headerToolsOpenModal={() => setShowDeleteModal(true)}
         headerToolsButtonIcon="danger"
         headerToolsButtonSize={20}
-        headerToolsButtonFill={'#000'}
+        headerToolsButtonFill={'#fff'}
         headerToolsButtonName="Deletar Todos Logs"
       />
 

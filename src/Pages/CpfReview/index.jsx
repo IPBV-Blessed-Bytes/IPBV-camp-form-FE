@@ -124,7 +124,7 @@ const CpfReview = ({ onPersonDataFetch }) => {
                 </Row>
                 <Row className="justify-content-end align-items-center mt-4">
                   <Col className="justify-content-end d-flex" md={6}>
-                    <Button type="submit" variant="warning" size="lg">
+                    <Button type="submit" variant="success" size="lg">
                       Consultar
                     </Button>
                   </Col>

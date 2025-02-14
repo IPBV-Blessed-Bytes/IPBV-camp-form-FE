@@ -237,7 +237,7 @@ const FAQ = () => {
               </Accordion.Item>
             </Accordion>
             <div className="d-flex justify-content-end mt-4">
-              <Button variant="warning" size="lg" onClick={() => navigate('/')}>
+              <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
                 Voltar pro formulário
               </Button>
             </div>

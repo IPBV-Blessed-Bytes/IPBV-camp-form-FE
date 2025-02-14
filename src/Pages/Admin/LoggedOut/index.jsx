@@ -23,7 +23,7 @@ const AdminLoggedOut = ({
           <p className="d-none d-sm-block">Clique para voltar ao Formulário de inscrição:</p>
           <Button
             className="fw-bold"
-            variant="danger"
+            variant="secondary"
             onClick={() => {
               navigateTo('/');
             }}
