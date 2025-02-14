@@ -149,7 +149,7 @@ const AdminDiscount = ({ loggedUsername }) => {
     const fieldMapping = discount.map((discount) => ({
       CPF: discount.cpf,
       Valor: discount.discount,
-      Usuáro: discount.user,
+      Usuário: discount.user,
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
