@@ -29,17 +29,18 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   scrollUp();
 
+  const fetchFeedbacks = async () => {
+    try {
+      const { data } = await fetcher.get('feedback');
+      setFeedbacks(data);
+    } catch (error) {
+      console.error('Erro ao carregar feedbacks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        const { data } = await fetcher.get('feedback');
-        setFeedbacks(data);
-      } catch (error) {
-        console.error('Erro ao carregar feedbacks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchFeedbacks();
   }, []);
 
@@ -51,6 +52,7 @@ const AdminFeedback = ({ loggedUsername }) => {
         toast.success('Todos os feedbacks foram deletados com sucesso');
         registerLog(`Deletou todos os feedbacks`, loggedUsername);
         setShowDeleteModal(false);
+        fetchFeedbacks();
       }
     } catch (error) {
       console.error('Error adding data:', error);
