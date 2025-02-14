@@ -117,7 +117,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
             </Row>
             <Row>
-              <Col md={8} className="mb-3">
+              <Col md={6} className="mb-3">
                 <Form.Group className="info-text-wrapper">
                   <Form.Label>
                     <b>Tem vagas de carona a oferecer?</b>
@@ -150,7 +150,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
               </Col>
 
               {values.car === true ? (
-                <Col md={4} className="mb-3">
+                <Col md={6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
                       <b>Quantas vagas?</b>
@@ -176,8 +176,8 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   </Form.Group>
                 </Col>
               ) : values.car === false ? (
-                <Col md={4} className="mb-3">
-                  <Form.Group>
+                <Col md={6} className="mb-3">
+                  <Form.Group className="info-text-wrapper">
                     <Form.Label>
                       <b>Precisa de carona?</b>
                     </Form.Label>
@@ -202,6 +202,9 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                       <option value={true}>Sim</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">{errors.needRide}</Form.Control.Feedback>
+                    <Card.Text className="mt-2 mb-0">
+                      <em>Se você optou por um pacote COM ÔNIBUS, não é necessário solicitar uma carona.</em>
+                    </Card.Text>
                   </Form.Group>
                 </Col>
               ) : (
@@ -307,8 +310,8 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
                   <Form.Control.Feedback type="invalid">{errors.hasAggregate}</Form.Control.Feedback>
                   <Card.Text className="mt-2 mb-0">
                     <em>
-                      Nos informe se você possui algum acompanhante que irá dividir quarto com você (esposo, esposa, filhos,
-                      etc).
+                      Nos informe se você possui algum acompanhante que irá dividir quarto com você (esposo, esposa,
+                      filhos, etc).
                     </em>
                   </Card.Text>
                 </Form.Group>
