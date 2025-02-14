@@ -38,7 +38,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const filteredRowsRef = useRef([]);
-  const adminTableAdvancedOptionsPermissions = permissions(userRole, 'advanced-options-admin-table');
+  const adminTableEditDeletePermissions = permissions(userRole, 'edit-delete-admin-table');
+  const adminTableCreateRegistration = permissions(userRole, 'create-registration-admin-table');
+  const adminTableDeleteRegistrationsAndSelectRows = permissions(userRole, 'delete-registrations-admin-table');
 
   const now = new Date();
   const day = now.getDate().toString().padStart(2, '0');
@@ -289,7 +291,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: () => (
           <>
-            {adminTableAdvancedOptionsPermissions ? (
+            {adminTableDeleteRegistrationsAndSelectRows ? (
               <div className="d-flex justify-content-between w-100">
                 <span className="d-flex">
                   <Form.Check
@@ -311,7 +313,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                 </span>
               </div>
             ) : (
-              '-'
+              'Editar Acampantes'
             )}
           </>
         ),
@@ -321,21 +323,25 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ row }) => (
           <>
-            {adminTableAdvancedOptionsPermissions ? (
+            {adminTableEditDeletePermissions ? (
               <div className="d-flex gap-5">
-                <Form.Check
-                  className="table-checkbox"
-                  type="checkbox"
-                  onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
-                  checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
-                />
+                {adminTableDeleteRegistrationsAndSelectRows && (
+                  <Form.Check
+                    className="table-checkbox"
+                    type="checkbox"
+                    onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
+                    checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
+                  />
+                )}
                 <div>
                   <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
                     <Icons typeIcon="edit" iconSize={24} />
                   </Button>{' '}
-                  <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
-                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                  </Button>
+                  {adminTableDeleteRegistrationsAndSelectRows && (
+                    <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
+                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                    </Button>
+                  )}
                 </div>
               </div>
             ) : (
@@ -910,17 +916,19 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
-        Header: `${adminTableAdvancedOptionsPermissions ? 'Editar / Deletar' : '-'}`,
+        Header: `${adminTableDeleteRegistrationsAndSelectRows ? 'Editar / Deletar' : 'Editar Acampantes'}`,
         Cell: ({ row }) => (
           <>
-            {adminTableAdvancedOptionsPermissions ? (
+            {adminTableEditDeletePermissions ? (
               <div>
                 <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
                   <Icons typeIcon="edit" iconSize={24} />
                 </Button>{' '}
-                <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
-                  <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                </Button>
+                {adminTableDeleteRegistrationsAndSelectRows && (
+                  <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
+                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                  </Button>
+                )}
               </div>
             ) : (
               '-'
@@ -1208,7 +1216,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             </Button>
             {selectedRows.length > 0 && (
               <>
-                {adminTableAdvancedOptionsPermissions && (
+                {adminTableDeleteRegistrationsAndSelectRows && (
                   <Button
                     variant="danger"
                     onClick={handleDeleteWithCheckbox}
@@ -1223,7 +1231,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                 )}
               </>
             )}
-            {adminTableAdvancedOptionsPermissions && (
+            {adminTableCreateRegistration && (
               <Button
                 onClick={() => {
                   setShowAddModal(true);
@@ -1238,7 +1246,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             )}
           </div>
         </Col>
-        {adminTableAdvancedOptionsPermissions && (
+        {adminTableCreateRegistration && (
           <Col xl={3}>
             <div className="table-tools__right-buttons mb-3">
               <Button
