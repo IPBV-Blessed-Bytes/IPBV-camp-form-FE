@@ -20,8 +20,11 @@ const AdminRooms = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
+  const [renamedRoomName, setRenamedRoomName] = useState('');
   const [roomToDelete, setRoomToDelete] = useState(null);
+  const [roomToRename, setRoomToRename] = useState(null);
 
   scrollUp();
 
@@ -91,9 +94,19 @@ const AdminRooms = ({ loggedUsername }) => {
     setShowDeleteModal(true);
   };
 
+  const handleShowEditModal = (room) => {
+    setRoomToRename(room);
+    setShowEditModal(true);
+  };
+
   const handleCloseDeleteModal = () => {
     setRoomToDelete(null);
     setShowDeleteModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setRoomToRename(null);
+    setShowEditModal(false);
   };
 
   const confirmDeleteRoom = async () => {
@@ -119,6 +132,37 @@ const AdminRooms = ({ loggedUsername }) => {
       } catch (error) {
         toast.error('Erro ao excluir quarto');
         console.error('Erro ao excluir quarto:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (roomToRename) {
+      setRenamedRoomName(roomToRename.name);
+    }
+  }, [roomToRename]);
+
+  const renameRoom = async () => {
+    if (roomToRename) {
+      const roomData = {
+        name: renamedRoomName,
+      };
+      setLoading(true);
+
+      try {
+        const response = await fetcher.put(`aggregate/name/${roomToRename.id}`, roomData);
+
+        if (response.data === 'Nome do quarto atualizado com sucesso.') {
+          fetchRooms();
+          toast.success('Quarto renomeado com sucesso');
+          registerLog(`Renomeou o quarto com nome ${roomToRename.name}`, loggedUsername);
+          handleCloseEditModal();
+        }
+      } catch (error) {
+        toast.error('Erro ao renomear quarto');
+        console.error('Erro ao renomear quarto:', error);
       } finally {
         setLoading(false);
       }
@@ -313,7 +357,11 @@ const AdminRooms = ({ loggedUsername }) => {
           <Accordion.Item eventKey={room.id} key={room.id}>
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
-              <div className="d-flex justify-content-end mb-3">
+              <div className="d-flex justify-content-end mb-3 gap-3">
+                <Button variant="warning" onClick={() => handleShowEditModal(room)}>
+                  <Icons typeIcon="edit" iconSize={24} />
+                  &nbsp;Renomear Quarto
+                </Button>
                 <Button variant="danger" onClick={() => handleShowDeleteModal(room)}>
                   <Icons typeIcon="delete" iconSize={24} fill="#fff" />
                   &nbsp;Excluir Quarto
@@ -403,6 +451,37 @@ const AdminRooms = ({ loggedUsername }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {roomToRename && (
+        <Modal show={showEditModal} onHide={handleCloseEditModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <b>Renomear Quarto</b>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group controlId="renameRoom">
+              <Form.Label>
+                <b>Novo Nome do Quarto:</b>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={renamedRoomName}
+                onChange={(e) => setRenamedRoomName(e.target.value)}
+                size="lg"
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseEditModal}>
+              Cancelar
+            </Button>
+            <Button variant="success" onClick={renameRoom}>
+              Salvar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
       <Loading loading={loading} />
     </Container>
