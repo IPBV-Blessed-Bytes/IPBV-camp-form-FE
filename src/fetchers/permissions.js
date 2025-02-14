@@ -16,7 +16,7 @@ export const permissions = (userRole, context) => {
     'extra-meals-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'packages-and-totals-cards-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'utilities-links-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
-    'edit-delete-admin-table': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
+    'edit-delete-admin-table': userRole === ADMIN || userRole === COLLABORATOR,
     'create-registration-admin-table': userRole === ADMIN || userRole === COLLABORATOR,
     'delete-registrations-admin-table': userRole === ADMIN || userRole === COLLABORATOR,
     'checkin-balance-panel': userRole === ADMIN || userRole === CHECKER,
