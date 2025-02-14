@@ -1,1 +1,10 @@
 @import '../../../styles/Variables.scss';
+
+.rooms {
+  .table-tools__left-buttons,
+  .table-tools__right-buttons {
+    @media (max-width: $md) {
+      display: flex !important;
+    }
+  }
+}

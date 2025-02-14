@@ -25,6 +25,8 @@ const AdminRooms = ({ loggedUsername }) => {
   const [renamedRoomName, setRenamedRoomName] = useState('');
   const [roomToDelete, setRoomToDelete] = useState(null);
   const [roomToRename, setRoomToRename] = useState(null);
+  const [showDeleteCamperFromRoomModal, setShowDeleteCamperFromRoomModal] = useState(false);
+  const [camperToDelete, setCamperToDelete] = useState(false);
 
   scrollUp();
 
@@ -107,6 +109,20 @@ const AdminRooms = ({ loggedUsername }) => {
   const handleCloseEditModal = () => {
     setRoomToRename(null);
     setShowEditModal(false);
+  };
+
+  const handleShowDeleteCamperFromRoomModal = (camperId) => {
+    if (!camperId) {
+      toast.error('Erro: Acampante não encontrado.');
+      return;
+    }
+    setCamperToDelete(camperId);
+    setShowDeleteCamperFromRoomModal(true);
+  };
+
+  const handleCloseDeleteCamperFromRoomModal = () => {
+    setCamperToDelete(null);
+    setShowDeleteCamperFromRoomModal(false);
   };
 
   const confirmDeleteRoom = async () => {
@@ -228,6 +244,30 @@ const AdminRooms = ({ loggedUsername }) => {
     }
   };
 
+  const deleteCamperFromRoom = async (camperToDelete) => {
+    if (!camperToDelete) {
+      toast.error('Erro: Nenhum acampante selecionado.');
+      return;
+    }
+    setLoading(true);
+
+    try {
+      const response = await fetcher.delete(`aggregate/room/${camperToDelete}`);
+
+      if (response.data === 'Acampante removido do quarto com sucesso.') {
+        toast.success('Acampante removido do quarto com sucesso');
+        fetchRooms();
+        fetchUsers();
+        handleCloseDeleteCamperFromRoomModal();
+      }
+    } catch (error) {
+      toast.error('Erro ao apagar acampante do quarto');
+      console.error('Erro ao apagar acampante do quarto:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const columns = useMemo(
     () => [
       { Header: 'Usuário:', accessor: 'personalInformation.name' },
@@ -270,7 +310,7 @@ const AdminRooms = ({ loggedUsername }) => {
   };
 
   return (
-    <Container fluid>
+    <Container className="rooms" fluid>
       <AdminHeader
         pageName="Gerenciamento de Quartos"
         sessionTypeIcon="rooms"
@@ -397,7 +437,12 @@ const AdminRooms = ({ loggedUsername }) => {
               </Row>
               <ol>
                 {(room.campers || []).map((camper, index) => (
-                  <li key={index}>{camper.name}</li>
+                  <li key={index}>
+                    <span>{camper.name}</span>&nbsp;
+                    <Button variant="danger" size="sm" onClick={() => handleShowDeleteCamperFromRoomModal(camper.id)}>
+                      <Icons typeIcon="delete" iconSize={24} fill="#fff" />
+                    </Button>
+                  </li>
                 ))}
               </ol>
             </Accordion.Body>
@@ -482,6 +527,23 @@ const AdminRooms = ({ loggedUsername }) => {
           </Modal.Footer>
         </Modal>
       )}
+
+      <Modal show={showDeleteCamperFromRoomModal} onHide={handleCloseDeleteCamperFromRoomModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <b>Confirmar Exclusão</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Tem certeza de que deseja excluir esse acampante do quarto?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={() => deleteCamperFromRoom(camperToDelete)}>
+            Excluir
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <Loading loading={loading} />
     </Container>
