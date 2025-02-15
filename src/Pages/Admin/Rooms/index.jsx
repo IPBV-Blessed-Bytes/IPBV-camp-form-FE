@@ -435,16 +435,19 @@ const AdminRooms = ({ loggedUsername }) => {
                   </Button>
                 </Col>
               </Row>
-              <ol>
-                {(room.campers || []).map((camper, index) => (
-                  <li key={index}>
-                    <span>{camper.name}</span>&nbsp;
-                    <Button variant="danger" size="sm" onClick={() => handleShowDeleteCamperFromRoomModal(camper.id)}>
-                      <Icons typeIcon="delete" iconSize={24} fill="#fff" />
-                    </Button>
-                  </li>
-                ))}
-              </ol>
+              <Col xs="12" md="12" lg="6">
+                <ol>
+                  {(room.campers || []).map((camper, index) => (
+                    <li key={index}>
+                      <span>{camper.name}</span>&nbsp;-&nbsp;
+                      <Button variant="danger" size="sm" onClick={() => handleShowDeleteCamperFromRoomModal(camper.id)}>
+                        <Icons typeIcon="delete" iconSize={24} fill="#fff" />
+                      </Button>
+                      <hr className="horizontal-line" />
+                    </li>
+                  ))}
+                </ol>
+              </Col>
             </Accordion.Body>
           </Accordion.Item>
         ))}
