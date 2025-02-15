@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
+import { Form, Container, Accordion, Table, Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.scss'
+import './style.scss';
 import * as XLSX from 'xlsx';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -16,6 +16,8 @@ import AdminHeader from '@/components/Admin/AdminHeader';
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
+  const [showDeleteRelationshipModal, setShowDeleteRelationshipModal] = useState(false);
+  const [camperToDelete, setCamperToDelete] = useState(false);
 
   scrollUp();
 
@@ -120,6 +122,16 @@ const AdminRide = ({ loggedUsername }) => {
     XLSX.writeFile(workbook, 'rides_data.xlsx');
   };
 
+  const handleShowDeleteRelationshipModal = (needRideId) => {
+    setCamperToDelete(needRideId);
+    setShowDeleteRelationshipModal(true);
+  };
+
+  const handleCloseDeleteRelationshipModal = () => {
+    setCamperToDelete(null);
+    setShowDeleteRelationshipModal(false);
+  };
+
   const handleDeleteRelationship = async (needRideId) => {
     try {
       await fetcher.delete(`ride/${needRideId}`);
@@ -141,6 +153,7 @@ const AdminRide = ({ loggedUsername }) => {
         const updatedNeedRide = removedNeedRide ? [...prevData.needRide, removedNeedRide] : prevData.needRide;
 
         toast.success('Carona desvinculada com sucesso');
+        handleCloseDeleteRelationshipModal();
 
         if (offerWithRelationship && removedNeedRide) {
           registerLog(
@@ -208,7 +221,11 @@ const AdminRide = ({ loggedUsername }) => {
                         <li key={relatedRide.id}>
                           <div className="d-flex justify-content-between">
                             <span>{relatedRide.name}</span>&nbsp;
-                            <Button variant="danger" size="sm" onClick={() => handleDeleteRelationship(relatedRide.id)}>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleShowDeleteRelationshipModal(relatedRide.id)}
+                            >
                               <Icons typeIcon="delete" iconSize={24} fill="#fff" />
                             </Button>
                           </div>
@@ -353,6 +370,24 @@ const AdminRide = ({ loggedUsername }) => {
         <Accordion.Header>Precisam de Carona</Accordion.Header>
         <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
       </Accordion>
+
+      <Modal show={showDeleteRelationshipModal} onHide={handleCloseDeleteRelationshipModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <b>Confirmar Exclusão</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Tem certeza de que deseja excluir esse acampante dessa carona?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteRelationshipModal}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={() => handleDeleteRelationship(camperToDelete)}>
+            Excluir
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Loading loading={loading} />
     </Container>
   );
