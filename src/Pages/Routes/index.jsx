@@ -369,7 +369,7 @@ const SiteRoutes = () => {
           <Route
             path="/admin/acampantes"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}>
                 <AdminCampers loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
               </ProtectedRoute>
             }
