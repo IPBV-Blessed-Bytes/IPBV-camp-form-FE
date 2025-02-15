@@ -127,7 +127,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       case 'checker':
         return 'Checker';
       case 'ride-manager':
-        return 'Gerenciador de Caronas';
+        return 'Gerenciador Coringa';
       default:
         return role;
     }
@@ -247,7 +247,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <option value="collaborator">Colaborador</option>
                 <option value="collaborator-viewer">Colaborador Visualizador</option>
                 <option value="checker">Checker</option>
-                <option value="ride-manager">Gerenciador das Caronas</option>
+                <option value="ride-manager">Gerenciador Coringa</option>
               </Form.Select>
             </Form.Group>
           </Form>
