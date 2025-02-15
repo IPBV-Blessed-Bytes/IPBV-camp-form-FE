@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -80,7 +79,8 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     return isNaN(parsedDate) ? null : parsedDate;
   };
 
-  useEffect(() => {
+  const checkAge = () => {
+    console.log('veio');
     if (values.birthday) {
       const age = calculateAge(values.birthday);
       if (age !== null) {
@@ -91,7 +91,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
         );
       }
     }
-  }, [values.birthday]);
+  };
 
   return (
     <Card className="form__container__general-height">
@@ -157,6 +157,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                     as={DatePicker}
                     selected={parseDate(values.birthday)}
                     onChange={handleDateChange}
+                    onBlur={() => checkAge()}
                     locale={ptBR}
                     autoComplete="off"
                     dateFormat="dd/MM/yyyy"
