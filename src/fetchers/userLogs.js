@@ -3,6 +3,8 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 
 export const registerLog = async (message, user) => {
   try {
+    if (user === 'test') return;
+
     const timestamp = new Date().toISOString();
     const ipResponse = await axios.get('https://api.ipify.org?format=json');
     const userIp = ipResponse.data.ip;
