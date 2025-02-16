@@ -146,11 +146,14 @@ const AdminDiscount = ({ loggedUsername }) => {
   };
 
   const generateExcel = () => {
-    const fieldMapping = discount.map((discount) => ({
-      CPF: discount.cpf,
-      Valor: discount.discount,
-      Usuário: discount.user,
-    }));
+    const fieldMapping = discount.map((discount) => {
+      const isUserRegistered = registeredUser(discount.cpf);
+      return {
+        CPF: discount.cpf,
+        Valor: discount.discount,
+        ...(isUserRegistered && { Usuário: discount.user }),
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
     const workbook = XLSX.utils.book_new();
