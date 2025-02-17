@@ -202,7 +202,15 @@ const AdminDiscount = ({ loggedUsername }) => {
                 <tr key={discount.id}>
                   <td>{discount.cpf}</td>
                   <td>{discount.discount}</td>
-                  <td>{isUserRegistered ? discount.user : ''}</td>
+                  <td>
+                    {isUserRegistered ? (
+                      discount.user
+                    ) : (
+                      <b>
+                        <em>NÃO UTILIZADO</em>
+                      </b>
+                    )}
+                  </td>
                   <td>
                     <Button variant="outline-success" onClick={() => openModal(discount)}>
                       <Icons typeIcon="edit" iconSize={24} />
