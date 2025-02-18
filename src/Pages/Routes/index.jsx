@@ -162,8 +162,9 @@ const SiteRoutes = () => {
         toast.error('Erro ao criar checkout');
       }
     } catch (error) {
+	  const errorMessage = error?.response?.data || 'Ocorreu um erro';
       setStatus('error');
-      toast.error('Ocorreu um erro');
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

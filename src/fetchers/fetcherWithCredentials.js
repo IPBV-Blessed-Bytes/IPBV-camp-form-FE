@@ -37,7 +37,10 @@ fetcherWithCredentials.interceptors.response.use(
     if (error?.response.status === 401) {
       localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
       window.location.assign(LOGIN_ROUTE);
+	  return;
     }
+
+	return Promise.reject(error)
   },
 );
 
