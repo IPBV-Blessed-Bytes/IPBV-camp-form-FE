@@ -13,7 +13,7 @@ const CpfData = ({ cpfValues }) => {
   const [rideOffer, setRideOffer] = useState(null);
   const [rideNeed, setRideNeed] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
 
   const paymentMethodMapping = {
     creditCard: 'Cartão de Crédito',
@@ -85,7 +85,7 @@ const CpfData = ({ cpfValues }) => {
                   <Button
                     variant="warning"
                     onClick={() => {
-                      navigateTo('/verificacao');
+                      navigate('/verificacao');
                     }}
                     size="lg"
                   >
@@ -96,7 +96,7 @@ const CpfData = ({ cpfValues }) => {
             </Card.Body>
           </Card>
         </div>
-        <Footer />
+        <Footer onAdminClick={() => navigate('/admin')}/>
       </div>
     );
   }
@@ -255,7 +255,7 @@ const CpfData = ({ cpfValues }) => {
             <Button
               variant="warning"
               onClick={() => {
-                navigateTo('/verificacao');
+                navigate('/verificacao');
               }}
               size="lg"
             >
@@ -265,7 +265,7 @@ const CpfData = ({ cpfValues }) => {
         </Card>
       </div>
       <Loading loading={loading} />
-      <Footer />
+      <Footer onAdminClick={() => navigate('/admin')}/>
     </div>
   );
 };
