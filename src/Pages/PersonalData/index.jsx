@@ -137,7 +137,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                     <option value="" disabled>
                       Selecione uma opção
                     </option>
-                    <option value="Criança">Criança (até 10 anos)</option>
+                    <option value="Crianca">Criança (até 10 anos)</option>
                     <option value="Homem">Adulto Masculino</option>
                     <option value="Mulher">Adulto Feminimo</option>
                   </Form.Select>
