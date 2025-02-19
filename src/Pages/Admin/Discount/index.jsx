@@ -162,7 +162,7 @@ const AdminDiscount = ({ loggedUsername }) => {
   };
 
   return (
-    <Container fluid>
+    <Container className="discounts" fluid>
       <AdminHeader
         pageName="Gerenciamento de Descontos"
         sessionTypeIcon="discount"

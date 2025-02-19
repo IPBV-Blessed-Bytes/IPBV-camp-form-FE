@@ -365,6 +365,15 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
+.rooms, .discounts {
+  .table-tools__left-buttons,
+  .table-tools__right-buttons {
+    @media (max-width: $md) {
+      display: flex !important;
+    }
+  }
+}
+
 .form-check-input {
   border: 1px solid $black;
   box-shadow:
