@@ -1,17 +1,15 @@
 import { expect, mergeTests } from '@playwright/test';
 import { userCreationTest } from 'tests/fixtures/userCreationTest';
 import { authenticationTest } from 'tests/fixtures/authenticationTest';
-
 import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(authenticationTest, userCreationTest);
 
 test.describe('User Creation number flow', () => {
   test('Verify if it is possible to create, edit and delete a user', async ({ authentication, userCreation }) => {
-    await authentication.goToAdminPage();
+    const testCredentials = testsConfig.users.testUser;
 
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    await authentication.login(testCredentials);
 
     await userCreation.openUsersManagementPage();
     await expect(userCreation.usersManagementHeading).toBeVisible();
@@ -41,10 +39,8 @@ test.describe('User Creation number flow', () => {
     authentication,
     userCreation,
   }) => {
-    await authentication.goToAdminPage();
-
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    const testCredentials = testsConfig.users.testUser;
+    await authentication.login(testCredentials);
 
     await userCreation.openUsersManagementPage();
     await expect(userCreation.usersManagementHeading).toBeVisible();

@@ -7,10 +7,9 @@ const test = mergeTests(authenticationTest, extraMealsTest);
 
 test.describe('Extra Meals flow', () => {
   test('Verify if it is possible to view extra meals previously created', async ({ authentication, extraMeals }) => {
-    await authentication.goToAdminPage();
+    const testCredentials = testsConfig.users.testUser;
 
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    await authentication.login(testCredentials);
 
     await extraMeals.extraMealsButton.click();
     await expect(extraMeals.extraMealsHeading).toBeVisible();

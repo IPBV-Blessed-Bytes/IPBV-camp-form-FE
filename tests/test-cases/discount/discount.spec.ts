@@ -7,10 +7,9 @@ const test = mergeTests(discountTest, authenticationTest);
 
 test.describe('Discount table flow', () => {
   test('Verify if it is possible to create, edit and delete a discount', async ({ authentication, discount }) => {
-    await authentication.goToAdminPage();
+    const testCredentials = testsConfig.users.testUser;
 
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    await authentication.login(testCredentials);
     await discount.discountButton.click();
     await expect(discount.discountHeading).toBeVisible();
 

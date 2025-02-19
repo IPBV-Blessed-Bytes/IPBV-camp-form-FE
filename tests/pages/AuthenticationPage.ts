@@ -32,6 +32,7 @@ export class AuthenticationComponent {
   }
 
   async login(user: { email: string; password: string }) {
+    await this.goToAdminPage();
     await this.fillUsername(user.email);
     await this.fillPassword(user.password);
     await this.signInButton.click();

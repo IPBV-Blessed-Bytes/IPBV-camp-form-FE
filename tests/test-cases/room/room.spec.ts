@@ -7,10 +7,9 @@ const test = mergeTests(roomTest, authenticationTest);
 
 test.describe('Room flow', () => {
   test('Verify if it is possible to create, add campers and delete a room', async ({ authentication, room }) => {
-    await authentication.goToAdminPage();
+    const testCredentials = testsConfig.users.testUser;
 
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    await authentication.login(testCredentials);
 
     await room.roomsButton.click();
     await expect(room.roomsHeading).toBeVisible();
