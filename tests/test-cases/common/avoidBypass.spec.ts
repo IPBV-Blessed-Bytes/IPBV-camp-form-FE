@@ -22,7 +22,6 @@ test.describe('Avoid Bypass', () => {
   }) => {
     const checkerUser = testsConfig.users.checkerUser;
 
-    await authentication.goToAdminPage();
     await authentication.login(checkerUser);
     await page.waitForResponse(`${BASE_URL}/auth/login`);
     await avoidBypass.goToAllowedPage();

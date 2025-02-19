@@ -7,10 +7,9 @@ const test = mergeTests(adminHomeTest, authenticationTest);
 
 test.describe('Admin home flow', () => {
   test('Verify admin navigation for all sections', async ({ authentication, adminHome }) => {
-    await authentication.goToAdminPage();
+    const testCredentials = testsConfig.users.testUser;
 
-    const adminPassword = testsConfig.users.testUser;
-    await authentication.login(adminPassword);
+    await authentication.login(testCredentials);
 
     for (let i = 0; i < adminHome.cardsItems.length; i++) {
       const section = adminHome.cardsItems[i];

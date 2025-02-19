@@ -17,9 +17,9 @@ test.describe('Authentication flow', () => {
   });
 
   test('Verify if it is possible to show and hide the login password', async ({ authentication }) => {
-    const adminPassword = testsConfig.users.adminUser.password;
+    const testCredentials = testsConfig.users.adminUser.password;
 
-    await authentication.fillPassword(adminPassword);
+    await authentication.fillPassword(testCredentials);
     await authentication.eyeIcon.click();
     await expect(authentication.passwordInput).toHaveAttribute('type', 'text');
     await authentication.eyeIcon.click();
