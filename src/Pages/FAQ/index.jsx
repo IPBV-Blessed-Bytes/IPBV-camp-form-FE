@@ -175,32 +175,33 @@ const FAQ = () => {
                   <ul className="my-2">
                     <li className="mb-2">
                       <b>Colégio:</b> <br />
-                      Colchão, extensão, ventilador, Bíblia, repelente, roupas de cama, toalha, itens de uso pessoal,
-                      roupa de piscina
+                      Colchão, roupa de cama, travesseiro, extensão, adaptador &quot;T&quot;, ventilador, Bíblia,
+                      repelente, roupas de cama, toalha, itens de uso pessoal, garrafa de água, roupa de piscina
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
-                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
+                      , roupa de frio, fantasia (camisa de herói, personagens, etc), e camisas de time de futebol, sendo
+                      esses dois últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                     <li className="mb-2">
                       <b>Seminário:</b> <br />
-                      Extensão, ventilador, Bíblia, repelente, toalha, itens de uso pessoal, roupa de piscina
+                      Roupa de cama, travesseiro, extensão, adaptador &quot;T&quot;, ventilador, Bíblia, repelente,
+                      toalha, itens de uso pessoal, garrafa de água, roupa de piscina
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
-                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
+                      , roupa de frio, fantasia (camisa de herói, personagens, etc), e camisas de time de futebol, sendo
+                      esses dois últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                     <li>
                       <b>Externo:</b>
                       <br />
-                      Bíblia, repelente, itens de uso pessoal, roupa de piscina
+                      Bíblia, repelente, itens de uso pessoal, garrafa de água, roupa de piscina
                       <span className="text-danger">
                         <b>*</b>
                       </span>
-                      , fantasia (camisa de herói, personagens, etc) e camisas de time de futebol, sendo esses dois
-                      últimos opcionais para as noites da fantasia e futebol, respectivamente.
+                      , roupa de frio, fantasia (camisa de herói, personagens, etc), e camisas de time de futebol, sendo
+                      esses dois últimos opcionais para as noites da fantasia e futebol, respectivamente.
                     </li>
                   </ul>
                   <span className="text-danger">
