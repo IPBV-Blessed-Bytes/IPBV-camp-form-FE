@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -18,6 +19,8 @@ const AdminSeatManagement = ({
   onUpdateTotalPackages,
   loading,
 }) => {
+  const [loadingContent, setLoadingContent] = useState(false);
+
   const packageLabels = {
     schoolIndividual: 'Colégio Individual',
     schoolFamily: 'Colégio Família',
@@ -41,6 +44,8 @@ const AdminSeatManagement = ({
     }
 
     try {
+      setLoadingContent(true);
+
       await fetcher.put('package-count', {
         totalSeats: totalSeats,
         totalPackages,
@@ -50,6 +55,8 @@ const AdminSeatManagement = ({
     } catch (error) {
       console.error(error);
       toast.error(error);
+    } finally {
+      setLoadingContent(false);
     }
   };
 
@@ -60,6 +67,8 @@ const AdminSeatManagement = ({
     }
 
     try {
+      setLoadingContent(true);
+
       await fetcher.put('package-count/total-bus-vacancies', {
         totalBusVacancies: totalBusVacancies,
       });
@@ -68,6 +77,8 @@ const AdminSeatManagement = ({
     } catch (error) {
       console.error(error);
       toast.error(error);
+    } finally {
+      setLoadingContent(false);
     }
   };
 
@@ -139,7 +150,7 @@ const AdminSeatManagement = ({
           </Form>
         </Col>
       </Row>
-      <Loading loading={loading} />
+      <Loading loading={loading || loadingContent} />
     </Container>
   );
 };
