@@ -384,7 +384,7 @@ const SiteRoutes = () => {
             }
           />
           <Route
-            path="/admin/cupom"
+            path="/admin/descontos"
             element={
               <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
                 <AdminDiscount loggedUsername={splitedLoggedUsername} />

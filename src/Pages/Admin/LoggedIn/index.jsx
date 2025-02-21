@@ -75,7 +75,7 @@ const AdminLoggedIn = ({
   };
 
   const handleDiscountClick = () => {
-    navigate('/admin/cupom');
+    navigate('/admin/descontos');
   };
 
   const handleRoomsClick = () => {
