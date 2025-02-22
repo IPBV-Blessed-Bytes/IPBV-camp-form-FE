@@ -17,9 +17,9 @@ const packageSchool = ({ age, withTransportation, withFood }) => {
   }
 
   // Transporte
-  if (age <= 6) {
+  if (age <= 5) {
     transportation = withTransportation ? [190, 0] : [0];
-    transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
+    transportationDiscountDescription = 'criança até 5 anos não paga transporte *(no colo dos pais)';
   } else if (age >= 7 && age <= 12) {
     transportation = withTransportation ? [190] : [0];
   }
@@ -63,9 +63,9 @@ const packageSeminary = ({ age, withTransportation, withFood }) => {
   }
 
   // Transporte
-  if (age <= 6) {
+  if (age <= 5) {
     transportation = withTransportation ? [190, 0] : [0];
-    transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
+    transportationDiscountDescription = 'criança até 5 anos não paga transporte *(no colo dos pais)';
   }
 
   // Hospedagem
@@ -118,9 +118,9 @@ const packageOther = ({ age, withTransportation, withFood }) => {
   }
 
   // Transporte
-  if (age <= 6) {
+  if (age <= 5) {
     transportation = withTransportation ? [190, 0] : [0];
-    transportationDiscountDescription = 'Criança até 6 anos não paga transporte *(no colo dos pais)';
+    transportationDiscountDescription = 'criança até 5 anos não paga transporte *(no colo dos pais)';
   }
 
   // Hospedagem
