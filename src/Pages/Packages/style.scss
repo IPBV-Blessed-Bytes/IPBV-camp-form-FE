@@ -55,6 +55,7 @@
 
 .card-disabled {
   cursor: not-allowed;
+  background: $light-red;
 
   &:hover {
     transform: none;
