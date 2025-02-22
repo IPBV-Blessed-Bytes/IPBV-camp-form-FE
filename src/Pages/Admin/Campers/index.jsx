@@ -586,13 +586,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Categoria:',
-        accessor: 'personalInformation.gender',
+        accessor: (row) => row.personalInformation.gender?.replace(/ç/g, 'c') || '-',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Homem', label: 'Adulto Masculino' },
-              { value: 'Mulher', label: 'Adulto Feminimo' },
+              { value: 'Mulher', label: 'Adulto Feminino' },
               { value: 'Crianca', label: 'Criança (até 10 anos)' },
             ]}
             onFilterChange={() => {
@@ -601,7 +601,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) => value.replace(/c/g, 'ç') || '-',
       },
       {
         Header: 'Celular:',
@@ -687,7 +687,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Acomodação:',
-        accessor: 'package.accomodationName',
+        accessor: (row) =>
+          row.package.accomodationName
+            ?.replace(/á|ã|à|â/g, 'a')
+            .replace(/é|ê/g, 'e')
+            .replace(/í/g, 'i')
+            .replace(/ó|ô/g, 'o')
+            .replace(/ú/g, 'u')
+            .replace(/ç/g, 'c') || '-',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -706,7 +713,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Sub Acomodação:',
-        accessor: 'package.subAccomodation',
+        accessor: (row) =>
+          row.package.subAccomodation
+            ?.replace(/á|ã|à|â/g, 'a')
+            .replace(/é|ê/g, 'e')
+            .replace(/í/g, 'i')
+            .replace(/ó|ô/g, 'o')
+            .replace(/ú/g, 'u')
+            .replace(/ç/g, 'c') || '-',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -732,8 +746,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           <ColumnFilterWithSelect
             column={column}
             options={[
-              { value: 'Com Onibus', label: 'Com Ônibus' },
-              { value: 'Sem Onibus', label: 'Sem Ônibus' },
+              { value: 'Com Ônibus', label: 'Com Ônibus' },
+              { value: 'Sem Ônibus', label: 'Sem Ônibus' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -742,10 +756,23 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
+        filter: (rows, id, filterValue) => {
+          return rows.filter((row) => {
+            const normalizedValue = row.values[id]?.toLowerCase().replace('onibus', 'ônibus');
+            return normalizedValue === filterValue.toLowerCase();
+          });
+        },
       },
       {
         Header: 'Alimentação:',
-        accessor: 'package.food',
+        accessor: (row) =>
+          row.package.food
+            ?.replace(/á|ã|à|â/g, 'a')
+            .replace(/é|ê/g, 'e')
+            .replace(/í/g, 'i')
+            .replace(/ó|ô/g, 'o')
+            .replace(/ú/g, 'u')
+            .replace(/ç/g, 'c') || '-',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
