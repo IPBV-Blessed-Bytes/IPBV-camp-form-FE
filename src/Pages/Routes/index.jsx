@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { enumSteps, initialValues } from './constants';
-import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
-import { BASE_URL } from '@/config/index';
+import { USER_STORAGE_KEY, USER_STORAGE_ROLE, BASE_URL } from '@/config';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
