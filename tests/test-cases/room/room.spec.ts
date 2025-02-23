@@ -16,8 +16,8 @@ test.describe('Room flow', () => {
     await room.createNewRoom();
 
     await room.fillRoom();
-    await expect(room.campersInsideRoom.nth(0)).toHaveText('Acsa Gabriely Farias Nascimento Souza');
-    await expect(room.campersInsideRoom.nth(1)).toHaveText('Agatha Gabriela Paiva de Lima');
+    await expect(room.campersInsideRoom.nth(0)).toHaveText('Acsa Gabriely Farias Nascimento Souza - ');
+    await expect(room.campersInsideRoom.nth(1)).toHaveText('Agatha Gabriela Paiva de Lima - ');
 
     await room.deleteRoomButton.click();
     await expect(room.confirmDeleteRoomModal).toBeVisible();
