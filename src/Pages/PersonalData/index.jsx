@@ -36,10 +36,12 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                   const matchingCoupon = coupons.find((coupon) => coupon.cpf === values.cpf);
 
                   if (matchingCoupon) {
-                    await axios.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
-                      ...matchingCoupon,
-                      user: formUsername,
-                    });
+                    if (!matchingCoupon.user) {
+                      await axios.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
+                        ...matchingCoupon,
+                        user: formUsername,
+                      });
+                    }
                   }
                 }
               } catch (error) {
