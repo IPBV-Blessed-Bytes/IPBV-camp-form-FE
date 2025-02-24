@@ -239,7 +239,7 @@ const FAQ = () => {
             </Accordion>
             <div className="d-flex justify-content-end mt-4">
               <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
-                Voltar pro formulário
+                Voltar pro Início
               </Button>
             </div>
           </Card.Body>
