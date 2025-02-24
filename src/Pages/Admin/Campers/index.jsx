@@ -1157,7 +1157,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       for (let key in obj) {
         let propName = parent ? `${parent}.${key}` : key;
 
-        if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        if (Array.isArray(obj[key])) {
+          res[fieldMapping[propName] || propName] = obj[key].join(' | ');
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
           flattenObject(obj[key], propName, res);
         } else {
           let value = obj[key];
