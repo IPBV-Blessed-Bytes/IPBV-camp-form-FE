@@ -1,9 +1,8 @@
 import CloseForm from './Pages/CloseForm';
-import Offline from './Pages/Offline';
 import FormRoutes from './Pages/Routes';
 
 function App() {
-  const toggleSite = 'form-on';
+  const formContext = 'form-on';
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
@@ -13,17 +12,16 @@ function App() {
 
   return (
     <>
-      {toggleSite === 'form-on' && <FormRoutes />}
-      {toggleSite === 'form-off' && <Offline />}
-      {toggleSite === 'form-closed' && <CloseForm />}
-      {toggleSite === 'maintenance' && (
+      {(formContext === 'form-on' || formContext === 'form-off') && <FormRoutes formContext={formContext} />}
+      {formContext === 'form-closed' && <CloseForm />}
+      {formContext === 'maintenance' && (
         <>
           <b className="display-6 d-flex flex-column align-items-center px-4 mt-5">
             SITE EM MANUTENÇÃO. RETORNE EM OUTRO MOMENTO!
           </b>
         </>
       )}
-      {toggleSite === 'google-forms' && (
+      {formContext === 'google-forms' && (
         <div
           style={{
             width: '100vw',

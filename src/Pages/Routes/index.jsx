@@ -5,6 +5,7 @@ import { USER_STORAGE_KEY, USER_STORAGE_ROLE, BASE_URL } from '@/config';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
+import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
@@ -36,8 +37,9 @@ import AdminUsersManagement from '../Admin/UsersManagement';
 import AdminFeedback from '../Admin/Feedback';
 import AdminDataPanel from '../Admin/DataPanel';
 import FAQ from '../FAQ';
+import Offline from '../Offline';
 
-const SiteRoutes = () => {
+const SiteRoutes = ({ formContext }) => {
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -161,7 +163,7 @@ const SiteRoutes = () => {
         toast.error('Erro ao criar checkout');
       }
     } catch (error) {
-	  const errorMessage = error?.response?.data || 'Ocorreu um erro';
+      const errorMessage = error?.response?.data || 'Ocorreu um erro';
       setStatus('error');
       toast.error(errorMessage);
     } finally {
@@ -256,97 +258,110 @@ const SiteRoutes = () => {
         isNotVerifyingDataPathname &&
         isNotFaqPathname && (
           <div className="components-container">
-            <Header currentStep={steps} goBackToStep={goBackToStep} formSubmitted={formSubmitted} showNavMenu={true} />
+            {formContext === 'form-off' && <Offline />}
 
-            <div className="form__container">
-              {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} backStep={backStep} />}
-
-              {steps === enumSteps.personalData && isNotSuccessPathname && (
-                <FormPersonalData
-                  initialValues={formValues.personalInformation}
-                  nextStep={nextStep}
-                  backStep={backStep}
-                  updateForm={updateFormValues('personalInformation')}
-                  onDiscountChange={handleDiscountChange}
-                  formUsername={formValues.personalInformation.name}
+            {formContext === 'form-on' && (
+              <>
+                <Header
+                  currentStep={steps}
+                  goBackToStep={goBackToStep}
+                  formSubmitted={formSubmitted}
+                  showNavMenu={true}
                 />
-              )}
 
-              {steps === enumSteps.contact && isNotSuccessPathname && (
-                <FormContact
-                  initialValues={formValues.contact}
-                  nextStep={nextStep}
-                  backStep={backStep}
-                  updateForm={updateFormValues('contact')}
-                />
-              )}
+                <div className="form__container">
+                  {steps === enumSteps.home && isNotSuccessPathname && (
+                    <FormHome nextStep={nextStep} backStep={backStep} />
+                  )}
 
-              {steps === enumSteps.packages && isNotSuccessPathname && (
-                <FormPackages
-                  age={age}
-                  nextStep={nextStep}
-                  backStep={backStep}
-                  updateForm={updateFormValues('package')}
-                  sendForm={sendForm}
-                  availablePackages={availablePackages}
-                  totalRegistrationsGlobal={totalRegistrations}
-                  discountValue={discount}
-                  hasDiscount={hasDiscount}
-                  totalSeats={totalSeats}
-                  totalBusVacancies={totalBusVacancies}
-                  totalValidWithBus={totalRegistrations.totalValidWithBus}
-                />
-              )}
-
-              {steps === enumSteps.extraMeals && isNotSuccessPathname && (
-                <ExtraMeals
-                  birthDate={formValues.personalInformation.birthday}
-                  backStep={backStep}
-                  nextStep={nextStep}
-                  initialValues={formValues.extraMeals}
-                  updateForm={updateFormValues('extraMeals')}
-                />
-              )}
-
-              {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                <FinalReview
-                  nextStep={nextStep}
-                  backStep={backStep}
-                  formValues={formValues}
-                  sendForm={sendForm}
-                  status={status}
-                />
-              )}
-
-              {steps === enumSteps.formPayment && isNotSuccessPathname && (
-                <ChooseFormPayment
-                  initialValues={formValues}
-                  skipTwoSteps={skipTwoSteps}
-                  backStep={backStep}
-                  updateForm={updateFormValues('formPayment')}
-                  sendForm={sendForm}
-                  loading={loading}
-                  status={status}
-                />
-              )}
-
-              <Routes>
-                <Route
-                  path="/sucesso"
-                  element={
-                    <FormSuccess
-                      initialStep={initialStep}
-                      resetForm={resetFormValues}
-                      resetFormSubmitted={resetFormSubmitted}
+                  {steps === enumSteps.personalData && isNotSuccessPathname && (
+                    <FormPersonalData
+                      initialValues={formValues.personalInformation}
+                      nextStep={nextStep}
+                      backStep={backStep}
+                      updateForm={updateFormValues('personalInformation')}
+                      onDiscountChange={handleDiscountChange}
+                      formUsername={formValues.personalInformation.name}
                     />
-                  }
-                />
-              </Routes>
-            </div>
+                  )}
 
-            <InfoButton timeout />
+                  {steps === enumSteps.contact && isNotSuccessPathname && (
+                    <FormContact
+                      initialValues={formValues.contact}
+                      nextStep={nextStep}
+                      backStep={backStep}
+                      updateForm={updateFormValues('contact')}
+                    />
+                  )}
 
-            <Footer onAdminClick={handleAdminClick} />
+                  {steps === enumSteps.packages && isNotSuccessPathname && (
+                    <FormPackages
+                      age={age}
+                      nextStep={nextStep}
+                      backStep={backStep}
+                      updateForm={updateFormValues('package')}
+                      sendForm={sendForm}
+                      availablePackages={availablePackages}
+                      totalRegistrationsGlobal={totalRegistrations}
+                      discountValue={discount}
+                      hasDiscount={hasDiscount}
+                      totalSeats={totalSeats}
+                      totalBusVacancies={totalBusVacancies}
+                      totalValidWithBus={totalRegistrations.totalValidWithBus}
+                    />
+                  )}
+
+                  {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+                    <ExtraMeals
+                      birthDate={formValues.personalInformation.birthday}
+                      backStep={backStep}
+                      nextStep={nextStep}
+                      initialValues={formValues.extraMeals}
+                      updateForm={updateFormValues('extraMeals')}
+                    />
+                  )}
+
+                  {steps === enumSteps.finalReview && isNotSuccessPathname && (
+                    <FinalReview
+                      nextStep={nextStep}
+                      backStep={backStep}
+                      formValues={formValues}
+                      sendForm={sendForm}
+                      status={status}
+                    />
+                  )}
+
+                  {steps === enumSteps.formPayment && isNotSuccessPathname && (
+                    <ChooseFormPayment
+                      initialValues={formValues}
+                      skipTwoSteps={skipTwoSteps}
+                      backStep={backStep}
+                      updateForm={updateFormValues('formPayment')}
+                      sendForm={sendForm}
+                      loading={loading}
+                      status={status}
+                    />
+                  )}
+
+                  <Routes>
+                    <Route
+                      path="/sucesso"
+                      element={
+                        <FormSuccess
+                          initialStep={initialStep}
+                          resetForm={resetFormValues}
+                          resetFormSubmitted={resetFormSubmitted}
+                        />
+                      }
+                    />
+                  </Routes>
+                </div>
+
+                <InfoButton timeout />
+
+                <Footer onAdminClick={handleAdminClick} />
+              </>
+            )}
           </div>
         )}
 
@@ -369,7 +384,10 @@ const SiteRoutes = () => {
           <Route
             path="/admin/acampantes"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}>
+              <ProtectedRoute
+                userRole={loggedUserRole}
+                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
+              >
                 <AdminCampers loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
               </ProtectedRoute>
             }
@@ -487,6 +505,10 @@ const SiteRoutes = () => {
       </div>
     </div>
   );
+};
+
+SiteRoutes.propTypes = {
+  formContext: PropTypes.string,
 };
 
 export default SiteRoutes;
