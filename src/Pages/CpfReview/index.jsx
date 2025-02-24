@@ -75,7 +75,7 @@ const CpfReview = ({ onPersonDataFetch }) => {
               </Row>
               <Form onSubmit={handleSubmit}>
                 <Row>
-                  <Col md={6} className='mb-4'>
+                  <Col md={6} className="mb-4">
                     <Form.Group>
                       <Form.Label>
                         <b>CPF:</b>
@@ -123,6 +123,11 @@ const CpfReview = ({ onPersonDataFetch }) => {
                   </Col>
                 </Row>
                 <Row className="justify-content-end align-items-center mt-4">
+                  <Col md={6}>
+                    <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
+                      Voltar pro Início
+                    </Button>
+                  </Col>
                   <Col className="justify-content-end d-flex" md={6}>
                     <Button type="submit" variant="success" size="lg">
                       Consultar
