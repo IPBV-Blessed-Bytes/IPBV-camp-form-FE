@@ -1,9 +1,12 @@
 import { Container, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 
 const Offline = () => {
+    const navigate = useNavigate();
+  
   return (
     <>
       <Header />
@@ -14,7 +17,7 @@ const Offline = () => {
               <div className="form__success text-center">
                 <div className="form__success__title">
                   <h2>
-                    <b>As inscrições para o acampamento de 2025 começarão em breve. Aguarde!</b>
+                    <b>As inscrições para o acampamento de 2025 foram encerradas. Nos vemos no sábado em Garanhuns!</b>
                   </h2>
                 </div>
                 <p className="form__success__message"></p>
@@ -32,7 +35,7 @@ const Offline = () => {
           </Card.Body>
         </Card>
       </div>
-      <Footer />
+      <Footer onAdminClick={() => navigate('/admin')}/>
     </>
   );
 };
