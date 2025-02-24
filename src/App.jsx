@@ -2,7 +2,7 @@ import CloseForm from './Pages/CloseForm';
 import FormRoutes from './Pages/Routes';
 
 function App() {
-  const formContext = 'form-on';
+  const formContext = 'form-off';
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
