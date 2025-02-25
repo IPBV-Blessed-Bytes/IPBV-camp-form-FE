@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -239,7 +239,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     },
   ];
 
-  const validateFields = () => {
+  const validateFields = useCallback(() => {
     const missing = [];
 
     fields.forEach((field) => {
@@ -255,7 +255,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     });
 
     return missing;
-  };
+  }, [addFormData, editFormData, fields]);
 
   useEffect(() => {
     const missing = validateFields();
@@ -263,7 +263,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     if (JSON.stringify(missing) !== JSON.stringify(missingFields)) {
       setMissingFields(missing);
     }
-  }, [addFormData, editFormData, missingFields, validateFields]);
+  }, [validateFields]);
 
   return (
     <Row>
