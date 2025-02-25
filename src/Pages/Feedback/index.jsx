@@ -181,7 +181,7 @@ const Feedback = () => {
                     )}
                   </Form.Label>
                   <Col sm="6">
-                    {['Excelente', 'Boa', 'Regular', 'Ruim', 'Não quero opinar'].map((option, index) => (
+                    {['Excelente', 'Boa', 'Regular', 'Precisa melhorar', 'Não quero opinar'].map((option, index) => (
                       <Form.Check
                         key={option}
                         type="radio"
@@ -211,7 +211,7 @@ const Feedback = () => {
                   </Form.Label>
                   <Col sm="6">
                     {[
-                      'Muito boa e diversificada',
+                      'Excelente',
                       'Boa',
                       'Poderia ter mais variedade',
                       'Não gostei das atividades',
@@ -286,7 +286,7 @@ const Feedback = () => {
                       'Sim, completamente',
                       'Sim, em parte',
                       'Não muito',
-                      'Não, me senti excluído(a)',
+                      'Não, me senti deslocado(a)',
                       'Não quero opinar',
                     ].map((option, index) => (
                       <Form.Check
