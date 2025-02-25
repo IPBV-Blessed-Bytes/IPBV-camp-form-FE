@@ -5,20 +5,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ColumnsFields from './ColumnsFields';
 import { packages, issuingState, rgShipper, food } from '@/Pages/Routes/constants';
 
-const Columns = ({
-  addFormData,
-  editFormData,
-  handleFormChange,
-  addForm,
-  editForm,
-  formSubmitted,
-  currentDate,
-}) => {
+const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate }) => {
   const [missingFields, setMissingFields] = useState([]);
 
   const packageOptions = packages.map((pkg) => ({
     label: pkg.label,
     value: pkg.value,
+  }));
+
+  const removeAccents = (str) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  };
+
+  const normalizedFoodOptions = food.map((item) => ({
+    value: removeAccents(item.value),
+    label: item.label,
   }));
 
   const fields = [
@@ -209,7 +210,7 @@ const Columns = ({
       type: 'select',
       placeholder: 'Selecione a alimentação',
       oddOrEven: 'odd',
-      options: food,
+      options: normalizedFoodOptions,
     },
     {
       label: 'Refeição Extra',
@@ -278,12 +279,12 @@ const Columns = ({
             ? editFormData.registrationDate
             : currentDate
           : isEditForm
-            ? isNestedField
-              ? getNestedValue(editFormData)
-              : editFormData[field.name]
-            : isNestedField
-              ? getNestedValue(addFormData)
-              : addFormData[field.name];
+          ? isNestedField
+            ? getNestedValue(editFormData)
+            : editFormData[field.name]
+          : isNestedField
+          ? getNestedValue(addFormData)
+          : addFormData[field.name];
 
         return (
           <ColumnsFields
