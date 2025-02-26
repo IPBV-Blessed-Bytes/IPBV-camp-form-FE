@@ -73,8 +73,9 @@ const FAQ = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                   Sim, você pode cancelar sua inscrição. Os pedidos de cancelamento devem ser feitos até 7 dias antes do
-                  acampamento, sendo definida a data de 22/02/25. Após esse prazo, não haverá reembolso. Caso haja
-                  necessidade de cancelamento, entre em contato com a secretaria da IPBV pelo número (81) 9 9839-0194.
+                  acampamento, sendo definida a data de 22/02/25 e tendo como valor máximo 50% do valor total. Após esse
+                  prazo, não haverá reembolso. Caso haja necessidade de cancelamento, entre em contato com a secretaria
+                  da IPBV pelo número (81) 9 9839-0194.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="6">
