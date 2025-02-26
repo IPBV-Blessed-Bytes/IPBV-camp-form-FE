@@ -3,8 +3,10 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { parse } from 'date-fns';
-import ptBR from 'date-fns/locale/pt';
-import DatePicker from 'react-datepicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ptBR } from 'date-fns/locale';
 import InputMask from 'react-input-mask';
 import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '../../form/validations/schema';
@@ -154,24 +156,23 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                   <Form.Label>
                     <b>Data de Nascimento:</b>
                   </Form.Label>
-                  <Form.Control
-                    isInvalid={!!errors.birthday}
-                    as={DatePicker}
-                    selected={parseDate(values.birthday)}
-                    onChange={handleDateChange}
-                    onBlur={() => checkAge()}
-                    locale={ptBR}
-                    autoComplete="off"
-                    dateFormat="dd/MM/yyyy"
-                    dropdownMode="select"
-                    id="birthDay"
-                    maxDate={new Date()}
-                    name="birthDay"
-                    placeholderText="dd/mm/aaaa"
-                    showMonthDropdown={true}
-                    showYearDropdown={true}
-                    title="Preencher Data de nascimento corretamente pois é ela quem calcula o valor a ser pago!"
-                  />
+                  <div className="custom-datepicker-wrapper">
+                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+                      <DatePicker
+                        value={values.birthday ? parseDate(values.birthday) : null}
+                        className="custom-datepicker"
+                        onChange={handleDateChange}
+                        onBlur={() => checkAge()}
+                        format="dd/MM/yyyy"
+                        id="birthday"
+                        name="birthday"
+                        maxDate={new Date()}
+                        openTo="year"
+                        views={['year', 'month', 'day']}
+                      />
+                    </LocalizationProvider>
+                  </div>
+
                   <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
                     {errors.birthday}
                   </Form.Control.Feedback>
