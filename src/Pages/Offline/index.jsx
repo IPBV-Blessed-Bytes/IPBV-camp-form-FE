@@ -59,6 +59,12 @@ const Offline = () => {
                     (81) 9839-0194 (Whatsapp)
                   </b>
                 </p>
+                <p>
+                  <em>
+                    Informamos que cancelamentos devem ser solicitados com, no máximo, 7 dias de antecedência da data do
+                    acampamento, com reembolso limitado a 50% do valor total.
+                  </em>
+                </p>
                 <small className="mt-5">
                   <em>Igreja Presbiteriana de Boa Viagem</em>
                 </small>
