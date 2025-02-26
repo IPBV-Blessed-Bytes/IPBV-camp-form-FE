@@ -67,6 +67,42 @@ body {
       width: 100%;
     }
 
+    .custom-datepicker-wrapper {
+      .custom-datepicker {
+        width: 100%;
+
+        .Mui-focused .MuiOutlinedInput-notchedOutline {
+          border-color: #86b7fe;
+          border-width: 1px;
+          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+          outline: 0;
+          width: 100%;
+        }
+
+        > div {
+          fieldset {
+            border-color: $alternate-gray;
+          }
+
+          &:hover {
+            border-color: transparent !important;
+
+            fieldset {
+              border-color: $alternate-gray;
+            }
+          }
+        }
+
+        > div > input {
+          height: 5px;
+
+          &:focus {
+            color: $blue !important;
+          }
+        }
+      }
+    }
+
     // Button
     &__buttons {
       align-items: center;
@@ -365,7 +401,8 @@ button.btn.btn-outline-danger:hover svg {
   }
 }
 
-.rooms, .discounts {
+.rooms,
+.discounts {
   .table-tools__left-buttons,
   .table-tools__right-buttons {
     @media (max-width: $md) {
