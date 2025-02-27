@@ -132,13 +132,12 @@ const AdminCheckin = ({ loggedUsername }) => {
     validatePackageTitle(userInfo?.package.title) === 'PACOTE 1' ||
     validatePackageTitle(userInfo?.package.title) === 'PACOTE 2' ||
     validatePackageTitle(userInfo?.package.title) === 'PACOTE 5' ||
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 6'
-      ? '#FF7F50'
-      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 9'
-      ? '#dc3545'
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 6' ||
+    validatePackageTitle(userInfo?.package.title) === 'PACOTE 9'
+      ? '#0000FF'
       : validatePackageTitle(userInfo?.package.title) === 'PACOTE 11' ||
         validatePackageTitle(userInfo?.package.title) === 'PACOTE 12'
-      ? '#65a300'
+      ? '#FF7F50'
       : validatePackageTitle(userInfo?.package.title) === 'PACOTE 13' ||
         validatePackageTitle(userInfo?.package.title) === 'PACOTE 14'
       ? '#ffc107'
