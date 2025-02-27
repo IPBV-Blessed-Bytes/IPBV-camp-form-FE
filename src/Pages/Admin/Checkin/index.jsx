@@ -128,27 +128,21 @@ const AdminCheckin = ({ loggedUsername }) => {
     return match ? match[0] : null;
   };
 
+  const packageColors = {
+    '#0000FF': ['PACOTE 1', 'PACOTE 2', 'PACOTE 5', 'PACOTE 6', 'PACOTE 9'],
+    '#FF7F50': ['PACOTE 11', 'PACOTE 12'],
+    '#ffc107': ['PACOTE 13', 'PACOTE 14'],
+    '#000': ['PACOTE 3', 'PACOTE 4', 'PACOTE 7', 'PACOTE 8', 'PACOTE 10', 'PACOTE 15'],
+  };
+
+  const packageTitle = validatePackageTitle(userInfo?.package.title);
+
   const userColor =
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 1' ||
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 2' ||
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 5' ||
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 6' ||
-    validatePackageTitle(userInfo?.package.title) === 'PACOTE 9'
-      ? '#0000FF'
-      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 11' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 12'
-      ? '#FF7F50'
-      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 13' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 14'
-      ? '#ffc107'
-      : validatePackageTitle(userInfo?.package.title) === 'PACOTE 3' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 4' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 7' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 8' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 10' ||
-        validatePackageTitle(userInfo?.package.title) === 'PACOTE 15'
-      ? '#000'
-      : '';
+    Object.entries(packageColors).find(
+      (
+        [, packages],
+      ) => packages.includes(packageTitle),
+    )?.[0] || '';
 
   return (
     <Container fluid>
