@@ -1,0 +1,25 @@
+@import '../../styles/Variables.scss';
+
+.waiting-for-camp-buttons {
+  button {
+    background-color: $light-yellow;
+    border: none;
+    border-radius: 5px;
+    color: $black;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__verify-button {
+    display: flex;
+    justify-content: center;
+  }
+}
