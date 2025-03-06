@@ -37,6 +37,7 @@ import AdminUsersManagement from '../Admin/UsersManagement';
 import AdminFeedback from '../Admin/Feedback';
 import AdminDataPanel from '../Admin/DataPanel';
 import FAQ from '../FAQ';
+import WaitingForCamp from '../WaitingForCamp';
 import Offline from '../Offline';
 
 const SiteRoutes = ({ formContext }) => {
@@ -258,8 +259,9 @@ const SiteRoutes = ({ formContext }) => {
         isNotVerifyingDataPathname &&
         isNotFaqPathname && (
           <div className="components-container">
+            {formContext === 'form-waiting' && <WaitingForCamp />}
             {formContext === 'form-off' && <Offline />}
-
+            
             {formContext === 'form-on' && (
               <>
                 <Header
