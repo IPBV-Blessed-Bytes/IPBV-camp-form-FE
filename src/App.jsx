@@ -12,7 +12,9 @@ function App() {
 
   return (
     <>
-      {(formContext === 'form-on' || formContext === 'form-off') && <FormRoutes formContext={formContext} />}
+      {(formContext === 'form-on' || formContext === 'form-off' || formContext === 'form-waiting') && (
+        <FormRoutes formContext={formContext} />
+      )}
       {formContext === 'form-closed' && <CloseForm />}
       {formContext === 'maintenance' && (
         <>
