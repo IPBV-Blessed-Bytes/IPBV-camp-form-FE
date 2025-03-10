@@ -261,7 +261,7 @@ const SiteRoutes = ({ formContext }) => {
           <div className="components-container">
             {formContext === 'form-waiting' && <WaitingForCamp />}
             {formContext === 'form-off' && <Offline />}
-            
+
             {formContext === 'form-on' && (
               <>
                 <Header
@@ -491,18 +491,22 @@ const SiteRoutes = ({ formContext }) => {
               </ProtectedRoute>
             }
           />
-
-          <Route path="/opiniao" element={<FormFeedback />} />
-          <Route
-            path="/verificacao"
-            element={<CpfReview onAdminClick={handleAdminClick} onPersonDataFetch={handlePersonData} />}
-          />
-          <Route path="/verificacao/dados" element={<CpfData cpfValues={personData} />} />
-          <Route path="/perguntas" element={<FAQ />} />
           <Route
             path="/unauthorized"
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
           />
+
+          {formContext === 'form-on' && (
+            <>
+              <Route path="/opiniao" element={<FormFeedback />} />
+              <Route
+                path="/verificacao"
+                element={<CpfReview onAdminClick={handleAdminClick} onPersonDataFetch={handlePersonData} />}
+              />
+              <Route path="/verificacao/dados" element={<CpfData cpfValues={personData} />} />
+              <Route path="/perguntas" element={<FAQ />} />
+            </>
+          )}
         </Routes>
       </div>
     </div>
