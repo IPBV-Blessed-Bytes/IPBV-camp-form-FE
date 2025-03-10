@@ -84,7 +84,6 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
   };
 
   const checkAge = () => {
-    console.log('veio');
     if (values.birthday) {
       const age = calculateAge(values.birthday);
       if (age !== null) {
