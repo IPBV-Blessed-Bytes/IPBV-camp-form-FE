@@ -116,6 +116,9 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
   const handleCancelAge = () => {
     setFieldValue('birthday', '');
+    toast.info(
+      'Como você não confirmou sua idade na data do acampamento, o campo foi resetado para que possa preenchê-lo corretamente.',
+    );
     setShowModal(false);
     setShowLegalGuardianFields(false);
   };
