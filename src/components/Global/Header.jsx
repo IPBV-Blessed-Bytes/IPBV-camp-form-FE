@@ -27,7 +27,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   return (
     <header className="form__header">
       <h2>
-        <a className="header-title" href="/">ACAMPAMENTO IPBV 2025</a>
+        <a className="header-title" href="/">ACAMPAMENTO IPBV 2026</a>
       </h2>
       {showNavMenu && (
         <Breadcrumb className="mt-4">
