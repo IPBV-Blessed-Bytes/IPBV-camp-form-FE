@@ -54,6 +54,11 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
           Controle de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
         </Button>
+
+        <Button className="settings-message-button" onClick={() => navigate('/admin/contexto')}>
+          Contexto do Formulário&nbsp;
+          <Icons className="settings-icons" typeIcon="form-context" iconSize={25} fill={'#fff'} />
+        </Button>
       </div>
     </>
   );

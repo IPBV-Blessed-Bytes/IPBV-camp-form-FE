@@ -32,6 +32,7 @@ import AdminSeatManagement from '../Pages/Admin/SeatManagement';
 import AdminUsersManagement from '../Pages/Admin/UsersManagement';
 import AdminFeedback from '../Pages/Admin/Feedback';
 import AdminDataPanel from '../Pages/Admin/DataPanel';
+import AdminFormContext from '@/Pages/Admin/FormContext';
 
 import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
@@ -293,6 +294,14 @@ const FormRoutes = ({
                   onUpdateTotalPackages={handleUpdateTotalPackages}
                   loading={loading}
                 />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/contexto"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+                <AdminFormContext loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
