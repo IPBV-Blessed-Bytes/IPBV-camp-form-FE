@@ -237,6 +237,17 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       placeholder: 'Observação sobre essa inscrição',
       oddOrEven: 'even',
     },
+    {
+      label: 'Equipe',
+      name: 'crew',
+      type: 'select',
+      placeholder: 'Selecione se é equipante',
+      oddOrEven: 'odd',
+      options: [
+        { label: 'Sim', value: true },
+        { label: 'Não', value: false },
+      ],
+    },
   ];
 
   const validateFields = useCallback(() => {

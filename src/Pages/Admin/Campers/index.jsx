@@ -924,6 +924,25 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
+        Header: 'Equipe:',
+        accessor: 'crew',
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithCrew',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+      },
+      {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
         Filter: ({ column }) => (
@@ -1009,6 +1028,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
+  const selectWithCrew = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.crew === filterValue;
+    });
+  };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -1041,6 +1067,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithCoupon,
         selectWithCheckin,
         selectWithManualRegistration,
+        selectWithCrew
       },
     },
     useFilters,
@@ -1103,6 +1130,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'extraMeals.extraMeals': 'Refeições Extra',
       'extraMeals.totalPrice': 'Valor Refeição Extra',
       observation: 'Observação',
+      crew: 'Equipe',
       manualRegistration: 'Inscrição Manual',
       'package.discountCoupon': 'Cupom de Desconto',
       'package.discountValue': 'Valor do Desconto',
@@ -1145,6 +1173,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Refeições Extra',
       'Valor Refeição Extra',
       'Observação',
+      'Equipe',
       'Inscrição Manual',
       'Cupom de Desconto',
       'Valor do Desconto',
