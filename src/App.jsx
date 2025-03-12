@@ -1,14 +1,29 @@
+import { useState, useEffect } from 'react';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 
 function App() {
-  const formContext = 'form-off';
+  const [formContext, setFormContext] = useState('');
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
       return;
     }
   };
+
+  const fetchFormContext = async () => {
+    try {
+      const response = await fetcher.get('form-context');
+      setFormContext(response);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFormContext();
+  }, []);
 
   return (
     <>
