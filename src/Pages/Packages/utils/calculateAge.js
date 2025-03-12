@@ -1,12 +1,11 @@
 function calculateAge(date) {
-  const today = new Date();
+  const eventDate = new Date('2026-02-14');
   const birthDate = new Date(date);
 
-  let age = today.getFullYear() - birthDate.getFullYear();
+  let age = eventDate.getFullYear() - birthDate.getFullYear();
+  const monthDiff = eventDate.getMonth() - birthDate.getMonth();
 
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+  if (monthDiff < 0 || (monthDiff === 0 && eventDate.getDate() < birthDate.getDate())) {
     age--;
   }
 
