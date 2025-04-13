@@ -7,7 +7,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminSeatManagement = ({
   loggedUsername,

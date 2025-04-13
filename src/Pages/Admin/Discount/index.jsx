@@ -11,7 +11,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
@@ -168,14 +168,12 @@ const AdminDiscount = ({ loggedUsername }) => {
         sessionTypeIcon="discount"
         iconSize={80}
         fill={'#204691'}
-        showHeaderTools
         headerToolsCols={{ xl: 8 }}
         headerToolsClassname="table-tools__left-buttons d-flex"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
         headerToolsButtonIcon="excel"
         headerToolsButtonName="Baixar Excel"
-        showSecondaryButton
         secondaryButtonCols={{ xl: 4 }}
         secondaryButtonClassname="table-tools__right-buttons"
         secondaryButtonTypeButton="primary"

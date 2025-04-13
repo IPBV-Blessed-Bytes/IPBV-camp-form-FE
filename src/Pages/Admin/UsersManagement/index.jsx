@@ -8,7 +8,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -144,7 +144,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         sessionTypeIcon="add-person"
         iconSize={80}
         fill={'#204691'}
-        showHeaderTools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2"
         headerToolsTypeButton="primary"
         headerToolsOpenModal={() => handleCreateClick()}

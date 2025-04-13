@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminExtraMeals = () => {
   const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);
@@ -54,7 +54,6 @@ const AdminExtraMeals = () => {
         sessionTypeIcon="food"
         iconSize={80}
         fill={'#204691'}
-        showHeaderTools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
