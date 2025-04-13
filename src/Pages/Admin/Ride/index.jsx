@@ -11,7 +11,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -353,7 +353,6 @@ const AdminRide = ({ loggedUsername }) => {
         sessionTypeIcon="ride"
         iconSize={80}
         fill={'#204691'}
-        showHeaderTools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
