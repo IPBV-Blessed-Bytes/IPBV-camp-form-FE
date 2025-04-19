@@ -1,4 +1,4 @@
-@import '../../styles/Variables.scss';
+@use '../../styles/Variables.scss' as *;
 
 .choose-form-payment-custom-padding {
   padding: 1.875rem !important;

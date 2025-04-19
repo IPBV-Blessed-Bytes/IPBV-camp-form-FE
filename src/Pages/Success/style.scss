@@ -1,4 +1,4 @@
-@import '../../styles/Variables.scss';
+@use '../../styles/Variables.scss' as *;
 
 .form-success__button {
   @media (max-width: $md) {

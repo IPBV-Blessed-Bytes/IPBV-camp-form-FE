@@ -1,4 +1,4 @@
-@import './Variables.scss';
+@use './Variables.scss' as *;
 
 // Body
 body {
