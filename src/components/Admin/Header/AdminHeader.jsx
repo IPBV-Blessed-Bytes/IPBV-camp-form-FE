@@ -2,29 +2,12 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
-import Tools from './Tools';
 
 const AdminHeader = ({
   pageName,
   sessionTypeIcon,
   iconSize,
   fill,
-  headerToolsCols,
-  headerToolsTypeButton,
-  headerToolsOpenModal,
-  headerToolsClassname,
-  headerToolsButtonIcon,
-  headerToolsButtonSize,
-  headerToolsButtonFill,
-  headerToolsButtonName,
-  secondaryButtonCols,
-  secondaryButtonTypeButton,
-  secondaryButtonOpenModal,
-  secondaryButtonClassname,
-  secondaryButtonIcon,
-  secondaryButtonSize,
-  secondaryButtonFill,
-  secondaryButtonName,
 }) => {
   const navigate = useNavigate();
 
@@ -43,25 +26,6 @@ const AdminHeader = ({
         </Col>
       </Row>
       <hr className="horizontal-line" />
-
-      <Tools
-        headerToolsCols={headerToolsCols}
-        headerToolsTypeButton={headerToolsTypeButton}
-        headerToolsOpenModal={headerToolsOpenModal}
-        headerToolsClassname={headerToolsClassname}
-        headerToolsButtonIcon={headerToolsButtonIcon}
-        headerToolsButtonSize={headerToolsButtonSize}
-        headerToolsButtonFill={headerToolsButtonFill}
-        headerToolsButtonName={headerToolsButtonName}
-        secondaryButtonCols={secondaryButtonCols}
-        secondaryButtonTypeButton={secondaryButtonTypeButton}
-        secondaryButtonOpenModal={secondaryButtonOpenModal}
-        secondaryButtonClassname={secondaryButtonClassname}
-        secondaryButtonIcon={secondaryButtonIcon}
-        secondaryButtonSize={secondaryButtonSize}
-        secondaryButtonFill={secondaryButtonFill}
-        secondaryButtonName={secondaryButtonName}
-      />
     </>
   );
 };
@@ -71,32 +35,6 @@ AdminHeader.propTypes = {
   sessionTypeIcon: PropTypes.string,
   iconSize: PropTypes.number,
   fill: PropTypes.string,
-  headerToolsCols: PropTypes.shape({
-    xl: PropTypes.number,
-    lg: PropTypes.number,
-    md: PropTypes.number,
-    xs: PropTypes.number,
-  }),
-  headerToolsTypeButton: PropTypes.string,
-  headerToolsOpenModal: PropTypes.func,
-  headerToolsClassname: PropTypes.string,
-  headerToolsButtonIcon: PropTypes.string,
-  headerToolsButtonSize: PropTypes.number,
-  headerToolsButtonFill: PropTypes.string,
-  headerToolsButtonName: PropTypes.string,
-  secondaryButtonCols: PropTypes.shape({
-    xl: PropTypes.number,
-    lg: PropTypes.number,
-    md: PropTypes.number,
-    xs: PropTypes.number,
-  }),
-  secondaryButtonTypeButton: PropTypes.string,
-  secondaryButtonOpenModal: PropTypes.func,
-  secondaryButtonClassname: PropTypes.string,
-  secondaryButtonIcon: PropTypes.string,
-  secondaryButtonSize: PropTypes.number,
-  secondaryButtonFill: PropTypes.string,
-  secondaryButtonName: PropTypes.string,
 };
 
 export default AdminHeader;
