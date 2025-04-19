@@ -39,6 +39,7 @@ import AdminDataPanel from '../Admin/DataPanel';
 import FAQ from '../FAQ';
 import WaitingForCamp from '../WaitingForCamp';
 import Offline from '../Offline';
+import AdminFormContext from '../Admin/FormContext';
 
 const SiteRoutes = ({ formContext }) => {
   const [steps, setSteps] = useState(enumSteps.home);
@@ -472,6 +473,14 @@ const SiteRoutes = ({ formContext }) => {
                   onUpdateTotalPackages={handleUpdateTotalPackages}
                   loading={loading}
                 />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/contexto"
+            element={
+              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+                <AdminFormContext loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
           />
