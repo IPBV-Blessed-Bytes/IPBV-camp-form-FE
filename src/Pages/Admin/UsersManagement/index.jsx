@@ -9,6 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -139,11 +140,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader
-        pageName="Gerenciamento de Usuários"
-        sessionTypeIcon="add-person"
-        iconSize={80}
-        fill={'#204691'}
+      <AdminHeader pageName="Gerenciamento de Usuários" sessionTypeIcon="add-person" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2"
         headerToolsTypeButton="primary"
         headerToolsOpenModal={() => handleCreateClick()}

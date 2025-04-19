@@ -8,6 +8,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminUserLogs = ({ loggedUsername }) => {
   const [groupedLogs, setGroupedLogs] = useState({});
@@ -68,11 +69,9 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader
-        pageName="Logs de Usuários"
-        sessionTypeIcon="logs"
-        iconSize={80}
-        fill={'#204691'}
+      <AdminHeader pageName="Logs de Usuários" sessionTypeIcon="logs" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="danger"
         headerToolsOpenModal={() => setShowDeleteModal(true)}
@@ -81,7 +80,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
         headerToolsButtonFill={'#fff'}
         headerToolsButtonName="Deletar Todos Logs"
       />
-
+      
       <Row>
         <Accordion defaultActiveKey="0">
           {Object.entries(groupedLogs).map(([username, logs], index) => (
