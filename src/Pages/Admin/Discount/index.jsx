@@ -12,6 +12,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
@@ -163,11 +164,9 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   return (
     <Container className="discounts" fluid>
-      <AdminHeader
-        pageName="Gerenciamento de Descontos"
-        sessionTypeIcon="discount"
-        iconSize={80}
-        fill={'#204691'}
+      <AdminHeader pageName="Gerenciamento de Descontos" sessionTypeIcon="discount" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsCols={{ xl: 8 }}
         headerToolsClassname="table-tools__left-buttons d-flex"
         headerToolsTypeButton="success"

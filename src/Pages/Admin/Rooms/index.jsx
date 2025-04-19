@@ -12,6 +12,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
@@ -311,11 +312,9 @@ const AdminRooms = ({ loggedUsername }) => {
 
   return (
     <Container className="rooms" fluid>
-      <AdminHeader
-        pageName="Gerenciamento de Quartos"
-        sessionTypeIcon="rooms"
-        iconSize={80}
-        fill={'#204691'}
+      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsCols={{ xl: 8 }}
         headerToolsClassname="table-tools__left-buttons d-flex"
         headerToolsTypeButton="success"

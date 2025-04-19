@@ -8,6 +8,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const TABLE_HEADERS = [
   'ID',
@@ -64,11 +65,9 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader
-        pageName="Gerenciamento de Feedbacks"
-        sessionTypeIcon="feedback"
-        iconSize={80}
-        fill="#204691"
+      <AdminHeader pageName="Gerenciamento de Feedbacks" sessionTypeIcon="feedback" iconSize={80} fill="#204691" />
+
+      <Tools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="danger"
         headerToolsOpenModal={() => setShowDeleteModal(true)}
@@ -77,6 +76,7 @@ const AdminFeedback = ({ loggedUsername }) => {
         headerToolsButtonFill={'#fff'}
         headerToolsButtonName="Deletar Todos Feedbacks"
       />
+
       <Table striped bordered hover responsive className="custom-table mt-3">
         <thead>
           <tr>

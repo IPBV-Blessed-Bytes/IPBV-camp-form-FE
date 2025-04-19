@@ -7,6 +7,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminExtraMeals = () => {
   const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);
@@ -49,11 +50,9 @@ const AdminExtraMeals = () => {
 
   return (
     <Container fluid>
-      <AdminHeader
-        pageName="Usuários com Refeições Extras"
-        sessionTypeIcon="food"
-        iconSize={80}
-        fill={'#204691'}
+      <AdminHeader pageName="Usuários com Refeições Extras" sessionTypeIcon="food" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
