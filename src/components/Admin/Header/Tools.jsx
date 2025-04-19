@@ -91,6 +91,19 @@ const Tools = ({
 };
 
 Tools.propTypes = {
+  headerToolsCols: PropTypes.shape({
+    xl: PropTypes.number,
+    lg: PropTypes.number,
+    md: PropTypes.number,
+    xs: PropTypes.number,
+  }),
+  headerToolsTypeButton: PropTypes.string,
+  headerToolsOpenModal: PropTypes.func,
+  headerToolsClassname: PropTypes.string,
+  headerToolsButtonIcon: PropTypes.string,
+  headerToolsButtonSize: PropTypes.number,
+  headerToolsButtonFill: PropTypes.string,
+  headerToolsButtonName: PropTypes.string,
   secondaryButtonCols: PropTypes.shape({
     xl: PropTypes.number,
     lg: PropTypes.number,
