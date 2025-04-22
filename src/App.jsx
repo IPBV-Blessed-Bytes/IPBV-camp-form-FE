@@ -2,7 +2,7 @@ import CloseForm from './Pages/CloseForm';
 import FormRoutes from './Pages/Routes';
 
 function App() {
-  const formContext = 'form-off';
+  const formContext = 'form-on';
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
@@ -24,15 +24,15 @@ function App() {
         </>
       )}
       {formContext === 'google-forms' && (
-        <div
-          style={{
-            width: '100vw',
-            height: '100vh',
-            overflowX: 'hidden',
-          }}
-        >
-          <iframe></iframe>
-        </div>
+         <div
+         style={{
+           width: '100vw',
+           height: '100vh',
+           overflowX: 'hidden',
+         }}
+       >
+         <iframe></iframe>
+       </div>
       )}
     </>
   );

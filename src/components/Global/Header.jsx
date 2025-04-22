@@ -4,9 +4,18 @@ import PropTypes from 'prop-types';
 import '../Style/style.scss';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
+import CartSummary from './CartSummary';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
-  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacotes', 'Refeição Extra', 'Revisão', 'Pagamento'];
+  const headerSteps = [
+    'Início',
+    'Informações Pessoais',
+    'Contato',
+    'Pacotes',
+    'Refeição Extra',
+    'Revisão',
+    'Pagamento',
+  ];
   const navigateTo = useNavigate();
 
   const handleStepChange = (newStep) => {
@@ -27,8 +36,12 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   return (
     <header className="form__header">
       <h2>
-        <a className="header-title" href="/">ACAMPAMENTO IPBV 2026</a>
+        <a className="header-title" href="/">
+          ACAMPAMENTO IPBV 2026
+        </a>
       </h2>
+      <CartSummary />
+
       {showNavMenu && (
         <Breadcrumb className="mt-4">
           {headerSteps.map((step, index) => (
@@ -38,8 +51,8 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
                   index > currentStep
                     ? 'form__header--future-step'
                     : index < currentStep
-                    ? 'form__header--previous-step'
-                    : ''
+                      ? 'form__header--previous-step'
+                      : ''
                 }
                 active={currentStep === index}
                 onClick={() => handleStepChange(index)}
@@ -47,7 +60,12 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
                 {step}
               </Breadcrumb.Item>
               {index < headerSteps.length - 1 && (
-                <Icons className="d-none d-lg-block" typeIcon="arrow-right" iconSize={25} fill={index < currentStep ? '#ffc107' : '#fff'} />
+                <Icons
+                  className="d-none d-lg-block"
+                  typeIcon="arrow-right"
+                  iconSize={25}
+                  fill={index < currentStep ? '#ffc107' : '#fff'}
+                />
               )}
             </React.Fragment>
           ))}

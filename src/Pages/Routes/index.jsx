@@ -10,6 +10,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import useAuth from '@/hooks/useAuth';
+import { useCart } from '@/hooks/useCart/CartContext';
 import calculateAge from '../Packages/utils/calculateAge';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import InfoButton from '../../components/Global/InfoButton';
@@ -64,6 +65,7 @@ const SiteRoutes = ({ formContext }) => {
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
+  const { addToCart, cartItems, totalPrice, clearCart } = useCart();
 
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
@@ -249,6 +251,44 @@ const SiteRoutes = ({ formContext }) => {
 
   const handlePersonData = (data) => {
     setPersonData(data);
+  };
+
+  const addPersonToCart = () => {
+    const newItem = {
+      ...formValues,
+      registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
+      totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
+      manualRegistration: false,
+    };
+    addToCart(newItem);
+    resetFormValues();
+    setSteps(enumSteps.personalData);
+    toast.success('Pessoa adicionada ao carrinho!');
+  };
+
+  const finalizeCartAndPay = async () => {
+    setLoading(true);
+    try {
+      const response = await fetcher.post(`${BASE_URL}/checkout/bulk-create`, {
+        registrations: cartItems,
+      });
+  
+      const checkoutUrl = response.data.payment_url;
+      const checkoutStatus = response.data.checkout_status;
+  
+      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
+        toast.success('Redirecionando para pagamento...');
+        clearCart();
+        window.open(checkoutUrl, '_self');
+      } else {
+        toast.error('Erro ao criar checkout');
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data || 'Erro ao finalizar compra';
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
