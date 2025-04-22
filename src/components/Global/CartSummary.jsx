@@ -9,7 +9,7 @@ const CartSummary = () => {
 
   return (
     <div>
-      <h2>Carrinho ({cartItems.length} inscrições)</h2>
+      {/* <h2>Carrinho ({cartItems.length} inscrições)</h2> */}
       <ul>
         {cartItems.map((item, index) => (
           <li key={index}>
