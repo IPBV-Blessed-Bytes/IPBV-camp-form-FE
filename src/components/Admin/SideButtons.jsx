@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 
 const SideButtons = ({ primaryPermission, secondaryPermission }) => {
@@ -27,32 +28,32 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
   return (
     <>
       {primaryPermission && (
-        <button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
+        <Button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
           <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
-        </button>
+        </Button>
       )}
 
       {secondaryPermission && (
-        <button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
+        <Button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
           <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
-        </button>
+        </Button>
       )}
 
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
-        <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
+        <Button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
           Logs de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
-        </button>
+        </Button>
 
-        <button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
+        <Button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
           Controle de Vagas&nbsp;
           <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
-        </button>
+        </Button>
 
-        <button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
+        <Button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
           Controle de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
-        </button>
+        </Button>
       </div>
     </>
   );

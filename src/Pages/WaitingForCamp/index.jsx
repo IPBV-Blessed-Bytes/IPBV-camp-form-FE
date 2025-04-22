@@ -1,5 +1,6 @@
 import { Container, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
@@ -30,10 +31,10 @@ const WaitingForCamp = () => {
                       outros.
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
+                      <Button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
                         Verificar Inscrição&nbsp;
                         <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
@@ -46,10 +47,10 @@ const WaitingForCamp = () => {
                       a sua também!
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+                      <Button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
                         Perguntas Frequentes&nbsp;
                         <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
