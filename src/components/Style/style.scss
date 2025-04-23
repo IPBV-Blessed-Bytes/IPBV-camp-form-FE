@@ -355,19 +355,20 @@
 
 // Cart Button
 .cart-btn {
-  background-color: $turquoise;
+  background-color: $blue;
   border: none;
   border-radius: 50%;
   bottom: 20px;
   cursor: pointer;
   left: 20px;
   padding: 10px;
-  opacity: 0.8;
+  // opacity: 0.8;
   // position: fixed;
   z-index: 9000;
 
   &:hover {
-    opacity: 1;
+    background-color: $blue;
+    opacity: 0.8;
   }
 }
 

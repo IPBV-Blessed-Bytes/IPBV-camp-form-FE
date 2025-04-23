@@ -5,7 +5,6 @@ import '../Style/style.scss';
 import { Breadcrumb, Modal, Button } from 'react-bootstrap';
 import { useCart } from '@/hooks/useCart/CartContext';
 import Icons from './Icons';
-import CartSummary from './CartSummary';
 
 const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   const headerSteps = [
@@ -34,6 +33,10 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
     if (newStep <= currentStep) {
       goBackToStep(newStep);
     }
+  };
+
+  const finalizeCartAndPay = () => {
+    alert('Finalizando compra!');
   };
 
   return (
@@ -75,9 +78,9 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
           </Breadcrumb>
         )}
 
-        <button className="cart-btn" onClick={() => setShowCartModal(true)}>
+        <Button className="cart-btn" onClick={() => setShowCartModal(true)}>
           <Icons typeIcon="cart" iconSize={30} fill={'#ffc107'} />
-        </button>
+        </Button>
       </header>
 
       <Modal show={showCartModal} onHide={() => setShowCartModal(false)}>
@@ -87,16 +90,24 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <CartSummary />
+          <ul>
+            {cartItems.map((item, index) => (
+              <li key={index}>
+                {item.personalInformation.name} — R$ {item.totalPrice.toFixed(2)}
+                <button onClick={() => removeFromCart(index)}>Remover</button>
+              </li>
+            ))}
+          </ul>
+          <h3>Total: R$ {totalPrice.toFixed(2)}</h3>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
+        <Modal.Footer>
+          <Button variant="secondary" onClick={clearCart}>
+            Limpar Carrinho
           </Button>
-          <Button variant="danger" onClick={''}>
-            Deletar
+          <Button variant="danger" onClick={finalizeCartAndPay}>
+            Finalizar e Pagar
           </Button>
-        </Modal.Footer> */}
+        </Modal.Footer>
       </Modal>
     </>
   );
