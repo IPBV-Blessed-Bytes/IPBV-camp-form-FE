@@ -1,11 +1,11 @@
 
-# 🎉 **Site de Inscrições - Acampamento 2025** 🎉
+# 🎉 **Site de Inscrições - Acampamento IPBV** 🎉
 
-Este projeto faz parte da iniciativa **Blessed Bytes**, sendo a segunda versão da plataforma de inscrições para o acampamento da nossa igreja. Desenvolvemos uma aplicação robusta e segura para simplificar o processo de inscrição, gestão de participantes e pagamentos, tornando a experiência tanto para os usuários quanto para a equipe organizadora muito mais eficiente.
+Este projeto faz parte da iniciativa **Blessed Bytes**, sendo a terceira versão da plataforma de inscrições para o acampamento da nossa igreja. Desenvolvemos uma aplicação robusta e segura para simplificar o processo de inscrição, gestão de participantes e pagamentos, tornando a experiência tanto para os usuários quanto para a equipe organizadora muito mais eficiente.
 
 ## 🚀 **Visão Geral**
 
-Após o sucesso da primeira versão, que facilitou a inscrição de mais de 600 participantes para o acampamento de 2024, esta versão 2.0 vem com várias melhorias no frontend e backend, resolvendo débitos técnicos e preenchendo lacunas, mesmo com recursos e tempo limitados. A plataforma agora conta com novas funcionalidades e maior segurança, graças à autenticação via JWT e ao gerenciamento de pagamentos com a biblioteca Pagar.me.
+Após o sucesso da primeira e segunda versão, que facilitou a inscrição de mais de 1000 participantes para o acampamento de 2024 e 2025, esta versão 3.0 vem com várias melhorias no frontend e backend, resolvendo débitos técnicos e preenchendo lacunas, mesmo com recursos e tempo limitados. A plataforma agora conta com novas funcionalidades e maior segurança, graças à autenticação via JWT e ao gerenciamento de pagamentos com a biblioteca Pagar.me.
 
 ## ✨ **Principais Funcionalidades**
 
@@ -19,11 +19,13 @@ Após o sucesso da primeira versão, que facilitou a inscrição de mais de 600 
 - **Refeições Extras**: Participantes que optarem por pacotes sem alimentação podem escolher refeições específicas para determinados dias, pagando apenas pelo que utilizarem.
 - **Painel de Administração**: Nova interface para a equipe organizadora, oferecendo:
   - Controle de inscritos e vagas.
+  - Controle de usuários
+  - Logs de usuários
   - Relatórios em Excel.
   - Filtros de busca e edição direta de inscrições.
 - **Gestão de Caronas**: Facilita a conexão entre quem oferece e quem precisa de caronas.
-- **Cupons de Desconto**: Administra cupons vinculados ao CPF dos inscritos.
 - **Gerenciamento de Quartos**: Facilita a alocação de participantes.
+- **Cupons de Desconto**: Administra cupons vinculados ao CPF dos inscritos.
 - **Cálculo de Pacotes em função da idade**: Cálculo automático dos valores dos pacotes em função da idade do participante.
 
 ### 🛠 **Backend: Estrutura e Eficiência**
@@ -35,14 +37,18 @@ Após o sucesso da primeira versão, que facilitou a inscrição de mais de 600 
 - **Boas Práticas**: Uso de DTOs e validação com **Bean Validation**.
 
 ## 🛠 **Tecnologias Utilizadas**
-- **Frontend**: Javascript com React.Js com framework 
+- **Frontend**: Javascript com React.Js como framework 
 - **Backend**: Spring Boot
+- **Testes**: Playwright
 - **Autenticação**: JWT
 - **Pagamento**: Pagar.me
 - **Hospedagem**: AWS (Amazon Web Services)
 - **Containerização**: Docker
 - **Segurança**: TLS (via Nginx)
 - **Documentação**: Swagger
+
+## 🛠 **Tests End to End**
+Estamos com 100% da nossa solução coberta por testes end-to-end utilizando o Playwright. Esses testes verificam o bom funcionamento do login, funcionalidades de administração, inscrições, formulário de inscrição, entre outros. Isso garante maior segurança para a aplicação e assegura que nenhuma funcionalidade deixe de funcionar após alterações no código.
 
 ## 📂 **Como Executar o Projeto Localmente**
 
