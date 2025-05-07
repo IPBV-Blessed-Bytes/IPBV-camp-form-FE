@@ -13,7 +13,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';

@@ -1,14 +1,10 @@
+import React, { useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
+import SecondaryButton from './SecondaryButton';
 
-const AdminHeader = ({
-  pageName,
-  sessionTypeIcon,
-  iconSize,
-  fill,
-  showHeaderTools,
+const Tools = ({
   headerToolsCols,
   headerToolsTypeButton,
   headerToolsOpenModal,
@@ -17,7 +13,6 @@ const AdminHeader = ({
   headerToolsButtonSize,
   headerToolsButtonFill,
   headerToolsButtonName,
-  showSecondaryButton,
   secondaryButtonCols,
   secondaryButtonTypeButton,
   secondaryButtonOpenModal,
@@ -27,24 +22,31 @@ const AdminHeader = ({
   secondaryButtonFill,
   secondaryButtonName,
 }) => {
-  const navigate = useNavigate();
+  const [showSecondaryButton, setShowSecondaryButton] = useState(false);
+
+  const showHeaderTools = () => {
+    if (
+      headerToolsCols ||
+      headerToolsTypeButton ||
+      headerToolsOpenModal ||
+      headerToolsClassname ||
+      headerToolsButtonIcon ||
+      headerToolsButtonSize ||
+      headerToolsButtonFill ||
+      headerToolsButtonName
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleShowSecondaryButton = (value) => {
+    setShowSecondaryButton(value);
+  };
 
   return (
     <>
-      <Row className="mt-3">
-        <Col>
-          <Button variant="secondary" onClick={() => navigate('/admin')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar
-          </Button>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">{pageName}</h4>
-          <Icons className="m-left" typeIcon={sessionTypeIcon} iconSize={iconSize} fill={fill} />
-        </Col>
-      </Row>
-      <hr className="horizontal-line" />
-
       {showHeaderTools && (
         <Row className="mb-4">
           <Col
@@ -71,42 +73,24 @@ const AdminHeader = ({
             </div>
           </Col>
 
-          {showSecondaryButton && (
-            <Col
-              xl={secondaryButtonCols?.xl || 12}
-              lg={secondaryButtonCols?.lg || 12}
-              md={secondaryButtonCols?.md || 12}
-              xs={secondaryButtonCols?.xs || 12}
-            >
-              <div className={secondaryButtonClassname}>
-                <Button
-                  variant={secondaryButtonTypeButton}
-                  onClick={secondaryButtonOpenModal}
-                  className="d-flex align-items-center justify-content-center"
-                  size="lg"
-                >
-                  <Icons
-                    typeIcon={secondaryButtonIcon}
-                    iconSize={secondaryButtonSize || 30}
-                    fill={secondaryButtonFill || '#fff'}
-                  />
-                  <span className="table-tools__button-name">&nbsp;{secondaryButtonName}</span>
-                </Button>
-              </div>
-            </Col>
-          )}
+          <SecondaryButton
+            showSecondaryButton={handleShowSecondaryButton}
+            secondaryButtonCols={secondaryButtonCols}
+            secondaryButtonTypeButton={secondaryButtonTypeButton}
+            secondaryButtonOpenModal={secondaryButtonOpenModal}
+            secondaryButtonClassname={secondaryButtonClassname}
+            secondaryButtonIcon={secondaryButtonIcon}
+            secondaryButtonSize={secondaryButtonSize}
+            secondaryButtonFill={secondaryButtonFill}
+            secondaryButtonName={secondaryButtonName}
+          />
         </Row>
       )}
     </>
   );
 };
 
-AdminHeader.propTypes = {
-  pageName: PropTypes.string,
-  sessionTypeIcon: PropTypes.string,
-  iconSize: PropTypes.number,
-  fill: PropTypes.string,
-  showHeaderTools: PropTypes.bool,
+Tools.propTypes = {
   headerToolsCols: PropTypes.shape({
     xl: PropTypes.number,
     lg: PropTypes.number,
@@ -120,7 +104,6 @@ AdminHeader.propTypes = {
   headerToolsButtonSize: PropTypes.number,
   headerToolsButtonFill: PropTypes.string,
   headerToolsButtonName: PropTypes.string,
-  showSecondaryButton: PropTypes.bool,
   secondaryButtonCols: PropTypes.shape({
     xl: PropTypes.number,
     lg: PropTypes.number,
@@ -136,4 +119,4 @@ AdminHeader.propTypes = {
   secondaryButtonName: PropTypes.string,
 };
 
-export default AdminHeader;
+export default Tools;
