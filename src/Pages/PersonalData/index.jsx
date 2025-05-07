@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { parse } from 'date-fns';
@@ -20,10 +20,12 @@ import AgeConfirmationModal from './AgeConfirmationModal';
 
 const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showPrefillModal, setShowPrefillModal] = useState(false);
+  const [previousUserData, setPreviousUserData] = useState(null);
   const [currentAge, setCurrentAge] = useState(null);
   const [showLegalGuardianFields, setShowLegalGuardianFields] = useState(false);
 
-  const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({
+  const { values, errors, handleChange, submitForm, setFieldValue, setValues } = useFormik({
     initialValues,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
@@ -74,6 +76,41 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  useEffect(() => {
+    const fetchPreviousData = async () => {
+      if (cpf.isValid(values.cpf)) {
+
+        try {
+          const response = await axios.post(`${BASE_URL}/user-previous-year`, {
+            cpf: values.cpf,
+          });
+
+          const userData = response.data;
+          sessionStorage.setItem('previousUserData', JSON.stringify(userData));
+          setPreviousUserData(userData);
+          setShowPrefillModal(true);
+        } catch (error) {
+          console.error('Erro ao buscar dados do ano anterior:', error);
+        }
+      }
+    };
+
+    if (values.cpf && values.cpf.length === 11) {
+      fetchPreviousData();
+    }
+  }, [values.cpf]);
+
+  const handlePrefillConfirm = () => {
+    if (previousUserData) {
+      setValues((prevValues) => ({
+        ...prevValues,
+        ...previousUserData,
+      }));
+      updateForm(previousUserData);
+    }
+    setShowPrefillModal(false);
+  };
 
   const handleDateChange = (date) => {
     setFieldValue('birthday', date);
@@ -423,6 +460,23 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
         handleCancelAge={handleCancelAge}
         handleConfirmAge={handleConfirmAge}
       />
+      <Modal show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Seus Dados do Último Acampamento</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Encontramos dados do ano anterior para esse CPF. Deseja preenchê-los automaticamente? Você ainda poderá editar
+          caso queira mudar algo!
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPrefillModal(false)}>
+            Não
+          </Button>
+          <Button variant="primary" onClick={handlePrefillConfirm}>
+            Sim
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
