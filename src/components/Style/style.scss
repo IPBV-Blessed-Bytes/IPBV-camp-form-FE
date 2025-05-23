@@ -353,6 +353,25 @@
   }
 }
 
+// Cart Button
+.cart-btn {
+  background-color: $blue;
+  border: none;
+  border-radius: 50%;
+  bottom: 20px;
+  cursor: pointer;
+  left: 20px;
+  padding: 10px;
+  // opacity: 0.8;
+  // position: fixed;
+  z-index: 9000;
+
+  &:hover {
+    background-color: $blue;
+    opacity: 0.8;
+  }
+}
+
 // Data Panel Button
 .data-panel-btn {
   background-color: $primary;
