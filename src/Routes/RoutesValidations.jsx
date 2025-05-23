@@ -11,7 +11,7 @@ import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 
 import useAuth from '@/hooks/useAuth';
-import calculateAge from '../Packages/utils/calculateAge';
+import calculateAge from '../Pages/Packages/utils/calculateAge';
 
 import FormRoutes from '.';
 

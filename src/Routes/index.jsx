@@ -5,37 +5,37 @@ import { enumSteps } from '@/utils/constants';
 
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
-import InfoButton from '../../components/Global/InfoButton';
+import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 
-import FormHome from '../Home';
-import FormPersonalData from '../PersonalData';
-import FormContact from '../Contact';
-import FormPackages from '../Packages';
-import ExtraMeals from '../ExtraMeals';
-import FinalReview from '../FinalReview';
-import ChooseFormPayment from '../ChooseFormPayment';
-import FormSuccess from '../Success';
-import FormFeedback from '../Feedback';
-import CpfReview from '../CpfReview';
-import CpfData from '../CpfReview/CpfData';
+import FormHome from '../Pages/Home';
+import FormPersonalData from '../Pages/PersonalData';
+import FormContact from '../Pages/Contact';
+import FormPackages from '../Pages/Packages';
+import ExtraMeals from '../Pages/ExtraMeals';
+import FinalReview from '../Pages/FinalReview';
+import ChooseFormPayment from '../Pages/ChooseFormPayment';
+import FormSuccess from '../Pages/Success';
+import FormFeedback from '../Pages/Feedback';
+import CpfReview from '../Pages/CpfReview';
+import CpfData from '../Pages/CpfReview/CpfData';
 
-import Login from '../Admin/Login';
-import AdminCampers from '../Admin/Campers';
-import AdminRide from '../Admin/Ride';
-import AdminDiscount from '../Admin/Discount';
-import AdminRooms from '../Admin/Rooms';
-import AdminExtraMeals from '../Admin/ExtraMeals';
-import AdminCheckin from '../Admin/Checkin';
-import AdminUserLogs from '../Admin/UserLogs';
-import AdminSeatManagement from '../Admin/SeatManagement';
-import AdminUsersManagement from '../Admin/UsersManagement';
-import AdminFeedback from '../Admin/Feedback';
-import AdminDataPanel from '../Admin/DataPanel';
+import Login from '../Pages/Admin/Login';
+import AdminCampers from '../Pages/Admin/Campers';
+import AdminRide from '../Pages/Admin/Ride';
+import AdminDiscount from '../Pages/Admin/Discount';
+import AdminRooms from '../Pages/Admin/Rooms';
+import AdminExtraMeals from '../Pages/Admin/ExtraMeals';
+import AdminCheckin from '../Pages/Admin/Checkin';
+import AdminUserLogs from '../Pages/Admin/UserLogs';
+import AdminSeatManagement from '../Pages/Admin/SeatManagement';
+import AdminUsersManagement from '../Pages/Admin/UsersManagement';
+import AdminFeedback from '../Pages/Admin/Feedback';
+import AdminDataPanel from '../Pages/Admin/DataPanel';
 
-import FAQ from '../FAQ';
-import WaitingForCamp from '../WaitingForCamp';
-import Offline from '../Offline';
+import FAQ from '../Pages/FAQ';
+import WaitingForCamp from '../Pages/WaitingForCamp';
+import Offline from '../Pages/Offline';
 
 const FormRoutes = ({
   formContext,
