@@ -1,4 +1,3 @@
-// src/hooks/useScrollUp.js
 import { useEffect } from 'react';
 
 const useScrollUp = () => {
