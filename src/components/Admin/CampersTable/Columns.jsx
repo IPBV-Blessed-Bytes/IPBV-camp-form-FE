@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ColumnsFields from './ColumnsFields';
-import { packages, issuingState, rgShipper, food } from '@/Pages/Routes/constants';
+import { packages, issuingState, rgShipper, food } from '@/utils/constants';
 
 const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate }) => {
   const [missingFields, setMissingFields] = useState([]);
