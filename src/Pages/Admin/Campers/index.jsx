@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Container, Row, Button, Form, Col } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import { initialValues } from '@/Pages/Routes/constants';
+import { initialValues } from '@/utils/constants';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
