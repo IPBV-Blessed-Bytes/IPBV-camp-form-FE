@@ -11,7 +11,8 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/AdminHeader';
+import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -348,12 +349,9 @@ const AdminRide = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader
-        pageName="Gerenciamento de Caronas"
-        sessionTypeIcon="ride"
-        iconSize={80}
-        fill={'#204691'}
-        showHeaderTools
+      <AdminHeader pageName="Gerenciamento de Caronas" sessionTypeIcon="ride" iconSize={80} fill={'#204691'} />
+
+      <Tools
         headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
         headerToolsTypeButton="success"
         headerToolsOpenModal={generateExcel}
