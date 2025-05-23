@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { enumSteps, initialValues } from './constants';
-import { USER_STORAGE_KEY, USER_STORAGE_ROLE, BASE_URL } from '@/config';
-import { toast } from 'react-toastify';
 import { format } from 'date-fns';
-import 'react-datepicker/dist/react-datepicker.css';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { BASE_URL, USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import { enumSteps, initialValues } from '@/utils/constants';
+import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import fetcher from '@/fetchers/fetcherWithCredentials';
-import Footer from '@/components/Global/Footer';
-import Header from '@/components/Global/Header';
+
 import useAuth from '@/hooks/useAuth';
 import calculateAge from '../Packages/utils/calculateAge';
-import ProtectedRoute from '@/components/Global/ProtectedRoute';
+
+import Footer from '@/components/Global/Footer';
+import Header from '@/components/Global/Header';
 import InfoButton from '../../components/Global/InfoButton';
+import ProtectedRoute from '@/components/Global/ProtectedRoute';
+
 import FormHome from '../Home';
 import FormPersonalData from '../PersonalData';
 import FormContact from '../Contact';
@@ -24,6 +29,7 @@ import FormSuccess from '../Success';
 import FormFeedback from '../Feedback';
 import CpfReview from '../CpfReview';
 import CpfData from '../CpfReview/CpfData';
+
 import Login from '../Admin/Login';
 import AdminCampers from '../Admin/Campers';
 import AdminRide from '../Admin/Ride';
@@ -36,37 +42,118 @@ import AdminSeatManagement from '../Admin/SeatManagement';
 import AdminUsersManagement from '../Admin/UsersManagement';
 import AdminFeedback from '../Admin/Feedback';
 import AdminDataPanel from '../Admin/DataPanel';
+
 import FAQ from '../FAQ';
 import WaitingForCamp from '../WaitingForCamp';
 import Offline from '../Offline';
 
 const SiteRoutes = ({ formContext }) => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [totalRegistrations, setTotalRegistrations] = useState({});
-  const isNotSuccessPathname = window.location.pathname !== '/sucesso';
-  const isNotFeedbackPathname = window.location.pathname !== '/opiniao';
-  const isNotVerifyingPathname = window.location.pathname !== '/verificacao';
-  const isNotVerifyingDataPathname = window.location.pathname !== '/verificacao/dados';
-  const isNotFaqPathname = window.location.pathname !== '/perguntas';
-  const adminPathname = window.location.pathname.startsWith('/admin') || window.location.pathname === '/unauthorized';
   const [availablePackages, setAvailablePackages] = useState({});
+  const [totalRegistrations, setTotalRegistrations] = useState({});
+  const [totalSeats, setTotalSeats] = useState({});
+  const [totalBusVacancies, setTotalBusVacancies] = useState({});
   const [totalPackages, setTotalPackages] = useState({});
   const [usedPackages, setUsedPackages] = useState();
   const [usedValidPackages, setUsedValidPackages] = useState({});
-  const [totalSeats, setTotalSeats] = useState({});
-  const [totalBusVacancies, setTotalBusVacancies] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
-  const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
 
-  const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
+  const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
+  const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
+
+  const windowPathname = window.location.pathname;
+  const adminPathname = isAdminPath(windowPathname);
+  const formPath = shouldRenderForm(windowPathname);
+
+  const isNotSuccessPathname = windowPathname !== '/sucesso';
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetcher.get(`${BASE_URL}/package-count`);
+        setAvailablePackages(response.data);
+        setTotalSeats(response.data?.totalSeats || 0);
+        setTotalBusVacancies(response.data?.totalBusVacancies || 0);
+        setTotalPackages(response.data?.totalPackages || {});
+        setUsedPackages(response.data?.usedPackages || {});
+        setUsedValidPackages(response.data?.usedValidPackages || {});
+      } catch (error) {
+        console.error('Erro ao buscar pacotes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalRegistrations = async () => {
+      try {
+        const response = await fetcher.get(`${BASE_URL}/total-registrations`);
+        setTotalRegistrations(response.data);
+      } catch (error) {
+        console.error(
+          error.message === 'Request failed with status code 503'
+            ? 'Banco de dados fora do ar. Tente novamente mais tarde'
+            : error.message,
+        );
+      }
+    };
+    fetchTotalRegistrations();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn && adminPathname) {
+      navigate('/admin');
+    }
+  }, [isLoggedIn, adminPathname, navigate]);
+
+  const age = calculateAge(formValues.personalInformation.birthday);
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
+  const handlePersonData = (data) => {
+    setPersonData(data);
+  };
+
+  const handleUpdateTotalSeats = (newTotalSeats) => {
+    setTotalSeats(newTotalSeats);
+  };
+
+  const handleUpdateTotalBusVacancies = (newTotalBusVacancies) => {
+    setTotalBusVacancies(newTotalBusVacancies);
+  };
+
+  const handleUpdateTotalPackages = (updatedPackages) => {
+    setTotalPackages(updatedPackages);
+  };
+
+  const handleDiscountChange = (discountValue) => {
+    setDiscount(discountValue);
+    setHasDiscount(discountValue !== 0 && discountValue !== '');
+  };
+
+  const resetFormValues = () => setFormValues(initialValues);
+
+  const resetFormSubmitted = () => setFormSubmitted(false);
 
   const updateFormValues = (key) => (value) => {
     setFormValues({
@@ -75,31 +162,17 @@ const SiteRoutes = ({ formContext }) => {
     });
   };
 
-  const resetFormValues = () => {
-    setFormValues(initialValues);
-  };
-
-  const resetFormSubmitted = () => {
-    setFormSubmitted(false);
-  };
-
-  const scrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const initialStep = () => {
+    setSteps(enumSteps.home);
+    scrollTop();
   };
 
   const nextStep = () => {
     if (steps < enumSteps.success) {
       const hasFood = formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '';
-
       setWithFood(hasFood);
-
-      const shouldSkipToFinalReview = hasFood && steps === enumSteps.packages;
-
-      if (shouldSkipToFinalReview) {
-        setSteps(enumSteps.finalReview);
-      } else {
-        setSteps(steps + 1);
-      }
+      const skipToReview = hasFood && steps === enumSteps.packages;
+      setSteps(skipToReview ? enumSteps.finalReview : steps + 1);
       scrollTop();
     }
   };
@@ -125,31 +198,19 @@ const SiteRoutes = ({ formContext }) => {
     scrollTop();
   };
 
-  const initialStep = () => {
-    setSteps(enumSteps.home);
-    scrollTop();
-  };
-
   const sendForm = async () => {
     setLoading(true);
-    sendFormValues();
-  };
-
-  const sendFormValues = async () => {
     try {
       setStatus('loading');
-
-      const paymentMethod = formValues.formPayment || 'nonPaid';
-
-      const updatedFormValues = {
+      const updatedForm = {
         ...formValues,
-        formPayment: paymentMethod,
+        formPayment: formValues.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
         totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
         manualRegistration: false,
       };
 
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, updatedFormValues);
+      const response = await fetcher.post(`${BASE_URL}/checkout/create`, updatedForm);
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
@@ -164,208 +225,124 @@ const SiteRoutes = ({ formContext }) => {
         toast.error('Erro ao criar checkout');
       }
     } catch (error) {
-      const errorMessage = error?.response?.data || 'Ocorreu um erro';
       setStatus('error');
-      toast.error(errorMessage);
+      toast.error(error?.response?.data || 'Ocorreu um erro');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const fetchPackages = async () => {
-      setLoading(true);
-
-      try {
-        const response = await fetcher.get(`${BASE_URL}/package-count`);
-        setAvailablePackages(response.data);
-        setTotalSeats(response.data?.totalSeats || 0);
-        setTotalBusVacancies(response.data?.totalBusVacancies || 0);
-        setTotalPackages(response.data?.totalPackages || {});
-        setUsedPackages(response.data?.usedPackages || {});
-        setUsedValidPackages(response.data?.usedValidPackages || {});
-      } catch (error) {
-        console.error('Erro ao buscar os pacotes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPackages();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalRegistrations = async () => {
-      try {
-        const response = await fetcher.get(`${BASE_URL}/total-registrations`);
-        setTotalRegistrations(response.data);
-      } catch (error) {
-        console.error(
-          error.message === 'Request failed with status code 503'
-            ? 'Banco de dados fora do ar. Tente novamente mais tarde'
-            : error.message,
-        );
-      }
-    };
-
-    fetchTotalRegistrations();
-  }, []);
-
-  const handleUpdateTotalSeats = (newTotalSeats) => {
-    setTotalSeats(newTotalSeats);
-  };
-
-  const handleUpdateTotalBusVacancies = (newTotalBusVacancies) => {
-    setTotalBusVacancies(newTotalBusVacancies);
-  };
-
-  const handleUpdateTotalPackages = (updatedPackages) => {
-    setTotalPackages(updatedPackages);
-  };
-
-  useEffect(() => {
-    if (!isLoggedIn && adminPathname) {
-      navigate('/admin');
-    }
-  }, [isLoggedIn, adminPathname, navigate]);
-
-  const handleAdminClick = () => {
-    navigate('/admin');
-  };
-
-  const age = calculateAge(formValues.personalInformation.birthday);
-
-  const handleDiscountChange = (discountValue) => {
-    setDiscount(discountValue);
-    if (discountValue !== 0 && discountValue !== '') {
-      setHasDiscount(true);
-    } else {
-      setHasDiscount(false);
-    }
-  };
-
-  const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
-  const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
-
-  const handlePersonData = (data) => {
-    setPersonData(data);
-  };
-
   return (
     <div className="form">
-      {!adminPathname &&
-        isNotFeedbackPathname &&
-        isNotVerifyingPathname &&
-        isNotVerifyingDataPathname &&
-        isNotFaqPathname && (
-          <div className="components-container">
-            {formContext === 'form-waiting' && <WaitingForCamp />}
-            {formContext === 'form-off' && <Offline />}
+      {!adminPathname && formPath && (
+        <div className="components-container">
+          {formContext === 'form-waiting' && <WaitingForCamp />}
+          {formContext === 'form-off' && <Offline />}
 
-            {formContext === 'form-on' && (
-              <>
-                <Header
-                  currentStep={steps}
-                  goBackToStep={goBackToStep}
-                  formSubmitted={formSubmitted}
-                  showNavMenu={true}
-                />
+          {formContext === 'form-on' && (
+            <>
+              <Header
+                currentStep={steps}
+                goBackToStep={goBackToStep}
+                formSubmitted={formSubmitted}
+                showNavMenu={true}
+              />
 
-                <div className="form__container">
-                  {steps === enumSteps.home && isNotSuccessPathname && (
-                    <FormHome nextStep={nextStep} backStep={backStep} />
-                  )}
+              <div className="form__container">
+                {steps === enumSteps.home && isNotSuccessPathname && (
+                  <FormHome nextStep={nextStep} backStep={backStep} />
+                )}
 
-                  {steps === enumSteps.personalData && isNotSuccessPathname && (
-                    <FormPersonalData
-                      initialValues={formValues.personalInformation}
-                      nextStep={nextStep}
-                      backStep={backStep}
-                      updateForm={updateFormValues('personalInformation')}
-                      onDiscountChange={handleDiscountChange}
-                      formUsername={formValues.personalInformation.name}
-                    />
-                  )}
+                {steps === enumSteps.personalData && isNotSuccessPathname && (
+                  <FormPersonalData
+                    initialValues={formValues.personalInformation}
+                    nextStep={nextStep}
+                    backStep={backStep}
+                    updateForm={updateFormValues('personalInformation')}
+                    onDiscountChange={handleDiscountChange}
+                    formUsername={formValues.personalInformation.name}
+                  />
+                )}
 
-                  {steps === enumSteps.contact && isNotSuccessPathname && (
-                    <FormContact
-                      initialValues={formValues.contact}
-                      nextStep={nextStep}
-                      backStep={backStep}
-                      updateForm={updateFormValues('contact')}
-                    />
-                  )}
+                {steps === enumSteps.contact && isNotSuccessPathname && (
+                  <FormContact
+                    initialValues={formValues.contact}
+                    nextStep={nextStep}
+                    backStep={backStep}
+                    updateForm={updateFormValues('contact')}
+                  />
+                )}
 
-                  {steps === enumSteps.packages && isNotSuccessPathname && (
-                    <FormPackages
-                      age={age}
-                      nextStep={nextStep}
-                      backStep={backStep}
-                      updateForm={updateFormValues('package')}
-                      sendForm={sendForm}
-                      availablePackages={availablePackages}
-                      totalRegistrationsGlobal={totalRegistrations}
-                      discountValue={discount}
-                      hasDiscount={hasDiscount}
-                      totalSeats={totalSeats}
-                      totalBusVacancies={totalBusVacancies}
-                      totalValidWithBus={totalRegistrations.totalValidWithBus}
-                    />
-                  )}
+                {steps === enumSteps.packages && isNotSuccessPathname && (
+                  <FormPackages
+                    age={age}
+                    nextStep={nextStep}
+                    backStep={backStep}
+                    updateForm={updateFormValues('package')}
+                    sendForm={sendForm}
+                    availablePackages={availablePackages}
+                    totalRegistrationsGlobal={totalRegistrations}
+                    discountValue={discount}
+                    hasDiscount={hasDiscount}
+                    totalSeats={totalSeats}
+                    totalBusVacancies={totalBusVacancies}
+                    totalValidWithBus={totalRegistrations.totalValidWithBus}
+                  />
+                )}
 
-                  {steps === enumSteps.extraMeals && isNotSuccessPathname && (
-                    <ExtraMeals
-                      birthDate={formValues.personalInformation.birthday}
-                      backStep={backStep}
-                      nextStep={nextStep}
-                      initialValues={formValues.extraMeals}
-                      updateForm={updateFormValues('extraMeals')}
-                    />
-                  )}
+                {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+                  <ExtraMeals
+                    birthDate={formValues.personalInformation.birthday}
+                    backStep={backStep}
+                    nextStep={nextStep}
+                    initialValues={formValues.extraMeals}
+                    updateForm={updateFormValues('extraMeals')}
+                  />
+                )}
 
-                  {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                    <FinalReview
-                      nextStep={nextStep}
-                      backStep={backStep}
-                      formValues={formValues}
-                      sendForm={sendForm}
-                      status={status}
-                    />
-                  )}
+                {steps === enumSteps.finalReview && isNotSuccessPathname && (
+                  <FinalReview
+                    nextStep={nextStep}
+                    backStep={backStep}
+                    formValues={formValues}
+                    sendForm={sendForm}
+                    status={status}
+                  />
+                )}
 
-                  {steps === enumSteps.formPayment && isNotSuccessPathname && (
-                    <ChooseFormPayment
-                      initialValues={formValues}
-                      skipTwoSteps={skipTwoSteps}
-                      backStep={backStep}
-                      updateForm={updateFormValues('formPayment')}
-                      sendForm={sendForm}
-                      loading={loading}
-                      status={status}
-                    />
-                  )}
+                {steps === enumSteps.formPayment && isNotSuccessPathname && (
+                  <ChooseFormPayment
+                    initialValues={formValues}
+                    skipTwoSteps={skipTwoSteps}
+                    backStep={backStep}
+                    updateForm={updateFormValues('formPayment')}
+                    sendForm={sendForm}
+                    loading={loading}
+                    status={status}
+                  />
+                )}
 
-                  <Routes>
-                    <Route
-                      path="/sucesso"
-                      element={
-                        <FormSuccess
-                          initialStep={initialStep}
-                          resetForm={resetFormValues}
-                          resetFormSubmitted={resetFormSubmitted}
-                        />
-                      }
-                    />
-                  </Routes>
-                </div>
+                <Routes>
+                  <Route
+                    path="/sucesso"
+                    element={
+                      <FormSuccess
+                        initialStep={initialStep}
+                        resetForm={resetFormValues}
+                        resetFormSubmitted={resetFormSubmitted}
+                      />
+                    }
+                  />
+                </Routes>
+              </div>
 
-                <InfoButton timeout />
+              <InfoButton timeout />
 
-                <Footer onAdminClick={handleAdminClick} />
-              </>
-            )}
-          </div>
-        )}
+              <Footer onAdminClick={handleAdminClick} />
+            </>
+          )}
+        </div>
+      )}
 
       <div className="routes">
         <Routes>
