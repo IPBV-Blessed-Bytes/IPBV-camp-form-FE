@@ -1,5 +1,5 @@
 import CloseForm from './Pages/CloseForm';
-import FormRoutes from './Pages/Routes';
+import FormRoutes from './Routes';
 
 function App() {
   const formContext = 'form-off';

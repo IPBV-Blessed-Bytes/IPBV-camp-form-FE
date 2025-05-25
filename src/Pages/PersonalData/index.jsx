@@ -11,7 +11,7 @@ import { ptBR } from 'date-fns/locale';
 import InputMask from 'react-input-mask';
 import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '../../form/validations/schema';
-import { issuingState, rgShipper } from '../Routes/constants';
+import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
 import { BASE_URL } from '@/config';
 import axios from 'axios';
