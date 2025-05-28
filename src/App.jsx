@@ -1,5 +1,5 @@
 import CloseForm from './Pages/CloseForm';
-import FormRoutes from './Routes';
+import RoutesValidations from './Routes/RoutesValidations';
 
 function App() {
   const formContext = 'form-off';
@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       {(formContext === 'form-on' || formContext === 'form-off' || formContext === 'form-waiting') && (
-        <FormRoutes formContext={formContext} />
+        <RoutesValidations formContext={formContext} />
       )}
       {formContext === 'form-closed' && <CloseForm />}
       {formContext === 'maintenance' && (
