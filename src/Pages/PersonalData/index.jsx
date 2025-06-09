@@ -123,6 +123,12 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     setShowLegalGuardianFields(false);
   };
 
+  const restoreScrollWhenMobile = () => {
+    setTimeout(() => {
+      document.body.style.removeProperty('overflow');
+    }, 1);
+  };
+
   return (
     <>
       <Card className="form__container__general-height">
@@ -422,6 +428,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
         currentAge={currentAge}
         handleCancelAge={handleCancelAge}
         handleConfirmAge={handleConfirmAge}
+        restoreScrollWhenMobile={restoreScrollWhenMobile}
       />
     </>
   );
