@@ -13,8 +13,8 @@ const SecondaryButton = ({
   secondaryButtonFill,
   secondaryButtonName,
 }) => {
-  const showSecondaryButton = () => {
-    if (
+  const shouldShowSecondaryButton = () => {
+    const hasProps =
       secondaryButtonCols ||
       secondaryButtonTypeButton ||
       secondaryButtonOpenModal ||
@@ -22,21 +22,15 @@ const SecondaryButton = ({
       secondaryButtonIcon ||
       secondaryButtonSize ||
       secondaryButtonFill ||
-      secondaryButtonName
-    ) {
-      showSecondaryButton(true);
+      secondaryButtonName;
 
-      return true;
-    } else {
-      showSecondaryButton(false);
-
-      return false;
-    }
+    showSecondaryButton?.(!!hasProps);
+    return hasProps;
   };
 
   return (
     <>
-      {showSecondaryButton && (
+      {shouldShowSecondaryButton && (
         <Col
           xl={secondaryButtonCols?.xl || 12}
           lg={secondaryButtonCols?.lg || 12}
@@ -65,7 +59,7 @@ const SecondaryButton = ({
 };
 
 SecondaryButton.propTypes = {
-  showSecondaryButton: PropTypes.bool,
+  showSecondaryButton: PropTypes.func,
   secondaryButtonCols: PropTypes.shape({
     xl: PropTypes.number,
     lg: PropTypes.number,
