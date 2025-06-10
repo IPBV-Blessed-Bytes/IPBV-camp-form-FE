@@ -100,6 +100,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const adjustedValue = value === '' ? '' : value;
 
     const booleanValue =
+      name === 'crew' ||
       name === 'extraMeals.someFood' ||
       name === 'contact.car' ||
       name === 'contact.needRide' ||
@@ -823,7 +824,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
-        Header: 'Nome:',
+        Header: 'Nome do Resp. Legal:',
         accessor: 'personalInformation.legalGuardianName',
         Filter: ({ column }) => (
           <ColumnFilter
@@ -837,7 +838,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value || '-',
       },
       {
-        Header: 'CPF:',
+        Header: 'CPF do Resp. Legal:',
         accessor: 'personalInformation.legalGuardianCpf',
         Filter: ({ column }) => (
           <ColumnFilter
@@ -850,7 +851,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Celular:',
+        Header: 'Celular do Resp. Legal:',
         accessor: 'personalInformation.legalGuardianCellPhone',
         Filter: ({ column }) => (
           <ColumnFilter
