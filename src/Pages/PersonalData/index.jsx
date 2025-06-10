@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -88,6 +88,17 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
     return isNaN(parsedDate) ? null : parsedDate;
   };
+
+  useEffect(() => {
+    if (values.birthday) {
+      const age = calculateAge(values.birthday);
+
+      setCurrentAge(age);
+      setShowLegalGuardianFields(age < 18);
+    } else {
+      setShowLegalGuardianFields(false);
+    }
+  }, [values.birthday]);
 
   const checkAge = () => {
     if (values.birthday) {
@@ -243,7 +254,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       </Form.Label>
                       <Form.Control
                         as={InputMask}
-                        isInvalid={!!errors.cpf}
+                        isInvalid={!!errors.legalGuardianCpf}
                         mask="999.999.999-99"
                         name="legalGuardianCpf"
                         id="legalGuardianCpf"
@@ -252,7 +263,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                         onChange={(event) =>
                           handleChange({
                             target: {
-                              name: 'cpf',
+                              name: 'legalGuardianCpf',
                               value: event.target.value.replace(/\D/g, ''),
                             },
                           })
@@ -272,14 +283,14 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       <Form.Control
                         type="text"
                         as={InputMask}
-                        isInvalid={!!errors.cellPhone}
+                        isInvalid={!!errors.legalGuardianCellPhone}
                         mask="(99) 99999-9999"
                         id="legalGuardianCellPhone"
                         value={values.legalGuardianCellPhone}
                         onChange={(event) => {
                           handleChange({
                             target: {
-                              name: 'cellPhone',
+                              name: 'legalGuardianCellPhone',
                               value: event.target.value.replace(/\D/g, ''),
                             },
                           });
