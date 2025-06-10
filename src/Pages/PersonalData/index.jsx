@@ -105,7 +105,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
     if (currentAge < 18) {
       toast.warn(
-        `Como a idade informada na data do acampamento é inferior a 18 anos (${currentAge}), é necessário informar os dados de um responsável legal que estará presente no acampamento.`,
+        `Como a idade informada na data do acampamento é de ${currentAge} anos, sendo inferior a 18 anos, é necessário informar os dados de um responsável legal que estará presente no acampamento.`,
       );
 
       setShowLegalGuardianFields(true);
@@ -219,15 +219,15 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       <Form.Control
                         type="text"
                         id="legalGuardianName"
-                        isInvalid={!!errors.name}
+                        isInvalid={!!errors.legalGuardianName}
                         value={values.legalGuardianName}
                         onChange={(e) => {
                           handleChange(e);
-                          updateForm({ ...values, name: e.target.value });
+                          updateForm({ ...values, legalGuardianName: e.target.value });
                         }}
                       />
                       <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
-                        {errors.birthday}
+                        {errors.legalGuardianName}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
@@ -260,7 +260,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                         placeholder="000.000000-00"
                         title="Preencher CPF válido"
                       ></Form.Control>
-                      <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCpf}</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
 
@@ -286,7 +286,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                         }}
                         placeholder="(00) 00000-0000"
                       />
-                      <Form.Control.Feedback type="invalid">{errors.cellPhone}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCellPhone}</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
