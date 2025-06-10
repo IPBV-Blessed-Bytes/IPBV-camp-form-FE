@@ -1,7 +1,13 @@
 import { Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const AgeConfirmationModal = ({ showModal, currentAge, handleCancelAge, handleConfirmAge, restoreScrollWhenMobile }) => {
+const AgeConfirmationModal = ({
+  showModal,
+  currentAge,
+  handleCancelAge,
+  handleConfirmAge,
+  restoreScrollWhenMobile,
+}) => {
   return (
     <Modal show={showModal} onHide={handleCancelAge} onExited={restoreScrollWhenMobile}>
       <Modal.Header closeButton>
@@ -29,6 +35,7 @@ AgeConfirmationModal.propTypes = {
   currentAge: PropTypes.number,
   handleCancelAge: PropTypes.func,
   handleConfirmAge: PropTypes.func,
+  restoreScrollWhenMobile: PropTypes.func,
 };
 
 export default AgeConfirmationModal;
