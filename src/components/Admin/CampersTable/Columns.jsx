@@ -231,6 +231,28 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
     },
     {
+      label: 'Nome do Responsável Legal',
+      name: 'personalInformation.legalGuardianName',
+      type: 'text',
+      placeholder: 'Nome do Responsável Legal',
+      oddOrEven: 'even',
+    },
+    {
+      label: 'CPF do Responsável Legal',
+      name: 'personalInformation.legalGuardianCpf',
+      type: 'number',
+      placeholder: '1234567890',
+      oddOrEven: 'odd',
+      errorMessage: 'Insira um CPF válido',
+    },
+    {
+      label: 'Celular do Responsável Legal',
+      name: 'personalInformation.legalGuardianCellPhone',
+      type: 'number',
+      placeholder: '81993727854',
+      oddOrEven: 'even',
+    },
+    {
       label: 'Observação',
       name: 'observation',
       type: 'text',

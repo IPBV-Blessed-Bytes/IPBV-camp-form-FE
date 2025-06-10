@@ -823,6 +823,46 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
+        Header: 'Nome:',
+        accessor: 'personalInformation.legalGuardianName',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: alphabeticalSort,
+        Cell: ({ value }) => value || '-',
+      },
+      {
+        Header: 'CPF:',
+        accessor: 'personalInformation.legalGuardianCpf',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Celular:',
+        accessor: 'personalInformation.legalGuardianCellPhone',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+      },
+      {
         Header: 'Observação:',
         accessor: 'observation',
         Filter: ({ column }) => (
@@ -1067,7 +1107,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithCoupon,
         selectWithCheckin,
         selectWithManualRegistration,
-        selectWithCrew
+        selectWithCrew,
       },
     },
     useFilters,
@@ -1129,6 +1169,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'extraMeals.someFood': 'Tem Refeição Extra',
       'extraMeals.extraMeals': 'Refeições Extra',
       'extraMeals.totalPrice': 'Valor Refeição Extra',
+      'personalInformation.legalGuardianName': 'Nome do Responsável Legal',
+      'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
+      'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
       observation: 'Observação',
       crew: 'Equipe',
       manualRegistration: 'Inscrição Manual',
@@ -1172,6 +1215,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Tem Refeição Extra',
       'Refeições Extra',
       'Valor Refeição Extra',
+      'Nome do Responsável Legal',
+      'CPF do Responsável Legal',
+      'Celular do Responsável Legal',
       'Observação',
       'Equipe',
       'Inscrição Manual',
