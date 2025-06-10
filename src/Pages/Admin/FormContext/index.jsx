@@ -18,6 +18,15 @@ const AdminFormContext = ({ loggedUsername }) => {
 
   scrollUp();
 
+  const contextLabels = {
+    'form-on': 'Aberto',
+    'form-off': 'Fechado',
+    'form-waiting': 'Esperando Início do Acampamento',
+    'form-closed': 'Restrito',
+    maintenance: 'Manutenção',
+    'google-forms': 'Google Forms',
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +54,7 @@ const AdminFormContext = ({ loggedUsername }) => {
     try {
       await fetcher.put('form-context', { formContext: selectedContext });
       toast.success('Contexto do formulário atualizado com sucesso');
-      registerLog(`Alterou o contexto do formulário para ${selectedContext}`, loggedUsername);
+      registerLog(`Alterou o contexto do formulário para ${contextLabels[selectedContext]}`, loggedUsername);
     } catch (error) {
       console.error('Erro ao atualizar contexto:', error);
       toast.error('Erro ao atualizar contexto do formulário');
@@ -76,7 +85,10 @@ const AdminFormContext = ({ loggedUsername }) => {
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Alteração</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Tem certeza de que deseja alterar o contexto do formulário para <b>{selectedContext}</b>?</Modal.Body>
+        <Modal.Body>
+          Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
+        </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancelar
