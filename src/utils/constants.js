@@ -16,6 +16,9 @@ export const initialValues = {
   personalInformation: {
     name: '',
     birthday: '',
+    legalGuardianName: '',
+    legalGuardianCpf: '',
+    legalGuardianCellPhone: '',
     cpf: '',
     rg: '',
     rgShipper: '',
