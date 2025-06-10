@@ -61,6 +61,9 @@ Estamos com 100% da nossa solução coberta por testes end-to-end utilizando o P
 3. Execute a aplicação:
    `yarn dev`
 
+4. Você poderá acessar pela porta 3000:
+   `http://localhost:3000/`
+
 ## 🌍 **Deployment**
 
 O projeto está em produção e pode ser acessado [neste link](https://inscricaoipbv.com.br/).
