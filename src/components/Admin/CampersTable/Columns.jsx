@@ -257,14 +257,14 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       name: 'observation',
       type: 'text',
       placeholder: 'Observação sobre essa inscrição',
-      oddOrEven: 'even',
+      oddOrEven: 'odd',
     },
     {
       label: 'Equipe',
       name: 'crew',
       type: 'select',
       placeholder: 'Selecione se é equipante',
-      oddOrEven: 'odd',
+      oddOrEven: 'even',
       options: [
         { label: 'Sim', value: true },
         { label: 'Não', value: false },
