@@ -47,7 +47,7 @@ const Tools = ({
 
   return (
     <>
-      {showHeaderTools && (
+      {showHeaderTools() && (
         <Row className="mb-4">
           <Col
             className={showSecondaryButton && 'mb-3 mb-xl-0'}

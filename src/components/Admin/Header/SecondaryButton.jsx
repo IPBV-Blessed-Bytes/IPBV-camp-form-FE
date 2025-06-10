@@ -30,7 +30,7 @@ const SecondaryButton = ({
 
   return (
     <>
-      {shouldShowSecondaryButton && (
+      {shouldShowSecondaryButton() && (
         <Col
           xl={secondaryButtonCols?.xl || 12}
           lg={secondaryButtonCols?.lg || 12}
