@@ -31,7 +31,7 @@ const AdminFormContext = ({ loggedUsername }) => {
     const fetchData = async () => {
       try {
         const response = await fetcher.get('form-context');
-        setFormContext(response.data.context);
+        setFormContext(response.data.formContext);
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
         toast.error('Erro ao carregar contexto do formulário');
