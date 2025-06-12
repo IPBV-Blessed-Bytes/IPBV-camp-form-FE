@@ -7,6 +7,7 @@ import './style.scss';
 
 const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
 
@@ -14,11 +15,21 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
     setIsConfirmed(e.target.checked);
   };
 
+  const handleAuthorizationChange = (e) => {
+    setIsDataAuthorized(e.target.checked);
+  };
+
   const handleClick = () => {
-    if (formValues.package.finalPrice === 0) {
-      sendForm();
+    if (!isConfirmed) {
+      return;
+    } else if (!isDataAuthorized) {
+      return;
     } else {
-      nextStep();
+      if (formValues.package.finalPrice === 0) {
+        sendForm();
+      } else {
+        nextStep();
+      }
     }
   };
 
@@ -197,7 +208,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
-                  <Form.Group className="d-flex justify-content-center">
+                  <Form.Group className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
@@ -206,6 +217,16 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                       name={'hasCoupon'}
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
+                    />
+                    <Form.Check
+                      className="form-review__section-title fw-bold"
+                      type={'checkbox'}
+                      label={
+                        'Autorizo o armazenamento e uso de meus dados para fins do acampamento. Eles não serão utilizados para nenhuma outra finalidade.'
+                      }
+                      id={'authorizeData'}
+                      onChange={handleAuthorizationChange}
+                      checked={isDataAuthorized}
                     />
                   </Form.Group>
                 </Form>
@@ -221,8 +242,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
               variant="warning"
               onClick={handleClick}
               size="lg"
-              disabled={!isConfirmed || status === 'loading' || status === 'loaded'}
-              title={!isConfirmed && `Confirme acima que os dados foram preenchidos corretamente`}
+              disabled={!isConfirmed || !isDataAuthorized || status === 'loading' || status === 'loaded'}
             >
               Avançar
             </Button>
@@ -272,7 +292,7 @@ FinalReview.propTypes = {
     extraMeals: PropTypes.shape({
       totalPrice: PropTypes.number,
       someFood: PropTypes.bool,
-    }).isRequired,
+    }),
   }).isRequired,
   sendForm: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
