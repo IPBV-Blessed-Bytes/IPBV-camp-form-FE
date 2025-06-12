@@ -116,6 +116,20 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
   const handlePrefillConfirm = () => {
     if (previousUserData.personalInformation) {
       const { name, rg, rgShipper, rgShipperState, gender } = previousUserData.personalInformation;
+      const {
+        cellPhone,
+        isWhatsApp,
+        email,
+        church,
+        car,
+        numberVacancies,
+        needRide,
+        rideObservation,
+        hasAllergy,
+        allergy,
+        hasAggregate,
+        aggregate,
+      } = previousUserData.contact;
 
       setValues((prevValues) => ({
         ...prevValues,
@@ -133,6 +147,18 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
         rgShipper,
         rgShipperState,
         gender,
+        cellPhone,
+        isWhatsApp,
+        email,
+        church,
+        car,
+        numberVacancies,
+        needRide,
+        rideObservation,
+        hasAllergy,
+        allergy,
+        hasAggregate,
+        aggregate,
       });
     }
     setShowPrefillModal(false);
