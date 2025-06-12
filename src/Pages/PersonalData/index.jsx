@@ -164,6 +164,26 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     setShowPrefillModal(false);
   };
 
+  const handlePrefillReject = async () => {
+    if (!previousUserData || !previousUserData.id) {
+      toast.error('Não foi possível encontrar o usuário para exclusão.');
+      return;
+    }
+
+    try {
+      await fetcher.delete(`${BASE_URL}/camper/user-previous-year`, {
+        data: { id: previousUserData.id },
+      });
+
+      toast.success('Usuário removido da base de dados com sucesso.');
+      setPreviousUserData(null);
+      setShowPrefillModal(false);
+    } catch (error) {
+      console.error('Erro ao excluir usuário anterior:', error);
+      toast.error('Erro ao excluir usuário da base de dados.');
+    }
+  };
+
   const handleDateChange = (date) => {
     setFieldValue('birthday', date);
   };
@@ -531,14 +551,22 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
       />
       <Modal show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Seus Dados do Último Acampamento</Modal.Title>
+          <Modal.Title>
+            <b>Pré-preenchimento dos dados:</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Encontramos dados do ano anterior para esse CPF. Deseja preenchê-los automaticamente? Você ainda poderá editar
-          caso queira mudar algo!
+          Identificamos que você participou do evento no ano passado. Deseja reutilizar suas informações para agilizar
+          sua inscrição?{' '}
+          <b>
+            Seus dados só serão preenchidos após sua confirmação e não serão utilizados para nenhuma outra finalidade.
+          </b>{' '}
+          Caso opte por não reutilizar, eles serão excluídos da nossa base de dados, essa ação é irreversível.{' '}
+          <em>Caso opte por utilizar, você ainda poderá editar os campos do formulário</em>, caso deseje fazer alguma
+          alteração.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowPrefillModal(false)}>
+          <Button variant="secondary" onClick={handlePrefillReject}>
             Não
           </Button>
           <Button variant="primary" onClick={handlePrefillConfirm}>
