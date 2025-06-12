@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -6,7 +7,7 @@ import { additionalInformationSchema } from '@/form/validations/schema';
 import './style.scss';
 
 const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
-  const { values, handleChange, errors, submitForm } = useFormik({
+  const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues,
     onSubmit: () => {
       nextStep();
@@ -16,6 +17,44 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
     validateOnChange: false,
     validationSchema: additionalInformationSchema,
   });
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('previousUserData');
+
+    if (storedData) {
+      const parsedPreviousUserData = JSON.parse(storedData);
+
+      const {
+        cellPhone,
+        isWhatsApp,
+        email,
+        church,
+        car,
+        numberVacancies,
+        needRide,
+        rideObservation,
+        hasAllergy,
+        allergy,
+        hasAggregate,
+        aggregate,
+      } = parsedPreviousUserData.contact;
+
+      setValues((prevValues) => ({
+        ...prevValues,
+        cellPhone,
+        isWhatsApp,
+        email,
+        church,
+        car,
+        numberVacancies,
+        needRide,
+        rideObservation,
+        hasAllergy,
+        allergy,
+        hasAggregate,
+        aggregate,
+      }));
+    }
+  }, []);
 
   return (
     <Card className="form__container__general-height">
