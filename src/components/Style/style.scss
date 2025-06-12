@@ -178,7 +178,7 @@
   justify-content: center;
 
   .spinner-border {
-    color: $secondary;
+    color: $baby-blue;
   }
 }
 
@@ -373,4 +373,9 @@
   svg {
     padding: 4px;
   }
+}
+
+// Skelleton Card Body
+.skelleton-card-body {
+  width: 100vw;
 }
