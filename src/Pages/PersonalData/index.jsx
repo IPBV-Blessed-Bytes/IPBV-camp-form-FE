@@ -107,13 +107,33 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     }
   }, [values.cpf, values.birthday]);
 
+  useEffect(() => {
+    if (values.cpf && values.cpf.length === 11 && !cpf.isValid(values.cpf)) {
+      toast.error('CPF inválido. Verifique o número e tente novamente.');
+    }
+  }, [values.cpf]);
+
   const handlePrefillConfirm = () => {
-    if (previousUserData) {
+    if (previousUserData.personalInformation) {
+      const { name, rg, rgShipper, rgShipperState, gender } = previousUserData.personalInformation;
+
       setValues((prevValues) => ({
         ...prevValues,
-        ...previousUserData,
+        name,
+        rg,
+        rgShipper,
+        rgShipperState,
+        gender,
       }));
-      updateForm(previousUserData);
+
+      updateForm({
+        ...values,
+        name,
+        rg,
+        rgShipper,
+        rgShipperState,
+        gender,
+      });
     }
     setShowPrefillModal(false);
   };
