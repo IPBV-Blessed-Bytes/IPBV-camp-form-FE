@@ -208,7 +208,7 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
-                  <Form.Group className="d-flex justify-content-center flex-column align-items-center gap-2 mt-4">
+                  <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
