@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { parse } from 'date-fns';
@@ -14,21 +14,26 @@ import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
 import { BASE_URL } from '@/config';
-import axios from 'axios';
+import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 
 const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showPrefillModal, setShowPrefillModal] = useState(false);
+  const [previousUserData, setPreviousUserData] = useState(null);
   const [currentAge, setCurrentAge] = useState(null);
   const [showLegalGuardianFields, setShowLegalGuardianFields] = useState(false);
 
-  const { values, errors, handleChange, submitForm, setFieldValue } = useFormik({
+  const { values, errors, handleChange, submitForm, setFieldValue, setValues } = useFormik({
     initialValues,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
         try {
-          const response = await axios.post(`${BASE_URL}/coupon/check`, { cpf: values.cpf });
+          const response = await fetcher.post(`${BASE_URL}/coupon/check`, {
+            cpf: values.cpf,
+            birthday: values.birthday,
+          });
 
           if (onDiscountChange) {
             onDiscountChange(response.data.discount);
@@ -37,7 +42,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
           if (response.data.discount && response.data.discount !== 0) {
             const fetchCoupons = async () => {
               try {
-                const couponResponse = await axios.get(`${BASE_URL}/coupon`);
+                const couponResponse = await fetcher.get(`${BASE_URL}/coupon`);
                 const coupons = couponResponse.data.coupons;
 
                 if (coupons && coupons.length > 0) {
@@ -45,7 +50,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
                   if (matchingCoupon) {
                     if (!matchingCoupon.user) {
-                      await axios.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
+                      await fetcher.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
                         ...matchingCoupon,
                         user: formUsername,
                       });
@@ -74,6 +79,44 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const isFullyValidDate = (date) => {
+    return date instanceof Date && !isNaN(date.getTime()) && date.getFullYear() > 1900;
+  };
+
+  useEffect(() => {
+    const fetchPreviousData = async () => {
+      if (cpf.isValid(values.cpf)) {
+        try {
+          const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
+            cpf: values.cpf,
+          });
+
+          const userData = response.data;
+          sessionStorage.setItem('previousUserData', JSON.stringify(userData));
+          setPreviousUserData(userData);
+          setShowPrefillModal(true);
+        } catch (error) {
+          console.error('Erro ao buscar dados do ano anterior:', error);
+        }
+      }
+    };
+
+    if (values.cpf && values.cpf.length === 11 && isFullyValidDate(values.birthday)) {
+      fetchPreviousData();
+    }
+  }, [values.cpf, values.birthday]);
+
+  const handlePrefillConfirm = () => {
+    if (previousUserData) {
+      setValues((prevValues) => ({
+        ...prevValues,
+        ...previousUserData,
+      }));
+      updateForm(previousUserData);
+    }
+    setShowPrefillModal(false);
+  };
 
   const handleDateChange = (date) => {
     setFieldValue('birthday', date);
@@ -152,49 +195,33 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
             </Card.Text>
             <Form>
               <Row>
-                <Col md={7} className="mb-3">
+                <Col md={6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
-                      <b>Nome Completo:</b>
+                      <b>CPF:</b>
                     </Form.Label>
                     <Form.Control
-                      type="text"
-                      id="name"
-                      isInvalid={!!errors.name}
-                      value={values.name}
-                      onChange={(e) => {
-                        handleChange(e);
-                        updateForm({ ...values, name: e.target.value });
-                      }}
-                    />
-                    <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                      as={InputMask}
+                      isInvalid={!!errors.cpf}
+                      mask="999.999.999-99"
+                      name="cpf"
+                      id="cpf"
+                      className="cpf-container"
+                      value={values.cpf}
+                      onChange={(event) =>
+                        handleChange({
+                          target: {
+                            name: 'cpf',
+                            value: event.target.value.replace(/\D/g, ''),
+                          },
+                        })
+                      }
+                      placeholder="000.000000-00"
+                      title="Preencher CPF válido"
+                    ></Form.Control>
+                    <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col md={5} className="mb-3">
-                  <Form.Group>
-                    <Form.Label>
-                      <b>Categoria de Acampante:</b>
-                    </Form.Label>
-                    <Form.Select
-                      isInvalid={!!errors.gender}
-                      value={values.gender}
-                      name="gender"
-                      id="gender"
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Selecione uma opção
-                      </option>
-                      <option value="Crianca">Criança (até 10 anos)</option>
-                      <option value="Homem">Adulto Masculino</option>
-                      <option value="Mulher">Adulto Feminimo</option>
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
                 <Col md={6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
@@ -221,7 +248,10 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                {showLegalGuardianFields && (
+              </Row>
+
+              {showLegalGuardianFields && (
+                <Row>
                   <Col md={6} className="mb-3">
                     <Form.Group>
                       <Form.Label>
@@ -242,11 +272,6 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
-                )}
-              </Row>
-
-              {showLegalGuardianFields && (
-                <Row>
                   <Col md={6} className="mb-3">
                     <Form.Group>
                       <Form.Label>
@@ -274,7 +299,11 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       <Form.Control.Feedback type="invalid">{errors.legalGuardianCpf}</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
+                </Row>
+              )}
 
+              <Row>
+                {showLegalGuardianFields && (
                   <Col md={6} className="mb-3">
                     <Form.Group>
                       <Form.Label>
@@ -300,35 +329,48 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       <Form.Control.Feedback type="invalid">{errors.legalGuardianCellPhone}</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
-                </Row>
-              )}
+                )}
+                <Col md={6} className="mb-3">
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Categoria de Acampante:</b>
+                    </Form.Label>
+                    <Form.Select
+                      isInvalid={!!errors.gender}
+                      value={values.gender}
+                      name="gender"
+                      id="gender"
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      <option value="Crianca">Criança (até 10 anos)</option>
+                      <option value="Homem">Adulto Masculino</option>
+                      <option value="Mulher">Adulto Feminimo</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
 
               <Row>
                 <Col md={6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
-                      <b>CPF:</b>
+                      <b>Nome Completo:</b>
                     </Form.Label>
                     <Form.Control
-                      as={InputMask}
-                      isInvalid={!!errors.cpf}
-                      mask="999.999.999-99"
-                      name="cpf"
-                      id="cpf"
-                      className="cpf-container"
-                      value={values.cpf}
-                      onChange={(event) =>
-                        handleChange({
-                          target: {
-                            name: 'cpf',
-                            value: event.target.value.replace(/\D/g, ''),
-                          },
-                        })
-                      }
-                      placeholder="000.000000-00"
-                      title="Preencher CPF válido"
-                    ></Form.Control>
-                    <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
+                      type="text"
+                      id="name"
+                      isInvalid={!!errors.name}
+                      value={values.name}
+                      onChange={(e) => {
+                        handleChange(e);
+                        updateForm({ ...values, name: e.target.value });
+                      }}
+                    />
+                    <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
 
@@ -441,6 +483,23 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
         handleConfirmAge={handleConfirmAge}
         restoreScrollWhenMobile={restoreScrollWhenMobile}
       />
+      <Modal show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Seus Dados do Último Acampamento</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Encontramos dados do ano anterior para esse CPF. Deseja preenchê-los automaticamente? Você ainda poderá editar
+          caso queira mudar algo!
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPrefillModal(false)}>
+            Não
+          </Button>
+          <Button variant="primary" onClick={handlePrefillConfirm}>
+            Sim
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
