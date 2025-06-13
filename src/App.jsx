@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { isAdminPath } from './utils/pathname';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -7,6 +8,8 @@ import Skelleton from './components/Global/Skelleton';
 function App() {
   const [formContext, setFormContext] = useState('');
   const [loading, setLoading] = useState(true);
+  const windowPathname = window.location.pathname;
+  const adminPathname = isAdminPath(windowPathname);
 
   console.error = (message) => {
     if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
@@ -29,7 +32,7 @@ function App() {
     fetchFormContext();
   }, []);
 
-  if (loading) {
+  if (loading && !adminPathname) {
     return <Skelleton />;
   }
 
