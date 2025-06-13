@@ -28,37 +28,37 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
   return (
     <>
       {primaryPermission && (
-        <Button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
+        <button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
           <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
-        </Button>
+        </button>
       )}
 
       {secondaryPermission && (
-        <Button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
+        <button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
           <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
-        </Button>
+        </button>
       )}
 
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
-        <Button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/logs')}>
           Logs de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
-        </Button>
+        </button>
 
-        <Button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/vagas')}>
           Controle de Vagas&nbsp;
           <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
-        </Button>
+        </button>
 
-        <Button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/usuarios')}>
           Controle de Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
-        </Button>
+        </button>
 
-        <Button className="settings-message-button" onClick={() => navigate('/admin/contexto')}>
+        <button className="settings-message-button" onClick={() => navigate('/admin/contexto')}>
           Contexto do Formulário&nbsp;
           <Icons className="settings-icons" typeIcon="form-context" iconSize={25} fill={'#fff'} />
-        </Button>
+        </button>
       </div>
     </>
   );

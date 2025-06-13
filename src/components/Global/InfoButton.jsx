@@ -40,20 +40,20 @@ const InfoButton = ({ timeout }) => {
   return (
     <>
       {showWhatsAppIcon && (
-        <Button ref={whatsappButtonRef} className="info-btn" onClick={toggleWhatsAppButtons}>
+        <button ref={whatsappButtonRef} className="info-btn" onClick={toggleWhatsAppButtons}>
           <Icons typeIcon="info" iconSize={25} fill={'#ffc107'} />
-        </Button>
+        </button>
       )}
 
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-        <Button
+        <button
           className="whatsapp-message-button"
           onClick={() => window.open('https://wa.me/5581998390194', '_blank')}
         >
           Fale Conosco&nbsp;
           <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
-        </Button>
-        <Button
+        </button>
+        <button
           className="whatsapp-share-button"
           onClick={() =>
             window.open(
@@ -64,15 +64,15 @@ const InfoButton = ({ timeout }) => {
         >
           Compartilhar&nbsp;
           <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />
-        </Button>
-        <Button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
+        </button>
+        <button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
           Verificar Inscrição&nbsp;
           <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
-        </Button>
-        <Button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+        </button>
+        <button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
           Perguntas Frequentes&nbsp;
           <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
-        </Button>
+        </button>
       </div>
     </>
   );
