@@ -10,6 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ptBR } from 'date-fns/locale';
 import InputMask from 'react-input-mask';
 import { cpf } from 'cpf-cnpj-validator';
+import { format } from 'date-fns';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
@@ -84,12 +85,18 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     return date instanceof Date && !isNaN(date.getTime()) && date.getFullYear() > 1900;
   };
 
+  const formatDate = (date) => {
+    if (!(date instanceof Date)) date = new Date(date);
+    return format(date, 'dd/MM/yyyy');
+  };
+
   useEffect(() => {
     const fetchPreviousData = async () => {
       if (cpf.isValid(values.cpf)) {
         try {
           const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
             cpf: values.cpf,
+            birthday: formatDate(values.birthday),
           });
 
           const userData = response.data;
