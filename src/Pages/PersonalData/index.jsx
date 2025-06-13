@@ -172,15 +172,13 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
   };
 
   const handlePrefillReject = async () => {
-    if (!previousUserData || !previousUserData.id) {
+    if (!previousUserData) {
       toast.error('Não foi possível encontrar o usuário para exclusão.');
       return;
     }
 
     try {
-      await fetcher.delete(`${BASE_URL}/camper/user-previous-year`, {
-        data: { id: previousUserData.id },
-      });
+      await fetcher.delete(`${BASE_URL}/camper/user-previous-year/${previousUserData.personalInformation.cpf}`);
 
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);
