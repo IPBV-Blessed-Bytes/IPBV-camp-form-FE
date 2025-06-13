@@ -210,7 +210,16 @@ select {
   text-decoration: none;
 }
 
-a:not(.form-success__button, .mail-to, .order-url) {
+.lgpd-link {
+  color: inherit;
+  font-weight: bold;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+a:not(.form-success__button, .mail-to, .order-url, .lgpd-link) {
   color: $white;
   text-decoration: none;
 }
