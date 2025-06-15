@@ -95,7 +95,7 @@ const FormRoutes = ({
 
               <div className="form__container">
                 {steps === enumSteps.home && isNotSuccessPathname && (
-                  <FormHome nextStep={nextStep} backStep={backStep} />
+                  <FormHome nextStep={nextStep} />
                 )}
 
                 {steps === enumSteps.personalData && isNotSuccessPathname && (

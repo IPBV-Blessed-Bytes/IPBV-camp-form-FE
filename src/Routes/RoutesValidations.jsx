@@ -19,7 +19,7 @@ const RoutesValidations = ({ formContext }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.packages);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [availablePackages, setAvailablePackages] = useState({});

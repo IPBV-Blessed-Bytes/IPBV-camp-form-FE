@@ -1,0 +1,70 @@
+import React from 'react';
+import { useCart } from 'react-use-cart';
+import { saveCart } from '@/services/cartService';
+
+const Cart = () => {
+  const { isEmpty, items, cartTotal, removeItem, emptyCart } = useCart();
+
+  const basePrice = 100;
+  const finalTotal = basePrice + cartTotal;
+
+  const handleSaveCart = async () => {
+    try {
+      await saveCart(items);
+      alert('Carrinho salvo com sucesso!');
+    } catch (err) {
+      alert('Erro ao salvar carrinho');
+    }
+  };
+
+  if (isEmpty) return <p className="empty-cart">Seu carrinho está vazio</p>;
+
+  const groupedByUser = items.reduce((acc, item) => {
+    const userName = item.userName || 'Desconhecido';
+    if (!acc[userName]) acc[userName] = [];
+    acc[userName].push(item);
+    return acc;
+  }, {});
+
+  return (
+    <div className="cart-container">
+      <h2 className="cart-title">Seu Carrinho 🛒</h2>
+
+      {Object.entries(groupedByUser).map(([userName, userItems]) => (
+        <div key={userName} className="cart-user-group">
+          <h4 className="cart-user-title"><b>{userName}:</b></h4>
+          {userItems.map((item) => (
+            <div key={`${item.id}-${item.userName}`} className="cart-item">
+              <div className="item-info">
+                <h3>{item.category || item.name}</h3>
+                {item.category && <p>{item.name}</p>}
+                <p>Preço: R$ {item.price.toFixed(2)}</p>
+              </div>
+
+              <div className="item-actions">
+                <button onClick={() => removeItem(item.id)} className="remove">
+                  Remover
+                </button>
+              </div>
+            </div>
+          ))}
+          <hr className="horizontal-line" />
+        </div>
+      ))}
+
+      <div className="cart-total">
+        <p>Valor Base: R$ {basePrice.toFixed(2)}</p>
+        <strong>Total:</strong> R$ {finalTotal.toFixed(2)}
+      </div>
+
+      <div className="cart-buttons">
+        <button onClick={emptyCart}>Esvaziar Carrinho</button>
+        <button onClick={handleSaveCart} className="save">
+          Salvar Carrinho
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;
