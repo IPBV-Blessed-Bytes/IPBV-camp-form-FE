@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 import PropTypes from 'prop-types';
+import { BASE_URL } from '@/config';
+import fetcher from '@/fetchers';
 import './style.scss';
 
 const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
@@ -17,6 +19,18 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
 
   const handleAuthorizationChange = (e) => {
     setIsDataAuthorized(e.target.checked);
+    saveConfirmationUserData(e.target.checked);
+  };
+
+  const saveConfirmationUserData = async (authorizationValue) => {
+    try {
+      await fetcher.post(`${BASE_URL}/camper/confirmationUserData`, {
+        cpf: formValues.personalInformation.cpf,
+        authorization: authorizationValue,
+      });
+    } catch (error) {
+      console.error('Erro ao salvar confirmação do uso dos dados do usuário:', error);
+    }
   };
 
   const handleClick = () => {
