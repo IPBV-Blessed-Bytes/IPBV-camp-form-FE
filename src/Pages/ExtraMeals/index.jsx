@@ -139,7 +139,7 @@ const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }
           <Card.Text>
             <i>
               <b>OBS.: </b>
-              Você selecionou um pacote SEM alimentação na etapa anterior. Verifique se realmente não precisará de
+              Você montou seu pacote SEM alimentação na etapa anterior. Verifique se realmente não precisará de
               alimentação. Caso precise de alguma refeição avulsa, selecione aqui (ou deixe para comprar
               presencialmente, se preferir).
             </i>

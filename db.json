@@ -1,0 +1,26 @@
+{
+  "carts": [
+    {
+      "id": "cd80",
+      "items": [
+        {
+          "id": 2,
+          "name": "Álvaro Leal",
+          "price": 149.9,
+          "image": "/img/tenis.png",
+          "quantity": 1,
+          "itemTotal": 149.9
+        },
+        {
+          "id": 1,
+          "name": "Artur Leal",
+          "price": 59.9,
+          "image": "/img/camiseta.png",
+          "quantity": 1,
+          "itemTotal": 59.9
+        }
+      ],
+      "createdAt": "2025-06-14T00:26:12.440Z"
+    }
+  ]
+}
