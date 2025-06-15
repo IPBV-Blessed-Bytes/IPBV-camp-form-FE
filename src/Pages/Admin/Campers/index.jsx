@@ -1003,6 +1003,25 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
       {
+        Header: 'Permissão Uso Dados:',
+        accessor: 'confirmationUserData',
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithConfirmationUserData',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+      },
+      {
         Header: `${adminTableDeleteRegistrationsAndSelectRows ? 'Editar / Deletar' : 'Editar Acampantes'}`,
         Cell: ({ row }) => (
           <>
@@ -1076,6 +1095,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
+  const selectWithConfirmationUserData = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.confirmationUserData === filterValue;
+    });
+  };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -1109,6 +1135,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithCheckin,
         selectWithManualRegistration,
         selectWithCrew,
+        selectWithConfirmationUserData,
       },
     },
     useFilters,
