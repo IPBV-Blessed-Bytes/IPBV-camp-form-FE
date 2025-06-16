@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../Style/style.scss';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
+import { Button, Modal } from 'react-bootstrap';
+import Cart from './Cart';
 
-const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
-  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacotes', 'Refeição Extra', 'Revisão', 'Pagamento'];
+const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu, formValues }) => {
+  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Refeição Extra', 'Revisão', 'Pagamento'];
+  const [showCartModal, setShowCartModal] = useState(false);
   const navigateTo = useNavigate();
 
   const handleStepChange = (newStep) => {
@@ -27,7 +30,9 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
   return (
     <header className="form__header">
       <h2>
-        <a className="header-title" href="/">ACAMPAMENTO IPBV 2026</a>
+        <a className="header-title" href="/">
+          ACAMPAMENTO IPBV 2026
+        </a>
       </h2>
       {showNavMenu && (
         <Breadcrumb className="mt-4">
@@ -47,12 +52,30 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
                 {step}
               </Breadcrumb.Item>
               {index < headerSteps.length - 1 && (
-                <Icons className="d-none d-lg-block" typeIcon="arrow-right" iconSize={25} fill={index < currentStep ? '#ffc107' : '#fff'} />
+                <Icons
+                  className="d-none d-lg-block"
+                  typeIcon="arrow-right"
+                  iconSize={25}
+                  fill={index < currentStep ? '#ffc107' : '#fff'}
+                />
               )}
             </React.Fragment>
           ))}
         </Breadcrumb>
       )}
+
+      <Button className="cart-btn" onClick={() => setShowCartModal(true)}>
+        <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+      </Button>
+
+      <Modal show={showCartModal} onHide={() => setShowCartModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Resumo do Carrinho</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Cart formValues={formValues} />
+        </Modal.Body>
+      </Modal>
     </header>
   );
 };
