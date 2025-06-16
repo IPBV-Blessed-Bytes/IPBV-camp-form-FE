@@ -1004,7 +1004,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Permissão Uso Dados:',
-        accessor: 'confirmationUserData',
+        accessor: 'authorization',
         Filter: ({ column }) => (
           <ColumnFilterWithTwoValues
             column={column}
