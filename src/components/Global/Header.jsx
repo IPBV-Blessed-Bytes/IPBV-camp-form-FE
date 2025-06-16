@@ -72,7 +72,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu, formVal
         <Modal.Header closeButton>
           <Modal.Title>Resumo do Carrinho</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className='p-0'>
           <Cart formValues={formValues} />
         </Modal.Body>
       </Modal>
