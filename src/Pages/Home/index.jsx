@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import './style.scss';
 
-const FormHome = (props) => {
+const FormHome = (nextStep) => {
   const location = useLocation();
   const [showLgpdModal, setShowLgpdModal] = useState(false);
 
@@ -82,7 +82,7 @@ const FormHome = (props) => {
         </Card.Body>
 
         <div className="form__container__buttons justify-content-end">
-          <Button variant="warning" onClick={props.nextStep} size="lg">
+          <Button variant="warning" onClick={nextStep} size="lg">
             Avançar
           </Button>
         </div>
