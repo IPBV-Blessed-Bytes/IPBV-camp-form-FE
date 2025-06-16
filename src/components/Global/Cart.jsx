@@ -23,7 +23,6 @@ const Cart = ({ formValues }) => {
 
   return (
     <div className="cart-container">
-      <h2 className="cart-title">Seu Carrinho</h2>
 
       <div className="cart-user-group">
         <h4 className="cart-user-title">
