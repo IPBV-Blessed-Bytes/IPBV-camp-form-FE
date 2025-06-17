@@ -76,7 +76,10 @@ const FormRoutes = ({
   backStep,
   goBackToStep,
   sendForm,
+  addUserToList,
 }) => {
+  const currentFormValues = formValues?.[formValues.length - 1] || {};
+
   return (
     <div className="form">
       {!adminPathname && formPath && (
@@ -91,27 +94,26 @@ const FormRoutes = ({
                 goBackToStep={goBackToStep}
                 formSubmitted={formSubmitted}
                 showNavMenu={true}
+                formValues={currentFormValues}
               />
 
               <div className="form__container">
-                {steps === enumSteps.home && isNotSuccessPathname && (
-                  <FormHome nextStep={nextStep} backStep={backStep} />
-                )}
+                {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
 
                 {steps === enumSteps.personalData && isNotSuccessPathname && (
                   <FormPersonalData
-                    initialValues={formValues.personalInformation}
+                    initialValues={currentFormValues.personalInformation}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('personalInformation')}
                     onDiscountChange={handleDiscountChange}
-                    formUsername={formValues.personalInformation.name}
+                    formUsername={currentFormValues.personalInformation?.name}
                   />
                 )}
 
                 {steps === enumSteps.contact && isNotSuccessPathname && (
                   <FormContact
-                    initialValues={formValues.contact}
+                    initialValues={currentFormValues.contact}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('contact')}
@@ -137,10 +139,10 @@ const FormRoutes = ({
 
                 {steps === enumSteps.extraMeals && isNotSuccessPathname && (
                   <ExtraMeals
-                    birthDate={formValues.personalInformation.birthday}
+                    birthDate={currentFormValues.personalInformation?.birthday}
                     backStep={backStep}
                     nextStep={nextStep}
-                    initialValues={formValues.extraMeals}
+                    initialValues={currentFormValues.extraMeals}
                     updateForm={updateFormValues('extraMeals')}
                   />
                 )}
@@ -149,15 +151,16 @@ const FormRoutes = ({
                   <FinalReview
                     nextStep={nextStep}
                     backStep={backStep}
-                    formValues={formValues}
+                    formValues={currentFormValues}
                     sendForm={sendForm}
                     status={status}
+                    addUserToList={addUserToList}
                   />
                 )}
 
                 {steps === enumSteps.formPayment && isNotSuccessPathname && (
                   <ChooseFormPayment
-                    initialValues={formValues}
+                    initialValues={currentFormValues}
                     skipTwoSteps={skipTwoSteps}
                     backStep={backStep}
                     updateForm={updateFormValues('formPayment')}
@@ -346,16 +349,18 @@ const FormRoutes = ({
 FormRoutes.propTypes = {
   formContext: PropTypes.string,
   steps: PropTypes.number,
-  formValues: PropTypes.shape({
-    personalInformation: PropTypes.shape({
-      name: PropTypes.string,
-      birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  formValues: PropTypes.arrayOf(
+    PropTypes.shape({
+      personalInformation: PropTypes.shape({
+        name: PropTypes.string,
+        birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+      }),
+      contact: PropTypes.object,
+      package: PropTypes.object,
+      extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+      formPayment: PropTypes.object,
     }),
-    contact: PropTypes.object,
-    package: PropTypes.object,
-    extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    formPayment: PropTypes.object,
-  }),
+  ),
   formSubmitted: PropTypes.bool,
   availablePackages: PropTypes.array,
   totalRegistrations: PropTypes.shape({
@@ -392,6 +397,7 @@ FormRoutes.propTypes = {
   backStep: PropTypes.func,
   goBackToStep: PropTypes.func,
   sendForm: PropTypes.func,
+  addUserToList: PropTypes.func,
 };
 
 export default FormRoutes;

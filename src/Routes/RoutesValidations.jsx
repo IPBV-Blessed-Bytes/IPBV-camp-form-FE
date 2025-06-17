@@ -19,7 +19,7 @@ const RoutesValidations = ({ formContext }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(enumSteps.personalData);
   const [formValues, setFormValues] = useState(initialValues);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [availablePackages, setAvailablePackages] = useState({});
@@ -35,6 +35,8 @@ const RoutesValidations = ({ formContext }) => {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
+  const [currentFormIndex, setCurrentFormIndex] = useState(0);
+  const [savedUsers, setSavedUsers] = useState([]);
 
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -90,7 +92,8 @@ const RoutesValidations = ({ formContext }) => {
     }
   }, [isLoggedIn, adminPathname, navigate]);
 
-  const age = calculateAge(formValues.personalInformation.birthday);
+  // const age = calculateAge(formValues.personalInformation.birthday);
+  const age = calculateAge(formValues[currentFormIndex]?.personalInformation?.birthday);
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -123,11 +126,40 @@ const RoutesValidations = ({ formContext }) => {
 
   const resetFormSubmitted = () => setFormSubmitted(false);
 
-  const updateFormValues = (key) => (value) => {
-    setFormValues({
-      ...formValues,
-      [key]: value,
+  const updateFormValues = (index, key) => (value) => {
+    setFormValues((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        [key]: value,
+      };
+      return updated;
     });
+  };
+
+  // const handleAddPerson = () => {
+  //   const newPerson = { ...initialValues };
+  //   setFormValues([...formValues, newPerson]);
+  //   setCurrentFormIndex(formValues.length);
+  // };
+
+  // const handleRemovePerson = (indexToRemove) => {
+  //   const updated = formValues.filter((_, index) => index !== indexToRemove);
+  //   setFormValues(updated);
+  //   if (currentFormIndex === indexToRemove) {
+  //     setCurrentFormIndex(0);
+  //   } else if (currentFormIndex > indexToRemove) {
+  //     setCurrentFormIndex((prev) => prev - 1);
+  //   }
+  // };
+
+  const handleSaveUser = () => {
+    addUserToList(formValues);
+    alert('Usuário adicionado à lista com sucesso!');
+  };
+
+  const addUserToList = (userData) => {
+    setSavedUsers((prev) => [...prev, userData]);
   };
 
   const initialStep = () => {
@@ -170,15 +202,15 @@ const RoutesValidations = ({ formContext }) => {
     setLoading(true);
     try {
       setStatus('loading');
-      const updatedForm = {
-        ...formValues,
-        formPayment: formValues.formPayment || 'nonPaid',
+      const formsToSend = formValues.map((form) => ({
+        ...form,
+        formPayment: form.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
+        totalPrice: form.package.finalPrice + form.extraMeals.totalPrice,
         manualRegistration: false,
-      };
+      }));
 
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, updatedForm);
+      const response = await fetcher.post(`${BASE_URL}/checkout/create`, formsToSend);
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
@@ -239,6 +271,7 @@ const RoutesValidations = ({ formContext }) => {
       backStep={backStep}
       goBackToStep={goBackToStep}
       sendForm={sendForm}
+      addUserToList={addUserToList}
     />
   );
 };

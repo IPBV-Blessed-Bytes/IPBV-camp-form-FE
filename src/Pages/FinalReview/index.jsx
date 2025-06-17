@@ -7,7 +7,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
+const FinalReview = ({ nextStep, backStep, formValues, sendForm, status, addUserToList }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
@@ -253,6 +253,14 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
               Voltar
             </Button>
             <Button
+              variant="success"
+              onClick={addUserToList}
+              size="lg"
+              disabled={status === 'loading' || status === 'loaded'}
+            >
+              Salvar Usuário
+            </Button>
+            <Button
               variant="warning"
               onClick={handleClick}
               size="lg"
@@ -310,6 +318,7 @@ FinalReview.propTypes = {
   }).isRequired,
   sendForm: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
+  addUserToList: PropTypes.func.isRequired,
 };
 
 export default FinalReview;
