@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import './style.scss';
 
-const FormHome = (nextStep) => {
+const FormHome = ({ nextStep }) => {
   const location = useLocation();
   const [showLgpdModal, setShowLgpdModal] = useState(false);
 
