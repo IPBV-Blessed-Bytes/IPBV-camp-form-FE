@@ -99,9 +99,15 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
             birthday: formatDate(values.birthday),
           });
 
-          const userData = response.data;
-          sessionStorage.setItem('previousUserData', JSON.stringify(userData));
-          setPreviousUserData(userData);
+          const fullUserData = response.data;
+
+          const filteredUserData = {
+            personalInformation: fullUserData.personalInformation,
+            contact: fullUserData.contact,
+          };
+
+          sessionStorage.setItem('previousUserData', JSON.stringify(filteredUserData));
+          setPreviousUserData(filteredUserData);
           setShowPrefillModal(true);
         } catch (error) {
           console.error('Erro ao buscar dados do ano anterior:', error);
