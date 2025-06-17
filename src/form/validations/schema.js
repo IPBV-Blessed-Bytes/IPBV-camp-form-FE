@@ -1,16 +1,33 @@
 import * as yup from 'yup';
+import { differenceInYears } from 'date-fns';
 
 const personalInformationSchema = yup.object().shape({
   name: yup.string().required('Informe o seu nome'),
   birthday: yup.date().required('Informe a sua data de nascimento'),
-  legalGuardianName: yup.string().required('Informe o nome do responsável legal'),
-  legalGuardianCpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o cpf do responsável legal'),
-  legalGuardianCellPhone: yup.string().min(10, 'Informe um número de telefone válido').required('Informe o telefone do responsável legal'),
   rg: yup.string().min(6, 'Informe um RG válido. Mínimo 6 dígitos').required('Informe o seu rg'),
   cpf: yup.string().min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o seu cpf'),
   rgShipper: yup.string().required('Selecione o órgão expedidor do seu RG'),
   rgShipperState: yup.string().required('Selecione a UF do órgão expedidor'),
   gender: yup.string().required('Selecione um gênero'),
+
+  legalGuardianName: yup.string().when('birthday', (birthday, schema) => {
+    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    return isMinor ? schema.required('Informe o nome do responsável legal') : schema.strip();
+  }),
+
+  legalGuardianCpf: yup.string().when('birthday', (birthday, schema) => {
+    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    return isMinor
+      ? schema.min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o CPF do responsável legal')
+      : schema.strip();
+  }),
+
+  legalGuardianCellPhone: yup.string().when('birthday', (birthday, schema) => {
+    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    return isMinor
+      ? schema.min(10, 'Informe um número de telefone válido').required('Informe o telefone do responsável legal')
+      : schema.strip();
+  }),
 });
 
 const additionalInformationSchema = yup.object().shape({
