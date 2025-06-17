@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 
 const SideButtons = ({ primaryPermission, secondaryPermission }) => {

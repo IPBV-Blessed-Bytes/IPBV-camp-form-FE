@@ -1,6 +1,6 @@
-import React from 'react';
 import { useCart } from 'react-use-cart';
 import { saveCart } from '@/services/cartService';
+import PropTypes from 'prop-types';
 
 const Cart = ({ formValues }) => {
   const { isEmpty, items, cartTotal, removeItem, emptyCart } = useCart();
@@ -23,7 +23,6 @@ const Cart = ({ formValues }) => {
 
   return (
     <div className="cart-container">
-
       <div className="cart-user-group">
         <h4 className="cart-user-title">
           <b>{userName}:</b>
@@ -60,6 +59,14 @@ const Cart = ({ formValues }) => {
       </div>
     </div>
   );
+};
+
+Cart.propTypes = {
+  formValues: PropTypes.shape({
+    personalInformation: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+  }),
 };
 
 export default Cart;

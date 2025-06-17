@@ -85,6 +85,7 @@ Header.propTypes = {
   goBackToStep: PropTypes.func.isRequired,
   formSubmitted: PropTypes.bool,
   showNavMenu: PropTypes.bool,
+  formValues: PropTypes.object
 };
 
 export default Header;

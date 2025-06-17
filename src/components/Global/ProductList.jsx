@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCart } from 'react-use-cart';
 import { products } from '../cart/products';
 
