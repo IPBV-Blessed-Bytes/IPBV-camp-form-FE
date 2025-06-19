@@ -9,57 +9,67 @@ export const enumSteps = {
   success: 7,
 };
 
-export const initialValues = {
-  registrationDate: '',
-  totalPrice: '',
-  manualRegistration: '',
-  personalInformation: {
-    name: '',
-    birthday: '',
-    legalGuardianName: '',
-    legalGuardianCpf: '',
-    legalGuardianCellPhone: '',
-    cpf: '',
-    rg: '',
-    rgShipper: '',
-    rgShipperState: '',
-    gender: '',
-  },
-  contact: {
-    cellPhone: '',
-    email: '',
-    isWhatsApp: '',
-    church: '',
-    car: '',
-    numberVacancies: '',
-    needRide: '',
-    rideObservation: '',
-    hasAllergy: '',
-    allergy: '',
-    hasAggregate: '',
-    aggregate: '',
-  },
-  package: {
-    accomodation: {
-      id: '',
-    },
-    accomodationName: '',
-    subAccomodation: '',
-    discountCoupon: '',
-    discountValue: '',
-    transportation: '',
-    food: '',
-    price: '',
-    finalPrice: '',
-    title: '',
-  },
-  extraMeals: {
-    someFood: '',
+export const initialValues = [
+  {
+    registrationDate: '',
     totalPrice: '',
-    extraMeals: [''],
+    manualRegistration: '',
+    personalInformation: {
+      name: '',
+      birthday: '',
+      legalGuardianName: '',
+      legalGuardianCpf: '',
+      legalGuardianCellPhone: '',
+      cpf: '',
+      rg: '',
+      rgShipper: '',
+      rgShipperState: '',
+      gender: '',
+    },
+    contact: {
+      cellPhone: '',
+      email: '',
+      isWhatsApp: '',
+      church: '',
+      car: '',
+      numberVacancies: '',
+      needRide: '',
+      rideObservation: '',
+      hasAllergy: '',
+      allergy: '',
+      hasAggregate: '',
+      aggregate: '',
+    },
+    package: {
+      accomodation: {
+        id: '',
+        name: '',
+        price: '',
+      },
+      transportation: {
+        id: '',
+        name: '',
+        price: '',
+      },
+      food: {
+        id: '',
+        name: '',
+        price: '',
+      },
+      discountCoupon: '',
+      discountValue: '',
+      price: '',
+      finalPrice: '',
+      title: '',
+    },
+    extraMeals: {
+      someFood: '',
+      totalPrice: '',
+      extraMeals: [''],
+    },
+    formPayment: '',
   },
-  formPayment: '',
-};
+];
 
 export const packages = [
   {
