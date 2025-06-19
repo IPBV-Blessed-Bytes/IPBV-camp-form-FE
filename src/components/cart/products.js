@@ -5,6 +5,7 @@ export const products = [
     name: 'Colégio',
     price: 0,
     image: '/img/hospedagem.png',
+    description: '',
     category: 'Hospedagem',
   },
   {
@@ -12,6 +13,7 @@ export const products = [
     name: 'Externo',
     price: 0,
     image: '/img/hospedagem.png',
+    description: '',
     category: 'Hospedagem',
   },
   {
@@ -19,6 +21,7 @@ export const products = [
     name: 'Seminário',
     price: 500,
     image: '/img/hospedagem.png',
+    description: '',
     category: 'Hospedagem',
   },
 
@@ -28,6 +31,7 @@ export const products = [
     name: 'Com Ônibus',
     price: 200,
     image: '/img/bus.png',
+    description: '',
     category: 'Transporte',
   },
   {
@@ -35,6 +39,7 @@ export const products = [
     name: 'Sem Ônibus',
     price: 0,
     image: '/img/bus.png',
+    description: '',
     category: 'Transporte',
   },
 
@@ -44,6 +49,15 @@ export const products = [
     name: 'Alimentação Completa (Café, Almoço e Jantar)',
     price: 300,
     image: '/img/food.png',
-    category: 'Alimentação Completa',
+    description: '',
+    category: 'Alimentação',
+  },
+  {
+    id: 'food-external',
+    name: 'Alimentação Parcial (Almoço e Jantar)',
+    price: 240,
+    image: '/img/food.png',
+    description: '',
+    category: 'Alimentação',
   },
 ];
