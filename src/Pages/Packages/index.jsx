@@ -2,18 +2,13 @@ import { useEffect } from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useCart } from 'react-use-cart';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 
-const Packages = ({
-  nextStep,
-  backStep,
-  age,
-  totalRegistrationsGlobal,
-  discountValue,
-  hasDiscount,
-  totalSeats,
-}) => {
+const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasDiscount, totalSeats, updateForm }) => {
+  const { items } = useCart();
+
   useEffect(() => {
     if (hasDiscount) {
       toast.info(
@@ -23,7 +18,43 @@ const Packages = ({
   }, [hasDiscount, discountValue]);
 
   const submitForm = () => {
-    nextStep();
+    const newPackage = {
+      accomodation: { id: '', name: '', price: '' },
+      transportation: { id: '', name: '', price: '' },
+      food: { id: '', name: '', price: '' },
+      price: '',
+      finalPrice: '',
+    };
+
+    items.forEach((item) => {
+      if (item.category === 'Hospedagem') {
+        newPackage.accomodation = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+        };
+      }
+      if (item.category === 'Transporte') {
+        newPackage.transportation = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+        };
+      }
+      if (item.category === 'Alimentação') {
+        newPackage.food = {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+        };
+      }
+    });
+
+    newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
+
+    newPackage.finalPrice = newPackage.price;
+
+    updateForm(newPackage);
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
@@ -79,26 +110,14 @@ const Packages = ({
 };
 
 Packages.propTypes = {
-  nextStep: PropTypes.func,
-  backStep: PropTypes.func,
-  birthDate: PropTypes.string.isRequired,
-  updateForm: PropTypes.func,
-  availablePackages: PropTypes.bool,
-  totalRegistrationsGlobal: PropTypes.object,
-  formUsername: PropTypes.string,
-  age: PropTypes.number,
+  backStep: PropTypes.func.isRequired,
+  age: PropTypes.number.isRequired,
+  totalRegistrationsGlobal: PropTypes.object.isRequired,
   discountValue: PropTypes.string,
   hasDiscount: PropTypes.bool,
-  totalSeats: PropTypes.string,
-  totalBusVacancies: PropTypes.string,
-  totalValidWithBus: PropTypes.string,
-  initialValues: PropTypes.shape({
-    price: PropTypes.string,
-    accomodation: PropTypes.string,
-    transportation: PropTypes.string,
-    food: PropTypes.string,
-    title: PropTypes.string,
-  }),
+  totalSeats: PropTypes.string.isRequired,
+  formValues: PropTypes.object.isRequired,
+  updateForm: PropTypes.func.isRequired,
 };
 
 export default Packages;
