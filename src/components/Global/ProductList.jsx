@@ -6,8 +6,8 @@ const ProductList = () => {
 
   const handleSelect = (product, filtered, singleSelection) => {
     if (singleSelection) {
-      filtered.forEach((p) => {
-        if (getItem(p.id)) removeItem(p.id);
+      filtered.forEach((products) => {
+        if (getItem(products.id)) removeItem(products.id);
       });
     }
 
@@ -15,7 +15,7 @@ const ProductList = () => {
   };
 
   const renderSection = (categoryTitle, categoryKey, singleSelection = false) => {
-    const filtered = products.filter((p) => p.category === categoryKey);
+    const filtered = products.filter((products) => products.category === categoryKey);
 
     return (
       <div className="product-section">
@@ -31,11 +31,16 @@ const ProductList = () => {
                 <h3 className="product-title">{product.name}</h3>
                 <p className="product-price">R$ {product.price.toFixed(2)}</p>
                 <button
-                  className="product-button"
-                  onClick={() => handleSelect(product, filtered, singleSelection)}
-                  disabled={alreadySelected}
+                  className={`product-button ${alreadySelected ? 'selected' : ''}`}
+                  onClick={() => {
+                    if (alreadySelected) {
+                      removeItem(product.id);
+                    } else {
+                      handleSelect(product, filtered, singleSelection);
+                    }
+                  }}
                 >
-                  {alreadySelected ? 'Selecionado' : 'Selecionar'}
+                  {alreadySelected ? 'Remover' : 'Selecionar'}
                 </button>
               </div>
             );
@@ -52,7 +57,7 @@ const ProductList = () => {
       <hr className="horizontal-line" />
       {renderSection('Transporte:', 'Transporte', true)}
       <hr className="horizontal-line" />
-      {renderSection('Alimentação (Opcional):', 'Alimentação Completa')}
+      {renderSection('Alimentação (Opcional):', 'Alimentação', true)}
     </>
   );
 };
