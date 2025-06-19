@@ -369,10 +369,14 @@
     background-color: $heavy-baby-blue;
     opacity: 0.8;
   }
+
+  &:active {
+    background-color: $white !important;
+    border-color: $white !important;
+  }
 }
 
 .cart-container {
-  max-width: 700px;
   padding: 20px;
   background: $white;
   border-radius: 8px;
@@ -389,7 +393,7 @@
 .empty-cart {
   text-align: center;
   color: #888;
-  margin-top: 60px;
+  margin: 60px auto;
 }
 
 .cart-item {
@@ -528,6 +532,10 @@
       cursor: not-allowed;
       color: #666;
     }
+  }
+
+  .product-button.selected {
+    background: red;
   }
 }
 
