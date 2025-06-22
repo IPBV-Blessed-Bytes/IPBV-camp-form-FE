@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -6,8 +6,18 @@ import { useCart } from 'react-use-cart';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 
-const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasDiscount, totalSeats, updateForm }) => {
-  const { items } = useCart();
+const Packages = ({
+  backStep,
+  age,
+  totalRegistrationsGlobal,
+  discountValue,
+  hasDiscount,
+  totalSeats,
+  updateForm,
+  nextStep,
+}) => {
+  const productListRef = useRef();
+  const { items, emptyCart } = useCart();
 
   useEffect(() => {
     if (hasDiscount) {
@@ -18,6 +28,10 @@ const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasD
   }, [hasDiscount, discountValue]);
 
   const submitForm = () => {
+    const isValid = productListRef.current?.checkRequiredPackages();
+
+    if (!isValid) return;
+
     const newPackage = {
       accomodation: { id: '', name: '', price: '' },
       transportation: { id: '', name: '', price: '' },
@@ -54,7 +68,15 @@ const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasD
 
     newPackage.finalPrice = newPackage.price;
 
-    updateForm(newPackage);
+    updateForm(newPackage, () => {
+      const foodId = newPackage.food?.id || '';
+      const hasFood = foodId === 'food-complete' || foodId === 'food-external';
+
+      const skipToReview = hasFood;
+      nextStep(skipToReview);
+    });
+
+    emptyCart();
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
@@ -79,7 +101,7 @@ const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasD
                   </b>
                 </Card.Text>
 
-                <ProductList />
+                <ProductList ref={productListRef} />
               </>
             )}
 
@@ -110,14 +132,15 @@ const Packages = ({ backStep, age, totalRegistrationsGlobal, discountValue, hasD
 };
 
 Packages.propTypes = {
+  nextStep: PropTypes.func,
   backStep: PropTypes.func.isRequired,
   age: PropTypes.number.isRequired,
   totalRegistrationsGlobal: PropTypes.object.isRequired,
   discountValue: PropTypes.string,
   hasDiscount: PropTypes.bool,
   totalSeats: PropTypes.string.isRequired,
-  formValues: PropTypes.object.isRequired,
   updateForm: PropTypes.func.isRequired,
+  currentFormIndex: PropTypes.number.isRequired,
 };
 
 export default Packages;
