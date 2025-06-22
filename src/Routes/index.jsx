@@ -37,6 +37,7 @@ import AdminFormContext from '@/Pages/Admin/FormContext';
 import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
+import BeforePayment from '@/Pages/BeforePayment';
 
 const FormRoutes = ({
   formContext,
@@ -76,7 +77,14 @@ const FormRoutes = ({
   backStep,
   goBackToStep,
   sendForm,
+  addUserToList,
+  savedUsers,
+  handleAddNewUser,
+  currentFormIndex,
+  setSavedUsers,
 }) => {
+  const currentFormValues = formValues[currentFormIndex] || {};
+
   return (
     <div className="form">
       {!adminPathname && formPath && (
@@ -91,27 +99,26 @@ const FormRoutes = ({
                 goBackToStep={goBackToStep}
                 formSubmitted={formSubmitted}
                 showNavMenu={true}
+                savedUsers={savedUsers}
               />
 
               <div className="form__container">
-                {steps === enumSteps.home && isNotSuccessPathname && (
-                  <FormHome nextStep={nextStep} backStep={backStep} />
-                )}
-
+                {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
                 {steps === enumSteps.personalData && isNotSuccessPathname && (
                   <FormPersonalData
-                    initialValues={formValues.personalInformation}
+                    initialValues={currentFormValues.personalInformation}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('personalInformation')}
                     onDiscountChange={handleDiscountChange}
-                    formUsername={formValues.personalInformation.name}
+                    formUsername={currentFormValues.personalInformation?.name}
+                    savedUsers={savedUsers}
                   />
                 )}
 
                 {steps === enumSteps.contact && isNotSuccessPathname && (
                   <FormContact
-                    initialValues={formValues.contact}
+                    initialValues={currentFormValues.contact}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('contact')}
@@ -132,15 +139,18 @@ const FormRoutes = ({
                     totalSeats={totalSeats}
                     totalBusVacancies={totalBusVacancies}
                     totalValidWithBus={totalRegistrations.totalValidWithBus}
+                    addUserToList={addUserToList}
+                    formValues={formValues}
+                    currentFormIndex={currentFormIndex}
                   />
                 )}
 
                 {steps === enumSteps.extraMeals && isNotSuccessPathname && (
                   <ExtraMeals
-                    birthDate={formValues.personalInformation.birthday}
+                    birthDate={currentFormValues.personalInformation?.birthday}
                     backStep={backStep}
                     nextStep={nextStep}
-                    initialValues={formValues.extraMeals}
+                    initialValues={currentFormValues.extraMeals}
                     updateForm={updateFormValues('extraMeals')}
                   />
                 )}
@@ -149,21 +159,33 @@ const FormRoutes = ({
                   <FinalReview
                     nextStep={nextStep}
                     backStep={backStep}
-                    formValues={formValues}
+                    formValues={currentFormValues}
                     sendForm={sendForm}
                     status={status}
+                    addUserToList={addUserToList}
+                    goBackToStep={goBackToStep}
+                  />
+                )}
+
+                {steps === enumSteps.beforePayment && isNotSuccessPathname && (
+                  <BeforePayment
+                    goToPersonalData={handleAddNewUser}
+                    goBackToStep={goBackToStep}
+                    setSavedUsers={setSavedUsers}
+                    savedUsers={savedUsers}
                   />
                 )}
 
                 {steps === enumSteps.formPayment && isNotSuccessPathname && (
                   <ChooseFormPayment
-                    initialValues={formValues}
+                    initialValues={currentFormValues}
                     skipTwoSteps={skipTwoSteps}
                     backStep={backStep}
                     updateForm={updateFormValues('formPayment')}
                     sendForm={sendForm}
                     loading={loading}
                     status={status}
+                    savedUsers={savedUsers}
                   />
                 )}
 
@@ -346,16 +368,18 @@ const FormRoutes = ({
 FormRoutes.propTypes = {
   formContext: PropTypes.string,
   steps: PropTypes.number,
-  formValues: PropTypes.shape({
-    personalInformation: PropTypes.shape({
-      name: PropTypes.string,
-      birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  formValues: PropTypes.arrayOf(
+    PropTypes.shape({
+      personalInformation: PropTypes.shape({
+        name: PropTypes.string,
+        birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+      }),
+      contact: PropTypes.object,
+      package: PropTypes.object,
+      extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+      formPayment: PropTypes.object,
     }),
-    contact: PropTypes.object,
-    package: PropTypes.object,
-    extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    formPayment: PropTypes.object,
-  }),
+  ),
   formSubmitted: PropTypes.bool,
   availablePackages: PropTypes.array,
   totalRegistrations: PropTypes.shape({
@@ -392,6 +416,19 @@ FormRoutes.propTypes = {
   backStep: PropTypes.func,
   goBackToStep: PropTypes.func,
   sendForm: PropTypes.func,
+  addUserToList: PropTypes.func,
+  savedUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      personalInformation: PropTypes.shape({
+        cpf: PropTypes.string,
+        name: PropTypes.string,
+        birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+      }),
+    }),
+  ),
+  handleAddNewUser: PropTypes.func,
+  currentFormIndex: PropTypes.number,
+  setSavedUsers: PropTypes.func,
 };
 
 export default FormRoutes;

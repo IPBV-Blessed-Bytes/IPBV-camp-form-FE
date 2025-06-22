@@ -35,6 +35,11 @@ const RoutesValidations = ({ formContext }) => {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
+  const [currentFormIndex, setCurrentFormIndex] = useState(0);
+  const [savedUsers, setSavedUsers] = useState(() => {
+    const saved = sessionStorage.getItem('savedUsers');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -90,7 +95,7 @@ const RoutesValidations = ({ formContext }) => {
     }
   }, [isLoggedIn, adminPathname, navigate]);
 
-  const age = calculateAge(formValues.personalInformation.birthday);
+  const age = calculateAge(formValues[currentFormIndex]?.personalInformation?.birthday);
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -123,24 +128,66 @@ const RoutesValidations = ({ formContext }) => {
 
   const resetFormSubmitted = () => setFormSubmitted(false);
 
-  const updateFormValues = (key) => (value) => {
-    setFormValues({
-      ...formValues,
-      [key]: value,
+  const updateFormValues = (sectionKey) => (newData, callback) => {
+    setFormValues((prev) => {
+      const updated = [...prev];
+      const index = updated.length - 1;
+      updated[index] = {
+        ...updated[index],
+        [sectionKey]: newData,
+      };
+      return updated;
+    });
+
+    if (callback && typeof callback === 'function') {
+      setTimeout(callback, 0);
+    }
+  };
+
+  const handleAddNewUser = () => {
+    setFormValues((prev) => {
+      const updated = [...prev, initialValues[0]];
+      setCurrentFormIndex(updated.length - 1);
+      return updated;
+    });
+    setSteps(enumSteps.personalData);
+    scrollTop();
+  };
+
+  const addUserToList = (userData) => {
+    const newCpf = userData?.personalInformation?.cpf;
+
+    if (!newCpf) {
+      toast.error('CPF não encontrado nos dados do usuário. Não foi possível adicionar.');
+      return;
+    }
+
+    setSavedUsers((prev) => {
+      const alreadyExists = prev.some((user) => user.personalInformation?.cpf === newCpf);
+
+      if (alreadyExists) {
+        toast.info(`Usuário com CPF ${newCpf} já está salvo. Ignorando duplicação.`);
+        return prev;
+      }
+
+      toast.success('Usuário adicionado com sucesso');
+      return [...prev, userData];
     });
   };
+
+  useEffect(() => {
+    sessionStorage.setItem('savedUsers', JSON.stringify(savedUsers));
+  }, [savedUsers]);
 
   const initialStep = () => {
     setSteps(enumSteps.home);
     scrollTop();
   };
 
-  const nextStep = () => {
+  const nextStep = (skipToReview = false) => {
     if (steps < enumSteps.success) {
-      const hasFood = formValues.package.food !== 'Sem Alimentação' && formValues.package.food !== '';
-      setWithFood(hasFood);
-      const skipToReview = hasFood && steps === enumSteps.packages;
-      setSteps(skipToReview ? enumSteps.finalReview : steps + 1);
+      setWithFood(skipToReview);
+      setSteps(skipToReview && steps === enumSteps.packages ? enumSteps.finalReview : steps + 1);
       scrollTop();
     }
   };
@@ -170,15 +217,15 @@ const RoutesValidations = ({ formContext }) => {
     setLoading(true);
     try {
       setStatus('loading');
-      const updatedForm = {
-        ...formValues,
-        formPayment: formValues.formPayment || 'nonPaid',
+      const formsToSend = formValues.map((form) => ({
+        ...form,
+        formPayment: form.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice: formValues.package.finalPrice + formValues.extraMeals.totalPrice,
+        totalPrice: form.package.finalPrice + form.extraMeals.totalPrice,
         manualRegistration: false,
-      };
+      }));
 
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, updatedForm);
+      const response = await fetcher.post(`${BASE_URL}/checkout/create`, formsToSend);
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
@@ -239,6 +286,11 @@ const RoutesValidations = ({ formContext }) => {
       backStep={backStep}
       goBackToStep={goBackToStep}
       sendForm={sendForm}
+      addUserToList={addUserToList}
+      savedUsers={savedUsers}
+      handleAddNewUser={handleAddNewUser}
+      currentFormIndex={currentFormIndex}
+      setSavedUsers={setSavedUsers}
     />
   );
 };
