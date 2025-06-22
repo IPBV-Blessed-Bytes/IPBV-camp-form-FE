@@ -5,8 +5,9 @@ export const enumSteps = {
   packages: 3,
   extraMeals: 4,
   finalReview: 5,
-  formPayment: 6,
-  success: 7,
+  beforePayment: 6,
+  formPayment: 7,
+  success: 8,
 };
 
 export const initialValues = [
