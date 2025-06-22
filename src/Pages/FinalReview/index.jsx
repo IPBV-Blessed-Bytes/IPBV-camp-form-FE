@@ -7,15 +7,13 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
+const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
 
-  const handleCheckboxChange = (e) => {
-    setIsConfirmed(e.target.checked);
-  };
+  const handleCheckboxChange = (e) => setIsConfirmed(e.target.checked);
 
   const handleAuthorizationChange = (e) => {
     setIsDataAuthorized(e.target.checked);
@@ -33,17 +31,17 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
     }
   };
 
-  const handleClick = () => {
-    if (!isConfirmed) {
-      return;
-    } else if (!isDataAuthorized) {
-      return;
+  const handleSaveUser = () => {
+    if (!isConfirmed || !isDataAuthorized) return;
+
+    const totalPrice = formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0);
+
+    addUserToList(formValues);
+
+    if (totalPrice === 0) {
+      sendForm();
     } else {
-      if (formValues.package.finalPrice === 0) {
-        sendForm();
-      } else {
-        nextStep();
-      }
+      nextStep();
     }
   };
 
@@ -252,9 +250,10 @@ const FinalReview = ({ nextStep, backStep, formValues, sendForm, status }) => {
             <Button variant="light" onClick={backStep} size="lg">
               Voltar
             </Button>
+
             <Button
               variant="warning"
-              onClick={handleClick}
+              onClick={handleSaveUser}
               size="lg"
               disabled={!isConfirmed || !isDataAuthorized || status === 'loading' || status === 'loaded'}
             >
@@ -308,8 +307,8 @@ FinalReview.propTypes = {
       someFood: PropTypes.bool,
     }),
   }).isRequired,
-  sendForm: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
+  addUserToList: PropTypes.func.isRequired,
 };
 
 export default FinalReview;
