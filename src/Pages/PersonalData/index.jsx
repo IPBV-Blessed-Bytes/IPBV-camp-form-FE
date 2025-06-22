@@ -3,14 +3,13 @@ import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { parse } from 'date-fns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import InputMask from 'react-input-mask';
 import { cpf } from 'cpf-cnpj-validator';
-import { format } from 'date-fns';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
@@ -19,7 +18,7 @@ import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 
-const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, formUsername }) => {
+const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, savedUsers }) => {
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
   const [previousUserData, setPreviousUserData] = useState(null);
@@ -30,6 +29,13 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     initialValues,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
+        const cpfAlreadyExists = savedUsers?.some((user) => user?.personalInformation?.cpf === values.cpf);
+
+        if (cpfAlreadyExists) {
+          toast.error('Este CPF já foi adicionado ao carrinho');
+          return;
+        }
+
         try {
           const response = await fetcher.post(`${BASE_URL}/coupon/check`, {
             cpf: values.cpf,
@@ -38,32 +44,6 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
           if (onDiscountChange) {
             onDiscountChange(response.data.discount);
-          }
-
-          if (response.data.discount && response.data.discount !== 0) {
-            const fetchCoupons = async () => {
-              try {
-                const couponResponse = await fetcher.get(`${BASE_URL}/coupon`);
-                const coupons = couponResponse.data.coupons;
-
-                if (coupons && coupons.length > 0) {
-                  const matchingCoupon = coupons.find((coupon) => coupon.cpf === values.cpf);
-
-                  if (matchingCoupon) {
-                    if (!matchingCoupon.user) {
-                      await fetcher.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
-                        ...matchingCoupon,
-                        user: formUsername,
-                      });
-                    }
-                  }
-                }
-              } catch (error) {
-                console.error('Erro ao verificar os descontos:', error);
-              }
-            };
-
-            await fetchCoupons();
           }
 
           nextStep();
@@ -593,17 +573,26 @@ PersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
-  formUsername: PropTypes.string,
-  onDiscountChange: PropTypes.bool,
+  onDiscountChange: PropTypes.func,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
-    birthday: PropTypes.string,
+    birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     cpf: PropTypes.string,
     rg: PropTypes.string,
     rgShipper: PropTypes.string,
     rgShipperState: PropTypes.string,
     gender: PropTypes.string,
+    legalGuardianName: PropTypes.string,
+    legalGuardianCpf: PropTypes.string,
+    legalGuardianCellPhone: PropTypes.string,
   }),
+  savedUsers: PropTypes.arrayOf(
+    PropTypes.shape({
+      personalInformation: PropTypes.shape({
+        cpf: PropTypes.string,
+      }),
+    }),
+  ),
 };
 
 export default PersonalData;
