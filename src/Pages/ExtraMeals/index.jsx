@@ -48,8 +48,8 @@ const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }
             'Você receberá as senhas das refeições adquiridas presencialmente, no seu checkin no acampamento',
           );
         values.totalPrice = totalPrice;
-        nextStep();
         updateForm(values);
+        nextStep();
       }
     },
     validateOnBlur: false,
