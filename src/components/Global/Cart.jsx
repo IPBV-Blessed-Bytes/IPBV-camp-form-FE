@@ -3,6 +3,7 @@ import { useCart } from 'react-use-cart';
 import { differenceInYears } from 'date-fns';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
+import Tips from './Tips';
 
 const Cart = ({ savedUsers = [], setSavedUsers }) => {
   const { removeItem, emptyCart } = useCart();
@@ -109,14 +110,21 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
       })}
 
       <div className="cart-total">
-        <div className="d-flex justify-content-end">
-          <Icons typeIcon="info" iconSize={20} fill="#000" />
-          <p>&nbsp;&nbsp;Valor Base: R$ {totalBasePrice.toFixed(2)}</p>
+        <div className="d-flex justify-content-end align-items-center gap-2">
+          <Tips
+            placement="top"
+            typeIcon="info"
+            size={20}
+            colour={'#000'}
+            text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+          />
+
+          <p className="m-0">Valor Base Usuário: R$ {totalBasePrice.toFixed(2)}</p>
         </div>
+
         <p>Total dos Pacotes: R$ {totalPackages.toFixed(2)}</p>
         <strong>Total Geral: R$ {finalTotal.toFixed(2)}</strong>
       </div>
-
       <div className="cart-buttons">
         <Button variant="warning" size="md" onClick={emptyCart} className="cart-btn-responsive">
           <Icons typeIcon="close" iconSize={30} fill="#000" /> &nbsp;Esvaziar Carrinho
