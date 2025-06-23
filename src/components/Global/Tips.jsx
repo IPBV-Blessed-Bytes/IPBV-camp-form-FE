@@ -18,7 +18,11 @@ const Tips = ({ placement, text, typeIcon, size, colour }) => {
 };
 
 Tips.propTypes = {
+  placement: PropTypes.string,
   text: PropTypes.string,
+  typeIcon: PropTypes.string,
+  size: PropTypes.number,
+  colour: PropTypes.string,
 };
 
 export default Tips;
