@@ -34,15 +34,9 @@ const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList, se
   const handleSaveUser = () => {
     if (!isConfirmed || !isDataAuthorized) return;
 
-    const totalPrice = formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0);
-
     addUserToList(formValues);
 
-    if (totalPrice === 0) {
-      sendForm();
-    } else {
-      nextStep();
-    }
+    nextStep();
   };
 
   useEffect(() => {
