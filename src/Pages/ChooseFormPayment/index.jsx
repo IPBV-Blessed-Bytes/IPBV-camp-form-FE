@@ -6,35 +6,12 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
-import fetcher from '@/fetchers';
-import { BASE_URL } from '@/config';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, savedUsers }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues: initialValues.formPayment,
-    onSubmit: async () => {
-      try {
-        const couponsResponse = await fetcher.get(`${BASE_URL}/coupon`);
-        const coupons = couponsResponse.data.coupons;
-        const allCampers = (savedUsers?.length && savedUsers) || [];
-
-        for (const camper of allCampers) {
-          const cpf = camper?.personalInformation?.cpf;
-          const matchingCoupon = coupons.find((coupon) => coupon.cpf === cpf);
-
-          if (matchingCoupon && !matchingCoupon.user) {
-            await fetcher.put(`${BASE_URL}/coupon/${matchingCoupon.id}`, {
-              ...matchingCoupon,
-              user: initialValues?.personalInformation.name,
-            });
-          }
-        }
-
-        sendForm();
-      } catch (error) {
-        toast.error('Erro ao finalizar validação do cupom. Tente novamente.');
-        console.error('Erro na validação final do cupom:', error);
-      }
+    onSubmit: () => {
+      sendForm();
     },
 
     validateOnBlur: false,
@@ -119,13 +96,6 @@ ChooseFormPayment.propTypes = {
   sendForm: PropTypes.func,
   loading: PropTypes.bool,
   status: PropTypes.string,
-  savedUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      personalInformation: PropTypes.shape({
-        cpf: PropTypes.string,
-      }),
-    }),
-  ),
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
     personalInformation: PropTypes.shape({
