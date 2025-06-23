@@ -7,7 +7,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList, sendForm }) => {
+const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
