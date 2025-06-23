@@ -3,7 +3,7 @@ import { useCart } from 'react-use-cart';
 import { products } from '../cart/products';
 import Icons from './Icons';
 
-const ProductList = forwardRef((ref) => {
+const ProductList = forwardRef((props, ref) => {
   const { addItem, getItem, removeItem } = useCart();
   const [hasError, setHasError] = useState(false);
 
