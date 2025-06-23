@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Tips from '@/components/Global/Tips';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import InputMask from 'react-input-mask';
@@ -17,7 +18,6 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
-import Tips from '@/components/Global/Tips';
 
 const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, savedUsers }) => {
   const [showModal, setShowModal] = useState(false);
@@ -30,7 +30,13 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
     initialValues,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
+        const cpfIsEqualToLegualGuardianCpf = values.cpf === values.legalGuardianCpf;
         const cpfAlreadyExists = savedUsers?.some((user) => user?.personalInformation?.cpf === values.cpf);
+
+        if (cpfIsEqualToLegualGuardianCpf) {
+          toast.error('CPF do acampante não pode ser igual ao CPF do responsável legal');
+          return;
+        }
 
         if (cpfAlreadyExists) {
           toast.error('Este CPF já foi adicionado ao carrinho');
