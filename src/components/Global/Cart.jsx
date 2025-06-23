@@ -1,7 +1,8 @@
 import { Button } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
+import { differenceInYears } from 'date-fns';
 import PropTypes from 'prop-types';
-import Icons from './Icons';
+import Icons from '@/components/Global/Icons';
 
 const Cart = ({ savedUsers = [], setSavedUsers }) => {
   const { removeItem, emptyCart } = useCart();
@@ -18,7 +19,23 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
     return acc + price;
   }, 0);
 
-  const finalTotal = totalPackages + basePrice;
+  const totalBasePrice = savedUsers.reduce((acc, user) => {
+    const birthDate = new Date(user?.personalInformation?.birthday);
+    const age = differenceInYears(new Date(), birthDate);
+
+    let individualBase = 0;
+    if (age <= 5) {
+      individualBase = 0;
+    } else if (age >= 6 && age <= 10) {
+      individualBase = 50;
+    } else if (age > 10) {
+      individualBase = 100;
+    }
+
+    return acc + individualBase;
+  }, 0);
+
+  const finalTotal = totalPackages + totalBasePrice;
 
   if (!savedUsers.length) {
     return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
@@ -30,8 +47,19 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
         const userName = user?.personalInformation?.name || `Pessoa ${index + 1}`;
         const userPackage = user?.package;
         const userExtraMeals = user?.extraMeals;
-
         const itemId = userPackage?.id || userPackage?.accomodation?.id;
+
+        const birthDate = new Date(user?.personalInformation?.birthday);
+        const age = differenceInYears(new Date(), birthDate);
+
+        let individualBase = 0;
+        if (age <= 5) {
+          individualBase = 0;
+        } else if (age >= 6 && age <= 10) {
+          individualBase = 50;
+        } else if (age > 10) {
+          individualBase = 100;
+        }
 
         return (
           <div key={index} className="cart-user-group">
@@ -64,11 +92,16 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
                       ? userExtraMeals.extraMeals.filter((meal) => meal && meal.trim() !== '').join(', ')
                       : userExtraMeals.extraMeals}
                   </h3>
-
                   <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0).toFixed(2)}</p>
                 </div>
               </div>
             )}
+
+            <div className="cart-item">
+              <div className="item-info">
+                <p>Valor Base Individual: R$ {individualBase.toFixed(2)}</p>
+              </div>
+            </div>
 
             <hr className="horizontal-line" />
           </div>
@@ -76,7 +109,10 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
       })}
 
       <div className="cart-total">
-        <p>Valor Base: R$ {basePrice.toFixed(2)}</p>
+        <div className="d-flex justify-content-end">
+          <Icons typeIcon="info" iconSize={20} fill="#000" />
+          <p>&nbsp;&nbsp;Valor Base: R$ {totalBasePrice.toFixed(2)}</p>
+        </div>
         <p>Total dos Pacotes: R$ {totalPackages.toFixed(2)}</p>
         <strong>Total Geral: R$ {finalTotal.toFixed(2)}</strong>
       </div>
