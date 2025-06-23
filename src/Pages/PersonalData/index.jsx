@@ -17,6 +17,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
+import Tips from '@/components/Global/Tips';
 
 const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, savedUsers }) => {
   const [showModal, setShowModal] = useState(false);
@@ -307,110 +308,6 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                 </Col>
               </Row>
 
-              {showLegalGuardianFields && (
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <Form.Group>
-                      <Form.Label>
-                        <b>Nome do Responsável Legal:</b>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        id="legalGuardianName"
-                        isInvalid={!!errors.legalGuardianName}
-                        value={values.legalGuardianName}
-                        onChange={(e) => {
-                          handleChange(e);
-                          updateForm({ ...values, legalGuardianName: e.target.value });
-                        }}
-                      />
-                      <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
-                        {errors.legalGuardianName}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <Form.Group>
-                      <Form.Label>
-                        <b>CPF do Responsável Legal:</b>
-                      </Form.Label>
-                      <Form.Control
-                        as={InputMask}
-                        isInvalid={!!errors.legalGuardianCpf}
-                        mask="999.999.999-99"
-                        name="legalGuardianCpf"
-                        id="legalGuardianCpf"
-                        className="cpf-container"
-                        value={values.legalGuardianCpf}
-                        onChange={(event) =>
-                          handleChange({
-                            target: {
-                              name: 'legalGuardianCpf',
-                              value: event.target.value.replace(/\D/g, ''),
-                            },
-                          })
-                        }
-                        placeholder="000.000000-00"
-                        title="Preencher CPF válido"
-                      ></Form.Control>
-                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCpf}</Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              )}
-
-              <Row>
-                {showLegalGuardianFields && (
-                  <Col md={6} className="mb-3">
-                    <Form.Group>
-                      <Form.Label>
-                        <b>Telefone do Responsável Legal:</b>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        as={InputMask}
-                        isInvalid={!!errors.legalGuardianCellPhone}
-                        mask="(99) 99999-9999"
-                        id="legalGuardianCellPhone"
-                        value={values.legalGuardianCellPhone}
-                        onChange={(event) => {
-                          handleChange({
-                            target: {
-                              name: 'legalGuardianCellPhone',
-                              value: event.target.value.replace(/\D/g, ''),
-                            },
-                          });
-                        }}
-                        placeholder="(00) 00000-0000"
-                      />
-                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCellPhone}</Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
-                )}
-                <Col md={6} className="mb-3">
-                  <Form.Group>
-                    <Form.Label>
-                      <b>Categoria de Acampante:</b>
-                    </Form.Label>
-                    <Form.Select
-                      isInvalid={!!errors.gender}
-                      value={values.gender}
-                      name="gender"
-                      id="gender"
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Selecione uma opção
-                      </option>
-                      <option value="Crianca">Criança (até 10 anos)</option>
-                      <option value="Homem">Adulto Masculino</option>
-                      <option value="Mulher">Adulto Feminimo</option>
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-              </Row>
-
               <Row>
                 <Col md={6} className="mb-3">
                   <Form.Group>
@@ -511,6 +408,120 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                   </Form.Group>
                 </Col>
               </Row>
+
+              <Row>
+                <Col md={6} className="mb-3">
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Categoria de Acampante:</b>
+                    </Form.Label>
+                    <Form.Select
+                      isInvalid={!!errors.gender}
+                      value={values.gender}
+                      name="gender"
+                      id="gender"
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      <option value="Crianca">Criança (até 10 anos)</option>
+                      <option value="Homem">Adulto Masculino</option>
+                      <option value="Mulher">Adulto Feminimo</option>
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid">{errors.gender}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+
+                {showLegalGuardianFields && (
+                  <Col md={6} className="mb-3">
+                    <Form.Group>
+                      <div className="d-flex gap-2">
+                        <Form.Label>
+                          <b>Nome do Responsável Legal:</b>
+                        </Form.Label>
+                        <Tips
+                          placement="top"
+                          typeIcon="info"
+                          size={20}
+                          colour={'#000'}
+                          text="Como a idade informada é menor que 18 anos, é necessário informar os dados de um responsável legal QUE ESTARÁ NO ACAMPAMENTO"
+                        />
+                      </div>
+                      <Form.Control
+                        type="text"
+                        id="legalGuardianName"
+                        isInvalid={!!errors.legalGuardianName}
+                        value={values.legalGuardianName}
+                        onChange={(e) => {
+                          handleChange(e);
+                          updateForm({ ...values, legalGuardianName: e.target.value });
+                        }}
+                      />
+                      <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+                        {errors.legalGuardianName}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                )}
+              </Row>
+
+              {showLegalGuardianFields && (
+                <Row>
+                  <Col md={6} className="mb-3">
+                    <Form.Group>
+                      <Form.Label>
+                        <b>CPF do Responsável Legal:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as={InputMask}
+                        isInvalid={!!errors.legalGuardianCpf}
+                        mask="999.999.999-99"
+                        name="legalGuardianCpf"
+                        id="legalGuardianCpf"
+                        className="cpf-container"
+                        value={values.legalGuardianCpf}
+                        onChange={(event) =>
+                          handleChange({
+                            target: {
+                              name: 'legalGuardianCpf',
+                              value: event.target.value.replace(/\D/g, ''),
+                            },
+                          })
+                        }
+                        placeholder="000.000000-00"
+                        title="Preencher CPF válido"
+                      ></Form.Control>
+                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCpf}</Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <Form.Group>
+                      <Form.Label>
+                        <b>Telefone do Responsável Legal:</b>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        as={InputMask}
+                        isInvalid={!!errors.legalGuardianCellPhone}
+                        mask="(99) 99999-9999"
+                        id="legalGuardianCellPhone"
+                        value={values.legalGuardianCellPhone}
+                        onChange={(event) => {
+                          handleChange({
+                            target: {
+                              name: 'legalGuardianCellPhone',
+                              value: event.target.value.replace(/\D/g, ''),
+                            },
+                          });
+                        }}
+                        placeholder="(00) 00000-0000"
+                      />
+                      <Form.Control.Feedback type="invalid">{errors.legalGuardianCellPhone}</Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              )}
             </Form>
           </Container>
         </Card.Body>
