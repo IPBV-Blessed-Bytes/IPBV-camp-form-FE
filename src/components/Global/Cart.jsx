@@ -8,8 +8,6 @@ import Tips from './Tips';
 const Cart = ({ savedUsers = [], setSavedUsers }) => {
   const { removeItem, emptyCart } = useCart();
 
-  const basePrice = 100;
-
   const handleRemoveUser = (index, itemId) => {
     setSavedUsers((prev) => prev.filter((_, i) => i !== index));
     if (itemId) removeItem(itemId);
