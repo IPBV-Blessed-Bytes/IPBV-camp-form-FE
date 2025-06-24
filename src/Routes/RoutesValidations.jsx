@@ -213,17 +213,22 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
-  const sendForm = async () => {
+  const sendForm = async (formikValues) => {
     setLoading(true);
     try {
       setStatus('loading');
-      const formsToSend = formValues.map((form) => ({
-        ...form,
-        formPayment: form.formPayment || 'nonPaid',
-        registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice: form.package.finalPrice + form.extraMeals.totalPrice,
-        manualRegistration: false,
-      }));
+
+      const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
+      const form = formValues[payerIndex];
+      const formsToSend = [
+        {
+          ...form,
+          formPayment: formikValues.formPayment || 'nonPaid',
+          registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
+          totalPrice: form.package.finalPrice + form.extraMeals.totalPrice,
+          manualRegistration: false,
+        },
+      ];
 
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, formsToSend);
       const checkoutUrl = response.data.payment_url;

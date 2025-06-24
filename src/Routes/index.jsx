@@ -140,7 +140,7 @@ const FormRoutes = ({
                     totalBusVacancies={totalBusVacancies}
                     totalValidWithBus={totalRegistrations.totalValidWithBus}
                     addUserToList={addUserToList}
-                    formValues={formValues}
+                    formValues={currentFormValues}
                     currentFormIndex={currentFormIndex}
                   />
                 )}
