@@ -7,9 +7,13 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, savedUsers }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
-    initialValues: initialValues.formPayment,
+    initialValues: {
+      formPayment: initialValues.formPayment || '',
+      mainPayerIndex: '',
+    },
+
     onSubmit: () => {
       sendForm();
     },
@@ -17,6 +21,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: formPaymentSchema,
+    context: { shouldValidatePayer: savedUsers.length > 1 },
   });
 
   useEffect(() => {
@@ -51,6 +56,32 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
             <em>não é necessário enviar comprovante de pagamento!</em> Todo o processo é digital e registrado
             automaticamente em nossa base de dados.
           </Card.Text>
+
+          {savedUsers.length > 1 && (
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Quem será o responsável pelo pagamento?</b>
+              </Form.Label>
+              <Form.Select
+                id="mainPayerIndex"
+                name="mainPayerIndex"
+                value={values.mainPayerIndex}
+                isInvalid={!!errors.mainPayerIndex}
+                onChange={handleChange}
+              >
+                <option value="" disabled>
+                  Selecione um responsável
+                </option>
+                {savedUsers.map((form, index) => (
+                  <option key={index} value={index}>
+                    {form.personalInformation?.name || `Usuário ${index + 1}`}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">{errors.mainPayerIndex}</Form.Control.Feedback>
+            </Form.Group>
+          )}
+
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -102,6 +133,9 @@ ChooseFormPayment.propTypes = {
       name: PropTypes.string,
     }),
   }),
+  savedUsers: PropTypes.array.isRequired,
+  mainPayerIndex: PropTypes.number,
+  setMainPayerIndex: PropTypes.func.isRequired,
 };
 
 export default ChooseFormPayment;
