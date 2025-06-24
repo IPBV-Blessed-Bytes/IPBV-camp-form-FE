@@ -66,6 +66,7 @@ const ExtraMealsSchema = yup.object().shape({
 
 const formPaymentSchema = yup.object().shape({
   formPayment: yup.string().required('Selecione o tipo de pagamento'),
+  mainPayerIndex: yup.string().required('Selecione o responsável pelo pagamento'),
 });
 
 const cpfReviewSchema = yup.object().shape({
