@@ -64,7 +64,7 @@ const Packages = ({
       }
     });
 
-    newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
+   newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
 
     newPackage.finalPrice = newPackage.price;
 
@@ -101,7 +101,7 @@ const Packages = ({
                   </b>
                 </Card.Text>
 
-                <ProductList ref={productListRef} />
+                <ProductList ref={productListRef} age={age} />
               </>
             )}
 

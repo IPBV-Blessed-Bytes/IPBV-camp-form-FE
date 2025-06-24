@@ -2,8 +2,9 @@ import { useState, useImperativeHandle, forwardRef } from 'react';
 import { useCart } from 'react-use-cart';
 import { products } from '../cart/products';
 import Icons from './Icons';
+import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
-const ProductList = forwardRef((props, ref) => {
+const ProductList = forwardRef(({ age }, ref) => {
   const { addItem, getItem, removeItem } = useCart();
   const [hasError, setHasError] = useState(false);
 
@@ -41,7 +42,7 @@ const ProductList = forwardRef((props, ref) => {
   };
 
   const renderSection = (categoryTitle, categoryKey, singleSelection = false, required) => {
-    const filtered = products.filter((p) => p.category === categoryKey);
+    const filtered = getDiscountedProducts(age).filter((p) => p.category === categoryKey);
 
     return (
       <div className="product-section">
@@ -55,6 +56,11 @@ const ProductList = forwardRef((props, ref) => {
               <div key={product.id} className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}>
                 <h3 className="product-title">{product.name}</h3>
                 <p className="product-price">R$ {product.price.toFixed(2)}</p>
+                {product.discountDescription && (
+                  <p className="discount-description text-success small">
+                    <em>{product.discountDescription}</em>
+                  </p>
+                )}
                 <button
                   className={`product-button ${alreadySelected ? 'selected' : ''}`}
                   onClick={() => {
