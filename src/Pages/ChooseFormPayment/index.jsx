@@ -8,21 +8,43 @@ import './style.scss';
 import Loading from '@/components/Global/Loading';
 
 const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, savedUsers }) => {
-  const { values, handleChange, errors, submitForm, setValues } = useFormik({
+  const formik = useFormik({
     initialValues: {
       formPayment: initialValues.formPayment || '',
-      mainPayerIndex: '',
+      mainPayer: '',
     },
-
-    onSubmit: () => {
-      sendForm();
-    },
-
+    validationSchema: formPaymentSchema,
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: formPaymentSchema,
     context: { shouldValidatePayer: savedUsers.length > 1 },
+    onSubmit: (values) => {
+      sendForm(values);
+    },
   });
+
+  const { values, errors, handleChange, setValues, setTouched, handleSubmit, validateForm } = formik;
+
+  const handleManualSubmit = async () => {
+    try {
+      await formPaymentSchema.validate(values, {
+        context: { shouldValidatePayer: savedUsers.length > 1 },
+        abortEarly: false,
+      });
+      handleSubmit();
+    } catch (validationError) {
+      const formattedErrors = {};
+      validationError.inner.forEach((error) => {
+        if (error.path) {
+          formattedErrors[error.path] = error.message;
+        }
+      });
+      formik.setErrors(formattedErrors);
+      formik.setTouched({
+        formPayment: true,
+        mainPayer: true,
+      });
+    }
+  };
 
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
@@ -31,7 +53,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
         formPayment: '',
       });
     }
-  }, [initialValues.formPayment, setValues, values, values.formPayment]);
+  }, [initialValues.formPayment]);
 
   useEffect(() => {
     toast.info(
@@ -57,31 +79,6 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
             automaticamente em nossa base de dados.
           </Card.Text>
 
-          {savedUsers.length > 1 && (
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>Quem será o responsável pelo pagamento?</b>
-              </Form.Label>
-              <Form.Select
-                id="mainPayerIndex"
-                name="mainPayerIndex"
-                value={values.mainPayerIndex}
-                isInvalid={!!errors.mainPayerIndex}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Selecione um responsável
-                </option>
-                {savedUsers.map((form, index) => (
-                  <option key={index} value={index}>
-                    {form.personalInformation?.name || `Usuário ${index + 1}`}
-                  </option>
-                ))}
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">{errors.mainPayerIndex}</Form.Control.Feedback>
-            </Form.Group>
-          )}
-
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -103,6 +100,34 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
+
+            {savedUsers.length > 1 && (
+              <Form.Group className="mb-3 info-text-wrapper">
+                <Form.Label>
+                  <b>Escolha o responsável pelo pagamento:</b>
+                </Form.Label>
+                <Form.Select
+                  id="mainPayer"
+                  name="mainPayer"
+                  isInvalid={!!errors.mainPayer}
+                  value={values.mainPayer}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Selecione uma opção
+                  </option>
+                  {savedUsers.map((form, index) => (
+                    <option key={index} value={index}>
+                      {form.personalInformation?.name || `Usuário ${index + 1}`}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">{errors.mainPayer}</Form.Control.Feedback>
+                <Card.Text className="mt-2 mb-0">
+                  <em>Informe-nos quem será o responsável pelo pagamento, entre todos que você cadastrou.</em>
+                </Card.Text>
+              </Form.Group>
+            )}
           </Form>
 
           <Loading loading={loading} />
@@ -113,7 +138,12 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-        <Button variant="warning" onClick={submitForm} size="lg" disabled={status === 'loading' || status === 'loaded'}>
+        <Button
+          variant="warning"
+          onClick={handleManualSubmit}
+          size="lg"
+          disabled={status === 'loading' || status === 'loaded'}
+        >
           Avançar
         </Button>
       </div>
@@ -134,8 +164,6 @@ ChooseFormPayment.propTypes = {
     }),
   }),
   savedUsers: PropTypes.array.isRequired,
-  mainPayerIndex: PropTypes.number,
-  setMainPayerIndex: PropTypes.func.isRequired,
 };
 
 export default ChooseFormPayment;
