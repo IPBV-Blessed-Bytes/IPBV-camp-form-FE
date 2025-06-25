@@ -288,9 +288,18 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                 </Col>
                 <Col md={6} className="mb-3">
                   <Form.Group>
-                    <Form.Label>
-                      <b>Data de Nascimento:</b>
-                    </Form.Label>
+                    <div className="d-flex gap-2">
+                      <Form.Label>
+                        <b>Data de Nascimento:</b>
+                      </Form.Label>
+                      <Tips
+                        placement="top"
+                        typeIcon="info"
+                        size={20}
+                        colour={'#000'}
+                        text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
+                      />
+                    </div>
                     <div className="custom-datepicker-wrapper">
                       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
                         <DatePicker
