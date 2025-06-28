@@ -1,18 +1,43 @@
-import { useState, useImperativeHandle, forwardRef } from 'react';
+import { useState, useImperativeHandle, useEffect, forwardRef, useRef } from 'react';
 import { useCart } from 'react-use-cart';
-import { products } from '../cart/products';
+import { products } from '../../Pages/Packages/utils/products';
 import Icons from './Icons';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import Tips from './Tips';
 
-const ProductList = forwardRef(({ age }, ref) => {
-  const { addItem, getItem, removeItem } = useCart();
+const ProductList = forwardRef(({ age, cartKey, discountValue }, ref) => {
+  const { addItem, getItem, removeItem, items } = useCart();
   const [hasError, setHasError] = useState(false);
+  const hasRestoredCart = useRef(false);
+
+  useEffect(() => {
+    const savedCart = sessionStorage.getItem(cartKey);
+
+    if (savedCart) {
+      try {
+        const parsed = JSON.parse(savedCart);
+        parsed.forEach((item) => {
+          if (!getItem(item.id)) {
+            addItem(item);
+          }
+        });
+      } catch (e) {
+        console.error('[ProductList] Erro ao restaurar carrinho:', e);
+      }
+    }
+
+    hasRestoredCart.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (hasRestoredCart.current) {
+      sessionStorage.setItem(cartKey, JSON.stringify(items));
+    }
+  }, [items]);
 
   const checkRequiredPackages = () => {
     const hostingSelected = products.filter((p) => p.category === 'Hospedagem').some((p) => getItem(p.id));
-
     const transportationSelected = products.filter((p) => p.category === 'Transporte').some((p) => getItem(p.id));
-
     const allValid = hostingSelected && transportationSelected;
 
     setHasError(!allValid);
@@ -54,7 +79,16 @@ const ProductList = forwardRef(({ age }, ref) => {
             const alreadySelected = !!getItem(product.id);
             return (
               <div key={product.id} className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}>
-                <h3 className="product-title">{product.name}</h3>
+                <div className="d-flex gap-2 align-items-center justify-content-center">
+                  <h3 className="product-title">{product.name}</h3>
+                  <Tips
+                    placement="top"
+                    typeIcon="rounded-question"
+                    size={20}
+                    colour={'#000'}
+                    text={product.description}
+                  />
+                </div>
                 <p className="product-price">R$ {product.price.toFixed(2)}</p>
                 {product.discountDescription && (
                   <p className="discount-description text-success small">
@@ -73,7 +107,7 @@ const ProductList = forwardRef(({ age }, ref) => {
             );
           })}
           {hasError && required && (
-            <div className={`invalid-feedback text-center d-block`}>
+            <div className="invalid-feedback text-center d-block">
               Selecione uma opção de {categoryTitle} &nbsp;
               <Icons typeIcon="error" iconSize={25} fill="#c92432" />
             </div>
