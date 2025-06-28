@@ -52,6 +52,10 @@ const RoutesValidations = ({ formContext }) => {
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
+    setSavedUsers(formValues);
+  }, [formValues]);
+
+  useEffect(() => {
     const fetchPackages = async () => {
       setLoading(true);
 
@@ -131,9 +135,8 @@ const RoutesValidations = ({ formContext }) => {
   const updateFormValues = (sectionKey) => (newData, callback) => {
     setFormValues((prev) => {
       const updated = [...prev];
-      const index = updated.length - 1;
-      updated[index] = {
-        ...updated[index],
+      updated[currentFormIndex] = {
+        ...updated[currentFormIndex],
         [sectionKey]: newData,
       };
       return updated;
@@ -179,6 +182,9 @@ const RoutesValidations = ({ formContext }) => {
     sessionStorage.setItem('savedUsers', JSON.stringify(savedUsers));
   }, [savedUsers]);
 
+  const existingCartKey = Object.keys(sessionStorage).find((key) => key === `cartItems${currentFormIndex}`);
+  const cartKey = existingCartKey || `cartItems${currentFormIndex}`;
+
   const initialStep = () => {
     setSteps(enumSteps.home);
     scrollTop();
@@ -210,6 +216,12 @@ const RoutesValidations = ({ formContext }) => {
 
   const goBackToStep = (step) => {
     setSteps(step);
+    scrollTop();
+  };
+
+  const goToEditStep = (index) => {
+    setCurrentFormIndex(index);
+    setSteps(enumSteps.personalData);
     scrollTop();
   };
 
@@ -296,6 +308,8 @@ const RoutesValidations = ({ formContext }) => {
       handleAddNewUser={handleAddNewUser}
       currentFormIndex={currentFormIndex}
       setSavedUsers={setSavedUsers}
+      goToEditStep={goToEditStep}
+      cartKey={cartKey}
     />
   );
 };
