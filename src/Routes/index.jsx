@@ -82,6 +82,8 @@ const FormRoutes = ({
   handleAddNewUser,
   currentFormIndex,
   setSavedUsers,
+  goToEditStep,
+  cartKey,
 }) => {
   const currentFormValues = formValues[currentFormIndex] || {};
 
@@ -106,19 +108,20 @@ const FormRoutes = ({
                 {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
                 {steps === enumSteps.personalData && isNotSuccessPathname && (
                   <FormPersonalData
-                    initialValues={currentFormValues.personalInformation}
+                    initialValues={savedUsers[currentFormIndex]?.personalInformation || {}}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('personalInformation')}
                     onDiscountChange={handleDiscountChange}
                     formUsername={currentFormValues.personalInformation?.name}
                     savedUsers={savedUsers}
+                    currentFormIndex={currentFormIndex}
                   />
                 )}
 
                 {steps === enumSteps.contact && isNotSuccessPathname && (
                   <FormContact
-                    initialValues={currentFormValues.contact}
+                    initialValues={savedUsers[currentFormIndex]?.contact || {}}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('contact')}
@@ -142,6 +145,7 @@ const FormRoutes = ({
                     addUserToList={addUserToList}
                     formValues={currentFormValues}
                     currentFormIndex={currentFormIndex}
+                    cartKey={cartKey}
                   />
                 )}
 
@@ -150,7 +154,7 @@ const FormRoutes = ({
                     birthDate={currentFormValues.personalInformation?.birthday}
                     backStep={backStep}
                     nextStep={nextStep}
-                    initialValues={currentFormValues.extraMeals}
+                    initialValues={savedUsers[currentFormIndex]?.extraMeals || {}}
                     updateForm={updateFormValues('extraMeals')}
                   />
                 )}
@@ -164,6 +168,7 @@ const FormRoutes = ({
                     status={status}
                     addUserToList={addUserToList}
                     goBackToStep={goBackToStep}
+                    cartKey={cartKey}
                   />
                 )}
 
@@ -173,6 +178,9 @@ const FormRoutes = ({
                     goBackToStep={goBackToStep}
                     setSavedUsers={setSavedUsers}
                     savedUsers={savedUsers}
+                    goToEditStep={goToEditStep}
+                    cartKey={cartKey}
+                    discountValue={discount}
                   />
                 )}
 
