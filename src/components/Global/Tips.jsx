@@ -8,7 +8,7 @@ const Tips = ({ placement, text, typeIcon, size, colour }) => {
     <OverlayTrigger placement={(placement && placement) || 'top'} overlay={<Tooltip>{text}</Tooltip>}>
       <div>
         <Icons
-          typeIcon={(typeIcon && typeIcon) || 'info'}
+          typeIcon={(typeIcon && typeIcon) || 'rounded-question'}
           iconSize={(size && size) || 20}
           fill={(colour && colour) || '#000'}
         />
