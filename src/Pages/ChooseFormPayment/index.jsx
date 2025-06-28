@@ -22,7 +22,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
     },
   });
 
-  const { values, errors, handleChange, setValues, setTouched, handleSubmit, validateForm } = formik;
+  const { values, errors, handleChange, setValues, handleSubmit } = formik;
 
   const handleManualSubmit = async () => {
     try {
