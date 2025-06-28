@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 import PropTypes from 'prop-types';
+import { useCart } from 'react-use-cart';
 import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
@@ -12,6 +13,7 @@ const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) 
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
+  const { emptyCart } = useCart();
 
   const handleCheckboxChange = (e) => setIsConfirmed(e.target.checked);
 
@@ -35,6 +37,8 @@ const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) 
     if (!isConfirmed || !isDataAuthorized) return;
 
     addUserToList(formValues);
+
+    emptyCart();
 
     nextStep();
   };
