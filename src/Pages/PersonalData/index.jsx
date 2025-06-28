@@ -19,7 +19,15 @@ import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 
-const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscountChange, savedUsers }) => {
+const PersonalData = ({
+  nextStep,
+  backStep,
+  updateForm,
+  initialValues,
+  onDiscountChange,
+  savedUsers,
+  currentFormIndex,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
   const [previousUserData, setPreviousUserData] = useState(null);
@@ -28,10 +36,14 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
 
   const { values, errors, handleChange, submitForm, setFieldValue, setValues } = useFormik({
     initialValues,
+    enableReinitialize: true,
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
         const cpfIsEqualToLegualGuardianCpf = values.cpf === values.legalGuardianCpf;
-        const cpfAlreadyExists = savedUsers?.some((user) => user?.personalInformation?.cpf === values.cpf);
+        const cpfAlreadyExists = savedUsers?.some((user, index) => {
+          if (index === currentFormIndex) return false;
+          return user?.personalInformation?.cpf === values.cpf;
+        });
 
         if (cpfIsEqualToLegualGuardianCpf) {
           toast.error('CPF do acampante não pode ser igual ao CPF do responsável legal');
@@ -295,7 +307,7 @@ const PersonalData = ({ nextStep, backStep, updateForm, initialValues, onDiscoun
                       <Tips
                         placement="top"
                         typeIcon="info"
-                        size={20}
+                        size={25}
                         colour={'#000'}
                         text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
                       />
