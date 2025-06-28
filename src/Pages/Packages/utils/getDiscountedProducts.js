@@ -1,4 +1,4 @@
-import { products } from '@/components/cart/products';
+import { products } from '@/Pages/Packages/utils/products';
 
 const getDiscountedProducts = (ageRaw) => {
   const age = Number(ageRaw);
