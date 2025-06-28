@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
 
-const Cart = ({ savedUsers = [], setSavedUsers }) => {
+const Cart = ({ savedUsers = [], setSavedUsers, goToEditStep, cartKey, discountValue }) => {
   const { removeItem, emptyCart } = useCart();
 
   const handleRemoveUser = (index, itemId) => {
@@ -40,6 +40,13 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
     return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
   }
 
+  const clearCart = () => {
+    emptyCart();
+    setSavedUsers([]);
+    sessionStorage.removeItem('savedUsers');
+    sessionStorage.removeItem(cartKey);
+  };
+
   return (
     <div className="cart-container">
       {savedUsers.map((user, index) => {
@@ -62,22 +69,34 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
 
         return (
           <div key={index} className="cart-user-group">
-            <h4 className="cart-user-title">
-              <b>{userName}:</b>
-            </h4>
+            <div className="d-flex justify-content-between">
+              <h4 className="cart-user-title">
+                <b>{userName}:</b>
+              </h4>
+              <div className="d-flex gap-2">
+                <Button variant="secondary" size="md" onClick={() => goToEditStep(index)} className="ms-2">
+                  <Icons typeIcon="edit" iconSize={30} />
+                  <span className="edit-user-btn">&nbsp;Editar Usuário</span>
+                </Button>
+
+                <Button variant="danger" size="md" onClick={() => handleRemoveUser(index, itemId)}>
+                  <Icons typeIcon="delete" iconSize={30} fill="#fff" />
+                  <span className="remove-user-btn">&nbsp;Remover Usuário</span>
+                </Button>
+              </div>
+            </div>
 
             {userPackage && (
               <div className="cart-item">
                 <div className="item-info">
-                  <h3>Pacote: {userPackage?.title}</h3>
-                  <p>Preço: R$ {Number(userPackage?.finalPrice || 0).toFixed(2)}</p>
-                </div>
+                  <h5>Acomodação: {userPackage?.accomodation.name}</h5>
+                  <p>Preço: R$ {Number(userPackage?.accomodation.price || 0).toFixed(2)}</p>
 
-                <div>
-                  <Button variant="danger" size="md" onClick={() => handleRemoveUser(index, itemId)}>
-                    <Icons typeIcon="delete" iconSize={30} fill="#fff" />
-                    <span className="remove-user-btn">&nbsp;Remover Usuário</span>
-                  </Button>
+                  <h5>Transporte: {userPackage?.transportation.name}</h5>
+                  <p>Preço: R$ {Number(userPackage?.transportation.price || 0).toFixed(2)}</p>
+
+                  <h5>Alimentação: {userPackage?.food.name.split(' (')[0]}</h5>
+                  <p>Preço: R$ {Number(userPackage?.food.price || 0).toFixed(2)}</p>
                 </div>
               </div>
             )}
@@ -85,12 +104,12 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
             {userExtraMeals && userExtraMeals.extraMeals && (
               <div className="cart-item">
                 <div className="item-info">
-                  <h3>
+                  <h5>
                     Refeições Extras:{' '}
                     {Array.isArray(userExtraMeals.extraMeals)
                       ? userExtraMeals.extraMeals.filter((meal) => meal && meal.trim() !== '').join(', ')
                       : userExtraMeals.extraMeals}
-                  </h3>
+                  </h5>
                   <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0).toFixed(2)}</p>
                 </div>
               </div>
@@ -98,6 +117,7 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
 
             <div className="cart-item">
               <div className="item-info">
+                {userPackage && <p>Total do Usuário: R$ {Number(userPackage?.finalPrice || 0).toFixed(2)}</p>}
                 <p>Valor Base Individual: R$ {individualBase.toFixed(2)}</p>
               </div>
             </div>
@@ -123,9 +143,9 @@ const Cart = ({ savedUsers = [], setSavedUsers }) => {
         <p>Total dos Pacotes: R$ {totalPackages.toFixed(2)}</p>
         <strong>Total Geral: R$ {finalTotal.toFixed(2)}</strong>
       </div>
-      <div className="cart-buttons">
-        <Button variant="warning" size="md" onClick={emptyCart} className="cart-btn-responsive">
-          <Icons typeIcon="close" iconSize={30} fill="#000" /> &nbsp;Esvaziar Carrinho
+      <div className="mt-4">
+        <Button variant="danger" size="lg" onClick={clearCart} className="cart-btn-responsive">
+          <Icons typeIcon="close" iconSize={30} fill="#fff" /> &nbsp;Esvaziar Carrinho
         </Button>
       </div>
     </div>
