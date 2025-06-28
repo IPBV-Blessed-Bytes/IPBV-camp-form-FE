@@ -15,9 +15,32 @@ const Packages = ({
   totalSeats,
   updateForm,
   nextStep,
+  formValues,
+  currentFormIndex,
+  cartKey,
+  addUserToList,
 }) => {
   const productListRef = useRef();
-  const { items, emptyCart } = useCart();
+  const { items, addItem } = useCart();
+
+  useEffect(() => {
+    const currentUser = formValues;
+    const cartIsEmpty = items.length === 0;
+
+    if (cartIsEmpty && currentUser?.package) {
+      const { accomodation, transportation, food } = currentUser.package;
+
+      if (accomodation?.id) {
+        addItem({ ...accomodation, category: 'Hospedagem' });
+      }
+      if (transportation?.id) {
+        addItem({ ...transportation, category: 'Transporte' });
+      }
+      if (food?.id) {
+        addItem({ ...food, category: 'Alimentação' });
+      }
+    }
+  }, [formValues, currentFormIndex]);
 
   useEffect(() => {
     if (hasDiscount) {
@@ -64,7 +87,7 @@ const Packages = ({
       }
     });
 
-   newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
+    newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
 
     newPackage.finalPrice = newPackage.price;
 
@@ -76,12 +99,11 @@ const Packages = ({
       nextStep(skipToReview);
     });
 
-    emptyCart();
+    addUserToList(formValues);
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
   const isChild = age < 11;
-
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
   return (
@@ -101,7 +123,7 @@ const Packages = ({
                   </b>
                 </Card.Text>
 
-                <ProductList ref={productListRef} age={age} />
+                <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discountValue} />
               </>
             )}
 
@@ -141,6 +163,7 @@ Packages.propTypes = {
   totalSeats: PropTypes.string.isRequired,
   updateForm: PropTypes.func.isRequired,
   currentFormIndex: PropTypes.number.isRequired,
+  formValues: PropTypes.array.isRequired,
 };
 
 export default Packages;
