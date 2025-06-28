@@ -5,9 +5,18 @@ import './style.scss';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 
-const BeforePayment = ({ goToPersonalData, goBackToStep, setSavedUsers, savedUsers }) => {
+const BeforePayment = ({
+  goToPersonalData,
+  goBackToStep,
+  setSavedUsers,
+  savedUsers,
+  goToEditStep,
+  cartKey,
+  discountValue,
+}) => {
   const goToPayment = () => {
     goBackToStep(enumSteps.formPayment);
+    sessionStorage.removeItem(cartKey);
   };
 
   return (
@@ -24,19 +33,27 @@ const BeforePayment = ({ goToPersonalData, goBackToStep, setSavedUsers, savedUse
 
               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
                 <Button variant="warning" size="lg" onClick={goToPersonalData} className="cart-btn-responsive">
-                  <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Outro Usuário
+                  <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Novo Usuário
                 </Button>
 
-                <Button variant="success" size="lg" onClick={goToPayment} className="cart-btn-responsive">
-                  <Icons typeIcon="money" iconSize={30} fill="#fff" /> &nbsp;Pagamento
-                </Button>
+                {savedUsers.length > 0 && (
+                  <Button variant="success" size="lg" onClick={goToPayment} className="cart-btn-responsive">
+                    <Icons typeIcon="money" iconSize={30} fill="#fff" /> &nbsp;Pagamento
+                  </Button>
+                )}
               </div>
             </Col>
           </Row>
 
           <Row>
             <Col>
-              <Cart setSavedUsers={setSavedUsers} savedUsers={savedUsers} />
+              <Cart
+                setSavedUsers={setSavedUsers}
+                savedUsers={savedUsers}
+                goToEditStep={goToEditStep}
+                cartKey={cartKey}
+                discountValue={discountValue}
+              />
             </Col>
           </Row>
         </Container>
