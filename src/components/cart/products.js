@@ -1,19 +1,34 @@
 export const products = [
-  // Hospedagem
   {
-    id: 'host-college',
-    name: 'Colégio',
+    id: 'host-college-collective',
+    name: 'Colégio Quarto Coletivo',
     price: 0,
     image: '/img/hospedagem.png',
-    description: '',
+    description: 'Quartos coletivos, separados por idade',
     category: 'Hospedagem',
   },
-   {
+  {
+    id: 'host-college-family',
+    name: 'Colégio Quarto Família',
+    price: 0,
+    image: '/img/hospedagem.png',
+    description: 'Quartos separados para cada família',
+    category: 'Hospedagem',
+  },
+  {
+    id: 'host-college-camping',
+    name: 'Colégio Camping',
+    price: 0,
+    image: '/img/hospedagem.png',
+    description: 'Área destinada para quem vai acampar de barraca (barraca por sua conta)',
+    category: 'Hospedagem',
+  },
+  {
     id: 'host-seminario',
     name: 'Seminário',
     price: 500,
     image: '/img/hospedagem.png',
-    description: '',
+    description: 'Quarto do seminário são josé',
     category: 'Hospedagem',
   },
   {
@@ -21,17 +36,15 @@ export const products = [
     name: 'Externo',
     price: 0,
     image: '/img/hospedagem.png',
-    description: '',
+    description: 'Qualquer hospedagem que não seja colégio ou seminário, por sua conta',
     category: 'Hospedagem',
   },
-
-  // Transporte
   {
     id: 'bus-yes',
     name: 'Com Ônibus',
     price: 200,
     image: '/img/bus.png',
-    description: '',
+    description: 'Ônibus disponibilizado pela igreja',
     category: 'Transporte',
   },
   {
@@ -39,17 +52,15 @@ export const products = [
     name: 'Sem Ônibus',
     price: 0,
     image: '/img/bus.png',
-    description: '',
+    description: 'Qualquer transporte que não seja no ônibus da igreja, por sua conta',
     category: 'Transporte',
   },
-
-  // Alimentação
   {
     id: 'food-complete',
     name: 'Alimentação Completa (Café, Almoço e Jantar)',
     price: 300,
     image: '/img/food.png',
-    description: '',
+    description: 'Café da manhã, almoço e jantar inclusos',
     category: 'Alimentação',
   },
   {
@@ -57,7 +68,8 @@ export const products = [
     name: 'Alimentação Parcial (Almoço e Jantar)',
     price: 240,
     image: '/img/food.png',
-    description: '',
+    description:
+      'Apenas almoço e jantar. Café não incluso, destinado para quem vai ficar no seminário ou hotel, que normalmente já inclui café da manhã',
     category: 'Alimentação',
   },
 ];
