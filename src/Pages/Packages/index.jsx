@@ -17,7 +17,7 @@ const Packages = ({
   nextStep,
   formValues,
   currentFormIndex,
-  cartKey
+  cartKey,
 }) => {
   const productListRef = useRef();
   const { items, addItem } = useCart();
@@ -161,6 +161,7 @@ Packages.propTypes = {
   updateForm: PropTypes.func.isRequired,
   currentFormIndex: PropTypes.number.isRequired,
   formValues: PropTypes.array.isRequired,
+  cartKey: PropTypes.string.isRequired,
 };
 
 export default Packages;

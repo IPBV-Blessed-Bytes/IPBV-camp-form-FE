@@ -631,6 +631,7 @@ PersonalData.propTypes = {
       }),
     }),
   ),
+  currentFormIndex: PropTypes.number,
 };
 
 export default PersonalData;

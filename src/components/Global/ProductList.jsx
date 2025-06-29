@@ -1,6 +1,7 @@
 import { useState, useImperativeHandle, useEffect, forwardRef, useRef } from 'react';
 import { useCart } from 'react-use-cart';
 import { products } from '../../Pages/Packages/utils/products';
+import PropTypes from 'prop-types';
 import Icons from './Icons';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import Tips from './Tips';
@@ -130,5 +131,11 @@ const ProductList = forwardRef(({ age, cartKey, discountValue }, ref) => {
 });
 
 ProductList.displayName = 'ProductList';
+
+ProductList.propTypes = {
+  age: PropTypes.number.isRequired,
+  cartKey: PropTypes.string.isRequired,
+  discountValue: PropTypes.string,
+};
 
 export default ProductList;

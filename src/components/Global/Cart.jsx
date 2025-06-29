@@ -173,6 +173,9 @@ Cart.propTypes = {
     }),
   ),
   setFormValues: PropTypes.func.isRequired,
+  goToEditStep: PropTypes.func.isRequired,
+  cartKey: PropTypes.string.isRequired,
+  discountValue: PropTypes.string,
 };
 
 export default Cart;

@@ -67,6 +67,9 @@ BeforePayment.propTypes = {
   goBackToStep: PropTypes.func.isRequired,
   setformValues: PropTypes.func.isRequired,
   formValues: PropTypes.array.isRequired,
+  goToEditStep: PropTypes.func.isRequired,
+  cartKey: PropTypes.string.isRequired,
+  discountValue: PropTypes.string,
 };
 
 export default BeforePayment;

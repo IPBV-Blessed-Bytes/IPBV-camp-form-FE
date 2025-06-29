@@ -422,6 +422,8 @@ FormRoutes.propTypes = {
   handleAddNewUser: PropTypes.func,
   currentFormIndex: PropTypes.number,
   setFormValues: PropTypes.func,
+  goToEditStep: PropTypes.func,
+  cartKey: PropTypes.string,
 };
 
 export default FormRoutes;
