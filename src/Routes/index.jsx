@@ -77,11 +77,9 @@ const FormRoutes = ({
   backStep,
   goBackToStep,
   sendForm,
-  addUserToList,
-  savedUsers,
   handleAddNewUser,
   currentFormIndex,
-  setSavedUsers,
+  setFormValues,
   goToEditStep,
   cartKey,
 }) => {
@@ -101,27 +99,26 @@ const FormRoutes = ({
                 goBackToStep={goBackToStep}
                 formSubmitted={formSubmitted}
                 showNavMenu={true}
-                savedUsers={savedUsers}
               />
 
               <div className="form__container">
                 {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
                 {steps === enumSteps.personalData && isNotSuccessPathname && (
                   <FormPersonalData
-                    initialValues={savedUsers[currentFormIndex]?.personalInformation || {}}
+                    initialValues={formValues[currentFormIndex]?.personalInformation || {}}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('personalInformation')}
                     onDiscountChange={handleDiscountChange}
                     formUsername={currentFormValues.personalInformation?.name}
-                    savedUsers={savedUsers}
+                    formValues={formValues}
                     currentFormIndex={currentFormIndex}
                   />
                 )}
 
                 {steps === enumSteps.contact && isNotSuccessPathname && (
                   <FormContact
-                    initialValues={savedUsers[currentFormIndex]?.contact || {}}
+                    initialValues={formValues[currentFormIndex]?.contact || {}}
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('contact')}
@@ -142,7 +139,6 @@ const FormRoutes = ({
                     totalSeats={totalSeats}
                     totalBusVacancies={totalBusVacancies}
                     totalValidWithBus={totalRegistrations.totalValidWithBus}
-                    addUserToList={addUserToList}
                     formValues={currentFormValues}
                     currentFormIndex={currentFormIndex}
                     cartKey={cartKey}
@@ -154,7 +150,7 @@ const FormRoutes = ({
                     birthDate={currentFormValues.personalInformation?.birthday}
                     backStep={backStep}
                     nextStep={nextStep}
-                    initialValues={savedUsers[currentFormIndex]?.extraMeals || {}}
+                    initialValues={formValues[currentFormIndex]?.extraMeals || {}}
                     updateForm={updateFormValues('extraMeals')}
                   />
                 )}
@@ -166,7 +162,6 @@ const FormRoutes = ({
                     formValues={currentFormValues}
                     sendForm={sendForm}
                     status={status}
-                    addUserToList={addUserToList}
                     goBackToStep={goBackToStep}
                     cartKey={cartKey}
                   />
@@ -176,8 +171,8 @@ const FormRoutes = ({
                   <BeforePayment
                     goToPersonalData={handleAddNewUser}
                     goBackToStep={goBackToStep}
-                    setSavedUsers={setSavedUsers}
-                    savedUsers={savedUsers}
+                    setFormValues={setFormValues}
+                    formValues={formValues}
                     goToEditStep={goToEditStep}
                     cartKey={cartKey}
                     discountValue={discount}
@@ -193,7 +188,7 @@ const FormRoutes = ({
                     sendForm={sendForm}
                     loading={loading}
                     status={status}
-                    savedUsers={savedUsers}
+                    formValues={formValues}
                   />
                 )}
 
@@ -424,19 +419,9 @@ FormRoutes.propTypes = {
   backStep: PropTypes.func,
   goBackToStep: PropTypes.func,
   sendForm: PropTypes.func,
-  addUserToList: PropTypes.func,
-  savedUsers: PropTypes.arrayOf(
-    PropTypes.shape({
-      personalInformation: PropTypes.shape({
-        cpf: PropTypes.string,
-        name: PropTypes.string,
-        birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-      }),
-    }),
-  ),
   handleAddNewUser: PropTypes.func,
   currentFormIndex: PropTypes.number,
-  setSavedUsers: PropTypes.func,
+  setFormValues: PropTypes.func,
 };
 
 export default FormRoutes;

@@ -5,20 +5,20 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
 
-const Cart = ({ savedUsers = [], setSavedUsers, goToEditStep, cartKey, discountValue }) => {
+const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountValue }) => {
   const { removeItem, emptyCart } = useCart();
 
   const handleRemoveUser = (index, itemId) => {
-    setSavedUsers((prev) => prev.filter((_, i) => i !== index));
+    setFormValues((prev) => prev.filter((_, i) => i !== index));
     if (itemId) removeItem(itemId);
   };
 
-  const totalPackages = savedUsers.reduce((acc, user) => {
+  const totalPackages = formValues.reduce((acc, user) => {
     const price = Number(user?.package?.finalPrice || 0);
     return acc + price;
   }, 0);
 
-  const totalBasePrice = savedUsers.reduce((acc, user) => {
+  const totalBasePrice = formValues.reduce((acc, user) => {
     const birthDate = new Date(user?.personalInformation?.birthday);
     const age = differenceInYears(new Date(), birthDate);
 
@@ -36,20 +36,20 @@ const Cart = ({ savedUsers = [], setSavedUsers, goToEditStep, cartKey, discountV
 
   const finalTotal = totalPackages + totalBasePrice;
 
-  if (!savedUsers.length) {
+  if (!formValues.length) {
     return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
   }
 
   const clearCart = () => {
     emptyCart();
-    setSavedUsers([]);
+    setFormValues([]);
     sessionStorage.removeItem('savedUsers');
     sessionStorage.removeItem(cartKey);
   };
 
   return (
     <div className="cart-container">
-      {savedUsers.map((user, index) => {
+      {formValues.map((user, index) => {
         const userName = user?.personalInformation?.name || `Pessoa ${index + 1}`;
         const userPackage = user?.package;
         const userExtraMeals = user?.extraMeals;
@@ -153,7 +153,7 @@ const Cart = ({ savedUsers = [], setSavedUsers, goToEditStep, cartKey, discountV
 };
 
 Cart.propTypes = {
-  savedUsers: PropTypes.arrayOf(
+  formValues: PropTypes.arrayOf(
     PropTypes.shape({
       personalInformation: PropTypes.shape({
         name: PropTypes.string,
@@ -172,7 +172,7 @@ Cart.propTypes = {
       }),
     }),
   ),
-  setSavedUsers: PropTypes.func.isRequired,
+  setFormValues: PropTypes.func.isRequired,
 };
 
 export default Cart;

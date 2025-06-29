@@ -25,7 +25,7 @@ const PersonalData = ({
   updateForm,
   initialValues,
   onDiscountChange,
-  savedUsers,
+  formValues,
   currentFormIndex,
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -40,7 +40,7 @@ const PersonalData = ({
     onSubmit: async () => {
       if (cpf.isValid(values.cpf)) {
         const cpfIsEqualToLegualGuardianCpf = values.cpf === values.legalGuardianCpf;
-        const cpfAlreadyExists = savedUsers?.some((user, index) => {
+        const cpfAlreadyExists = formValues?.some((user, index) => {
           if (index === currentFormIndex) return false;
           return user?.personalInformation?.cpf === values.cpf;
         });
@@ -624,7 +624,7 @@ PersonalData.propTypes = {
     legalGuardianCpf: PropTypes.string,
     legalGuardianCellPhone: PropTypes.string,
   }),
-  savedUsers: PropTypes.arrayOf(
+  formValues: PropTypes.arrayOf(
     PropTypes.shape({
       personalInformation: PropTypes.shape({
         cpf: PropTypes.string,

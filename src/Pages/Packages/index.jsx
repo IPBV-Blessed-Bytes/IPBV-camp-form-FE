@@ -17,8 +17,7 @@ const Packages = ({
   nextStep,
   formValues,
   currentFormIndex,
-  cartKey,
-  addUserToList,
+  cartKey
 }) => {
   const productListRef = useRef();
   const { items, addItem } = useCart();
@@ -98,8 +97,6 @@ const Packages = ({
       const skipToReview = hasFood;
       nextStep(skipToReview);
     });
-
-    addUserToList(formValues);
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;

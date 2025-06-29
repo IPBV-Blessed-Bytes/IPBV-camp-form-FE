@@ -8,7 +8,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) => {
+const FinalReview = ({ nextStep, backStep, formValues, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
@@ -36,10 +36,7 @@ const FinalReview = ({ nextStep, backStep, formValues, status, addUserToList }) 
   const handleSaveUser = () => {
     if (!isConfirmed || !isDataAuthorized) return;
 
-    addUserToList(formValues);
-
     emptyCart();
-
     nextStep();
   };
 
@@ -306,7 +303,6 @@ FinalReview.propTypes = {
     }),
   }).isRequired,
   status: PropTypes.string.isRequired,
-  addUserToList: PropTypes.func.isRequired,
   sendForm: PropTypes.func,
 };
 

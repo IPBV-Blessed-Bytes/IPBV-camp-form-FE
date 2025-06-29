@@ -20,7 +20,10 @@ const RoutesValidations = ({ formContext }) => {
   const { isLoggedIn } = useAuth();
 
   const [steps, setSteps] = useState(enumSteps.home);
-  const [formValues, setFormValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(() => {
+    const stored = sessionStorage.getItem('savedUsers');
+    return stored ? JSON.parse(stored) : initialValues;
+  });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [availablePackages, setAvailablePackages] = useState({});
   const [totalRegistrations, setTotalRegistrations] = useState({});
@@ -36,10 +39,6 @@ const RoutesValidations = ({ formContext }) => {
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
-  const [savedUsers, setSavedUsers] = useState(() => {
-    const saved = sessionStorage.getItem('savedUsers');
-    return saved ? JSON.parse(saved) : [];
-  });
 
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -52,7 +51,7 @@ const RoutesValidations = ({ formContext }) => {
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
-    setSavedUsers(formValues);
+    sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
   }, [formValues]);
 
   useEffect(() => {
@@ -157,30 +156,28 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
-  const addUserToList = (userData) => {
-    const newCpf = userData?.personalInformation?.cpf;
+  // MOVER ESSA VALIDAÇÃO PRA ALGUM OUTRO STEP
 
-    if (!newCpf) {
-      toast.error('CPF não encontrado nos dados do usuário. Não foi possível adicionar.');
-      return;
-    }
+  //  const addUserToList = (userData) => {
+  //   const newCpf = userData?.personalInformation?.cpf;
 
-    setSavedUsers((prev) => {
-      const alreadyExists = prev.some((user) => user.personalInformation?.cpf === newCpf);
+  //   if (!newCpf) {
+  //     toast.error('CPF não encontrado nos dados do usuário. Não foi possível adicionar.');
+  //     return;
+  //   }
 
-      if (alreadyExists) {
-        toast.info(`Usuário com CPF ${newCpf} já está salvo. Ignorando duplicação.`);
-        return prev;
-      }
+  //   setSavedUsers((prev) => {
+  //     const alreadyExists = prev.some((user) => user.personalInformation?.cpf === newCpf);
 
-      toast.success('Usuário adicionado com sucesso');
-      return [...prev, userData];
-    });
-  };
+  //     if (alreadyExists) {
+  //       toast.info(`Usuário com CPF ${newCpf} já está salvo. Ignorando duplicação.`);
+  //       return prev;
+  //     }
 
-  useEffect(() => {
-    sessionStorage.setItem('savedUsers', JSON.stringify(savedUsers));
-  }, [savedUsers]);
+  //     toast.success('Usuário adicionado com sucesso');
+  //     return [...prev, userData];
+  //   });
+  // };
 
   const existingCartKey = Object.keys(sessionStorage).find((key) => key === `cartItems${currentFormIndex}`);
   const cartKey = existingCartKey || `cartItems${currentFormIndex}`;
@@ -303,11 +300,9 @@ const RoutesValidations = ({ formContext }) => {
       backStep={backStep}
       goBackToStep={goBackToStep}
       sendForm={sendForm}
-      addUserToList={addUserToList}
-      savedUsers={savedUsers}
       handleAddNewUser={handleAddNewUser}
       currentFormIndex={currentFormIndex}
-      setSavedUsers={setSavedUsers}
+      setFormValues={setFormValues}
       goToEditStep={goToEditStep}
       cartKey={cartKey}
     />

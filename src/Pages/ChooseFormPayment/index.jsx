@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, savedUsers }) => {
+const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, formValues }) => {
   const formik = useFormik({
     initialValues: {
       formPayment: initialValues.formPayment || '',
@@ -16,7 +16,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
     validationSchema: formPaymentSchema,
     validateOnBlur: false,
     validateOnChange: false,
-    context: { shouldValidatePayer: savedUsers.length > 1 },
+    context: { shouldValidatePayer: formValues.length > 1 },
     onSubmit: (values) => {
       sendForm(values);
     },
@@ -27,7 +27,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
   const handleManualSubmit = async () => {
     try {
       await formPaymentSchema.validate(values, {
-        context: { shouldValidatePayer: savedUsers.length > 1 },
+        context: { shouldValidatePayer: formValues.length > 1 },
         abortEarly: false,
       });
       handleSubmit();
@@ -101,7 +101,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
 
-            {savedUsers.length > 1 && (
+            {formValues.length > 1 && (
               <Form.Group className="mb-3 info-text-wrapper">
                 <Form.Label>
                   <b>Escolha o responsável pelo pagamento:</b>
@@ -116,7 +116,7 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
                   <option value="" disabled>
                     Selecione uma opção
                   </option>
-                  {savedUsers.map((form, index) => (
+                  {formValues.map((form, index) => (
                     <option key={index} value={index}>
                       {form.personalInformation?.name || `Usuário ${index + 1}`}
                     </option>
@@ -163,7 +163,7 @@ ChooseFormPayment.propTypes = {
       name: PropTypes.string,
     }),
   }),
-  savedUsers: PropTypes.array.isRequired,
+  formValues: PropTypes.array.isRequired,
 };
 
 export default ChooseFormPayment;

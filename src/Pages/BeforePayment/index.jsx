@@ -8,8 +8,8 @@ import Icons from '@/components/Global/Icons';
 const BeforePayment = ({
   goToPersonalData,
   goBackToStep,
-  setSavedUsers,
-  savedUsers,
+  setFormValues,
+  formValues,
   goToEditStep,
   cartKey,
   discountValue,
@@ -36,7 +36,7 @@ const BeforePayment = ({
                   <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Novo Usuário
                 </Button>
 
-                {savedUsers.length > 0 && (
+                {formValues.length > 0 && (
                   <Button variant="success" size="lg" onClick={goToPayment} className="cart-btn-responsive">
                     <Icons typeIcon="money" iconSize={30} fill="#fff" /> &nbsp;Pagamento
                   </Button>
@@ -48,8 +48,8 @@ const BeforePayment = ({
           <Row>
             <Col>
               <Cart
-                setSavedUsers={setSavedUsers}
-                savedUsers={savedUsers}
+                setFormValues={setFormValues}
+                formValues={formValues}
                 goToEditStep={goToEditStep}
                 cartKey={cartKey}
                 discountValue={discountValue}
@@ -65,8 +65,8 @@ const BeforePayment = ({
 BeforePayment.propTypes = {
   goToPersonalData: PropTypes.func.isRequired,
   goBackToStep: PropTypes.func.isRequired,
-  setSavedUsers: PropTypes.func.isRequired,
-  savedUsers: PropTypes.array.isRequired,
+  setformValues: PropTypes.func.isRequired,
+  formValues: PropTypes.array.isRequired,
 };
 
 export default BeforePayment;
