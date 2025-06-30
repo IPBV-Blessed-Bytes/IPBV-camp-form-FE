@@ -7,7 +7,7 @@ import Icons from '@/components/Global/Icons';
 
 const BeforePayment = ({
   goToPersonalData,
-  goBackToStep,
+  goToStep,
   setFormValues,
   formValues,
   goToEditStep,
@@ -15,7 +15,7 @@ const BeforePayment = ({
   discountValue,
 }) => {
   const goToPayment = () => {
-    goBackToStep(enumSteps.formPayment);
+    goToStep(enumSteps.formPayment);
     sessionStorage.removeItem(cartKey);
   };
 
@@ -64,7 +64,7 @@ const BeforePayment = ({
 
 BeforePayment.propTypes = {
   goToPersonalData: PropTypes.func.isRequired,
-  goBackToStep: PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
   setformValues: PropTypes.func.isRequired,
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,

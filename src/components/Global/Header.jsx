@@ -7,7 +7,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
+const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu }) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -30,7 +30,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
     if (formSubmitted) return;
 
     if (newStep <= currentStep) {
-      goBackToStep(newStep);
+      goToStep(newStep);
     }
   };
 
@@ -72,7 +72,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
         </Breadcrumb>
       )}
 
-      <Button className="cart-btn" onClick={() => goBackToStep(enumSteps.beforePayment)}>
+      <Button className="cart-btn" onClick={() => goToStep(enumSteps.beforePayment)}>
         <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
       </Button>
     </header>
@@ -81,7 +81,7 @@ const Header = ({ currentStep, goBackToStep, formSubmitted, showNavMenu }) => {
 
 Header.propTypes = {
   currentStep: PropTypes.number.isRequired,
-  goBackToStep: PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
   formSubmitted: PropTypes.bool,
   showNavMenu: PropTypes.bool,
 };

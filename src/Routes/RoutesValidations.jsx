@@ -211,7 +211,7 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
-  const goBackToStep = (step) => {
+  const goToStep = (step) => {
     setSteps(step);
     scrollTop();
   };
@@ -298,7 +298,7 @@ const RoutesValidations = ({ formContext }) => {
       nextStep={nextStep}
       skipTwoSteps={skipTwoSteps}
       backStep={backStep}
-      goBackToStep={goBackToStep}
+      goToStep={goToStep}
       sendForm={sendForm}
       handleAddNewUser={handleAddNewUser}
       currentFormIndex={currentFormIndex}

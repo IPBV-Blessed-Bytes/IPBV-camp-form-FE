@@ -75,7 +75,7 @@ const FormRoutes = ({
   nextStep,
   skipTwoSteps,
   backStep,
-  goBackToStep,
+  goToStep,
   sendForm,
   handleAddNewUser,
   currentFormIndex,
@@ -96,7 +96,7 @@ const FormRoutes = ({
             <>
               <Header
                 currentStep={steps}
-                goBackToStep={goBackToStep}
+                goToStep={goToStep}
                 formSubmitted={formSubmitted}
                 showNavMenu={true}
               />
@@ -162,7 +162,6 @@ const FormRoutes = ({
                     formValues={currentFormValues}
                     sendForm={sendForm}
                     status={status}
-                    goBackToStep={goBackToStep}
                     cartKey={cartKey}
                   />
                 )}
@@ -170,7 +169,7 @@ const FormRoutes = ({
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
                   <BeforePayment
                     goToPersonalData={handleAddNewUser}
-                    goBackToStep={goBackToStep}
+                    goToStep={goToStep}
                     setFormValues={setFormValues}
                     formValues={formValues}
                     goToEditStep={goToEditStep}
@@ -417,7 +416,7 @@ FormRoutes.propTypes = {
   nextStep: PropTypes.func,
   skipTwoSteps: PropTypes.func,
   backStep: PropTypes.func,
-  goBackToStep: PropTypes.func,
+  goToStep: PropTypes.func,
   sendForm: PropTypes.func,
   handleAddNewUser: PropTypes.func,
   currentFormIndex: PropTypes.number,
