@@ -36,7 +36,12 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
 
   const finalTotal = totalPackages + totalBasePrice;
 
-  if (!formValues.length) {
+  const validUsers = formValues.filter(
+    (user) =>
+      user && user.personalInformation && user.personalInformation.name && user.personalInformation.name.trim() !== '',
+  );
+
+  if (!validUsers.length) {
     return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
   }
 
@@ -49,7 +54,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
 
   return (
     <div className="cart-container">
-      {formValues.map((user, index) => {
+      {validUsers.map((user, index) => {
         const userName = user?.personalInformation?.name || `Pessoa ${index + 1}`;
         const userPackage = user?.package;
         const userExtraMeals = user?.extraMeals;
@@ -69,22 +74,24 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
 
         return (
           <div key={index} className="cart-user-group">
-            <div className="d-flex justify-content-between">
-              <h4 className="cart-user-title">
-                <b>{userName}:</b>
-              </h4>
-              <div className="d-flex gap-2">
-                <Button variant="secondary" size="md" onClick={() => goToEditStep(index)} className="ms-2">
-                  <Icons typeIcon="edit" iconSize={30} />
-                  <span className="edit-user-btn">&nbsp;Editar Usuário</span>
-                </Button>
+            {userName && (
+              <div className="d-flex justify-content-between">
+                <h4 className="cart-user-title">
+                  <b>{userName}:</b>
+                </h4>
+                <div className="d-flex gap-2">
+                  <Button variant="secondary" size="md" onClick={() => goToEditStep(index)} className="ms-2">
+                    <Icons typeIcon="edit" iconSize={30} />
+                    <span className="edit-user-btn">&nbsp;Editar Usuário</span>
+                  </Button>
 
-                <Button variant="danger" size="md" onClick={() => handleRemoveUser(index, itemId)}>
-                  <Icons typeIcon="delete" iconSize={30} fill="#fff" />
-                  <span className="remove-user-btn">&nbsp;Remover Usuário</span>
-                </Button>
+                  <Button variant="danger" size="md" onClick={() => handleRemoveUser(index, itemId)}>
+                    <Icons typeIcon="delete" iconSize={30} fill="#fff" />
+                    <span className="remove-user-btn">&nbsp;Remover Usuário</span>
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {userPackage && (
               <div className="cart-item">
