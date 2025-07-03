@@ -41,15 +41,16 @@ const RoutesValidations = ({ formContext }) => {
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
-
+  
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
   const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
-
+  
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
   const formPath = shouldRenderForm(windowPathname);
-
+  
+  const alreadyInCart = highestStepReached >= enumSteps.finalReview;
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
@@ -321,6 +322,7 @@ const RoutesValidations = ({ formContext }) => {
       preFill={preFill}
       setPreFill={setPreFill}
       highestStepReached={highestStepReached}
+      alreadyInCart={alreadyInCart}
     />
   );
 };

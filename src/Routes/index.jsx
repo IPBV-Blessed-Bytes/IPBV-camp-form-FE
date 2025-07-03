@@ -86,6 +86,7 @@ const FormRoutes = ({
   preFill,
   setPreFill,
   highestStepReached,
+  alreadyInCart
 }) => {
   const currentFormValues = formValues[currentFormIndex] || {};
 
@@ -105,6 +106,7 @@ const FormRoutes = ({
                 showNavMenu={true}
                 handlePreFill={handlePreFill}
                 highestStepReached={highestStepReached}
+                alreadyInCart={alreadyInCart}
               />
 
               <div className="form__container">

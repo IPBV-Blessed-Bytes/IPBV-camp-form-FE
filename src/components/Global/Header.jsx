@@ -7,7 +7,15 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFill, highestStepReached }) => {
+const Header = ({
+  currentStep,
+  goToStep,
+  formSubmitted,
+  showNavMenu,
+  handlePreFill,
+  highestStepReached,
+  alreadyInCart,
+}) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -28,6 +36,8 @@ const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFi
     }
 
     if (formSubmitted) return;
+
+    if (alreadyInCart) return;
 
     if (newStep > highestStepReached) return;
 
