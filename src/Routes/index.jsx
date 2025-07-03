@@ -86,7 +86,8 @@ const FormRoutes = ({
   preFill,
   setPreFill,
   highestStepReached,
-  alreadyInCart
+  backStepFlag,
+  setBackStepFlag,
 }) => {
   const currentFormValues = formValues[currentFormIndex] || {};
 
@@ -106,7 +107,7 @@ const FormRoutes = ({
                 showNavMenu={true}
                 handlePreFill={handlePreFill}
                 highestStepReached={highestStepReached}
-                alreadyInCart={alreadyInCart}
+                backStepFlag={backStepFlag}
               />
 
               <div className="form__container">
@@ -123,6 +124,7 @@ const FormRoutes = ({
                     currentFormIndex={currentFormIndex}
                     preFill={preFill}
                     setPreFill={setPreFill}
+                    setBackStepFlag={setBackStepFlag}
                   />
                 )}
 
@@ -186,6 +188,8 @@ const FormRoutes = ({
                     goToEditStep={goToEditStep}
                     cartKey={cartKey}
                     discountValue={discount}
+                    nextStep={nextStep}
+                    setBackStepFlag={setBackStepFlag}
                   />
                 )}
 
@@ -199,6 +203,7 @@ const FormRoutes = ({
                     loading={loading}
                     status={status}
                     formValues={formValues}
+                    setBackStepFlag={setBackStepFlag}
                   />
                 )}
 

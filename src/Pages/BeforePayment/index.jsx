@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { enumSteps } from '@/utils/constants';
@@ -13,11 +14,17 @@ const BeforePayment = ({
   goToEditStep,
   cartKey,
   discountValue,
+  nextStep,
+  setBackStepFlag,
 }) => {
   const goToPayment = () => {
-    goToStep(enumSteps.formPayment);
     sessionStorage.removeItem(cartKey);
+    nextStep();
   };
+
+  useEffect(() => {
+    setBackStepFlag(false);
+  }, []);
 
   return (
     <Card className="form__container__general-height">

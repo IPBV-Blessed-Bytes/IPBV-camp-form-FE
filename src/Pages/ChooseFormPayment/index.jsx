@@ -7,7 +7,16 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 
-const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, loading, status, formValues }) => {
+const ChooseFormPayment = ({
+  backStep,
+  updateForm,
+  initialValues,
+  sendForm,
+  loading,
+  status,
+  formValues,
+  setBackStepFlag
+}) => {
   const formik = useFormik({
     initialValues: {
       formPayment: initialValues.formPayment || '',
@@ -65,6 +74,10 @@ const ChooseFormPayment = ({ backStep, updateForm, initialValues, sendForm, load
     updateForm(e.target.value);
     handleChange(e);
   };
+
+  useEffect(() => {
+    setBackStepFlag(true);
+  }, []);
 
   return (
     <Card className="form__container__general-height">

@@ -14,7 +14,7 @@ const Header = ({
   showNavMenu,
   handlePreFill,
   highestStepReached,
-  alreadyInCart,
+  backStepFlag,
 }) => {
   const headerSteps = [
     'Início',
@@ -37,7 +37,7 @@ const Header = ({
 
     if (formSubmitted) return;
 
-    if (alreadyInCart) return;
+    if (!backStepFlag) return;
 
     if (newStep > highestStepReached) return;
 

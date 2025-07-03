@@ -29,6 +29,7 @@ const PersonalData = ({
   currentFormIndex,
   preFill,
   setPreFill,
+  setBackStepFlag
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
@@ -127,6 +128,10 @@ const PersonalData = ({
       toast.error('CPF inválido. Verifique o número e tente novamente.');
     }
   }, [values.cpf]);
+
+  useEffect(() => {
+    setBackStepFlag(true);
+  }, []);
 
   const handlePrefillConfirm = () => {
     if (previousUserData.personalInformation) {
