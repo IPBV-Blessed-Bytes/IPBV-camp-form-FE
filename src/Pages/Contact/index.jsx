@@ -6,7 +6,7 @@ import InputMask from 'react-input-mask';
 import { additionalInformationSchema } from '@/form/validations/schema';
 import './style.scss';
 
-const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
+const Contact = ({ nextStep, backStep, initialValues, updateForm, handlePreFill }) => {
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -385,6 +385,7 @@ const Contact = ({ nextStep, backStep, initialValues, updateForm }) => {
           onClick={() => {
             backStep();
             updateForm(values);
+            handlePreFill(false);
           }}
           size="lg"
         >

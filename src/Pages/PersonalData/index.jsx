@@ -27,6 +27,8 @@ const PersonalData = ({
   onDiscountChange,
   formValues,
   currentFormIndex,
+  preFill,
+  setPreFill,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
@@ -91,7 +93,7 @@ const PersonalData = ({
 
   useEffect(() => {
     const fetchPreviousData = async () => {
-      if (cpf.isValid(values.cpf)) {
+      if (cpf.isValid(values.cpf) && preFill === true) {
         try {
           const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
             cpf: values.cpf,
@@ -116,6 +118,7 @@ const PersonalData = ({
 
     if (values.cpf && values.cpf.length === 11 && isFullyValidDate(values.birthday)) {
       fetchPreviousData();
+      setPreFill(true);
     }
   }, [values.cpf, values.birthday]);
 

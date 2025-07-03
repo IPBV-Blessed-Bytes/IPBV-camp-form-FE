@@ -82,6 +82,9 @@ const FormRoutes = ({
   setFormValues,
   goToEditStep,
   cartKey,
+  handlePreFill,
+  preFill,
+  setPreFill,
 }) => {
   const currentFormValues = formValues[currentFormIndex] || {};
 
@@ -99,6 +102,7 @@ const FormRoutes = ({
                 goToStep={goToStep}
                 formSubmitted={formSubmitted}
                 showNavMenu={true}
+                handlePreFill={handlePreFill}
               />
 
               <div className="form__container">
@@ -113,6 +117,8 @@ const FormRoutes = ({
                     formUsername={currentFormValues.personalInformation?.name}
                     formValues={formValues}
                     currentFormIndex={currentFormIndex}
+                    preFill={preFill}
+                    setPreFill={setPreFill}
                   />
                 )}
 
@@ -122,6 +128,7 @@ const FormRoutes = ({
                     nextStep={nextStep}
                     backStep={backStep}
                     updateForm={updateFormValues('contact')}
+                    handlePreFill={handlePreFill}
                   />
                 )}
 

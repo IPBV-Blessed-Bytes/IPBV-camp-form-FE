@@ -7,7 +7,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu }) => {
+const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFill }) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -30,6 +30,7 @@ const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu }) => {
     if (formSubmitted) return;
 
     if (newStep <= currentStep) {
+      handlePreFill(false);
       goToStep(newStep);
     }
   };

@@ -39,6 +39,7 @@ const RoutesValidations = ({ formContext }) => {
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
+  const [preFill, setPreFill] = useState(true);
 
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -222,6 +223,12 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
+  const handlePreFill = (preFill) => {
+    if (preFill) {
+      setPreFill(true);
+    }
+  };
+
   const sendForm = async (formikValues) => {
     setLoading(true);
     try {
@@ -305,6 +312,9 @@ const RoutesValidations = ({ formContext }) => {
       setFormValues={setFormValues}
       goToEditStep={goToEditStep}
       cartKey={cartKey}
+      handlePreFill={handlePreFill}
+      preFill={preFill}
+      setPreFill={setPreFill}
     />
   );
 };
