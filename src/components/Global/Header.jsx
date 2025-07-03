@@ -7,7 +7,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFill }) => {
+const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFill, highestStepReached }) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -29,7 +29,9 @@ const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFi
 
     if (formSubmitted) return;
 
-    if (newStep <= currentStep) {
+    if (newStep > highestStepReached) return;
+
+    if (newStep <= highestStepReached) {
       handlePreFill(false);
       goToStep(newStep);
     }
@@ -73,7 +75,12 @@ const Header = ({ currentStep, goToStep, formSubmitted, showNavMenu, handlePreFi
         </Breadcrumb>
       )}
 
-      <Button className="cart-btn" onClick={() => goToStep(enumSteps.beforePayment)}>
+      <Button
+        className="cart-btn"
+        onClick={() => {
+          goToStep(enumSteps.beforePayment);
+        }}
+      >
         <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
       </Button>
     </header>

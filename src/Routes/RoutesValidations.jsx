@@ -40,6 +40,7 @@ const RoutesValidations = ({ formContext }) => {
   const [personData, setPersonData] = useState(null);
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
   const [preFill, setPreFill] = useState(true);
+  const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
 
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -190,9 +191,11 @@ const RoutesValidations = ({ formContext }) => {
 
   const nextStep = (skipToReview = false) => {
     if (steps < enumSteps.success) {
+      const next = skipToReview && steps === enumSteps.packages ? enumSteps.finalReview : steps + 1;
       setWithFood(skipToReview);
-      setSteps(skipToReview && steps === enumSteps.packages ? enumSteps.finalReview : steps + 1);
+      setSteps(next);
       scrollTop();
+      setHighestStepReached((prev) => Math.max(prev, next));
     }
   };
 
@@ -223,9 +226,11 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
-  const handlePreFill = (preFill) => {
-    if (preFill) {
+  const handlePreFill = (preFillValue) => {
+    if (preFillValue) {
       setPreFill(true);
+    } else {
+      setPreFill(false);
     }
   };
 
@@ -315,6 +320,7 @@ const RoutesValidations = ({ formContext }) => {
       handlePreFill={handlePreFill}
       preFill={preFill}
       setPreFill={setPreFill}
+      highestStepReached={highestStepReached}
     />
   );
 };
