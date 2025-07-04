@@ -101,109 +101,109 @@ const FormRoutes = ({
           {formContext === 'form-on' && (
             <>
               <Header
+                backStepFlag={backStepFlag}
                 currentStep={steps}
-                goToStep={goToStep}
                 formSubmitted={formSubmitted}
-                showNavMenu={true}
+                goToStep={goToStep}
                 handlePreFill={handlePreFill}
                 highestStepReached={highestStepReached}
-                backStepFlag={backStepFlag}
+                showNavMenu={true}
               />
 
               <div className="form__container">
                 {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
                 {steps === enumSteps.personalData && isNotSuccessPathname && (
                   <FormPersonalData
-                    initialValues={formValues[currentFormIndex]?.personalInformation || {}}
-                    nextStep={nextStep}
                     backStep={backStep}
-                    updateForm={updateFormValues('personalInformation')}
-                    onDiscountChange={handleDiscountChange}
+                    currentFormIndex={currentFormIndex}
                     formUsername={currentFormValues.personalInformation?.name}
                     formValues={formValues}
-                    currentFormIndex={currentFormIndex}
+                    initialValues={formValues[currentFormIndex]?.personalInformation || {}}
+                    nextStep={nextStep}
+                    onDiscountChange={handleDiscountChange}
                     preFill={preFill}
-                    setPreFill={setPreFill}
                     setBackStepFlag={setBackStepFlag}
+                    setPreFill={setPreFill}
+                    updateForm={updateFormValues('personalInformation')}
                   />
                 )}
 
                 {steps === enumSteps.contact && isNotSuccessPathname && (
                   <FormContact
+                    backStep={backStep}
+                    handlePreFill={handlePreFill}
                     initialValues={formValues[currentFormIndex]?.contact || {}}
                     nextStep={nextStep}
-                    backStep={backStep}
                     updateForm={updateFormValues('contact')}
-                    handlePreFill={handlePreFill}
                   />
                 )}
 
                 {steps === enumSteps.packages && isNotSuccessPathname && (
                   <FormPackages
                     age={age}
-                    nextStep={nextStep}
-                    backStep={backStep}
-                    updateForm={updateFormValues('package')}
-                    sendForm={sendForm}
                     availablePackages={availablePackages}
-                    totalRegistrationsGlobal={totalRegistrations}
-                    discountValue={discount}
-                    hasDiscount={hasDiscount}
-                    totalSeats={totalSeats}
-                    totalBusVacancies={totalBusVacancies}
-                    totalValidWithBus={totalRegistrations.totalValidWithBus}
-                    formValues={currentFormValues}
-                    currentFormIndex={currentFormIndex}
+                    backStep={backStep}
                     cartKey={cartKey}
+                    currentFormIndex={currentFormIndex}
+                    discountValue={discount}
+                    formValues={currentFormValues}
+                    hasDiscount={hasDiscount}
+                    nextStep={nextStep}
+                    sendForm={sendForm}
+                    totalBusVacancies={totalBusVacancies}
+                    totalRegistrationsGlobal={totalRegistrations}
+                    totalSeats={totalSeats}
+                    totalValidWithBus={totalRegistrations.totalValidWithBus}
+                    updateForm={updateFormValues('package')}
                   />
                 )}
 
                 {steps === enumSteps.extraMeals && isNotSuccessPathname && (
                   <ExtraMeals
-                    birthDate={currentFormValues.personalInformation?.birthday}
                     backStep={backStep}
-                    nextStep={nextStep}
+                    birthDate={currentFormValues.personalInformation?.birthday}
                     initialValues={formValues[currentFormIndex]?.extraMeals || {}}
+                    nextStep={nextStep}
                     updateForm={updateFormValues('extraMeals')}
                   />
                 )}
 
                 {steps === enumSteps.finalReview && isNotSuccessPathname && (
                   <FinalReview
-                    nextStep={nextStep}
                     backStep={backStep}
+                    cartKey={cartKey}
                     formValues={currentFormValues}
+                    nextStep={nextStep}
                     sendForm={sendForm}
                     status={status}
-                    cartKey={cartKey}
                   />
                 )}
 
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
                   <BeforePayment
-                    goToPersonalData={handleAddNewUser}
-                    goToStep={goToStep}
-                    setFormValues={setFormValues}
-                    formValues={formValues}
-                    goToEditStep={goToEditStep}
                     cartKey={cartKey}
                     discountValue={discount}
+                    formValues={formValues}
+                    goToEditStep={goToEditStep}
+                    goToPersonalData={handleAddNewUser}
+                    goToStep={goToStep}
                     nextStep={nextStep}
                     setBackStepFlag={setBackStepFlag}
+                    setFormValues={setFormValues}
                   />
                 )}
 
                 {steps === enumSteps.formPayment && isNotSuccessPathname && (
                   <ChooseFormPayment
-                    initialValues={currentFormValues}
-                    skipTwoSteps={skipTwoSteps}
                     backStep={backStep}
-                    updateForm={updateFormValues('formPayment')}
-                    sendForm={sendForm}
-                    loading={loading}
-                    status={status}
                     formValues={formValues}
+                    initialValues={currentFormValues}
+                    loading={loading}
+                    sendForm={sendForm}
                     setBackStepFlag={setBackStepFlag}
+                    skipTwoSteps={skipTwoSteps}
+                    status={status}
+                    updateForm={updateFormValues('formPayment')}
                   />
                 )}
 
@@ -235,13 +235,13 @@ const FormRoutes = ({
             path="/admin"
             element={
               <Login
-                totalRegistrationsGlobal={totalRegistrations}
-                userRole={loggedUserRole}
-                totalValidWithBus={totalRegistrations.totalValidWithBus}
                 availablePackages={availablePackages}
-                totalSeats={totalSeats}
-                totalBusVacancies={totalBusVacancies}
                 spinnerLoading={loading}
+                totalBusVacancies={totalBusVacancies}
+                totalRegistrationsGlobal={totalRegistrations}
+                totalSeats={totalSeats}
+                totalValidWithBus={totalRegistrations.totalValidWithBus}
+                userRole={loggedUserRole}
               />
             }
           />
@@ -249,8 +249,8 @@ const FormRoutes = ({
             path="/admin/acampantes"
             element={
               <ProtectedRoute
-                userRole={loggedUserRole}
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
+                userRole={loggedUserRole}
               >
                 <AdminCampers loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
               </ProtectedRoute>
@@ -259,7 +259,7 @@ const FormRoutes = ({
           <Route
             path="/admin/carona"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
                 <AdminRide loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -267,7 +267,7 @@ const FormRoutes = ({
           <Route
             path="/admin/descontos"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={loggedUserRole}>
                 <AdminDiscount loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -275,7 +275,7 @@ const FormRoutes = ({
           <Route
             path="/admin/quartos"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
                 <AdminRooms loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -283,7 +283,7 @@ const FormRoutes = ({
           <Route
             path="/admin/alimentacao"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
                 <AdminExtraMeals />
               </ProtectedRoute>
             }
@@ -291,7 +291,7 @@ const FormRoutes = ({
           <Route
             path="/admin/checkin"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'checker']}>
+              <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={loggedUserRole}>
                 <AdminCheckin loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -300,14 +300,14 @@ const FormRoutes = ({
             path="/admin/painel"
             element={
               <ProtectedRoute
-                userRole={loggedUserRole}
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
+                userRole={loggedUserRole}
               >
                 <AdminDataPanel
-                  userRole={loggedUserRole}
                   totalPackages={totalPackages}
                   usedPackages={usedPackages}
                   usedValidPackages={usedValidPackages}
+                  userRole={loggedUserRole}
                 />
               </ProtectedRoute>
             }
@@ -315,7 +315,7 @@ const FormRoutes = ({
           <Route
             path="/admin/logs"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
                 <AdminUserLogs loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -323,16 +323,16 @@ const FormRoutes = ({
           <Route
             path="/admin/vagas"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
                 <AdminSeatManagement
+                  loading={loading}
                   loggedUsername={splitedLoggedUsername}
-                  totalSeats={totalSeats}
+                  onUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
+                  onUpdateTotalPackages={handleUpdateTotalPackages}
                   onUpdateTotalSeats={handleUpdateTotalSeats}
                   totalBusVacancies={totalBusVacancies}
-                  onUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
                   totalPackages={totalPackages}
-                  onUpdateTotalPackages={handleUpdateTotalPackages}
-                  loading={loading}
+                  totalSeats={totalSeats}
                 />
               </ProtectedRoute>
             }
@@ -340,7 +340,7 @@ const FormRoutes = ({
           <Route
             path="/admin/contexto"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
                 <AdminFormContext loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -348,7 +348,7 @@ const FormRoutes = ({
           <Route
             path="/admin/usuarios"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
                 <AdminUsersManagement loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
@@ -356,7 +356,7 @@ const FormRoutes = ({
           <Route
             path="/admin/opiniao"
             element={
-              <ProtectedRoute userRole={loggedUserRole} allowedRoles={['admin', 'collaborator']}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
                 <AdminFeedback loggedUsername={splitedLoggedUsername} />
               </ProtectedRoute>
             }
