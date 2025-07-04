@@ -1,4 +1,5 @@
-import { Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import { differenceInYears } from 'date-fns';
 import PropTypes from 'prop-types';
@@ -6,6 +7,11 @@ import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
 
 const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountValue }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState(null);
+  const [targetIndex, setTargetIndex] = useState(null);
+  const [targetItemId, setTargetItemId] = useState(null);
+
   const { removeItem, emptyCart } = useCart();
 
   const handleRemoveUser = (index, itemId) => {
@@ -52,6 +58,22 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
     sessionStorage.removeItem(cartKey);
   };
 
+  const openConfirmationModal = (type, index = null, itemId = null) => {
+    setModalType(type);
+    setTargetIndex(index);
+    setTargetItemId(itemId);
+    setShowModal(true);
+  };
+
+  const handleConfirmAction = () => {
+    if (modalType === 'removeUser') {
+      handleRemoveUser(targetIndex, targetItemId);
+    } else if (modalType === 'clearCart') {
+      clearCart();
+    }
+    setShowModal(false);
+  };
+
   return (
     <div className="cart-container">
       {validUsers.map((user, index) => {
@@ -85,7 +107,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
                     <span className="edit-user-btn">&nbsp;Editar Usuário</span>
                   </Button>
 
-                  <Button variant="danger" size="md" onClick={() => handleRemoveUser(index, itemId)}>
+                  <Button variant="danger" size="md" onClick={() => openConfirmationModal('removeUser', index, itemId)}>
                     <Icons typeIcon="delete" iconSize={30} fill="#fff" />
                     <span className="remove-user-btn">&nbsp;Remover Usuário</span>
                   </Button>
@@ -151,10 +173,35 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
         <strong>Total Geral: R$ {finalTotal.toFixed(2)}</strong>
       </div>
       <div className="mt-4">
-        <Button variant="danger" size="lg" onClick={clearCart} className="cart-btn-responsive">
+        <Button
+          variant="danger"
+          size="lg"
+          onClick={() => openConfirmationModal('clearCart')}
+          className="cart-btn-responsive"
+        >
           <Icons typeIcon="close" iconSize={30} fill="#fff" /> &nbsp;Esvaziar Carrinho
         </Button>
       </div>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <b>Confirmação de {modalType === 'removeUser' ? 'Exclusão' : 'Limpeza'}</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalType === 'removeUser' && <p>Tem certeza que deseja remover este usuário?</p>}
+          {modalType === 'clearCart' && <p>Tem certeza que deseja esvaziar o carrinho?</p>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleConfirmAction}>
+            Confirmar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
