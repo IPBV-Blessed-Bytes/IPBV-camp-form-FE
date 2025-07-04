@@ -42,15 +42,15 @@ const RoutesValidations = ({ formContext }) => {
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
-  
+
   const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
   const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
-  
+
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
   const formPath = shouldRenderForm(windowPathname);
-  
+
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
@@ -276,54 +276,54 @@ const RoutesValidations = ({ formContext }) => {
 
   return (
     <FormRoutes
-      formContext={formContext}
-      steps={steps}
-      formValues={formValues}
-      formSubmitted={formSubmitted}
-      availablePackages={availablePackages}
-      totalRegistrations={totalRegistrations}
-      totalSeats={totalSeats}
-      totalBusVacancies={totalBusVacancies}
-      totalPackages={totalPackages}
-      usedPackages={usedPackages}
-      usedValidPackages={usedValidPackages}
-      loading={loading}
-      status={status}
-      hasDiscount={hasDiscount}
-      discount={discount}
-      personData={personData}
-      loggedUserRole={loggedUserRole}
-      splitedLoggedUsername={splitedLoggedUsername}
       adminPathname={adminPathname}
-      formPath={formPath}
-      isNotSuccessPathname={isNotSuccessPathname}
       age={age}
+      availablePackages={availablePackages}
+      backStep={backStep}
+      backStepFlag={backStepFlag}
+      cartKey={cartKey}
+      currentFormIndex={currentFormIndex}
+      discount={discount}
+      formContext={formContext}
+      formPath={formPath}
+      formSubmitted={formSubmitted}
+      formValues={formValues}
+      goToEditStep={goToEditStep}
+      goToStep={goToStep}
+      handleAddNewUser={handleAddNewUser}
       handleAdminClick={handleAdminClick}
+      handleDiscountChange={handleDiscountChange}
       handlePersonData={handlePersonData}
-      handleUpdateTotalSeats={handleUpdateTotalSeats}
+      handlePreFill={handlePreFill}
       handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
       handleUpdateTotalPackages={handleUpdateTotalPackages}
-      handleDiscountChange={handleDiscountChange}
-      resetFormValues={resetFormValues}
-      resetFormSubmitted={resetFormSubmitted}
-      updateFormValues={updateFormValues}
-      initialStep={initialStep}
-      nextStep={nextStep}
-      skipTwoSteps={skipTwoSteps}
-      backStep={backStep}
-      goToStep={goToStep}
-      sendForm={sendForm}
-      handleAddNewUser={handleAddNewUser}
-      currentFormIndex={currentFormIndex}
-      setFormValues={setFormValues}
-      goToEditStep={goToEditStep}
-      cartKey={cartKey}
-      handlePreFill={handlePreFill}
-      preFill={preFill}
-      setPreFill={setPreFill}
+      handleUpdateTotalSeats={handleUpdateTotalSeats}
+      hasDiscount={hasDiscount}
       highestStepReached={highestStepReached}
-      backStepFlag={backStepFlag}
+      initialStep={initialStep}
+      isNotSuccessPathname={isNotSuccessPathname}
+      loading={loading}
+      loggedUserRole={loggedUserRole}
+      nextStep={nextStep}
+      personData={personData}
+      preFill={preFill}
+      resetFormSubmitted={resetFormSubmitted}
+      resetFormValues={resetFormValues}
+      sendForm={sendForm}
       setBackStepFlag={setBackStepFlag}
+      setFormValues={setFormValues}
+      setPreFill={setPreFill}
+      skipTwoSteps={skipTwoSteps}
+      splitedLoggedUsername={splitedLoggedUsername}
+      status={status}
+      steps={steps}
+      totalBusVacancies={totalBusVacancies}
+      totalPackages={totalPackages}
+      totalRegistrations={totalRegistrations}
+      totalSeats={totalSeats}
+      updateFormValues={updateFormValues}
+      usedPackages={usedPackages}
+      usedValidPackages={usedValidPackages}
     />
   );
 };
