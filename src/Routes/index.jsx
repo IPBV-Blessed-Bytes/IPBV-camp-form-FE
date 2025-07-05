@@ -163,12 +163,7 @@ const FormRoutes = ({
                 )}
 
                 {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                  <FinalReview
-                    backStep={backStep}
-                    formValues={currentFormValues}
-                    nextStep={nextStep}
-                    status={status}
-                  />
+                  <FinalReview backStep={backStep} formValues={currentFormValues} nextStep={nextStep} status={status} />
                 )}
 
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
@@ -359,10 +354,7 @@ const FormRoutes = ({
           {formContext === 'form-on' && (
             <>
               <Route path="/opiniao" element={<FormFeedback />} />
-              <Route
-                path="/verificacao"
-                element={<CpfReview handlePersonData={handlePersonData} />}
-              />
+              <Route path="/verificacao" element={<CpfReview handlePersonData={handlePersonData} />} />
               <Route path="/verificacao/dados" element={<CpfData personData={personData} />} />
               <Route path="/perguntas" element={<FAQ />} />
             </>
@@ -378,8 +370,19 @@ FormRoutes.propTypes = {
   age: PropTypes.number,
   availablePackages: PropTypes.array,
   backStep: PropTypes.func,
+  backStepFlag: PropTypes.bool,
   cartKey: PropTypes.string,
   currentFormIndex: PropTypes.number,
+  currentFormValues: PropTypes.shape({
+    personalInformation: PropTypes.shape({
+      name: PropTypes.string,
+      birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    }),
+    contact: PropTypes.object,
+    package: PropTypes.object,
+    extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    formPayment: PropTypes.object,
+  }),
   discount: PropTypes.number,
   formContext: PropTypes.string,
   formPath: PropTypes.bool,
@@ -402,6 +405,8 @@ FormRoutes.propTypes = {
   handleAdminClick: PropTypes.func,
   handleDiscountChange: PropTypes.func,
   handlePersonData: PropTypes.func,
+  handlePreFill: PropTypes.func,
+  highestStepReached: PropTypes.number,
   handleUpdateTotalBusVacancies: PropTypes.func,
   handleUpdateTotalPackages: PropTypes.func,
   handleUpdateTotalSeats: PropTypes.func,
@@ -412,10 +417,13 @@ FormRoutes.propTypes = {
   userRole: PropTypes.string,
   nextStep: PropTypes.func,
   personData: PropTypes.object,
+  preFill: PropTypes.bool,
   resetFormSubmitted: PropTypes.func,
   resetFormValues: PropTypes.func,
   sendForm: PropTypes.func,
+  setBackStepFlag: PropTypes.func,
   setFormValues: PropTypes.func,
+  setPreFill: PropTypes.func,
   skipTwoSteps: PropTypes.func,
   loggedUsername: PropTypes.string,
   status: PropTypes.string,

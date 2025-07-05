@@ -400,9 +400,8 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
 };
 
 Contact.propTypes = {
-  nextStep: PropTypes.func,
   backStep: PropTypes.func,
-  updateForm: PropTypes.func,
+  handlePreFill: PropTypes.func,
   initialValues: PropTypes.shape({
     cellPhone: PropTypes.string,
     email: PropTypes.string,
@@ -412,6 +411,8 @@ Contact.propTypes = {
     hasAggregate: PropTypes.bool,
     aggregate: PropTypes.string,
   }),
+  nextStep: PropTypes.func,
+  updateForm: PropTypes.func,
 };
 
 export default Contact;

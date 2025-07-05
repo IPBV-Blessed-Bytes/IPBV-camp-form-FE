@@ -166,17 +166,18 @@ const ChooseFormPayment = ({
 
 ChooseFormPayment.propTypes = {
   backStep: PropTypes.func,
-  updateForm: PropTypes.func,
-  sendForm: PropTypes.func,
-  loading: PropTypes.bool,
-  status: PropTypes.string,
+  formValues: PropTypes.array.isRequired,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
     personalInformation: PropTypes.shape({
       name: PropTypes.string,
     }),
   }),
-  formValues: PropTypes.array.isRequired,
+  loading: PropTypes.bool,
+  sendForm: PropTypes.func,
+  setBackStepFlag: PropTypes.func,
+  status: PropTypes.string,
+  updateForm: PropTypes.func,
 };
 
 export default ChooseFormPayment;

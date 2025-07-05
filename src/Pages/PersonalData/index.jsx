@@ -616,22 +616,8 @@ const PersonalData = ({
 };
 
 PersonalData.propTypes = {
-  nextStep: PropTypes.func,
   backStep: PropTypes.func,
-  updateForm: PropTypes.func,
-  handleDiscountChange: PropTypes.func,
-  initialValues: PropTypes.shape({
-    name: PropTypes.string,
-    birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-    cpf: PropTypes.string,
-    rg: PropTypes.string,
-    rgShipper: PropTypes.string,
-    rgShipperState: PropTypes.string,
-    gender: PropTypes.string,
-    legalGuardianName: PropTypes.string,
-    legalGuardianCpf: PropTypes.string,
-    legalGuardianCellPhone: PropTypes.string,
-  }),
+  currentFormIndex: PropTypes.number,
   formValues: PropTypes.arrayOf(
     PropTypes.shape({
       personalInformation: PropTypes.shape({
@@ -639,7 +625,24 @@ PersonalData.propTypes = {
       }),
     }),
   ),
-  currentFormIndex: PropTypes.number,
+  handleDiscountChange: PropTypes.func,
+  initialValues: PropTypes.shape({
+    birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    cpf: PropTypes.string,
+    gender: PropTypes.string,
+    legalGuardianCellPhone: PropTypes.string,
+    legalGuardianCpf: PropTypes.string,
+    legalGuardianName: PropTypes.string,
+    name: PropTypes.string,
+    rg: PropTypes.string,
+    rgShipper: PropTypes.string,
+    rgShipperState: PropTypes.string,
+  }),
+  nextStep: PropTypes.func,
+  preFill: PropTypes.bool,
+  setBackStepFlag: PropTypes.func,
+  setPreFill: PropTypes.func,
+  updateForm: PropTypes.func,
 };
 
 export default PersonalData;

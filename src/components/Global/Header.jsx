@@ -7,15 +7,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({
-  backStepFlag,
-  formSubmitted,
-  goToStep,
-  handlePreFill,
-  highestStepReached,
-  showNavMenu,
-  steps,
-}) => {
+const Header = ({ backStepFlag, formSubmitted, goToStep, handlePreFill, highestStepReached, showNavMenu, steps }) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -61,11 +53,7 @@ const Header = ({
             <React.Fragment key={index}>
               <Breadcrumb.Item
                 className={
-                  index > steps
-                    ? 'form__header--future-step'
-                    : index < steps
-                    ? 'form__header--previous-step'
-                    : ''
+                  index > steps ? 'form__header--future-step' : index < steps ? 'form__header--previous-step' : ''
                 }
                 active={steps === index}
                 onClick={() => handleStepChange(index)}
@@ -98,10 +86,13 @@ const Header = ({
 };
 
 Header.propTypes = {
-  steps: PropTypes.number.isRequired,
-  goToStep: PropTypes.func.isRequired,
+  backStepFlag: PropTypes.bool,
   formSubmitted: PropTypes.bool,
+  goToStep: PropTypes.func.isRequired,
+  handlePreFill: PropTypes.func,
+  highestStepReached: PropTypes.number,
   showNavMenu: PropTypes.bool,
+  steps: PropTypes.number.isRequired,
 };
 
 export default Header;

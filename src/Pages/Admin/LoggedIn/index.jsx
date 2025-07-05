@@ -103,7 +103,7 @@ const AdminLoggedIn = ({
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
-  const totalRegistrations = totalRegistrations.totalRegistrations;
+  const totalRegistrationsGlobal = totalRegistrations.totalRegistrations;
   const totalValidRegistrations = totalRegistrations.totalValidRegistrations;
   const totalChildren = totalRegistrations.totalChildren;
   const totalAdultsNonPaid = totalRegistrations.totalAdultsNonPaid;
@@ -214,7 +214,7 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Total de Inscritos Geral',
-      filledVacancies: totalRegistrations || '0',
+      filledVacancies: totalRegistrationsGlobal || '0',
       showRemainingVacancies: false,
     },
     {

@@ -68,12 +68,14 @@ const BeforePayment = ({
 };
 
 BeforePayment.propTypes = {
-  goToPersonalData: PropTypes.func.isRequired,
-  setformValues: PropTypes.func.isRequired,
-  formValues: PropTypes.array.isRequired,
-  goToEditStep: PropTypes.func.isRequired,
   cartKey: PropTypes.string.isRequired,
   discount: PropTypes.string,
+  formValues: PropTypes.array.isRequired,
+  goToEditStep: PropTypes.func.isRequired,
+  goToPersonalData: PropTypes.func.isRequired,
+  nextStep: PropTypes.func.isRequired,
+  setBackStepFlag: PropTypes.func.isRequired,
+  setFormValues: PropTypes.func.isRequired,
 };
 
 export default BeforePayment;
