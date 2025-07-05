@@ -9,19 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
-
-const TABLE_HEADERS = [
-  'ID',
-  'Nome',
-  'Organização',
-  'Experiência',
-  'Alimentação',
-  'Programação',
-  'Estrutura Física',
-  'Acolhimento',
-  'Probabilidade de Volta',
-  'Campo Aberto',
-];
+import { TABLE_HEADERS } from '@/utils/constants';
 
 const AdminFeedback = ({ loggedUsername }) => {
   const [feedbacks, setFeedbacks] = useState([]);

@@ -9,7 +9,7 @@ import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import CheckinBalance from '@/components/Admin/CheckinBalance';
 import VacanciesProgression from '@/components/Admin/VacanciesProgression';
 
-const AdminDataPanel = ({ userRole, totalPackages, usedPackages, usedValidPackages }) => {
+const AdminDataPanel = ({ totalPackages, usedPackages, usedValidPackages, userRole }) => {
   const [loading, setLoading] = useState(true);
   const [fillingVacancies, setFillingVacancies] = useState();
   const vacanciesProgressionPermissions = permissions(userRole, 'vacancies-progression-panel');

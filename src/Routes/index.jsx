@@ -47,6 +47,7 @@ const FormRoutes = ({
   backStepFlag,
   cartKey,
   currentFormIndex,
+  currentFormValues,
   discount,
   formContext,
   formPath,
@@ -67,7 +68,7 @@ const FormRoutes = ({
   initialStep,
   isNotSuccessPathname,
   loading,
-  loggedUserRole,
+  userRole,
   nextStep,
   personData,
   preFill,
@@ -77,8 +78,7 @@ const FormRoutes = ({
   setBackStepFlag,
   setFormValues,
   setPreFill,
-  skipTwoSteps,
-  splitedLoggedUsername,
+  loggedUsername,
   status,
   steps,
   totalBusVacancies,
@@ -89,8 +89,6 @@ const FormRoutes = ({
   usedPackages,
   usedValidPackages,
 }) => {
-  const currentFormValues = formValues[currentFormIndex] || {};
-
   return (
     <div className="form">
       {!adminPathname && formPath && (
@@ -102,12 +100,12 @@ const FormRoutes = ({
             <>
               <Header
                 backStepFlag={backStepFlag}
-                currentStep={steps}
                 formSubmitted={formSubmitted}
                 goToStep={goToStep}
                 handlePreFill={handlePreFill}
                 highestStepReached={highestStepReached}
                 showNavMenu={true}
+                steps={steps}
               />
 
               <div className="form__container">
@@ -118,9 +116,9 @@ const FormRoutes = ({
                     currentFormIndex={currentFormIndex}
                     formUsername={currentFormValues.personalInformation?.name}
                     formValues={formValues}
+                    handleDiscountChange={handleDiscountChange}
                     initialValues={formValues[currentFormIndex]?.personalInformation || {}}
                     nextStep={nextStep}
-                    onDiscountChange={handleDiscountChange}
                     preFill={preFill}
                     setBackStepFlag={setBackStepFlag}
                     setPreFill={setPreFill}
@@ -141,19 +139,15 @@ const FormRoutes = ({
                 {steps === enumSteps.packages && isNotSuccessPathname && (
                   <FormPackages
                     age={age}
-                    availablePackages={availablePackages}
                     backStep={backStep}
                     cartKey={cartKey}
                     currentFormIndex={currentFormIndex}
-                    discountValue={discount}
-                    formValues={currentFormValues}
+                    currentFormValues={currentFormValues}
+                    discount={discount}
                     hasDiscount={hasDiscount}
                     nextStep={nextStep}
-                    sendForm={sendForm}
-                    totalBusVacancies={totalBusVacancies}
                     totalRegistrationsGlobal={totalRegistrations}
                     totalSeats={totalSeats}
-                    totalValidWithBus={totalRegistrations.totalValidWithBus}
                     updateForm={updateFormValues('package')}
                   />
                 )}
@@ -171,10 +165,8 @@ const FormRoutes = ({
                 {steps === enumSteps.finalReview && isNotSuccessPathname && (
                   <FinalReview
                     backStep={backStep}
-                    cartKey={cartKey}
                     formValues={currentFormValues}
                     nextStep={nextStep}
-                    sendForm={sendForm}
                     status={status}
                   />
                 )}
@@ -182,11 +174,10 @@ const FormRoutes = ({
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
                   <BeforePayment
                     cartKey={cartKey}
-                    discountValue={discount}
+                    discount={discount}
                     formValues={formValues}
                     goToEditStep={goToEditStep}
                     goToPersonalData={handleAddNewUser}
-                    goToStep={goToStep}
                     nextStep={nextStep}
                     setBackStepFlag={setBackStepFlag}
                     setFormValues={setFormValues}
@@ -201,7 +192,6 @@ const FormRoutes = ({
                     loading={loading}
                     sendForm={sendForm}
                     setBackStepFlag={setBackStepFlag}
-                    skipTwoSteps={skipTwoSteps}
                     status={status}
                     updateForm={updateFormValues('formPayment')}
                   />
@@ -223,7 +213,7 @@ const FormRoutes = ({
 
               <InfoButton timeout />
 
-              <Footer onAdminClick={handleAdminClick} />
+              <Footer handleAdminClick={handleAdminClick} />
             </>
           )}
         </div>
@@ -238,10 +228,10 @@ const FormRoutes = ({
                 availablePackages={availablePackages}
                 spinnerLoading={loading}
                 totalBusVacancies={totalBusVacancies}
-                totalRegistrationsGlobal={totalRegistrations}
+                totalRegistrations={totalRegistrations}
                 totalSeats={totalSeats}
                 totalValidWithBus={totalRegistrations.totalValidWithBus}
-                userRole={loggedUserRole}
+                userRole={userRole}
               />
             }
           />
@@ -250,40 +240,40 @@ const FormRoutes = ({
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
-                userRole={loggedUserRole}
+                userRole={userRole}
               >
-                <AdminCampers loggedUsername={splitedLoggedUsername} userRole={loggedUserRole} />
+                <AdminCampers loggedUsername={loggedUsername} userRole={userRole} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/carona"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
-                <AdminRide loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <AdminRide loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/descontos"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={loggedUserRole}>
-                <AdminDiscount loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
+                <AdminDiscount loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/quartos"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
-                <AdminRooms loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <AdminRooms loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/alimentacao"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminExtraMeals />
               </ProtectedRoute>
             }
@@ -291,8 +281,8 @@ const FormRoutes = ({
           <Route
             path="/admin/checkin"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={loggedUserRole}>
-                <AdminCheckin loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
+                <AdminCheckin loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
@@ -301,13 +291,13 @@ const FormRoutes = ({
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
-                userRole={loggedUserRole}
+                userRole={userRole}
               >
                 <AdminDataPanel
                   totalPackages={totalPackages}
                   usedPackages={usedPackages}
                   usedValidPackages={usedValidPackages}
-                  userRole={loggedUserRole}
+                  userRole={userRole}
                 />
               </ProtectedRoute>
             }
@@ -315,21 +305,21 @@ const FormRoutes = ({
           <Route
             path="/admin/logs"
             element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
-                <AdminUserLogs loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminUserLogs loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/vagas"
             element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminSeatManagement
                   loading={loading}
-                  loggedUsername={splitedLoggedUsername}
-                  onUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
-                  onUpdateTotalPackages={handleUpdateTotalPackages}
-                  onUpdateTotalSeats={handleUpdateTotalSeats}
+                  loggedUsername={loggedUsername}
+                  handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
+                  handleUpdateTotalPackages={handleUpdateTotalPackages}
+                  handleUpdateTotalSeats={handleUpdateTotalSeats}
                   totalBusVacancies={totalBusVacancies}
                   totalPackages={totalPackages}
                   totalSeats={totalSeats}
@@ -340,24 +330,24 @@ const FormRoutes = ({
           <Route
             path="/admin/contexto"
             element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
-                <AdminFormContext loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminFormContext loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/usuarios"
             element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={loggedUserRole}>
-                <AdminUsersManagement loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminUsersManagement loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/opiniao"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={loggedUserRole}>
-                <AdminFeedback loggedUsername={splitedLoggedUsername} />
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <AdminFeedback loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
@@ -371,9 +361,9 @@ const FormRoutes = ({
               <Route path="/opiniao" element={<FormFeedback />} />
               <Route
                 path="/verificacao"
-                element={<CpfReview onAdminClick={handleAdminClick} onPersonDataFetch={handlePersonData} />}
+                element={<CpfReview handlePersonData={handlePersonData} />}
               />
-              <Route path="/verificacao/dados" element={<CpfData cpfValues={personData} />} />
+              <Route path="/verificacao/dados" element={<CpfData personData={personData} />} />
               <Route path="/perguntas" element={<FAQ />} />
             </>
           )}
@@ -419,7 +409,7 @@ FormRoutes.propTypes = {
   initialStep: PropTypes.func,
   isNotSuccessPathname: PropTypes.bool,
   loading: PropTypes.bool,
-  loggedUserRole: PropTypes.string,
+  userRole: PropTypes.string,
   nextStep: PropTypes.func,
   personData: PropTypes.object,
   resetFormSubmitted: PropTypes.func,
@@ -427,7 +417,7 @@ FormRoutes.propTypes = {
   sendForm: PropTypes.func,
   setFormValues: PropTypes.func,
   skipTwoSteps: PropTypes.func,
-  splitedLoggedUsername: PropTypes.string,
+  loggedUsername: PropTypes.string,
   status: PropTypes.string,
   steps: PropTypes.number,
   totalBusVacancies: PropTypes.number,

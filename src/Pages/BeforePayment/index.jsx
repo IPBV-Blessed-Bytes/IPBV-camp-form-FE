@@ -1,21 +1,19 @@
 import { useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { enumSteps } from '@/utils/constants';
 import './style.scss';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 
 const BeforePayment = ({
-  goToPersonalData,
-  goToStep,
-  setFormValues,
+  cartKey,
+  discount,
   formValues,
   goToEditStep,
-  cartKey,
-  discountValue,
+  goToPersonalData,
   nextStep,
   setBackStepFlag,
+  setFormValues,
 }) => {
   const goToPayment = () => {
     sessionStorage.removeItem(cartKey);
@@ -59,7 +57,7 @@ const BeforePayment = ({
                 formValues={formValues}
                 goToEditStep={goToEditStep}
                 cartKey={cartKey}
-                discountValue={discountValue}
+                discountValue={discount}
               />
             </Col>
           </Row>
@@ -71,12 +69,11 @@ const BeforePayment = ({
 
 BeforePayment.propTypes = {
   goToPersonalData: PropTypes.func.isRequired,
-  goToStep: PropTypes.func.isRequired,
   setformValues: PropTypes.func.isRequired,
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,
   cartKey: PropTypes.string.isRequired,
-  discountValue: PropTypes.string,
+  discount: PropTypes.string,
 };
 
 export default BeforePayment;

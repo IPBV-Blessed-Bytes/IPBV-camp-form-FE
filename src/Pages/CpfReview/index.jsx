@@ -18,7 +18,7 @@ import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import { useFormik } from 'formik';
 
-const CpfReview = ({ onPersonDataFetch }) => {
+const CpfReview = ({ handlePersonData }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ const CpfReview = ({ onPersonDataFetch }) => {
         const response = await fetcher.post(`${BASE_URL}/camper/get-person-data`, payload);
 
         if (response.status === 200) {
-          onPersonDataFetch(response);
+          handlePersonData(response);
           navigate('/verificacao/dados');
           toast.success('Usuário encontrado com sucesso');
         }
@@ -147,7 +147,7 @@ const CpfReview = ({ onPersonDataFetch }) => {
 };
 
 CpfReview.propTypes = {
-  onPersonDataFetch: PropTypes.func,
+  handlePersonData: PropTypes.func,
 };
 
 export default CpfReview;

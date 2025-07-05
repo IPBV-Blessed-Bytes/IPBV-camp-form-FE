@@ -11,13 +11,13 @@ import AdminLoggedOut from '../LoggedOut';
 import AdminLoggedIn from '../LoggedIn';
 
 const Login = ({
-  totalRegistrationsGlobal,
-  userRole,
-  totalValidWithBus,
   availablePackages,
-  totalSeats,
-  totalBusVacancies,
   spinnerLoading,
+  totalBusVacancies,
+  totalRegistrations,
+  totalSeats,
+  totalValidWithBus,
+  userRole,
 }) => {
   const isAdminPathname = window.location.pathname === '/admin';
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,7 @@ const Login = ({
   const { login, logout, user, isLoggedIn, loading } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
-  
+
   scrollUp();
 
   const handleLogin = () => {
@@ -46,30 +46,30 @@ const Login = ({
         <Container className="p-4 admin" fluid>
           {!isLoggedIn && (
             <AdminLoggedOut
-              loginData={loginData}
               handleKeyDown={handleKeyDown}
-              showPassword={showPassword}
-              handleShowPassword={handleShowPassword}
               handleLogin={handleLogin}
+              handleShowPassword={handleShowPassword}
+              loginData={loginData}
               navigateTo={navigateTo}
               setLoginData={setLoginData}
+              showPassword={showPassword}
             />
           )}
 
           {isLoggedIn && (
             <AdminLoggedIn
+              availablePackages={availablePackages}
               loggedInUsername={user || 'Usuário não identificado'}
-              handleLogout={logout}
-              totalRegistrationsGlobal={totalRegistrationsGlobal}
-              userRole={userRole}
+              logout={logout}
               sendLoggedMessage={sendLoggedMessage}
               setSendLoggedMessage={setSendLoggedMessage}
-              user={user}
-              totalValidWithBus={totalValidWithBus}
-              availablePackages={availablePackages}
-              totalSeats={totalSeats}
-              totalBusVacancies={totalBusVacancies}
               spinnerLoading={spinnerLoading}
+              totalBusVacancies={totalBusVacancies}
+              totalRegistrations={totalRegistrations}
+              totalSeats={totalSeats}
+              totalValidWithBus={totalValidWithBus}
+              user={user}
+              userRole={userRole}
             />
           )}
 
@@ -81,7 +81,7 @@ const Login = ({
 };
 
 Login.propTypes = {
-  totalRegistrationsGlobal: PropTypes.object.isRequired,
+  totalRegistrations: PropTypes.object.isRequired,
   userRole: PropTypes.string,
   totalValidWithBus: PropTypes.number,
   availablePackages: PropTypes.array,

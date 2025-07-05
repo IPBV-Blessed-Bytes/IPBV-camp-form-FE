@@ -8,7 +8,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ nextStep, backStep, formValues, status }) => {
+const FinalReview = ({ backStep, formValues, nextStep, status }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
@@ -303,7 +303,6 @@ FinalReview.propTypes = {
     }),
   }).isRequired,
   status: PropTypes.string.isRequired,
-  sendForm: PropTypes.func,
 };
 
 export default FinalReview;

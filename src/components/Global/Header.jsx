@@ -8,13 +8,13 @@ import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
 const Header = ({
-  currentStep,
-  goToStep,
+  backStepFlag,
   formSubmitted,
-  showNavMenu,
+  goToStep,
   handlePreFill,
   highestStepReached,
-  backStepFlag,
+  showNavMenu,
+  steps,
 }) => {
   const headerSteps = [
     'Início',
@@ -61,13 +61,13 @@ const Header = ({
             <React.Fragment key={index}>
               <Breadcrumb.Item
                 className={
-                  index > currentStep
+                  index > steps
                     ? 'form__header--future-step'
-                    : index < currentStep
+                    : index < steps
                     ? 'form__header--previous-step'
                     : ''
                 }
-                active={currentStep === index}
+                active={steps === index}
                 onClick={() => handleStepChange(index)}
               >
                 {step}
@@ -77,7 +77,7 @@ const Header = ({
                   className="d-none d-lg-block"
                   typeIcon="arrow-right"
                   iconSize={25}
-                  fill={index < currentStep ? '#ffc107' : '#fff'}
+                  fill={index < steps ? '#ffc107' : '#fff'}
                 />
               )}
             </React.Fragment>
@@ -98,7 +98,7 @@ const Header = ({
 };
 
 Header.propTypes = {
-  currentStep: PropTypes.number.isRequired,
+  steps: PropTypes.number.isRequired,
   goToStep: PropTypes.func.isRequired,
   formSubmitted: PropTypes.bool,
   showNavMenu: PropTypes.bool,

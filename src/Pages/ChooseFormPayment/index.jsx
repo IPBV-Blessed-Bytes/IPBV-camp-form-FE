@@ -9,13 +9,13 @@ import Loading from '@/components/Global/Loading';
 
 const ChooseFormPayment = ({
   backStep,
-  updateForm,
-  initialValues,
-  sendForm,
-  loading,
-  status,
   formValues,
-  setBackStepFlag
+  initialValues,
+  loading,
+  sendForm,
+  setBackStepFlag,
+  status,
+  updateForm,
 }) => {
   const formik = useFormik({
     initialValues: {

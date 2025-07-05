@@ -5,23 +5,9 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import calculateAge from '../Packages/utils/calculateAge';
 import { ExtraMealsSchema } from '@/form/validations/schema';
-import './style.scss'
+import './style.scss';
 import Icons from '@/components/Global/Icons';
-
-const mealOptions = [
-  { day: 'Sábado', name: 'Sábado - almoço', price: 26, checkboxMargin: '' },
-  { day: 'Sábado', name: 'Sábado - jantar', price: 26, checkboxMargin: '' },
-  { day: 'Domingo', name: 'Domingo - café da manhã', price: 23, checkboxMargin: 'mb-2' },
-  { day: 'Domingo', name: 'Domingo - almoço', price: 26, checkboxMargin: 'mb-2' },
-  { day: 'Domingo', name: 'Domingo - jantar', price: 26, checkboxMargin: '' },
-  { day: 'Segunda', name: 'Segunda - café da manhã', price: 23, checkboxMargin: 'mb-2' },
-  { day: 'Segunda', name: 'Segunda - almoço', price: 26, checkboxMargin: 'mb-2' },
-  { day: 'Segunda', name: 'Segunda - jantar', price: 26, checkboxMargin: '' },
-  { day: 'Terça', name: 'Terça - café da manhã', price: 23, checkboxMargin: 'mb-2' },
-  { day: 'Terça', name: 'Terça - almoço', price: 26, checkboxMargin: 'mb-2' },
-  { day: 'Terça', name: 'Terça - jantar', price: 26, checkboxMargin: '' },
-  { day: 'Quarta', name: 'Quarta - café da manhã', price: 23, checkboxMargin: '' },
-];
+import { mealOptions } from '@/utils/constants';
 
 const groupedMealOptions = mealOptions.reduce((acc, meal) => {
   if (!acc[meal.day]) {
@@ -31,7 +17,7 @@ const groupedMealOptions = mealOptions.reduce((acc, meal) => {
   return acc;
 }, {});
 
-const ExtraMeals = ({ birthDate, backStep, nextStep, initialValues, updateForm }) => {
+const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [extraMealSelected, setExtraMealSelected] = useState(false);

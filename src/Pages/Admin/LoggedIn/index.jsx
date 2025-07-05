@@ -16,18 +16,18 @@ import SessionCard from '@/components/Admin/SessionCard';
 import SideButtons from '@/components/Admin/SideButtons';
 
 const AdminLoggedIn = ({
+  availablePackages,
   loggedInUsername,
-  handleLogout,
-  totalRegistrationsGlobal,
-  userRole,
+  logout,
   sendLoggedMessage,
   setSendLoggedMessage,
-  user,
-  totalValidWithBus,
-  availablePackages,
-  totalSeats,
-  totalBusVacancies,
   spinnerLoading,
+  totalBusVacancies,
+  totalRegistrations,
+  totalSeats,
+  totalValidWithBus,
+  user,
+  userRole,
 }) => {
   const [filteredChildrenCount, setFilteredChildrenCount] = useState([]);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
@@ -103,10 +103,10 @@ const AdminLoggedIn = ({
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
-  const totalRegistrations = totalRegistrationsGlobal.totalRegistrations;
-  const totalValidRegistrations = totalRegistrationsGlobal.totalValidRegistrations;
-  const totalChildren = totalRegistrationsGlobal.totalChildren;
-  const totalAdultsNonPaid = totalRegistrationsGlobal.totalAdultsNonPaid;
+  const totalRegistrations = totalRegistrations.totalRegistrations;
+  const totalValidRegistrations = totalRegistrations.totalValidRegistrations;
+  const totalChildren = totalRegistrations.totalChildren;
+  const totalAdultsNonPaid = totalRegistrations.totalAdultsNonPaid;
   const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
 
   const availablePackagesUsedValid = availablePackages.usedValidPackages;
@@ -247,7 +247,7 @@ const AdminLoggedIn = ({
             </span>
             &ldquo;
           </p>
-          <Button variant="danger" onClick={handleLogout}>
+          <Button variant="danger" onClick={logout}>
             <Icons typeIcon="logout" iconSize={20} fill="#fff" />
             &nbsp;Desconectar
           </Button>
@@ -388,13 +388,13 @@ const AdminLoggedIn = ({
 
 AdminLoggedIn.propTypes = {
   loggedInUsername: PropTypes.string.isRequired,
-  handleLogout: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   userRole: PropTypes.string,
   sendLoggedMessage: PropTypes.bool,
   setSendLoggedMessage: PropTypes.func,
   user: PropTypes.string,
   totalValidWithBus: PropTypes.number,
-  totalRegistrationsGlobal: PropTypes.shape({
+  totalRegistrations: PropTypes.shape({
     totalRegistrations: PropTypes.number,
     totalChildren: PropTypes.number,
     totalFilledVacancies: PropTypes.number,

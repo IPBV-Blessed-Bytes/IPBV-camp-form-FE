@@ -10,14 +10,14 @@ import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminSeatManagement = ({
-  loggedUsername,
-  totalSeats,
-  onUpdateTotalSeats,
-  totalBusVacancies,
-  onUpdateTotalBusVacancies,
-  totalPackages,
-  onUpdateTotalPackages,
   loading,
+  loggedUsername,
+  handleUpdateTotalBusVacancies,
+  handleUpdateTotalPackages,
+  handleUpdateTotalSeats,
+  totalBusVacancies,
+  totalPackages,
+  totalSeats,
 }) => {
   const [loadingContent, setLoadingContent] = useState(false);
 
@@ -83,7 +83,7 @@ const AdminSeatManagement = ({
   };
 
   const handlePackageChange = (packageType, newPackageValue) => {
-    onUpdateTotalPackages({
+    handleUpdateTotalPackages({
       ...totalPackages,
       [packageType]: newPackageValue,
     });
@@ -104,7 +104,7 @@ const AdminSeatManagement = ({
                 type="number"
                 min="1"
                 value={totalSeats}
-                onChange={(e) => onUpdateTotalSeats(Number(e.target.value))}
+                onChange={(e) => handleUpdateTotalSeats(Number(e.target.value))}
               />
             </Form.Group>
 
@@ -138,7 +138,7 @@ const AdminSeatManagement = ({
                 type="number"
                 min="1"
                 value={totalBusVacancies}
-                onChange={(e) => onUpdateTotalBusVacancies(Number(e.target.value))}
+                onChange={(e) => handleUpdateTotalBusVacancies(Number(e.target.value))}
               />
             </Form.Group>
 
@@ -158,11 +158,11 @@ const AdminSeatManagement = ({
 AdminSeatManagement.propTypes = {
   loggedUsername: PropTypes.string,
   totalSeats: PropTypes.number.isRequired,
-  onUpdateTotalSeats: PropTypes.func.isRequired,
+  handleUpdateTotalSeats: PropTypes.func.isRequired,
   totalBusVacancies: PropTypes.number.isRequired,
-  onUpdateTotalBusVacancies: PropTypes.func.isRequired,
+  handleUpdateTotalBusVacancies: PropTypes.func.isRequired,
   totalPackages: PropTypes.object.isRequired,
-  onUpdateTotalPackages: PropTypes.func.isRequired,
+  handleUpdateTotalPackages: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
 

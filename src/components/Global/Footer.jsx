@@ -2,8 +2,7 @@ import { PropTypes } from 'prop-types';
 import '../Style/style.scss';
 import logoFooter from '../../../public/Images/logo.png';
 
-const Footer = ({ onAdminClick }) => {
-
+const Footer = ({ handleAdminClick }) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -23,7 +22,7 @@ const Footer = ({ onAdminClick }) => {
         </p>
       </div>
 
-      <a onClick={onAdminClick}>
+      <a onClick={handleAdminClick}>
         <img src={logoFooter} className="form__footer-logo" alt="logo" />
       </a>
     </footer>
@@ -31,7 +30,7 @@ const Footer = ({ onAdminClick }) => {
 };
 
 Footer.propTypes = {
-  onAdminClick: PropTypes.func.isRequired,
+  handleAdminClick: PropTypes.func.isRequired,
 };
 
 export default Footer;

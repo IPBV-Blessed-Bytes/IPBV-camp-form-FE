@@ -43,9 +43,9 @@ const RoutesValidations = ({ formContext }) => {
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
 
-  const loggedUserRole = localStorage.getItem(USER_STORAGE_ROLE);
+  const userRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
-  const splitedLoggedUsername = savedLoggedUsername?.split('@')[0];
+  const loggedUsername = savedLoggedUsername?.split('@')[0];
 
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
@@ -102,6 +102,8 @@ const RoutesValidations = ({ formContext }) => {
   }, [isLoggedIn, adminPathname, navigate]);
 
   const age = calculateAge(formValues[currentFormIndex]?.personalInformation?.birthday);
+
+  const currentFormValues = formValues[currentFormIndex] || {};
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -283,6 +285,7 @@ const RoutesValidations = ({ formContext }) => {
       backStepFlag={backStepFlag}
       cartKey={cartKey}
       currentFormIndex={currentFormIndex}
+      currentFormValues={currentFormValues}
       discount={discount}
       formContext={formContext}
       formPath={formPath}
@@ -303,7 +306,7 @@ const RoutesValidations = ({ formContext }) => {
       initialStep={initialStep}
       isNotSuccessPathname={isNotSuccessPathname}
       loading={loading}
-      loggedUserRole={loggedUserRole}
+      loggedUsername={loggedUsername}
       nextStep={nextStep}
       personData={personData}
       preFill={preFill}
@@ -314,7 +317,6 @@ const RoutesValidations = ({ formContext }) => {
       setFormValues={setFormValues}
       setPreFill={setPreFill}
       skipTwoSteps={skipTwoSteps}
-      splitedLoggedUsername={splitedLoggedUsername}
       status={status}
       steps={steps}
       totalBusVacancies={totalBusVacancies}
@@ -324,6 +326,7 @@ const RoutesValidations = ({ formContext }) => {
       updateFormValues={updateFormValues}
       usedPackages={usedPackages}
       usedValidPackages={usedValidPackages}
+      userRole={userRole}
     />
   );
 };

@@ -9,7 +9,7 @@ import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import Loading from '@/components/Global/Loading';
 
-const CpfData = ({ cpfValues }) => {
+const CpfData = ({ personData }) => {
   const [rideOffer, setRideOffer] = useState(null);
   const [rideNeed, setRideNeed] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,14 +23,14 @@ const CpfData = ({ cpfValues }) => {
 
   scrollUp();
 
-  const paymentMethodLabel = paymentMethodMapping[cpfValues?.data.formPayment] || 'Não Pagante';
+  const paymentMethodLabel = paymentMethodMapping[personData?.data.formPayment] || 'Não Pagante';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const rideResponse = await fetcher.get('ride/offer');
 
-        const rideOfferVacancies = rideResponse.data.find((offer) => offer.name === cpfValues?.data.name);
+        const rideOfferVacancies = rideResponse.data.find((offer) => offer.name === personData?.data.name);
 
         if (rideOfferVacancies) {
           setRideOffer(rideOfferVacancies);
@@ -44,7 +44,7 @@ const CpfData = ({ cpfValues }) => {
           }
         } else {
           const rideNeedVacancies = rideResponse.data.find((offer) =>
-            offer.relationship.some((rider) => rider.name === cpfValues?.data.name && rider.type === 'needRide'),
+            offer.relationship.some((rider) => rider.name === personData?.data.name && rider.type === 'needRide'),
           );
 
           if (rideNeedVacancies) {
@@ -63,9 +63,9 @@ const CpfData = ({ cpfValues }) => {
     };
 
     fetchData();
-  }, [cpfValues]);
+  }, [personData]);
 
-  if (!cpfValues || !cpfValues?.data) {
+  if (!personData || !personData?.data) {
     return (
       <div className="components-container">
         <Header />
@@ -116,13 +116,13 @@ const CpfData = ({ cpfValues }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Nome:</span> <br />
-                        {cpfValues?.data.name}
+                        {personData?.data.name}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Acompanhantes:</span> <br />
-                        {cpfValues?.data.aggregate}
+                        {personData?.data.aggregate}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -138,7 +138,7 @@ const CpfData = ({ cpfValues }) => {
                       <Card.Text>
                         <span className="form-review__section-title">Cadastrado em: </span>
                         <br />
-                        {cpfValues?.data.registrationDate}
+                        {personData?.data.registrationDate}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -147,17 +147,17 @@ const CpfData = ({ cpfValues }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Categoria do Pacote:</span> <br />
-                        {cpfValues?.data.packageTitle}
+                        {personData?.data.packageTitle}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Acomodação:</span> <br />
-                        {cpfValues?.data.accomodationName} |{' '}
-                        {cpfValues?.data.subAccomodation
-                          ? cpfValues?.data.subAccomodation !== 'Outra'
-                            ? cpfValues?.data.subAccomodation.split(' ')[1]
-                            : cpfValues?.data.subAccomodation
+                        {personData?.data.accomodationName} |{' '}
+                        {personData?.data.subAccomodation
+                          ? personData?.data.subAccomodation !== 'Outra'
+                            ? personData?.data.subAccomodation.split(' ')[1]
+                            : personData?.data.subAccomodation
                           : 'vazio'}
                       </Card.Text>
                     </Col>
@@ -166,13 +166,13 @@ const CpfData = ({ cpfValues }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alimentação:</span> <br />
-                        {cpfValues?.data.food}
+                        {personData?.data.food}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alimentação Extra:</span> <br />
-                        {cpfValues?.data.extraMeals || 'Nenhuma'}
+                        {personData?.data.extraMeals || 'Nenhuma'}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -181,14 +181,14 @@ const CpfData = ({ cpfValues }) => {
                       <Card.Text>
                         <span className="form-review__section-title">Transporte:</span>
                         <br />
-                        {cpfValues?.data.transportation}
+                        {personData?.data.transportation}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
                         <br />
-                        {cpfValues?.data.allergy || 'Nenhuma'}
+                        {personData?.data.allergy || 'Nenhuma'}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -197,13 +197,13 @@ const CpfData = ({ cpfValues }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Tem vaga de carona:</span> <br />
-                        {cpfValues?.data.numberVacancies || 'Nenhuma vaga'}
+                        {personData?.data.numberVacancies || 'Nenhuma vaga'}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Precisa de carona:</span> <br />
-                        {cpfValues?.data.needRide ? 'Sim' : 'Não'}
+                        {personData?.data.needRide ? 'Sim' : 'Não'}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -242,7 +242,7 @@ const CpfData = ({ cpfValues }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Preço:</span> <br />
-                        R$ {cpfValues?.data.price},00
+                        R$ {personData?.data.price},00
                       </Card.Text>
                     </Col>
                   </Row>
@@ -271,7 +271,7 @@ const CpfData = ({ cpfValues }) => {
 };
 
 CpfData.propTypes = {
-  cpfValues: PropTypes.object,
+  personData: PropTypes.object,
 };
 
 export default CpfData;

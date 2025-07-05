@@ -20,16 +20,16 @@ import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 
 const PersonalData = ({
-  nextStep,
   backStep,
-  updateForm,
-  initialValues,
-  onDiscountChange,
-  formValues,
   currentFormIndex,
+  formValues,
+  handleDiscountChange,
+  initialValues,
+  nextStep,
   preFill,
+  setBackStepFlag,
   setPreFill,
-  setBackStepFlag
+  updateForm,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
@@ -64,8 +64,8 @@ const PersonalData = ({
             birthday: values.birthday,
           });
 
-          if (onDiscountChange) {
-            onDiscountChange(response.data.discount);
+          if (handleDiscountChange) {
+            handleDiscountChange(response.data.discount);
           }
 
           nextStep();
@@ -320,7 +320,7 @@ const PersonalData = ({
                         text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
                       />
                     </div>
-                    <div className="custom-datepicker-wrapper">
+                   <div className="custom-datepicker-wrapper">
                       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
                         <DatePicker
                           value={values.birthday ? parseDate(values.birthday) : null}
@@ -619,7 +619,7 @@ PersonalData.propTypes = {
   nextStep: PropTypes.func,
   backStep: PropTypes.func,
   updateForm: PropTypes.func,
-  onDiscountChange: PropTypes.func,
+  handleDiscountChange: PropTypes.func,
   initialValues: PropTypes.shape({
     name: PropTypes.string,
     birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),

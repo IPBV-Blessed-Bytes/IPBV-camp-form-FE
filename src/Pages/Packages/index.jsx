@@ -7,23 +7,23 @@ import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 
 const Packages = ({
-  backStep,
   age,
-  totalRegistrationsGlobal,
-  discountValue,
+  backStep,
+  cartKey,
+  currentFormIndex,
+  currentFormValues,
+  discount,
   hasDiscount,
+  nextStep,
+  totalRegistrationsGlobal,
   totalSeats,
   updateForm,
-  nextStep,
-  formValues,
-  currentFormIndex,
-  cartKey,
 }) => {
   const productListRef = useRef();
   const { items, addItem } = useCart();
 
   useEffect(() => {
-    const currentUser = formValues;
+    const currentUser = currentFormValues;
     const cartIsEmpty = items.length === 0;
 
     if (cartIsEmpty && currentUser?.package) {
@@ -39,15 +39,15 @@ const Packages = ({
         addItem({ ...food, category: 'Alimentação' });
       }
     }
-  }, [formValues, currentFormIndex]);
+  }, [currentFormValues, currentFormIndex]);
 
   useEffect(() => {
     if (hasDiscount) {
       toast.info(
-        `Foi gerado um cupom de desconto no valor de R$ ${discountValue} em seu nome. O desconto já está aplicado ao valor final dos pacotes.`,
+        `Foi gerado um cupom de desconto no valor de R$ ${discount} em seu nome. O desconto já está aplicado ao valor final dos pacotes.`,
       );
     }
-  }, [hasDiscount, discountValue]);
+  }, [hasDiscount, discount]);
 
   const submitForm = () => {
     const isValid = productListRef.current?.checkRequiredPackages();
@@ -120,7 +120,7 @@ const Packages = ({
                   </b>
                 </Card.Text>
 
-                <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discountValue} />
+                <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discount} />
               </>
             )}
 
@@ -155,12 +155,12 @@ Packages.propTypes = {
   backStep: PropTypes.func.isRequired,
   age: PropTypes.number.isRequired,
   totalRegistrationsGlobal: PropTypes.object.isRequired,
-  discountValue: PropTypes.string,
+  discount: PropTypes.string,
   hasDiscount: PropTypes.bool,
   totalSeats: PropTypes.string.isRequired,
   updateForm: PropTypes.func.isRequired,
   currentFormIndex: PropTypes.number.isRequired,
-  formValues: PropTypes.array.isRequired,
+  currentFormValues: PropTypes.array.isRequired,
   cartKey: PropTypes.string.isRequired,
 };
 
