@@ -3,13 +3,11 @@ import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import DatePicker from 'react-datepicker';
+import InputMask from 'react-input-mask';
 import Tips from '@/components/Global/Tips';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import InputMask from 'react-input-mask';
 import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../../utils/constants';
@@ -36,6 +34,7 @@ const PersonalData = ({
   const [previousUserData, setPreviousUserData] = useState(null);
   const [currentAge, setCurrentAge] = useState(null);
   const [showLegalGuardianFields, setShowLegalGuardianFields] = useState(false);
+  const [hasValidatedAge, setHasValidatedAge] = useState(false);
 
   const { values, errors, handleChange, submitForm, setFieldValue, setValues } = useFormik({
     initialValues,
@@ -204,6 +203,24 @@ const PersonalData = ({
 
   const handleDateChange = (date) => {
     setFieldValue('birthday', date);
+    setHasValidatedAge(false);
+    handleAgeValidation(date);
+  };
+
+  const handleDateBlur = () => {
+    handleAgeValidation(values.birthday);
+  };
+
+  const handleAgeValidation = (birthday) => {
+    if (hasValidatedAge || !birthday) return;
+
+    const age = calculateAge(birthday);
+
+    if (age !== null) {
+      setCurrentAge(age);
+      setShowModal(true);
+      setHasValidatedAge(true);
+    }
   };
 
   const parseDate = (value) => {
@@ -226,17 +243,6 @@ const PersonalData = ({
       setShowLegalGuardianFields(false);
     }
   }, [values.birthday]);
-
-  const checkAge = () => {
-    if (values.birthday) {
-      const age = calculateAge(values.birthday);
-
-      if (age !== null) {
-        setCurrentAge(age);
-        setShowModal(true);
-      }
-    }
-  };
 
   const handleConfirmAge = () => {
     setShowModal(false);
@@ -320,21 +326,27 @@ const PersonalData = ({
                         text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
                       />
                     </div>
-                   <div className="custom-datepicker-wrapper">
-                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-                        <DatePicker
-                          value={values.birthday ? parseDate(values.birthday) : null}
-                          className="custom-datepicker"
-                          onChange={handleDateChange}
-                          onAccept={() => checkAge()}
-                          format="dd/MM/yyyy"
-                          id="birthday"
-                          name="birthday"
-                          maxDate={new Date()}
-                          openTo="year"
-                          views={['year', 'month', 'day']}
-                        />
-                      </LocalizationProvider>
+                    <div className="custom-datepicker-wrapper">
+                      <Form.Control
+                        isInvalid={!!errors.birthday}
+                        as={DatePicker}
+                        selected={parseDate(values.birthday)}
+                        onChange={handleDateChange}
+                        onBlur={handleDateBlur}
+                        locale={ptBR}
+                        autoComplete="off"
+                        dateFormat="dd/MM/yyyy"
+                        dropdownMode="select"
+                        id="birthday"
+                        name="birthday"
+                        maxDate={new Date()}
+                        placeholderText="dd/mm/aaaa"
+                        showMonthDropdown
+                        showYearDropdown
+                        customInput={
+                          <InputMask mask="99/99/9999">{(inputProps) => <Form.Control {...inputProps} />}</InputMask>
+                        }
+                      />
                     </div>
                     <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
                       {errors.birthday}
