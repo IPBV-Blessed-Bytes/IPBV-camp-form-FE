@@ -276,6 +276,8 @@ const PersonalData = ({
     }, 1);
   };
 
+  const extractNumbers = (value) => value.replace(/\D/g, '');
+
   return (
     <>
       <Card className="form__container__general-height">
@@ -305,7 +307,7 @@ const PersonalData = ({
                         handleChange({
                           target: {
                             name: 'cpf',
-                            value: event.target.value.replace(/\D/g, ''),
+                            value: extractNumbers(event.target.value),
                           },
                         })
                       }
@@ -392,7 +394,7 @@ const PersonalData = ({
                         handleChange({
                           target: {
                             name: 'rg',
-                            value: event.target.value.replace(/\D/g, ''),
+                            value: extractNumbers(event.target.value),
                           },
                         })
                       }
@@ -535,7 +537,7 @@ const PersonalData = ({
                           handleChange({
                             target: {
                               name: 'legalGuardianCpf',
-                              value: event.target.value.replace(/\D/g, ''),
+                              value: extractNumbers(event.target.value),
                             },
                           })
                         }
@@ -561,7 +563,7 @@ const PersonalData = ({
                           handleChange({
                             target: {
                               name: 'legalGuardianCellPhone',
-                              value: event.target.value.replace(/\D/g, ''),
+                              value: extractNumbers(event.target.value),
                             },
                           });
                         }}
