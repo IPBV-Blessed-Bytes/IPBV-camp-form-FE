@@ -82,45 +82,10 @@ const PersonalData = ({
     validateOnChange: false,
   });
 
-  const isFullyValidDate = (date) => {
-    return date instanceof Date && !isNaN(date.getTime()) && date.getFullYear() > 1900;
-  };
-
   const formatDate = (date) => {
     if (!(date instanceof Date)) date = new Date(date);
     return format(date, 'dd/MM/yyyy');
   };
-
-  useEffect(() => {
-    const fetchPreviousData = async () => {
-      if (cpf.isValid(values.cpf) && preFill === true) {
-        try {
-          const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
-            cpf: values.cpf,
-            birthday: formatDate(values.birthday),
-          });
-
-          const fullUserData = response.data;
-
-          const filteredUserData = {
-            personalInformation: fullUserData.personalInformation,
-            contact: fullUserData.contact,
-          };
-
-          sessionStorage.setItem('previousUserData', JSON.stringify(filteredUserData));
-          setPreviousUserData(filteredUserData);
-          setShowPrefillModal(true);
-        } catch (error) {
-          console.error('Erro ao buscar dados do ano anterior:', error);
-        }
-      }
-    };
-
-    if (values.cpf && values.cpf.length === 11 && isFullyValidDate(values.birthday)) {
-      fetchPreviousData();
-      setPreFill(true);
-    }
-  }, [values.cpf, values.birthday]);
 
   useEffect(() => {
     if (values.cpf && values.cpf.length === 11 && !cpf.isValid(values.cpf)) {
@@ -223,6 +188,67 @@ const PersonalData = ({
     }
   };
 
+  const fetchPreviousData = async () => {
+    if (cpf.isValid(values.cpf) && preFill === true) {
+      try {
+        const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
+          cpf: values.cpf,
+          birthday: formatDate(values.birthday),
+        });
+
+        const fullUserData = response.data;
+
+        const filteredUserData = {
+          personalInformation: fullUserData.personalInformation,
+          contact: fullUserData.contact,
+        };
+
+        sessionStorage.setItem('previousUserData', JSON.stringify(filteredUserData));
+        setPreviousUserData(filteredUserData);
+
+        return filteredUserData;
+      } catch (error) {
+        console.error('Erro ao buscar dados do ano anterior:', error);
+        return null;
+      }
+    }
+  };
+
+  const handleConfirmAge = async () => {
+    setShowModal(false);
+
+    if (currentAge < 18) {
+      toast.warn(
+        `Como a idade informada na data do acampamento é de ${currentAge} anos, sendo inferior a 18 anos, é necessário informar os dados de um responsável legal que estará presente no acampamento.`,
+      );
+      setShowLegalGuardianFields(true);
+    } else {
+      setShowLegalGuardianFields(false);
+    }
+
+    if (cpf.isValid(values.cpf)) {
+      try {
+        const fetchedData = await fetchPreviousData();
+
+        if (fetchedData) {
+          setShowPrefillModal(true);
+          setPreFill(true);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados anteriores após confirmação de idade', error);
+      }
+    }
+  };
+
+  const handleCancelAge = () => {
+    setFieldValue('birthday', '');
+    toast.info(
+      'Como você não confirmou sua idade na data do acampamento, o campo foi resetado para que possa preenchê-lo corretamente.',
+    );
+    setShowModal(false);
+    setShowLegalGuardianFields(false);
+  };
+
   const parseDate = (value) => {
     if (value instanceof Date && !isNaN(value)) {
       return value;
@@ -243,29 +269,6 @@ const PersonalData = ({
       setShowLegalGuardianFields(false);
     }
   }, [values.birthday]);
-
-  const handleConfirmAge = () => {
-    setShowModal(false);
-
-    if (currentAge < 18) {
-      toast.warn(
-        `Como a idade informada na data do acampamento é de ${currentAge} anos, sendo inferior a 18 anos, é necessário informar os dados de um responsável legal que estará presente no acampamento.`,
-      );
-
-      setShowLegalGuardianFields(true);
-    } else {
-      setShowLegalGuardianFields(false);
-    }
-  };
-
-  const handleCancelAge = () => {
-    setFieldValue('birthday', '');
-    toast.info(
-      'Como você não confirmou sua idade na data do acampamento, o campo foi resetado para que possa preenchê-lo corretamente.',
-    );
-    setShowModal(false);
-    setShowLegalGuardianFields(false);
-  };
 
   const restoreScrollWhenMobile = () => {
     setTimeout(() => {
