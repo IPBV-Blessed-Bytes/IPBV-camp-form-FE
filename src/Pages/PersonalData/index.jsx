@@ -258,9 +258,17 @@ const PersonalData = ({
       return value;
     }
 
-    const parsedDate = value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+    if (typeof value === 'string') {
+      const isoParsed = new Date(value);
+      if (!isNaN(isoParsed)) {
+        return isoParsed;
+      }
 
-    return isNaN(parsedDate) ? null : parsedDate;
+      const parsed = parse(value, 'dd/MM/yyyy', new Date());
+      return isNaN(parsed) ? null : parsed;
+    }
+
+    return null;
   };
 
   useEffect(() => {
