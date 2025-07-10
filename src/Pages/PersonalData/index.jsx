@@ -82,9 +82,12 @@ const PersonalData = ({
     validateOnChange: false,
   });
 
+  const extractNumbers = (value) => value.replace(/\D/g, '');
+  const isUnderage = (age) => age < 18;
+
   const formatDate = (date) => {
-    if (!(date instanceof Date)) date = new Date(date);
-    return format(date, 'dd/MM/yyyy');
+    const parsed = parseDate(date);
+    return parsed ? format(parsed, 'dd/MM/yyyy') : '';
   };
 
   useEffect(() => {
@@ -173,7 +176,8 @@ const PersonalData = ({
   };
 
   const handleDateBlur = () => {
-    handleAgeValidation(values.birthday);
+    const parsed = parseDate(values.birthday);
+    handleAgeValidation(parsed);
   };
 
   const handleAgeValidation = (birthday) => {
@@ -217,7 +221,7 @@ const PersonalData = ({
   const handleConfirmAge = async () => {
     setShowModal(false);
 
-    if (currentAge < 18) {
+    if (isUnderage(currentAge)) {
       toast.warn(
         `Como a idade informada na data do acampamento é de ${currentAge} anos, sendo inferior a 18 anos, é necessário informar os dados de um responsável legal que estará presente no acampamento.`,
       );
@@ -264,7 +268,7 @@ const PersonalData = ({
       const age = calculateAge(values.birthday);
 
       setCurrentAge(age);
-      setShowLegalGuardianFields(age < 18);
+      setShowLegalGuardianFields(isUnderage(age));
     } else {
       setShowLegalGuardianFields(false);
     }
@@ -275,8 +279,6 @@ const PersonalData = ({
       document.body.style.removeProperty('overflow');
     }, 1);
   };
-
-  const extractNumbers = (value) => value.replace(/\D/g, '');
 
   return (
     <>
