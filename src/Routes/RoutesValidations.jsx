@@ -54,10 +54,6 @@ const RoutesValidations = ({ formContext }) => {
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
-    sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
-  }, [formValues]);
-
-  useEffect(() => {
     const fetchPackages = async () => {
       setLoading(true);
 
@@ -101,6 +97,10 @@ const RoutesValidations = ({ formContext }) => {
     }
   }, [isLoggedIn, adminPathname, navigate]);
 
+  useEffect(() => {
+    sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
+  }, [formValues]);
+
   const age = calculateAge(formValues[currentFormIndex]?.personalInformation?.birthday);
 
   const currentFormValues = formValues[currentFormIndex] || {};
@@ -137,19 +137,55 @@ const RoutesValidations = ({ formContext }) => {
   const resetFormSubmitted = () => setFormSubmitted(false);
 
   const updateFormValues = (sectionKey) => (newData, callback) => {
+    const skipPersistSections = ['personalInformation', 'contact', 'package', 'extraMeals'];
+    const isFinalReview = sectionKey === 'finalReview';
+    const shouldSkipPersist = skipPersistSections.includes(sectionKey) && !isFinalReview;
+
+    if (shouldSkipPersist) {
+      saveTempData(sectionKey, newData);
+
+      if (typeof callback === 'function') {
+        setTimeout(callback, 0);
+      }
+      return;
+    }
+
+    const sessionData = getTempData();
+
     setFormValues((prev) => {
       const updated = [...prev];
-      updated[currentFormIndex] = {
-        ...updated[currentFormIndex],
-        [sectionKey]: newData,
-      };
+      const previous = prev[currentFormIndex] || {};
+
+      if (isFinalReview) {
+        updated[currentFormIndex] = {
+          ...previous,
+          ...sessionData,
+          ...(typeof newData === 'object' && newData !== null ? newData : {}),
+        };
+
+        sessionStorage.removeItem('formTempData');
+      } else {
+        updated[currentFormIndex] = {
+          ...previous,
+          [sectionKey]: newData,
+        };
+      }
+
       return updated;
     });
 
-    if (callback && typeof callback === 'function') {
+    if (typeof callback === 'function') {
       setTimeout(callback, 0);
     }
   };
+
+  const saveTempData = (key, data) => {
+    const existing = JSON.parse(sessionStorage.getItem('formTempData')) || {};
+    existing[key] = data;
+    sessionStorage.setItem('formTempData', JSON.stringify(existing));
+  };
+
+  const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
 
   const handleAddNewUser = () => {
     setFormValues((prev) => {
