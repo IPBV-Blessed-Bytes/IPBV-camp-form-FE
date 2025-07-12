@@ -101,6 +101,7 @@ const FormRoutes = ({
               <Header
                 backStepFlag={backStepFlag}
                 formSubmitted={formSubmitted}
+                formValues={formValues}
                 goToStep={goToStep}
                 handlePreFill={handlePreFill}
                 highestStepReached={highestStepReached}
@@ -163,7 +164,12 @@ const FormRoutes = ({
                 )}
 
                 {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                  <FinalReview backStep={backStep} formValues={currentFormValues} nextStep={nextStep} status={status} />
+                  <FinalReview
+                    backStep={backStep}
+                    nextStep={nextStep}
+                    status={status}
+                    updateForm={updateFormValues('finalReview')}
+                  />
                 )}
 
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
