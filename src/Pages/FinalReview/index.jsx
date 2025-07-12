@@ -8,12 +8,16 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ backStep, formValues, nextStep, status }) => {
+const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const navigateTo = useNavigate();
   const location = useLocation();
   const { emptyCart } = useCart();
+
+  const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
+
+  const formValues = getTempData();
 
   const handleCheckboxChange = (e) => setIsConfirmed(e.target.checked);
 
@@ -36,6 +40,7 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
   const handleSaveUser = () => {
     if (!isConfirmed || !isDataAuthorized) return;
 
+    updateForm();
     emptyCart();
     nextStep();
   };
@@ -47,7 +52,7 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
   }, [status, navigateTo]);
 
   const isSuccessPathname = location.pathname === '/sucesso';
-
+  
   return (
     <>
       {!isSuccessPathname && (
@@ -75,45 +80,44 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
                   <Row className="row-gap">
-                    <Col
-                      md={formValues.extraMeals.totalPrice || formValues.package.discountCoupon ? 5 : 6}
-                      className={`fw-bold ${
-                        !(formValues.extraMeals.totalPrice || formValues.package.discountCoupon) ? 'mb-3' : ''
-                      }`}
-                    >
+                    <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
                       <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
-                        Nome = {formValues.package.accomodationName} <br />
-                        Acomodação = {formValues.package.subAccomodation}
+                        Hospedagem = {formValues.package.accomodation.name}
                         <br />
-                        Preço = R$ {formValues.package.finalPrice},00
+                        Preço = R$ {formValues.package.accomodation.price},00
+                        <div className="packages-horizontal-line" />
+                        Transporte = {formValues.package.transportation.name}
+                        <br />
+                        Preço = R$ {formValues.package.transportation.price},00
+                        {formValues.package.food.id && (
+                          <>
+                            <div className="packages-horizontal-line" />
+                            Alimentação = {formValues.package.food.name}
+                            <br />
+                            Preço = R$ {formValues.package.food.price},00
+                            <div className="packages-horizontal-line" />
+                          </>
+                        )}
                       </Card.Text>
                     </Col>
                     <Col md={4} className="fw-bold">
-                      {(formValues.extraMeals.totalPrice || formValues.extraMeals.totalPrice !== 0) &&
-                        formValues.extraMeals.someFood && (
+                      {(formValues.extraMeals?.totalPrice || formValues.extraMeals?.totalPrice !== 0) &&
+                        formValues.extraMeals?.someFood && (
                           <Card.Text>
                             <span className="form-review__section-title">Refeição Extra:</span>
                             <br />
-                            R$ {formValues.extraMeals.totalPrice},00
+                            Preço = R$ {formValues.extraMeals?.totalPrice},00
                           </Card.Text>
                         )}
-                      {formValues.package.discountCoupon && (
-                        <Card.Text>
-                          <span className="form-review__section-title">Desconto:</span>
-                          <br />
-                          R$ {formValues.package.discountValue},00
-                        </Card.Text>
-                      )}
                     </Col>
-                    <Col
-                      md={formValues.extraMeals.totalPrice || formValues.package.discountCoupon ? 3 : 6}
-                      className="fw-bold"
-                    >
+                    <Col md={formValues.extraMeals?.totalPrice ? 3 : 6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
                         <br />
-                        <em>R$ {formValues.package.finalPrice + (formValues.extraMeals?.totalPrice || 0)},00</em>
+                        <em>
+                          R$ {Number(formValues.package.finalPrice) + Number(formValues.extraMeals?.totalPrice || 0)},00
+                        </em>
                       </Card.Text>
                     </Col>
                   </Row>
@@ -153,7 +157,7 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> Data de Nascimento:</span> <br />
+                        <span className="form-review__section-title">Data de Nascimento:</span> <br />
                         {isValid(new Date(formValues.personalInformation.birthday))
                           ? format(new Date(formValues.personalInformation.birthday), 'dd/MM/yyyy')
                           : 'Data inválida'}
@@ -170,7 +174,7 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> CPF:</span> <br />
+                        <span className="form-review__section-title">CPF:</span> <br />
                         {formValues.personalInformation.cpf}
                       </Card.Text>
                     </Col>
@@ -185,14 +189,14 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> Telefone: </span>
+                        <span className="form-review__section-title">Telefone: </span>
                         <br />
                         {formValues.contact.cellPhone} - Whatsapp ({formValues.contact.isWhatsApp ? 'Sim' : 'Não'})
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> Email: </span>
+                        <span className="form-review__section-title">Email: </span>
                         <br />
                         {formValues.contact.email}
                       </Card.Text>
@@ -209,8 +213,30 @@ const FinalReview = ({ backStep, formValues, nextStep, status }) => {
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title"> Acompanhantes:</span> <br />
+                        <span className="form-review__section-title">Acompanhantes:</span> <br />
                         {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
+                      </Card.Text>
+                    </Col>
+                  </Row>
+                  <div className="packages-horizontal-line" />
+                  <Row className="row-gap">
+                    <Col md={4} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Nome Resp. Legal: </span>
+                        <br />
+                        {formValues.personalInformation.legalGuardianName}
+                      </Card.Text>
+                    </Col>
+                    <Col md={4} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
+                        {formValues.personalInformation.legalGuardianCpf}
+                      </Card.Text>
+                    </Col>
+                    <Col md={4} className="fw-bold">
+                      <Card.Text>
+                        <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
+                        {formValues.personalInformation.legalGuardianCellPhone}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -281,7 +307,6 @@ FinalReview.propTypes = {
       subAccomodation: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
       finalPrice: PropTypes.number.isRequired,
-      discountCoupon: PropTypes.string,
       discountValue: PropTypes.number,
     }).isRequired,
     contact: PropTypes.shape({
