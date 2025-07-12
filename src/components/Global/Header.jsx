@@ -7,7 +7,16 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
-const Header = ({ backStepFlag, formSubmitted, goToStep, handlePreFill, highestStepReached, showNavMenu, steps }) => {
+const Header = ({
+  backStepFlag,
+  formSubmitted,
+  formValues,
+  goToStep,
+  handlePreFill,
+  highestStepReached,
+  showNavMenu,
+  steps,
+}) => {
   const headerSteps = [
     'Início',
     'Informações Pessoais',
@@ -73,14 +82,16 @@ const Header = ({ backStepFlag, formSubmitted, goToStep, handlePreFill, highestS
         </Breadcrumb>
       )}
 
-      <Button
-        className="cart-btn"
-        onClick={() => {
-          goToStep(enumSteps.beforePayment);
-        }}
-      >
-        <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
-      </Button>
+      {Array.isArray(formValues) && formValues.some((user) => user?.personalInformation?.name?.trim()) && (
+        <Button
+          className="cart-btn"
+          onClick={() => {
+            goToStep(enumSteps.beforePayment);
+          }}
+        >
+          <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+        </Button>
+      )}
     </header>
   );
 };
@@ -88,6 +99,7 @@ const Header = ({ backStepFlag, formSubmitted, goToStep, handlePreFill, highestS
 Header.propTypes = {
   backStepFlag: PropTypes.bool,
   formSubmitted: PropTypes.bool,
+  formValues: PropTypes.array.isRequired,
   goToStep: PropTypes.func.isRequired,
   handlePreFill: PropTypes.func,
   highestStepReached: PropTypes.number,
