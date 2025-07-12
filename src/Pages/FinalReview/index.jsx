@@ -346,6 +346,7 @@ FinalReview.propTypes = {
     }),
   }).isRequired,
   status: PropTypes.string.isRequired,
+  updateForm: PropTypes.func,
 };
 
 export default FinalReview;
