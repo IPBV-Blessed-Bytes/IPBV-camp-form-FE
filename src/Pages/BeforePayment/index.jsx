@@ -22,6 +22,7 @@ const BeforePayment = ({
 
   useEffect(() => {
     setBackStepFlag(false);
+    sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
   }, []);
 
   return (
