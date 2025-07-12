@@ -52,7 +52,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
   }, [status, navigateTo]);
 
   const isSuccessPathname = location.pathname === '/sucesso';
-  
+
   return (
     <>
       {!isSuccessPathname && (
@@ -71,6 +71,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         {formValues.personalInformation.name}
                       </Card.Text>
                     </Col>
+
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Gênero:</span> <br />
@@ -79,6 +80,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Row className="row-gap">
                     <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
                       <Card.Text>
@@ -111,6 +113,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                           </Card.Text>
                         )}
                     </Col>
+
                     <Col md={formValues.extraMeals?.totalPrice ? 3 : 6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Valor Total:</span>
@@ -122,6 +125,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   {(formValues.contact.car === true || formValues.contact.needRide === true) && (
                     <>
                       <Row className="row-gap">
@@ -134,6 +138,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                                 {formValues.contact.car === true && 'Sim'}
                               </Card.Text>
                             </Col>
+
                             <Col md={6} className="fw-bold">
                               <Card.Text>
                                 <span className="form-review__section-title">Vagas de Carona:</span> <br />
@@ -154,6 +159,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                       <div className="packages-horizontal-line" />
                     </>
                   )}
+
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
@@ -163,6 +169,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                           : 'Data inválida'}
                       </Card.Text>
                     </Col>
+
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Igreja:</span> <br />
@@ -171,6 +178,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
@@ -178,6 +186,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         {formValues.personalInformation.cpf}
                       </Card.Text>
                     </Col>
+
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">RG:</span> <br />
@@ -186,6 +195,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
@@ -194,6 +204,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         {formValues.contact.cellPhone} - Whatsapp ({formValues.contact.isWhatsApp ? 'Sim' : 'Não'})
                       </Card.Text>
                     </Col>
+
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Email: </span>
@@ -203,6 +214,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
@@ -211,6 +223,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         {formValues.contact.hasAllergy ? 'Sim -' : 'Não'} {formValues.contact.allergy}
                       </Card.Text>
                     </Col>
+
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Acompanhantes:</span> <br />
@@ -219,6 +232,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Row className="row-gap">
                     <Col md={4} className="fw-bold">
                       <Card.Text>
@@ -227,12 +241,14 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         {formValues.personalInformation.legalGuardianName}
                       </Card.Text>
                     </Col>
+
                     <Col md={4} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
                         {formValues.personalInformation.legalGuardianCpf}
                       </Card.Text>
                     </Col>
+
                     <Col md={4} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
@@ -241,6 +257,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                     </Col>
                   </Row>
                   <div className="packages-horizontal-line" />
+
                   <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
                     <Form.Check
                       className="form-review__section-title fw-bold"
@@ -251,6 +268,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                       onChange={handleCheckboxChange}
                       checked={isConfirmed}
                     />
+
                     <Form.Check
                       className="form-review__section-title fw-bold"
                       type={'checkbox'}
