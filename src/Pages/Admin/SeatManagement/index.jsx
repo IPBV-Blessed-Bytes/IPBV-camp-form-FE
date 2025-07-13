@@ -26,7 +26,7 @@ const AdminSeatManagement = ({
     schoolFamily: 'Colégio Família',
     schoolCamping: 'Colégio Camping',
     seminary: 'Seminário',
-    other: 'Outra Acomodação Externa',
+    other: 'Outra Hospedagem Externa',
   };
 
   const packageOrder = ['schoolIndividual', 'schoolFamily', 'schoolCamping', 'seminary', 'other'];

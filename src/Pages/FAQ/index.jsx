@@ -149,7 +149,7 @@ const FAQ = () => {
                 <Accordion.Header>15. Qual deve ser minha primeira ação ao chegar em Garanhuns?</Accordion.Header>
                 <Accordion.Body>
                   Antes de ir para os hotéis e o seminário, você deve ir primeiro ao colégio para fazer seu check-in,
-                  pegar sua pulseira e identificação de carro. Somente após isso, deve se deslocar para a acomodação
+                  pegar sua pulseira e identificação de carro. Somente após isso, deve se deslocar para a hospedagem
                   previamente escolhida. No colégio, haverá uma recepção próxima à guarita, com uma equipe designada
                   para realizar o check-in.
                 </Accordion.Body>

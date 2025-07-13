@@ -220,7 +220,7 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
               </p>
               <p>
-                <strong>Acomodação:</strong> {userInfo.package.accomodationName}
+                <strong>Hospedagem:</strong> {userInfo.package.accomodationName}
               </p>
               <p>
                 <strong>Sub Acomodação:</strong> {userInfo.package.subAccomodation}

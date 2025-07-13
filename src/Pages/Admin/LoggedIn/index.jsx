@@ -173,7 +173,7 @@ const AdminLoggedIn = ({
       showRemainingVacancies: true,
     },
     {
-      title: 'Outra Acomodação',
+      title: 'Outra Hospedagem',
       remainingVacancies: otherRemainingVacanciesSum || '0',
       filledVacancies: otherFilledVacanciesSum || '0',
       showRemainingVacancies: true,

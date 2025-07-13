@@ -168,10 +168,10 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias', oddOrEven: 'even' },
     { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
     {
-      label: 'Acomodação',
+      label: 'Hospedagem',
       name: 'package.accomodationName',
       type: 'select',
-      placeholder: 'Selecione a acomodação',
+      placeholder: 'Selecione a hospedagem',
       oddOrEven: 'even',
       options: [
         { label: 'Colegio XV de Novembro', value: 'Colegio XV de Novembro' },
@@ -179,7 +179,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
         { label: 'Outra Acomodacao Externa', value: 'Outra Acomodacao Externa' },
       ],
     },
-    {
+     {
       label: 'Sub Acomodação',
       name: 'package.subAccomodation',
       type: 'select',

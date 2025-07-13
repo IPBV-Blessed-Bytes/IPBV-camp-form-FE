@@ -152,7 +152,7 @@ const CpfData = ({ personData }) => {
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Acomodação:</span> <br />
+                        <span className="form-review__section-title">Hospedagem:</span> <br />
                         {personData?.data.accomodationName} |{' '}
                         {personData?.data.subAccomodation
                           ? personData?.data.subAccomodation !== 'Outra'

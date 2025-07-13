@@ -118,7 +118,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
             {userPackage && (
               <div className="cart-item">
                 <div className="item-info">
-                  <h5>Acomodação: {userPackage?.accomodation.name}</h5>
+                  <h5>Hospedagem: {userPackage?.accomodation.name}</h5>
                   <p>Preço: R$ {Number(userPackage?.accomodation.price || 0).toFixed(2)}</p>
 
                   <h5>Transporte: {userPackage?.transportation.name}</h5>

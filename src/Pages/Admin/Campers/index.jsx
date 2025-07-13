@@ -687,7 +687,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
-        Header: 'Acomodação:',
+        Header: 'Hospedagem:',
         accessor: (row) =>
           row.package.accomodationName
             ?.replace(/á|ã|à|â/g, 'a')
@@ -702,7 +702,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             options={[
               { value: 'Colegio XV de Novembro', label: 'Colégio XV de Novembro' },
               { value: 'Seminario Sao Jose', label: 'Seminário São José' },
-              { value: 'Outra Acomodacao Externa', label: 'Outra Acomodação Externa' },
+              { value: 'Outra Hospedagem Externa', label: 'Outra Hospedagem Externa' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -712,7 +712,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
-      {
+       {
         Header: 'Sub Acomodação:',
         accessor: (row) =>
           row.package.subAccomodation
@@ -1188,7 +1188,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'contact.allergy': 'Alergia',
       'contact.hasAggregate': 'Tem Agregados',
       'contact.aggregate': 'Agregados',
-      'package.accomodationName': 'Acomodação',
+      'package.accomodationName': 'Hospedagem',
       'package.accomodation.id': 'ID da Acomodação',
       'package.subAccomodation': 'Sub Acomodação',
       'package.transportation': 'Transporte',
@@ -1234,7 +1234,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Alergia',
       'Tem Agregados',
       'Agregados',
-      'Acomodação',
+      'Hospedagem',
       'ID da Acomodação',
       'Sub Acomodação',
       'Transporte',
