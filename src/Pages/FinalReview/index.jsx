@@ -233,30 +233,34 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                   </Row>
                   <div className="packages-horizontal-line" />
 
-                  <Row className="row-gap">
-                    <Col md={4} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Nome Resp. Legal: </span>
-                        <br />
-                        {formValues.personalInformation.legalGuardianName}
-                      </Card.Text>
-                    </Col>
+                  {formValues.personalInformation.legalGuardianName && (
+                    <>
+                      <Row className="row-gap">
+                        <Col md={4} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Nome Resp. Legal: </span>
+                            <br />
+                            {formValues.personalInformation.legalGuardianName}
+                          </Card.Text>
+                        </Col>
 
-                    <Col md={4} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
-                        {formValues.personalInformation.legalGuardianCpf}
-                      </Card.Text>
-                    </Col>
+                        <Col md={4} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
+                            {formValues.personalInformation.legalGuardianCpf}
+                          </Card.Text>
+                        </Col>
 
-                    <Col md={4} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
-                        {formValues.personalInformation.legalGuardianCellPhone}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <div className="packages-horizontal-line" />
+                        <Col md={4} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
+                            {formValues.personalInformation.legalGuardianCellPhone}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <div className="packages-horizontal-line" />
+                    </>
+                  )}
 
                   <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
                     <Form.Check
