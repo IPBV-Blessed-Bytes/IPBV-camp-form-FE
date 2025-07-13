@@ -323,10 +323,7 @@ FinalReview.propTypes = {
     package: PropTypes.shape({
       accomodation: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        subAccomodation: PropTypes.string.isRequired,
       }).isRequired,
-      accomodationName: PropTypes.string.isRequired,
-      subAccomodation: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
       finalPrice: PropTypes.number.isRequired,
       discountValue: PropTypes.number,

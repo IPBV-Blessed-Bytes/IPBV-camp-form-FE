@@ -137,12 +137,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const packageTitle = validatePackageTitle(userInfo?.package.title);
 
-  const userColor =
-    Object.entries(packageColors).find(
-      (
-        [, packages],
-      ) => packages.includes(packageTitle),
-    )?.[0] || '';
+  const userColor = Object.entries(packageColors).find(([, packages]) => packages.includes(packageTitle))?.[0] || '';
 
   return (
     <Container fluid>
@@ -191,9 +186,11 @@ const AdminCheckin = ({ loggedUsername }) => {
               <p>
                 <strong>Pacote:</strong> {userInfo.package.title}{' '}
                 <u>
-                  {userInfo.package.accomodationName === 'Colegio XV de Novembro'
+                  {userInfo.package.accomodation.name === 'Colégio Quarto Coletivo' ||
+                  userInfo.package.accomodation.name === 'Colégio Quarto Família' ||
+                  userInfo.package.accomodation.name === 'Colégio Camping'
                     ? '(COLÉGIO)'
-                    : userInfo.package.accomodationName === 'Seminario Sao Jose'
+                    : userInfo.package.accomodation.name === 'Seminario Sao Jose'
                     ? '(SEMINÁRIO)'
                     : ''}
                 </u>
@@ -220,16 +217,13 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
               </p>
               <p>
-                <strong>Hospedagem:</strong> {userInfo.package.accomodationName}
-              </p>
-              <p>
-                <strong>Sub Acomodação:</strong> {userInfo.package.subAccomodation}
+                <strong>Hospedagem:</strong> {userInfo.package.accomodation.name}
               </p>
               <p>
                 <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
               </p>
               <p>
-                <strong>Alimentação:</strong> {userInfo.package.food ? userInfo.package.food : '-'}
+                <strong>Alimentação:</strong> {userInfo.package.food.name ? userInfo.package.food.name : '-'}
               </p>
               <p>
                 <strong>Dias de Refeição Extra:</strong>{' '}

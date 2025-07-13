@@ -153,12 +153,7 @@ const CpfData = ({ personData }) => {
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Hospedagem:</span> <br />
-                        {personData?.data.accomodationName} |{' '}
-                        {personData?.data.subAccomodation
-                          ? personData?.data.subAccomodation !== 'Outra'
-                            ? personData?.data.subAccomodation.split(' ')[1]
-                            : personData?.data.subAccomodation
-                          : 'vazio'}
+                        {personData?.data.accomodation.name} |{' '}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -181,7 +176,7 @@ const CpfData = ({ personData }) => {
                       <Card.Text>
                         <span className="form-review__section-title">Transporte:</span>
                         <br />
-                        {personData?.data.transportation}
+                        {personData?.data.transportation.name}
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">

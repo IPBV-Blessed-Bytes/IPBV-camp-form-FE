@@ -361,27 +361,27 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Pacote:',
         accessor: (row) =>
           `${row.package.title} ${
-            row.package.accomodationName === 'Colegio XV de Novembro'
+            row.package.accomodation.name === 'Colegio XV de Novembro'
               ? '[COLÉGIO]'
-              : row.package.accomodationName === 'Seminario Sao Jose'
+              : row.package.accomodation.name === 'Seminario Sao Jose'
               ? '[SEMINÁRIO]'
               : ''
           } ${
-            row.package.transportation === 'Com Ônibus' || row.package.transportation === 'Com Onibus'
+            row.package.transportation.name === 'Com Ônibus' || row.package.transportation.name === 'Com Onibus'
               ? 'COM ÔNIBUS'
-              : row.package.transportation === 'Sem Ônibus' || row.package.transportation === 'Sem Onibus'
+              : row.package.transportation.name === 'Sem Ônibus' || row.package.transportation.name === 'Sem Onibus'
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.food === 'Café da manhã, almoço e jantar' ||
-            row.package.food === 'Café da manhã| almoço e jantar' ||
-            row.package.food === 'Cafe da manha, almoco e jantar' ||
-            row.package.food === 'Cafe da manha| almoco e jantar' ||
-            row.package.food === 'Cafe da manha  almoco e jantar' ||
-            row.package.food === 'Almoço e jantar' ||
-            row.package.food === 'Almoco e jantar'
+            row.package.food.name === 'Café da manhã, almoço e jantar' ||
+            row.package.food.name === 'Café da manhã| almoço e jantar' ||
+            row.package.food.name === 'Cafe da manha, almoco e jantar' ||
+            row.package.food.name === 'Cafe da manha| almoco e jantar' ||
+            row.package.food.name === 'Cafe da manha  almoco e jantar' ||
+            row.package.food.name === 'Almoço e jantar' ||
+            row.package.food.name === 'Almoco e jantar'
               ? 'COM ALIMENTAÇÃO'
-              : row.package.food === ''
+              : row.package.food.name === ''
               ? ''
               : 'SEM ALIMENTAÇÃO'
           }`,
@@ -689,7 +689,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Hospedagem:',
         accessor: (row) =>
-          row.package.accomodationName
+          row.package.accomodation.name
             ?.replace(/á|ã|à|â/g, 'a')
             .replace(/é|ê/g, 'e')
             .replace(/í/g, 'i')
@@ -700,37 +700,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           <ColumnFilterWithSelect
             column={column}
             options={[
-              { value: 'Colegio XV de Novembro', label: 'Colégio XV de Novembro' },
-              { value: 'Seminario Sao Jose', label: 'Seminário São José' },
-              { value: 'Outra Hospedagem Externa', label: 'Outra Hospedagem Externa' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
-      },
-       {
-        Header: 'Sub Acomodação:',
-        accessor: (row) =>
-          row.package.subAccomodation
-            ?.replace(/á|ã|à|â/g, 'a')
-            .replace(/é|ê/g, 'e')
-            .replace(/í/g, 'i')
-            .replace(/ó|ô/g, 'o')
-            .replace(/ú/g, 'u')
-            .replace(/ç/g, 'c') || '-',
-        Filter: ({ column }) => (
-          <ColumnFilterWithSelect
-            column={column}
-            options={[
-              { value: 'Colegio Individual', label: 'Colégio Individual' },
-              { value: 'Colegio Familia', label: 'Colégio Família' },
+              { value: 'Colegio Quarto Coletivo', label: 'Colégio XV de Novembro' },
+              { value: 'Colegio Quarto Familia', label: 'Colégio Quarto Família' },
               { value: 'Colegio Camping', label: 'Colégio Camping' },
-              { value: 'Seminario', label: 'Seminário' },
-              { value: 'Outra', label: 'Outra' },
+              { value: 'Seminario', label: 'Seminário São José' },
+              { value: 'Externo', label: 'Outra Hospedagem Externa' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -742,7 +716,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Transporte:',
-        accessor: 'package.transportation',
+        accessor: 'package.transportation.name',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -767,7 +741,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Alimentação:',
         accessor: (row) =>
-          row.package.food
+          row.package.food.name
             ?.replace(/á|ã|à|â/g, 'a')
             .replace(/é|ê/g, 'e')
             .replace(/í/g, 'i')
@@ -778,8 +752,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           <ColumnFilterWithSelect
             column={column}
             options={[
-              { value: 'Almoco e jantar', label: 'Com Alimentação' },
-              { value: 'Sem Alimentacao', label: 'Sem Alimentação' },
+              {
+                value: 'Alimentação Completa (Café, Almoço e Jantar)',
+                label: 'Alimentação Completa (Café, Almoço e Jantar)',
+              },
+              { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -1188,11 +1165,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'contact.allergy': 'Alergia',
       'contact.hasAggregate': 'Tem Agregados',
       'contact.aggregate': 'Agregados',
-      'package.accomodationName': 'Hospedagem',
-      'package.accomodation.id': 'ID da Acomodação',
-      'package.subAccomodation': 'Sub Acomodação',
-      'package.transportation': 'Transporte',
-      'package.food': 'Alimentação',
+      'package.accomodation.name': 'Hospedagem',
+      'package.transportation.name': 'Transporte',
+      'package.food.name': 'Alimentação',
       'package.price': 'Valor do pacote',
       'extraMeals.someFood': 'Tem Refeição Extra',
       'extraMeals.extraMeals': 'Refeições Extra',
@@ -1235,8 +1210,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Tem Agregados',
       'Agregados',
       'Hospedagem',
-      'ID da Acomodação',
-      'Sub Acomodação',
       'Transporte',
       'Alimentação',
       'Valor do pacote',

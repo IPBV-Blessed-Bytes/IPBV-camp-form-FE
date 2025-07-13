@@ -7,7 +7,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
     const checkins =
       fillingVacancies?.filter((vacancy) => {
-        return vacancy.accomodationName?.toLowerCase().includes(packageNameKeyword.toLowerCase()) && vacancy.checkin;
+        return vacancy.accomodation.name?.toLowerCase().includes(packageNameKeyword.toLowerCase()) && vacancy.checkin;
       }).length || 0;
 
     const percentage = ((checkins / totalUsed) * 100).toFixed(0);
@@ -112,7 +112,6 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 CheckinBalance.propTypes = {
   fillingVacancies: PropTypes.arrayOf(
     PropTypes.shape({
-      accomodationName: PropTypes.string,
       checkin: PropTypes.bool,
     }),
   ),

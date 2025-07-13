@@ -175,8 +175,8 @@ export const issuingState = [
 ];
 
 export const food = [
-  { value: 'Café da manhã, almoço e jantar', label: 'Café da manhã, almoço e jantar' },
-  { value: 'Almoço e jantar', label: 'Almoço e jantar' },
+  { value: 'Alimentação Completa (Café, Almoço e Jantar)', label: 'Alimentação Completa (Café, Almoço e Jantar)' },
+  { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
   { value: 'Sem Alimentação', label: 'Sem Alimentação' },
 ];
 
