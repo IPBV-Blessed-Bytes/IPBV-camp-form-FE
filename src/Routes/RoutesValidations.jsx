@@ -197,29 +197,6 @@ const RoutesValidations = ({ formContext }) => {
     scrollTop();
   };
 
-  // MOVER ESSA VALIDAÇÃO PRA ALGUM OUTRO STEP
-
-  //  const addUserToList = (userData) => {
-  //   const newCpf = userData?.personalInformation?.cpf;
-
-  //   if (!newCpf) {
-  //     toast.error('CPF não encontrado nos dados do usuário. Não foi possível adicionar.');
-  //     return;
-  //   }
-
-  //   setSavedUsers((prev) => {
-  //     const alreadyExists = prev.some((user) => user.personalInformation?.cpf === newCpf);
-
-  //     if (alreadyExists) {
-  //       toast.info(`Usuário com CPF ${newCpf} já está salvo. Ignorando duplicação.`);
-  //       return prev;
-  //     }
-
-  //     toast.success('Usuário adicionado com sucesso');
-  //     return [...prev, userData];
-  //   });
-  // };
-
   const existingCartKey = Object.keys(sessionStorage).find((key) => key === `cartItems${currentFormIndex}`);
   const cartKey = existingCartKey || `cartItems${currentFormIndex}`;
 
@@ -278,7 +255,7 @@ const RoutesValidations = ({ formContext }) => {
     try {
       setStatus('loading');
 
-      const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
+     const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
       const form = formValues[payerIndex];
       const formsToSend = [
         {
