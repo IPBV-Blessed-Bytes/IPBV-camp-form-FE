@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
 import { BASE_URL } from '@/config';
@@ -39,6 +40,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
 
   const handleSaveUser = () => {
     if (!isConfirmed || !isDataAuthorized) return;
+    toast.success('Usuário adicionado ao carrinho');
 
     updateForm();
     emptyCart();
