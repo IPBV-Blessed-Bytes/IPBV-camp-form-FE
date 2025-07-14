@@ -61,7 +61,6 @@ export const initialValues = [
       discountValue: '',
       price: '',
       finalPrice: '',
-      title: '',
     },
     extraMeals: {
       someFood: '',

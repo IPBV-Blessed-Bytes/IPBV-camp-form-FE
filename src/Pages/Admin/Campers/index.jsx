@@ -1148,7 +1148,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const generateExcel = () => {
     const fieldMapping = {
-      'package.title': 'Pacote',
       'personalInformation.name': 'Nome',
       'formPayment.formPayment': 'Forma de Pagamento',
       'contact.church': 'Igreja',
@@ -1192,7 +1191,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     };
 
     const orderedFields = [
-      'Pacote',
       'Nome',
       'Forma de Pagamento',
       'Igreja',
