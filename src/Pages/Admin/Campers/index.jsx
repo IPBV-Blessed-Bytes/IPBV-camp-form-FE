@@ -360,11 +360,15 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Pacote:',
         accessor: (row) =>
-          `${row.package.title} ${
-            row.package.accomodation.name === 'Colegio XV de Novembro'
+          `${
+            row.package.accomodation.name === 'Colégio Quarto Coletivo' ||
+            row.package.accomodation.name === 'Colégio Quarto Família' ||
+            row.package.accomodation.name === 'Colégio Camping'
               ? '[COLÉGIO]'
-              : row.package.accomodation.name === 'Seminario Sao Jose'
+              : row.package.accomodation.name === 'Seminário'
               ? '[SEMINÁRIO]'
+              : row.package.accomodation.name === 'Externo'
+              ? '[EXTERNO]'
               : ''
           } ${
             row.package.transportation.name === 'Com Ônibus' || row.package.transportation.name === 'Com Onibus'
@@ -373,9 +377,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.food.name === 'Café da manhã, almoço e jantar' ||
-            row.package.food.name === 'Café da manhã| almoço e jantar' ||
-            row.package.food.name === 'Cafe da manha, almoco e jantar' ||
+            row.package.food.name === 'Café, almoço e jantar' ||
+            row.package.food.name === 'Café| almoço e jantar' ||
+            row.package.food.name === 'Cafe, almoco e jantar' ||
             row.package.food.name === 'Cafe da manha| almoco e jantar' ||
             row.package.food.name === 'Cafe da manha  almoco e jantar' ||
             row.package.food.name === 'Almoço e jantar' ||
@@ -700,10 +704,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           <ColumnFilterWithSelect
             column={column}
             options={[
-              { value: 'Colegio Quarto Coletivo', label: 'Colégio XV de Novembro' },
-              { value: 'Colegio Quarto Familia', label: 'Colégio Quarto Família' },
-              { value: 'Colegio Camping', label: 'Colégio Camping' },
-              { value: 'Seminario', label: 'Seminário São José' },
+              { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
+              { value: 'Colégio Quarto Familia', label: 'Colégio Quarto Família' },
+              { value: 'Colégio Camping', label: 'Colégio Camping' },
+              { value: 'Seminário', label: 'Seminário São José' },
               { value: 'Externo', label: 'Outra Hospedagem Externa' },
             ]}
             onFilterChange={() => {

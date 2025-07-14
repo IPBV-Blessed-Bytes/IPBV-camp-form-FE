@@ -3,15 +3,10 @@ import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ColumnsFields from './ColumnsFields';
-import { packages, issuingState, rgShipper, food } from '@/utils/constants';
+import { issuingState, rgShipper, food } from '@/utils/constants';
 
 const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate }) => {
   const [missingFields, setMissingFields] = useState([]);
-
-  const packageOptions = packages.map((pkg) => ({
-    label: pkg.label,
-    value: pkg.value,
-  }));
 
   const removeAccents = (str) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -23,16 +18,6 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
   }));
 
   const fields = [
-    {
-      label: 'Pacote',
-      name: 'package.title',
-      type: 'select',
-      placeholder: 'Selecione um pacote',
-      oddOrEven: 'odd',
-      options: packageOptions,
-      required: true,
-      errorMessage: 'Selecione um pacote',
-    },
     {
       label: 'Nome',
       name: 'personalInformation.name',
@@ -174,11 +159,11 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       placeholder: 'Selecione a hospedagem',
       oddOrEven: 'even',
       options: [
-        { label: 'Colégio Quarto Coletivo', value: 'Colegio Quarto Coletivo' },
-        { label: 'Colégio Quarto Famíli', value: 'Colegio Quarto Familia' },
-        { label: 'Colégio Camping', value: 'Colegio Camping' },
-        { label: 'Seminario Sao Jose', value: 'Seminario' },
-        { label: 'Outra Acomodacao Externa', value: 'Externo' },
+        { label: 'Colégio Quarto Coletivo', value: 'Colégio Quarto Coletivo' },
+        { label: 'Colégio Quarto Família', value: 'Colégio Quarto Família' },
+        { label: 'Colégio Camping', value: 'Colégio Camping' },
+        { label: 'Seminário Sao Jose', value: 'Seminário' },
+        { label: 'Outra Hospedagem Externa', value: 'Externo' },
       ],
     },
     {
@@ -219,14 +204,14 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
     },
     {
-      label: 'Nome do Responsável Legal',
+      label: 'Nome do Resp.` Legal',
       name: 'personalInformation.legalGuardianName',
       type: 'text',
       placeholder: 'Nome do Responsável Legal',
       oddOrEven: 'even',
     },
     {
-      label: 'CPF do Responsável Legal',
+      label: 'CPF do Resp. Legal',
       name: 'personalInformation.legalGuardianCpf',
       type: 'number',
       placeholder: '1234567890',
@@ -234,7 +219,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       errorMessage: 'Insira um CPF válido',
     },
     {
-      label: 'Celular do Responsável Legal',
+      label: 'Celular do Resp. Legal',
       name: 'personalInformation.legalGuardianCellPhone',
       type: 'number',
       placeholder: '81993727854',
