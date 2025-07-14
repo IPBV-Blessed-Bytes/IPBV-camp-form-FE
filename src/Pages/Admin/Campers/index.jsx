@@ -826,6 +826,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Celular do Resp. Legal:',
@@ -839,6 +840,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Observação:',
