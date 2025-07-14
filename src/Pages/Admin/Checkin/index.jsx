@@ -184,18 +184,6 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <span className="emphasize-checkin-username">{userInfo.personalInformation.name}</span>
               </p>
               <p>
-                <strong>Pacote:</strong> {userInfo.package.title}{' '}
-                <u>
-                  {userInfo.package.accomodation.name === 'Colégio Quarto Coletivo' ||
-                  userInfo.package.accomodation.name === 'Colégio Quarto Família' ||
-                  userInfo.package.accomodation.name === 'Colégio Camping'
-                    ? '(COLÉGIO)'
-                    : userInfo.package.accomodation.name === 'Seminario Sao Jose'
-                    ? '(SEMINÁRIO)'
-                    : ''}
-                </u>
-              </p>
-              <p>
                 <strong>Forma de Pagamento:</strong>{' '}
                 {userInfo.formPayment.formPayment === 'creditCard'
                   ? 'Cartão de Crédito'
