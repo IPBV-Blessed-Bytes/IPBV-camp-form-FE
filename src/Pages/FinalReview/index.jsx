@@ -328,7 +328,6 @@ FinalReview.propTypes = {
       }).isRequired,
       price: PropTypes.number.isRequired,
       finalPrice: PropTypes.number.isRequired,
-      discountValue: PropTypes.number,
     }).isRequired,
     contact: PropTypes.shape({
       cellPhone: PropTypes.string.isRequired,
