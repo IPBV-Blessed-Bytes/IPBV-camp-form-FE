@@ -123,21 +123,26 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
-  const validatePackageTitle = (title) => {
-    const match = title?.match(/^PACOTE \d+/i);
-    return match ? match[0] : null;
-  };
+  const userWristbands = [];
 
-  const packageColors = {
-    '#0000FF': ['PACOTE 1', 'PACOTE 2', 'PACOTE 5', 'PACOTE 6', 'PACOTE 9'],
-    '#FF7F50': ['PACOTE 11', 'PACOTE 12'],
-    '#ffc107': ['PACOTE 13', 'PACOTE 14'],
-    '#000': ['PACOTE 3', 'PACOTE 4', 'PACOTE 7', 'PACOTE 8', 'PACOTE 10', 'PACOTE 15'],
-  };
+  const accomodationName = userInfo?.package?.accomodation?.name;
+  const foodName = userInfo?.package?.food?.name;
 
-  const packageTitle = validatePackageTitle(userInfo?.package.title);
+  const isSchoolAccommodation = ['Colégio Quarto Coletivo', 'Colégio Quarto Família', 'Colégio Camping'].includes(
+    accomodationName,
+  );
 
-  const userColor = Object.entries(packageColors).find(([, packages]) => packages.includes(packageTitle))?.[0] || '';
+  if (isSchoolAccommodation) {
+    userWristbands.push('#FFFF00');
+  }
+
+  if (foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)') {
+    userWristbands.push('#0000FF');
+  } else if (foodName === 'Alimentação Parcial (Almoço e Jantar)') {
+    userWristbands.push('#D36AD6');
+  } else {
+    userWristbands.push('#000000');
+  }
 
   return (
     <Container fluid>
@@ -170,7 +175,9 @@ const AdminCheckin = ({ loggedUsername }) => {
       {userInfo && (
         <>
           <Row className="my-3 p-0 checkin-color-status-wrapper">
-            <div className="checkin-color-status-wrapper__line" style={{ background: userColor }} />
+            {userWristbands.map((color, index) => (
+              <div key={index} className="checkin-color-status-wrapper__line" style={{ background: color }} />
+            ))}
           </Row>
           <Row className="mb-2">
             <Col className="form-label">
@@ -211,7 +218,7 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
               </p>
               <p>
-                <strong>Alimentação:</strong> {userInfo.package.food.name ? userInfo.package.food.name : '-'}
+                <strong>Alimentação:</strong> {userInfo.package.food.name || '-'}
               </p>
               <p>
                 <strong>Dias de Refeição Extra:</strong>{' '}
