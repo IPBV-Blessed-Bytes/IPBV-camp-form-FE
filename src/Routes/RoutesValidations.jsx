@@ -255,14 +255,14 @@ const RoutesValidations = ({ formContext }) => {
     try {
       setStatus('loading');
 
-     const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
+      const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
       const form = formValues[payerIndex];
       const formsToSend = [
         {
           ...form,
           formPayment: formikValues.formPayment || 'nonPaid',
           registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-          totalPrice: form.package.finalPrice + form.extraMeals.totalPrice,
+          totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
           manualRegistration: false,
         },
       ];
