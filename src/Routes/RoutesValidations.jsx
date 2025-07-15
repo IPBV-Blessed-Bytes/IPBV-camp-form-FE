@@ -263,7 +263,13 @@ const RoutesValidations = ({ formContext }) => {
         manualRegistration: false,
       }));
 
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, formsToSend);
+      const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+
+      const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
+        forms: formsToSend,
+        finalPriceCheckout,
+      });
+
       const checkoutUrl = response.data.payment_url;
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
