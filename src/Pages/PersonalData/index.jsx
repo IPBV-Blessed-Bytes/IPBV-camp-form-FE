@@ -82,6 +82,20 @@ const PersonalData = ({
     validateOnChange: false,
   });
 
+  useEffect(() => {
+    const tempData = JSON.parse(sessionStorage.getItem('formTempData') || '{}');
+
+    if (Object.keys(tempData).length > 0) {
+      const mergedValues = {
+        ...values,
+        ...tempData.personalInformation,
+      };
+
+      setValues(mergedValues);
+      updateForm(mergedValues);
+    }
+  }, []);
+
   const extractNumbers = (value) => value.replace(/\D/g, '');
   const isUnderage = (age) => age < 18;
 
