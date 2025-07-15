@@ -39,7 +39,7 @@ const BeforePayment = ({
 
               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
                 <Button variant="warning" size="lg" onClick={goToPersonalData} className="cart-btn-responsive">
-                  <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Novo Usuário
+                  <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Nova Pessoa
                 </Button>
 
                 {formValues.length > 0 && (

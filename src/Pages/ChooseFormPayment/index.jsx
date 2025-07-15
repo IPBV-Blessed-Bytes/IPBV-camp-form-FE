@@ -20,12 +20,10 @@ const ChooseFormPayment = ({
   const formik = useFormik({
     initialValues: {
       formPayment: initialValues.formPayment || '',
-      mainPayer: '',
     },
     validationSchema: formPaymentSchema,
     validateOnBlur: false,
     validateOnChange: false,
-    context: { shouldValidatePayer: formValues.length > 1 },
     onSubmit: (values) => {
       sendForm(values);
     },
@@ -35,10 +33,7 @@ const ChooseFormPayment = ({
 
   const handleManualSubmit = async () => {
     try {
-      await formPaymentSchema.validate(values, {
-        context: { shouldValidatePayer: formValues.length > 1 },
-        abortEarly: false,
-      });
+      await formPaymentSchema.validate(values, { abortEarly: false });
       handleSubmit();
     } catch (validationError) {
       const formattedErrors = {};
@@ -48,19 +43,13 @@ const ChooseFormPayment = ({
         }
       });
       formik.setErrors(formattedErrors);
-      formik.setTouched({
-        formPayment: true,
-        mainPayer: true,
-      });
+      formik.setTouched({ formPayment: true });
     }
   };
 
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
-      setValues({
-        ...values,
-        formPayment: '',
-      });
+      setValues({ formPayment: '' });
     }
   }, [initialValues.formPayment]);
 
@@ -113,34 +102,6 @@ const ChooseFormPayment = ({
               </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
             </Form.Group>
-
-            {formValues.length > 1 && (
-              <Form.Group className="mb-3 info-text-wrapper">
-                <Form.Label>
-                  <b>Escolha o responsável pelo pagamento:</b>
-                </Form.Label>
-                <Form.Select
-                  id="mainPayer"
-                  name="mainPayer"
-                  isInvalid={!!errors.mainPayer}
-                  value={values.mainPayer}
-                  onChange={handleChange}
-                >
-                  <option value="" disabled>
-                    Selecione uma opção
-                  </option>
-                  {formValues.map((form, index) => (
-                    <option key={index} value={index}>
-                      {form.personalInformation?.name}
-                    </option>
-                  ))}
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">{errors.mainPayer}</Form.Control.Feedback>
-                <Card.Text className="mt-2 mb-0">
-                  <em>Informe-nos quem será o responsável pelo pagamento, entre todos que você cadastrou.</em>
-                </Card.Text>
-              </Form.Group>
-            )}
           </Form>
 
           <Loading loading={loading} />
@@ -169,9 +130,6 @@ ChooseFormPayment.propTypes = {
   formValues: PropTypes.array.isRequired,
   initialValues: PropTypes.shape({
     formPayment: PropTypes.string,
-    personalInformation: PropTypes.shape({
-      name: PropTypes.string,
-    }),
   }),
   loading: PropTypes.bool,
   sendForm: PropTypes.func,

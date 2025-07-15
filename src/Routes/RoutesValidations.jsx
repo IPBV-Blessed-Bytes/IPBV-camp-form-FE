@@ -255,17 +255,13 @@ const RoutesValidations = ({ formContext }) => {
     try {
       setStatus('loading');
 
-      const payerIndex = formValues.length === 1 ? 0 : Number(formikValues.mainPayerIndex ?? -1);
-      const form = formValues[payerIndex];
-      const formsToSend = [
-        {
-          ...form,
-          formPayment: formikValues.formPayment || 'nonPaid',
-          registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-          totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
-          manualRegistration: false,
-        },
-      ];
+      const formsToSend = formValues.map((form) => ({
+        ...form,
+        formPayment: formikValues.formPayment || 'nonPaid',
+        registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
+        totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
+        manualRegistration: false,
+      }));
 
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, formsToSend);
       const checkoutUrl = response.data.payment_url;
