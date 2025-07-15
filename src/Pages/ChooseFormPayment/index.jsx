@@ -131,7 +131,7 @@ const ChooseFormPayment = ({
                   </option>
                   {formValues.map((form, index) => (
                     <option key={index} value={index}>
-                      {form.personalInformation?.name || `Usuário ${index + 1}`}
+                      {form.personalInformation?.name}
                     </option>
                   ))}
                 </Form.Select>
