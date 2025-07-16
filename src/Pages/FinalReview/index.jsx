@@ -111,7 +111,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                             Alimentação = {formValues.package.food.name}
                             <br />
                             Preço = R$ {Number(formValues.package.food.price || 0)}
-                            <div className="packages-horizontal-line" />
+                            {!formValues.extraMeals?.totalPrice && <div className="packages-horizontal-line" />}
                           </>
                         )}
                       </Card.Text>
