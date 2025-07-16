@@ -109,6 +109,14 @@ const Packages = ({
   const isChild = age < 11;
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
+  const accomodationPrice = items.find((item) => item.category === 'Hospedagem')?.price || 0;
+  const transportationPrice = items.find((item) => item.category === 'Transporte')?.price || 0;
+  const foodPrice = items.find((item) => item.category === 'Alimentação')?.price || 0;
+
+  const totalBeforeDiscount = Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice);
+  const discountNumeric = Number(discount) || 0;
+  const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
+
   return (
     <>
       <Card className="form__container__general-height">
@@ -127,6 +135,20 @@ const Packages = ({
                 </Card.Text>
 
                 <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discount} />
+
+                <div className="d-flex flex-column align-items-center mt-4">
+                  <p>
+                    <strong>Soma dos Pacotes:</strong> R$ {totalBeforeDiscount.toFixed(2).replace('.', ',')}
+                  </p>
+                  {hasDiscount && discountNumeric > 0 && (
+                    <p>
+                      <strong>Desconto Aplicado:</strong> R$ {discountNumeric.toFixed(2).replace('.', ',')}
+                    </p>
+                  )}
+                  <p className="text-success">
+                    <strong>Total Final com Desconto: <em>R$ {finalTotal.toFixed(2).replace('.', ',')}</em></strong>
+                  </p>
+                </div>
               </>
             )}
 
