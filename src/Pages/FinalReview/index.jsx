@@ -55,6 +55,17 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
 
   const isSuccessPathname = location.pathname === '/sucesso';
 
+  const packageOriginalPrice =
+    Number(formValues.package.accomodation.price || 0) +
+    Number(formValues.package.transportation.price || 0) +
+    Number(formValues.package.food.price || 0);
+
+  const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
+  const discountNumeric = Number(formValues.package?.discount || 0);
+
+  const totalBeforeDiscount = packageOriginalPrice + extraMealsPrice;
+  const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
+
   return (
     <>
       {!isSuccessPathname && (
@@ -89,17 +100,17 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         <span className="form-review__section-title">Pacote:</span> <br />
                         Hospedagem = {formValues.package.accomodation.name}
                         <br />
-                        Preço = R$ {formValues.package.accomodation.price},00
+                        Preço = R$ {Number(formValues.package.accomodation.price || 0)}
                         <div className="packages-horizontal-line" />
                         Transporte = {formValues.package.transportation.name}
                         <br />
-                        Preço = R$ {formValues.package.transportation.price},00
+                        Preço = R$ {Number(formValues.package.transportation.price || 0)}
                         {formValues.package.food.id && (
                           <>
                             <div className="packages-horizontal-line" />
                             Alimentação = {formValues.package.food.name}
                             <br />
-                            Preço = R$ {formValues.package.food.price},00
+                            Preço = R$ {Number(formValues.package.food.price || 0)}
                             <div className="packages-horizontal-line" />
                           </>
                         )}
@@ -111,18 +122,25 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                           <Card.Text>
                             <span className="form-review__section-title">Refeição Extra:</span>
                             <br />
-                            Preço = R$ {formValues.extraMeals?.totalPrice},00
+                            Preço = R$ {extraMealsPrice}
                           </Card.Text>
                         )}
                     </Col>
 
                     <Col md={formValues.extraMeals?.totalPrice ? 3 : 6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Valor Total:</span>
+                        <span className="form-review__section-title">
+                          Valor Total {discountNumeric > 0 ? 'com Desconto' : ''}:
+                        </span>
                         <br />
-                        <em>
-                          R$ {Number(formValues.package.finalPrice) + Number(formValues.extraMeals?.totalPrice || 0)},00
-                        </em>
+                        {discountNumeric > 0 ? (
+                          <>
+                            <em className="text-decoration-line-through text-muted me-2">R$ {totalBeforeDiscount}</em>
+                            <em className="fw-bold text-success">R$ {finalTotal}</em>
+                          </>
+                        ) : (
+                          <em className="fw-bold">R$ {finalTotal}</em>
+                        )}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -325,9 +343,20 @@ FinalReview.propTypes = {
     package: PropTypes.shape({
       accomodation: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      }).isRequired,
+      transportation: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      }).isRequired,
+      food: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       }).isRequired,
       price: PropTypes.number.isRequired,
       finalPrice: PropTypes.number.isRequired,
+      discount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }).isRequired,
     contact: PropTypes.shape({
       cellPhone: PropTypes.string.isRequired,
@@ -346,7 +375,7 @@ FinalReview.propTypes = {
       totalPrice: PropTypes.number,
       someFood: PropTypes.bool,
     }),
-  }).isRequired,
+  }),
   status: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
 };
