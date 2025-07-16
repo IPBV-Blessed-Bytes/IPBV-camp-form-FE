@@ -60,6 +60,7 @@ const Packages = ({
       food: { id: '', name: '', price: '' },
       price: '',
       finalPrice: '',
+      discount: 0,
     };
 
     items.forEach((item) => {
@@ -86,9 +87,14 @@ const Packages = ({
       }
     });
 
-    newPackage.price = newPackage.accomodation.price + newPackage.transportation.price + newPackage.food.price;
+    newPackage.price =
+      Number(newPackage.accomodation.price || 0) +
+      Number(newPackage.transportation.price || 0) +
+      Number(newPackage.food.price || 0);
 
-    newPackage.finalPrice = newPackage.price;
+    const discountNumeric = Number(discount) || 0;
+    newPackage.finalPrice = Math.max(newPackage.price - discountNumeric, 0);
+    newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
       const foodId = newPackage.food?.id || '';
