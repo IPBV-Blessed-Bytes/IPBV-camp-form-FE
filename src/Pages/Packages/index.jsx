@@ -137,16 +137,22 @@ const Packages = ({
                 <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discount} />
 
                 <div className="d-flex flex-column align-items-center mt-4">
-                  <p>
-                    <strong>Soma dos Pacotes:</strong> R$ {totalBeforeDiscount.toFixed(2).replace('.', ',')}
-                  </p>
                   {hasDiscount && discountNumeric > 0 && (
                     <p>
-                      <strong>Desconto Aplicado:</strong> R$ {discountNumeric.toFixed(2).replace('.', ',')}
+                      <strong>Soma dos Pacotes:</strong> R$ {totalBeforeDiscount}
                     </p>
                   )}
+
+                  {hasDiscount && discountNumeric > 0 && (
+                    <p>
+                      <strong>Desconto Aplicado:</strong> R$ {discountNumeric}
+                    </p>
+                  )}
+                  
                   <p className="text-success">
-                    <strong>Total Final com Desconto: <em>R$ {finalTotal.toFixed(2).replace('.', ',')}</em></strong>
+                    <strong>
+                      Total Final {hasDiscount && discountNumeric ? 'com Desconto' : ''}: <em>R$ {finalTotal}</em>
+                    </strong>
                   </p>
                 </div>
               </>
