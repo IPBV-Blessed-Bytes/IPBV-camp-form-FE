@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
 
-const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountValue }) => {
+const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
@@ -119,13 +119,13 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
               <div className="cart-item">
                 <div className="item-info">
                   <h5>Hospedagem: {userPackage?.accomodation.name}</h5>
-                  <p>Preço: R$ {Number(userPackage?.accomodation.price || 0).toFixed(2)}</p>
+                  <p>Preço: R$ {Number(userPackage?.accomodation.price || 0)}</p>
 
                   <h5>Transporte: {userPackage?.transportation.name}</h5>
-                  <p>Preço: R$ {Number(userPackage?.transportation.price || 0).toFixed(2)}</p>
+                  <p>Preço: R$ {Number(userPackage?.transportation.price || 0)}</p>
 
                   <h5>Alimentação: {userPackage?.food.name.split(' (')[0]}</h5>
-                  <p>Preço: R$ {Number(userPackage?.food.price || 0).toFixed(2)}</p>
+                  <p>Preço: R$ {Number(userPackage?.food.price || 0)}</p>
                 </div>
               </div>
             )}
@@ -139,15 +139,33 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
                       ? userExtraMeals.extraMeals.filter((meal) => meal && meal.trim() !== '').join(', ')
                       : userExtraMeals.extraMeals}
                   </h5>
-                  <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0).toFixed(2)}</p>
+                  <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0)}</p>
                 </div>
               </div>
             )}
 
             <div className="cart-item">
               <div className="item-info">
-                {userPackage && <p>Total do Usuário: R$ {Number(userPackage?.finalPrice || 0).toFixed(2)}</p>}
-                <p>Valor Base Individual: R$ {individualBase.toFixed(2)}</p>
+                <div className="d-flex  align-items-center gap-2">
+                  <p>Valor Base Individual: R$ {individualBase}</p>
+                  <Tips
+                    placement="top"
+                    typeIcon="info"
+                    size={15}
+                    colour={'#000'}
+                    text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                  />
+                </div>
+                {userPackage && (
+                  <>
+                    <p>Total do Pacote: R$ {Number(userPackage?.finalPrice + userPackage?.discount || 0)}</p>
+                    {userPackage?.discount > 0 && (
+                      <p className="text-success">Desconto aplicado: -R$ {Number(userPackage.discount)}</p>
+                    )}
+                    <br />
+                    <p>Total do Usuário: R$ {Number(userPackage?.finalPrice) + Number(individualBase)}</p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -157,20 +175,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey, discountV
       })}
 
       <div className="cart-total">
-        <div className="d-flex justify-content-end align-items-center gap-2">
-          <Tips
-            placement="top"
-            typeIcon="info"
-            size={20}
-            colour={'#000'}
-            text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
-          />
-
-          <p className="m-0">Valor Base Usuário: R$ {totalBasePrice.toFixed(2)}</p>
-        </div>
-
-        <p>Total dos Pacotes: R$ {totalPackages.toFixed(2)}</p>
-        <strong>Total Geral: R$ {finalTotal.toFixed(2)}</strong>
+        <strong>Total Geral: R$ {finalTotal}</strong>
       </div>
       <div className="mt-4">
         <Button
@@ -229,7 +234,6 @@ Cart.propTypes = {
   setFormValues: PropTypes.func.isRequired,
   goToEditStep: PropTypes.func.isRequired,
   cartKey: PropTypes.string.isRequired,
-  discountValue: PropTypes.string,
 };
 
 export default Cart;
