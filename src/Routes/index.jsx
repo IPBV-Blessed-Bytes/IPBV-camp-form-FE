@@ -175,7 +175,6 @@ const FormRoutes = ({
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
                   <BeforePayment
                     cartKey={cartKey}
-                    discount={discount}
                     formValues={formValues}
                     goToEditStep={goToEditStep}
                     goToPersonalData={handleAddNewUser}
