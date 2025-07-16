@@ -7,7 +7,6 @@ import Icons from '@/components/Global/Icons';
 
 const BeforePayment = ({
   cartKey,
-  discount,
   formValues,
   goToEditStep,
   goToPersonalData,
@@ -58,7 +57,6 @@ const BeforePayment = ({
                 formValues={formValues}
                 goToEditStep={goToEditStep}
                 cartKey={cartKey}
-                discountValue={discount}
               />
             </Col>
           </Row>
@@ -70,7 +68,6 @@ const BeforePayment = ({
 
 BeforePayment.propTypes = {
   cartKey: PropTypes.string.isRequired,
-  discount: PropTypes.string,
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,
   goToPersonalData: PropTypes.func.isRequired,
