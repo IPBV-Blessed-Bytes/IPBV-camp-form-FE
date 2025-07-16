@@ -13,6 +13,7 @@ const Header = ({
   formValues,
   goToStep,
   handlePreFill,
+  hasFood,
   highestStepReached,
   showNavMenu,
   steps,
@@ -40,6 +41,10 @@ const Header = ({
 
     if (!backStepFlag) return;
 
+    if (newStep === 4 && hasFood) {
+      return;
+    }
+
     if (newStep > highestStepReached) return;
 
     if (newStep <= highestStepReached) {
@@ -61,9 +66,9 @@ const Header = ({
           {headerSteps.map((step, index) => (
             <React.Fragment key={index}>
               <Breadcrumb.Item
-                className={
+                className={`${
                   index > steps ? 'form__header--future-step' : index < steps ? 'form__header--previous-step' : ''
-                }
+                } ${index === 4 && hasFood ? 'disabled-link' : ''}`}
                 active={steps === index}
                 onClick={() => handleStepChange(index)}
               >
@@ -105,6 +110,7 @@ Header.propTypes = {
   highestStepReached: PropTypes.number,
   showNavMenu: PropTypes.bool,
   steps: PropTypes.number.isRequired,
+  hasFood: PropTypes.bool,
 };
 
 export default Header;

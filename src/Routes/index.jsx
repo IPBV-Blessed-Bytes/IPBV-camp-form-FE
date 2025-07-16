@@ -64,6 +64,7 @@ const FormRoutes = ({
   handleUpdateTotalPackages,
   handleUpdateTotalSeats,
   hasDiscount,
+  hasFood,
   highestStepReached,
   initialStep,
   isNotSuccessPathname,
@@ -104,6 +105,7 @@ const FormRoutes = ({
                 formValues={formValues}
                 goToStep={goToStep}
                 handlePreFill={handlePreFill}
+                hasFood={hasFood}
                 highestStepReached={highestStepReached}
                 showNavMenu={true}
                 steps={steps}

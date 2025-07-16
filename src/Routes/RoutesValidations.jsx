@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import 'react-datepicker/dist/react-datepicker.css';
+import { products } from '@/Pages/Packages/utils/products';
+import { useCart } from 'react-use-cart';
 
 import { BASE_URL, USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
@@ -18,6 +20,7 @@ import FormRoutes from '.';
 const RoutesValidations = ({ formContext }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const { items } = useCart();
 
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(() => {
@@ -250,6 +253,10 @@ const RoutesValidations = ({ formContext }) => {
     }
   };
 
+  const hasFood = items.some(item =>
+    products.find(p => p.id === item.id && p.category === 'Alimentação')
+  );
+
   const sendForm = async (formikValues) => {
     setLoading(true);
     try {
@@ -317,6 +324,7 @@ const RoutesValidations = ({ formContext }) => {
       handleUpdateTotalPackages={handleUpdateTotalPackages}
       handleUpdateTotalSeats={handleUpdateTotalSeats}
       hasDiscount={hasDiscount}
+      hasFood={hasFood} // Passando a prop hasFood
       highestStepReached={highestStepReached}
       initialStep={initialStep}
       isNotSuccessPathname={isNotSuccessPathname}
