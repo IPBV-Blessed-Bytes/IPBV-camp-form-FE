@@ -9,7 +9,6 @@ import Loading from '@/components/Global/Loading';
 
 const ChooseFormPayment = ({
   backStep,
-  formValues,
   initialValues,
   loading,
   sendForm,

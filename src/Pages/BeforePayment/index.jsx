@@ -73,6 +73,7 @@ BeforePayment.propTypes = {
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,
   goToPersonalData: PropTypes.func.isRequired,
+  handleBasePriceChange: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
   setBackStepFlag: PropTypes.func.isRequired,
   setFormValues: PropTypes.func.isRequired,

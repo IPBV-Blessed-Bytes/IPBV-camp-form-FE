@@ -212,6 +212,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
 };
 
 Cart.propTypes = {
+  cartKey: PropTypes.string.isRequired,
   formValues: PropTypes.arrayOf(
     PropTypes.shape({
       personalInformation: PropTypes.shape({
@@ -231,9 +232,9 @@ Cart.propTypes = {
       }),
     }),
   ),
-  setFormValues: PropTypes.func.isRequired,
   goToEditStep: PropTypes.func.isRequired,
-  cartKey: PropTypes.string.isRequired,
+  handleBasePriceChange: PropTypes.func,
+  setFormValues: PropTypes.func.isRequired,
 };
 
 export default Cart;
