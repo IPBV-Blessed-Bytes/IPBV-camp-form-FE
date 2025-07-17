@@ -6,7 +6,7 @@ import Icons from './Icons';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import Tips from './Tips';
 
-const ProductList = forwardRef(({ age, cartKey, discountValue }, ref) => {
+const ProductList = forwardRef(({ age, cartKey }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [hasError, setHasError] = useState(false);
   const hasRestoredCart = useRef(false);
