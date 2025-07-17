@@ -57,6 +57,7 @@ const FormRoutes = ({
   goToStep,
   handleAddNewUser,
   handleAdminClick,
+  handleBasePriceChange,
   handleDiscountChange,
   handlePersonData,
   handlePreFill,
@@ -180,6 +181,7 @@ const FormRoutes = ({
                     formValues={formValues}
                     goToEditStep={goToEditStep}
                     goToPersonalData={handleAddNewUser}
+                    handleBasePriceChange={handleBasePriceChange}
                     nextStep={nextStep}
                     setBackStepFlag={setBackStepFlag}
                     setFormValues={setFormValues}

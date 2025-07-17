@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import { differenceInYears } from 'date-fns';
@@ -6,7 +6,13 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
 
-const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
+const getIndividualBase = (age) => {
+  if (age <= 5) return 0;
+  if (age <= 10) return 50;
+  return 100;
+};
+
+const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, setFormValues }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
@@ -27,17 +33,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
   const totalBasePrice = formValues.reduce((acc, user) => {
     const birthDate = new Date(user?.personalInformation?.birthday);
     const age = differenceInYears(new Date(), birthDate);
-
-    let individualBase = 0;
-    if (age <= 5) {
-      individualBase = 0;
-    } else if (age >= 6 && age <= 10) {
-      individualBase = 50;
-    } else if (age > 10) {
-      individualBase = 100;
-    }
-
-    return acc + individualBase;
+    return acc + getIndividualBase(age);
   }, 0);
 
   const finalTotal = totalPackages + totalBasePrice;
@@ -46,10 +42,6 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
     (user) =>
       user && user.personalInformation && user.personalInformation.name && user.personalInformation.name.trim() !== '',
   );
-
-  if (!validUsers.length) {
-    return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
-  }
 
   const clearCart = () => {
     emptyCart();
@@ -74,6 +66,22 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
     setShowModal(false);
   };
 
+  useEffect(() => {
+    const baseTotal = formValues.reduce((acc, user) => {
+      const birthDate = new Date(user?.personalInformation?.birthday);
+      const age = differenceInYears(new Date(), birthDate);
+      return acc + getIndividualBase(age);
+    }, 0);
+
+    if (handleBasePriceChange) {
+      handleBasePriceChange(baseTotal);
+    }
+  }, [formValues, handleBasePriceChange]);
+
+  if (!validUsers.length) {
+    return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
+  }
+
   return (
     <div className="cart-container">
       {validUsers.map((user, index) => {
@@ -84,15 +92,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
 
         const birthDate = new Date(user?.personalInformation?.birthday);
         const age = differenceInYears(new Date(), birthDate);
-
-        let individualBase = 0;
-        if (age <= 5) {
-          individualBase = 0;
-        } else if (age >= 6 && age <= 10) {
-          individualBase = 50;
-        } else if (age > 10) {
-          individualBase = 100;
-        }
+        const individualBase = getIndividualBase(age);
 
         return (
           <div key={index} className="cart-user-group">
@@ -146,7 +146,7 @@ const Cart = ({ formValues = [], setFormValues, goToEditStep, cartKey }) => {
 
             <div className="cart-item">
               <div className="item-info">
-                <div className="d-flex  align-items-center gap-2">
+                <div className="d-flex align-items-center gap-2">
                   <p>Valor Base Individual: R$ {individualBase}</p>
                   <Tips
                     placement="top"

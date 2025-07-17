@@ -10,6 +10,7 @@ const BeforePayment = ({
   formValues,
   goToEditStep,
   goToPersonalData,
+  handleBasePriceChange,
   nextStep,
   setBackStepFlag,
   setFormValues,
@@ -53,10 +54,11 @@ const BeforePayment = ({
           <Row>
             <Col>
               <Cart
-                setFormValues={setFormValues}
+                cartKey={cartKey}
                 formValues={formValues}
                 goToEditStep={goToEditStep}
-                cartKey={cartKey}
+                handleBasePriceChange={handleBasePriceChange}
+                setFormValues={setFormValues}
               />
             </Col>
           </Row>

@@ -45,6 +45,7 @@ const RoutesValidations = ({ formContext }) => {
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
+  const [basePriceTotal, setBasePriceTotal] = useState(0);
 
   const userRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -253,9 +254,11 @@ const RoutesValidations = ({ formContext }) => {
     }
   };
 
-  const hasFood = items.some(item =>
-    products.find(p => p.id === item.id && p.category === 'Alimentação')
-  );
+  const hasFood = items.some((item) => products.find((p) => p.id === item.id && p.category === 'Alimentação'));
+
+  const handleBasePriceChange = (basePriceTotal) => {
+    setBasePriceTotal(basePriceTotal);
+  };
 
   const sendForm = async (formikValues) => {
     setLoading(true);
@@ -266,7 +269,8 @@ const RoutesValidations = ({ formContext }) => {
         ...form,
         formPayment: formikValues.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
+        totalPrice:
+          Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0) + Number(basePriceTotal || 0),
         manualRegistration: false,
       }));
 
@@ -317,6 +321,7 @@ const RoutesValidations = ({ formContext }) => {
       goToStep={goToStep}
       handleAddNewUser={handleAddNewUser}
       handleAdminClick={handleAdminClick}
+      handleBasePriceChange={handleBasePriceChange}
       handleDiscountChange={handleDiscountChange}
       handlePersonData={handlePersonData}
       handlePreFill={handlePreFill}
@@ -324,7 +329,7 @@ const RoutesValidations = ({ formContext }) => {
       handleUpdateTotalPackages={handleUpdateTotalPackages}
       handleUpdateTotalSeats={handleUpdateTotalSeats}
       hasDiscount={hasDiscount}
-      hasFood={hasFood} // Passando a prop hasFood
+      hasFood={hasFood}
       highestStepReached={highestStepReached}
       initialStep={initialStep}
       isNotSuccessPathname={isNotSuccessPathname}
