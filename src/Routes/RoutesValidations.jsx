@@ -105,8 +105,6 @@ const RoutesValidations = ({ formContext }) => {
     sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
   }, [formValues]);
 
-  const age = calculateAge(formValues[currentFormIndex]?.personalInformation?.birthday);
-
   const currentFormValues = formValues[currentFormIndex] || {};
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -191,6 +189,12 @@ const RoutesValidations = ({ formContext }) => {
 
   const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
 
+  const updatedAge = getTempData();
+
+  const birthday = updatedAge.personalInformation?.birthday;
+
+  const age = birthday ? calculateAge(birthday) : null;
+
   const handleAddNewUser = () => {
     setFormValues((prev) => {
       const updated = [...prev, initialValues[0]];
@@ -270,7 +274,9 @@ const RoutesValidations = ({ formContext }) => {
         formPayment: formikValues.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
         totalPrice:
-          Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0) + Number(basePriceTotal || 0),
+          Number(form?.package?.finalPrice || 0) +
+          Number(form?.extraMeals?.totalPrice || 0) +
+          Number(basePriceTotal || 0),
         manualRegistration: false,
       }));
 
