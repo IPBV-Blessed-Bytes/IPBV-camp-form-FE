@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
-import { differenceInYears } from 'date-fns';
+import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
@@ -32,7 +32,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
 
   const totalBasePrice = formValues.reduce((acc, user) => {
     const birthDate = new Date(user?.personalInformation?.birthday);
-    const age = differenceInYears(new Date(), birthDate);
+    const age = calculateAge(birthDate);
     return acc + getIndividualBase(age);
   }, 0);
 
@@ -69,7 +69,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
   useEffect(() => {
     const baseTotal = formValues.reduce((acc, user) => {
       const birthDate = new Date(user?.personalInformation?.birthday);
-      const age = differenceInYears(new Date(), birthDate);
+      const age = calculateAge(birthDate);
       return acc + getIndividualBase(age);
     }, 0);
 
@@ -91,7 +91,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         const itemId = userPackage?.id || userPackage?.accomodation?.id;
 
         const birthDate = new Date(user?.personalInformation?.birthday);
-        const age = differenceInYears(new Date(), birthDate);
+        const age = calculateAge(birthDate);
         const individualBase = getIndividualBase(age);
 
         return (
