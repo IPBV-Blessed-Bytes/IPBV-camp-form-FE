@@ -25,23 +25,27 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
     if (itemId) removeItem(itemId);
   };
 
-  const totalPackages = formValues.reduce((acc, user) => {
-    const price = Number(user?.package?.finalPrice || 0);
-    return acc + price;
-  }, 0);
+  const validUsers = formValues.filter(
+    (user) =>
+      user && user.personalInformation && user.personalInformation.name && user.personalInformation.name.trim() !== '',
+  );
 
-  const totalBasePrice = formValues.reduce((acc, user) => {
+  const totalBasePrice = validUsers.reduce((acc, user) => {
     const birthDate = new Date(user?.personalInformation?.birthday);
     const age = calculateAge(birthDate);
     return acc + getIndividualBase(age);
   }, 0);
 
-  const finalTotal = totalPackages + totalBasePrice;
+  const totalExtraMeals = validUsers.reduce((acc, user) => {
+    return acc + Number(user?.extraMeals?.totalPrice || 0);
+  }, 0);
 
-  const validUsers = formValues.filter(
-    (user) =>
-      user && user.personalInformation && user.personalInformation.name && user.personalInformation.name.trim() !== '',
-  );
+  const totalPackages = validUsers.reduce((acc, user) => {
+    const price = Number(user?.package?.finalPrice || 0);
+    return acc + price;
+  }, 0);
+
+  const finalTotal = totalPackages + totalExtraMeals + totalBasePrice;
 
   const clearCart = () => {
     emptyCart();
@@ -130,19 +134,15 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
               </div>
             )}
 
-            {userExtraMeals && userExtraMeals.extraMeals && (
-              <div className="cart-item">
-                <div className="item-info">
-                  <h5>
-                    Refeições Extras:{' '}
-                    {Array.isArray(userExtraMeals.extraMeals)
-                      ? userExtraMeals.extraMeals.filter((meal) => meal && meal.trim() !== '').join(', ')
-                      : userExtraMeals.extraMeals}
-                  </h5>
-                  <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0)}</p>
+            {Array.isArray(userExtraMeals?.extraMeals) &&
+              userExtraMeals.extraMeals.some((item) => item && item.trim() !== '') && (
+                <div className="cart-item">
+                  <div className="item-info">
+                    <h5>Refeições Extras:</h5>
+                    <p>Preço: R$ {Number(userExtraMeals?.totalPrice || 0)}</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             <div className="cart-item">
               <div className="item-info">
@@ -158,12 +158,20 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
                 </div>
                 {userPackage && (
                   <>
-                    <p>Total do Pacote: R$ {Number(userPackage?.finalPrice + userPackage?.discount || 0)}</p>
+                    <p>
+                      Total do Pacote: R${' '}
+                      {Number(userPackage?.finalPrice + userPackage?.discount + userExtraMeals?.totalPrice)}
+                    </p>
                     {userPackage?.discount > 0 && (
                       <p className="text-success">Desconto aplicado: -R$ {Number(userPackage.discount)}</p>
                     )}
                     <br />
-                    <p>Total do Usuário: R$ {Number(userPackage?.finalPrice) + Number(individualBase)}</p>
+                    <p>
+                      Total do Usuário: R${' '}
+                      {Number(userPackage?.finalPrice || 0) +
+                        Number(individualBase) +
+                        Number(userExtraMeals?.totalPrice || 0)}
+                    </p>
                   </>
                 )}
               </div>
