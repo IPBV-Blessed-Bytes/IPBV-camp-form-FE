@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
+import getDiscountedProducts from './utils/getDiscountedProducts';
 
 const Packages = ({
   age,
@@ -109,11 +110,21 @@ const Packages = ({
   const isChild = age < 11;
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
-  const accomodationPrice = items.find((item) => item.category === 'Hospedagem')?.price || 0;
-  const transportationPrice = items.find((item) => item.category === 'Transporte')?.price || 0;
-  const foodPrice = items.find((item) => item.category === 'Alimentação')?.price || 0;
+  const discounted = getDiscountedProducts(age);
 
-  const totalBeforeDiscount = Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice);
+  const getDiscountedPrice = (category) => {
+    const item = items.find((i) => i.category === category);
+    if (!item) return 0;
+
+    const discountedItem = discounted.find((d) => d.id === item.id);
+    return discountedItem?.price ?? item.price ?? 0;
+  };
+
+  const accomodationPrice = getDiscountedPrice('Hospedagem');
+  const transportationPrice = getDiscountedPrice('Transporte');
+  const foodPrice = getDiscountedPrice('Alimentação');
+
+  const totalBeforeDiscount = accomodationPrice + transportationPrice + foodPrice;
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
@@ -148,7 +159,7 @@ const Packages = ({
                       <strong>Desconto Aplicado:</strong> R$ {discountNumeric}
                     </p>
                   )}
-                  
+
                   <p className="text-success">
                     <strong>
                       Total Final {hasDiscount && discountNumeric ? 'com Desconto' : ''}: <em>R$ {finalTotal}</em>
