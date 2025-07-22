@@ -195,6 +195,33 @@ const RoutesValidations = ({ formContext }) => {
 
   const age = birthday ? calculateAge(birthday) : null;
 
+  const sanitizeForms = (forms) =>
+    forms.map((form) => {
+      const { personalInformation, contact } = form;
+
+      const {
+        cellPhone,
+        email,
+        isWhatsApp,
+        church,
+        car,
+        numberVacancies,
+        needRide,
+        rideObservation,
+        hasAllergy,
+        allergy,
+        hasAggregate,
+        aggregate,
+        ...cleanPersonalInfo
+      } = personalInformation;
+
+      return {
+        ...form,
+        personalInformation: cleanPersonalInfo,
+        contact,
+      };
+    });
+
   const handleAddNewUser = () => {
     setFormValues((prev) => {
       const updated = [...prev, initialValues[0]];
@@ -223,11 +250,9 @@ const RoutesValidations = ({ formContext }) => {
     }
   };
 
-  const skipTwoSteps = () => {
-    if (steps === enumSteps.formPayment) {
-      setSteps(enumSteps.success);
-      scrollTop();
-    }
+  const goToSuccessPage = () => {
+    setSteps(enumSteps.success);
+    scrollTop();
   };
 
   const backStep = () => {
@@ -282,8 +307,9 @@ const RoutesValidations = ({ formContext }) => {
 
       const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
+      const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
-        forms: formsToSend,
+        forms: sanitizedForms,
         finalPriceCheckout,
       });
 
@@ -325,6 +351,7 @@ const RoutesValidations = ({ formContext }) => {
       formValues={formValues}
       goToEditStep={goToEditStep}
       goToStep={goToStep}
+      goToSuccessPage={goToSuccessPage}
       handleAddNewUser={handleAddNewUser}
       handleAdminClick={handleAdminClick}
       handleBasePriceChange={handleBasePriceChange}
@@ -350,7 +377,6 @@ const RoutesValidations = ({ formContext }) => {
       setBackStepFlag={setBackStepFlag}
       setFormValues={setFormValues}
       setPreFill={setPreFill}
-      skipTwoSteps={skipTwoSteps}
       status={status}
       steps={steps}
       totalBusVacancies={totalBusVacancies}
