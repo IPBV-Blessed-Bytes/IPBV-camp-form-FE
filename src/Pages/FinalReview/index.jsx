@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -12,7 +12,6 @@ import './style.scss';
 const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
-  const navigateTo = useNavigate();
   const location = useLocation();
   const { emptyCart } = useCart();
 
@@ -46,12 +45,6 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
     emptyCart();
     nextStep();
   };
-
-  useEffect(() => {
-    if (status === 'loaded') {
-      navigateTo('/sucesso');
-    }
-  }, [status, navigateTo]);
 
   const isSuccessPathname = location.pathname === '/sucesso';
 
@@ -314,12 +307,7 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
               Voltar
             </Button>
 
-            <Button
-              variant="warning"
-              onClick={handleSaveUser}
-              size="lg"
-              disabled={!isConfirmed || !isDataAuthorized || status === 'loading' || status === 'loaded'}
-            >
+            <Button variant="warning" onClick={handleSaveUser} size="lg" disabled={!isConfirmed || !isDataAuthorized}>
               Avançar
             </Button>
           </div>

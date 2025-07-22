@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -10,20 +11,40 @@ const BeforePayment = ({
   formValues,
   goToEditStep,
   goToPersonalData,
+  goToSuccessPage,
   handleBasePriceChange,
   nextStep,
+  sendForm,
   setBackStepFlag,
   setFormValues,
+  status,
 }) => {
-  const goToPayment = () => {
-    sessionStorage.removeItem(cartKey);
-    nextStep();
-  };
+  const [cartTotal, setCartTotal] = useState(0);
+  const navigateTo = useNavigate();
+  const cartIsFree = cartTotal === 0;
 
   useEffect(() => {
     setBackStepFlag(false);
     sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
   }, []);
+
+  useEffect(() => {
+    if (status === 'loaded') {
+      navigateTo('/sucesso');
+    }
+  }, [status, navigateTo]);
+
+  const handleClick = () => {
+    if (formValues.length === 0) return;
+
+    if (cartIsFree) {
+      sendForm(formValues);
+      goToSuccessPage();
+    } else {
+      sessionStorage.removeItem(cartKey);
+      nextStep();
+    }
+  };
 
   return (
     <Card className="form__container__general-height">
@@ -34,7 +55,7 @@ const BeforePayment = ({
               <Card.Title>Carrinho</Card.Title>
               <Card.Text>
                 Você pode administrar seus usuários, adicionar outro usuário ou finalizar sua compra clicando em
-                pagamento
+                {cartIsFree ? ' finalizar inscrição' : ' pagamento'}.
               </Card.Text>
 
               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
@@ -43,8 +64,9 @@ const BeforePayment = ({
                 </Button>
 
                 {formValues.length > 0 && (
-                  <Button variant="success" size="lg" onClick={goToPayment} className="cart-btn-responsive">
-                    <Icons typeIcon="money" iconSize={30} fill="#fff" /> &nbsp;Pagamento
+                  <Button variant="success" size="lg" onClick={handleClick} className="cart-btn-responsive">
+                    <Icons typeIcon={cartIsFree ? 'checked' : 'money'} iconSize={30} fill="#fff" /> &nbsp;
+                    {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                   </Button>
                 )}
               </div>
@@ -58,6 +80,7 @@ const BeforePayment = ({
                 formValues={formValues}
                 goToEditStep={goToEditStep}
                 handleBasePriceChange={handleBasePriceChange}
+                setCartTotal={setCartTotal}
                 setFormValues={setFormValues}
               />
             </Col>
@@ -75,8 +98,10 @@ BeforePayment.propTypes = {
   goToPersonalData: PropTypes.func.isRequired,
   handleBasePriceChange: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
+  sendForm: PropTypes.func.isRequired,
   setBackStepFlag: PropTypes.func.isRequired,
   setFormValues: PropTypes.func.isRequired,
+  status: PropTypes.string,
 };
 
 export default BeforePayment;

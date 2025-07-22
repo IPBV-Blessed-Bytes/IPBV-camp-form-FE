@@ -12,7 +12,7 @@ const getIndividualBase = (age) => {
   return 100;
 };
 
-const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, setFormValues }) => {
+const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, setCartTotal, setFormValues }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
@@ -46,6 +46,12 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
   }, 0);
 
   const finalTotal = totalPackages + totalExtraMeals + totalBasePrice;
+
+  useEffect(() => {
+    if (setCartTotal) {
+      setCartTotal(finalTotal);
+    }
+  }, [finalTotal, setCartTotal]);
 
   const clearCart = () => {
     emptyCart();

@@ -83,6 +83,7 @@ const FormRoutes = ({
   loggedUsername,
   status,
   steps,
+  goToSuccessPage,
   totalBusVacancies,
   totalPackages,
   totalRegistrations,
@@ -181,10 +182,13 @@ const FormRoutes = ({
                     formValues={formValues}
                     goToEditStep={goToEditStep}
                     goToPersonalData={handleAddNewUser}
+                    goToSuccessPage={goToSuccessPage}
                     handleBasePriceChange={handleBasePriceChange}
                     nextStep={nextStep}
+                    sendForm={sendForm}
                     setBackStepFlag={setBackStepFlag}
                     setFormValues={setFormValues}
+                    status={status}
                   />
                 )}
 
@@ -410,6 +414,7 @@ FormRoutes.propTypes = {
   ),
   goToEditStep: PropTypes.func,
   goToStep: PropTypes.func,
+  goToSuccessPage: PropTypes.func,
   handleAddNewUser: PropTypes.func,
   handleAdminClick: PropTypes.func,
   handleBasePriceChange: PropTypes.func,
@@ -435,7 +440,6 @@ FormRoutes.propTypes = {
   setBackStepFlag: PropTypes.func,
   setFormValues: PropTypes.func,
   setPreFill: PropTypes.func,
-  skipTwoSteps: PropTypes.func,
   loggedUsername: PropTypes.string,
   status: PropTypes.string,
   steps: PropTypes.number,
