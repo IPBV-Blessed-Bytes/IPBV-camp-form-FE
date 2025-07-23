@@ -50,7 +50,8 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
     return acc + discount;
   }, 0);
 
-  const finalTotal = totalPackages + totalExtraMeals + totalBasePrice - totalDiscount;
+  const finalTotalRaw = totalPackages + totalExtraMeals + totalBasePrice - totalDiscount;
+  const finalTotal = Math.max(finalTotalRaw, 0);
 
   useEffect(() => {
     if (setCartTotal) {
@@ -103,11 +104,15 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         const userName = user?.personalInformation?.name || `Pessoa ${index + 1}`;
         const userPackage = user?.package;
         const userExtraMeals = user?.extraMeals;
+        const userFinalPrice = userPackage?.finalPrice || 0;
         const itemId = userPackage?.id || userPackage?.accomodation?.id;
 
         const birthDate = new Date(user?.personalInformation?.birthday);
         const age = calculateAge(birthDate);
         const individualBase = getIndividualBase(age);
+
+        const userTotalValueRaw = userFinalPrice + individualBase + userExtraMeals?.totalPrice - userPackage.discount;
+        const userTotalValue = Math.max(userTotalValueRaw, 0);
 
         return (
           <div key={index} className="cart-user-group">
@@ -177,13 +182,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
                       <p className="text-success">Desconto aplicado: -R$ {Number(userPackage.discount)}</p>
                     )}
                     <br />
-                    <p>
-                      Total do Usuário: R${' '}
-                      {Number(userPackage?.finalPrice || 0) +
-                        Number(individualBase) +
-                        Number(userExtraMeals?.totalPrice || 0) -
-                        Number(userPackage.discount)}
-                    </p>
+                    <p>Total do Usuário: R$ {Number(userTotalValue)}</p>
                   </>
                 )}
               </div>
