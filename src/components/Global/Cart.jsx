@@ -45,7 +45,12 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
     return acc + price;
   }, 0);
 
-  const finalTotal = totalPackages + totalExtraMeals + totalBasePrice;
+  const totalDiscount = validUsers.reduce((acc, user) => {
+    const discount = Number(user?.package?.discount || 0);
+    return acc + discount;
+  }, 0);
+
+  const finalTotal = totalPackages + totalExtraMeals + totalBasePrice - totalDiscount;
 
   useEffect(() => {
     if (setCartTotal) {
@@ -176,7 +181,8 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
                       Total do Usuário: R${' '}
                       {Number(userPackage?.finalPrice || 0) +
                         Number(individualBase) +
-                        Number(userExtraMeals?.totalPrice || 0)}
+                        Number(userExtraMeals?.totalPrice || 0) -
+                        Number(userPackage.discount)}
                     </p>
                   </>
                 )}
