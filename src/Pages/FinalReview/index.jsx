@@ -120,7 +120,10 @@ const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
                         )}
                     </Col>
 
-                    <Col md={formValues.extraMeals?.totalPrice ? 3 : 6} className="fw-bold">
+                    <Col
+                      md={formValues.extraMeals?.totalPrice ? 3 : 6}
+                      className={`fw-bold ${formValues.package.food.id ? '' : 'mt-3'}`}
+                    >
                       <Card.Text>
                         <span className="form-review__section-title">
                           Valor Total {discountNumeric > 0 ? 'com Desconto' : ''}:
