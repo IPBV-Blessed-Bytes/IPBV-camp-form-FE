@@ -105,6 +105,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         const birthDate = new Date(user?.personalInformation?.birthday);
         const age = calculateAge(birthDate);
         const individualBase = getIndividualBase(age);
+        const totalPackage = userPackage?.finalPrice + userPackage?.discount + userExtraMeals?.totalPrice;
 
         const userTotalValueRaw = userFinalPrice + individualBase + userExtraMeals?.totalPrice;
         const userTotalValue = Math.max(userTotalValueRaw, 0);
@@ -169,10 +170,8 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
                 </div>
                 {userPackage && (
                   <>
-                    <p>
-                      Total do Pacote: R${' '}
-                      {Number(userPackage?.finalPrice + userPackage?.discount + userExtraMeals?.totalPrice)}
-                    </p>
+                    <p>Total do Pacote: R$ {Number(totalPackage)}</p>
+                    <p><em>= R$ {individualBase + totalPackage}</em></p>
                     {userPackage?.discount > 0 && (
                       <p className="text-success">Desconto aplicado: -R$ {Number(userPackage.discount)}</p>
                     )}
