@@ -26,7 +26,7 @@ const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }
   const { values, handleChange, errors, submitForm, setFieldValue } = useFormik({
     initialValues: { ...initialValues, extraMeals: initialValues.extraMeals || [] },
     onSubmit: () => {
-      if (values.someFood && values.extraMeals.length === 0) {
+      if (values.someFood && values.extraMeals.length === 0 || values.extraMeals.length === 1) {
         setCheckboxHasError(true);
       } else {
         extraMealSelected &&
@@ -292,7 +292,7 @@ const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-        <Button variant="warning" onClick={submitForm} size="lg">
+         <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>
