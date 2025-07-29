@@ -251,6 +251,7 @@ const RoutesValidations = ({ formContext }) => {
   };
 
   const goToSuccessPage = () => {
+    navigate('/sucesso');
     setSteps(enumSteps.success);
     scrollTop();
   };
@@ -298,14 +299,12 @@ const RoutesValidations = ({ formContext }) => {
         ...form,
         formPayment: formikValues.formPayment || 'nonPaid',
         registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice:
-          Number(form?.package?.finalPrice || 0) +
-          Number(form?.extraMeals?.totalPrice || 0) +
-          Number(basePriceTotal || 0),
+        totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
         manualRegistration: false,
       }));
 
-      const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      const finalPriceCheckout =
+        basePriceTotal + formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
       const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
