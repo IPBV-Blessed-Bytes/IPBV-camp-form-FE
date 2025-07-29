@@ -30,22 +30,26 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
       user && user.personalInformation && user.personalInformation.name && user.personalInformation.name.trim() !== '',
   );
 
-  const totalBasePrice = validUsers.reduce((acc, user) => {
-    const birthDate = new Date(user?.personalInformation?.birthday);
-    const age = calculateAge(birthDate);
-    return acc + getIndividualBase(age);
+  const finalTotalRaw = validUsers.reduce((acc, user) => {
+    const userPackage = user?.package || {};
+    const userExtraMeals = user?.extraMeals || {};
+
+    const accomodationPrice = Number(userPackage?.accomodation?.price || 0);
+    const transportationPrice = Number(userPackage?.transportation?.price || 0);
+    const foodPrice = Number(userPackage?.food?.price || 0);
+    const extraMealsPrice = Number(userExtraMeals?.totalPrice || 0);
+    const discount = Number(userPackage?.discount || 0);
+
+    const individualBase = getIndividualBase(calculateAge(new Date(user?.personalInformation?.birthday)));
+
+    const totalUser = Math.max(
+      accomodationPrice + transportationPrice + foodPrice + extraMealsPrice + individualBase - discount,
+      0,
+    );
+
+    return acc + totalUser;
   }, 0);
 
-  const totalExtraMeals = validUsers.reduce((acc, user) => {
-    return acc + Number(user?.extraMeals?.totalPrice || 0);
-  }, 0);
-
-  const totalPackages = validUsers.reduce((acc, user) => {
-    const price = Number(user?.package?.finalPrice || 0);
-    return acc + price;
-  }, 0);
-
-  const finalTotalRaw = totalPackages + totalExtraMeals + totalBasePrice;
   const finalTotal = Math.max(finalTotalRaw, 0);
 
   useEffect(() => {
@@ -81,12 +85,24 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
     const baseTotal = formValues.reduce((acc, user) => {
       const birthDate = new Date(user?.personalInformation?.birthday);
       const age = calculateAge(birthDate);
-      return acc + getIndividualBase(age);
+      const individualBase = getIndividualBase(age);
+
+      const accomodation = Number(user?.package?.accomodation?.price || 0);
+      const transportation = Number(user?.package?.transportation?.price || 0);
+      const food = Number(user?.package?.food?.price || 0);
+      const extraMeals = Number(user?.extraMeals?.totalPrice || 0);
+      const discount = Number(user?.package?.discount || 0);
+
+      const totalBeforeDiscount = accomodation + transportation + food + extraMeals + individualBase;
+
+      if (discount >= totalBeforeDiscount) {
+        return acc;
+      }
+
+      return acc + individualBase;
     }, 0);
 
-    if (handleBasePriceChange) {
-      handleBasePriceChange(baseTotal);
-    }
+    handleBasePriceChange?.(baseTotal);
   }, [formValues, handleBasePriceChange]);
 
   if (!validUsers.length) {
@@ -99,15 +115,21 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         const userName = user?.personalInformation?.name || `Pessoa ${index + 1}`;
         const userPackage = user?.package;
         const userExtraMeals = user?.extraMeals;
-        const userFinalPrice = userPackage?.finalPrice || 0;
         const itemId = userPackage?.id || userPackage?.accomodation?.id;
 
         const birthDate = new Date(user?.personalInformation?.birthday);
         const age = calculateAge(birthDate);
         const individualBase = getIndividualBase(age);
-        const totalPackage = userPackage?.finalPrice + userPackage?.discount + userExtraMeals?.totalPrice;
 
-        const userTotalValueRaw = userFinalPrice + individualBase + userExtraMeals?.totalPrice;
+        const discount = Number(userPackage?.discount || 0);
+        const packageRaw =
+          Number(userPackage?.accomodation?.price || 0) +
+          Number(userPackage?.transportation?.price || 0) +
+          Number(userPackage?.food?.price || 0);
+
+        const totalPackage = packageRaw + Number(userExtraMeals?.totalPrice || 0);
+
+        const userTotalValueRaw = totalPackage + individualBase - discount;
         const userTotalValue = Math.max(userTotalValueRaw, 0);
 
         return (
@@ -170,11 +192,11 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
                 </div>
                 {userPackage && (
                   <>
-                    <p>Total do Pacote: R$ {Number(totalPackage)}</p>
-                    <p><em>= R$ {individualBase + totalPackage}</em></p>
-                    {userPackage?.discount > 0 && (
-                      <p className="text-success">Desconto aplicado: -R$ {Number(userPackage.discount)}</p>
-                    )}
+                    <p>Total do Pacote: R$ {totalPackage}</p>
+                    <p>
+                      <em>= R$ {individualBase + totalPackage}</em>
+                    </p>
+                    {discount > 0 && <p className="text-success">Desconto aplicado: -R$ {discount}</p>}
                     <br />
                     <p>Total do Usuário: R$ {Number(userTotalValue)}</p>
                   </>
