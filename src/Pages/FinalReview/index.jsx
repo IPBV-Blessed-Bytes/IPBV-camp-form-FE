@@ -116,6 +116,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                             <span className="form-review__section-title">Refeição Extra:</span>
                             <br />
                             Preço = R$ {extraMealsPrice}
+                            <div className="packages-horizontal-line-mobile" />
                           </Card.Text>
                         )}
                     </Col>

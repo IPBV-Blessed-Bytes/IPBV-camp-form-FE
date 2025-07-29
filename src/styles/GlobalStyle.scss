@@ -238,6 +238,15 @@ a:not(.form-success__button, .mail-to, .order-url, .lgpd-link) {
   margin: 1rem 0;
 }
 
+.packages-horizontal-line-mobile {
+  @media (max-width: $md) {
+    background-color: $medium-gray;
+    border: none;
+    height: 0.125rem;
+    margin: 1rem 0;
+  }
+}
+
 .msg-error {
   border-color: $red;
 }
