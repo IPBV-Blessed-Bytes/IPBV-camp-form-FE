@@ -269,6 +269,7 @@ Cart.propTypes = {
   ),
   goToEditStep: PropTypes.func.isRequired,
   handleBasePriceChange: PropTypes.func,
+  setCartTotal: PropTypes.func.isRequired,
   setFormValues: PropTypes.func.isRequired,
 };
 

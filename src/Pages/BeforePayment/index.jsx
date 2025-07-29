@@ -96,6 +96,7 @@ BeforePayment.propTypes = {
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,
   goToPersonalData: PropTypes.func.isRequired,
+  goToSuccessPage: PropTypes.func.isRequired,
   handleBasePriceChange: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
   sendForm: PropTypes.func.isRequired,

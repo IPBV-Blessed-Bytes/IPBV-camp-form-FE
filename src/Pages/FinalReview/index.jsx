@@ -9,7 +9,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 
-const FinalReview = ({ backStep, nextStep, status, updateForm }) => {
+const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const location = useLocation();
@@ -369,7 +369,6 @@ FinalReview.propTypes = {
       someFood: PropTypes.bool,
     }),
   }),
-  status: PropTypes.string.isRequired,
   updateForm: PropTypes.func,
 };
 

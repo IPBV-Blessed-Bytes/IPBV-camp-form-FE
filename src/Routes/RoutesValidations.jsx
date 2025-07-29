@@ -199,21 +199,7 @@ const RoutesValidations = ({ formContext }) => {
     forms.map((form) => {
       const { personalInformation, contact } = form;
 
-      const {
-        cellPhone,
-        email,
-        isWhatsApp,
-        church,
-        car,
-        numberVacancies,
-        needRide,
-        rideObservation,
-        hasAllergy,
-        allergy,
-        hasAggregate,
-        aggregate,
-        ...cleanPersonalInfo
-      } = personalInformation;
+      const { ...cleanPersonalInfo } = personalInformation;
 
       return {
         ...form,
