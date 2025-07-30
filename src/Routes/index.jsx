@@ -160,7 +160,6 @@ const FormRoutes = ({
                 {steps === enumSteps.extraMeals && isNotSuccessPathname && (
                   <ExtraMeals
                     backStep={backStep}
-                    birthDate={currentFormValues.personalInformation?.birthday}
                     initialValues={formValues[currentFormIndex]?.extraMeals || {}}
                     nextStep={nextStep}
                     updateForm={updateFormValues('extraMeals')}

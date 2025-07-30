@@ -17,16 +17,19 @@ const groupedMealOptions = mealOptions.reduce((acc, meal) => {
   return acc;
 }, {});
 
-const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }) => {
+const ExtraMeals = ({ backStep, initialValues, nextStep, updateForm }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [extraMealSelected, setExtraMealSelected] = useState(false);
+
+  const tempData = JSON.parse(sessionStorage.getItem('formTempData') || '{}');
+  const birthDate = tempData.personalInformation?.birthday;
   const age = calculateAge(birthDate);
 
   const { values, handleChange, errors, submitForm, setFieldValue } = useFormik({
     initialValues: { ...initialValues, extraMeals: initialValues.extraMeals || [] },
     onSubmit: () => {
-      if (values.someFood && values.extraMeals.length === 0 || values.extraMeals.length === 1) {
+      if ((values.someFood && values.extraMeals.length === 0) || values.extraMeals.length === 1) {
         setCheckboxHasError(true);
       } else {
         extraMealSelected &&
@@ -100,6 +103,30 @@ const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }
         setCheckboxHasError(true);
       }
       setExtraMealSelected(values.extraMeals.length > 1);
+    }
+  };
+
+  const getFormattedMealLabel = (meal, age) => {
+    const originalPrice = meal.price;
+    let discountedPrice = originalPrice;
+
+    if (age < 7) {
+      return (
+        <>
+          <span className="price-with-discount">R$ {originalPrice},00</span> ⭢{' '}
+          <span className="text-success-custom">R$ 0,00</span>
+        </>
+      );
+    } else if (age <= 12) {
+      discountedPrice = Math.round(originalPrice * 0.5);
+      return (
+        <>
+          <span className="price-with-discount">R$ {originalPrice},00</span> ⭢{' '}
+          <span className="text-success-custom">R$ {discountedPrice},00</span>
+        </>
+      );
+    } else {
+      return `R$ ${originalPrice},00`;
     }
   };
 
@@ -253,7 +280,11 @@ const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }
                                 isInvalid={!!errors.extraMeals}
                                 onChange={handleCheckboxChange}
                                 checked={values.extraMeals.includes(meal.name)}
-                                label={`${meal.name} - R$ ${meal.price},00`}
+                                label={
+                                  <>
+                                    {meal.name} - {getFormattedMealLabel(meal, age)}
+                                  </>
+                                }
                               />
                               <Form.Check.Label className="d-none" htmlFor={`meal-${meal.name}`} />
                             </Form.Group>
@@ -292,7 +323,7 @@ const ExtraMeals = ({ backStep, birthDate, initialValues, nextStep, updateForm }
         <Button variant="light" onClick={backStep} size="lg">
           Voltar
         </Button>
-         <Button variant="warning" onClick={submitForm} size="lg">
+        <Button variant="warning" onClick={submitForm} size="lg">
           Avançar
         </Button>
       </div>
