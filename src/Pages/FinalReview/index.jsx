@@ -98,6 +98,11 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                         Transporte = {formValues.package.transportation.name}
                         <br />
                         Preço = R$ {Number(formValues.package.transportation.price || 0)}
+                        {!formValues.package.food.id &&
+                          formValues.package.transportation.name &&
+                          (formValues.contact.car === true || formValues.contact.needRide) === true && (
+                            <div className="packages-horizontal-line" />
+                          )}
                         {formValues.package.food.id && (
                           <>
                             <div className="packages-horizontal-line" />
