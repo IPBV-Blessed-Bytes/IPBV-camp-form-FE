@@ -123,21 +123,20 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                     <Col md={4} className="fw-bold">
-                      {(formValues.extraMeals?.totalPrice || formValues.extraMeals?.totalPrice !== 0) &&
-                        formValues.extraMeals?.someFood && (
-                          <Card.Text>
-                            <span className="form-review__section-title">Refeição Extra:</span>
-                            <br />
-                            Preço = R$ {extraMealsPrice}
-                            <div className="packages-horizontal-line-mobile" />
-                          </Card.Text>
-                        )}
+                      {formValues.extraMeals?.someFood && (
+                        <Card.Text>
+                          <span className="form-review__section-title">Refeição Extra:</span>
+                          <br />
+                          Preço = R$ {extraMealsPrice}
+                          <div className="packages-horizontal-line-mobile" />
+                        </Card.Text>
+                      )}
                     </Col>
 
                     <Col
                       md={formValues.extraMeals?.totalPrice ? 3 : 6}
                       className={`fw-bold ${
-                        !formValues.package.food.id && !formValues.extraMeals.someFood ? 'mt-3' : ''
+                        !formValues.package.food.id ? 'mt-3' : ''
                       }`}
                     >
                       <Card.Text>
