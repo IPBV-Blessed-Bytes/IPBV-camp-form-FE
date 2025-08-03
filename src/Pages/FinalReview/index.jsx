@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import { format, isValid } from 'date-fns';
+import { format, isValid, differenceInYears } from 'date-fns';
+import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
@@ -18,6 +19,11 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
 
   const formValues = getTempData();
+
+  const birthday = new Date(formValues.personalInformation?.birthday);
+  const age = isValid(birthday) ? differenceInYears(new Date(), birthday) : 0;
+
+  const discountedProducts = getDiscountedProducts(age);
 
   const handleCheckboxChange = (e) => setIsConfirmed(e.target.checked);
 
@@ -48,11 +54,13 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
 
   const isSuccessPathname = location.pathname === '/sucesso';
 
-  const packageOriginalPrice =
-    Number(formValues.package.accomodation.price || 0) +
-    Number(formValues.package.transportation.price || 0) +
-    Number(formValues.package.food.price || 0);
+  const getProductPrice = (productId) => discountedProducts.find((p) => p.id === productId)?.price || 0;
 
+  const accomodationPrice = getProductPrice(formValues.package.accomodation.id);
+  const transportationPrice = getProductPrice(formValues.package.transportation.id);
+  const foodPrice = formValues.package.food?.id ? getProductPrice(formValues.package.food.id) : 0;
+
+  const packageOriginalPrice = accomodationPrice + transportationPrice + foodPrice;
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
@@ -93,11 +101,11 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                         <span className="form-review__section-title">Pacote:</span> <br />
                         Hospedagem = {formValues.package.accomodation.name}
                         <br />
-                        Preço = R$ {Number(formValues.package.accomodation.price || 0)}
+                        Preço = R$ {accomodationPrice}
                         <div className="packages-horizontal-line" />
                         Transporte = {formValues.package.transportation.name}
                         <br />
-                        Preço = R$ {Number(formValues.package.transportation.price || 0)}
+                        Preço = R$ {transportationPrice}
                         {!formValues.package.food.id &&
                           formValues.package.transportation.name &&
                           (formValues.contact.car === true || formValues.contact.needRide) === true && (
@@ -108,7 +116,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                             <div className="packages-horizontal-line" />
                             Alimentação = {formValues.package.food.name}
                             <br />
-                            Preço = R$ {Number(formValues.package.food.price || 0)}
+                            Preço = R$ {foodPrice}
                             {!formValues.extraMeals?.totalPrice && <div className="packages-horizontal-line" />}
                           </>
                         )}
