@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
+import { format, isValid, differenceInYears } from 'date-fns';
+import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -129,10 +130,28 @@ const RoutesValidations = ({ formContext }) => {
     setTotalPackages(updatedPackages);
   };
 
-  const handleDiscountChange = (discountValue) => {
+  const handleDiscountChange = (discountValue, userIndex) => {
+    const currentDiscounts = JSON.parse(sessionStorage.getItem('discountList') || '[]');
+
+    currentDiscounts[userIndex] = Number(discountValue);
+
+    sessionStorage.setItem('discountList', JSON.stringify(currentDiscounts));
+
     setDiscount(discountValue);
-    setHasDiscount(discountValue !== 0 && discountValue !== '');
+    setHasDiscount(Number(discountValue) !== 0);
   };
+
+  useEffect(() => {
+    const storedList = sessionStorage.getItem('discountList');
+
+    if (storedList !== null) {
+      const parsedList = JSON.parse(storedList);
+      const userDiscount = Number(parsedList[currentFormIndex]) || 0;
+
+      setDiscount(userDiscount);
+      setHasDiscount(userDiscount !== 0);
+    }
+  }, [currentFormIndex]);
 
   const resetFormValues = () => setFormValues(initialValues);
 
@@ -281,16 +300,42 @@ const RoutesValidations = ({ formContext }) => {
     try {
       setStatus('loading');
 
-      const formsToSend = formValues.map((form) => ({
-        ...form,
-        formPayment: formikValues.formPayment || 'nonPaid',
-        registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-        totalPrice: Number(form?.package?.finalPrice || 0) + Number(form?.extraMeals?.totalPrice || 0),
-        manualRegistration: false,
-      }));
+      const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
+      const totalDiscount = discountList.reduce((acc, curr) => acc + Number(curr || 0), 0);
 
-      const finalPriceCheckout =
-        basePriceTotal + formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      const formsToSend = formValues.map((form) => {
+        const birthdayRaw = form?.personalInformation?.birthday;
+
+        const birthday = new Date(birthdayRaw);
+        const age = isValid(birthday) ? differenceInYears(new Date(), birthday) : 0;
+
+        const discountedProducts = getDiscountedProducts(age);
+
+        const getProductPrice = (productId) => discountedProducts.find((p) => p.id === productId)?.price || 0;
+
+        const accomodationPrice = getProductPrice(form.package?.accomodation?.id);
+        const transportationPrice = getProductPrice(form.package?.transportation?.id);
+        const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
+
+        const extraMealsPrice = (form.extraMeals?.meals || [])
+          .map((meal) => getProductPrice(meal.id))
+          .reduce((acc, curr) => acc + curr, 0);
+
+        const totalPrice =
+          Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice) + Number(extraMealsPrice);
+
+        return {
+          ...form,
+          formPayment: formikValues.formPayment || 'nonPaid',
+          registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
+          totalPrice,
+          manualRegistration: false,
+        };
+      });
+
+      const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+
+      const finalPriceCheckout = basePriceTotal + totalFromForms - totalDiscount;
 
       const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {

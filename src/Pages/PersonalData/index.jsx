@@ -64,7 +64,7 @@ const PersonalData = ({
           });
 
           if (handleDiscountChange) {
-            handleDiscountChange(response.data.discount);
+            handleDiscountChange(response.data.discount, currentFormIndex);
           }
 
           nextStep();
