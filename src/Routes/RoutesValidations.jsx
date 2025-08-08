@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format, isValid, differenceInYears } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -301,13 +301,12 @@ const RoutesValidations = ({ formContext }) => {
       setStatus('loading');
 
       const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
-      const totalDiscount = discountList.reduce((acc, curr) => acc + Number(curr || 0), 0);
 
-      const formsToSend = formValues.map((form) => {
+      const formsToSend = formValues.map((form, index) => {
         const birthdayRaw = form?.personalInformation?.birthday;
 
         const birthday = new Date(birthdayRaw);
-        const age = isValid(birthday) ? differenceInYears(new Date(), birthday) : 0;
+        const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
         const discountedProducts = getDiscountedProducts(age);
 
@@ -323,6 +322,9 @@ const RoutesValidations = ({ formContext }) => {
 
         const totalPrice =
           Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice) + Number(extraMealsPrice);
+          
+        const rawDiscount = Number(discountList[index] || 0);
+        const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
         return {
           ...form,
@@ -330,12 +332,18 @@ const RoutesValidations = ({ formContext }) => {
           registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
           totalPrice,
           manualRegistration: false,
+          appliedDiscount,
         };
       });
 
-      const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      const totalFromForms = formsToSend.reduce((acc, curr) => {
+        const totalPrice = Number(curr.totalPrice || 0);
+        const discount = Number(curr.appliedDiscount || 0);
+        const finalPrice = totalPrice - discount;
+        return acc + finalPrice;
+      }, 0);
 
-      const finalPriceCheckout = basePriceTotal + totalFromForms - totalDiscount;
+      const finalPriceCheckout = basePriceTotal + totalFromForms;
 
       const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {

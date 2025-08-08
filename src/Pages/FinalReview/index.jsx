@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import { format, isValid, differenceInYears } from 'date-fns';
+import { format, isValid } from 'date-fns';
+import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -21,7 +22,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const formValues = getTempData();
 
   const birthday = new Date(formValues.personalInformation?.birthday);
-  const age = isValid(birthday) ? differenceInYears(new Date(), birthday) : 0;
+  const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
   const discountedProducts = getDiscountedProducts(age);
 
@@ -135,9 +136,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
 
                     <Col
                       md={formValues.extraMeals?.totalPrice ? 3 : 6}
-                      className={`fw-bold ${
-                        !formValues.package.food.id ? 'mt-3' : ''
-                      }`}
+                      className={`fw-bold ${!formValues.package.food.id ? 'mt-3' : ''}`}
                     >
                       <Card.Text>
                         <span className="form-review__section-title">

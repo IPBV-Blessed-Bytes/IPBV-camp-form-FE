@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { differenceInYears } from 'date-fns';
+import calculateAge from '@/Pages/Packages/utils/calculateAge';
 
 const personalInformationSchema = yup.object().shape({
   name: yup.string().required('Informe o seu nome'),
@@ -11,19 +11,19 @@ const personalInformationSchema = yup.object().shape({
   gender: yup.string().required('Selecione um gênero'),
 
   legalGuardianName: yup.string().when('birthday', (birthday, schema) => {
-    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    const isMinor = birthday && calculateAge(new Date(birthday)) < 18;
     return isMinor ? schema.required('Informe o nome do responsável legal') : schema.strip();
   }),
 
   legalGuardianCpf: yup.string().when('birthday', (birthday, schema) => {
-    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    const isMinor = birthday && calculateAge(new Date(birthday)) < 18;
     return isMinor
       ? schema.min(11, 'Informe um CPF válido. Mínimo 11 dígitos').required('Informe o CPF do responsável legal')
       : schema.strip();
   }),
 
   legalGuardianCellPhone: yup.string().when('birthday', (birthday, schema) => {
-    const isMinor = birthday && differenceInYears(new Date(), new Date(birthday)) < 18;
+    const isMinor = birthday && calculateAge(new Date(birthday)) < 18;
     return isMinor
       ? schema.min(10, 'Informe um número de telefone válido').required('Informe o telefone do responsável legal')
       : schema.strip();
