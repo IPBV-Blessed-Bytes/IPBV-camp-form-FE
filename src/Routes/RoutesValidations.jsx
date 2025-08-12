@@ -316,13 +316,11 @@ const RoutesValidations = ({ formContext }) => {
         const transportationPrice = getProductPrice(form.package?.transportation?.id);
         const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
 
-        const extraMealsPrice = (form.extraMeals?.meals || [])
-          .map((meal) => getProductPrice(meal.id))
-          .reduce((acc, curr) => acc + curr, 0);
+          const extraMealsPrice = form.extraMeals.totalPrice;
 
         const totalPrice =
           Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice) + Number(extraMealsPrice);
-          
+
         const rawDiscount = Number(discountList[index] || 0);
         const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
