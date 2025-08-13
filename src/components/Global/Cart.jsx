@@ -53,7 +53,9 @@ const renderUserTotalInfo = (user, age, individualBase) => {
   const { accomodation, transportation, food } = getDiscountedPrices(user, age);
   const extraMeals = Number(user.extraMeals?.totalPrice || 0);
 
-  const packageTotal = Number(accomodation) + Number(transportation) + Number(food) + extraMeals;
+  const packageTotal =
+    Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
+
   const discount = Number(user.package?.discount || 0);
   const sumBeforeDiscount = Math.max(Number(packageTotal) + Number(individualBase), 0);
   const sumAfterDiscount = Math.max(sumBeforeDiscount - discount, 0);
@@ -98,7 +100,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
       Number(accomodation) +
         Number(transportation) +
         Number(food) +
-        Number(extraMeals) +
+        (user.package?.food?.id ? 0 : Number(extraMeals)) +
         Number(individualBase) -
         Number(discount),
       0,
@@ -186,14 +188,16 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
 
             {renderPackageDetails(user, age)}
 
-            {Array.isArray(user.extraMeals?.extraMeals) && user.extraMeals.extraMeals.some((item) => item?.trim()) && (
-              <div className="cart-item">
-                <div className="item-info">
-                  <h5>Refeições Extras:</h5>
-                  <p>Preço: R$ {Number(user.extraMeals?.totalPrice || 0)}</p>
+            {!user.package?.food?.id &&
+              Array.isArray(user.extraMeals?.extraMeals) &&
+              user.extraMeals.extraMeals.some((item) => item?.trim()) && (
+                <div className="cart-item">
+                  <div className="item-info">
+                    <h5>Refeições Extras:</h5>
+                    <p>Preço: R$ {Number(user.extraMeals?.totalPrice || 0)}</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             <div className="cart-item">
               <div className="item-info">
