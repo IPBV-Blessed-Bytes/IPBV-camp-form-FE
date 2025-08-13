@@ -115,22 +115,9 @@ const PersonalData = ({
   }, []);
 
   const handlePrefillConfirm = () => {
-    if (previousUserData.personalInformation) {
+    if (previousUserData) {
       const { name, rg, rgShipper, rgShipperState, gender } = previousUserData.personalInformation;
-      const {
-        cellPhone,
-        isWhatsApp,
-        email,
-        church,
-        car,
-        numberVacancies,
-        needRide,
-        rideObservation,
-        hasAllergy,
-        allergy,
-        hasAggregate,
-        aggregate,
-      } = previousUserData.contact;
+      const contactData = previousUserData.contact;
 
       setValues((prevValues) => ({
         ...prevValues,
@@ -148,19 +135,10 @@ const PersonalData = ({
         rgShipper,
         rgShipperState,
         gender,
-        cellPhone,
-        isWhatsApp,
-        email,
-        church,
-        car,
-        numberVacancies,
-        needRide,
-        rideObservation,
-        hasAllergy,
-        allergy,
-        hasAggregate,
-        aggregate,
+        ...contactData,
       });
+
+      sessionStorage.setItem('previousUserData', JSON.stringify(previousUserData));
     }
     setShowPrefillModal(false);
   };
@@ -173,9 +151,10 @@ const PersonalData = ({
 
     try {
       await fetcher.delete(`${BASE_URL}/camper/user-previous-year/${previousUserData.personalInformation.cpf}`);
-
+     
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);
+      sessionStorage.removeItem('previousUserData');
       setShowPrefillModal(false);
     } catch (error) {
       console.error('Erro ao excluir usuário anterior:', error);
@@ -221,7 +200,6 @@ const PersonalData = ({
           contact: fullUserData.contact,
         };
 
-        sessionStorage.setItem('previousUserData', JSON.stringify(filteredUserData));
         setPreviousUserData(filteredUserData);
 
         return filteredUserData;
