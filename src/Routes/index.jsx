@@ -170,7 +170,6 @@ const FormRoutes = ({
                   <FinalReview
                     backStep={backStep}
                     nextStep={nextStep}
-                    status={status}
                     updateForm={updateFormValues('finalReview')}
                   />
                 )}
