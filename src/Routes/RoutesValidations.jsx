@@ -228,6 +228,7 @@ const RoutesValidations = ({ formContext }) => {
     });
 
   const handleAddNewUser = () => {
+    sessionStorage.removeItem('previousUserData');
     setFormValues((prev) => {
       const updated = [...prev, initialValues[0]];
       setCurrentFormIndex(updated.length - 1);
@@ -316,7 +317,7 @@ const RoutesValidations = ({ formContext }) => {
         const transportationPrice = getProductPrice(form.package?.transportation?.id);
         const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
 
-          const extraMealsPrice = form.extraMeals.totalPrice;
+        const extraMealsPrice = form.extraMeals.totalPrice;
 
         const totalPrice =
           Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice) + Number(extraMealsPrice);

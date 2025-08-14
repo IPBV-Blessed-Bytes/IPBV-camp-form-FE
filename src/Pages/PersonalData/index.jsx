@@ -83,6 +83,7 @@ const PersonalData = ({
   });
 
   useEffect(() => {
+    sessionStorage.removeItem('previousUserData');
     const tempData = JSON.parse(sessionStorage.getItem('formTempData') || '{}');
 
     if (Object.keys(tempData).length > 0) {
