@@ -6,6 +6,7 @@ import { useCart } from 'react-use-cart';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import getDiscountedProducts from './utils/getDiscountedProducts';
+import getIndividualBaseValue from './utils/getIndividualBaseValue';
 
 const Packages = ({
   age,
@@ -120,18 +121,12 @@ const Packages = ({
     return discountedItem?.price ?? item.price ?? 0;
   };
 
-  const getIndividualBase = (age) => {
-    if (age <= 5) return 0;
-    if (age <= 10) return 50;
-    return 100;
-  };
-
   const accomodationPrice = getDiscountedPrice('Hospedagem');
   const transportationPrice = getDiscountedPrice('Transporte');
   const foodPrice = getDiscountedPrice('Alimentação');
 
   const totalBeforeDiscount = accomodationPrice + transportationPrice + foodPrice;
-  const individualBase = getIndividualBase(age);
+  const individualBase = getIndividualBaseValue(age);
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount + individualBase - discountNumeric, 0);
 

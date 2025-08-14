@@ -3,15 +3,10 @@ import { Button, Modal } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import getIndividualBaseValue from '@/Pages/Packages/utils/getIndividualBaseValue';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import Tips from './Tips';
-
-const getIndividualBase = (age) => {
-  if (age <= 5) return 0;
-  if (age <= 10) return 50;
-  return 100;
-};
 
 const getDiscountedPrices = (user, age) => {
   const discounted = getDiscountedProducts(age);
@@ -94,7 +89,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
     const { accomodation, transportation, food } = getDiscountedPrices(user, age);
     const extraMeals = Number(user.extraMeals?.totalPrice || 0);
     const discount = Number(user.package?.discount || 0);
-    const individualBase = getIndividualBase(age);
+    const individualBase = getIndividualBaseValue(age);
 
     const total = Math.max(
       Number(accomodation) +
@@ -117,7 +112,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
   useEffect(() => {
     const baseTotal = formValues.reduce((acc, user) => {
       const age = calculateAge(new Date(user?.personalInformation?.birthday));
-      const individualBase = getIndividualBase(age);
+      const individualBase = getIndividualBaseValue(age);
       const accomodation = Number(user?.package?.accomodation?.price || 0);
       const transportation = Number(user?.package?.transportation?.price || 0);
       const food = Number(user?.package?.food?.price || 0);
@@ -164,7 +159,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
       {validUsers.map((user, index) => {
         const userName = user.personalInformation.name || `Pessoa ${index + 1}`;
         const age = calculateAge(new Date(user.personalInformation.birthday));
-        const individualBase = getIndividualBase(age);
+        const individualBase = getIndividualBaseValue(age);
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
