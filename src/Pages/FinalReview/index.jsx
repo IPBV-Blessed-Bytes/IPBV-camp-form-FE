@@ -65,7 +65,14 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
-  const totalBeforeDiscount = packageOriginalPrice + extraMealsPrice;
+  const getIndividualBase = (age) => {
+    if (age <= 5) return 0;
+    if (age <= 10) return 50;
+    return 100;
+  };
+
+  const individualBase = getIndividualBase(age);
+  const totalBeforeDiscount = packageOriginalPrice + individualBase + extraMealsPrice;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
   return (
