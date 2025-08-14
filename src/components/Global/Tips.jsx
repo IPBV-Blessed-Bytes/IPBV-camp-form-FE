@@ -3,10 +3,10 @@ import { PropTypes } from 'prop-types';
 import '../Style/style.scss';
 import Icons from '@/components/Global/Icons';
 
-const Tips = ({ placement, text, typeIcon, size, colour }) => {
+const Tips = ({ classNameWrapper, colour, placement, size, text, typeIcon }) => {
   return (
     <OverlayTrigger placement={(placement && placement) || 'top'} overlay={<Tooltip>{text}</Tooltip>}>
-      <div>
+      <div className={classNameWrapper}>
         <Icons
           typeIcon={(typeIcon && typeIcon) || 'rounded-question'}
           iconSize={(size && size) || 20}
@@ -18,11 +18,12 @@ const Tips = ({ placement, text, typeIcon, size, colour }) => {
 };
 
 Tips.propTypes = {
+  classNameWrapper: PropTypes.string,
+  colour: PropTypes.string,
   placement: PropTypes.string,
+  size: PropTypes.number,
   text: PropTypes.string,
   typeIcon: PropTypes.string,
-  size: PropTypes.number,
-  colour: PropTypes.string,
 };
 
 export default Tips;

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
+import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import getIndividualBaseValue from './utils/getIndividualBaseValue';
 
@@ -156,9 +157,19 @@ const Packages = ({
                     </p>
                   )}
 
-                  <p>
-                    <strong> Valor Base: </strong> R$ {individualBase}
-                  </p>
+                  <div className="d-flex align-items-center gap-2">
+                    <p>
+                      <strong> Valor Base: </strong> R$ {individualBase}
+                    </p>
+                    <Tips
+                      classNameWrapper="mt-0 mb-3"
+                      colour={'#000'}
+                      placement="top"
+                      size={15}
+                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                      typeIcon="info"
+                    />
+                  </div>
 
                   {hasDiscount && discountNumeric > 0 && (
                     <p>
