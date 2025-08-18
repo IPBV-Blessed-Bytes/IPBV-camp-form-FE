@@ -1,8 +1,8 @@
 export const JWT_LOCAL_STORAGE_KEY = 'token_jwt';
 
-export const TEST_URL = 'http://35.85.144.78:8080';
+export const TEST_URL = 'http://3.17.23.226:8080';
 
-export const BASE_URL = 'http://35.85.144.78:8080';
+export const BASE_URL = 'http://3.17.23.226:8080';
 
 export const LOGIN_ROUTE = '/admin';
 
