@@ -1,1 +1,11 @@
 @use '../../styles/Variables.scss' as *;
+
+.summary {
+  &-individual-base,
+  &-total-package,
+  &-discount,
+  &-total-geral {
+    display: flex;
+    justify-content: space-between;
+  }
+}

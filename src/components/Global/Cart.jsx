@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
@@ -29,15 +29,33 @@ const renderPackageDetails = (user, age) => {
   return (
     <div className="cart-item">
       <div className="item-info">
-        <h5>Hospedagem: {user.package?.accomodation.name}</h5>
-        <p>Preço: R$ {accomodation}</p>
-        <h5>Transporte: {user.package?.transportation.name}</h5>
-        <p>Preço: R$ {transportation}</p>
+        <div className="item-accomodation mb-3">
+          <div className="d-flex justify-content-between">
+            <h5>Hospedagem:</h5>
+            <br />
+            <h5>R$ {accomodation},00</h5>
+          </div>
+          <p>{user.package?.accomodation.name}</p>
+        </div>
+
+        <div className="item-transportation mb-3">
+          <div className="d-flex justify-content-between">
+            <h5>Transporte:</h5>
+            <br />
+            <h5>R$ {transportation},00</h5>
+          </div>
+          <p>{user.package?.transportation.name}</p>
+        </div>
+
         {user.package?.food?.name && (
-          <>
-            <h5>Alimentação: {user.package.food.name.split(' (')[0]}</h5>
-            <p>Preço: R$ {food}</p>
-          </>
+          <div className="item-food mb-3">
+            <div className="d-flex justify-content-between">
+              <h5>Alimentação:</h5>
+              <br />
+              <h5>R$ {food},00</h5>
+            </div>
+            <p>{user.package.food.name.split(' (')[0]}</p>
+          </div>
         )}
       </div>
     </div>
@@ -51,19 +69,22 @@ const renderUserTotalInfo = (user, age, individualBase) => {
   const packageTotal =
     Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
 
-  const discount = Number(user.package?.discount || 0);
-  const sumBeforeDiscount = Math.max(Number(packageTotal) + Number(individualBase), 0);
-  const sumAfterDiscount = Math.max(sumBeforeDiscount - discount, 0);
+  // const discount = Number(user.package?.discount || 0);
+  const sumBeforeDiscount = Math.max(Number(packageTotal), 0);
+  // const sumAfterDiscount = Math.max(sumBeforeDiscount - discount, 0);
 
   return (
     <div className="cart-item">
       <div className="item-info">
-        <p>Total do Pacote: R$ {packageTotal}</p>
+        {/* <p>Total do Pacote: R$ {packageTotal}</p>
         <p>
           <em>= R$ {sumBeforeDiscount}</em>
         </p>
-        {discount > 0 && <p className="text-success">Desconto aplicado: -R$ {discount}</p>}
-        <p>Total do Usuário: R$ {sumAfterDiscount}</p>
+        {discount > 0 && <p className="text-success">Desconto aplicado: -R$ {discount}</p>} */}
+
+        <h5 className="fw-bold d-flex justify-content-between">
+          Total Acampante: <span>R$ {sumBeforeDiscount},00</span>
+        </h5>
       </div>
     </div>
   );
@@ -163,63 +184,72 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
-          <div key={index} className="cart-user-group">
-            <div className="d-flex justify-content-between">
-              <h4 className="cart-user-title">
-                <b>{userName}:</b>
-              </h4>
-              <div className="d-flex gap-2">
-                <Button variant="secondary" size="md" onClick={() => goToEditStep(index)} className="ms-2">
-                  <Icons typeIcon="edit" iconSize={30} />
-                  <span className="edit-user-btn">&nbsp;Editar Usuário</span>
-                </Button>
+          <Card key={index} className="mb-4 shadow-sm">
+            <Card.Body>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h4 className="cart-user-title mb-0">
+                  <b>{userName}:</b>
+                </h4>
+                <div className="d-flex gap-2">
+                  <Button variant="outline-secondary" size="md" onClick={() => goToEditStep(index)}>
+                    <Icons typeIcon="edit" iconSize={30} />
+                  </Button>
 
-                <Button variant="danger" size="md" onClick={() => openConfirmationModal('removeUser', index, itemId)}>
-                  <Icons typeIcon="delete" iconSize={30} fill="#fff" />
-                  <span className="remove-user-btn">&nbsp;Remover Usuário</span>
-                </Button>
+                  <Button
+                    variant="outline-danger"
+                    size="md"
+                    onClick={() => openConfirmationModal('removeUser', index, itemId)}
+                  >
+                    <Icons typeIcon="delete" iconSize={30} fill="#dc3545" />
+                  </Button>
+                </div>
               </div>
-            </div>
+              <div className="packages-horizontal-line-cart"></div>
 
-            {renderPackageDetails(user, age)}
+              {renderPackageDetails(user, age)}
 
-            {!user.package?.food?.id &&
-              Array.isArray(user.extraMeals?.extraMeals) &&
-              user.extraMeals.extraMeals.some((item) => item?.trim()) && (
-                <div className="cart-item">
-                  <div className="item-info">
-                    <h5>Refeições Extras:</h5>
-                    <p>Preço: R$ {Number(user.extraMeals?.totalPrice || 0)}</p>
+              {!user.package?.food?.id &&
+                Array.isArray(user.extraMeals?.extraMeals) &&
+                user.extraMeals.extraMeals.some((item) => item?.trim()) && (
+                  <div className="cart-item">
+                    <div className="item-info">
+                      <div className="item-extra-meals mb-3">
+                        <div className="d-flex justify-content-between">
+                          <h5>Refeições Extras:</h5>
+                          <h5>R$ {Number(user.extraMeals?.totalPrice || 0)},00</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              <div className="packages-horizontal-line-cart"></div>
+
+              {/* <div className="cart-item">
+                <div className="item-info">
+                  <div className="d-flex align-items-center gap-2">
+                    <p>Valor Base Individual: R$ {individualBase}</p>
+                    <Tips
+                      placement="top"
+                      typeIcon="info"
+                      size={15}
+                      colour={'#000'}
+                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                    />
                   </div>
                 </div>
-              )}
+              </div> */}
 
-            <div className="cart-item">
-              <div className="item-info">
-                <div className="d-flex align-items-center gap-2">
-                  <p>Valor Base Individual: R$ {individualBase}</p>
-                  <Tips
-                    placement="top"
-                    typeIcon="info"
-                    size={15}
-                    colour={'#000'}
-                    text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {renderUserTotalInfo(user, age, individualBase)}
-
-            <hr className="horizontal-line" />
-          </div>
+              {renderUserTotalInfo(user, age, individualBase)}
+            </Card.Body>
+          </Card>
         );
       })}
 
       <div className="cart-total">
         <strong>Total Geral: R$ {finalTotal}</strong>
       </div>
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <Button
           variant="danger"
           size="lg"
@@ -228,7 +258,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         >
           <Icons typeIcon="close" iconSize={30} fill="#fff" /> &nbsp;Esvaziar Carrinho
         </Button>
-      </div>
+      </div> */}
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

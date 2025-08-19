@@ -47,34 +47,12 @@ const BeforePayment = ({
   };
 
   return (
-    <Card className="form__container__general-height">
-      <Card.Body>
-        <Container>
-          <Row className="mb-4">
-            <Col>
+    <Container fluid className="form__container__cart-height ">
+      <Row>
+        <Col md={8}>
+          <Card className="mb-4 h-100">
+            <Card.Body>
               <Card.Title>Carrinho</Card.Title>
-              <Card.Text>
-                Você pode administrar seus usuários, adicionar outro usuário ou finalizar sua compra clicando em
-                {cartIsFree ? ' finalizar inscrição' : ' pagamento'}.
-              </Card.Text>
-
-              <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
-                <Button variant="warning" size="lg" onClick={goToPersonalData} className="cart-btn-responsive">
-                  <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Nova Pessoa
-                </Button>
-
-                {formValues.length > 0 && (
-                  <Button variant="success" size="lg" onClick={handleClick} className="cart-btn-responsive">
-                    <Icons typeIcon={cartIsFree ? 'checked' : 'money'} iconSize={30} fill="#fff" /> &nbsp;
-                    {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
-                  </Button>
-                )}
-              </div>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
               <Cart
                 cartKey={cartKey}
                 formValues={formValues}
@@ -83,11 +61,55 @@ const BeforePayment = ({
                 setCartTotal={setCartTotal}
                 setFormValues={setFormValues}
               />
-            </Col>
-          </Row>
-        </Container>
-      </Card.Body>
-    </Card>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={4}>
+          <Card className="mb-4 h-100">
+            <Card.Body>
+              <Card.Title>Resumo</Card.Title>
+              <div className="packages-horizontal-line-cart"></div>
+
+              <div className="summary">
+                <div className="summary-individual-base">
+                  <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
+                  <h5 className="summary-individual-base-value">R$,00</h5>
+                </div>
+                <div className="summary-total-package">
+                  <h5 className="summary-total-package-label">Total do Pacote</h5>
+                  <h5 className="summary-total-package-value">R$,00</h5>
+                </div>
+                <div className="summary-discount">
+                  <h5 className="summary-discount-label">Desconto:</h5>
+                  <h5 className="summary-discount-value">R$,00</h5>
+                </div>
+
+                <div className="packages-horizontal-line-cart"></div>
+
+                <div className="summary-total-geral mb-3 fw-bold">
+                  <h5>Total:</h5>
+                  <h5>R$ {cartTotal}</h5>
+                </div>
+
+                <div className="summary-buttons d-grid gap-3">
+                  <Button variant="warning" size="lg" onClick={goToPersonalData}>
+                    <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Nova Pessoa
+                  </Button>
+
+                  {formValues.length > 0 && (
+                    <Button variant="success" size="lg" onClick={handleClick}>
+                      <Icons typeIcon={cartIsFree ? 'checked' : 'money'} iconSize={30} fill="#fff" /> &nbsp;
+                      {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

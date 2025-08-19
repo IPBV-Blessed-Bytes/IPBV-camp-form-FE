@@ -25,13 +25,21 @@ body {
   // Form Container
   &__container {
     flex: 1 1 auto;
-    max-width: 50rem;
     margin-inline: auto;
     margin-top: -2.5rem;
 
     &__general-height {
       min-height: 41.625rem;
       width: 50rem;
+
+      @media (max-width: $lg) {
+        width: 100%;
+      }
+    }
+
+    &__cart-height {
+      min-height: 41.625rem;
+      width: 125rem;
 
       @media (max-width: $lg) {
         width: 100%;
@@ -236,6 +244,14 @@ a:not(.form-success__button, .mail-to, .order-url, .lgpd-link) {
   border: none;
   height: 0.125rem;
   margin: 1rem 0;
+}
+
+.packages-horizontal-line-cart {
+  background-color: $medium-gray;
+  border: none;
+  height: 0.125rem;
+  margin: 1rem 0;
+  opacity: 0.3;
 }
 
 .packages-horizontal-line-mobile {

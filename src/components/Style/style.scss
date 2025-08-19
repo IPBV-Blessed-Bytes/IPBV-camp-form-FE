@@ -453,13 +453,6 @@
 
 // Cart
 .cart {
-  &-container {
-    padding: 1.25rem;
-    background: $white;
-    border-radius: 0.5rem;
-    box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.08);
-    font-family: sans-serif;
-  }
 
   &-title {
     font-size: 1.625rem;
@@ -498,12 +491,15 @@
   }
 
   &-item {
-    padding-bottom: 0.75rem;
-
     .item-info {
+      h5 {
+        margin-bottom: 0;
+      }
+
       p {
-        margin: 0.25rem 0;
         color: $alternate-dark-gray;
+        font-size: 1.125rem;
+        margin: 0.25rem 0;
       }
     }
 
