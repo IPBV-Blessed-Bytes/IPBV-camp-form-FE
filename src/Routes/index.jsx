@@ -113,67 +113,93 @@ const FormRoutes = ({
                 steps={steps}
               />
 
+              {steps !== enumSteps.beforePayment && isNotSuccessPathname && (
+                <div className="form__container container">
+                  {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
+                  {steps === enumSteps.personalData && isNotSuccessPathname && (
+                    <FormPersonalData
+                      backStep={backStep}
+                      currentFormIndex={currentFormIndex}
+                      formUsername={currentFormValues.personalInformation?.name}
+                      formValues={formValues}
+                      handleDiscountChange={handleDiscountChange}
+                      initialValues={formValues[currentFormIndex]?.personalInformation || {}}
+                      nextStep={nextStep}
+                      preFill={preFill}
+                      setBackStepFlag={setBackStepFlag}
+                      setPreFill={setPreFill}
+                      updateForm={updateFormValues('personalInformation')}
+                    />
+                  )}
+
+                  {steps === enumSteps.contact && isNotSuccessPathname && (
+                    <FormContact
+                      backStep={backStep}
+                      handlePreFill={handlePreFill}
+                      initialValues={formValues[currentFormIndex]?.contact || {}}
+                      nextStep={nextStep}
+                      updateForm={updateFormValues('contact')}
+                    />
+                  )}
+
+                  {steps === enumSteps.packages && isNotSuccessPathname && (
+                    <FormPackages
+                      age={age}
+                      backStep={backStep}
+                      cartKey={cartKey}
+                      currentFormIndex={currentFormIndex}
+                      currentFormValues={currentFormValues}
+                      discount={discount}
+                      hasDiscount={hasDiscount}
+                      nextStep={nextStep}
+                      totalRegistrationsGlobal={totalRegistrations}
+                      totalSeats={totalSeats}
+                      updateForm={updateFormValues('package')}
+                    />
+                  )}
+
+                  {steps === enumSteps.extraMeals && isNotSuccessPathname && (
+                    <ExtraMeals
+                      backStep={backStep}
+                      initialValues={formValues[currentFormIndex]?.extraMeals || {}}
+                      nextStep={nextStep}
+                      updateForm={updateFormValues('extraMeals')}
+                    />
+                  )}
+
+                  {steps === enumSteps.finalReview && isNotSuccessPathname && (
+                    <FinalReview backStep={backStep} nextStep={nextStep} updateForm={updateFormValues('finalReview')} />
+                  )}
+
+                  {steps === enumSteps.formPayment && isNotSuccessPathname && (
+                    <ChooseFormPayment
+                      backStep={backStep}
+                      formValues={formValues}
+                      initialValues={currentFormValues}
+                      loading={loading}
+                      sendForm={sendForm}
+                      setBackStepFlag={setBackStepFlag}
+                      status={status}
+                      updateForm={updateFormValues('formPayment')}
+                    />
+                  )}
+
+                  <Routes>
+                    <Route
+                      path="/sucesso"
+                      element={
+                        <FormSuccess
+                          initialStep={initialStep}
+                          resetForm={resetFormValues}
+                          resetFormSubmitted={resetFormSubmitted}
+                        />
+                      }
+                    />
+                  </Routes>
+                </div>
+              )}
+
               <div className="form__container">
-                {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
-                {steps === enumSteps.personalData && isNotSuccessPathname && (
-                  <FormPersonalData
-                    backStep={backStep}
-                    currentFormIndex={currentFormIndex}
-                    formUsername={currentFormValues.personalInformation?.name}
-                    formValues={formValues}
-                    handleDiscountChange={handleDiscountChange}
-                    initialValues={formValues[currentFormIndex]?.personalInformation || {}}
-                    nextStep={nextStep}
-                    preFill={preFill}
-                    setBackStepFlag={setBackStepFlag}
-                    setPreFill={setPreFill}
-                    updateForm={updateFormValues('personalInformation')}
-                  />
-                )}
-
-                {steps === enumSteps.contact && isNotSuccessPathname && (
-                  <FormContact
-                    backStep={backStep}
-                    handlePreFill={handlePreFill}
-                    initialValues={formValues[currentFormIndex]?.contact || {}}
-                    nextStep={nextStep}
-                    updateForm={updateFormValues('contact')}
-                  />
-                )}
-
-                {steps === enumSteps.packages && isNotSuccessPathname && (
-                  <FormPackages
-                    age={age}
-                    backStep={backStep}
-                    cartKey={cartKey}
-                    currentFormIndex={currentFormIndex}
-                    currentFormValues={currentFormValues}
-                    discount={discount}
-                    hasDiscount={hasDiscount}
-                    nextStep={nextStep}
-                    totalRegistrationsGlobal={totalRegistrations}
-                    totalSeats={totalSeats}
-                    updateForm={updateFormValues('package')}
-                  />
-                )}
-
-                {steps === enumSteps.extraMeals && isNotSuccessPathname && (
-                  <ExtraMeals
-                    backStep={backStep}
-                    initialValues={formValues[currentFormIndex]?.extraMeals || {}}
-                    nextStep={nextStep}
-                    updateForm={updateFormValues('extraMeals')}
-                  />
-                )}
-
-                {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                  <FinalReview
-                    backStep={backStep}
-                    nextStep={nextStep}
-                    updateForm={updateFormValues('finalReview')}
-                  />
-                )}
-
                 {steps === enumSteps.beforePayment && isNotSuccessPathname && (
                   <BeforePayment
                     cartKey={cartKey}
@@ -189,32 +215,6 @@ const FormRoutes = ({
                     status={status}
                   />
                 )}
-
-                {steps === enumSteps.formPayment && isNotSuccessPathname && (
-                  <ChooseFormPayment
-                    backStep={backStep}
-                    formValues={formValues}
-                    initialValues={currentFormValues}
-                    loading={loading}
-                    sendForm={sendForm}
-                    setBackStepFlag={setBackStepFlag}
-                    status={status}
-                    updateForm={updateFormValues('formPayment')}
-                  />
-                )}
-
-                <Routes>
-                  <Route
-                    path="/sucesso"
-                    element={
-                      <FormSuccess
-                        initialStep={initialStep}
-                        resetForm={resetFormValues}
-                        resetFormSubmitted={resetFormSubmitted}
-                      />
-                    }
-                  />
-                </Routes>
               </div>
 
               <InfoButton timeout />
