@@ -5,6 +5,10 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
+import Tips from '@/components/Global/Tips';
+import calculateAge from '../Packages/utils/calculateAge';
+import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
+import getIndividualBaseValue from '../Packages/utils/getIndividualBaseValue';
 
 const BeforePayment = ({
   cartKey,
@@ -46,11 +50,50 @@ const BeforePayment = ({
     }
   };
 
+  const getSummaryValues = (formValues) => {
+    let totalBase = 0;
+    let totalPackage = 0;
+    let totalDiscount = 0;
+
+    formValues.forEach((user) => {
+      const age = calculateAge(new Date(user.personalInformation.birthday));
+      const individualBase = getIndividualBaseValue(age);
+
+      const discounted = getDiscountedProducts(age);
+      const getPrice = (id, fallback = 0) => discounted.find((p) => p.id === id)?.price ?? fallback;
+
+      const accomodation = getPrice(user.package?.accomodation?.id, user.package?.accomodation?.price);
+      const transportation = getPrice(user.package?.transportation?.id, user.package?.transportation?.price);
+      const food = getPrice(user.package?.food?.id, user.package?.food?.price);
+
+      const extraMeals = Number(user.extraMeals?.totalPrice || 0);
+      const discount = Number(user.package?.discount || 0);
+
+      const packageTotal =
+        Number(accomodation) +
+        Number(transportation) +
+        Number(food) +
+        (user.package?.food?.id ? 0 : Number(extraMeals));
+
+      totalBase += individualBase;
+      totalPackage += packageTotal;
+      totalDiscount += discount;
+    });
+
+    return {
+      totalBase,
+      totalPackage,
+      totalDiscount,
+    };
+  };
+
+  const { totalBase, totalPackage, totalDiscount } = getSummaryValues(formValues);
+
   return (
-    <Container fluid className="form__container__cart-height ">
+    <Container className="form__container__cart-height">
       <Row>
-        <Col md={8}>
-          <Card className="mb-4 h-100">
+        <Col md={8} className='mb-2'>
+          <Card className="h-100">
             <Card.Body>
               <Card.Title>Carrinho</Card.Title>
               <Cart
@@ -61,45 +104,59 @@ const BeforePayment = ({
                 setCartTotal={setCartTotal}
                 setFormValues={setFormValues}
               />
+
+              <div className="text-center">
+                <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={goToPersonalData}>
+                  <Icons typeIcon="plus" iconSize={30} fill={'#6c757d'} /> &nbsp;Adicionar Acampante
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
 
         <Col md={4}>
-          <Card className="mb-4 h-100">
+          <Card className="mb-4">
             <Card.Body>
               <Card.Title>Resumo</Card.Title>
               <div className="packages-horizontal-line-cart"></div>
 
               <div className="summary">
                 <div className="summary-individual-base">
-                  <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
-                  <h5 className="summary-individual-base-value">R$,00</h5>
+                  <div className="d-flex align-items-center gap-2">
+                    <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
+                    <Tips
+                      classNameWrapper="mt-0 mb-2"
+                      placement="top"
+                      typeIcon="info"
+                      size={15}
+                      colour={'#000'}
+                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                    />
+                  </div>
+                  <h5 className="summary-individual-base-value">R$ {totalBase},00</h5>
                 </div>
                 <div className="summary-total-package">
-                  <h5 className="summary-total-package-label">Total do Pacote</h5>
-                  <h5 className="summary-total-package-value">R$,00</h5>
+                  <h5 className="summary-total-package-label">Total do Pacote:</h5>
+                  <h5 className="summary-total-package-value">R$ {totalPackage},00</h5>
                 </div>
-                <div className="summary-discount">
-                  <h5 className="summary-discount-label">Desconto:</h5>
-                  <h5 className="summary-discount-value">R$,00</h5>
-                </div>
+
+                {totalDiscount > 0 && (
+                  <div className="summary-discount">
+                    <h5 className="summary-discount-label">Desconto:</h5>
+                    <h5 className="summary-discount-value">-R$ {totalDiscount},00</h5>
+                  </div>
+                )}
 
                 <div className="packages-horizontal-line-cart"></div>
 
-                <div className="summary-total-geral mb-3 fw-bold">
-                  <h5>Total:</h5>
-                  <h5>R$ {cartTotal}</h5>
+                <div className="summary-total-geral mb-3">
+                  <h5 className="fw-bold">Total:</h5>
+                  <h5 className="fw-bold">R$ {cartTotal},00</h5>
                 </div>
 
                 <div className="summary-buttons d-grid gap-3">
-                  <Button variant="warning" size="lg" onClick={goToPersonalData}>
-                    <Icons typeIcon="add-person" iconSize={30} fill="#000" /> &nbsp;Adicionar Nova Pessoa
-                  </Button>
-
                   {formValues.length > 0 && (
-                    <Button variant="success" size="lg" onClick={handleClick}>
-                      <Icons typeIcon={cartIsFree ? 'checked' : 'money'} iconSize={30} fill="#fff" /> &nbsp;
+                    <Button variant="info" size="lg" className='payment-btn' onClick={handleClick}>
                       {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                     </Button>
                   )}

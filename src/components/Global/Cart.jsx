@@ -6,7 +6,6 @@ import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts'
 import getIndividualBaseValue from '@/Pages/Packages/utils/getIndividualBaseValue';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
-import Tips from './Tips';
 
 const getDiscountedPrices = (user, age) => {
   const discounted = getDiscountedProducts(age);
@@ -69,19 +68,11 @@ const renderUserTotalInfo = (user, age, individualBase) => {
   const packageTotal =
     Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
 
-  // const discount = Number(user.package?.discount || 0);
   const sumBeforeDiscount = Math.max(Number(packageTotal), 0);
-  // const sumAfterDiscount = Math.max(sumBeforeDiscount - discount, 0);
 
   return (
     <div className="cart-item">
       <div className="item-info">
-        {/* <p>Total do Pacote: R$ {packageTotal}</p>
-        <p>
-          <em>= R$ {sumBeforeDiscount}</em>
-        </p>
-        {discount > 0 && <p className="text-success">Desconto aplicado: -R$ {discount}</p>} */}
-
         <h5 className="fw-bold d-flex justify-content-between">
           Total Acampante: <span>R$ {sumBeforeDiscount},00</span>
         </h5>
@@ -225,40 +216,11 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
 
               <div className="packages-horizontal-line-cart"></div>
 
-              {/* <div className="cart-item">
-                <div className="item-info">
-                  <div className="d-flex align-items-center gap-2">
-                    <p>Valor Base Individual: R$ {individualBase}</p>
-                    <Tips
-                      placement="top"
-                      typeIcon="info"
-                      size={15}
-                      colour={'#000'}
-                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
-                    />
-                  </div>
-                </div>
-              </div> */}
-
               {renderUserTotalInfo(user, age, individualBase)}
             </Card.Body>
           </Card>
         );
       })}
-
-      <div className="cart-total">
-        <strong>Total Geral: R$ {finalTotal}</strong>
-      </div>
-      {/* <div className="mt-4">
-        <Button
-          variant="danger"
-          size="lg"
-          onClick={() => openConfirmationModal('clearCart')}
-          className="cart-btn-responsive"
-        >
-          <Icons typeIcon="close" iconSize={30} fill="#fff" /> &nbsp;Esvaziar Carrinho
-        </Button>
-      </div> */}
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
