@@ -1,6 +1,13 @@
 @use '../../styles/Variables.scss' as *;
 
-.date-enphasis {
-  color: $slime-green;
-  font-weight: bold;
+.info-home {
+  &-enphasis {
+    color: $primary;
+    font-weight: bold;
+  }
+
+  &-list {
+    list-style-type: none;
+    padding-left: 0;
+  }
 }

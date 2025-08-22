@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Container, Button, Card, Modal } from 'react-bootstrap';
+import { Container, Button, Card, Modal, Row, Col } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import './style.scss';
+import Icons from '@/components/Global/Icons';
 
 const FormHome = ({ nextStep }) => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const FormHome = ({ nextStep }) => {
   useEffect(() => {
     if (location.pathname === '/') {
       toast.info(
-        'Favor cadastrar todas as pessoas da sua família, de todas as idades, a partir de 6 meses de vida até idosos. Não se esqueça de incluir seus filhos, mesmo que sejam bem pequenos, pois é essencial para o nosso controle de alimentação e para o departamento infantil!',
+        'Favor cadastrar todas as pessoas da sua família, de todas as idades, a partir de 6 meses de vida até idosos. Não se esqueça de incluir seus filhos, mesmo que sejam bem pequenos, pois isso é essencial para o nosso controle de alimentação e para o departamento infantil!',
       );
       setShowLgpdModal(true);
     }
@@ -25,59 +26,79 @@ const FormHome = ({ nextStep }) => {
       <Card className="form__container__general-height">
         <Card.Body>
           <Container>
-            <div className="row">
-              <div className="col">
-                <h3 className="mb-2 text-center">Acampamento no período de Carnaval 2025</h3>
-                <h5 className="mb-2 text-center">
-                  IP de Boa Viagem -&nbsp;
-                  <span className="date-enphasis fw-bold">
-                    01 a 05 de Março - Garanhuns
-                    <br /> Colégio XV de Novembro • Preletor: Rev. Valdeci Santos
+            <Row className="text-center">
+              <Col>
+                <h3 className="mb-3">
+                  <b>Acampamento no Período de Carnaval 2026</b>
+                </h3>
+                <h5 className="mb-2">
+                  <span className="info-home-enphasis">
+                    <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
+                      <Icons typeIcon="calendar" iconSize={30} fill={'#007185'} />
+                      IP de Boa Viagem • 14 a 18 de fevereiro • Garanhuns
+                    </span>
+                    <span className="d-flex gap-3 align-items-center justify-content-center">
+                      <Icons typeIcon="location-pin" iconSize={30} fill={'#007185'} />
+                      Colégio XV de Novembro • Preletor: Rev. Tarcizio Carvalho
+                    </span>
                   </span>
+                  <br />
+                  Inscrições até{' '}
+                  <em>
+                    <b>10/02</b>
+                  </em>{' '}
+                  ou até o esgotamento das vagas!
                 </h5>
-                <p className="mb-2 text-center">
-                  Siga o passo a passo para completar sua inscrição. Qualquer dúvida, favor contactar a secretaria da
-                  igreja no telefone <em>(81) 9 9839-0194</em> (whatsapp). <br />
-                  <b>Vagas Limitadas • Inscrições até 23/02 ou até se esgotarem as vagas!</b>
-                </p>
-              </div>
-            </div>
+              </Col>
+            </Row>
             <hr className="horizontal-line" />
-            <div className="row">
-              <div className="col">
-                <h4 className="mb-2">Observações:</h4>
-                <ul>
-                  <li>
-                    <u>
-                      <b>AS INSCRIÇÕES SÃO INDIVIDUAIS! Preencher os campos corretamente!</b>
-                    </u>
+            <Row>
+              <Col>
+                <h4 className="mb-4 fw-bold">Instruções Importantes:</h4>
+                <ul className="info-home-list">
+                  <li className="mb-3">
+                    <span className="d-flex gap-3 align-items-center">
+                      <Icons typeIcon="simple-pin" iconSize={40} fill={'#007185'} />
+                      <span>
+                        <b className="info-home-enphasis">Inscrição Individual:</b> Todas as pessoas devem ser
+                        cadastradas, inclusive crianças, de qualquer faixa etária. Preencha todos os campos
+                        corretamente.
+                      </span>
+                    </span>
                   </li>
-                  <li>
-                    Para garantir um controle adequado e facilitar o processo de inscrições, é fundamental registrar
-                    todas as pessoas, incluindo recém-nascidos e idosos. Isso abrange todas as faixas etárias, desde
-                    crianças e jovens até adultos, independentemente de serem pagantes ou não.
+
+                  <li className="mb-3">
+                    <span className="d-flex gap-3 align-items-center">
+                      <Icons typeIcon="credit-card" iconSize={32} fill={'#007185'} />
+                      <span>
+                        <b className="info-home-enphasis">Pagamento:</b> Apenas online! Não é necessário enviar
+                        comprovante.
+                      </span>
+                    </span>
                   </li>
-                  <li>
-                    Inscrições e pagamentos apenas online.{' '}
-                    <u>Caso encontre alguma dificuldade, entre em contato com a secretaria</u> para que possamos lhe
-                    ajudar.
+
+                  <li className="mb-3">
+                    <span className="d-flex gap-3 align-items-center">
+                      <Icons typeIcon="family" iconSize={35} fill={'#007185'} />
+                      <span>
+                        <b className="info-home-enphasis">Compartilhamento de Quarto:</b> Informe no campo{' '}
+                        <em>acompanhantes</em> quem irá dividir o quarto com você (pais, filhos, cônjuge, etc.).
+                      </span>
+                    </span>
                   </li>
+
                   <li>
-                    <b>
-                      Não é necessário enviar comprovantes de pagamento de nenhuma espécie (cartão de crédito, Pix ou
-                      boleto).
-                    </b>{' '}
-                    Uma vez que o pagamento é feito e aprovado, tudo é registrado digitalmente, e não se faz necessário
-                    o envio de comprovante para os meios de comunicação da igreja.
-                  </li>
-                  <li>
-                    Caso algum parente (pai, mãe, esposo, esposa, filhos, etc.) compartilhe o mesmo quarto que você,
-                    seja no colégio ou seminário, por favor, informe-nos na seção de contato no campo de acompanhantes.
-                    Isso nos permitirá organizar os quartos para todos.
+                    <span className="d-flex gap-3 align-items-center">
+                      <Icons typeIcon="phone" iconSize={30} fill={'none'} stroke={'#007185'} />
+                      <span>
+                        <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
+                        igreja pelo telefone <em>(81) 9 9839-0194</em> (WhatsApp).
+                      </span>
+                    </span>
                   </li>
                 </ul>
-              </div>
-            </div>
+              </Col>
+            </Row>
           </Container>
         </Card.Body>
 
