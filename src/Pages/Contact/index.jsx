@@ -118,7 +118,7 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
               </Col>
             </Row>
             <Row>
-              <Col md={8} className="mb-3">
+              <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>
                     <b>Email:</b>
@@ -133,7 +133,7 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
                   <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              <Col md={4} className="mb-3">
+              <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>
                     <b>Igreja:</b>
