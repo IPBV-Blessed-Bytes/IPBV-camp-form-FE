@@ -122,7 +122,7 @@ const BeforePayment = ({
 
               <div className="summary">
                 <div className="summary-individual-base">
-                  <div className="d-flex align-items-center gap-2">
+                  <div className="d-flex align-items-center gap-1">
                     <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
                     <Tips
                       classNameWrapper="mt-0 mb-2"
