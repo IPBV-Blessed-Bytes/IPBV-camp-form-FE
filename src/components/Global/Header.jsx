@@ -62,7 +62,7 @@ const Header = ({
       </h2>
 
       {showNavMenu && (
-        <Breadcrumb className="mt-4">
+        <Breadcrumb className="form__header mt-4">
           {headerSteps.map((step, index) => (
             <React.Fragment key={index}>
               <Breadcrumb.Item
@@ -77,8 +77,8 @@ const Header = ({
               {index < headerSteps.length - 1 && (
                 <Icons
                   className="d-none d-lg-block"
-                  typeIcon="arrow-right"
-                  iconSize={25}
+                  typeIcon="simple-arrow"
+                  iconSize={15}
                   fill={index < steps ? '#ffc107' : '#fff'}
                 />
               )}
