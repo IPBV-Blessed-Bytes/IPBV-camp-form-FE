@@ -25,25 +25,16 @@ body {
   // Form Container
   &__container {
     flex: 1 1 auto;
-    margin-inline: auto;
     margin-top: -2.5rem;
 
     &__general-height {
       min-height: 41.625rem;
-      width: 50rem;
-
-      @media (max-width: $lg) {
-        width: 100%;
-      }
+      width: 100%;
     }
 
     &__cart-height {
       min-height: 41.625rem;
-      width: 125rem;
-
-      @media (max-width: $lg) {
-        width: 100%;
-      }
+      width: 100%;
     }
 
     // Card
@@ -308,7 +299,8 @@ button.accordion-button:not(.collapsed) {
   border-width: 3px !important;
 }
 
-button.btn.btn-outline-danger:hover svg {
+button.btn.btn-outline-danger:hover svg,
+button.btn.btn-outline-secondary.plus-camper-button:hover svg {
   fill: #fff;
 }
 
