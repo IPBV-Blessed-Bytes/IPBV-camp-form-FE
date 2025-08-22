@@ -61,7 +61,7 @@ const renderPackageDetails = (user, age) => {
   );
 };
 
-const renderUserTotalInfo = (user, age, individualBase) => {
+const renderUserTotalInfo = (user, age) => {
   const { accomodation, transportation, food } = getDiscountedPrices(user, age);
   const extraMeals = Number(user.extraMeals?.totalPrice || 0);
 
