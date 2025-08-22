@@ -474,3 +474,23 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
   font-size: 1.1875rem !important;
   padding: 0.375rem 2.25rem 0.375rem 0.5rem !important;
 }
+
+.btn-info {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #007185;
+  --bs-btn-border-color: #007185;
+  --bs-btn-hover-bg: #007185;
+  --bs-btn-hover-border-color: #007185;
+  --bs-btn-active-bg: #007185;
+  --bs-btn-active-border-color: #007185;
+  --bs-btn-disabled-bg: #007185;
+  --bs-btn-disabled-border-color: #007185;
+}
+
+.btn.payment-btn:hover {
+  color: $secondary;
+
+  svg {
+    fill: $secondary;
+  }
+}
