@@ -107,7 +107,7 @@ const BeforePayment = ({
 
               <div className="text-center">
                 <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={goToPersonalData}>
-                  <Icons typeIcon="plus" iconSize={30} fill={'#6c757d'} /> &nbsp;Adicionar Acampante
+                  <Icons typeIcon="plus" iconSize={25} fill={'#6c757d'} /> &nbsp;Adicionar Acampante
                 </Button>
               </div>
             </Card.Body>
