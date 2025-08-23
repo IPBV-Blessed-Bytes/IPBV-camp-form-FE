@@ -208,23 +208,27 @@ const FormRoutes = ({
                 </div>
               )}
 
-              <div className="form__container">
-                {steps === enumSteps.beforePayment && isNotSuccessPathname && (
-                  <BeforePayment
-                    cartKey={cartKey}
-                    formValues={formValues}
-                    goToEditStep={goToEditStep}
-                    goToPersonalData={handleAddNewUser}
-                    goToSuccessPage={goToSuccessPage}
-                    handleBasePriceChange={handleBasePriceChange}
-                    nextStep={nextStep}
-                    sendForm={sendForm}
-                    setBackStepFlag={setBackStepFlag}
-                    setFormValues={setFormValues}
-                    status={status}
-                  />
-                )}
-              </div>
+              {steps === enumSteps.beforePayment && isNotSuccessPathname && (
+                <div className="form__container">
+                  <Row className="justify-content-center">
+                    <Col lg={10}>
+                      <BeforePayment
+                        cartKey={cartKey}
+                        formValues={formValues}
+                        goToEditStep={goToEditStep}
+                        goToPersonalData={handleAddNewUser}
+                        goToSuccessPage={goToSuccessPage}
+                        handleBasePriceChange={handleBasePriceChange}
+                        nextStep={nextStep}
+                        sendForm={sendForm}
+                        setBackStepFlag={setBackStepFlag}
+                        setFormValues={setFormValues}
+                        status={status}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              )}
 
               <InfoButton timeout />
 
