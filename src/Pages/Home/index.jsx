@@ -37,17 +37,21 @@ const FormHome = ({ nextStep }) => {
                       <Icons typeIcon="calendar" iconSize={30} fill={'#007185'} />
                       IP de Boa Viagem • 14 a 18 de fevereiro • Garanhuns
                     </span>
-                    <span className="d-flex gap-3 align-items-center justify-content-center">
+                    <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
                       <Icons typeIcon="location-pin" iconSize={30} fill={'#007185'} />
                       Colégio XV de Novembro • Preletor: Rev. Tarcizio Carvalho
                     </span>
                   </span>
-                  <br />
-                  Inscrições até{' '}
-                  <em>
-                    <b>10/02</b>
-                  </em>{' '}
-                  ou até o esgotamento das vagas!
+                  <span className="d-flex gap-3 align-items-center justify-content-center">
+                    <Icons typeIcon="simple-info" iconSize={35} fill={'#007185'} />
+                    <span>
+                      Inscrições até{' '}
+                      <em>
+                        <b>10/02</b>
+                      </em>{' '}
+                      ou até o esgotamento das vagas!
+                    </span>
+                  </span>
                 </h5>
               </Col>
             </Row>
