@@ -7,10 +7,16 @@
   &-total-geral {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
   }
 
   &-discount-value {
     color: $green;
+  }
+
+  h5 {
+    @media (min-width: $xxxl) and (max-width: $xxxxl) {
+      font-size: 1rem;
+    }
   }
 }
