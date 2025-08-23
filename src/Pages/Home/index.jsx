@@ -28,22 +28,22 @@ const FormHome = ({ nextStep }) => {
           <Container>
             <Row className="text-center">
               <Col>
-                <h3 className="mb-3">
+                <h4 className="mb-3">
                   <b>Acampamento no Período de Carnaval 2026</b>
-                </h3>
-                <h5 className="mb-2">
+                </h4>
+                <h5 className="info-home-text mb-2">
                   <span className="info-home-enphasis">
                     <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
-                      <Icons typeIcon="calendar" iconSize={30} fill={'#007185'} />
+                      <Icons className="flex-shrink-0" typeIcon="calendar" iconSize={30} fill={'#007185'} />
                       IP de Boa Viagem • 14 a 18 de fevereiro • Garanhuns
                     </span>
                     <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
-                      <Icons typeIcon="location-pin" iconSize={30} fill={'#007185'} />
+                      <Icons className="flex-shrink-0" typeIcon="location-pin" iconSize={30} fill={'#007185'} />
                       Colégio XV de Novembro • Preletor: Rev. Tarcizio Carvalho
                     </span>
                   </span>
                   <span className="d-flex gap-3 align-items-center justify-content-center">
-                    <Icons typeIcon="simple-info" iconSize={35} fill={'#007185'} />
+                    <Icons className="flex-shrink-0" typeIcon="simple-info" iconSize={35} fill={'#007185'} />
                     <span>
                       Inscrições até{' '}
                       <em>
@@ -54,51 +54,57 @@ const FormHome = ({ nextStep }) => {
                   </span>
                 </h5>
               </Col>
+              <hr className="horizontal-line" />
             </Row>
-            <hr className="horizontal-line" />
-            <Row>
-              <Col>
-                <h4 className="mb-4 fw-bold">Instruções Importantes:</h4>
+            <Row className="justify-content-center">
+              <Col xl={9}>
+                <h4 className="mb-4 fw-bold">Instruções Importantes</h4>
                 <ul className="info-home-list">
                   <li className="mb-3">
-                    <span className="d-flex gap-3 align-items-center">
-                      <Icons typeIcon="simple-pin" iconSize={40} fill={'#007185'} />
+                    <h6 className="d-flex gap-3 align-items-center">
+                      <Icons className="flex-shrink-0" typeIcon="simple-pin" iconSize={40} fill={'#007185'} />
                       <span>
                         <b className="info-home-enphasis">Inscrição Individual:</b> Todas as pessoas devem ser
                         cadastradas, inclusive crianças, de qualquer faixa etária. Preencha todos os campos
                         corretamente.
                       </span>
-                    </span>
+                    </h6>
                   </li>
 
                   <li className="mb-3">
-                    <span className="d-flex gap-3 align-items-center">
-                      <Icons typeIcon="credit-card" iconSize={32} fill={'#007185'} />
+                    <h6 className="d-flex gap-3 align-items-center">
+                      <Icons className="flex-shrink-0" typeIcon="credit-card" iconSize={32} fill={'#007185'} />
                       <span>
                         <b className="info-home-enphasis">Pagamento:</b> Apenas online! Não é necessário enviar
                         comprovante.
                       </span>
-                    </span>
+                    </h6>
                   </li>
 
                   <li className="mb-3">
-                    <span className="d-flex gap-3 align-items-center">
-                      <Icons typeIcon="family" iconSize={35} fill={'#007185'} />
+                    <h6 className="d-flex gap-3 align-items-center">
+                      <Icons className="flex-shrink-0" typeIcon="family" iconSize={35} fill={'#007185'} />
                       <span>
                         <b className="info-home-enphasis">Compartilhamento de Quarto:</b> Informe no campo{' '}
                         <em>acompanhantes</em> quem irá dividir o quarto com você (pais, filhos, cônjuge, etc.).
                       </span>
-                    </span>
+                    </h6>
                   </li>
 
                   <li>
-                    <span className="d-flex gap-3 align-items-center">
-                      <Icons typeIcon="phone" iconSize={30} fill={'none'} stroke={'#007185'} />
+                    <h6 className="d-flex gap-3 align-items-center">
+                      <Icons
+                        className="flex-shrink-0"
+                        typeIcon="phone"
+                        iconSize={30}
+                        fill={'none'}
+                        stroke={'#007185'}
+                      />
                       <span>
                         <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
                         igreja pelo telefone <em>(81) 9 9839-0194</em> (WhatsApp).
                       </span>
-                    </span>
+                    </h6>
                   </li>
                 </ul>
               </Col>

@@ -1,6 +1,12 @@
 @use '../../styles/Variables.scss' as *;
 
 .info-home {
+  &-text {
+    @media (max-width: $md) {
+      font-size: 1rem;
+    }
+  }
+
   &-enphasis {
     color: $primary;
     font-weight: bold;
