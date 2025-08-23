@@ -92,7 +92,7 @@ const BeforePayment = ({
   return (
     <Container className="form__container__cart-height">
       <Row>
-        <Col lg={8} className='mb-2'>
+        <Col xs={12} xl={8} className="mb-2">
           <Card className="h-100">
             <Card.Body>
               <Card.Title>Carrinho</Card.Title>
@@ -114,7 +114,7 @@ const BeforePayment = ({
           </Card>
         </Col>
 
-        <Col lg={4}>
+        <Col xs={12} xl={4}>
           <Card className="mb-4">
             <Card.Body>
               <Card.Title>Resumo</Card.Title>
@@ -123,9 +123,9 @@ const BeforePayment = ({
               <div className="summary">
                 <div className="summary-individual-base">
                   <div className="d-flex align-items-center gap-1">
-                    <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
+                    <h5 className="summary-individual-base-label">Valor Base:</h5>
                     <Tips
-                      classNameWrapper="summary-tip mt-0 mb-2"
+                      classNameWrapper="mt-0 mb-2"
                       placement="top"
                       typeIcon="info"
                       size={15}
@@ -156,7 +156,7 @@ const BeforePayment = ({
 
                 <div className="summary-buttons d-grid gap-3">
                   {formValues.length > 0 && (
-                    <Button variant="info" size="lg" className='payment-btn' onClick={handleClick}>
+                    <Button variant="info" size="lg" className="payment-btn" onClick={handleClick}>
                       {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                     </Button>
                   )}
