@@ -92,7 +92,7 @@ const BeforePayment = ({
   return (
     <Container className="form__container__cart-height">
       <Row>
-        <Col md={8} className='mb-2'>
+        <Col lg={8} className='mb-2'>
           <Card className="h-100">
             <Card.Body>
               <Card.Title>Carrinho</Card.Title>
@@ -114,7 +114,7 @@ const BeforePayment = ({
           </Card>
         </Col>
 
-        <Col md={4}>
+        <Col lg={4}>
           <Card className="mb-4">
             <Card.Body>
               <Card.Title>Resumo</Card.Title>
@@ -125,7 +125,7 @@ const BeforePayment = ({
                   <div className="d-flex align-items-center gap-1">
                     <h5 className="summary-individual-base-label">Valor Base Individual:</h5>
                     <Tips
-                      classNameWrapper="mt-0 mb-2"
+                      classNameWrapper="summary-tip mt-0 mb-2"
                       placement="top"
                       typeIcon="info"
                       size={15}
