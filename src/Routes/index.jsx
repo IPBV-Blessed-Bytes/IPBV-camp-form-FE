@@ -114,7 +114,7 @@ const FormRoutes = ({
                 steps={steps}
               />
 
-              {steps !== enumSteps.beforePayment && isNotSuccessPathname && (
+              {steps !== enumSteps.beforePayment && (
                 <div className="form__container container">
                   <Row className="justify-content-center">
                     <Col lg={10}>
