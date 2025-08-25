@@ -1051,64 +1051,64 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const selectWithRide = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.car === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.car === filterValue;
     });
   };
 
   const selectWithCellphone = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.isWhatsApp === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.isWhatsApp === filterValue;
     });
   };
 
   const selectWithExtraMeals = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.someFood === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.someFood === filterValue;
     });
   };
 
   const selectWithCoupon = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.discountCoupon === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.discountCoupon === filterValue;
     });
   };
 
   const selectWithCheckin = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.checkin === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.checkin === filterValue;
     });
   };
 
   const selectWithManualRegistration = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData === filterValue;
     });
   };
 
   const selectWithCrew = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.crew === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.crew === filterValue;
     });
   };
 
    const selectWithPastoralFamily = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.pastoralFamily === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.pastoralFamily === filterValue;
     });
   };
 
   const selectWithConfirmationUserData = (rows, id, filterValue) => {
     return rows.filter((row) => {
-      const checkinData = row.values[id];
-      return filterValue === undefined || checkinData.confirmationUserData === filterValue;
+      const filterData = row.values[id];
+      return filterValue === undefined || filterData.confirmationUserData === filterValue;
     });
   };
 
