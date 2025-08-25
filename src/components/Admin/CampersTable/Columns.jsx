@@ -243,6 +243,17 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
         { label: 'Não', value: false },
       ],
     },
+    {
+      label: 'Família Pastoral',
+      name: 'pastoralFamily',
+      type: 'select',
+      placeholder: 'Selecione se é família pastoral',
+      oddOrEven: 'odd',
+      options: [
+        { label: 'Sim', value: true },
+        { label: 'Não', value: false },
+      ],
+    },
   ];
 
   const validateFields = useCallback(() => {

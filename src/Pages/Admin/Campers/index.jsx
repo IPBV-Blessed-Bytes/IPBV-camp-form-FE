@@ -101,6 +101,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
     const booleanValue =
       name === 'crew' ||
+      name === 'pastoralFamily' ||
       name === 'extraMeals.someFood' ||
       name === 'contact.car' ||
       name === 'contact.needRide' ||
@@ -966,6 +967,25 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
       },
+        {
+        Header: 'Família Pastoral:',
+        accessor: 'pastoralFamily',
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithPastoralFamily',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+      },
       {
         Header: 'Inscrição Manual:',
         accessor: 'manualRegistration',
@@ -1078,6 +1098,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
+   const selectWithPastoralFamily = (rows, id, filterValue) => {
+    return rows.filter((row) => {
+      const checkinData = row.values[id];
+      return filterValue === undefined || checkinData.pastoralFamily === filterValue;
+    });
+  };
+
   const selectWithConfirmationUserData = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const checkinData = row.values[id];
@@ -1118,6 +1145,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithCheckin,
         selectWithManualRegistration,
         selectWithCrew,
+        selectWithPastoralFamily,
         selectWithConfirmationUserData,
       },
     },
@@ -1182,6 +1210,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
       observation: 'Observação',
       crew: 'Equipe',
+      pastoralFamily: 'Família Pastoral',
       manualRegistration: 'Inscrição Manual',
       'package.discountCoupon': 'Cupom de Desconto',
       'package.discountValue': 'Valor do Desconto',
@@ -1225,6 +1254,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Celular do Responsável Legal',
       'Observação',
       'Equipe',
+      'Família Pastoral',
       'Inscrição Manual',
       'Cupom de Desconto',
       'Valor do Desconto',
