@@ -39,6 +39,7 @@ import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
+import CustomCarousel from '@/components/Global/CustomCarousel';
 
 const FormRoutes = ({
   adminPathname,
@@ -231,6 +232,8 @@ const FormRoutes = ({
               )}
 
               <InfoButton timeout />
+
+              <CustomCarousel images={[]} title="Parceiros" />
 
               <Footer handleAdminClick={handleAdminClick} />
             </>
