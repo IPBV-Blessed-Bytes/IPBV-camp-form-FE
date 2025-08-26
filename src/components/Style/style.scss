@@ -532,44 +532,12 @@
 }
 
 // Carousel
-.carousel {
-  border-radius: 0.75rem;
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
-  margin: 0;
-  max-width: none;
-  overflow: hidden;
-  width: 100%;
-
-  .carousel-inner {
-    background: $white;
-    border-radius: 0.75rem;
-    padding: 2rem;
-  }
-
-  .carousel-item {
-    text-align: center;
-
-    img {
-      background: $white;
-      height: 9.375rem;
-      object-fit: contain;
-      width: 100%;
-    }
-  }
-
-  .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-    filter: invert(1);
-  }
-
-  .carousel-indicators {
-    margin-bottom: 0;
-    [data-bs-target] {
-      background-color: $primary;
-    }
-
-    .active {
-      background-color: $secondary;
-    }
+.swiper {
+  img {
+    display: block;
+    margin: auto;
+    max-height: 100px;
+    object-fit: contain;
+    width: 100%;
   }
 }

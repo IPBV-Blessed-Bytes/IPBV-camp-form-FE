@@ -1,33 +1,40 @@
 import PropTypes from 'prop-types';
-import { Carousel, Col, Row, Container, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 import '../Style/style.scss';
 
 const CustomCarousel = ({ images, title }) => {
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 mb-3 mb-md-0">
       <Row className="justify-content-center">
         <Col lg={10}>
-          <h4 className="mb-4 fw-bold">{title || 'Parceiros'}</h4>
+          <h4 className="d-flex mb-4 fw-bold justify-content-center">{title || 'Título'}</h4>
         </Col>
       </Row>
       <Row className="justify-content-center">
         <Col lg={10}>
           {images && images.length > 0 ? (
-            <Carousel>
+            <Swiper
+              modules={[Autoplay]}
+              spaceBetween={20}
+              slidesPerView={5}
+              loop={true}
+              autoplay={{
+                delay: 0,
+                disableOnInteraction: false,
+              }}
+              speed={3000}
+              grabCursor={true}
+              allowTouchMove={true}
+            >
               {images.map((src, index) => (
-                <Carousel.Item key={index}>
-                  <img
-                    className="d-block mx-auto"
-                    src={src}
-                    alt={`Imagem ${index + 1}`}
-                    style={{
-                      maxHeight: '300px',
-                      objectFit: 'contain',
-                    }}
-                  />
-                </Carousel.Item>
+                <SwiperSlide key={index}>
+                  <img src={src} alt={`Imagem ${index + 1}`} />
+                </SwiperSlide>
               ))}
-            </Carousel>
+            </Swiper>
           ) : (
             <Alert variant="warning" className="text-center">
               Nenhuma imagem disponível no momento
