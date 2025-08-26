@@ -234,7 +234,7 @@ const FormRoutes = ({
               <InfoButton timeout />
 
               {(steps === enumSteps.home || steps === enumSteps.success) && (
-                <CustomCarousel images={[]} title="Parceiros" />
+                <CustomCarousel title="Parceiros" images={[]} />
               )}
 
               <Footer handleAdminClick={handleAdminClick} />

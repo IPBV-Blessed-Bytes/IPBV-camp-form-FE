@@ -5,7 +5,7 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import '../Style/style.scss';
 
-const CustomCarousel = ({ images, title }) => {
+const CustomCarousel = ({ title, images }) => {
   return (
     <Container className="mt-5 mb-3 mb-md-0">
       <Row className="justify-content-center">
@@ -47,8 +47,8 @@ const CustomCarousel = ({ images, title }) => {
 };
 
 CustomCarousel.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default CustomCarousel;
