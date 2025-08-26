@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // ⬅️ useLocation importado
 import PropTypes from 'prop-types';
 import { enumSteps } from '@/utils/constants';
 import '../Style/style.scss';
@@ -30,21 +30,17 @@ const Header = ({
   ];
 
   const navigateTo = useNavigate();
+  const location = useLocation();
 
   const handleStepChange = (newStep) => {
-    if (window.location.pathname === '/sucesso') {
+    if (location.pathname === '/sucesso') {
       navigateTo('/');
       return;
     }
 
     if (formSubmitted) return;
-
     if (!backStepFlag) return;
-
-    if (newStep === 4 && hasFood) {
-      return;
-    }
-
+    if (newStep === 4 && hasFood) return;
     if (newStep > highestStepReached) return;
 
     if (newStep <= highestStepReached) {
@@ -87,16 +83,18 @@ const Header = ({
         </Breadcrumb>
       )}
 
-      {Array.isArray(formValues) && formValues.some((user) => user?.personalInformation?.name?.trim()) && (
-        <Button
-          className="cart-btn"
-          onClick={() => {
-            goToStep(enumSteps.beforePayment);
-          }}
-        >
-          <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
-        </Button>
-      )}
+      {location.pathname !== '/sucesso' &&
+        Array.isArray(formValues) &&
+        formValues.some((user) => user?.personalInformation?.name?.trim()) && (
+          <Button
+            className="cart-btn"
+            onClick={() => {
+              goToStep(enumSteps.beforePayment);
+            }}
+          >
+            <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+          </Button>
+        )}
     </header>
   );
 };
