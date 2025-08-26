@@ -43,7 +43,6 @@ const BeforePayment = ({
 
     if (cartIsFree) {
       sendForm(formValues);
-      goToSuccessPage();
     } else {
       sessionStorage.removeItem(cartKey);
       nextStep();

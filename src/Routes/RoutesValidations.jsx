@@ -300,7 +300,7 @@ const RoutesValidations = ({ formContext }) => {
     setLoading(true);
     try {
       setStatus('loading');
-
+    
       const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
 
       const formsToSend = formValues.map((form, index) => {
@@ -358,6 +358,7 @@ const RoutesValidations = ({ formContext }) => {
         window.open(checkoutUrl, '_self');
         toast.success('Redirecionando para pagamento...');
       } else if (response.status === 201 || response.status === 200) {
+        goToSuccessPage();
         setFormSubmitted(true);
         toast.success('Inscrição validada com sucesso');
       } else if (checkoutStatus === 'Checkout Error') {
