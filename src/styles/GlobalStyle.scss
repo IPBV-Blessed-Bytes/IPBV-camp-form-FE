@@ -295,7 +295,8 @@ button.accordion-button:not(.collapsed) {
 }
 
 .btn.btn-outline-success,
-.btn.btn-outline-danger {
+.btn.btn-outline-danger,
+.cart-container .btn-outline-secondary {
   border-width: 3px !important;
 }
 
