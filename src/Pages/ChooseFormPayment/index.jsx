@@ -1,21 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Container, Card, Form, Button, Modal } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 
-const ChooseFormPayment = ({
-  backStep,
-  initialValues,
-  loading,
-  sendForm,
-  setBackStepFlag,
-  status,
-  updateForm,
-}) => {
+const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBackStepFlag, status, updateForm }) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       formPayment: initialValues.formPayment || '',
@@ -33,7 +27,7 @@ const ChooseFormPayment = ({
   const handleManualSubmit = async () => {
     try {
       await formPaymentSchema.validate(values, { abortEarly: false });
-      handleSubmit();
+      setShowConfirm(true);
     } catch (validationError) {
       const formattedErrors = {};
       validationError.inner.forEach((error) => {
@@ -44,6 +38,11 @@ const ChooseFormPayment = ({
       formik.setErrors(formattedErrors);
       formik.setTouched({ formPayment: true });
     }
+  };
+
+  const handleConfirmAdvance = () => {
+    setShowConfirm(false);
+    handleSubmit();
   };
 
   useEffect(() => {
@@ -68,59 +67,88 @@ const ChooseFormPayment = ({
   }, []);
 
   return (
-    <Card className="form__container__general-height">
-      <Card.Body className="choose-form-payment-custom-padding">
-        <Container>
-          <Card.Title>Pagamento</Card.Title>
-          <Card.Text>
-            Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você será
-            redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção. Certifique-se
-            de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
-            <em>não é necessário enviar comprovante de pagamento!</em> Todo o processo é digital e registrado
-            automaticamente em nossa base de dados.
-          </Card.Text>
+    <>
+      <Card className="form__container__general-height">
+        <Card.Body className="choose-form-payment-custom-padding">
+          <Container>
+            <Card.Title>Pagamento</Card.Title>
+            <Card.Text>
+              Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você será
+              redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção.
+              Certifique-se de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
+              <em>não é necessário enviar comprovante de pagamento!</em> Todo o processo é digital e registrado
+              automaticamente em nossa base de dados.
+            </Card.Text>
 
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>Escolha sua forma de pagamento:</b>
-              </Form.Label>
-              <Form.Select
-                id="formPayment"
-                name="formPayment"
-                isInvalid={!!errors.formPayment}
-                value={values.formPayment}
-                onChange={selectChangeHandler}
-              >
-                <option value="" disabled>
-                  Selecione uma opção
-                </option>
-                <option value="creditCard">Cartão de Crédito (Até 12x)</option>
-                <option value="pix">PIX</option>
-                <option value="ticket">Boleto</option>
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
-            </Form.Group>
-          </Form>
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <b>Escolha sua forma de pagamento:</b>
+                </Form.Label>
+                <Form.Select
+                  id="formPayment"
+                  name="formPayment"
+                  isInvalid={!!errors.formPayment}
+                  value={values.formPayment}
+                  onChange={selectChangeHandler}
+                >
+                  <option value="" disabled>
+                    Selecione uma opção
+                  </option>
+                  <option value="creditCard">Cartão de Crédito (Até 12x)</option>
+                  <option value="pix">PIX</option>
+                  <option value="ticket">Boleto</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
+              </Form.Group>
+            </Form>
 
-          <Loading loading={loading} />
-        </Container>
-      </Card.Body>
+            <Loading loading={loading} />
+          </Container>
+        </Card.Body>
 
-      <div className="form__container__buttons">
-        <Button variant="light" onClick={backStep} size="lg">
-          Voltar
-        </Button>
-        <Button
-          variant="warning"
-          onClick={handleManualSubmit}
-          size="lg"
-          disabled={status === 'loading' || status === 'loaded'}
-        >
-          Avançar
-        </Button>
-      </div>
-    </Card>
+        <div className="form__container__buttons">
+          <Button variant="light" onClick={backStep} size="lg">
+            Voltar
+          </Button>
+          <Button
+            variant="warning"
+            onClick={handleManualSubmit}
+            size="lg"
+            disabled={status === 'loading' || status === 'loaded'}
+          >
+            Avançar
+          </Button>
+        </div>
+      </Card>
+
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <b>Confirmação</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            <b>Atenção:</b> caso você avance para a sessão de pagamento, <b><em>o carrinho será limpo</em></b> e não será mais
+            possível alterar os dados do formulário ou a forma de pagamento.
+          </p>
+          <p>
+            Caso deseje, você poderá <b>refazer a inscrição do zero</b> posteriormente, preenchendo novamente seus
+            dados.
+          </p>
+          <p>Deseja realmente prosseguir?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            Cancelar
+          </Button>
+          <Button variant="success" onClick={handleConfirmAdvance}>
+            Sim, avançar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 
