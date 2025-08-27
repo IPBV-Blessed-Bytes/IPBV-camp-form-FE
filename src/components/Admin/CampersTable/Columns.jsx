@@ -204,7 +204,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
     },
     {
-      label: 'Nome do Resp.` Legal',
+      label: 'Nome do Resp. Legal',
       name: 'personalInformation.legalGuardianName',
       type: 'text',
       placeholder: 'Nome do Responsável Legal',

@@ -161,6 +161,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       id: editFormData.id,
       observation: editFormData.observation,
       pastoralFamily: editFormData.pastoralFamily,
+      crew: editFormData.crew,
       ...sanitizedFormData,
     };
 
@@ -194,6 +195,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       manualRegistration: true,
       observation: addFormData.observation ? addFormData.observation : '',
       pastoralFamily: addFormData.pastoralFamily ? addFormData.pastoralFamily : '',
+      crew: addFormData.crew ? addFormData.crew : '',
       ...sanitizedFormData,
       registrationDate: currentDate,
     };
