@@ -210,7 +210,7 @@ const FormRoutes = ({
               )}
 
               {steps === enumSteps.beforePayment && isNotSuccessPathname && (
-                <div className="form__container">
+                <div className="form__container container-fluid">
                   <Row className="justify-content-center">
                     <Col lg={10}>
                       <BeforePayment
@@ -234,7 +234,18 @@ const FormRoutes = ({
               <InfoButton timeout />
 
               {(steps === enumSteps.home || steps === enumSteps.success) && (
-                <CustomCarousel title="Parceiros" images={[]} />
+                <CustomCarousel
+                  title="Parceiros"
+                  images={[
+                    '../../public/Images/camp_logo.png',
+                    '../../public/Images/logo_50.png',
+                    '../../public/Images/logo.png',
+                    '../../public/Images/qr-code.jpeg',
+                    '../../public/Images/test-intelligenza-sociale.jpg',
+                    '../../public/Images/Test-Logo.svg.png',
+                    '../../public/Images/test.png',
+                  ]}
+                />
               )}
 
               <Footer handleAdminClick={handleAdminClick} />

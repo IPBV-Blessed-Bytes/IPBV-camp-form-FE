@@ -489,9 +489,10 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
 }
 
 .btn.payment-btn:hover {
-  color: $secondary;
+  color: $white;
+  opacity: 0.9;
 
   svg {
-    fill: $secondary;
+    fill: $white;
   }
 }

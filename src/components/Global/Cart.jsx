@@ -179,7 +179,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4 className="cart-user-title mb-0">
-                  <b>{userName}:</b>
+                  <b>{userName}</b>
                 </h4>
                 <div className="d-flex gap-2">
                   <Button variant="outline-secondary" size="md" onClick={() => goToEditStep(index)}>
