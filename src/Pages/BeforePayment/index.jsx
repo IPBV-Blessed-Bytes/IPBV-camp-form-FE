@@ -91,7 +91,7 @@ const BeforePayment = ({
   return (
     <Container className="form__container__cart-height">
       <Row>
-        <Col xs={12} xl={8} className="mb-2">
+        <Col xs={12} xl={8} className="mb-2 px-0 px-lg-2">
           <Card className="h-100">
             <Card.Body>
               <Card.Title>Carrinho</Card.Title>
@@ -113,7 +113,7 @@ const BeforePayment = ({
           </Card>
         </Col>
 
-        <Col xs={12} xl={4}>
+        <Col xs={12} xl={4} className="px-0 px-lg-2">
           <Card className="mb-4">
             <Card.Body>
               <Card.Title>Resumo</Card.Title>

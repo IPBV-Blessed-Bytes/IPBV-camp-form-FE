@@ -118,7 +118,7 @@ const FormRoutes = ({
               {steps !== enumSteps.beforePayment && (
                 <div className="form__container container">
                   <Row className="justify-content-center">
-                    <Col lg={10}>
+                    <Col lg={10} className="px-0">
                       {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
                       {steps === enumSteps.personalData && isNotSuccessPathname && (
                         <FormPersonalData
@@ -210,9 +210,9 @@ const FormRoutes = ({
               )}
 
               {steps === enumSteps.beforePayment && isNotSuccessPathname && (
-                <div className="form__container container-fluid">
+                <div className="form__container container-fluid ">
                   <Row className="justify-content-center">
-                    <Col lg={10}>
+                    <Col lg={10} className="px-0">
                       <BeforePayment
                         cartKey={cartKey}
                         formValues={formValues}
