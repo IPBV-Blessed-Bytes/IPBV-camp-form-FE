@@ -156,10 +156,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     setLoading(true);
 
     const sanitizedFormData = sanitizeFields(editFormData, initialValues);
-
+    
     const updatedFormValues = {
       id: editFormData.id,
       observation: editFormData.observation,
+      pastoralFamily: editFormData.pastoralFamily,
       ...sanitizedFormData,
     };
 
@@ -192,6 +193,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const updatedFormValues = {
       manualRegistration: true,
       observation: addFormData.observation ? addFormData.observation : '',
+      pastoralFamily: addFormData.pastoralFamily ? addFormData.pastoralFamily : '',
       ...sanitizedFormData,
       registrationDate: currentDate,
     };
