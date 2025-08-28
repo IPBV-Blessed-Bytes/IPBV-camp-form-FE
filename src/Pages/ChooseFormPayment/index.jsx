@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
+import Icons from '@/components/Global/Icons';
 
 const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBackStepFlag, status, updateForm }) => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -123,28 +124,28 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
       </Card>
 
       <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>Confirmação</b>
+        <Modal.Header closeButton className="choose-form-payment-custom-modal-header">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
+            <b>Avançar para Pagamento</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            <b>Atenção:</b> caso você avance para a sessão de pagamento, <b><em>o carrinho será limpo</em></b> e não será mais
-            possível alterar os dados do formulário ou a forma de pagamento.
+            Ao continuar, <b>seu carrinho será apagado</b> e não será possível alterar os dados já preenchidos ou a
+            forma de pagamento.
           </p>
           <p>
-            Caso deseje, você poderá <b>refazer a inscrição do zero</b> posteriormente, preenchendo novamente seus
-            dados.
+            Caso prefira, você poderá <b>refazer a inscrição do zero</b> posteriormente.
           </p>
           <p>Deseja realmente prosseguir?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
-            Cancelar
+          <Button variant="outline-secondary" onClick={() => setShowConfirm(false)}>
+            Voltar
           </Button>
-          <Button variant="success" onClick={handleConfirmAdvance}>
-            Sim, avançar
+          <Button variant="danger" onClick={handleConfirmAdvance}>
+            Avançar
           </Button>
         </Modal.Footer>
       </Modal>
