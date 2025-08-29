@@ -289,7 +289,9 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
         const isEditForm = editForm;
         const isNestedField = field.name.includes('.');
 
-        const getNestedValue = (data) => data[field.name.split('.')[0]]?.[field.name.split('.')[1]];
+        const getNestedValue = (data, path) => {
+          return path.split('.').reduce((obj, key) => obj?.[key], data);
+        };
 
         const value = isRegistrationDate
           ? isEditForm
@@ -297,10 +299,10 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
             : currentDate
           : isEditForm
           ? isNestedField
-            ? getNestedValue(editFormData)
+            ? getNestedValue(editFormData, field.name)
             : editFormData[field.name]
           : isNestedField
-          ? getNestedValue(addFormData)
+          ? getNestedValue(addFormData, field.name)
           : addFormData[field.name];
 
         return (

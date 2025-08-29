@@ -111,23 +111,37 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
     const updateState = (setter) => {
       setter((prevData) => {
-        if (keys.length === 2) {
+        let newState = { ...prevData };
+
+        if (keys.length === 1) {
+          newState = {
+            ...prevData,
+            [keys[0]]: booleanValue,
+          };
+        } else if (keys.length === 2) {
           const [parentKey, childKey] = keys;
-          const newState = {
+          newState = {
             ...prevData,
             [parentKey]: {
               ...prevData[parentKey],
               [childKey]: booleanValue,
             },
           };
-          return newState;
-        } else {
-          const newState = {
+        } else if (keys.length === 3) {
+          const [grandParentKey, parentKey, childKey] = keys;
+          newState = {
             ...prevData,
-            [name]: booleanValue,
+            [grandParentKey]: {
+              ...prevData[grandParentKey],
+              [parentKey]: {
+                ...prevData[grandParentKey]?.[parentKey],
+                [childKey]: booleanValue,
+              },
+            },
           };
-          return newState;
         }
+
+        return newState;
       });
     };
 
@@ -1488,7 +1502,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
       />
 
-      {showScrollButton && <Icons className="scroll-to-top" typeIcon="arrow-top" onClick={scrollToTop} iconSize={30} />}
       <Loading loading={loading} />
     </Container>
   );
