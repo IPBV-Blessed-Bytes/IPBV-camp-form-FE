@@ -429,10 +429,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         accessor: (row) =>
           `${
             row.package.accomodation.name === 'Colégio Quarto Coletivo' ||
+            row.package.accomodation.name === 'Colegio Quarto Coletivo' ||
             row.package.accomodation.name === 'Colégio Quarto Família' ||
-            row.package.accomodation.name === 'Colégio Camping'
+            row.package.accomodation.name === 'Colegio Quarto Familia' ||
+            row.package.accomodation.name === 'Colégio Camping' ||
+            row.package.accomodation.name === 'Colegio Camping'
               ? '[COLÉGIO]'
-              : row.package.accomodation.name === 'Seminário'
+              : row.package.accomodation.name === 'Seminário' || row.package.accomodation.name === 'Seminario'
               ? '[SEMINÁRIO]'
               : row.package.accomodation.name === 'Externo'
               ? '[EXTERNO]'
@@ -444,17 +447,20 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.food.name === 'Café, almoço e jantar' ||
-            row.package.food.name === 'Café| almoço e jantar' ||
-            row.package.food.name === 'Cafe, almoco e jantar' ||
-            row.package.food.name === 'Cafe da manha| almoco e jantar' ||
-            row.package.food.name === 'Cafe da manha  almoco e jantar' ||
-            row.package.food.name === 'Almoço e jantar' ||
-            row.package.food.name === 'Almoco e jantar'
-              ? 'COM ALIMENTAÇÃO'
-              : row.package.food.name === ''
-              ? ''
-              : 'SEM ALIMENTAÇÃO'
+            row.package.food.name === 'Alimentação Completa (Café, Almoço e Jantar)' ||
+            row.package.food.name === 'Alimentacao Completa (Cafe, Almoco e Jantar)' ||
+            row.package.food.name === 'Alimentação Completa (Café| Almoço e Jantar)' ||
+            row.package.food.name === 'Alimentacao Completa (Cafe| Almoco e Jantar)' ||
+            row.package.food.name === 'Alimentacao Completa (Cafe  Almoco e Jantar)'
+              ? 'COM ALIMENTAÇÃO COMPLETA'
+              : row.package.food.name === 'Alimentação Parcial (Almoço e Jantar)' ||
+                row.package.food.name === 'Alimentacao Parcial (Almoco e Jantar)'
+              ? 'COM ALIMENTAÇÃO PARCIAL'
+              : row.package.food.name === '' ||
+                row.package.food.name === 'Sem Alimentação' ||
+                row.package.food.name === 'Sem Alimentacao'
+              ? 'SEM ALIMENTAÇÃO'
+              : ''
           }`,
         Filter: ({ column }) => (
           <ColumnFilter
