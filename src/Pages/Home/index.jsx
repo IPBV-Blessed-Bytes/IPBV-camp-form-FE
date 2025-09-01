@@ -62,7 +62,7 @@ const FormHome = ({ nextStep }) => {
                 <ul className="info-home-list">
                   <li className="mb-3">
                     <h6 className="d-flex gap-3 align-items-center">
-                      <Icons className="flex-shrink-0" typeIcon="simple-pin" iconSize={40} fill={'#007185'} />
+                      <Icons className="flex-shrink-0" typeIcon="simple-pin" iconSize={37} fill={'#007185'} />
                       <span>
                         <b className="info-home-enphasis">Inscrição Individual:</b> Todas as pessoas devem ser
                         cadastradas, inclusive crianças, de qualquer faixa etária. Preencha todos os campos
