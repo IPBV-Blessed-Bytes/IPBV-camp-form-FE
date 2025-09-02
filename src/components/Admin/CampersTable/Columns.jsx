@@ -155,7 +155,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
     {
       label: 'Hospedagem',
-      name: 'package.accomodation.name',
+      name: 'package.accomodationName',
       type: 'select',
       placeholder: 'Selecione a hospedagem',
       oddOrEven: 'even',
@@ -169,7 +169,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     },
     {
       label: 'Transporte',
-      name: 'package.transportation.name',
+      name: 'package.transportationName',
       type: 'select',
       placeholder: 'Selecione tipo de transporte',
       oddOrEven: 'odd',
@@ -180,7 +180,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     },
     {
       label: 'Alimentação',
-      name: 'package.food.name',
+      name: 'package.foodName',
       type: 'select',
       placeholder: 'Selecione a alimentação',
       oddOrEven: 'even',

@@ -53,7 +53,7 @@ const renderPackageDetails = (user, age) => {
               <br />
               <h5>R$ {food},00</h5>
             </div>
-            <p>{user.package.food.name.split(' (')[0]}</p>
+            <p>{user.package.foodName.split(' (')[0]}</p>
           </div>
         )}
       </div>

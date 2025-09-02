@@ -102,22 +102,22 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                     <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
                       <Card.Text>
                         <span className="form-review__section-title">Pacote:</span> <br />
-                        Hospedagem = {formValues.package.accomodation.name}
+                        Hospedagem = {formValues.package.accomodationName}
                         <br />
                         Preço = R$ {accomodationPrice}
                         <div className="packages-horizontal-line" />
-                        Transporte = {formValues.package.transportation.name}
+                        Transporte = {formValues.package.transportationName}
                         <br />
                         Preço = R$ {transportationPrice}
                         {!formValues.package.food.id &&
-                          formValues.package.transportation.name &&
+                          formValues.package.transportationName &&
                           (formValues.contact.car === true || formValues.contact.needRide) === true && (
                             <div className="packages-horizontal-line" />
                           )}
                         {formValues.package.food.id && (
                           <>
                             <div className="packages-horizontal-line" />
-                            Alimentação = {formValues.package.food.name}
+                            Alimentação = {formValues.package.foodName}
                             <br />
                             Preço = R$ {foodPrice}
                             {!formValues.extraMeals?.totalPrice && <div className="packages-horizontal-line" />}

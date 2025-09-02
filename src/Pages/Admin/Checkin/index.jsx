@@ -214,13 +214,13 @@ const AdminCheckin = ({ loggedUsername }) => {
                 <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
               </p>
               <p>
-                <strong>Hospedagem:</strong> {userInfo.package.accomodation.name}
+                <strong>Hospedagem:</strong> {userInfo.package.accomodationName}
               </p>
               <p>
                 <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
               </p>
               <p>
-                <strong>Alimentação:</strong> {userInfo.package.food.name || '-'}
+                <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
               </p>
               <p>
                 <strong>Dias de Refeição Extra:</strong>{' '}
