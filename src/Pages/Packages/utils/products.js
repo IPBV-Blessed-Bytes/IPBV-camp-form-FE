@@ -60,7 +60,7 @@ export const products = [
     name: 'Alimentação Parcial (Almoço e Jantar)',
     price: 240,
     description:
-      'Apenas almoço e jantar. Café da manhã não incluso, destinado para quem vai ficar no seminário ou hotel, que normalmente já inclui café da manhã',
+      'Apenas almoço e jantar. Café da manhã não incluso, destinado para quem vai ficar em hotéis que normalmente já inclui café da manhã.',
     category: 'Alimentação',
   },
 ];
