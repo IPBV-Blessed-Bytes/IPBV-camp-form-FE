@@ -111,37 +111,23 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
     const updateState = (setter) => {
       setter((prevData) => {
-        let newState = { ...prevData };
-
-        if (keys.length === 1) {
-          newState = {
-            ...prevData,
-            [keys[0]]: booleanValue,
-          };
-        } else if (keys.length === 2) {
+        if (keys.length === 2) {
           const [parentKey, childKey] = keys;
-          newState = {
+          const newState = {
             ...prevData,
             [parentKey]: {
               ...prevData[parentKey],
               [childKey]: booleanValue,
             },
           };
-        } else if (keys.length === 3) {
-          const [grandParentKey, parentKey, childKey] = keys;
-          newState = {
+          return newState;
+        } else {
+          const newState = {
             ...prevData,
-            [grandParentKey]: {
-              ...prevData[grandParentKey],
-              [parentKey]: {
-                ...prevData[grandParentKey]?.[parentKey],
-                [childKey]: booleanValue,
-              },
-            },
+            [name]: booleanValue,
           };
+          return newState;
         }
-
-        return newState;
       });
     };
 
@@ -428,37 +414,37 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Pacote:',
         accessor: (row) =>
           `${
-            row.package.accomodation.name === 'Colégio Quarto Coletivo' ||
-            row.package.accomodation.name === 'Colegio Quarto Coletivo' ||
-            row.package.accomodation.name === 'Colégio Quarto Família' ||
-            row.package.accomodation.name === 'Colegio Quarto Familia' ||
-            row.package.accomodation.name === 'Colégio Camping' ||
-            row.package.accomodation.name === 'Colegio Camping'
+            row.package.accomodationName === 'Colégio Quarto Coletivo' ||
+            row.package.accomodationName === 'Colegio Quarto Coletivo' ||
+            row.package.accomodationName === 'Colégio Quarto Família' ||
+            row.package.accomodationName === 'Colegio Quarto Familia' ||
+            row.package.accomodationName === 'Colégio Camping' ||
+            row.package.accomodationName === 'Colegio Camping'
               ? '[COLÉGIO]'
-              : row.package.accomodation.name === 'Seminário' || row.package.accomodation.name === 'Seminario'
+              : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
               ? '[SEMINÁRIO]'
-              : row.package.accomodation.name === 'Externo'
+              : row.package.accomodationName === 'Externo'
               ? '[EXTERNO]'
               : ''
           } ${
-            row.package.transportation.name === 'Com Ônibus' || row.package.transportation.name === 'Com Onibus'
+            row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
               ? 'COM ÔNIBUS'
-              : row.package.transportation.name === 'Sem Ônibus' || row.package.transportation.name === 'Sem Onibus'
+              : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.food.name === 'Alimentação Completa (Café, Almoço e Jantar)' ||
-            row.package.food.name === 'Alimentacao Completa (Cafe, Almoco e Jantar)' ||
-            row.package.food.name === 'Alimentação Completa (Café| Almoço e Jantar)' ||
-            row.package.food.name === 'Alimentacao Completa (Cafe| Almoco e Jantar)' ||
-            row.package.food.name === 'Alimentacao Completa (Cafe  Almoco e Jantar)'
+            row.package.foodName === 'Alimentação Completa (Café, Almoço e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe, Almoco e Jantar)' ||
+            row.package.foodName === 'Alimentação Completa (Café| Almoço e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe| Almoco e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe  Almoco e Jantar)'
               ? 'COM ALIMENTAÇÃO COMPLETA'
-              : row.package.food.name === 'Alimentação Parcial (Almoço e Jantar)' ||
-                row.package.food.name === 'Alimentacao Parcial (Almoco e Jantar)'
+              : row.package.foodName === 'Alimentação Parcial (Almoço e Jantar)' ||
+                row.package.foodName === 'Alimentacao Parcial (Almoco e Jantar)'
               ? 'COM ALIMENTAÇÃO PARCIAL'
-              : row.package.food.name === '' ||
-                row.package.food.name === 'Sem Alimentação' ||
-                row.package.food.name === 'Sem Alimentacao'
+              : row.package.foodName === '' ||
+                row.package.foodName === 'Sem Alimentação' ||
+                row.package.foodName === 'Sem Alimentacao'
               ? 'SEM ALIMENTAÇÃO'
               : ''
           }`,
@@ -769,7 +755,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Hospedagem:',
         accessor: (row) =>
-          row.package.accomodation.name
+          row.package.accomodationName
             ?.replace(/á|ã|à|â/g, 'a')
             .replace(/é|ê/g, 'e')
             .replace(/í/g, 'i')
@@ -796,7 +782,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Transporte:',
-        accessor: 'package.transportation.name',
+        accessor: 'package.transportationName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -821,7 +807,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Alimentação:',
         accessor: (row) =>
-          row.package.food.name
+          row.package.foodName
             ?.replace(/á|ã|à|â/g, 'a')
             .replace(/é|ê/g, 'e')
             .replace(/í/g, 'i')
@@ -1273,9 +1259,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'contact.allergy': 'Alergia',
       'contact.hasAggregate': 'Tem Agregados',
       'contact.aggregate': 'Agregados',
-      'package.accomodation.name': 'Hospedagem',
-      'package.transportation.name': 'Transporte',
-      'package.food.name': 'Alimentação',
+      'package.accomodationName': 'Hospedagem',
+      'package.transportationName': 'Transporte',
+      'package.foodName': 'Alimentação',
       'package.price': 'Valor do pacote',
       'extraMeals.someFood': 'Tem Refeição Extra',
       'extraMeals.extraMeals': 'Refeições Extra',
