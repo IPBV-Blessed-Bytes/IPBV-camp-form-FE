@@ -237,13 +237,10 @@ const FormRoutes = ({
                 <CustomCarousel
                   title="Parceiros"
                   images={[
-                    '../../public/Images/camp_logo.png',
-                    '../../public/Images/logo_50.png',
-                    '../../public/Images/logo.png',
-                    '../../public/Images/qr-code.jpeg',
-                    '../../public/Images/test-intelligenza-sociale.jpg',
-                    '../../public/Images/Test-Logo.svg.png',
-                    '../../public/Images/test.png',
+                    '../../public/Images/hebron.png',
+                    '../../public/Images/oasis.png',
+                    '../../public/Images/canaa.png',
+                    '../../public/Images/serur.png',
                   ]}
                 />
               )}
