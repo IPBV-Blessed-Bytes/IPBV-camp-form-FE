@@ -36,8 +36,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       options: [
         { label: 'Cartão de Crédito', value: 'creditCard' },
         { label: 'PIX', value: 'pix' },
-        { label: 'Boleto Bancário à Vista', value: 'boleto' },
-        { label: 'Boleto Bancário Parcelado', value: 'installmentBill' },
+        { label: 'Boleto Bancário', value: 'boleto' },
         { label: 'Não Pagante', value: 'nonPaid' },
       ],
     },

@@ -481,8 +481,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             options={[
               { value: 'creditCard', label: 'Cartão de Crédito' },
               { value: 'pix', label: 'PIX' },
-              { value: 'boleto', label: 'Boleto Bancário à Vista' },
-              { value: 'installmentBill', label: 'Boleto Bancário Parcelado' },
+              { value: 'boleto', label: 'Boleto Bancário' },
               { value: 'nonPaid', label: 'Não Pagante' },
             ]}
             onFilterChange={() => {
@@ -497,9 +496,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             : value === 'pix'
             ? 'PIX'
             : value === 'boleto'
-            ? 'Boleto Bancário à Vista'
-            : value === 'installmentBill'
-            ? 'Boleto Bancário Parcelado'
+            ? 'Boleto Bancário'
             : 'Não pagante',
       },
       {

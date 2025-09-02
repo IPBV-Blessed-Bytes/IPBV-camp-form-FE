@@ -98,8 +98,7 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
                   </option>
                   <option value="creditCard">Cartão de Crédito (Até 12x)</option>
                   <option value="pix">PIX</option>
-                  <option value="ticket">Boleto à Vista</option>
-                  <option value="installmentBill">Boleto Parcelado</option>
+                  <option value="ticket">Boleto</option>
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
               </Form.Group>
