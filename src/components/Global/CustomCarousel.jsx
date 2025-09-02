@@ -25,9 +25,23 @@ const CustomCarousel = ({ title, images }) => {
                 delay: 0,
                 disableOnInteraction: false,
               }}
-              speed={3000}
+              speed={4000}
               grabCursor={true}
               allowTouchMove={true}
+              breakpoints={{
+                320: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+                576: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+                992: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+              }}
             >
               {images.map((src, index) => (
                 <SwiperSlide key={index}>
