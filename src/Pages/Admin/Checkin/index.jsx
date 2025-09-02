@@ -197,7 +197,9 @@ const AdminCheckin = ({ loggedUsername }) => {
                   : userInfo.formPayment.formPayment === 'pix'
                   ? 'PIX'
                   : userInfo.formPayment.formPayment === 'boleto'
-                  ? 'Boleto Bancário'
+                  ? 'Boleto Bancário à Vista'
+                  : userInfo.formPayment.formPayment === 'installmentBill'
+                  ? 'Boleto Bancário Parcelado'
                   : 'Não Pagante'}
               </p>
               <p>

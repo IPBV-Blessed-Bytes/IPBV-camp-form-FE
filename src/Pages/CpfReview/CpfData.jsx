@@ -18,7 +18,8 @@ const CpfData = ({ personData }) => {
   const paymentMethodMapping = {
     creditCard: 'Cartão de Crédito',
     pix: 'PIX',
-    boleto: 'Boleto Bancário',
+    boleto: 'Boleto Bancário à Vista',
+    installmentBill: 'Boleto Bancário Parcelado',
   };
 
   scrollUp();
