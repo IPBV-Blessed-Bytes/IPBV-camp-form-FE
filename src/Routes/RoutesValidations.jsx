@@ -300,12 +300,11 @@ const RoutesValidations = ({ formContext }) => {
     setLoading(true);
     try {
       setStatus('loading');
-    
+
       const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
 
       const formsToSend = formValues.map((form, index) => {
         const birthdayRaw = form?.personalInformation?.birthday;
-
         const birthday = new Date(birthdayRaw);
         const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
@@ -327,6 +326,25 @@ const RoutesValidations = ({ formContext }) => {
 
         return {
           ...form,
+          package: {
+            accomodation: {
+              id: form.package?.accomodation?.id || '',
+              price: accomodationPrice,
+            },
+            accomodationName: form.package?.accomodation?.name || '',
+            transportation: {
+              id: form.package?.transportation?.id || '',
+              price: transportationPrice,
+            },
+            transportationName: form.package?.transportation?.name || '',
+            food: {
+              id: form.package?.food?.id || '',
+              price: foodPrice,
+            },
+            foodName: form.package?.food?.name || '',
+            price: form.package.price,
+            finalPrice: form.package.finalPrice,
+          },
           formPayment: formikValues.formPayment || 'nonPaid',
           registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
           totalPrice,
