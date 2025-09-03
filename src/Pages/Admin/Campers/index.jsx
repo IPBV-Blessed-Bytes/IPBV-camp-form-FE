@@ -194,8 +194,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
         price: data.package?.price || '',
         finalPrice: data.package?.finalPrice || '',
-        discountCoupon: data.package?.discountCoupon === true || data.package?.discountCoupon === 'true',
-        discountValue: data.package?.discountValue || '',
       },
     };
   };
@@ -921,10 +919,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Desconto:',
-        accessor: (row) => ({
-          discountCoupon: row.package.discountCoupon,
-          discountValue: row.package.discountValue,
-        }),
+        accessor: 'appliedDiscount',
         Filter: ({ column }) => (
           <ColumnFilterWithTwoValues
             column={column}
@@ -940,8 +935,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithCoupon',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
-          const discountValueText = value.discountValue !== '0' ? value.discountValue : '-';
+          const hasDiscount = value.appliedDiscount ? 'Sim' : !value.appliedDiscount ? 'Não' : '-';
+          const discountValueText = value.appliedDiscount !== '0' ? value.appliedDiscount : '-';
           return `${hasDiscount} ${
             discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
           }`;
@@ -1131,7 +1126,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const selectWithCoupon = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData.discountCoupon === filterValue;
+      return filterValue === undefined || filterData.appliedDiscount === filterValue;
     });
   };
 
@@ -1270,8 +1265,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       crew: 'Equipe',
       pastoralFamily: 'Família Pastoral',
       manualRegistration: 'Inscrição Manual',
-      'package.discountCoupon': 'Cupom de Desconto',
-      'package.discountValue': 'Valor do Desconto',
+      appliedDiscount: 'Valor do Desconto',
       orderId: 'Chave do Pedido',
       checkin: 'Checkin',
       checkinTime: 'Hora do Checkin',
@@ -1314,7 +1308,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Equipe',
       'Família Pastoral',
       'Inscrição Manual',
-      'Cupom de Desconto',
       'Valor do Desconto',
       'Chave do Pedido',
       'Checkin',
