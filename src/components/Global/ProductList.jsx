@@ -135,7 +135,6 @@ ProductList.displayName = 'ProductList';
 ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
-  discountValue: PropTypes.string,
 };
 
 export default ProductList;
