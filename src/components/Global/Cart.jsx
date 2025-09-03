@@ -46,7 +46,7 @@ const renderPackageDetails = (user, age) => {
           <p>{user.package?.transportation.name}</p>
         </div>
 
-        {user.package?.food?.name && (
+        {user.package?.foodName && (
           <div className="item-food mb-3">
             <div className="d-flex justify-content-between">
               <h5>Alimentação:</h5>
