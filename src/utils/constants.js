@@ -57,8 +57,6 @@ export const initialValues = [
         price: '',
       },
       foodName: '',
-      discountCoupon: '',
-      discountValue: '',
       price: '',
       finalPrice: '',
     },
