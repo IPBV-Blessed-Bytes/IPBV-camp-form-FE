@@ -431,11 +431,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               ? 'SEM ÔNIBUS'
               : ''
           } ${
-            row.package.foodName === 'Alimentação Completa (Café, Almoço e Jantar)' ||
-            row.package.foodName === 'Alimentacao Completa (Cafe, Almoco e Jantar)' ||
-            row.package.foodName === 'Alimentação Completa (Café| Almoço e Jantar)' ||
-            row.package.foodName === 'Alimentacao Completa (Cafe| Almoco e Jantar)' ||
-            row.package.foodName === 'Alimentacao Completa (Cafe  Almoco e Jantar)'
+            row.package.foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe da manha, Almoco e Jantar)' ||
+            row.package.foodName === 'Alimentação Completa (Café da manhã| Almoço e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe da manha| Almoco e Jantar)' ||
+            row.package.foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
               ? 'COM ALIMENTAÇÃO COMPLETA'
               : row.package.foodName === 'Alimentação Parcial (Almoço e Jantar)' ||
                 row.package.foodName === 'Alimentacao Parcial (Almoco e Jantar)'
