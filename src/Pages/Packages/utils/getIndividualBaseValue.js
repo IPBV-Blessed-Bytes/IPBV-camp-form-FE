@@ -1,7 +1,7 @@
 const getIndividualBaseValue = (age) => {
-  if (age <= 5) return 0;
-  if (age <= 10) return 50;
-  return 100;
+  if (age <= 6) return 0;
+  if (age <= 12) return 100;
+  return 200;
 };
 
 export default getIndividualBaseValue;

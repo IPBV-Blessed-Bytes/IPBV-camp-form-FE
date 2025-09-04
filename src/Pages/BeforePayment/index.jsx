@@ -122,14 +122,14 @@ const BeforePayment = ({
               <div className="summary">
                 <div className="summary-individual-base">
                   <div className="d-flex align-items-center gap-1">
-                    <h5 className="summary-individual-base-label">Valor Base:</h5>
+                    <h5 className="summary-individual-base-label">Taxa de Inscrição:</h5>
                     <Tips
                       classNameWrapper="mt-0 mb-2"
                       placement="top"
                       typeIcon="info"
                       size={15}
                       colour={'#000'}
-                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                      text="Valor da taxa de inscrição conforme a idade: até 6 anos = 0 reais, 7 a 12 anos = 100 reais, acima de 13 anos = 200 reais."
                     />
                   </div>
                   <h5 className="summary-individual-base-value">R$ {totalBase},00</h5>

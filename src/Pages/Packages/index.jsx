@@ -159,14 +159,14 @@ const Packages = ({
 
                   <div className="d-flex align-items-center gap-2">
                     <p>
-                      <strong> Valor Base: </strong> R$ {individualBase}
+                      <strong> Taxa de Inscrição: </strong> R$ {individualBase}
                     </p>
                     <Tips
                       classNameWrapper="mt-0 mb-3"
                       colour={'#000'}
                       placement="top"
                       size={15}
-                      text="Valor base conforme a idade: até 5 anos = R$ 0, até 10 = R$ 50, acima de 10 = R$ 100"
+                      text="Valor da taxa de inscrição conforme a idade: até 6 anos = 0 reais, 7 a 12 anos = 100 reais, acima de 13 anos = 200 reais."
                       typeIcon="info"
                     />
                   </div>
