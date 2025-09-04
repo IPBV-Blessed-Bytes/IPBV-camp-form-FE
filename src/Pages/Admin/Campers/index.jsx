@@ -719,6 +719,31 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
+       {
+        Header: 'Desconto:',
+        accessor: 'appliedDiscount',
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithCoupon',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const hasDiscount = value ? 'Sim' : !value ? 'Não' : '-';
+          const discountValueText = value !== '0' ? value : '-';
+          return `${hasDiscount} ${
+            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
+          }`;
+        },
+      },
       {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
@@ -916,31 +941,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
-      },
-      {
-        Header: 'Desconto:',
-        accessor: 'appliedDiscount',
-        Filter: ({ column }) => (
-          <ColumnFilterWithTwoValues
-            column={column}
-            options={[
-              { value: 'sim', label: 'Sim' },
-              { value: 'não', label: 'Não' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        filter: 'selectWithCoupon',
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => {
-          const hasDiscount = value.appliedDiscount ? 'Sim' : !value.appliedDiscount ? 'Não' : '-';
-          const discountValueText = value.appliedDiscount !== '0' ? value.appliedDiscount : '-';
-          return `${hasDiscount} ${
-            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
-          }`;
-        },
       },
       {
         Header: 'Chave do Pedido:',
