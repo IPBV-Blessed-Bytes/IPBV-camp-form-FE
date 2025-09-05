@@ -16,6 +16,7 @@ import { BASE_URL } from '@/config';
 import fetcher from '@/fetchers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
+import Icons from '@/components/Global/Icons';
 
 const PersonalData = ({
   backStep,
@@ -152,7 +153,7 @@ const PersonalData = ({
 
     try {
       await fetcher.delete(`${BASE_URL}/camper/user-previous-year/${previousUserData.personalInformation.cpf}`);
-     
+
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);
       sessionStorage.removeItem('previousUserData');
@@ -606,10 +607,11 @@ const PersonalData = ({
         handleConfirmAge={handleConfirmAge}
         restoreScrollWhenMobile={restoreScrollWhenMobile}
       />
-      <Modal show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>Pré-preenchimento dos dados:</b>
+      <Modal className="custom-modal" show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="form" iconSize={25} fill={'#057c05'} />
+            <b>Preencher dados:</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -626,7 +628,7 @@ const PersonalData = ({
           <Button variant="secondary" onClick={handlePrefillReject}>
             Não
           </Button>
-          <Button variant="primary" onClick={handlePrefillConfirm}>
+          <Button variant="primary" className='btn-confirm' onClick={handlePrefillConfirm}>
             Sim
           </Button>
         </Modal.Footer>
