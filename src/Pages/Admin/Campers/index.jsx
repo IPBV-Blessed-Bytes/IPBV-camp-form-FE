@@ -719,7 +719,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
-       {
+      {
         Header: 'Desconto:',
         accessor: 'appliedDiscount',
         Filter: ({ column }) => (
@@ -737,7 +737,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithCoupon',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const hasDiscount = value ? 'Sim' : !value ? 'Não' : '-';
+          const hasDiscount = value !== '0' ? 'Sim' : !value || value === '0' ? 'Não' : '-';
           const discountValueText = value !== '0' ? value : '-';
           return `${hasDiscount} ${
             discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
