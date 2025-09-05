@@ -625,7 +625,7 @@ const PersonalData = ({
           alteração.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handlePrefillReject}>
+          <Button variant="outline-secondary" onClick={handlePrefillReject}>
             Não
           </Button>
           <Button variant="primary" className='btn-confirm' onClick={handlePrefillConfirm}>
