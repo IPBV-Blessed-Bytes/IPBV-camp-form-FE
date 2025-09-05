@@ -34,7 +34,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const filteredRowsRef = useRef([]);
@@ -53,14 +52,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const currentDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
   scrollUp();
-
-  useEffect(() => {
-    fetchData();
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const fetchData = async () => {
     try {
@@ -1371,18 +1362,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       window.removeEventListener('beforeunload', storeSortByInSession);
     };
   }, [storeSortByInSession]);
-
-  const handleScroll = () => {
-    if (window.scrollY > 300) {
-      setShowScrollButton(true);
-    } else {
-      setShowScrollButton(false);
-    }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <Container fluid>

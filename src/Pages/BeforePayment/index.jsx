@@ -15,7 +15,6 @@ const BeforePayment = ({
   formValues,
   goToEditStep,
   goToPersonalData,
-  goToSuccessPage,
   handleBasePriceChange,
   nextStep,
   sendForm,

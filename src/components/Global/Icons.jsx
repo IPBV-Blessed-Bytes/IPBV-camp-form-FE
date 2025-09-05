@@ -1376,7 +1376,7 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
             stroke={stroke || '#000000'}
             strokeWidth="2"
             strokeLinecap="round"
-            strokeLineJoin="round"
+            strokeLinejoin="round"
           />
         </svg>
       )}
