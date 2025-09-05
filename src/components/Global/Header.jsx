@@ -23,7 +23,7 @@ const Header = ({
     'Informações Pessoais',
     'Contato',
     'Pacote',
-    'Refeição Extra',
+    // 'Refeição Extra',
     'Revisão',
     'Items',
     'Pagamento',

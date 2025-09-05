@@ -101,8 +101,9 @@ const Packages = ({
 
     updateForm(newPackage, () => {
       const foodId = newPackage.food?.id || '';
-      const hasFood = foodId === 'food-complete' || foodId === 'food-external';
-
+      // const hasFood = foodId === 'food-complete' || foodId === 'food-external';
+      const hasFood = true;
+      
       const skipToReview = hasFood;
       nextStep(skipToReview);
     });

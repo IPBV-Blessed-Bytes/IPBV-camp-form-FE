@@ -185,24 +185,24 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'even',
       options: normalizedFoodOptions,
     },
-    {
-      label: 'Refeição Extra',
-      name: 'extraMeals.someFood',
-      type: 'select',
-      placeholder: 'Selecione se terá refeição extra',
-      oddOrEven: 'odd',
-      options: [
-        { label: 'Sim', value: true },
-        { label: 'Não', value: false },
-      ],
-    },
-    {
-      label: 'Refeição Extra (dias)',
-      name: 'extraMeals.extraMeals',
-      type: 'text',
-      placeholder: 'Domingo, Segunda, Terça, etc.',
-      oddOrEven: 'even',
-    },
+    // {
+    //   label: 'Refeição Extra',
+    //   name: 'extraMeals.someFood',
+    //   type: 'select',
+    //   placeholder: 'Selecione se terá refeição extra',
+    //   oddOrEven: 'odd',
+    //   options: [
+    //     { label: 'Sim', value: true },
+    //     { label: 'Não', value: false },
+    //   ],
+    // },
+    // {
+    //   label: 'Refeição Extra (dias)',
+    //   name: 'extraMeals.extraMeals',
+    //   type: 'text',
+    //   placeholder: 'Domingo, Segunda, Terça, etc.',
+    //   oddOrEven: 'even',
+    // },
     {
       label: 'Nome do Resp. Legal',
       name: 'personalInformation.legalGuardianName',
