@@ -734,7 +734,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             }}
           />
         ),
-        filter: 'selectWithCoupon',
+        filter: 'selectWithDiscount',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
           const hasDiscount = value !== '0' ? 'Sim' : !value || value === '0' ? 'Não' : '-';
@@ -1123,10 +1123,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
-  const selectWithCoupon = (rows, id, filterValue) => {
+  const selectWithDiscount = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData.appliedDiscount === filterValue;
+      return filterValue === undefined || filterData === filterValue;
     });
   };
 
@@ -1147,21 +1147,21 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const selectWithCrew = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData.crew === filterValue;
+      return filterValue === undefined || filterData === filterValue;
     });
   };
 
   const selectWithPastoralFamily = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData.pastoralFamily === filterValue;
+      return filterValue === undefined || filterData === filterValue;
     });
   };
 
   const selectWithConfirmationUserData = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData.confirmationUserData === filterValue;
+      return filterValue === undefined || filterData === filterValue;
     });
   };
 
@@ -1194,7 +1194,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithRide,
         selectWithCellphone,
         selectWithExtraMeals,
-        selectWithCoupon,
+        selectWithDiscount,
         selectWithCheckin,
         selectWithManualRegistration,
         selectWithCrew,
