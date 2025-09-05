@@ -51,6 +51,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const currentDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   scrollUp();
 
   const fetchData = async () => {
