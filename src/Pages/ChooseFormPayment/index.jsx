@@ -123,8 +123,8 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
         </div>
       </Card>
 
-      <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--danger">
+      <Modal className="custom-modal" show={showConfirm} onHide={() => setShowConfirm(false)} centered>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
           <Modal.Title className="d-flex align-items-center gap-2">
             <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Avançar para Pagamento</b>
@@ -144,7 +144,7 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
           <Button variant="outline-secondary" onClick={() => setShowConfirm(false)}>
             Voltar
           </Button>
-          <Button variant="danger" onClick={handleConfirmAdvance}>
+          <Button variant="danger" className="btn-cancel" onClick={handleConfirmAdvance}>
             Avançar
           </Button>
         </Modal.Footer>
