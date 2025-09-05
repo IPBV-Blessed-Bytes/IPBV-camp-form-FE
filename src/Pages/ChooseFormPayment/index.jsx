@@ -124,7 +124,7 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
       </Card>
 
       <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
-        <Modal.Header closeButton className="custom-modal-header--danger">
+        <Modal.Header closeButton className="custom-modal__header--danger">
           <Modal.Title className="d-flex align-items-center gap-2">
             <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Avançar para Pagamento</b>
