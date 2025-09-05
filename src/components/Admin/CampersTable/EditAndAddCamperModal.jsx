@@ -1,6 +1,7 @@
 import { Modal, Button, Form } from 'react-bootstrap';
 import Columns from './Columns';
 import PropTypes from 'prop-types';
+import Icons from '@/components/Global/Icons';
 
 const EditAndAddCamperModal = ({
   name,
@@ -23,9 +24,10 @@ const EditAndAddCamperModal = ({
 }) => {
   return (
     <>
-      <Modal show={showEditModal} size="xl" onHide={() => setShowEditModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showEditModal} size="xl" onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="edit" iconSize={25} />
             <b>Editar Inscrição</b>
           </Modal.Title>
         </Modal.Header>
@@ -44,15 +46,16 @@ const EditAndAddCamperModal = ({
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleSaveEdit}>
+          <Button variant="primary" className="btn-confirm" onClick={handleSaveEdit}>
             Salvar
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
             <b>Nova Inscrição</b>
           </Modal.Title>
         </Modal.Header>
@@ -71,15 +74,16 @@ const EditAndAddCamperModal = ({
           <Button variant="secondary" onClick={() => setShowAddModal(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleAddSubmit}>
+          <Button variant="primary" className="btn-confirm" onClick={handleAddSubmit}>
             Adicionar
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -94,6 +98,7 @@ const EditAndAddCamperModal = ({
           </Button>
           <Button
             variant="danger"
+            className='btn-cancel'
             onClick={modalType === 'delete-all' ? handleConfirmDeleteAll : handleConfirmDeleteSpecific}
           >
             Deletar
