@@ -222,9 +222,10 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
         );
       })}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmação de {modalType === 'removeUser' ? 'Exclusão' : 'Limpeza'}</b>
           </Modal.Title>
         </Modal.Header>
@@ -236,7 +237,7 @@ const Cart = ({ cartKey, formValues = [], goToEditStep, handleBasePriceChange, s
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleConfirmAction}>
+          <Button variant="danger" className="btn-cancel" onClick={handleConfirmAction}>
             Confirmar
           </Button>
         </Modal.Footer>
