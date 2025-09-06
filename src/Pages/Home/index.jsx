@@ -120,9 +120,9 @@ const FormHome = ({ nextStep }) => {
       </Card>
 
       <Modal className="custom-modal" show={showLgpdModal} onHide={handleCloseLgpdModal}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
+        <Modal.Header closeButton className="custom-modal__header--inf">
           <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="form" iconSize={25} fill={'#057c05'} />
+            <Icons typeIcon="info" iconSize={23} fill={'#2E5AAC'} />
             <b>Conformidade com a LGPD</b>
           </Modal.Title>
         </Modal.Header>
@@ -144,7 +144,7 @@ const FormHome = ({ nextStep }) => {
           </a>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" className="btn-confirm" onClick={handleCloseLgpdModal}>
+          <Button variant="info" className="btn-inf" onClick={handleCloseLgpdModal}>
             Ciente
           </Button>
         </Modal.Footer>
