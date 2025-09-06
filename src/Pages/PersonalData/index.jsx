@@ -608,10 +608,10 @@ const PersonalData = ({
         restoreScrollWhenMobile={restoreScrollWhenMobile}
       />
       <Modal className="custom-modal" show={showPrefillModal} onHide={() => setShowPrefillModal(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
+        <Modal.Header closeButton className="custom-modal__header--inf">
           <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="form" iconSize={25} fill={'#057c05'} />
-            <b>Preencher dados:</b>
+            <Icons typeIcon="info" iconSize={25} fill={'#2E5AAC'} />
+            <b>Preencher Dados</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -628,7 +628,7 @@ const PersonalData = ({
           <Button variant="outline-secondary" onClick={handlePrefillReject}>
             Não
           </Button>
-          <Button variant="primary" className='btn-confirm' onClick={handlePrefillConfirm}>
+          <Button variant="primary" className='btn-inf' onClick={handlePrefillConfirm}>
             Sim
           </Button>
         </Modal.Footer>
