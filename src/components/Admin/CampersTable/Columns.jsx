@@ -226,7 +226,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
     },
     {
-      label: 'Observação',
+      label: 'Observação Adm',
       name: 'observation',
       type: 'text',
       placeholder: 'Observação sobre essa inscrição',

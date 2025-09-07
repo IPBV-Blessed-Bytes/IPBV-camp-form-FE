@@ -54,7 +54,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   scrollUp();
 
   const fetchData = async () => {
@@ -924,8 +924,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value || '-',
       },
       {
-        Header: 'Observação:',
-        accessor: 'observation',
+        Header: 'Observação Acampante:',
+        accessor: 'finalObservation',
         Filter: ({ column }) => (
           <ColumnFilter
             column={column}
@@ -936,30 +936,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
-      },
-      {
-        Header: 'Chave do Pedido:',
-        accessor: 'orderId',
-        Filter: ({ column }) => (
-          <ColumnFilter
-            column={column}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => {
-          const orderUrl = `https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/${value}`;
-
-          return value ? (
-            <a href={orderUrl} className="order-url" target="_blank" rel="noopener noreferrer">
-              {value}
-            </a>
-          ) : (
-            '-'
-          );
-        },
       },
       {
         Header: 'Check-in:',
@@ -1071,6 +1047,44 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithConfirmationUserData',
         sortType: 'alphanumeric',
         Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+      },
+      {
+        Header: 'Observação Adm:',
+        accessor: 'observation',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
+      },
+      {
+        Header: 'Chave do Pedido:',
+        accessor: 'orderId',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const orderUrl = `https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/${value}`;
+
+          return value ? (
+            <a href={orderUrl} className="order-url" target="_blank" rel="noopener noreferrer">
+              {value}
+            </a>
+          ) : (
+            '-'
+          );
+        },
       },
       {
         Header: `${adminTableDeleteRegistrationsAndSelectRows ? 'Editar / Deletar' : 'Editar Acampantes'}`,
@@ -1256,11 +1270,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'personalInformation.legalGuardianName': 'Nome do Responsável Legal',
       'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
-      observation: 'Observação',
+      finalObservation: 'Observação Acampante',
       crew: 'Equipe',
       pastoralFamily: 'Família Pastoral',
       manualRegistration: 'Inscrição Manual',
       appliedDiscount: 'Valor do Desconto',
+      observation: 'Observação Adm',
       orderId: 'Chave do Pedido',
       checkin: 'Checkin',
       checkinTime: 'Hora do Checkin',
@@ -1299,11 +1314,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Nome do Responsável Legal',
       'CPF do Responsável Legal',
       'Celular do Responsável Legal',
-      'Observação',
+      'Observação Acampante',
       'Equipe',
       'Família Pastoral',
       'Inscrição Manual',
       'Valor do Desconto',
+      'Observação Adm',
       'Chave do Pedido',
       'Checkin',
       'Hora do Checkin',
