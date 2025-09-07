@@ -15,6 +15,7 @@ import './style.scss';
 const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
+  const [observation, setObservation] = useState('');
   const location = useLocation();
   const { emptyCart } = useCart();
 
@@ -45,8 +46,30 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
     }
   };
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
     if (!isConfirmed || !isDataAuthorized) return;
+
+    if (observation.trim() !== '') {
+      try {
+        const { cpf } = formValues.personalInformation || {};
+        await fetcher.post(`${BASE_URL}/camper/finalObservation`, {
+          cpf,
+          text: observation,
+        });
+
+        toast.success('Observação salva com sucesso!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } catch (error) {
+        console.error('Erro ao salvar observação final:', error);
+        toast.error('Falha ao salvar observação. Tente novamente.', {
+          position: 'top-right',
+          autoClose: 4000,
+        });
+      }
+    }
+
     toast.success('Usuário adicionado ao carrinho');
 
     updateForm();
@@ -294,6 +317,21 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                     </>
                   )}
 
+                  <Form.Group controlId="finalObservation">
+                    <Form.Label className="form-label-final-observation-text fw-bold">
+                      Deseja enviar alguma observação final sobre a sua inscrição?&nbsp;
+                    </Form.Label>
+                    <Form.Label className="form-label-final-observation-complement fw-bold">
+                      Faremos o máximo para poder lhe ajudar!
+                    </Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Digite sua observação (opcional)"
+                      value={observation}
+                      onChange={(e) => setObservation(e.target.value)}
+                    />
+                  </Form.Group>
                   <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
                     <Form.Check
                       className="form-review__section-title fw-bold"

@@ -20,3 +20,14 @@
     }
   }
 }
+
+.form-label-final-observation {
+  &-text {
+    color: $black !important;
+  }
+
+  &-complement {
+    color: $black !important;
+    font-style: italic;
+  }
+}
