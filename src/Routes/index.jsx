@@ -40,6 +40,7 @@ import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 import CustomCarousel from '@/components/Global/CustomCarousel';
+import AdminLotManagement from '@/Pages/Admin/LotManagement';
 
 const FormRoutes = ({
   adminPathname,
@@ -356,6 +357,14 @@ const FormRoutes = ({
                   totalPackages={totalPackages}
                   totalSeats={totalSeats}
                 />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/lotes"
+            element={
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminLotManagement loading={loading} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
