@@ -116,7 +116,7 @@ const FormRoutes = ({
                 steps={steps}
               />
 
-              {steps !== enumSteps.beforePayment && (
+              {steps !== (enumSteps.packages && enumSteps.beforePayment) && (
                 <div className="form__container container">
                   <Row className="justify-content-center">
                     <Col lg={10} className="px-0">
@@ -144,22 +144,6 @@ const FormRoutes = ({
                           initialValues={formValues[currentFormIndex]?.contact || {}}
                           nextStep={nextStep}
                           updateForm={updateFormValues('contact')}
-                        />
-                      )}
-
-                      {steps === enumSteps.packages && isNotSuccessPathname && (
-                        <FormPackages
-                          age={age}
-                          backStep={backStep}
-                          cartKey={cartKey}
-                          currentFormIndex={currentFormIndex}
-                          currentFormValues={currentFormValues}
-                          discount={discount}
-                          hasDiscount={hasDiscount}
-                          nextStep={nextStep}
-                          totalRegistrationsGlobal={totalRegistrations}
-                          totalSeats={totalSeats}
-                          updateForm={updateFormValues('package')}
                         />
                       )}
 
@@ -205,6 +189,28 @@ const FormRoutes = ({
                           }
                         />
                       </Routes>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+
+              {steps === enumSteps.packages && isNotSuccessPathname && (
+                <div className="form__container container-fluid ">
+                  <Row className="justify-content-center">
+                    <Col lg={10} className="px-0">
+                      <FormPackages
+                        age={age}
+                        backStep={backStep}
+                        cartKey={cartKey}
+                        currentFormIndex={currentFormIndex}
+                        currentFormValues={currentFormValues}
+                        discount={discount}
+                        hasDiscount={hasDiscount}
+                        nextStep={nextStep}
+                        totalRegistrationsGlobal={totalRegistrations}
+                        totalSeats={totalSeats}
+                        updateForm={updateFormValues('package')}
+                      />
                     </Col>
                   </Row>
                 </div>
