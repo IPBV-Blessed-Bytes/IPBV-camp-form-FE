@@ -32,7 +32,8 @@ body {
       width: 100%;
     }
 
-    &__cart-height {
+    &__cart-height,
+    &__packages-height {
       min-height: 41.625rem;
       width: 100%;
     }
@@ -522,7 +523,7 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
       }
     }
 
-     &--inf {
+    &--inf {
       background-color: $minimum-blue;
       border-bottom-color: $alternate-blue;
       color: $light-heavy-blue;
@@ -576,16 +577,16 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
     }
   }
 
-   .btn.btn-inf {
+  .btn.btn-inf {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #2E5AAC;
-    --bs-btn-border-color: #2E5AAC;
-    --bs-btn-hover-bg: #2E5AAC;
-    --bs-btn-hover-border-color: #2E5AAC;
-    --bs-btn-active-bg: #2E5AAC;
-    --bs-btn-active-border-color: #2E5AAC;
-    --bs-btn-disabled-bg: #2E5AAC;
-    --bs-btn-disabled-border-color: #2E5AAC;
+    --bs-btn-bg: #2e5aac;
+    --bs-btn-border-color: #2e5aac;
+    --bs-btn-hover-bg: #2e5aac;
+    --bs-btn-hover-border-color: #2e5aac;
+    --bs-btn-active-bg: #2e5aac;
+    --bs-btn-active-border-color: #2e5aac;
+    --bs-btn-disabled-bg: #2e5aac;
+    --bs-btn-disabled-border-color: #2e5aac;
 
     &:hover {
       color: $white;

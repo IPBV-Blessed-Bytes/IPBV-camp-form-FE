@@ -390,7 +390,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 20px;
-    padding: 20px;
   }
 
   &-card {
@@ -401,7 +400,6 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 1rem;
-    text-align: center;
     transition: transform 0.2s ease;
 
     &:hover {
@@ -409,7 +407,8 @@
     }
 
     &-is-active {
-      background-color: $intense-green-light;
+      background-color: $pastel-green;
+      border: 1px solid $green;
     }
 
     .product {
@@ -424,17 +423,18 @@
       &-title {
         font-size: 1.125rem;
         font-weight: 600;
-        margin: 0.5rem 0 0.25rem;
       }
 
       &-price {
-        color: $alternate-dark-gray;
-        font-size: 1rem;
+        color: $primary;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5rem;
+        font-weight: bold;
         margin-bottom: 0.75rem;
       }
 
       &-button {
-        background: $medium-blue;
+        background: $primary;
         border: none;
         border-radius: 0.25rem;
         color: $white;
@@ -444,11 +444,15 @@
         transition: background 0.2s ease;
 
         &:hover {
-          background: $light-medium-blue;
+          background: $primary;
+        }
+
+        &:focus-visible {
+          outline-color: transparent;
         }
 
         &.selected {
-          background: $militar-green;
+          background: $intense-medium-green;
         }
       }
     }
