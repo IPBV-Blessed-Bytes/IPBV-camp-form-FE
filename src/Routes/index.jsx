@@ -240,7 +240,7 @@ const FormRoutes = ({
 
               <InfoButton timeout />
 
-              {(steps === enumSteps.home || steps === enumSteps.success) && (
+              {/* {(steps === enumSteps.home || steps === enumSteps.success) && (
                 <CustomCarousel
                   title="Parceiros"
                   images={[
@@ -250,7 +250,7 @@ const FormRoutes = ({
                     '../../public/Images/serur.png',
                   ]}
                 />
-              )}
+              )} */}
 
               <Footer handleAdminClick={handleAdminClick} />
             </>
