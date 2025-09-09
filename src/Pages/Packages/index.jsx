@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
@@ -68,25 +68,13 @@ const Packages = ({
 
     items.forEach((item) => {
       if (item.category === 'Hospedagem') {
-        newPackage.accomodation = {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-        };
+        newPackage.accomodation = { id: item.id, name: item.name, price: item.price };
       }
       if (item.category === 'Transporte') {
-        newPackage.transportation = {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-        };
+        newPackage.transportation = { id: item.id, name: item.name, price: item.price };
       }
       if (item.category === 'Alimentação') {
-        newPackage.food = {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-        };
+        newPackage.food = { id: item.id, name: item.name, price: item.price };
       }
     });
 
@@ -100,7 +88,7 @@ const Packages = ({
     newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
-      const foodId = newPackage.food?.id || '';
+       const foodId = newPackage.food?.id || '';
       // const hasFood = foodId === 'food-complete' || foodId === 'food-external';
       const hasFood = true;
       
@@ -118,7 +106,7 @@ const Packages = ({
   const getDiscountedPrice = (category) => {
     const item = items.find((i) => i.category === category);
     if (!item) return 0;
-
+    
     const discountedItem = discounted.find((d) => d.id === item.id);
     return discountedItem?.price ?? item.price ?? 0;
   };
@@ -133,72 +121,110 @@ const Packages = ({
   const finalTotal = Math.max(totalBeforeDiscount + individualBase - discountNumeric, 0);
 
   return (
-    <>
-      <Card className="form__container__general-height">
-        <Card.Body>
-          <Container>
-            <Card.Title>Monte Seu Pacote</Card.Title>
-            {!isRegistrationClosed && (
-              <>
-                <Card.Text>
-                  Vamos começar a montagem do seu pacote. A escolha da hospedagem e do transporte é obrigatória. A
-                  alimentação é opcional. Caso não deseje incluir todas as refeições, você poderá selecionar refeições
-                  avulsas na próxima etapa, com pagamento individual.{' '}
-                  <b>
-                    <em>Lembrando que a seleção aqui é individual para cada usuário!</em>
-                  </b>
-                </Card.Text>
+    <Container className="packages-page form__container__cart-height">
+      <Row>
+        <Col xs={12} xl={8} className="px-0">
+          {!isRegistrationClosed ? (
+            <>
+              <Card className="mb-3">
+                <Card.Body>
+                  <Card.Title>Hospedagem</Card.Title>
+                  <Card.Text>
+                    Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
+                  </Card.Text>
+                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Hospedagem" />
+                </Card.Body>
+              </Card>
 
-                <ProductList ref={productListRef} age={age} cartKey={cartKey} discountValue={discount} />
+              <Card className="mb-3">
+                <Card.Body>
+                  <Card.Title>Transporte</Card.Title>
+                  <Card.Text>
+                    Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdate total com transporte
+                    próprio. A escolha do transporte é <strong>obrigatória</strong>.
+                  </Card.Text>
+                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Transporte" />
+                </Card.Body>
+              </Card>
 
-                <div className="d-flex flex-column align-items-center mt-4">
-                  {hasDiscount && discountNumeric > 0 && (
-                    <p>
-                      <strong>Soma dos Pacotes:</strong> R$ {totalBeforeDiscount}
-                    </p>
-                  )}
+              <Card className="mb-3 mb-sm-0">
+                <Card.Body>
+                  <Card.Title>Alimentação (Opcional)</Card.Title>
+                  <Card.Text>
+                    Você pode incluir todas as refeições ou apenas algumas.{' '}
+                    <strong>Não teremos vendas de refeições avulsas</strong>.
+                  </Card.Text>
+                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Alimentação" />
+                </Card.Body>
+              </Card>
+            </>
+          ) : (
+            <div className="registration-closed-message">
+              <p>
+                Desculpe, as vagas para inscrições estão completas. <br />
+                Para maiores dúvidas, favor contactar a secretaria da igreja.
+              </p>
+            </div>
+          )}
+        </Col>
 
-                  <div className="d-flex align-items-center gap-2">
-                    <p>
-                      <strong> Taxa de Inscrição: </strong> R$ {individualBase}
-                    </p>
+        <Col xs={12} xl={4} className="px-0 px-lg-2">
+          <Card>
+            <Card.Body>
+              <Card.Title>Resumo do Pacote</Card.Title>
+              <div className="summary">
+                <div className="summary__accomodation">
+                  Hospedagem: <br />
+                  {items.find((i) => i.category === 'Hospedagem')?.name || 'Não selecionado'}
+                  <div className="packages-horizontal-line-cart"></div>
+                </div>
+
+                <div className="summary__transportation">
+                  Transporte:
+                  <br />
+                  {items.find((i) => i.category === 'Transporte')?.name || 'Não selecionado'}
+                  <div className="packages-horizontal-line-cart"></div>
+                </div>
+
+                <div className="summary__food">
+                  Alimentação:
+                  <br />
+                  {items.find((i) => i.category === 'Alimentação')?.name || 'Não selecionado'}
+                  <div className="packages-horizontal-line-cart"></div>
+                </div>
+
+                <div className="summary__individual-base">
+                  <div className="d-flex align-items-center gap-1">
+                    <h5 className="summary-individual-base-label">Taxa de Inscrição:</h5>
                     <Tips
-                      classNameWrapper="mt-0 mb-3"
-                      colour={'#000'}
+                      classNameWrapper="mt-0 mb-2"
                       placement="top"
-                      size={15}
-                      text="Valor da taxa de inscrição conforme a idade: até 6 anos = 0 reais, 7 a 12 anos = 100 reais, acima de 13 anos = 200 reais."
                       typeIcon="info"
+                      size={15}
+                      colour={'#7f7878'}
+                      text="Valor da taxa de inscrição conforme a idade: até 6 anos = 0 reais, 7 a 12 anos = 100 reais, acima de 13 anos = 200 reais."
                     />
                   </div>
-
-                  {hasDiscount && discountNumeric > 0 && (
-                    <p>
-                      <strong>Desconto Aplicado:</strong> R$ {discountNumeric}
-                    </p>
-                  )}
-
-                  <p className="text-success">
-                    <strong>
-                      Total Final {hasDiscount && discountNumeric ? 'com Desconto' : ''}: <em>R$ {finalTotal}</em>
-                    </strong>
-                  </p>
+                  <h5 className="summary-individual-base-value"> R$ {individualBase},00 </h5>
+                  <div className="packages-horizontal-line-cart"></div>
                 </div>
-              </>
-            )}
 
-            {isRegistrationClosed && (
-              <div className="registration-closed-message">
-                <p>
-                  Desculpe, as vagas para inscrições estão completas. <br />
-                  Para maiores dúvidas, favor contactar a secretaria da igreja.
-                </p>
+                <div className="summary__discount">
+                  {hasDiscount && discountNumeric > 0 && `Desconto: -R$ ${discountNumeric}`}
+                  <div className="packages-horizontal-line-cart"></div>
+                </div>
+
+                <div className="summary__discount">
+                  <strong>Total: R$ {finalTotal}</strong>
+                </div>
               </div>
-            )}
-          </Container>
-        </Card.Body>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        <div className="form__container__buttons">
+      <Row>
+        <div className="form__container__buttons mt-0">
           <Button variant="light" onClick={backStep} size="lg">
             Voltar
           </Button>
@@ -208,8 +234,8 @@ const Packages = ({
             </Button>
           )}
         </div>
-      </Card>
-    </>
+      </Row>
+    </Container>
   );
 };
 

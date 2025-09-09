@@ -6,7 +6,7 @@ import Icons from './Icons';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import Tips from './Tips';
 
-const ProductList = forwardRef(({ age, cartKey }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true, required = false }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [hasError, setHasError] = useState(false);
   const hasRestoredCart = useRef(false);
@@ -67,26 +67,23 @@ const ProductList = forwardRef(({ age, cartKey }, ref) => {
     }
   };
 
-  const renderSection = (categoryTitle, categoryKey, singleSelection = false, required) => {
+  const renderSection = (categoryTitle, categoryKey, singleSelection, required) => {
     const filtered = getDiscountedProducts(age).filter((p) => p.category === categoryKey);
 
     return (
       <div className="product-section">
-        <h4 className="product-section-title mt-4">
-          {categoryTitle}: {required && <span className="required-field fw-bold">*</span>}
-        </h4>
         <div className="product-grid">
           {filtered.map((product) => {
             const alreadySelected = !!getItem(product.id);
             return (
               <div key={product.id} className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}>
-                <div className="d-flex gap-2 align-items-center justify-content-center">
+                <div className="d-flex gap-2 align-items-center justify-content-between">
                   <h3 className="product-title">{product.name}</h3>
                   <Tips
                     placement="top"
-                    typeIcon="rounded-question"
+                    typeIcon="info"
                     size={20}
-                    colour={'#000'}
+                    colour={'#7f7878'}
                     text={product.description}
                   />
                 </div>
@@ -98,11 +95,9 @@ const ProductList = forwardRef(({ age, cartKey }, ref) => {
                 )}
                 <button
                   className={`product-button ${alreadySelected ? 'selected' : ''}`}
-                  onClick={() => {
-                    handlePackageButton(product, filtered, singleSelection, alreadySelected);
-                  }}
+                  onClick={() => handlePackageButton(product, filtered, singleSelection, alreadySelected)}
                 >
-                  {alreadySelected ? 'Remover' : 'Selecionar'}
+                  {alreadySelected ? 'Selecionado' : 'Selecionar'}
                 </button>
               </div>
             );
@@ -118,16 +113,7 @@ const ProductList = forwardRef(({ age, cartKey }, ref) => {
     );
   };
 
-  return (
-    <>
-      <hr className="horizontal-line" />
-      {renderSection('Hospedagem', 'Hospedagem', true, true)}
-      <hr className="horizontal-line" />
-      {renderSection('Transporte', 'Transporte', true, true)}
-      <hr className="horizontal-line" />
-      {renderSection('Alimentação (Opcional)', 'Alimentação', true, false)}
-    </>
-  );
+  return <>{renderSection(category, category, singleSelection, required)}</>;
 });
 
 ProductList.displayName = 'ProductList';
@@ -135,6 +121,9 @@ ProductList.displayName = 'ProductList';
 ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  singleSelection: PropTypes.bool,
+  required: PropTypes.bool,
 };
 
 export default ProductList;
