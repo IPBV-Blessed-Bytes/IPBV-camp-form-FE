@@ -19,13 +19,26 @@ const defaultPrice = {
   bus: '',
 };
 
+const defaultVacancies = {
+  seminary: '',
+  registrationFee: '',
+  food: '',
+  bus: '',
+};
+
 const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [loadingContent, setLoadingContent] = useState(false);
   const [lots, setLots] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newLot, setNewLot] = useState({ name: '', price: { ...defaultPrice }, startDate: '', endDate: '' });
+  const [newLot, setNewLot] = useState({
+    name: '',
+    price: { ...defaultPrice },
+    vacancies: { ...defaultVacancies },
+    startDate: '',
+    endDate: '',
+  });
 
   scrollUp();
 
@@ -51,10 +64,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       prevLots.map((lot) => {
         if (lot.id !== id) return lot;
 
-        if (field === 'price' && nestedField) {
+        if ((field === 'price' || field === 'vacancies') && nestedField) {
           return {
             ...lot,
-            price: { ...lot.price, [nestedField]: value },
+            [field]: { ...lot[field], [nestedField]: value },
           };
         }
 
@@ -70,13 +83,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         name: lot.name,
         startDate: lot.startDate,
         endDate: lot.endDate,
-        price: {
-          seminary: lot.price?.seminary || '',
-          registrationFee: lot.price?.registrationFee || '',
-          completeFood: lot.price?.completeFood || '',
-          partialFood: lot.price?.partialFood || '',
-          bus: lot.price?.bus || '',
-        },
+        price: { ...lot.price },
+        vacancies: { ...lot.vacancies },
       });
       toast.success(`${lot.name} atualizado com sucesso`);
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
@@ -113,18 +121,19 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         name: newLot.name,
         startDate: newLot.startDate,
         endDate: newLot.endDate,
-        price: {
-          seminary: newLot.price.seminary || '',
-          registrationFee: newLot.price.registrationFee || '',
-          completeFood: newLot.price.completeFood || '',
-          partialFood: newLot.price.partialFood || '',
-          bus: newLot.price.bus || '',
-        },
+        price: { ...newLot.price },
+        vacancies: { ...newLot.vacancies },
       });
       toast.success(`${newLot.name} adicionado com sucesso`);
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
       setShowAddModal(false);
-      setNewLot({ name: '', price: { ...defaultPrice }, startDate: '', endDate: '' });
+      setNewLot({
+        name: '',
+        price: { ...defaultPrice },
+        vacancies: { ...defaultVacancies },
+        startDate: '',
+        endDate: '',
+      });
       fetchLots();
     } catch (error) {
       console.error(error);
@@ -140,6 +149,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     completeFood: 'Preço da Alimentação Completa',
     partialFood: 'Preço da Alimentação Parcial',
     bus: 'Preço do Ônibus',
+  };
+
+  const vacanciesLabels = {
+    seminary: 'Vagas Seminário',
+    registrationFee: 'Vagas Taxa de Inscrição',
+    food: 'Vagas Alimentação',
+    bus: 'Vagas Ônibus',
   };
 
   return (
@@ -175,6 +191,22 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           type="text"
                           value={lot.price?.[field] || ''}
                           onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  ))}
+
+                  {Object.keys(defaultVacancies).map((field) => (
+                    <Col xs={12} md={4} key={field}>
+                      <Form.Group>
+                        <Form.Label>
+                          <strong>{vacanciesLabels[field]}</strong>
+                        </Form.Label>
+                        <Form.Control
+                          type="number"
+                          min="0"
+                          value={lot.vacancies?.[field] ?? 0}
+                          onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
                         />
                       </Form.Group>
                     </Col>
@@ -249,7 +281,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+      <Modal show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>
             <b>Adicionar Novo Lote</b>
@@ -257,51 +289,90 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <strong>Nome:</strong>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                value={newLot.name}
-                onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
-              />
-            </Form.Group>
+            <Row>
+              <Col md={12} lg={4} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Nome:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={newLot.name}
+                    onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
+                    className={`form-control-lg form-control-bg admin-field--even`}
+                    placeholder="Nome do Lote"
+                  />
+                </Form.Group>
+              </Col>
 
-            {Object.keys(defaultPrice).map((field) => (
-              <Form.Group className="mb-3" key={field}>
-                <Form.Label>
-                  <strong>{priceLabels[field]}:</strong>
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  min="0"
-                  value={newLot.price[field]}
-                  onChange={(e) => setNewLot({ ...newLot, price: { ...newLot.price, [field]: e.target.value } })}
-                />
-              </Form.Group>
-            ))}
+              <Col md={12} lg={4} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Data Início:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newLot.startDate}
+                    onChange={(e) => setNewLot({ ...newLot, startDate: e.target.value })}
+                    className={`form-control-lg form-control-bg admin-field--even`}
+                    placeholder="Data de Início do Lote"
+                  />
+                </Form.Group>
+              </Col>
 
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <strong>Data Início:</strong>
-              </Form.Label>
-              <Form.Control
-                type="date"
-                value={newLot.startDate}
-                onChange={(e) => setNewLot({ ...newLot, startDate: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>
-                <strong>Data Fim:</strong>
-              </Form.Label>
-              <Form.Control
-                type="date"
-                value={newLot.endDate}
-                onChange={(e) => setNewLot({ ...newLot, endDate: e.target.value })}
-              />
-            </Form.Group>
+              <Col md={12} lg={4} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Data Fim:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newLot.endDate}
+                    onChange={(e) => setNewLot({ ...newLot, endDate: e.target.value })}
+                    className={`form-control-lg form-control-bg admin-field--even`}
+                    placeholder="Data de Fim do Lote"
+                  />
+                </Form.Group>
+              </Col>
+
+              {Object.keys(defaultPrice).map((field) => (
+                <Col md={12} lg={4} className="mb-3">
+                  <Form.Group className="mb-3" key={field}>
+                    <Form.Label>
+                      <strong>{priceLabels[field]}:</strong>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      value={newLot.price[field]}
+                      onChange={(e) => setNewLot({ ...newLot, price: { ...newLot.price, [field]: e.target.value } })}
+                      className={`form-control-lg form-control-bg admin-field--odd`}
+                      placeholder="Preços"
+                    />
+                  </Form.Group>
+                </Col>
+              ))}
+
+              {Object.keys(defaultVacancies).map((field) => (
+                <Col md={12} lg={4} className="mb-3">
+                  <Form.Group className="mb-3" key={field}>
+                    <Form.Label>
+                      <strong>{vacanciesLabels[field]}:</strong>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      value={newLot.vacancies[field]}
+                      onChange={(e) =>
+                        setNewLot({ ...newLot, vacancies: { ...newLot.vacancies, [field]: e.target.value } })
+                      }
+                      className={`form-control-lg form-control-bg admin-field--even`}
+                      placeholder="Vagas"
+                    />
+                  </Form.Group>
+                </Col>
+              ))}
+            </Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>
