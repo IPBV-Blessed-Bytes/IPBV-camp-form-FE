@@ -294,6 +294,11 @@
   }
 }
 
+.verify-registration-button:hover {
+  background-color: $light-yellow;
+  color: $black;
+}
+
 // Settings Button
 .settings-btn {
   background-color: $alternate-dark-gray;
