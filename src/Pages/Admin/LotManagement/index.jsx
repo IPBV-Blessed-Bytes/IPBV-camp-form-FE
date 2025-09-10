@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -8,10 +8,16 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
+import Icons from '@/components/Global/Icons';
 
 const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [loadingContent, setLoadingContent] = useState(false);
   const [lots, setLots] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedLot, setSelectedLot] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newLot, setNewLot] = useState({ name: '', price: 0, startDate: '', endDate: '' });
 
   scrollUp();
 
@@ -19,7 +25,12 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     try {
       setLoadingContent(true);
       const response = await fetcher.get('lots');
-      setLots(response.lots || []);
+      setLots(
+        (response.data?.lots || []).map((lot) => ({
+          ...lot,
+          price: parseInt(lot.price, 10),
+        })),
+      );
     } catch (error) {
       console.error(error);
       toast.error('Erro ao carregar lotes');
@@ -33,11 +44,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   }, []);
 
   const handleLotChange = (id, field, value) => {
-    setLots((prevLots) =>
-      prevLots.map((lot) =>
-        lot.id === id ? { ...lot, [field]: value } : lot
-      )
-    );
+    setLots((prevLots) => prevLots.map((lot) => (lot.id === id ? { ...lot, [field]: value } : lot)));
   };
 
   const updateLot = async (lot) => {
@@ -48,7 +55,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: lot.startDate,
         endDate: lot.endDate,
       });
-      toast.success(`Lote ${lot.name} atualizado com sucesso`);
+      toast.success(`${lot.name} atualizado com sucesso`);
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
     } catch (error) {
       console.error(error);
@@ -58,57 +65,118 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
+  const handleDeleteLot = async () => {
+    if (!selectedLot) return;
+
+    try {
+      setLoadingContent(true);
+      await fetcher.delete(`lots/${selectedLot.id}`);
+      toast.success(`${selectedLot.name} deletado com sucesso`);
+      registerLog(`Deletou o ${selectedLot.name}`, loggedUsername);
+      setShowDeleteModal(false);
+      fetchLots();
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao deletar lote');
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
+  const handleAddLot = async () => {
+    try {
+      setLoadingContent(true);
+      await fetcher.post('lots', {
+        name: newLot.name,
+        price: Number(newLot.price),
+        startDate: newLot.startDate,
+        endDate: newLot.endDate,
+      });
+      toast.success(`Novo lote ${newLot.name} adicionado com sucesso`);
+      registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
+      setShowAddModal(false);
+      setNewLot({ name: '', price: 0, startDate: '', endDate: '' });
+      fetchLots();
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao adicionar lote');
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
   return (
     <Container fluid>
       <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#204691'} />
 
+      <Tools
+        headerToolsClassname="d-flex justify-content-end gap-2"
+        headerToolsTypeButton="primary"
+        headerToolsOpenModal={() => setShowAddModal(true)}
+        headerToolsButtonIcon="plus"
+        headerToolsButtonSize={20}
+        headerToolsButtonFill={'#fff'}
+        headerToolsButtonName="Adicionar Novo Lote"
+      />
+
       <Row className="justify-content-center">
-        <Col xs={12} md={8} lg={6}>
-          <Form className="my-4">
+        <Col xs={12} md={10} lg={8}>
+          <Form>
             {lots.map((lot) => (
               <div key={lot.id} className="border rounded p-3 mb-3">
-                <h5>{lot.name}</h5>
+                <h5>
+                  <strong>{lot.name}:</strong>
+                </h5>
                 <Row>
                   <Col xs={12} md={4}>
                     <Form.Group>
-                      <Form.Label>Preço</Form.Label>
+                      <Form.Label>
+                        <strong>Preço</strong>
+                      </Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
                         value={lot.price || ''}
-                        onChange={(e) =>
-                          handleLotChange(lot.id, 'price', e.target.value)
-                        }
+                        onChange={(e) => handleLotChange(lot.id, 'price', parseInt(e.target.value, 10) || 0)}
                       />
                     </Form.Group>
                   </Col>
                   <Col xs={12} md={4}>
                     <Form.Group>
-                      <Form.Label>Data Início</Form.Label>
+                      <Form.Label>
+                        <strong>Data Início</strong>
+                      </Form.Label>
                       <Form.Control
                         type="date"
                         value={lot.startDate || ''}
-                        onChange={(e) =>
-                          handleLotChange(lot.id, 'startDate', e.target.value)
-                        }
+                        onChange={(e) => handleLotChange(lot.id, 'startDate', e.target.value)}
                       />
                     </Form.Group>
                   </Col>
                   <Col xs={12} md={4}>
                     <Form.Group>
-                      <Form.Label>Data Fim</Form.Label>
+                      <Form.Label>
+                        <strong>Data Fim</strong>
+                      </Form.Label>
                       <Form.Control
                         type="date"
                         value={lot.endDate || ''}
-                        onChange={(e) =>
-                          handleLotChange(lot.id, 'endDate', e.target.value)
-                        }
+                        onChange={(e) => handleLotChange(lot.id, 'endDate', e.target.value)}
                       />
                     </Form.Group>
                   </Col>
                 </Row>
 
-                <div className="d-flex mt-3 justify-content-end">
+                <div className="d-flex mt-3 justify-content-end gap-2">
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      setSelectedLot(lot);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    Deletar
+                  </Button>
                   <Button variant="success" onClick={() => updateLot(lot)}>
                     Salvar {lot.name}
                   </Button>
@@ -118,6 +186,91 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           </Form>
         </Col>
       </Row>
+
+      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
+            <b>Confirmar Exclusão</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?{' '}
+          <em>
+            <b>Essa ação é irreversível!</b>
+          </em>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
+            Deletar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <b>Adicionar Novo Lote</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <strong>Nome:</strong>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={newLot.name}
+                onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <strong>Preço:</strong>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                value={newLot.price}
+                onChange={(e) => setNewLot({ ...newLot, price: parseInt(e.target.value, 10) || 0 })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <strong>Data Início:</strong>
+              </Form.Label>
+              <Form.Control
+                type="date"
+                value={newLot.startDate}
+                onChange={(e) => setNewLot({ ...newLot, startDate: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>
+                <strong>Data Fim:</strong>
+              </Form.Label>
+              <Form.Control
+                type="date"
+                value={newLot.endDate}
+                onChange={(e) => setNewLot({ ...newLot, endDate: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="success" onClick={handleAddLot}>
+            Adicionar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Loading loading={loading || loadingContent} />
     </Container>
   );
