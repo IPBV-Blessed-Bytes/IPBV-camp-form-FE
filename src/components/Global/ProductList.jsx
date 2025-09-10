@@ -77,11 +77,11 @@ const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true
             const alreadySelected = !!getItem(product.id);
             return (
               <div key={product.id} className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}>
-                <div className="align-items-center">
+                <div className="align-items-center mb-4">
                   <h3 className="product-title">{product.name}</h3>
                 </div>
-                <p className="product-price">R$ {product.price.toFixed(2)}</p>
-                {product.description && <p className="discount-description small">{product.description}</p>}
+                <p className="product-price mb-4">R$ {product.price.toFixed(2)}</p>
+                {product.description && <p className="discount-description small mb-4">{product.description}</p>}
                 <button
                   className={`product-button ${alreadySelected ? 'selected' : ''}`}
                   onClick={() => handlePackageButton(product, filtered, singleSelection, alreadySelected)}
