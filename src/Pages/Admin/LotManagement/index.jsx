@@ -4,6 +4,11 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
+import DatePicker from 'react-datepicker';
+import { registerLocale } from 'react-datepicker';
+import ptBR from 'date-fns/locale/pt-BR';
+import { parse, isValid } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -13,16 +18,17 @@ import Icons from '@/components/Global/Icons';
 
 const defaultPrice = {
   seminary: '',
+  school: '',
+  otherAccomodation: '',
   registrationFee: '',
-  completeFood: '',
-  partialFood: '',
+  food: '',
   bus: '',
 };
 
 const defaultVacancies = {
   seminary: '',
-  registrationFee: '',
-  food: '',
+  school: '',
+  otherAccomodation: '',
   bus: '',
 };
 
@@ -41,6 +47,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   });
 
   scrollUp();
+
+  registerLocale('ptBR', ptBR);
 
   const fetchLots = async () => {
     try {
@@ -144,18 +152,30 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   };
 
   const priceLabels = {
-    seminary: 'Preço do Seminário',
-    registrationFee: 'Preço da Taxa de Inscrição',
-    completeFood: 'Preço da Alimentação Completa',
-    partialFood: 'Preço da Alimentação Parcial',
-    bus: 'Preço do Ônibus',
+    seminary: 'Preço Seminário',
+    school: 'Preço Escola',
+    otherAccomodation: 'Preço Externo',
+    registrationFee: 'Preço Taxa Inscrição',
+    food: 'Preço Alimentação',
+    bus: 'Preço Ônibus',
   };
 
   const vacanciesLabels = {
     seminary: 'Vagas Seminário',
-    registrationFee: 'Vagas Taxa de Inscrição',
-    food: 'Vagas Alimentação',
+    school: 'Vagas Colégio',
+    otherAccomodation: 'Vagas Externo',
     bus: 'Vagas Ônibus',
+  };
+
+  const parseDate = (dateString) => {
+    if (!dateString) return null;
+    const parsed = parse(dateString, 'dd/MM/yyyy', new Date());
+    return isValid(parsed) ? parsed : null;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    return date.toLocaleDateString('pt-BR');
   };
 
   return (
@@ -173,19 +193,56 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       />
 
       <Row className="justify-content-center">
-        <Col xs={12} md={10} lg={8}>
+        <Col>
           <Form>
             {lots.map((lot) => (
               <div key={lot.id} className="border rounded p-3 mb-3">
-                <h5>
+                <h5 className='mb-3'>
                   <strong>{lot.name}:</strong>
                 </h5>
                 <Row>
+                  <Col xs={12} md={6} className='mb-3'>
+                    <Form.Group>
+                      <Form.Label>
+                        <strong>Data Início:</strong>
+                      </Form.Label>
+                      <DatePicker
+                        selected={parseDate(lot.startDate)}
+                        onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
+                        className="form-control form-control-lg"
+                        placeholderText="dd/mm/aaaa"
+                        dateFormat="dd/MM/yyyy"
+                        locale="ptBR"
+                        dropdownMode="select"
+                        showMonthDropdown
+                        showYearDropdown
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={12} md={6} className='mb-3'>
+                    <Form.Group>
+                      <Form.Label>
+                        <strong>Data Fim:</strong>
+                      </Form.Label>
+                      <DatePicker
+                        selected={parseDate(lot.endDate)}
+                        onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
+                        className="form-control form-control-lg"
+                        placeholderText="dd/mm/aaaa"
+                        dateFormat="dd/MM/yyyy"
+                        locale="ptBR"
+                        dropdownMode="select"
+                        showMonthDropdown
+                        showYearDropdown
+                      />
+                    </Form.Group>
+                  </Col>
+
                   {Object.keys(defaultPrice).map((field) => (
-                    <Col xs={12} md={4} key={field}>
+                    <Col xs={12} md={4} key={field} className='mb-3'>
                       <Form.Group>
                         <Form.Label>
-                          <strong>{priceLabels[field]}</strong>
+                          <strong>{priceLabels[field]}:</strong>
                         </Form.Label>
                         <Form.Control
                           type="text"
@@ -197,10 +254,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   ))}
 
                   {Object.keys(defaultVacancies).map((field) => (
-                    <Col xs={12} md={4} key={field}>
+                    <Col xs={12} md={4} key={field} className='mb-3'>
                       <Form.Group>
                         <Form.Label>
-                          <strong>{vacanciesLabels[field]}</strong>
+                          <strong>{vacanciesLabels[field]}:</strong>
                         </Form.Label>
                         <Form.Control
                           type="number"
@@ -211,31 +268,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       </Form.Group>
                     </Col>
                   ))}
-
-                  <Col xs={12} md={6}>
-                    <Form.Group>
-                      <Form.Label>
-                        <strong>Data Início</strong>
-                      </Form.Label>
-                      <Form.Control
-                        type="date"
-                        value={lot.startDate || ''}
-                        onChange={(e) => handleLotChange(lot.id, 'startDate', e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={6}>
-                    <Form.Group>
-                      <Form.Label>
-                        <strong>Data Fim</strong>
-                      </Form.Label>
-                      <Form.Control
-                        type="date"
-                        value={lot.endDate || ''}
-                        onChange={(e) => handleLotChange(lot.id, 'endDate', e.target.value)}
-                      />
-                    </Form.Group>
-                  </Col>
                 </Row>
 
                 <div className="d-flex mt-3 justify-content-end gap-2">
@@ -266,10 +298,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?{' '}
-          <em>
-            <b>Essa ação é irreversível!</b>
-          </em>
+          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
@@ -310,12 +339,16 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   <Form.Label>
                     <strong>Data Início:</strong>
                   </Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={newLot.startDate}
-                    onChange={(e) => setNewLot({ ...newLot, startDate: e.target.value })}
-                    className={`form-control-lg form-control-bg admin-field--even`}
-                    placeholder="Data de Início do Lote"
+                  <DatePicker
+                    selected={parseDate(newLot.startDate)}
+                    onChange={(date) => setNewLot({ ...newLot, startDate: formatDate(date) })}
+                    className="form-control form-control-lg admin-field--even"
+                    placeholderText="dd/mm/aaaa"
+                    dateFormat="dd/MM/yyyy"
+                    locale="ptBR"
+                    dropdownMode="select"
+                    showMonthDropdown
+                    showYearDropdown
                   />
                 </Form.Group>
               </Col>
@@ -325,12 +358,16 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   <Form.Label>
                     <strong>Data Fim:</strong>
                   </Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={newLot.endDate}
-                    onChange={(e) => setNewLot({ ...newLot, endDate: e.target.value })}
-                    className={`form-control-lg form-control-bg admin-field--even`}
-                    placeholder="Data de Fim do Lote"
+                  <DatePicker
+                    selected={parseDate(newLot.endDate)}
+                    onChange={(date) => setNewLot({ ...newLot, endDate: formatDate(date) })}
+                    className="form-control form-control-lg admin-field--even"
+                    placeholderText="dd/mm/aaaa"
+                    dateFormat="dd/MM/yyyy"
+                    locale="ptBR"
+                    dropdownMode="select"
+                    showMonthDropdown
+                    showYearDropdown
                   />
                 </Form.Group>
               </Col>
