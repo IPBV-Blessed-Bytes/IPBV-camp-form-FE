@@ -11,13 +11,21 @@ import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 import Icons from '@/components/Global/Icons';
 
+const defaultPrice = {
+  seminary: '',
+  registrationFee: '',
+  completeFood: '',
+  partialFood: '',
+  bus: '',
+};
+
 const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [loadingContent, setLoadingContent] = useState(false);
   const [lots, setLots] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newLot, setNewLot] = useState({ name: '', price: 0, startDate: '', endDate: '' });
+  const [newLot, setNewLot] = useState({ name: '', price: { ...defaultPrice }, startDate: '', endDate: '' });
 
   scrollUp();
 
@@ -25,12 +33,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     try {
       setLoadingContent(true);
       const response = await fetcher.get('lots');
-      setLots(
-        (response.data?.lots || []).map((lot) => ({
-          ...lot,
-          price: parseInt(lot.price, 10),
-        })),
-      );
+      setLots(response.data?.lots || []);
     } catch (error) {
       console.error(error);
       toast.error('Erro ao carregar lotes');
@@ -43,17 +46,37 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     fetchLots();
   }, []);
 
-  const handleLotChange = (id, field, value) => {
-    setLots((prevLots) => prevLots.map((lot) => (lot.id === id ? { ...lot, [field]: value } : lot)));
+  const handleLotChange = (id, field, value, nestedField = null) => {
+    setLots((prevLots) =>
+      prevLots.map((lot) => {
+        if (lot.id !== id) return lot;
+
+        if (field === 'price' && nestedField) {
+          return {
+            ...lot,
+            price: { ...lot.price, [nestedField]: value },
+          };
+        }
+
+        return { ...lot, [field]: value };
+      }),
+    );
   };
 
   const updateLot = async (lot) => {
     try {
       setLoadingContent(true);
       await fetcher.patch(`lots/${lot.id}`, {
-        price: Number(lot.price),
+        name: lot.name,
         startDate: lot.startDate,
         endDate: lot.endDate,
+        price: {
+          seminary: lot.price?.seminary || '',
+          registrationFee: lot.price?.registrationFee || '',
+          completeFood: lot.price?.completeFood || '',
+          partialFood: lot.price?.partialFood || '',
+          bus: lot.price?.bus || '',
+        },
       });
       toast.success(`${lot.name} atualizado com sucesso`);
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
@@ -88,14 +111,20 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       setLoadingContent(true);
       await fetcher.post('lots', {
         name: newLot.name,
-        price: Number(newLot.price),
         startDate: newLot.startDate,
         endDate: newLot.endDate,
+        price: {
+          seminary: newLot.price.seminary || '',
+          registrationFee: newLot.price.registrationFee || '',
+          completeFood: newLot.price.completeFood || '',
+          partialFood: newLot.price.partialFood || '',
+          bus: newLot.price.bus || '',
+        },
       });
-      toast.success(`Novo lote ${newLot.name} adicionado com sucesso`);
+      toast.success(`${newLot.name} adicionado com sucesso`);
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
       setShowAddModal(false);
-      setNewLot({ name: '', price: 0, startDate: '', endDate: '' });
+      setNewLot({ name: '', price: { ...defaultPrice }, startDate: '', endDate: '' });
       fetchLots();
     } catch (error) {
       console.error(error);
@@ -103,6 +132,14 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     } finally {
       setLoadingContent(false);
     }
+  };
+
+  const priceLabels = {
+    seminary: 'Preço do Seminário',
+    registrationFee: 'Preço da Taxa de Inscrição',
+    completeFood: 'Preço da Alimentação Completa',
+    partialFood: 'Preço da Alimentação Parcial',
+    bus: 'Preço do Ônibus',
   };
 
   return (
@@ -128,20 +165,22 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   <strong>{lot.name}:</strong>
                 </h5>
                 <Row>
-                  <Col xs={12} md={4}>
-                    <Form.Group>
-                      <Form.Label>
-                        <strong>Preço</strong>
-                      </Form.Label>
-                      <Form.Control
-                        type="number"
-                        min="0"
-                        value={lot.price || ''}
-                        onChange={(e) => handleLotChange(lot.id, 'price', parseInt(e.target.value, 10) || 0)}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={4}>
+                  {Object.keys(defaultPrice).map((field) => (
+                    <Col xs={12} md={4} key={field}>
+                      <Form.Group>
+                        <Form.Label>
+                          <strong>{priceLabels[field]}</strong>
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={lot.price?.[field] || ''}
+                          onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  ))}
+
+                  <Col xs={12} md={6}>
                     <Form.Group>
                       <Form.Label>
                         <strong>Data Início</strong>
@@ -153,7 +192,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col xs={12} md={4}>
+                  <Col xs={12} md={6}>
                     <Form.Group>
                       <Form.Label>
                         <strong>Data Fim</strong>
@@ -178,7 +217,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                     Deletar
                   </Button>
                   <Button variant="success" onClick={() => updateLot(lot)}>
-                    Salvar {lot.name}
+                    Salvar
                   </Button>
                 </div>
               </div>
@@ -228,17 +267,21 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                 onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <strong>Preço:</strong>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                value={newLot.price}
-                onChange={(e) => setNewLot({ ...newLot, price: parseInt(e.target.value, 10) || 0 })}
-              />
-            </Form.Group>
+
+            {Object.keys(defaultPrice).map((field) => (
+              <Form.Group className="mb-3" key={field}>
+                <Form.Label>
+                  <strong>{priceLabels[field]}:</strong>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  value={newLot.price[field]}
+                  onChange={(e) => setNewLot({ ...newLot, price: { ...newLot.price, [field]: e.target.value } })}
+                />
+              </Form.Group>
+            ))}
+
             <Form.Group className="mb-3">
               <Form.Label>
                 <strong>Data Início:</strong>
