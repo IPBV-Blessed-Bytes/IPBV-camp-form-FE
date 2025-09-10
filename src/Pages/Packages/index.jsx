@@ -88,10 +88,10 @@ const Packages = ({
     newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
-       const foodId = newPackage.food?.id || '';
+      const foodId = newPackage.food?.id || '';
       // const hasFood = foodId === 'food-complete' || foodId === 'food-external';
       const hasFood = true;
-      
+
       const skipToReview = hasFood;
       nextStep(skipToReview);
     });
@@ -103,10 +103,19 @@ const Packages = ({
 
   const discounted = getDiscountedProducts(age);
 
+  const getCategoryDiscountDescription = (category) => {
+    const productsInCategory = discounted.filter((p) => p.category === category);
+    const descriptions = productsInCategory
+      .filter((p) => p.discountDescription && p.discountDescription.trim() !== '')
+      .map((p) => `${p.discountDescription} quando opção for ${p.name}`);
+
+    return descriptions.length > 0 ? ` ${descriptions.join(' | ')}` : '';
+  };
+
   const getDiscountedPrice = (category) => {
     const item = items.find((i) => i.category === category);
     if (!item) return 0;
-    
+
     const discountedItem = discounted.find((d) => d.id === item.id);
     return discountedItem?.price ?? item.price ?? 0;
   };
@@ -131,6 +140,9 @@ const Packages = ({
                   <Card.Title>Hospedagem</Card.Title>
                   <Card.Text>
                     Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
+                    <em className="discount-description text-success small">
+                      {getCategoryDiscountDescription('Hospedagem')}
+                    </em>
                   </Card.Text>
                   <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Hospedagem" />
                 </Card.Body>
@@ -142,6 +154,9 @@ const Packages = ({
                   <Card.Text>
                     Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdate total com transporte
                     próprio. A escolha do transporte é <strong>obrigatória</strong>.
+                    <em className="discount-description text-success small">
+                      {getCategoryDiscountDescription('Transporte')}
+                    </em>
                   </Card.Text>
                   <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Transporte" />
                 </Card.Body>
@@ -153,6 +168,9 @@ const Packages = ({
                   <Card.Text>
                     Você pode incluir todas as refeições ou apenas algumas.{' '}
                     <strong>Não teremos vendas de refeições avulsas</strong>.
+                    <em className="discount-description text-success small">
+                      {getCategoryDiscountDescription('Alimentação')}
+                    </em>
                   </Card.Text>
                   <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Alimentação" />
                 </Card.Body>
