@@ -186,105 +186,107 @@ const Packages = ({
           )}
         </Col>
 
-        <Col xs={12} xl={4} className="px-0 ps-xl-3">
-          <Card>
-            <Card.Body>
-              <Card.Title>Resumo do Pacote</Card.Title>
-              <div className="summary">
-                <div className="summary__accomodation">
-                  <div className="summary__accomodation__label">Hospedagem:</div>
-                  <div
-                    className={`summary__accomodation__content ${
-                      items.find((i) => i.category === 'Hospedagem') ? 'with-border' : 'no-border'
-                    }`}
-                  >
-                    {items.find((i) => i.category === 'Hospedagem') ? (
-                      <div>{items.find((i) => i.category === 'Hospedagem')?.name}</div>
-                    ) : (
-                      <small className="text-secondary">Não selecionado</small>
-                    )}
-                    {items.find((i) => i.category === 'Hospedagem') && (
-                      <div className="summary__accomodation__value">R$ {accomodationPrice},00</div>
-                    )}
-                  </div>
-                  <div className="packages-horizontal-line-cart"></div>
-                </div>
-
-                <div className="summary__transportation">
-                  <div className="summary__accomodation__label">Transporte:</div>
-                  <div
-                    className={`summary__accomodation__content ${
-                      items.find((i) => i.category === 'Transporte') ? 'with-border' : 'no-border'
-                    }`}
-                  >
-                    {items.find((i) => i.category === 'Transporte') ? (
-                      <div>{items.find((i) => i.category === 'Transporte')?.name}</div>
-                    ) : (
-                      <small className="text-secondary">Não selecionado</small>
-                    )}
-                    {items.find((i) => i.category === 'Transporte') && (
-                      <div className="summary__accomodation__value">R$ {transportationPrice},00</div>
-                    )}
-                  </div>
-                  <div className="packages-horizontal-line-cart"></div>
-                </div>
-
-                <div className="summary__food">
-                  <div className="summary__accomodation__label">Alimentação:</div>
-                  <div
-                    className={`summary__accomodation__content ${
-                      items.find((i) => i.category === 'Alimentação') ? 'with-border' : 'no-border'
-                    }`}
-                  >
-                    {items.find((i) => i.category === 'Alimentação') ? (
-                      <div>{items.find((i) => i.category === 'Alimentação')?.name}</div>
-                    ) : (
-                      <small className="text-secondary">Não selecionado</small>
-                    )}
-                    {items.find((i) => i.category === 'Alimentação') && (
-                      <div className="summary__accomodation__value">R$ {foodPrice},00</div>
-                    )}
-                  </div>
-                  <div className="packages-horizontal-line-cart"></div>
-                </div>
-
-                <div className="summary__individual-base">
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex align-items-center gap-1">
-                      <div className="summary-individual-base-label">Taxa de Inscrição:</div>
-                      <Tips
-                        classNameWrapper="mt-0 mb-2"
-                        placement="top"
-                        typeIcon="info"
-                        size={15}
-                        color={'#7f7878'}
-                        text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 100 reais, acima de 15 anos = 200 reais."
-                      />
+        {!isRegistrationClosed && (
+          <Col xs={12} xl={4} className="px-0 ps-xl-3">
+            <Card>
+              <Card.Body>
+                <Card.Title>Resumo do Pacote</Card.Title>
+                <div className="summary">
+                  <div className="summary__accomodation">
+                    <div className="summary__accomodation__label">Hospedagem:</div>
+                    <div
+                      className={`summary__accomodation__content ${
+                        items.find((i) => i.category === 'Hospedagem') ? 'with-border' : 'no-border'
+                      }`}
+                    >
+                      {items.find((i) => i.category === 'Hospedagem') ? (
+                        <div>{items.find((i) => i.category === 'Hospedagem')?.name}</div>
+                      ) : (
+                        <small className="text-secondary">Não selecionado</small>
+                      )}
+                      {items.find((i) => i.category === 'Hospedagem') && (
+                        <div className="summary__accomodation__value">R$ {accomodationPrice},00</div>
+                      )}
                     </div>
-                    <div className="summary-individual-base-value"> R$ {individualBase},00 </div>
+                    <div className="packages-horizontal-line-cart"></div>
                   </div>
-                  <div className="packages-horizontal-line-cart"></div>
-                </div>
 
-                <div className="summary__discount">
-                  {hasDiscount && discountNumeric > 0 && (
+                  <div className="summary__transportation">
+                    <div className="summary__accomodation__label">Transporte:</div>
+                    <div
+                      className={`summary__accomodation__content ${
+                        items.find((i) => i.category === 'Transporte') ? 'with-border' : 'no-border'
+                      }`}
+                    >
+                      {items.find((i) => i.category === 'Transporte') ? (
+                        <div>{items.find((i) => i.category === 'Transporte')?.name}</div>
+                      ) : (
+                        <small className="text-secondary">Não selecionado</small>
+                      )}
+                      {items.find((i) => i.category === 'Transporte') && (
+                        <div className="summary__accomodation__value">R$ {transportationPrice},00</div>
+                      )}
+                    </div>
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
+
+                  <div className="summary__food">
+                    <div className="summary__accomodation__label">Alimentação:</div>
+                    <div
+                      className={`summary__accomodation__content ${
+                        items.find((i) => i.category === 'Alimentação') ? 'with-border' : 'no-border'
+                      }`}
+                    >
+                      {items.find((i) => i.category === 'Alimentação') ? (
+                        <div>{items.find((i) => i.category === 'Alimentação')?.name}</div>
+                      ) : (
+                        <small className="text-secondary">Não selecionado</small>
+                      )}
+                      {items.find((i) => i.category === 'Alimentação') && (
+                        <div className="summary__accomodation__value">R$ {foodPrice},00</div>
+                      )}
+                    </div>
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
+
+                  <div className="summary__individual-base">
                     <div className="d-flex justify-content-between">
-                      <div>Desconto:</div> <div>-R$ {discountNumeric},00</div>
+                      <div className="d-flex align-items-center gap-1">
+                        <div className="summary-individual-base-label">Taxa de Inscrição:</div>
+                        <Tips
+                          classNameWrapper="mt-0 mb-2"
+                          placement="top"
+                          typeIcon="info"
+                          size={15}
+                          color={'#7f7878'}
+                          text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 100 reais, acima de 15 anos = 200 reais."
+                        />
+                      </div>
+                      <div className="summary-individual-base-value"> R$ {individualBase},00 </div>
                     </div>
-                  )}
-                  <div className="packages-horizontal-line-cart"></div>
-                </div>
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
 
-                <div className="summary__discount">
-                  <strong className="d-flex justify-content-between">
-                    <div>Total:</div>
-                    <div>R$ {finalTotal},00</div>
-                  </strong>
+                  <div className="summary__discount">
+                    {hasDiscount && discountNumeric > 0 && (
+                      <div className="d-flex justify-content-between">
+                        <div>Desconto:</div> <div>-R$ {discountNumeric},00</div>
+                      </div>
+                    )}
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
+
+                  <div className="summary__discount">
+                    <strong className="d-flex justify-content-between">
+                      <div>Total:</div>
+                      <div>R$ {finalTotal},00</div>
+                    </strong>
+                  </div>
                 </div>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
       </Row>
 
       <Row>
