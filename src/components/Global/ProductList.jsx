@@ -1,13 +1,13 @@
-import { useState, useImperativeHandle, useEffect, forwardRef, useRef } from 'react';
+import { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react';
 import { useCart } from 'react-use-cart';
 import { products } from '../../Pages/Packages/utils/products';
 import PropTypes from 'prop-types';
-import Icons from './Icons';
+import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
-const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true, required = false }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
-  const [hasError, setHasError] = useState(false);
+  const [categoriesNotSelected, setCategoriesNotSelected] = useState([]);
   const hasRestoredCart = useRef(false);
 
   useEffect(() => {
@@ -17,9 +17,7 @@ const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true
       try {
         const parsed = JSON.parse(savedCart);
         parsed.forEach((item) => {
-          if (!getItem(item.id)) {
-            addItem(item);
-          }
+          if (!getItem(item.id)) addItem(item);
         });
       } catch (e) {
         console.error('[ProductList] Erro ao restaurar carrinho:', e);
@@ -36,38 +34,42 @@ const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true
   }, [items]);
 
   const checkRequiredPackages = () => {
-    const hostingSelected = products.filter((p) => p.category === 'Hospedagem').some((p) => getItem(p.id));
-    const transportationSelected = products.filter((p) => p.category === 'Transporte').some((p) => getItem(p.id));
-    const foodSelected = products.filter((p) => p.category === 'Alimentação').some((p) => getItem(p.id));
-    const allValid = hostingSelected && transportationSelected && foodSelected;
+    const requiredCategories = ['Hospedagem', 'Transporte', 'Alimentação'];
+    const missingCategories = requiredCategories.filter(
+      (cat) => !products.some((p) => p.category === cat && getItem(p.id)),
+    );
 
-    setHasError(!allValid);
-    return allValid;
+    setCategoriesNotSelected(missingCategories);
+
+    if (missingCategories.length > 0) {
+      toast.error(`Selecione uma opção para: ${missingCategories.join(', ')}`);
+      return false;
+    }
+
+    return true;
   };
 
   useImperativeHandle(ref, () => ({
     checkRequiredPackages,
   }));
 
-  const handleSelect = (product, filtered, singleSelection) => {
-    if (singleSelection) {
-      filtered.forEach((p) => {
-        if (getItem(p.id)) removeItem(p.id);
-      });
-    }
-
+  const handleSelect = (product, filtered) => {
+    filtered.forEach((p) => {
+      if (getItem(p.id)) removeItem(p.id);
+    });
     addItem(product);
   };
 
-  const handlePackageButton = (product, filtered, singleSelection, alreadySelected) => {
+  const handlePackageButton = (product, filtered) => {
+    const alreadySelected = !!getItem(product.id);
     if (alreadySelected) {
       removeItem(product.id);
     } else {
-      handleSelect(product, filtered, singleSelection);
+      handleSelect(product, filtered);
     }
   };
 
-  const renderSection = (categoryTitle, categoryKey, singleSelection, required) => {
+  const renderSection = (categoryKey) => {
     const filtered = getDiscountedProducts(age).filter((p) => p.category === categoryKey);
 
     return (
@@ -80,29 +82,23 @@ const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true
                 <div className="align-items-center mb-4">
                   <h3 className="product-title">{product.name}</h3>
                 </div>
-                <p className="product-price mb-4">R$ {product.price.toFixed(2)}</p>
+                <p className="product-price mb-4">R$ {product.price},00</p>
                 {product.description && <p className="discount-description small mb-4">{product.description}</p>}
                 <button
                   className={`product-button ${alreadySelected ? 'selected' : ''}`}
-                  onClick={() => handlePackageButton(product, filtered, singleSelection, alreadySelected)}
+                  onClick={() => handlePackageButton(product, filtered)}
                 >
                   {alreadySelected ? 'Selecionado' : 'Selecionar'}
                 </button>
               </div>
             );
           })}
-          {hasError && required && (
-            <div className="invalid-feedback text-center d-block">
-              Selecione uma opção de {categoryTitle} &nbsp;
-              <Icons typeIcon="error" iconSize={25} fill="#c92432" />
-            </div>
-          )}
         </div>
       </div>
     );
   };
 
-  return <>{renderSection(category, category, singleSelection, required)}</>;
+  return <>{renderSection(category, category)}</>;
 });
 
 ProductList.displayName = 'ProductList';
@@ -111,8 +107,6 @@ ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
-  singleSelection: PropTypes.bool,
-  required: PropTypes.bool,
 };
 
 export default ProductList;
