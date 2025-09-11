@@ -837,7 +837,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                 value: 'Alimentação Completa (Café, Almoço e Jantar)',
                 label: 'Alimentação Completa (Café, Almoço e Jantar)',
               },
-              { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
+              {
+                value: 'Sem Alimentação',
+                label: 'Sem Alimentação',
+              },
+              // { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);

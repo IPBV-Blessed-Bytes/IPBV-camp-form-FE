@@ -56,10 +56,17 @@ export const products = [
     category: 'Alimentação',
   },
   {
-    id: 'food-external',
-    name: 'Alimentação Parcial',
-    price: 240,
-    description: 'Apenas almoço e jantar. Café da manhã não incluso',
+    id: 'no-food',
+    name: 'Sem Alimentação',
+    price: 0,
+    description: 'Sem refeições',
     category: 'Alimentação',
   },
+  // {
+  //   id: 'food-external',
+  //   name: 'Alimentação Parcial',
+  //   price: 240,
+  //   description: 'Apenas almoço e jantar. Café da manhã não incluso',
+  //   category: 'Alimentação',
+  // },
 ];
