@@ -132,7 +132,7 @@ const Packages = ({
   return (
     <Container className="packages-page form__container__cart-height">
       <Row>
-        <Col xs={12} xl={8} className="px-0">
+        <Col xs={12} xl={8} className="px-0 mb-3 mb-xl-0">
           {!isRegistrationClosed ? (
             <>
               <Card className="mb-3">
@@ -186,7 +186,7 @@ const Packages = ({
           )}
         </Col>
 
-        <Col xs={12} xl={4} className="px-0 px-lg-2">
+        <Col xs={12} xl={4} className="ps-0 ps-xl-3">
           <Card>
             <Card.Body>
               <Card.Title>Resumo do Pacote</Card.Title>
