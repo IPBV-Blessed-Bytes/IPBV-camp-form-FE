@@ -77,3 +77,29 @@
     }
   }
 }
+
+.summary {
+  &__accomodation,
+  &__transportation,
+  &__food {
+    &__content {
+      align-items: center;
+      display: grid;
+      height: 50px;
+      padding-left: 8px;
+      margin-top: 8px;
+
+      &.with-border {
+        border-left: 3px solid $primary;
+      }
+
+      &.no-border {
+        border-left: none;
+      }
+
+      small {
+        font-style: italic;
+      }
+    }
+  }
+}
