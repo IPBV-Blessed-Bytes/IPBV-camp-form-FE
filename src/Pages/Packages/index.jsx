@@ -98,7 +98,7 @@ const Packages = ({
   };
 
   const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
-  const isChild = age < 11;
+  const isChild = age < 9;
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
   const discounted = getDiscountedProducts(age);
