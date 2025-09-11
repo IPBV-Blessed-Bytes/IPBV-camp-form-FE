@@ -82,6 +82,11 @@
   &__accomodation,
   &__transportation,
   &__food {
+    &__label {
+      color: $primary;
+      font-weight: bold;
+    }
+    
     &__content {
       align-items: center;
       display: grid;
