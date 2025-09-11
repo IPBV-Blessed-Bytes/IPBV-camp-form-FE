@@ -330,8 +330,8 @@ const PersonalData = ({
                       <Tips
                         placement="top"
                         typeIcon="info"
-                        size={25}
-                        colour={'#000'}
+                        size={18}
+                        colour={'#7f7878'}
                         text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
                       />
                     </div>
@@ -628,7 +628,7 @@ const PersonalData = ({
           <Button variant="outline-secondary" onClick={handlePrefillReject}>
             Não
           </Button>
-          <Button variant="primary" className='btn-inf' onClick={handlePrefillConfirm}>
+          <Button variant="primary" className="btn-inf" onClick={handlePrefillConfirm}>
             Sim
           </Button>
         </Modal.Footer>
