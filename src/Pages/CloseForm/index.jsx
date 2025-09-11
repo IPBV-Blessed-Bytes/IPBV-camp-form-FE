@@ -1,44 +1,41 @@
 import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import fetcher from '@/fetchers';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
-import FormRoutes from '../../Routes';
+import RoutesValidations from '@/Routes/RoutesValidations';
 
 const CloseForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({
-    username: '',
+    login: '',
     password: '',
   });
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('https://ipbv-camp-form-be-production-2b7d.up.railway.app/credentials');
-      const credentialsData = response.data;
+      const response = await fetcher.post('auth/login', {
+        login: loginData.login,
+        password: loginData.password,
+      });
 
-      const user = credentialsData.find((u) => u.login === loginData.username && u.password === loginData.password);
-
-      if (user) {
+      if (response.status === 200) {
         setIsLoggedIn(true);
+        setLoginData({ login: '', password: '' });
         toast.success('Usuário logado com sucesso!');
       } else {
         toast.error('Credenciais Inválidas. Tente novamente!');
       }
     } catch (error) {
       console.error(error.message);
-      toast.error('Erro ao buscar credenciais. Tente novamente mais tarde.');
+      toast.error('Credenciais Inválidas. Tente novamente.');
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleLogin();
-    }
-  };
+  const handleKeyDown = (e) => e.key === 'Enter' && handleLogin();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -53,14 +50,14 @@ const CloseForm = () => {
               <Form className="p-4">
                 <h4 className="text-center fw-bold my-5">IPBV</h4>
 
-                <Form.Group className="input-login-wrapper mb-3" controlId="username">
+                <Form.Group className="input-login-wrapper mb-3" controlId="login">
                   <Form.Label className="fw-bold">Nome de Usuário:</Form.Label>
                   <Form.Control
                     className="admin__user"
                     type="text"
                     placeholder="Digite seu nome de usuário"
-                    value={loginData.username}
-                    onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                    value={loginData.login}
+                    onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
                     onKeyDown={handleKeyDown}
                   />
                 </Form.Group>
@@ -68,6 +65,7 @@ const CloseForm = () => {
                 <Form.Group className="input-login-wrapper mb-3" controlId="password">
                   <Form.Label className="fw-bold">Senha:</Form.Label>
                   <Form.Control
+                    autocomplete="off"
                     className="admin__password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Digite sua senha"
@@ -83,7 +81,7 @@ const CloseForm = () => {
                 </Form.Group>
 
                 <div className="input-login-btn-wrapper d-flex justify-content-end">
-                  <Button variant="primary" onClick={handleLogin}>
+                  <Button className="fw-bold" variant="primary" onClick={handleLogin}>
                     Entrar
                   </Button>
                 </div>
@@ -92,9 +90,7 @@ const CloseForm = () => {
           </Row>
         </div>
       ) : (
-        <>
-          <FormRoutes />
-        </>
+        <RoutesValidations formContext="form-on" />
       )}
     </>
   );
