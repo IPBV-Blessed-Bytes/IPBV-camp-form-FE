@@ -14,25 +14,28 @@ const getDiscountedProducts = (ageRaw) => {
           discountDescription = 'Criança até 8 anos não paga hospedagem';
         } else if (age >= 9 && age <= 14) {
           price = price * 0.5;
-          discountDescription = 'Criança de 9 a 14 anos paga apenas 50% na hospedagem';
+          discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na hospedagem';
         }
       }
     }
 
     if (product.category === 'Transporte') {
-      if (age <= 5 && product.id === 'bus-yes') {
+      if (age <= 8 && product.id === 'bus-yes') {
         price = 0;
-        discountDescription = 'Criança até 5 anos não paga transporte (no colo dos pais)';
+        discountDescription = 'Criança até 8 anos não paga transporte';
+      } else if (age >= 9 && age <= 14 && product.id === 'bus-yes') {
+        price = price * 0.5;
+        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% no transporte';
       }
     }
 
     if (product.category === 'Alimentação') {
-      if (age <= 6) {
+      if (age <= 8) {
         price = 0;
-        discountDescription = 'Criança até 6 anos não paga alimentação';
-      } else if (age >= 7 && age <= 12) {
+        discountDescription = 'Criança até 8 anos não paga alimentação';
+      } else if (age >= 9 && age <= 14) {
         price = price * 0.5;
-        discountDescription = 'Criança de 7 a 12 anos paga apenas 50% na alimentação';
+        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na alimentação';
       }
     }
 
