@@ -164,7 +164,7 @@ const Packages = ({
 
               <Card className="mb-3 mb-sm-0">
                 <Card.Body>
-                  <Card.Title>Alimentação (Opcional)</Card.Title>
+                  <Card.Title>Alimentação</Card.Title>
                   <Card.Text>
                     Você pode incluir todas as refeições ou apenas algumas.{' '}
                     <strong>Não teremos vendas de refeições avulsas</strong>.
