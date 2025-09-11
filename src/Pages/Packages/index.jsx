@@ -47,7 +47,7 @@ const Packages = ({
   useEffect(() => {
     if (hasDiscount) {
       toast.info(
-        `Foi gerado um cupom de desconto no valor de R$ ${discount} em seu nome. O desconto já está aplicado ao valor final dos pacotes.`,
+        `Foi gerado um desconto no valor de R$ ${discount} em seu nome. O desconto já está aplicado ao valor final dos produtos.`,
       );
     }
   }, [hasDiscount, discount]);
@@ -223,7 +223,7 @@ const Packages = ({
                       text="Valor da taxa de inscrição conforme a idade: até 6 anos = 0 reais, 7 a 12 anos = 100 reais, acima de 13 anos = 200 reais."
                     />
                   </div>
-                  <h5 className="summary-individual-base-value"> R$ {individualBase},00 </h5>
+                  <h5 className="summary-individual-base-value"> R$ {individualBase} </h5>
                   <div className="packages-horizontal-line-cart"></div>
                 </div>
 
