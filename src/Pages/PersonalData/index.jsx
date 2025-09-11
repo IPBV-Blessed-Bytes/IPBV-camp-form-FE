@@ -331,7 +331,7 @@ const PersonalData = ({
                         placement="top"
                         typeIcon="info"
                         size={18}
-                        colour={'#7f7878'}
+                        color={'#7f7878'}
                         text="A idade considerada será a idade na data do acampamento, para fins de cálculo de pacotes"
                       />
                     </div>
@@ -500,7 +500,7 @@ const PersonalData = ({
                           placement="top"
                           typeIcon="info"
                           size={20}
-                          colour={'#000'}
+                          color={'#000'}
                           text="Como a idade informada é menor que 18 anos, é necessário informar os dados de um responsável legal QUE ESTARÁ NO ACAMPAMENTO"
                         />
                       </div>
