@@ -4,7 +4,6 @@ import { products } from '../../Pages/Packages/utils/products';
 import PropTypes from 'prop-types';
 import Icons from './Icons';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
-import Tips from './Tips';
 
 const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true, required = false }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
@@ -39,7 +38,8 @@ const ProductList = forwardRef(({ age, cartKey, category, singleSelection = true
   const checkRequiredPackages = () => {
     const hostingSelected = products.filter((p) => p.category === 'Hospedagem').some((p) => getItem(p.id));
     const transportationSelected = products.filter((p) => p.category === 'Transporte').some((p) => getItem(p.id));
-    const allValid = hostingSelected && transportationSelected;
+    const foodSelected = products.filter((p) => p.category === 'Alimentação').some((p) => getItem(p.id));
+    const allValid = hostingSelected && transportationSelected && foodSelected;
 
     setHasError(!allValid);
     return allValid;
