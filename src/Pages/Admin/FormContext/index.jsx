@@ -69,7 +69,9 @@ const AdminFormContext = ({ loggedUsername }) => {
 
       <Form>
         <Form.Group controlId="formContextSelect">
-          <Form.Label>Selecione o contexto do formulário:</Form.Label>
+          <Form.Label>
+            <strong>Selecione o contexto do formulário:</strong>
+          </Form.Label>
           <Form.Select value={formContext} onChange={handleChange} disabled={loading}>
             <option value="form-on">Aberto</option>
             <option value="form-off">Fechado</option>
