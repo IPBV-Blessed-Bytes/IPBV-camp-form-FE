@@ -267,14 +267,14 @@ const Packages = ({
                     <div className="packages-horizontal-line-cart"></div>
                   </div>
 
-                  <div className="summary__discount">
-                    {hasDiscount && discountNumeric > 0 && (
+                  {hasDiscount && discountNumeric > 0 && (
+                    <div className="summary__discount">
                       <div className="d-flex justify-content-between">
                         <div>Desconto:</div> <div>-R$ {discountNumeric},00</div>
                       </div>
-                    )}
-                    <div className="packages-horizontal-line-cart"></div>
-                  </div>
+                      <div className="packages-horizontal-line-cart"></div>
+                    </div>
+                  )}
 
                   <div className="summary__discount">
                     <strong className="d-flex justify-content-between">
