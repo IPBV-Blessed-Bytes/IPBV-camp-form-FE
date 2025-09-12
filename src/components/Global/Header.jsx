@@ -73,12 +73,15 @@ const Header = ({
                     {step}
                   </Breadcrumb.Item>
                   {index < headerSteps.length - 1 && (
-                    <Icons
-                      className="d-none d-lg-block"
-                      typeIcon="simple-arrow"
-                      iconSize={15}
-                      fill={index < steps ? '#ffc107' : '#fff'}
-                    />
+                    <>
+                      <Icons
+                        className="d-none d-lg-block"
+                        typeIcon="simple-arrow"
+                        iconSize={15}
+                        fill={index < steps ? '#ffc107' : '#fff'}
+                      />
+                      <span className="d-lg-none">•</span>
+                    </>
                   )}
                 </React.Fragment>
               ))}
