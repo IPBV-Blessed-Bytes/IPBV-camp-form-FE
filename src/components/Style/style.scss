@@ -7,6 +7,24 @@
   padding: 1.25rem 1.875rem 3rem;
   text-align: center;
 
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__left {
+    text-align: center;
+  }
+
+  &__right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   ol {
     align-items: center;
   }
@@ -64,6 +82,20 @@
           display: none;
         }
       }
+    }
+  }
+}
+
+@media (max-width: $md) {
+  .form__header {
+    .container {
+      flex-direction: column;
+    }
+
+    &__right {
+      position: static;
+      transform: none;
+      margin-bottom: 0.75rem;
     }
   }
 }

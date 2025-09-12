@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'; // ⬅️ useLocati
 import PropTypes from 'prop-types';
 import { enumSteps } from '@/utils/constants';
 import '../Style/style.scss';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import { Container, Breadcrumb } from 'react-bootstrap';
 import Icons from './Icons';
 import { Button } from 'react-bootstrap';
 
@@ -51,50 +51,56 @@ const Header = ({
 
   return (
     <header className="form__header">
-      <h2>
-        <a className="header-title" href="/">
-          ACAMPAMENTO IPBV 2026
-        </a>
-      </h2>
+      <Container>
+        <div className="form__header__left">
+          <h2>
+            <a className="header-title" href="/">
+              ACAMPAMENTO IPBV 2026
+            </a>
+          </h2>
 
-      {showNavMenu && (
-        <Breadcrumb className="mt-4">
-          {headerSteps.map((step, index) => (
-            <React.Fragment key={index}>
-              <Breadcrumb.Item
-                className={`${
-                  index > steps ? 'form__header--future-step' : index < steps ? 'form__header--previous-step' : ''
-                } ${index === 4 && hasFood ? 'disabled-link' : ''}`}
-                active={steps === index}
-                onClick={() => handleStepChange(index)}
+          {showNavMenu && (
+            <Breadcrumb className="mt-4">
+              {headerSteps.map((step, index) => (
+                <React.Fragment key={index}>
+                  <Breadcrumb.Item
+                    className={`${
+                      index > steps ? 'form__header--future-step' : index < steps ? 'form__header--previous-step' : ''
+                    } ${index === 4 && hasFood ? 'disabled-link' : ''}`}
+                    active={steps === index}
+                    onClick={() => handleStepChange(index)}
+                  >
+                    {step}
+                  </Breadcrumb.Item>
+                  {index < headerSteps.length - 1 && (
+                    <Icons
+                      className="d-none d-lg-block"
+                      typeIcon="simple-arrow"
+                      iconSize={15}
+                      fill={index < steps ? '#ffc107' : '#fff'}
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </Breadcrumb>
+          )}
+        </div>
+
+        <div className="form__header__right">
+          {location.pathname !== '/sucesso' &&
+            Array.isArray(formValues) &&
+            formValues.some((user) => user?.personalInformation?.name?.trim()) && (
+              <Button
+                className="cart-btn"
+                onClick={() => {
+                  goToStep(enumSteps.beforePayment);
+                }}
               >
-                {step}
-              </Breadcrumb.Item>
-              {index < headerSteps.length - 1 && (
-                <Icons
-                  className="d-none d-lg-block"
-                  typeIcon="simple-arrow"
-                  iconSize={15}
-                  fill={index < steps ? '#ffc107' : '#fff'}
-                />
-              )}
-            </React.Fragment>
-          ))}
-        </Breadcrumb>
-      )}
-
-      {location.pathname !== '/sucesso' &&
-        Array.isArray(formValues) &&
-        formValues.some((user) => user?.personalInformation?.name?.trim()) && (
-          <Button
-            className="cart-btn"
-            onClick={() => {
-              goToStep(enumSteps.beforePayment);
-            }}
-          >
-            <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
-          </Button>
-        )}
+                <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+              </Button>
+            )}
+        </div>
+      </Container>
     </header>
   );
 };
