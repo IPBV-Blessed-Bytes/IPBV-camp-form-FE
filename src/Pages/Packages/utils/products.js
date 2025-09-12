@@ -23,7 +23,7 @@ export const products = [
   {
     id: 'host-seminario',
     name: 'Seminário',
-    price: 500,
+    price: 280,
     description: 'Quarto do seminário São José',
     category: 'Hospedagem',
   },
@@ -51,7 +51,7 @@ export const products = [
   {
     id: 'food-complete',
     name: 'Alimentação Completa',
-    price: 300,
+    price: 220,
     description: 'Café da manhã, almoço e jantar inclusos',
     category: 'Alimentação',
   },
