@@ -369,9 +369,10 @@ const AdminRide = ({ loggedUsername }) => {
         <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
       </Accordion>
 
-      <Modal show={showDeleteRelationshipModal} onHide={handleCloseDeleteRelationshipModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteRelationshipModal} onHide={handleCloseDeleteRelationshipModal}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -380,7 +381,7 @@ const AdminRide = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={handleCloseDeleteRelationshipModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => handleDeleteRelationship(camperToDelete)}>
+          <Button variant="danger" className="btn-cancel" onClick={() => handleDeleteRelationship(camperToDelete)}>
             Excluir
           </Button>
         </Modal.Footer>

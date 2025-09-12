@@ -223,9 +223,10 @@ const AdminDiscount = ({ loggedUsername }) => {
         </Table>
       </div>
 
-      <Modal show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showModal} onHide={closeModal}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon={editingDiscount ? 'edit' : 'plus'} iconSize={25} fill={editingDiscount ? '' : '#057c05'} />
             <b>{editingDiscount ? 'Editar Desconto' : 'Criar Novo Desconto'}</b>
           </Modal.Title>
         </Modal.Header>
@@ -270,27 +271,31 @@ const AdminDiscount = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={closeModal}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
+          <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
             {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Excluir Desconto</b>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>? Essa ação é
-          irreversível.
+          Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeConfirmDeleteModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}>
+          <Button
+            variant="danger"
+            className="btn-cancel"
+            onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}
+          >
             Excluir
           </Button>
         </Modal.Footer>

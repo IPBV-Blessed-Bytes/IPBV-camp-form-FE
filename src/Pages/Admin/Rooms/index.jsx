@@ -450,9 +450,10 @@ const AdminRooms = ({ loggedUsername }) => {
         ))}
       </Accordion>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
             <b>Adicionar Novo Quarto</b>
           </Modal.Title>
         </Modal.Header>
@@ -474,15 +475,16 @@ const AdminRooms = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={handleCloseModal}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={createRoom}>
+          <Button variant="primary" className="btn-confirm" onClick={createRoom}>
             Criar Quarto
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -491,16 +493,17 @@ const AdminRooms = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={handleCloseDeleteModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={confirmDeleteRoom}>
+          <Button variant="danger" className="btn-cancel" onClick={confirmDeleteRoom}>
             Excluir
           </Button>
         </Modal.Footer>
       </Modal>
 
       {roomToRename && (
-        <Modal show={showEditModal} onHide={handleCloseEditModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>
+        <Modal className="custom-modal" show={showEditModal} onHide={handleCloseEditModal}>
+          <Modal.Header closeButton className="custom-modal__header--confirm">
+            <Modal.Title className="d-flex align-items-center gap-2">
+              <Icons typeIcon="refresh" iconSize={25} fill={'#057c05'} />
               <b>Renomear Quarto</b>
             </Modal.Title>
           </Modal.Header>
@@ -521,16 +524,21 @@ const AdminRooms = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={handleCloseEditModal}>
               Cancelar
             </Button>
-            <Button variant="success" onClick={renameRoom}>
+            <Button variant="success" className="btn-confirm" onClick={renameRoom}>
               Salvar
             </Button>
           </Modal.Footer>
         </Modal>
       )}
 
-      <Modal show={showDeleteCamperFromRoomModal} onHide={handleCloseDeleteCamperFromRoomModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal
+        className="custom-modal"
+        show={showDeleteCamperFromRoomModal}
+        onHide={handleCloseDeleteCamperFromRoomModal}
+      >
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -539,7 +547,7 @@ const AdminRooms = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => deleteCamperFromRoom(camperToDelete)}>
+          <Button variant="danger" className="btn-cancel" onClick={() => deleteCamperFromRoom(camperToDelete)}>
             Excluir
           </Button>
         </Modal.Footer>

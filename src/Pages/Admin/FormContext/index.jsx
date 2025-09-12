@@ -9,6 +9,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Icons from '@/components/Global/Icons';
 
 const AdminFormContext = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(true);
@@ -83,9 +84,12 @@ const AdminFormContext = ({ loggedUsername }) => {
         </Form.Group>
       </Form>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmar Alteração</Modal.Title>
+      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="checked" iconSize={25} fill={'#057c05'} />
+            <b>Confirmar Alteração</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
@@ -95,7 +99,7 @@ const AdminFormContext = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleConfirmChange}>
+          <Button variant="primary" className="btn-confirm" onClick={handleConfirmChange}>
             Confirmar
           </Button>
         </Modal.Footer>

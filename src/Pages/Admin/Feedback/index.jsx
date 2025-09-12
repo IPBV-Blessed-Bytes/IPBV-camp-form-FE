@@ -9,6 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
+import Icons from '@/components/Global/Icons';
 import { TABLE_HEADERS } from '@/utils/constants';
 
 const AdminFeedback = ({ loggedUsername }) => {
@@ -86,9 +87,10 @@ const AdminFeedback = ({ loggedUsername }) => {
         </tbody>
       </Table>
 
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -102,7 +104,7 @@ const AdminFeedback = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleDeleteFeedbacks}>
+          <Button variant="danger" className="btn-cancel" onClick={handleDeleteFeedbacks}>
             Deletar
           </Button>
         </Modal.Footer>

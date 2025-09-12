@@ -191,9 +191,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         </Col>
       </Row>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon={editingUser ? 'edit' : 'plus'} iconSize={25} fill={editingUser ? '' : '#057c05'} />
             <b>{editingUser ? 'Editar Usuário' : 'Criar Usuário'}</b>
           </Modal.Title>
         </Modal.Header>
@@ -255,6 +256,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             Cancelar
           </Button>
           <Button
+            className="btn-confirm"
             variant="primary"
             type="submit"
             onClick={handleSubmit}
@@ -265,9 +267,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -278,7 +281,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
             Deletar
           </Button>
         </Modal.Footer>

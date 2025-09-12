@@ -197,11 +197,11 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           <Form>
             {lots.map((lot) => (
               <div key={lot.id} className="border rounded p-3 mb-3">
-                <h5 className='mb-3'>
+                <h5 className="mb-3">
                   <strong>{lot.name}:</strong>
                 </h5>
                 <Row>
-                  <Col xs={12} md={6} className='mb-3'>
+                  <Col xs={12} md={6} className="mb-3">
                     <Form.Group>
                       <Form.Label>
                         <strong>Data Início:</strong>
@@ -219,7 +219,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       />
                     </Form.Group>
                   </Col>
-                  <Col xs={12} md={6} className='mb-3'>
+                  <Col xs={12} md={6} className="mb-3">
                     <Form.Group>
                       <Form.Label>
                         <strong>Data Fim:</strong>
@@ -239,7 +239,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   </Col>
 
                   {Object.keys(defaultPrice).map((field) => (
-                    <Col xs={12} md={4} key={field} className='mb-3'>
+                    <Col xs={12} md={4} key={field} className="mb-3">
                       <Form.Group>
                         <Form.Label>
                           <strong>{priceLabels[field]}:</strong>
@@ -254,7 +254,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                   ))}
 
                   {Object.keys(defaultVacancies).map((field) => (
-                    <Col xs={12} md={4} key={field} className='mb-3'>
+                    <Col xs={12} md={4} key={field} className="mb-3">
                       <Form.Group>
                         <Form.Label>
                           <strong>{vacanciesLabels[field]}:</strong>
@@ -310,9 +310,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
             <b>Adicionar Novo Lote</b>
           </Modal.Title>
         </Modal.Header>
@@ -416,7 +417,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowAddModal(false)}>
             Cancelar
           </Button>
-          <Button variant="success" onClick={handleAddLot}>
+          <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
             Adicionar
           </Button>
         </Modal.Footer>

@@ -9,6 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
+import Icons from '@/components/Global/Icons';
 
 const AdminUserLogs = ({ loggedUsername }) => {
   const [groupedLogs, setGroupedLogs] = useState({});
@@ -80,7 +81,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
         headerToolsButtonFill={'#fff'}
         headerToolsButtonName="Deletar Todos Logs"
       />
-      
+
       <Row>
         <Accordion defaultActiveKey="0">
           {Object.entries(groupedLogs).map(([username, logs], index) => (
@@ -112,9 +113,10 @@ const AdminUserLogs = ({ loggedUsername }) => {
         </Accordion>
       </Row>
 
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
+      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
@@ -128,7 +130,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleDeleteLogs}>
+          <Button variant="danger" className="btn-cancel" onClick={handleDeleteLogs}>
             Deletar
           </Button>
         </Modal.Footer>
