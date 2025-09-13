@@ -318,10 +318,25 @@ const RoutesValidations = ({ formContext }) => {
 
         const extraMealsPrice = form.extraMeals.totalPrice;
 
-        const totalPrice =
-          Number(accomodationPrice) + Number(transportationPrice) + Number(foodPrice) + Number(extraMealsPrice);
-
         const rawDiscount = Number(discountList[index] || 0);
+
+        const discount = Math.min(
+          Number(accomodationPrice) +
+            Number(transportationPrice) +
+            Number(foodPrice) +
+            Number(extraMealsPrice) +
+            Number(basePriceTotal),
+          rawDiscount,
+        );
+
+        const totalPrice =
+          Number(accomodationPrice) +
+          Number(transportationPrice) +
+          Number(foodPrice) +
+          Number(extraMealsPrice) +
+          Number(basePriceTotal) -
+          Number(discount);
+
         const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
         return {
@@ -355,12 +370,11 @@ const RoutesValidations = ({ formContext }) => {
 
       const totalFromForms = formsToSend.reduce((acc, curr) => {
         const totalPrice = Number(curr.totalPrice || 0);
-        const discount = Number(curr.appliedDiscount || 0);
-        const finalPrice = totalPrice - discount;
+        const finalPrice = totalPrice;
         return acc + finalPrice;
       }, 0);
 
-      const finalPriceCheckout = basePriceTotal + totalFromForms;
+      const finalPriceCheckout = totalFromForms;
 
       const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
