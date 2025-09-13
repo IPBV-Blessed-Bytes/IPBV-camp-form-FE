@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -7,7 +7,8 @@ import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
-import getIndividualBaseValue from './utils/getIndividualBaseValue';
+import fetcher from '@/fetchers';
+import Loading from '@/components/Global/Loading';
 
 const Packages = ({
   age,
@@ -24,6 +25,33 @@ const Packages = ({
 }) => {
   const productListRef = useRef();
   const { items, addItem } = useCart();
+  const [individualBase, setIndividualBase] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRegistrationFee = async () => {
+      try {
+        const response = await fetcher.get('lots');
+        const lots = response.data?.lots || [];
+
+        if (lots.length > 0) {
+          let fee = Number(lots[0].price.registrationFee || 0);
+
+          if (age <= 8) fee = 0;
+          else if (age <= 14) fee = fee / 2;
+
+          setIndividualBase(fee);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar lotes:', error);
+        setIndividualBase(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRegistrationFee();
+  }, [age]);
 
   useEffect(() => {
     const currentUser = currentFormValues;
@@ -125,7 +153,6 @@ const Packages = ({
   const foodPrice = getDiscountedPrice('Alimentação');
 
   const totalBeforeDiscount = accomodationPrice + transportationPrice + foodPrice;
-  const individualBase = getIndividualBaseValue(age);
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount + individualBase - discountNumeric, 0);
 
@@ -271,15 +298,15 @@ const Packages = ({
                     <div className="summary__discount">
                       <div className="d-flex justify-content-between">
                         <div className="d-flex align-items-center gap-1">
-                        <div>Desconto:</div>
-                        <Tips
-                          classNameWrapper="mt-0 mb-1"
-                          placement="top"
-                          typeIcon="info"
-                          size={15}
-                          color={'#7f7878'}
-                          text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
-                        />
+                          <div>Desconto:</div>
+                          <Tips
+                            classNameWrapper="mt-0 mb-1"
+                            placement="top"
+                            typeIcon="info"
+                            size={15}
+                            color={'#7f7878'}
+                            text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                          />
                         </div>
                         <div className="summary-discount-value">-R$ {discountNumeric},00</div>
                       </div>
@@ -312,6 +339,7 @@ const Packages = ({
           )}
         </div>
       </Row>
+      <Loading loading={loading} />
     </Container>
   );
 };
