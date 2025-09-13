@@ -499,8 +499,8 @@ const PersonalData = ({
                         <Tips
                           placement="top"
                           typeIcon="info"
-                          size={20}
-                          color={'#000'}
+                          size={18}
+                          color={'#7f7878'}
                           text="Como a idade informada é menor que 18 anos, é necessário informar os dados de um responsável legal QUE ESTARÁ NO ACAMPAMENTO"
                         />
                       </div>
