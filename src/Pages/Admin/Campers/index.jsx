@@ -748,11 +748,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithDiscount',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const hasDiscount = value !== '0' ? 'Sim' : !value || value === '0' ? 'Não' : '-';
-          const discountValueText = value !== '0' ? value : '-';
-          return `${hasDiscount} ${
-            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
-          }`;
+          const hasDiscount = value != null && value !== '' && value !== '0';
+          return hasDiscount ? `Sim | Valor: ${value}` : 'Não';
         },
       },
       {
