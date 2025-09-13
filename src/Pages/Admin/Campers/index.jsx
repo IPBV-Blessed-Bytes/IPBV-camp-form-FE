@@ -834,20 +834,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Alimentação:',
-        accessor: (row) =>
-          row.package.foodName
-            ?.replace(/á|ã|à|â/g, 'a')
-            .replace(/é|ê/g, 'e')
-            .replace(/í/g, 'i')
-            .replace(/ó|ô/g, 'o')
-            .replace(/ú/g, 'u')
-            .replace(/ç/g, 'c') || '-',
+        accessor: 'package.foodName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
             options={[
               {
-                value: 'Alimentação Completa (Café, Almoço e Jantar)',
+                value: 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)',
                 label: 'Alimentação Completa (Café, Almoço e Jantar)',
               },
               {
