@@ -270,7 +270,18 @@ const Packages = ({
                   {hasDiscount && discountNumeric > 0 && (
                     <div className="summary__discount">
                       <div className="d-flex justify-content-between">
-                        <div>Desconto:</div> <div className="summary-discount-value">-R$ {discountNumeric},00</div>
+                        <div className="d-flex align-items-center gap-1">
+                        <div>Desconto:</div>
+                        <Tips
+                          classNameWrapper="mt-0 mb-1"
+                          placement="top"
+                          typeIcon="info"
+                          size={15}
+                          color={'#7f7878'}
+                          text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                        />
+                        </div>
+                        <div className="summary-discount-value">-R$ {discountNumeric},00</div>
                       </div>
                       <div className="packages-horizontal-line-cart"></div>
                     </div>

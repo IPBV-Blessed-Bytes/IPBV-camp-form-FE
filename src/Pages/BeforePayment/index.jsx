@@ -127,7 +127,7 @@ const BeforePayment = ({
                       placement="top"
                       typeIcon="info"
                       size={15}
-                      color={'#000'}
+                      color={'#7f7878'}
                       text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 100 reais, acima de 15 anos = 200 reais."
                     />
                   </div>
@@ -140,7 +140,17 @@ const BeforePayment = ({
 
                 {totalDiscount > 0 && (
                   <div className="summary-discount">
-                    <h5 className="summary-discount-label">Desconto:</h5>
+                    <div className="d-flex align-items-center gap-1">
+                      <h5 className="summary-discount-label">Desconto:</h5>
+                      <Tips
+                        classNameWrapper="mt-0 mb-2"
+                        placement="top"
+                        typeIcon="info"
+                        size={15}
+                        color={'#7f7878'}
+                        text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                      />
+                    </div>
                     <h5 className="summary-discount-value">-R$ {totalDiscount},00</h5>
                   </div>
                 )}
