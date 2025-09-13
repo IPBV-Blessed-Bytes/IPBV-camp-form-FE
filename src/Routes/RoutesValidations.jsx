@@ -390,6 +390,8 @@ const RoutesValidations = ({ formContext }) => {
       setStatus('error');
       toast.error(error?.response?.data || 'Ocorreu um erro');
     } finally {
+      sessionStorage.removeItem('previousUserData');
+      sessionStorage.removeItem('savedUsers');
       setLoading(false);
     }
   };
