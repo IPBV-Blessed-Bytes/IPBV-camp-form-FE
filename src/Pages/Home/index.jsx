@@ -47,7 +47,7 @@ const FormHome = ({ nextStep }) => {
                     <span>
                       Inscrições até{' '}
                       <em>
-                        <b>10/02</b>
+                        <b>01 de Fevereiro</b>
                       </em>{' '}
                       ou até o esgotamento das vagas!
                     </span>
