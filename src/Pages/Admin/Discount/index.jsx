@@ -33,7 +33,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const fetchDiscounts = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/coupon`);
+      const response = await fetcher.get(`${BASE_URL}/coupon`);
       setDiscount(response.data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar descontos');
@@ -148,11 +148,12 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const generateExcel = () => {
     const fieldMapping = discount.map((discount) => {
-      const isUserRegistered = registeredUser(discount.cpf);
+      const camper = paidUsers.find((user) => user.personalInformation.cpf === discount.cpf);
       return {
         CPF: discount.cpf,
-        Valor: discount.discount,
-        ...(isUserRegistered && { Usuário: discount.user }),
+        'Valor Desconto': discount.discount,
+        Usuário: camper ? discount.user : 'NÃO UTILIZADO',
+        'Valor Pago': camper ? camper.totalPrice : '-',
       };
     });
 
@@ -186,21 +187,22 @@ const AdminDiscount = ({ loggedUsername }) => {
           <thead>
             <tr>
               <th className="table-cells-header">CPF atrelado:</th>
-              <th className="table-cells-header">Valor:</th>
+              <th className="table-cells-header">Valor Desconto:</th>
               <th className="table-cells-header">Usuário:</th>
+              <th className="table-cells-header">Valor Pago:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
           <tbody>
             {discount.map((discount) => {
-              const isUserRegistered = registeredUser(discount.cpf);
+              const camper = paidUsers.find((user) => user.personalInformation.cpf === discount.cpf);
 
               return (
                 <tr key={discount.id}>
                   <td>{discount.cpf}</td>
                   <td>{discount.discount}</td>
                   <td>
-                    {isUserRegistered ? (
+                    {camper ? (
                       discount.user
                     ) : (
                       <b>
@@ -208,6 +210,7 @@ const AdminDiscount = ({ loggedUsername }) => {
                       </b>
                     )}
                   </td>
+                  <td>{camper ? camper.totalPrice : '-'}</td>
                   <td>
                     <Button variant="outline-success" onClick={() => openModal(discount)}>
                       <Icons typeIcon="edit" iconSize={24} />
