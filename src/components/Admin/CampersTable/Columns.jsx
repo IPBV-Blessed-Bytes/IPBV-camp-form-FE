@@ -47,7 +47,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       placeholder: 'Selecione sua igreja',
       oddOrEven: 'even',
       options: [
-        { label: 'IPBV', value: 'IPBV' },
+        { label: 'Boa Viagem', value: 'Boa Viagem' },
         { label: 'Outra', value: 'Outra' },
       ],
     },
