@@ -28,7 +28,7 @@ const FAQ = () => {
                 <Accordion.Body>
                   Você pode fazer sua inscrição preenchendo o formulário disponível na nossa plataforma online. Após
                   preencher todos os dados, não se esqueça de confirmar o pagamento para garantir sua vaga. Lembrando
-                  que, este ano, todo o processo é digital aqui pela plataforma. Além disso, crianças de até 6 anos não
+                  que, este ano, todo o processo é digital aqui pela plataforma. Além disso, crianças de até 8 anos não
                   pagam.
                 </Accordion.Body>
               </Accordion.Item>
@@ -54,17 +54,19 @@ const FAQ = () => {
                 <Accordion.Header>4. Quando pode acontecer de a minha inscrição não gerar pagamento?</Accordion.Header>
                 <Accordion.Body>
                   Isso pode ocorrer caso você, por erro de digitação, informe a data de nascimento incorretamente.
-                  Normalmente, nesses casos, a data padrão registrada será a do dia da inscrição em 2025, fazendo com
+                  Normalmente, nesses casos, a data padrão registrada será a do dia da inscrição em 2026, fazendo com
                   que o sistema interprete você como uma criança e não gere custos. Nesses casos, entre em contato com a
                   secretaria pelo telefone (81) 9 9839-0194 (WhatsApp) para receber orientações adequadas para corrigir
-                  o problema e efetuar o pagamento da inscrição.
+                  o problema e efetuar o pagamento da inscrição. Por fim, fique atento no momento do preenchimento dos
+                  campos para que tudo seja feito corretamente.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="4">
                 <Accordion.Header>5. O que está incluso no valor da inscrição?</Accordion.Header>
                 <Accordion.Body>
-                  Temos vários pacotes, e cada um possui sua abrangência. De forma geral, o valor da inscrição inclui
-                  transporte, hospedagem e alimentação completa: café da manhã, almoço e jantar.
+                  Temos diversos pacotes, cada um com sua abrangência. De forma geral, o valor da inscrição inclui
+                  transporte, hospedagem e alimentação completa (café da manhã, almoço e jantar), iniciando com o almoço
+                  de sábado e encerrando com o café da manhã de quarta-feira.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="5">
@@ -72,10 +74,10 @@ const FAQ = () => {
                   6. Posso cancelar minha inscrição? Existe a possibilidade de reembolso?
                 </Accordion.Header>
                 <Accordion.Body>
-                  Sim, você pode cancelar sua inscrição. Os pedidos de cancelamento devem ser feitos até 7 dias antes do
-                  acampamento, sendo definida a data de 22/02/25 e tendo como valor máximo 50% do valor total. Após esse
-                  prazo, não haverá reembolso. Caso haja necessidade de cancelamento, entre em contato com a secretaria
-                  da IPBV pelo número (81) 9 9839-0194.
+                  Sim, você pode cancelar sua inscrição. Os pedidos de cancelamento devem ser feitos até 2 semanas antes
+                  do acampamento, sendo definida a data de 01/02/26 e tendo como valor máximo 50% do valor total. Após
+                  esse prazo, não haverá reembolso. Caso haja necessidade de cancelamento, entre em contato com a
+                  secretaria da IPBV pelo número (81) 9 9839-0194.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="6">
@@ -88,10 +90,13 @@ const FAQ = () => {
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="7">
-                <Accordion.Header>8. Por que apareceu uma taxa de 50 reais para eu pagar?</Accordion.Header>
+                <Accordion.Header>8. Por que apareceu uma taxa de inscrição para eu pagar?</Accordion.Header>
                 <Accordion.Body>
-                  Se você escolheu um pacote SEM ALIMENTAÇÃO, foi cobrada uma taxa de 50 reais para fins de manutenção
-                  do acampamento e custos gerais. Se optou por um pacote com alimentação, essa taxa não foi cobrada.
+                  Para o acampamento de 2026, os produtos foram separados para melhor organização dos custos. Assim,
+                  cada participante poderá visualizar e adquirir os valores referentes a transporte, hospedagem e
+                  alimentação. Além disso, existe a taxa de inscrição, que é obrigatória a todos os participantes e
+                  cobre despesas gerais, como custos com o preletor, utilização do colégio, equipe de limpeza, entre
+                  outros.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="8">
@@ -105,7 +110,7 @@ const FAQ = () => {
               <Accordion.Item eventKey="9">
                 <Accordion.Header>10. Quando e onde será o acampamento?</Accordion.Header>
                 <Accordion.Body>
-                  O acampamento ocorrerá no feriado de Carnaval, de 01/03 a 05/03 (sábado a quarta-feira), com chegada a
+                  O acampamento ocorrerá no feriado de Carnaval, de 14/02 a 18/02 (sábado a quarta-feira), com chegada a
                   partir das 10h no sábado e saída até 10h na quarta-feira. O local será o Colégio Presbiteriano XV de
                   Novembro, em Garanhuns (Praça Souto Filho, 696 - Helópolis, Garanhuns - PE, 55295-400).
                 </Accordion.Body>
@@ -113,8 +118,8 @@ const FAQ = () => {
               <Accordion.Item eventKey="10">
                 <Accordion.Header>11. Existe transporte organizado para o acampamento?</Accordion.Header>
                 <Accordion.Body>
-                  Sim, oferecemos transporte partindo da igreja, ida e volta. Certifique-se de escolher um pacote com
-                  essa opção no formulário de inscrição.
+                  Sim, oferecemos transporte partindo da igreja, ida e volta. Certifique-se de escolher a opção com
+                  ônibus no formulário de inscrição.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="11">
@@ -129,8 +134,8 @@ const FAQ = () => {
                   13. Meu filho menor de idade vai comigo no ônibus. Devo enviar algum documento?
                 </Accordion.Header>
                 <Accordion.Body>
-                  Sim, você deve digitalizar e enviar o documento de identificação do seu filho (RG ou certidão de
-                  nascimento) para o WhatsApp da secretaria da IPBV: (81) 9 9839-0194.
+                  Sim, você deve digitalizar e enviar com antecedência o documento de identificação do seu filho (RG ou
+                  certidão de nascimento) para o WhatsApp da secretaria da IPBV: (81) 9 9839-0194.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="13">
@@ -138,11 +143,8 @@ const FAQ = () => {
                   14. Posso adquirir refeições extras (avulsas) durante o acampamento?
                 </Accordion.Header>
                 <Accordion.Body>
-                  Sim, porém não é recomendável. Solicitamos que, caso você tenha optado por um pacote sem alimentação,
-                  onde o sistema já pergunta se há necessidade de refeições avulsas, adquira-as antecipadamente pelo
-                  sistema para evitar trabalho manual. No entanto, se você não tiver feito essa solicitação diretamente
-                  no sistema e posteriormente surgir essa necessidade, será possível adquirir refeições avulsas até, no
-                  máximo, a refeição anterior. Não será permitido pagar por alimentação avulsa no momento da refeição.
+                  Não. As refeições estarão disponíveis apenas por meio da compra antecipada de pacotes, com ou sem
+                  alimentação. Não haverá venda de refeições avulsas, seja antes ou durante o acampamento.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="14">
@@ -216,7 +218,20 @@ const FAQ = () => {
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="17">
-                <Accordion.Header>18. O que é o campo de acompanhante no formulário de inscrição?</Accordion.Header>
+                <Accordion.Header>18. Quais serão as programações?</Accordion.Header>
+                <Accordion.Body>
+                  O acampamento contará com diversos espaços de lazer, como piscina, campo society, quadra de basquete,
+                  quadra de vôlei, parquinho e uma ampla área verde. Além disso, haverá oficinas com diferentes temas
+                  durante as tardes e programações especiais à noite, após os cultos. Todas as atividades serão
+                  divulgadas previamente pelo site institucional e pelo grupo de WhatsApp, que será criado em breve.
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="18">
+                <Accordion.Header>19. Posso levar animais de estimação?</Accordion.Header>
+                <Accordion.Body>Animais de estimação não são permitidos.</Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="19">
+                <Accordion.Header>20. O que é o campo de acompanhante no formulário de inscrição?</Accordion.Header>
                 <Accordion.Body>
                   O campo de acompanhante serve para informar quem vai dormir com você no seu quarto, sejam filhos,
                   cônjuges ou parentes em geral. Essa informação nos permite organizar a logística de hospedagem, tanto
@@ -224,14 +239,14 @@ const FAQ = () => {
                   hospedagem diferente do seminário ou da escola.
                 </Accordion.Body>
               </Accordion.Item>
-              <Accordion.Item eventKey="18">
-                <Accordion.Header>19. Haverá departamento infantil?</Accordion.Header>
+              <Accordion.Item eventKey="20">
+                <Accordion.Header>21. Haverá departamento infantil?</Accordion.Header>
                 <Accordion.Body>
-                  Sim, haverá atividades do departamento infantil para crianças de 2 anos e meio até 10 anos.
+                  Sim, haverá atividades do departamento infantil para crianças de 3 anos até 10 anos.
                 </Accordion.Body>
               </Accordion.Item>
-              <Accordion.Item eventKey="19">
-                <Accordion.Header>20. Posso escolher meu quarto?</Accordion.Header>
+              <Accordion.Item eventKey="21">
+                <Accordion.Header>22. Posso escolher meu quarto?</Accordion.Header>
                 <Accordion.Body>
                   Não é possível escolher quartos específicos. A divisão será feita pela equipe de organização visando
                   melhor acomodação para todos, baseado nos nomes informados no campo acompanhantes.
