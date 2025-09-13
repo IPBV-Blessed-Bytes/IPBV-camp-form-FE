@@ -1,14 +1,23 @@
 import { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react';
 import { useCart } from 'react-use-cart';
-import { products } from '../../Pages/Packages/utils/products';
+import { loadProducts } from '../../Pages/Packages/utils/products';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
 const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
-  const [categoriesNotSelected, setCategoriesNotSelected] = useState([]);
+  const [productsState, setProductsState] = useState([]);
   const hasRestoredCart = useRef(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const prods = await loadProducts();
+      setProductsState(prods);
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const savedCart = sessionStorage.getItem(cartKey);
@@ -36,10 +45,8 @@ const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
   const checkRequiredPackages = () => {
     const requiredCategories = ['Hospedagem', 'Transporte', 'Alimentação'];
     const missingCategories = requiredCategories.filter(
-      (cat) => !products.some((p) => p.category === cat && getItem(p.id)),
+      (cat) => !productsState.some((p) => p.category === cat && getItem(p.id)),
     );
-
-    setCategoriesNotSelected(missingCategories);
 
     if (missingCategories.length > 0) {
       toast.error(`Selecione uma opção para: ${missingCategories.join(', ')}`);
@@ -70,7 +77,9 @@ const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
   };
 
   const renderSection = (categoryKey) => {
-    const filtered = getDiscountedProducts(age).filter((p) => p.category === categoryKey);
+    const filtered = getDiscountedProducts(age).filter(
+      (p) => p.category === categoryKey && productsState.find((prod) => prod.id === p.id),
+    );
 
     return (
       <div className="product-section">
@@ -98,7 +107,7 @@ const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
     );
   };
 
-  return <>{renderSection(category, category)}</>;
+  return <>{renderSection(category)}</>;
 });
 
 ProductList.displayName = 'ProductList';
