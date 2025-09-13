@@ -782,14 +782,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Hospedagem:',
-        accessor: (row) =>
-          row.package.accomodationName
-            ?.replace(/á|ã|à|â/g, 'a')
-            .replace(/é|ê/g, 'e')
-            .replace(/í/g, 'i')
-            .replace(/ó|ô/g, 'o')
-            .replace(/ú/g, 'u')
-            .replace(/ç/g, 'c') || '-',
+        accessor: 'package.accomodationName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
