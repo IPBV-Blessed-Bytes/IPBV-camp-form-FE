@@ -318,24 +318,18 @@ const RoutesValidations = ({ formContext }) => {
 
         const extraMealsPrice = form.extraMeals.totalPrice;
 
-        const rawDiscount = Number(discountList[index] || 0);
-
-        const discount = Math.min(
-          Number(accomodationPrice) +
-            Number(transportationPrice) +
-            Number(foodPrice) +
-            Number(extraMealsPrice) +
-            Number(basePriceTotal),
-          rawDiscount,
-        );
-
-        const totalPrice =
+        const subtotal =
           Number(accomodationPrice) +
           Number(transportationPrice) +
           Number(foodPrice) +
           Number(extraMealsPrice) +
-          Number(basePriceTotal) -
-          Number(discount);
+          Number(basePriceTotal);
+
+        const rawDiscount = Number(discountList[index] || 0);
+
+        const discount = Math.min(subtotal, rawDiscount);
+
+        const totalPrice = subtotal - discount;
 
         const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
@@ -368,11 +362,7 @@ const RoutesValidations = ({ formContext }) => {
         };
       });
 
-      const totalFromForms = formsToSend.reduce((acc, curr) => {
-        const totalPrice = Number(curr.totalPrice || 0);
-        const finalPrice = totalPrice;
-        return acc + finalPrice;
-      }, 0);
+      const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
       const finalPriceCheckout = totalFromForms;
 
