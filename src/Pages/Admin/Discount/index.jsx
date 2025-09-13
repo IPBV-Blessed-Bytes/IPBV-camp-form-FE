@@ -3,7 +3,6 @@ import { Table, Button, Form, Modal, Container } from 'react-bootstrap';
 import { BASE_URL } from '@/config';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import './style.scss';
 import * as XLSX from 'xlsx';
 import { registerLog } from '@/fetchers/userLogs';
@@ -53,14 +52,6 @@ const AdminDiscount = ({ loggedUsername }) => {
     } catch (error) {
       console.error('Erro ao buscar usuários pagos:', error);
     }
-  };
-
-  const registeredUser = (cpf) => {
-    const isValid = paidUsers.some((user) => {
-      return user.personalInformation.cpf === cpf;
-    });
-
-    return isValid;
   };
 
   const handleCreateDiscount = async () => {

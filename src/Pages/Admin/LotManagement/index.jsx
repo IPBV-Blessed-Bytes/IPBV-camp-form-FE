@@ -4,8 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
-import DatePicker from 'react-datepicker';
-import { registerLocale } from 'react-datepicker';
+import { DatePicker, registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -374,8 +373,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               </Col>
 
               {Object.keys(defaultPrice).map((field) => (
-                <Col md={12} lg={4} className="mb-3">
-                  <Form.Group className="mb-3" key={field}>
+                <Col key={field} md={12} lg={4} className="mb-3">
+                  <Form.Group className="mb-3">
                     <Form.Label>
                       <strong>{priceLabels[field]}:</strong>
                     </Form.Label>
@@ -383,8 +382,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       type="number"
                       min="0"
                       value={newLot.price[field]}
-                      onChange={(e) => setNewLot({ ...newLot, price: { ...newLot.price, [field]: e.target.value } })}
-                      className={`form-control-lg form-control-bg admin-field--odd`}
+                      onChange={(e) =>
+                        setNewLot({
+                          ...newLot,
+                          price: { ...newLot.price, [field]: e.target.value },
+                        })
+                      }
+                      className="form-control-lg form-control-bg admin-field--odd"
                       placeholder="Preços"
                     />
                   </Form.Group>
@@ -392,8 +396,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               ))}
 
               {Object.keys(defaultVacancies).map((field) => (
-                <Col md={12} lg={4} className="mb-3">
-                  <Form.Group className="mb-3" key={field}>
+                <Col key={field} md={12} lg={4} className="mb-3">
+                  <Form.Group className="mb-3">
                     <Form.Label>
                       <strong>{vacanciesLabels[field]}:</strong>
                     </Form.Label>
@@ -402,9 +406,12 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       min="0"
                       value={newLot.vacancies[field]}
                       onChange={(e) =>
-                        setNewLot({ ...newLot, vacancies: { ...newLot.vacancies, [field]: e.target.value } })
+                        setNewLot({
+                          ...newLot,
+                          vacancies: { ...newLot.vacancies, [field]: e.target.value },
+                        })
                       }
-                      className={`form-control-lg form-control-bg admin-field--even`}
+                      className="form-control-lg form-control-bg admin-field--even"
                       placeholder="Vagas"
                     />
                   </Form.Group>

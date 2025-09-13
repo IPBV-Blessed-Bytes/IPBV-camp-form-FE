@@ -39,7 +39,7 @@ import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
-import CustomCarousel from '@/components/Global/CustomCarousel';
+// import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
 
 const FormRoutes = ({
