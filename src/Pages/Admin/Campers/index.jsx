@@ -202,8 +202,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       ...sanitizedFormData,
       id: editFormData.id,
       observation: editFormData.observation || '',
-      pastoralFamily: editFormData.pastoralFamily || '',
-      crew: editFormData.crew || '',
+      pastoralFamily: !!editFormData.pastoralFamily,
+      crew: !!editFormData.crew,
+      package: {
+        ...sanitizedFormData.package,
+        accomodationName: editFormData.package?.accomodationName || '',
+        transportationName: editFormData.package?.transportationName || '',
+        foodName: editFormData.package?.foodName || '',
+        discountCoupon: sanitizedFormData.package?.discountCoupon ?? false,
+        discountValue: sanitizedFormData.package?.discountValue ?? '',
+      },
     };
 
     try {
@@ -211,7 +219,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       if (response.status === 200) {
         toast.success('Inscrição alterada com sucesso');
         setFormSubmitted(true);
-        const newData = data.map((item, index) => (index === editRowIndex ? editFormData : item));
+        const newData = data.map((item, index) => (index === editRowIndex ? { ...editFormData } : item));
         setData(newData);
         setShowEditModal(false);
         registerLog(`Editou a inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
@@ -234,10 +242,18 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
     const updatedFormValues = {
       manualRegistration: true,
-      observation: addFormData.observation ? addFormData.observation : '',
-      pastoralFamily: addFormData.pastoralFamily ? addFormData.pastoralFamily : '',
-      crew: addFormData.crew ? addFormData.crew : '',
+      observation: addFormData.observation || '',
+      pastoralFamily: !!addFormData.pastoralFamily,
+      crew: !!addFormData.crew,
       ...sanitizedFormData,
+      package: {
+        ...sanitizedFormData.package,
+        accomodationName: addFormData.package?.accomodationName || '',
+        transportationName: addFormData.package?.transportationName || '',
+        foodName: addFormData.package?.foodName || '',
+        discountCoupon: false,
+        discountValue: '',
+      },
       registrationDate: currentDate,
     };
 
