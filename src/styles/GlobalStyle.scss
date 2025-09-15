@@ -219,7 +219,7 @@ select {
   }
 }
 
-a:not(.form-success__button, .mail-to, .order-url, .lgpd-link) {
+a:not(.form-success__button, .mail-to, .order-url, .lgpd-link, .faq-link) {
   color: $white;
   text-decoration: none;
 }
