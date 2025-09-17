@@ -125,18 +125,24 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const userWristbands = [];
 
-  const accomodationName = userInfo?.package?.accomodation?.name;
-  const foodName = userInfo?.package?.food?.name;
+  const accomodationName = userInfo?.package?.accomodationName;
+  const foodName = userInfo?.package?.foodName;
 
-  const isSchoolAccommodation = ['Colégio Quarto Coletivo', 'Colégio Quarto Família', 'Colégio Camping'].includes(
-    accomodationName,
-  );
-
+  const isSchoolAccommodation = [
+    'Colégio Quarto Coletivo',
+    'Colegio Quarto Coletivo',
+    'Colégio Quarto Família',
+    'Colegio Quarto Familia',
+    'Colégio Camping',
+    'Colegio Camping',
+  ].includes(accomodationName);
   if (isSchoolAccommodation) {
     userWristbands.push('#FFFF00');
   }
-
-  if (foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)') {
+  if (
+    foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
+    foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
+  ) {
     userWristbands.push('#0000FF');
   } else if (foodName === 'Alimentação Parcial (Almoço e Jantar)') {
     userWristbands.push('#D36AD6');
