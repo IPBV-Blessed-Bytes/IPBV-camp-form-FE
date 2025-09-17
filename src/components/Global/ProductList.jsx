@@ -1,23 +1,19 @@
 import { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react';
 import { useCart } from 'react-use-cart';
-import { loadProducts } from '../../Pages/Packages/utils/products';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
-const ProductList = forwardRef(({ age, cartKey, category }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category, products }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
-  const [productsState, setProductsState] = useState([]);
+  const [productsState, setProductsState] = useState(products || []);
   const hasRestoredCart = useRef(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const prods = await loadProducts();
-      setProductsState(prods);
-    };
-
-    fetchProducts();
-  }, []);
+    if (products && products.length > 0) {
+      setProductsState(products);
+    }
+  }, [products]);
 
   useEffect(() => {
     const savedCart = sessionStorage.getItem(cartKey);
@@ -116,6 +112,7 @@ ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
+  products: PropTypes.array.isRequired,
 };
 
 export default ProductList;

@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
+import { loadProducts } from './utils/products';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
@@ -27,21 +28,27 @@ const Packages = ({
   const { items, addItem } = useCart();
   const [individualBase, setIndividualBase] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [productsState, setProductsState] = useState([]);
 
   useEffect(() => {
-    const fetchRegistrationFee = async () => {
+    const fetchLotsAndProducts = async () => {
       try {
+        const updatedProducts = await loadProducts();
+
         const response = await fetcher.get('lots');
         const lots = response.data?.lots || [];
 
         if (lots.length > 0) {
-          let fee = Number(lots[0].price.registrationFee || 0);
+          const lot = lots[0];
 
+          let fee = Number(lot.price.registrationFee || 0);
           if (age <= 8) fee = 0;
           else if (age <= 14) fee = fee / 2;
 
           setIndividualBase(fee);
         }
+
+        setProductsState(updatedProducts);
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
         setIndividualBase(0);
@@ -50,7 +57,7 @@ const Packages = ({
       }
     };
 
-    fetchRegistrationFee();
+    fetchLotsAndProducts();
   }, [age]);
 
   useEffect(() => {
@@ -171,7 +178,13 @@ const Packages = ({
                       {getCategoryDiscountDescription('Hospedagem')}
                     </em>
                   </Card.Text>
-                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Hospedagem" />
+                  <ProductList
+                    age={age}
+                    cartKey={cartKey}
+                    category="Hospedagem"
+                    products={productsState}
+                    ref={productListRef}
+                  />
                 </Card.Body>
               </Card>
 
@@ -185,7 +198,13 @@ const Packages = ({
                       {getCategoryDiscountDescription('Transporte')}
                     </em>
                   </Card.Text>
-                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Transporte" />
+                  <ProductList
+                    age={age}
+                    cartKey={cartKey}
+                    category="Transporte"
+                    products={productsState}
+                    ref={productListRef}
+                  />
                 </Card.Body>
               </Card>
 
@@ -199,7 +218,13 @@ const Packages = ({
                       {getCategoryDiscountDescription('Alimentação')}
                     </em>
                   </Card.Text>
-                  <ProductList ref={productListRef} age={age} cartKey={cartKey} category="Alimentação" />
+                  <ProductList
+                    age={age}
+                    cartKey={cartKey}
+                    category="Alimentação"
+                    products={productsState}
+                    ref={productListRef}
+                  />
                 </Card.Body>
               </Card>
             </>
@@ -354,7 +379,7 @@ Packages.propTypes = {
   totalSeats: PropTypes.string.isRequired,
   updateForm: PropTypes.func.isRequired,
   currentFormIndex: PropTypes.number.isRequired,
-  currentFormValues: PropTypes.array.isRequired,
+  currentFormValues: PropTypes.object.isRequired,
   cartKey: PropTypes.string.isRequired,
 };
 
