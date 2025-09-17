@@ -74,7 +74,7 @@ const WaitingForCamp = () => {
           </Card.Body>
         </Card>
       </div>
-      <Footer onAdminClick={() => navigate('/admin')} />
+      <Footer handleAdminClick={() => navigate('/admin')} />
     </>
   );
 };

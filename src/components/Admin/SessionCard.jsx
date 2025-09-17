@@ -30,7 +30,7 @@ SessionCard.propTypes = {
   cardType: PropTypes.string,
   title: PropTypes.string,
   typeIcon: PropTypes.string,
-  iconSize: PropTypes.string,
+  iconSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   iconFill: PropTypes.string,
 };
 

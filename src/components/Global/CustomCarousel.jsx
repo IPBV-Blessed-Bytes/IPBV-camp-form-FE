@@ -62,7 +62,7 @@ const CustomCarousel = ({ title, images }) => {
 
 CustomCarousel.propTypes = {
   title: PropTypes.string,
-  images: PropTypes.arrayOf(PropTypes.string).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default CustomCarousel;

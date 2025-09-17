@@ -234,6 +234,7 @@ a:not(.form-success__button, .mail-to, .order-url, .lgpd-link, .faq-link) {
 .packages-horizontal-line {
   background-color: $medium-gray;
   border: none;
+  display: block;
   height: 0.125rem;
   margin: 1rem 0;
 }

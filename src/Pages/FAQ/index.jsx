@@ -79,8 +79,9 @@ const FAQ = () => {
               <Accordion.Item eventKey="4">
                 <Accordion.Header>5. Como confirmo se minha inscrição está correta?</Accordion.Header>
                 <Accordion.Body>
-                  Haverá um campo no canto inferior esquerdo chamado "verificar inscrição", onde você poderá confirmar
-                  se sua inscrição está ativa e visualizar seus dados. Também é possível acessar diretamente em{' '}
+                  Haverá um campo no canto inferior esquerdo chamado &quot;verificar inscrição&quot;, onde você poderá
+                  confirmar se sua inscrição está ativa e visualizar seus dados. Também é possível acessar diretamente
+                  em{' '}
                   <a
                     className="faq-link"
                     href="https://inscricaoipbv.com.br/verificacao"
@@ -245,16 +246,17 @@ const FAQ = () => {
                   <br />
                   <ul className="my-2">
                     <li className="mb-2">
-                      <b>Colégio:</b> colchão, roupa de cama, travesseiro, extensão, adaptador "T", ventilador, Bíblia,
-                      repelente, roupas de cama, toalha, itens de uso pessoal, garrafa de água, roupa de piscina
+                      <b>Colégio:</b> colchão, roupa de cama, travesseiro, extensão, adaptador &quot;T&quot;,
+                      ventilador, Bíblia, repelente, roupas de cama, toalha, itens de uso pessoal, garrafa de água,
+                      roupa de piscina
                       <span className="text-danger">
                         <b>*</b>
                       </span>
                       , roupa de frio, fantasia (opcional), camisas de time (opcional).
                     </li>
                     <li className="mb-2">
-                      <b>Seminário:</b> roupa de cama, travesseiro, extensão, adaptador "T", ventilador, Bíblia,
-                      repelente, toalha, itens de uso pessoal, garrafa de água, roupa de piscina
+                      <b>Seminário:</b> roupa de cama, travesseiro, extensão, adaptador &quot;T&quot;, ventilador,
+                      Bíblia, repelente, toalha, itens de uso pessoal, garrafa de água, roupa de piscina
                       <span className="text-danger">
                         <b>*</b>
                       </span>
@@ -313,7 +315,7 @@ const FAQ = () => {
         </Card>
         <InfoButton />
       </div>
-      <Footer onAdminClick={() => navigate('/admin')} />
+      <Footer handleAdminClick={() => navigate('/admin')} />
     </div>
   );
 };

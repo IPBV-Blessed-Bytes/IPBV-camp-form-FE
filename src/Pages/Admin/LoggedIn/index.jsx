@@ -109,8 +109,8 @@ const AdminLoggedIn = ({
   const totalAdultsNonPaid = totalRegistrations.totalAdultsNonPaid;
   const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
 
-  const availablePackagesUsedValid = availablePackages.usedValidPackages;
-  const availablePackagesTotal = availablePackages.totalPackages || {};
+  const availablePackagesUsedValid = availablePackages?.usedValidPackages || {};
+  const availablePackagesTotal = availablePackages?.totalPackages || {};
 
   const individualSchoolFilledVacanciesSum =
     availablePackagesUsedValid?.schoolIndividualWithBusWithFood +
@@ -150,32 +150,32 @@ const AdminLoggedIn = ({
   const packageCardsData = [
     {
       title: 'Colégio Individual',
-      remainingVacancies: individualSchoolRemainingVacanciesSum || '0',
-      filledVacancies: individualSchoolFilledVacanciesSum || '0',
+      remainingVacancies: Number(individualSchoolRemainingVacanciesSum) || 0,
+      filledVacancies: Number(individualSchoolFilledVacanciesSum) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Família',
-      remainingVacancies: familySchoolRemainingVacanciesSum || '0',
-      filledVacancies: familySchoolFilledVacanciesSum || '0',
+      remainingVacancies: Number(familySchoolRemainingVacanciesSum) || 0,
+      filledVacancies: Number(familySchoolFilledVacanciesSum) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Camping',
-      remainingVacancies: campingSchoolRemainingVacanciesSum || '0',
-      filledVacancies: campingSchoolFilledVacanciesSum || '0',
+      remainingVacancies: Number(campingSchoolRemainingVacanciesSum) || 0,
+      filledVacancies: Number(campingSchoolFilledVacanciesSum) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Seminário',
-      remainingVacancies: seminaryRemainingVacanciesSum || '0',
-      filledVacancies: seminaryFilledVacanciesSum || '0',
+      remainingVacancies: Number(seminaryRemainingVacanciesSum) || 0,
+      filledVacancies: Number(seminaryFilledVacanciesSum) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Outra Hospedagem',
-      remainingVacancies: otherRemainingVacanciesSum || '0',
-      filledVacancies: otherFilledVacanciesSum || '0',
+      remainingVacancies: Number(otherRemainingVacanciesSum) || 0,
+      filledVacancies: Number(otherFilledVacanciesSum) || 0,
       showRemainingVacancies: true,
     },
   ];
@@ -183,44 +183,44 @@ const AdminLoggedIn = ({
   const totalCardsData = [
     {
       title: 'Total de Crianças Pagantes',
-      filledVacancies: totalChildren - filteredChildrenCount || '0',
+      filledVacancies: Number(totalChildren - filteredChildrenCount) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Crianças Não Pagantes',
-      filledVacancies: filteredChildrenCount || '0',
+      filledVacancies: Number(filteredChildrenCount) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Crianças',
-      filledVacancies: totalChildren || '0',
+      filledVacancies: Number(totalChildren) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Adultos Pagantes',
-      filledVacancies: totalAdultsPaid || '0',
+      filledVacancies: Number(totalAdultsPaid) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Adultos Não Pagantes',
-      filledVacancies: totalAdultsNonPaid || '0',
+      filledVacancies: Number(totalAdultsNonPaid) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Adultos',
-      remainingVacancies: totalSeats - totalValidRegistrations || '0',
-      filledVacancies: totalValidRegistrations || '0',
+      remainingVacancies: Number(totalSeats - totalValidRegistrations) || 0,
+      filledVacancies: Number(totalValidRegistrations) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Total de Inscritos Geral',
-      filledVacancies: totalRegistrationsGlobal || '0',
+      filledVacancies: Number(totalRegistrationsGlobal) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: totalBusVacancies - totalValidWithBus || '0',
-      filledVacancies: totalValidWithBus || '0',
+      remainingVacancies: Number(totalBusVacancies - totalValidWithBus) || 0,
+      filledVacancies: Number(totalValidWithBus) || 0,
       showRemainingVacancies: true,
     },
   ];
@@ -418,12 +418,18 @@ AdminLoggedIn.propTypes = {
       otherWithBusWithFood: PropTypes.number,
       otherWithoutBusWithFood: PropTypes.number,
       otherWithoutBusWithoutFood: PropTypes.number,
-    }).isRequired,
-    totalPackages: PropTypes.number.isRequired,
-  }).isRequired,
-  totalSeats: PropTypes.number.isRequired,
-  totalBusVacancies: PropTypes.number.isRequired,
-  spinnerLoading: PropTypes.bool.isRequired,
+    }),
+    totalPackages: PropTypes.shape({
+      schoolIndividual: PropTypes.number,
+      schoolFamily: PropTypes.number,
+      schoolCamping: PropTypes.number,
+      seminary: PropTypes.number,
+      other: PropTypes.number,
+    }),
+  }),
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  spinnerLoading: PropTypes.bool,
 };
 
 export default AdminLoggedIn;

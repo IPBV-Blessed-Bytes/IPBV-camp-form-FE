@@ -23,7 +23,7 @@ const Login = ({
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
   const { login, logout, user, isLoggedIn, loading } = useAuth();
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginData, setLoginData] = useState({ login: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
 
   scrollUp();
@@ -84,9 +84,9 @@ Login.propTypes = {
   totalRegistrations: PropTypes.object.isRequired,
   userRole: PropTypes.string,
   totalValidWithBus: PropTypes.number,
-  availablePackages: PropTypes.array,
-  totalSeats: PropTypes.number,
-  totalBusVacancies: PropTypes.number,
+  availablePackages: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   spinnerLoading: PropTypes.bool,
 };
 

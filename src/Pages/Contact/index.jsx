@@ -405,10 +405,10 @@ Contact.propTypes = {
   initialValues: PropTypes.shape({
     cellPhone: PropTypes.string,
     email: PropTypes.string,
-    isWhatsApp: PropTypes.bool,
-    hasAllergy: PropTypes.bool,
+    isWhatsApp: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+    hasAllergy: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     allergy: PropTypes.string,
-    hasAggregate: PropTypes.bool,
+    hasAggregate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     aggregate: PropTypes.string,
   }),
   nextStep: PropTypes.func,

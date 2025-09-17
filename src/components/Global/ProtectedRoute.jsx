@@ -10,8 +10,8 @@ const ProtectedRoute = ({ userRole, allowedRoles, children }) => {
 };
 
 ProtectedRoute.propTypes = {
+  allowedRoles: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   userRole: PropTypes.string,
-  allowedRoles: PropTypes.string,
   children: PropTypes.element,
 };
 

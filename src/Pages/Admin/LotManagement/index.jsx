@@ -438,7 +438,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
 
 AdminLotManagement.propTypes = {
   loggedUsername: PropTypes.string,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
 };
 
 export default AdminLotManagement;

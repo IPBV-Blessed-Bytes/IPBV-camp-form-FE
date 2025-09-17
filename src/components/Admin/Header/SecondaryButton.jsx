@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Col, Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
@@ -13,24 +14,25 @@ const SecondaryButton = ({
   secondaryButtonFill,
   secondaryButtonName,
 }) => {
-  const shouldShowSecondaryButton = () => {
-    const hasProps =
-      secondaryButtonCols ||
-      secondaryButtonTypeButton ||
-      secondaryButtonOpenModal ||
-      secondaryButtonClassname ||
-      secondaryButtonIcon ||
-      secondaryButtonSize ||
-      secondaryButtonFill ||
-      secondaryButtonName;
+  const hasProps =
+    secondaryButtonCols ||
+    secondaryButtonTypeButton ||
+    secondaryButtonOpenModal ||
+    secondaryButtonClassname ||
+    secondaryButtonIcon ||
+    secondaryButtonSize ||
+    secondaryButtonFill ||
+    secondaryButtonName;
 
-    showSecondaryButton?.(!!hasProps);
-    return hasProps;
-  };
+  useEffect(() => {
+    if (showSecondaryButton) {
+      showSecondaryButton(!!hasProps);
+    }
+  }, [showSecondaryButton, hasProps]);
 
   return (
     <>
-      {shouldShowSecondaryButton() && (
+      {hasProps && (
         <Col
           xl={secondaryButtonCols?.xl || 12}
           lg={secondaryButtonCols?.lg || 12}

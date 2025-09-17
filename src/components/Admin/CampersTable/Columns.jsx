@@ -298,12 +298,12 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
             ? editFormData.registrationDate
             : currentDate
           : isEditForm
-          ? isNestedField
-            ? getNestedValue(editFormData, field.name)
-            : editFormData[field.name]
-          : isNestedField
-          ? getNestedValue(addFormData, field.name)
-          : addFormData[field.name];
+            ? isNestedField
+              ? getNestedValue(editFormData, field.name)
+              : editFormData[field.name]
+            : isNestedField
+              ? getNestedValue(addFormData, field.name)
+              : addFormData[field.name];
 
         return (
           <ColumnsFields
@@ -330,15 +330,13 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
 };
 
 Columns.propTypes = {
-  addFormData: PropTypes.string,
+  addFormData: PropTypes.object,
+  editFormData: PropTypes.object,
   handleFormChange: PropTypes.func,
+  formSubmitted: PropTypes.bool,
+  currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   addForm: PropTypes.bool,
   editForm: PropTypes.bool,
-  formSubmitted: PropTypes.bool,
-  currentDate: PropTypes.string,
-  editFormData: PropTypes.shape({
-    registrationDate: PropTypes.string,
-  }),
 };
 
 export default Columns;

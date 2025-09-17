@@ -65,7 +65,7 @@ const CloseForm = () => {
                 <Form.Group className="input-login-wrapper mb-3" controlId="password">
                   <Form.Label className="fw-bold">Senha:</Form.Label>
                   <Form.Control
-                    autocomplete="off"
+                    autoComplete="off"
                     className="admin__password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Digite sua senha"

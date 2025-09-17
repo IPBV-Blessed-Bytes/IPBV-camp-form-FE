@@ -12,11 +12,11 @@ const Skelleton = () => {
         <Header />
         <div className="form__container">
           <Card className="form__container__general-height">
-            <Card.Body className='skelleton-card-body'></Card.Body>
+            <Card.Body className="skelleton-card-body"></Card.Body>
           </Card>
         </div>
 
-        <Footer onAdminClick={() => navigate('/admin')} />
+        <Footer handleAdminClick={() => navigate('/admin')} />
       </div>
     </div>
   );

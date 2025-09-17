@@ -141,7 +141,7 @@ const CpfReview = ({ handlePersonData }) => {
         </Card>
         <InfoButton />
       </div>
-      <Footer onAdminClick={() => navigate('/admin')} />
+      <Footer handleAdminClick={() => navigate('/admin')} />
     </div>
   );
 };

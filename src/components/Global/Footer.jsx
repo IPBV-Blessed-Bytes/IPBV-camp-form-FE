@@ -30,7 +30,7 @@ const Footer = ({ handleAdminClick }) => {
 };
 
 Footer.propTypes = {
-  handleAdminClick: PropTypes.func.isRequired,
+  handleAdminClick: PropTypes.func,
 };
 
 export default Footer;

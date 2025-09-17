@@ -111,12 +111,12 @@ const Header = ({
 Header.propTypes = {
   backStepFlag: PropTypes.bool,
   formSubmitted: PropTypes.bool,
-  formValues: PropTypes.array.isRequired,
-  goToStep: PropTypes.func.isRequired,
+  formValues: PropTypes.array,
+  goToStep: PropTypes.func,
   handlePreFill: PropTypes.func,
   highestStepReached: PropTypes.number,
   showNavMenu: PropTypes.bool,
-  steps: PropTypes.number.isRequired,
+  steps: PropTypes.number,
   hasFood: PropTypes.bool,
 };
 

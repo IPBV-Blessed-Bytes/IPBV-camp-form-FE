@@ -376,7 +376,7 @@ Packages.propTypes = {
   totalRegistrationsGlobal: PropTypes.object.isRequired,
   discount: PropTypes.string,
   hasDiscount: PropTypes.bool,
-  totalSeats: PropTypes.string.isRequired,
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   updateForm: PropTypes.func.isRequired,
   currentFormIndex: PropTypes.number.isRequired,
   currentFormValues: PropTypes.object.isRequired,

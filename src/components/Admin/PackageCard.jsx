@@ -9,10 +9,10 @@ const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, sho
       <Card.Body className={`card-container ${cardType}`}>
         <Card.Title className="card-container-title">{title}</Card.Title>
         <Card.Text className="card-container-content">
-          <p>
-            Vagas Preenchidas: <b>{filledVacancies || '0'}</b>
-          </p>
-          {showRemainingVacancies && <p>Vagas Restantes: {remainingVacancies || '0'}</p>}
+          Vagas Preenchidas: <b>{filledVacancies || '0'}</b>
+          <br />
+          <br />
+          {showRemainingVacancies && <>Vagas Restantes: {remainingVacancies || '0'}</>}
         </Card.Text>
       </Card.Body>
     </Card>
@@ -21,8 +21,8 @@ const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, sho
 
 PackageCard.propTypes = {
   title: PropTypes.string,
-  remainingVacancies: PropTypes.string,
-  filledVacancies: PropTypes.string,
+  remainingVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  filledVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   background: PropTypes.string,
   cardType: PropTypes.string,
   showRemainingVacancies: PropTypes.bool,

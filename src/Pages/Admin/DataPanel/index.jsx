@@ -85,9 +85,9 @@ const AdminDataPanel = ({ totalPackages, usedPackages, usedValidPackages, userRo
 
 AdminDataPanel.propTypes = {
   userRole: PropTypes.string,
-  totalPackages: PropTypes.number,
-  usedPackages: PropTypes.number,
-  usedValidPackages: PropTypes.number,
+  totalPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  usedPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  usedValidPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 };
 
 export default AdminDataPanel;

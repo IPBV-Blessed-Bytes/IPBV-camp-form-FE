@@ -217,22 +217,23 @@ const AdminRide = ({ loggedUsername }) => {
               <Accordion.Body className="accordion-body-custom">
                 <ul>
                   {row.original.relationship && row.original.relationship.length > 0 ? (
-                    row.original.relationship.map((relatedRide) =>
-                      relatedRide ? (
-                        <li key={relatedRide.id}>
-                          <div className="d-flex justify-content-between">
-                            <span>{relatedRide.name}</span>&nbsp;
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => handleShowDeleteRelationshipModal(relatedRide.id)}
-                            >
-                              <Icons typeIcon="delete" iconSize={24} fill="#fff" />
-                            </Button>
-                          </div>
-                          <hr className="horizontal-line" />
-                        </li>
-                      ) : null,
+                    row.original.relationship.map(
+                      (relatedRide, index) =>
+                        relatedRide && (
+                          <li key={`${relatedRide.id}-${index}`}>
+                            <div className="d-flex justify-content-between">
+                              <span>{relatedRide.name}</span>&nbsp;
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleShowDeleteRelationshipModal(relatedRide.id)}
+                              >
+                                <Icons typeIcon="delete" iconSize={24} fill="#fff" />
+                              </Button>
+                            </div>
+                            <hr className="horizontal-line" />
+                          </li>
+                        ),
                     )
                   ) : (
                     <span>Sem caronas relacionadas</span>
@@ -332,9 +333,9 @@ const AdminRide = ({ loggedUsername }) => {
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()} key={row.id}>
+                <tr {...row.getRowProps()} key={`row-${row.original.id}`}>
                   {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()} key={cell.column.id}>
+                    <td {...cell.getCellProps()} key={`cell-${row.original.id}-${cell.column.id}`}>
                       {cell.render('Cell')}
                     </td>
                   ))}

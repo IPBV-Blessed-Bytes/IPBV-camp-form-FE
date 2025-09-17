@@ -96,7 +96,7 @@ const CpfData = ({ personData }) => {
             </Card.Body>
           </Card>
         </div>
-        <Footer onAdminClick={() => navigate('/admin')}/>
+        <Footer handleAdminClick={() => navigate('/admin')} />
       </div>
     );
   }
@@ -260,7 +260,7 @@ const CpfData = ({ personData }) => {
         </Card>
       </div>
       <Loading loading={loading} />
-      <Footer onAdminClick={() => navigate('/admin')}/>
+      <Footer handleAdminClick={() => navigate('/admin')} />
     </div>
   );
 };

@@ -43,7 +43,7 @@ const AdminLoggedOut = ({
                 className="admin__user"
                 type="text"
                 placeholder="Digite seu nome de usuário"
-                value={loginData.login}
+                value={loginData.login || ''}
                 onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
                 onKeyDown={handleKeyDown}
               />
@@ -52,11 +52,11 @@ const AdminLoggedOut = ({
             <Form.Group className="input-login-wrapper mb-3" controlId="password">
               <Form.Label className="fw-bold form-label-admin">Senha:</Form.Label>
               <Form.Control
-                autocomplete="off"
+                autoComplete="off"
                 className="admin__password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Digite sua senha"
-                value={loginData.password}
+                value={loginData.password || ''}
                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                 onKeyDown={handleKeyDown}
               />

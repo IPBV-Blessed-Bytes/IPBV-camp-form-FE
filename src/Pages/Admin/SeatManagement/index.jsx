@@ -157,13 +157,13 @@ const AdminSeatManagement = ({
 
 AdminSeatManagement.propTypes = {
   loggedUsername: PropTypes.string,
-  totalSeats: PropTypes.number.isRequired,
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   handleUpdateTotalSeats: PropTypes.func.isRequired,
-  totalBusVacancies: PropTypes.number.isRequired,
+  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   handleUpdateTotalBusVacancies: PropTypes.func.isRequired,
   totalPackages: PropTypes.object.isRequired,
   handleUpdateTotalPackages: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
 };
 
 export default AdminSeatManagement;

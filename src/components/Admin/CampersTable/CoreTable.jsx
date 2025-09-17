@@ -3,52 +3,47 @@ import Icons from '@/components/Global/Icons';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const CoreTable = ({
-  getTableProps,
-  getTableBodyProps,
-  headerGroups,
-  rows,
-  prepareRow,
-  showFilters,
-  selectedRows,
-}) => {
+const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, showFilters, selectedRows }) => {
   return (
     <div className="table-responsive">
       <Table striped bordered hover {...getTableProps()} className="custom-table">
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <React.Fragment key={headerGroup.id}>
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th className="table-cells-header" key={column.id}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      {column.render('Header')}
-                      <span
-                        className="sort-icon-wrapper px-3"
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                      >
-                        <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
-                      </span>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-              {showFilters && (
-                <tr className="filter">
-                  {headerGroup.headers.map((column) => (
-                    <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
-                  ))}
+          {headerGroups.map((headerGroup) => {
+            const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
+            return (
+              <React.Fragment key={headerGroupKey}>
+                <tr {...restHeaderGroupProps}>
+                  {headerGroup.headers.map((column) => {
+                    const { key: sortKey, ...restSortProps } = column.getHeaderProps(column.getSortByToggleProps());
+                    return (
+                      <th className="table-cells-header" key={column.id}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          {column.render('Header')}
+                          <span key={sortKey} {...restSortProps} className="sort-icon-wrapper px-3">
+                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
+                          </span>
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
+                {showFilters && (
+                  <tr className="filter">
+                    {headerGroup.headers.map((column) => (
+                      <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
+                    ))}
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
-
+            const { key: rowKey, ...restRowProps } = row.getRowProps();
             return (
-              <tr {...row.getRowProps()} key={row.id}>
+              <tr key={rowKey} {...restRowProps}>
                 {row.cells.map((cell) => (
                   <td
                     className={`table-cells-cols${
@@ -70,13 +65,13 @@ const CoreTable = ({
 };
 
 CoreTable.propTypes = {
-  getTableProps: PropTypes.func,
-  getTableBodyProps: PropTypes.func,
-  headerGroups: PropTypes.object,
-  rows: PropTypes.object,
-  prepareRow: PropTypes.func,
+  getTableProps: PropTypes.func.isRequired,
+  getTableBodyProps: PropTypes.func.isRequired,
+  headerGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  prepareRow: PropTypes.func.isRequired,
   showFilters: PropTypes.bool,
-  selectedRows: PropTypes.array,
+  selectedRows: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CoreTable;

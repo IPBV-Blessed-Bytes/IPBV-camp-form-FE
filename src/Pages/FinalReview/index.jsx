@@ -119,7 +119,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   <Row className="row-gap">
                     <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
@@ -128,22 +128,22 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                         Hospedagem = {formValues.package.accomodation.name}
                         <br />
                         Preço = R$ {accomodationPrice}
-                        <div className="packages-horizontal-line" />
+                        <span className="packages-horizontal-line" />
                         Transporte = {formValues.package.transportation.name}
                         <br />
                         Preço = R$ {transportationPrice}
                         {!formValues.package.food.id &&
                           formValues.package.transportation.name &&
                           (formValues.contact.car === true || formValues.contact.needRide) === true && (
-                            <div className="packages-horizontal-line" />
+                            <span className="packages-horizontal-line" />
                           )}
                         {formValues.package.food.id && (
                           <>
-                            <div className="packages-horizontal-line" />
+                            <span className="packages-horizontal-line" />
                             Alimentação = {formValues.package.food.name}
                             <br />
                             Preço = R$ {foodPrice}
-                            {!formValues.extraMeals?.totalPrice && <div className="packages-horizontal-line" />}
+                            {!formValues.extraMeals?.totalPrice && <span className="packages-horizontal-line" />}
                           </>
                         )}
                       </Card.Text>
@@ -179,7 +179,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   {(formValues.contact.car === true || formValues.contact.needRide === true) && (
                     <>
@@ -211,7 +211,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                           </Col>
                         )}
                       </Row>
-                      <div className="packages-horizontal-line" />
+                      <span className="packages-horizontal-line" />
                     </>
                   )}
 
@@ -232,7 +232,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
@@ -249,7 +249,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
@@ -268,7 +268,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   <Row className="row-gap">
                     <Col md={6} className="fw-bold">
@@ -286,7 +286,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                       </Card.Text>
                     </Col>
                   </Row>
-                  <div className="packages-horizontal-line" />
+                  <span className="packages-horizontal-line" />
 
                   {formValues.personalInformation.legalGuardianName && (
                     <>
@@ -313,7 +313,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                           </Card.Text>
                         </Col>
                       </Row>
-                      <div className="packages-horizontal-line" />
+                      <span className="packages-horizontal-line" />
                     </>
                   )}
 

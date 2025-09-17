@@ -98,7 +98,7 @@ const EditAndAddCamperModal = ({
           </Button>
           <Button
             variant="danger"
-            className='btn-cancel'
+            className="btn-cancel"
             onClick={modalType === 'delete-all' ? handleConfirmDeleteAll : handleConfirmDeleteSpecific}
           >
             Deletar
@@ -116,12 +116,12 @@ EditAndAddCamperModal.propTypes = {
   showAddModal: PropTypes.bool,
   setShowAddModal: PropTypes.func,
   showDeleteModal: PropTypes.bool,
-  modalType: PropTypes.string,
+  modalType: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   formSubmitted: PropTypes.bool,
-  editFormData: PropTypes.array,
-  currentDate: PropTypes.object,
+  editFormData: PropTypes.object,
+  currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   handleSaveEdit: PropTypes.func,
-  addFormData: PropTypes.array,
+  addFormData: PropTypes.object,
   handleFormChange: PropTypes.func,
   handleAddSubmit: PropTypes.func,
   handleCloseDeleteModal: PropTypes.func,
