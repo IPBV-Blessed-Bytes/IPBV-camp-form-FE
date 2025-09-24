@@ -20,6 +20,7 @@ const Packages = ({
   discount,
   hasDiscount,
   nextStep,
+  packageCount,
   totalRegistrationsGlobal,
   totalSeats,
   updateForm,
@@ -184,6 +185,7 @@ const Packages = ({
                     category="Hospedagem"
                     products={productsState}
                     ref={productListRef}
+                    packageCount={packageCount}
                   />
                 </Card.Body>
               </Card>
@@ -204,6 +206,7 @@ const Packages = ({
                     category="Transporte"
                     products={productsState}
                     ref={productListRef}
+                    packageCount={packageCount}
                   />
                 </Card.Body>
               </Card>
@@ -224,6 +227,7 @@ const Packages = ({
                     category="Alimentação"
                     products={productsState}
                     ref={productListRef}
+                    packageCount={packageCount}
                   />
                 </Card.Body>
               </Card>

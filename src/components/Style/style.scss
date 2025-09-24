@@ -449,6 +449,11 @@
       border: 1px solid $green;
     }
 
+    &-unavailable {
+      background-color: $light-red;
+      border: 1px solid $medium-red;
+    }
+
     .product {
       &-image {
         border-radius: 0.375rem;

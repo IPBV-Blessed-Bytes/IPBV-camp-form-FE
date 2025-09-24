@@ -75,6 +75,7 @@ const FormRoutes = ({
   loading,
   userRole,
   nextStep,
+  packageCount,
   personData,
   preFill,
   resetFormSubmitted,
@@ -207,6 +208,7 @@ const FormRoutes = ({
                         discount={discount}
                         hasDiscount={hasDiscount}
                         nextStep={nextStep}
+                        packageCount={packageCount}
                         totalRegistrationsGlobal={totalRegistrations}
                         totalSeats={totalSeats}
                         updateForm={updateFormValues('package')}

@@ -47,6 +47,7 @@ const RoutesValidations = ({ formContext }) => {
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
   const [basePriceTotal, setBasePriceTotal] = useState(0);
+  const [packageCount, setPackageCount] = useState(null);
 
   const userRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -64,6 +65,7 @@ const RoutesValidations = ({ formContext }) => {
 
       try {
         const response = await fetcher.get(`${BASE_URL}/package-count`);
+        setPackageCount(response.data);
         setAvailablePackages(response.data);
         setTotalSeats(response.data?.totalSeats || 0);
         setTotalBusVacancies(response.data?.totalBusVacancies || 0);
@@ -325,7 +327,7 @@ const RoutesValidations = ({ formContext }) => {
           Number(extraMealsPrice) +
           Number(basePriceTotal);
 
-        const rawDiscount = Number(discountList[index] || 0);
+          const rawDiscount = Number(discountList[index] || 0);
 
         const discount = Math.min(subtotal, rawDiscount);
 
@@ -363,7 +365,7 @@ const RoutesValidations = ({ formContext }) => {
       });
 
       const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-
+    
       const finalPriceCheckout = totalFromForms;
 
       const sanitizedForms = sanitizeForms(formsToSend);
@@ -431,6 +433,7 @@ const RoutesValidations = ({ formContext }) => {
       loading={loading}
       loggedUsername={loggedUsername}
       nextStep={nextStep}
+      packageCount={packageCount}
       personData={personData}
       preFill={preFill}
       resetFormSubmitted={resetFormSubmitted}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
-const ProductList = forwardRef(({ age, cartKey, category, products }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category, products, packageCount }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [productsState, setProductsState] = useState(products || []);
   const hasRestoredCart = useRef(false);
@@ -37,6 +37,44 @@ const ProductList = forwardRef(({ age, cartKey, category, products }, ref) => {
       sessionStorage.setItem(cartKey, JSON.stringify(items));
     }
   }, [items]);
+
+  const getAvailability = (product, packageCount) => {
+    if (age < 9) return true;
+
+    if (!packageCount) return true;
+
+    const { totalPackages, usedValidPackages, totalBusVacancies } = packageCount;
+
+    if (product.id === 'bus-yes') {
+      const usedBus = Object.entries(usedValidPackages)
+        .filter(([key]) => key.includes('WithBus'))
+        .reduce((acc, [, val]) => acc + val, 0);
+      return usedBus < totalBusVacancies;
+    }
+
+    const packageKeys = {
+      'host-seminario': 'seminary',
+      'host-college-collective': 'schoolIndividual',
+      'host-college-family': 'schoolFamily',
+      'host-college-camping': 'schoolCamping',
+      'host-external': 'other',
+    };
+
+    const key = packageKeys[product.id];
+    if (key) {
+      const total = totalPackages[key] || 0;
+
+      const used =
+        (usedValidPackages[`${key}WithBusWithFood`] || 0) +
+        (usedValidPackages[`${key}WithBusWithoutFood`] || 0) +
+        (usedValidPackages[`${key}WithoutBusWithFood`] || 0) +
+        (usedValidPackages[`${key}WithoutBusWithoutFood`] || 0);
+
+      return used < total;
+    }
+
+    return true;
+  };
 
   const checkRequiredPackages = () => {
     const requiredCategories = ['Hospedagem', 'Transporte', 'Alimentação'];
@@ -82,19 +120,31 @@ const ProductList = forwardRef(({ age, cartKey, category, products }, ref) => {
         <div className="product-grid">
           {filtered.map((product) => {
             const alreadySelected = !!getItem(product.id);
+            const isAvailable = getAvailability(product, packageCount);
+
             return (
-              <div key={product.id} className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}>
+              <div
+                key={product.id}
+                className={`product-card 
+    ${alreadySelected ? 'product-card-is-active' : ''} 
+    ${!isAvailable ? 'product-card-unavailable' : ''}`}
+              >
                 <div className="align-items-center mb-4">
                   <h3 className="product-title">{product.name}</h3>
                 </div>
                 <p className="product-price mb-4">R$ {product.price},00</p>
                 {product.description && <p className="discount-description small mb-4">{product.description}</p>}
-                <button
-                  className={`product-button ${alreadySelected ? 'selected' : ''}`}
-                  onClick={() => handlePackageButton(product, filtered)}
-                >
-                  {alreadySelected ? 'Selecionado' : 'Selecionar'}
-                </button>
+
+                {!isAvailable ? (
+                  <p className="text-danger small fw-bold">Indisponível</p>
+                ) : (
+                  <button
+                    className={`product-button ${alreadySelected ? 'selected' : ''}`}
+                    onClick={() => handlePackageButton(product, filtered)}
+                  >
+                    {alreadySelected ? 'Selecionado' : 'Selecionar'}
+                  </button>
+                )}
               </div>
             );
           })}
@@ -112,6 +162,7 @@ ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
+  packageCount: PropTypes.object,
   products: PropTypes.array.isRequired,
 };
 
