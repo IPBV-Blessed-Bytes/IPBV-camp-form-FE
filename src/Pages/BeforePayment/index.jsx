@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './style.scss';
+import fetcher from '@/fetchers';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
+import Loading from '@/components/Global/Loading';
+import { loadProducts } from '../Packages/utils/products';
 import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
-import getIndividualBaseValue from '../Packages/utils/getIndividualBaseValue';
 
 const BeforePayment = ({
   cartKey,
@@ -23,6 +25,9 @@ const BeforePayment = ({
   status,
 }) => {
   const [cartTotal, setCartTotal] = useState(0);
+  const [individualBase, setIndividualBase] = useState(0);
+  const [rawFee, setRawFee] = useState(0);
+  const [loading, setLoading] = useState(true);
   const navigateTo = useNavigate();
   const cartIsFree = cartTotal === 0;
 
@@ -49,13 +54,11 @@ const BeforePayment = ({
   };
 
   const getSummaryValues = (formValues) => {
-    let totalBase = 0;
     let totalPackage = 0;
     let totalDiscount = 0;
 
     formValues.forEach((user) => {
       const age = calculateAge(new Date(user.personalInformation.birthday));
-      const individualBase = getIndividualBaseValue(age);
 
       const discounted = getDiscountedProducts(age);
       const getPrice = (id, fallback = 0) => discounted.find((p) => p.id === id)?.price ?? fallback;
@@ -73,19 +76,51 @@ const BeforePayment = ({
         Number(food) +
         (user.package?.food?.id ? 0 : Number(extraMeals));
 
-      totalBase += individualBase;
       totalPackage += packageTotal;
       totalDiscount += discount;
     });
 
-    return {
-      totalBase,
-      totalPackage,
-      totalDiscount,
-    };
+    return { totalPackage, totalDiscount };
   };
 
-  const { totalBase, totalPackage, totalDiscount } = getSummaryValues(formValues);
+  useEffect(() => {
+    if (!formValues || formValues.length === 0) return;
+
+    const fetchLotsAndProducts = async () => {
+      try {
+        await loadProducts();
+        const response = await fetcher.get('lots');
+        const lots = response.data.lots || [];
+
+        if (lots.length > 0) {
+          const lot = lots[0];
+          const rawFee = Number(lot.price.registrationFee || 0);
+          setRawFee(rawFee);
+
+          const totalFee = formValues.reduce((sum, user) => {
+            const age = calculateAge(new Date(user.personalInformation.birthday));
+            let fee = rawFee;
+            if (age <= 8) fee = 0;
+            else if (age <= 14) fee = fee / 2;
+            return sum + fee;
+          }, 0);
+
+          setIndividualBase(totalFee);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar lotes:', error);
+        setIndividualBase(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLotsAndProducts();
+  }, [formValues]);
+
+  const { totalPackage, totalDiscount } = getSummaryValues(formValues);
+
+  const totalGeral = totalPackage + individualBase - totalDiscount;
 
   return (
     <Container className="form__container__cart-height">
@@ -101,6 +136,7 @@ const BeforePayment = ({
                 handleBasePriceChange={handleBasePriceChange}
                 setCartTotal={setCartTotal}
                 setFormValues={setFormValues}
+                rawFee={rawFee}
               />
 
               <div className="text-center">
@@ -131,7 +167,7 @@ const BeforePayment = ({
                       text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 100 reais, acima de 15 anos = 200 reais."
                     />
                   </div>
-                  <h5 className="summary-individual-base-value">R$ {totalBase},00</h5>
+                  <h5 className="summary-individual-base-value">R$ {individualBase},00</h5>
                 </div>
                 <div className="summary-total-package">
                   <h5 className="summary-total-package-label">Total do Pacote:</h5>
@@ -159,7 +195,7 @@ const BeforePayment = ({
 
                 <div className="summary-total-geral mb-3">
                   <h5 className="fw-bold">Total:</h5>
-                  <h5 className="fw-bold">R$ {cartTotal},00</h5>
+                  <h5 className="fw-bold">R$ {totalGeral},00</h5>
                 </div>
 
                 <div className="summary-buttons d-grid gap-3">
@@ -174,6 +210,7 @@ const BeforePayment = ({
           </Card>
         </Col>
       </Row>
+      <Loading loading={loading} />
     </Container>
   );
 };
