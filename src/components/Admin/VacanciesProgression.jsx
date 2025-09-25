@@ -16,7 +16,7 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
         return acc;
       }, 0) || 0;
 
-    const percentage = ((filledVacancies / totalVacancies) * 100).toFixed(0);
+    const percentage = Number(((filledVacancies / totalVacancies) * 100).toFixed(0));
 
     return { percentage, filledVacancies };
   };
@@ -37,7 +37,7 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
     schoolCampingDetails.filledVacancies +
     seminaryDetails.filledVacancies +
     otherDetails.filledVacancies;
-  const totalPercentage = totalVacancies ? ((totalFilledVacancies / totalVacancies) * 100).toFixed(0) : 0;
+  const totalPercentage = totalVacancies ? Number(((totalFilledVacancies / totalVacancies) * 100).toFixed(0)) : 0;
 
   const renderProgressBar = (label, details, totalVacancies, color) => (
     <Box mb={3}>

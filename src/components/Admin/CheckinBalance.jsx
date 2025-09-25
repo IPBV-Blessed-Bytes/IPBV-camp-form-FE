@@ -7,10 +7,10 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
     const checkins =
       fillingVacancies?.filter((vacancy) => {
-        return vacancy.accomodation.name?.toLowerCase().includes(packageNameKeyword.toLowerCase()) && vacancy.checkin;
+        return vacancy.accomodationName?.toLowerCase().includes(packageNameKeyword.toLowerCase()) && vacancy.checkin;
       }).length || 0;
 
-    const percentage = ((checkins / totalUsed) * 100).toFixed(0);
+    const percentage = Number(((checkins / totalUsed) * 100).toFixed(0));
     return { percentage, checkins };
   };
 
@@ -49,7 +49,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
     schoolCampingDetails.checkins +
     seminaryDetails.checkins +
     otherDetails.checkins;
-  const totalPercentage = totalUsed ? ((totalCheckins / totalUsed) * 100).toFixed(0) : 0;
+  const totalPercentage = totalUsed ? Number(((totalCheckins / totalUsed) * 100).toFixed(0)) : 0;
 
   const renderProgressBar = (label, details, usedByPackage, color) => (
     <Box mb={3}>
