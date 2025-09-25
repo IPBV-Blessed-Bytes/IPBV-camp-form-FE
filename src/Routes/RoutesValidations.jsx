@@ -298,105 +298,111 @@ const RoutesValidations = ({ formContext }) => {
     setBasePriceTotal(basePriceTotal);
   };
 
-  const sendForm = async (formikValues) => {
-    setLoading(true);
-    try {
-      setStatus('loading');
+ const sendForm = async (formikValues) => {
+  setLoading(true);
+  try {
+    setStatus('loading');
 
-      const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
+    const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
+    const registrationFeePerUser = basePriceTotal / formValues.length;
 
-      const formsToSend = formValues.map((form, index) => {
-        const birthdayRaw = form?.personalInformation?.birthday;
-        const birthday = new Date(birthdayRaw);
-        const age = isValid(birthday) ? calculateAge(birthday) : 0;
+    const formsToSend = formValues.map((form, index) => {
+      const birthdayRaw = form?.personalInformation?.birthday;
+      const birthday = new Date(birthdayRaw);
+      const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
-        const discountedProducts = getDiscountedProducts(age);
+      const discountedProducts = getDiscountedProducts(age);
 
-        const getProductPrice = (productId) => discountedProducts.find((p) => p.id === productId)?.price || 0;
+      const getProductPrice = (productId) =>
+        discountedProducts.find((p) => p.id === productId)?.price || 0;
 
-        const accomodationPrice = getProductPrice(form.package?.accomodation?.id);
-        const transportationPrice = getProductPrice(form.package?.transportation?.id);
-        const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
+      const accomodationPrice = getProductPrice(form.package?.accomodation?.id);
+      const transportationPrice = getProductPrice(form.package?.transportation?.id);
+      const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
 
-        const extraMealsPrice = form.extraMeals.totalPrice;
+      const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
 
-        const subtotal =
-          Number(accomodationPrice) +
-          Number(transportationPrice) +
-          Number(foodPrice) +
-          Number(extraMealsPrice) +
-          Number(basePriceTotal);
+      let registrationFee = registrationFeePerUser;
+      if (age <= 8) registrationFee = 0;
+      else if (age <= 14) registrationFee = registrationFee / 2;
 
-          const rawDiscount = Number(discountList[index] || 0);
+      const subtotal =
+        Number(accomodationPrice) +
+        Number(transportationPrice) +
+        Number(foodPrice) +
+        Number(extraMealsPrice) +
+        Number(registrationFee);
 
-        const discount = Math.min(subtotal, rawDiscount);
+      const rawDiscount = Number(discountList[index] || 0);
 
-        const totalPrice = subtotal - discount;
+      const discount = Math.min(subtotal, rawDiscount);
 
-        const appliedDiscount = Math.min(totalPrice, rawDiscount);
+      const totalPrice = subtotal - discount;
+      
+      const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
-        return {
-          ...form,
-          package: {
-            accomodation: {
-              id: form.package?.accomodation?.id || '',
-              price: accomodationPrice,
-            },
-            accomodationName: form.package?.accomodation?.name || '',
-            transportation: {
-              id: form.package?.transportation?.id || '',
-              price: transportationPrice,
-            },
-            transportationName: form.package?.transportation?.name || '',
-            food: {
-              id: form.package?.food?.id || '',
-              price: foodPrice,
-            },
-            foodName: form.package?.food?.name || '',
-            price: form.package.price,
-            finalPrice: form.package.finalPrice,
+      return {
+        ...form,
+        package: {
+          accomodation: {
+            id: form.package?.accomodation?.id || '',
+            price: accomodationPrice,
           },
-          formPayment: formikValues.formPayment || 'nonPaid',
-          registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-          totalPrice,
-          manualRegistration: false,
-          appliedDiscount,
-        };
-      });
+          accomodationName: form.package?.accomodation?.name || '',
+          transportation: {
+            id: form.package?.transportation?.id || '',
+            price: transportationPrice,
+          },
+          transportationName: form.package?.transportation?.name || '',
+          food: {
+            id: form.package?.food?.id || '',
+            price: foodPrice,
+          },
+          foodName: form.package?.food?.name || '',
+          price: subtotal,
+          finalPrice: totalPrice,
+        },
+        formPayment: formikValues.formPayment || 'nonPaid',
+        registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
+        totalPrice,
+        manualRegistration: false,
+        appliedDiscount,
+      };
+    });
 
-      const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-    
-      const finalPriceCheckout = totalFromForms;
+    const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+   
+    const finalPriceCheckout = totalFromForms;
 
-      const sanitizedForms = sanitizeForms(formsToSend);
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
-        forms: sanitizedForms,
-        finalPriceCheckout,
-      });
+    const sanitizedForms = sanitizeForms(formsToSend);
+    const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
+      forms: sanitizedForms,
+      finalPriceCheckout,
+    });
 
-      const checkoutUrl = response.data.payment_url;
-      const checkoutStatus = response.data.checkout_status;
-      setStatus('loaded');
+    const checkoutUrl = response.data.payment_url;
+    const checkoutStatus = response.data.checkout_status;
+    setStatus('loaded');
 
-      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
-        window.open(checkoutUrl, '_self');
-        toast.success('Redirecionando para pagamento...');
-      } else if (response.status === 201 || response.status === 200) {
-        goToSuccessPage();
-        setFormSubmitted(true);
-        toast.success('Inscrição validada com sucesso');
-      } else if (checkoutStatus === 'Checkout Error') {
-        toast.error('Erro ao criar checkout');
-      }
-    } catch (error) {
-      setStatus('error');
-      toast.error(error?.response?.data || 'Ocorreu um erro');
-    } finally {
-      sessionStorage.removeItem('previousUserData');
-      sessionStorage.removeItem('savedUsers');
-      setLoading(false);
+    if (checkoutUrl && checkoutStatus === 'Checkout generated') {
+      window.open(checkoutUrl, '_self');
+      toast.success('Redirecionando para pagamento...');
+    } else if (response.status === 201 || response.status === 200) {
+      goToSuccessPage();
+      setFormSubmitted(true);
+      toast.success('Inscrição validada com sucesso');
+    } else if (checkoutStatus === 'Checkout Error') {
+      toast.error('Erro ao criar checkout');
     }
-  };
+  } catch (error) {
+    setStatus('error');
+    toast.error(error?.response?.data || 'Ocorreu um erro');
+  } finally {
+    sessionStorage.removeItem('previousUserData');
+    sessionStorage.removeItem('savedUsers');
+    setLoading(false);
+  }
+};
 
   return (
     <FormRoutes
