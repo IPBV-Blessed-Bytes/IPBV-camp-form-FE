@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
-import getIndividualBaseValue from '../Packages/utils/getIndividualBaseValue';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
@@ -16,6 +15,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const [observation, setObservation] = useState('');
+  const [rawFee, setRawFee] = useState(0);
   const location = useLocation();
   const { emptyCart } = useCart();
 
@@ -25,6 +25,22 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
 
   const birthday = new Date(formValues.personalInformation?.birthday);
   const age = isValid(birthday) ? calculateAge(birthday) : 0;
+
+  useEffect(() => {
+    const fetchLots = async () => {
+      try {
+        const response = await fetcher.get('lots');
+        const lots = response.data.lots || [];
+        if (lots.length > 0) {
+          const lot = lots[0];
+          setRawFee(Number(lot.price.registrationFee || 0));
+        }
+      } catch (error) {
+        console.error('Erro ao buscar lotes:', error);
+      }
+    };
+    fetchLots();
+  }, []);
 
   const discountedProducts = getDiscountedProducts(age);
 
@@ -89,7 +105,10 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
-  const individualBase = getIndividualBaseValue(age);
+  let individualBase = rawFee;
+  if (age <= 8) individualBase = 0;
+  else if (age <= 14) individualBase = rawFee / 2;
+
   const totalBeforeDiscount = packageOriginalPrice + individualBase + extraMealsPrice;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
