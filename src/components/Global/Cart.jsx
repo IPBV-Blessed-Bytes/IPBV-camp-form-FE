@@ -136,19 +136,17 @@ const Cart = ({
   }, [finalTotal, setCartTotal]);
 
   useEffect(() => {
-    const baseTotal = formValues.reduce((acc, user) => {
+    if (!formValues.length || rawFee === undefined) return;
+
+    const firstPayingUser = formValues.find((user) => {
       const age = calculateAge(new Date(user?.personalInformation?.birthday));
       const individualBase = getIndividualBaseFromLot(age, rawFee);
-      const accomodation = Number(user?.package?.accomodation?.price || 0);
-      const transportation = Number(user?.package?.transportation?.price || 0);
-      const food = Number(user?.package?.food?.price || 0);
-      const extraMeals = Number(user?.extraMeals?.totalPrice || 0);
-      const discount = Number(user?.package?.discount || 0);
+      return individualBase > 0;
+    });
 
-      const totalBeforeDiscount = accomodation + transportation + food + extraMeals + individualBase;
-      if (discount >= totalBeforeDiscount) return acc;
-      return acc + individualBase;
-    }, 0);
+    const baseTotal = firstPayingUser
+      ? getIndividualBaseFromLot(calculateAge(new Date(firstPayingUser.personalInformation?.birthday)), rawFee)
+      : 0;
 
     handleBasePriceChange(baseTotal);
   }, [formValues, rawFee, handleBasePriceChange]);

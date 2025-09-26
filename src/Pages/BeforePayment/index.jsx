@@ -53,9 +53,10 @@ const BeforePayment = ({
     }
   };
 
-  const getSummaryValues = (formValues) => {
+  const getSummaryValues = (formValues, rawFee) => {
     let totalPackage = 0;
     let totalDiscount = 0;
+    let totalFinal = 0;
 
     formValues.forEach((user) => {
       const age = calculateAge(new Date(user.personalInformation.birthday));
@@ -76,11 +77,21 @@ const BeforePayment = ({
         Number(food) +
         (user.package?.food?.id ? 0 : Number(extraMeals));
 
+      let fee = rawFee;
+      if (age <= 8) fee = 0;
+      else if (age <= 14) fee = rawFee / 2;
+
+      const userTotalWithFee = packageTotal + fee;
+
+      const appliedDiscount = Math.min(userTotalWithFee, discount);
+      const finalPrice = userTotalWithFee - appliedDiscount;
+
       totalPackage += packageTotal;
-      totalDiscount += discount;
+      totalDiscount += appliedDiscount;
+      totalFinal += finalPrice;
     });
 
-    return { totalPackage, totalDiscount };
+    return { totalPackage, totalDiscount, totalFinal };
   };
 
   useEffect(() => {
@@ -118,9 +129,9 @@ const BeforePayment = ({
     fetchLotsAndProducts();
   }, [formValues]);
 
-  const { totalPackage, totalDiscount } = getSummaryValues(formValues);
+  const { totalPackage, totalDiscount, totalFinal } = getSummaryValues(formValues, rawFee);
 
-  const totalGeral = totalPackage + individualBase - totalDiscount;
+  const totalGeral = totalFinal;
 
   return (
     <Container className="form__container__cart-height">
