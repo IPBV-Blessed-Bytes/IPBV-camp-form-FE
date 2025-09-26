@@ -473,6 +473,7 @@ FormRoutes.propTypes = {
   loading: PropTypes.bool,
   userRole: PropTypes.string,
   nextStep: PropTypes.func,
+  packageCount: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
   personData: PropTypes.object,
   preFill: PropTypes.bool,
   resetFormSubmitted: PropTypes.func,

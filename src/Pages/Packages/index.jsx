@@ -78,6 +78,7 @@ const Packages = ({
         addItem({ ...food, category: 'Alimentação' });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFormValues, currentFormIndex]);
 
   useEffect(() => {
@@ -385,6 +386,7 @@ Packages.propTypes = {
   currentFormIndex: PropTypes.number.isRequired,
   currentFormValues: PropTypes.object.isRequired,
   cartKey: PropTypes.string.isRequired,
+  packageCount: PropTypes.number,
 };
 
 export default Packages;

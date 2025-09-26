@@ -3,7 +3,6 @@ import { Button, Modal, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
-import getIndividualBaseValue from '@/Pages/Packages/utils/getIndividualBaseValue';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 
@@ -265,6 +264,7 @@ Cart.propTypes = {
   handleBasePriceChange: PropTypes.func,
   setCartTotal: PropTypes.func.isRequired,
   setFormValues: PropTypes.func.isRequired,
+  rawFee: PropTypes.number.isRequired,
 };
 
 export default Cart;
