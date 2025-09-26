@@ -446,7 +446,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             row.package.foodName === 'Alimentacao Completa (Cafe da manha, Almoco e Jantar)' ||
             row.package.foodName === 'Alimentação Completa (Café da manhã| Almoço e Jantar)' ||
             row.package.foodName === 'Alimentacao Completa (Cafe da manha| Almoco e Jantar)' ||
-            row.package.foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
+            row.package.foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)' ||
+            row.package.foodName === 'Alimentação Completa' ||
+            row.package.foodName === 'Alimentacao Completa'
               ? 'COM ALIMENTAÇÃO COMPLETA'
               : row.package.foodName === 'Alimentação Parcial (Almoço e Jantar)' ||
                 row.package.foodName === 'Alimentacao Parcial (Almoco e Jantar)'
