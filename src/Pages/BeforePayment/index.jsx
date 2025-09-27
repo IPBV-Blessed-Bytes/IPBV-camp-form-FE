@@ -31,10 +31,18 @@ const BeforePayment = ({
   const navigateTo = useNavigate();
   const cartIsFree = cartTotal === 0;
 
+  const isUserValid = (user) => {
+    const hasName = user?.personalInformation?.name && user.personalInformation.name.trim() !== '';
+    const hasBirthday = user?.personalInformation?.birthday && user.personalInformation.birthday.trim() !== '';
+    return hasName || hasBirthday;
+  };
+
+  const validFormValues = formValues.filter(isUserValid);
+
   useEffect(() => {
     setBackStepFlag(false);
-    sessionStorage.setItem('savedUsers', JSON.stringify(formValues));
-  }, []);
+    sessionStorage.setItem('savedUsers', JSON.stringify(validFormValues));
+  }, [validFormValues]);
 
   useEffect(() => {
     if (status === 'loaded') {
@@ -43,22 +51,22 @@ const BeforePayment = ({
   }, [status, navigateTo]);
 
   const handleClick = () => {
-    if (formValues.length === 0) return;
+    if (validFormValues.length === 0) return;
 
     if (cartIsFree) {
-      sendForm(formValues);
+      sendForm(validFormValues);
     } else {
       sessionStorage.removeItem(cartKey);
       nextStep();
     }
   };
 
-  const getSummaryValues = (formValues, rawFee) => {
+  const getSummaryValues = (formValuesToSummarize, rawFee) => {
     let totalPackage = 0;
     let totalDiscount = 0;
     let totalFinal = 0;
 
-    formValues.forEach((user) => {
+    formValuesToSummarize.forEach((user) => {
       const age = calculateAge(new Date(user.personalInformation.birthday));
 
       const discounted = getDiscountedProducts(age);
@@ -95,7 +103,11 @@ const BeforePayment = ({
   };
 
   useEffect(() => {
-    if (!formValues || formValues.length === 0) return;
+    if (!validFormValues || validFormValues.length === 0) {
+      setIndividualBase(0);
+      setLoading(false);
+      return;
+    }
 
     const fetchLotsAndProducts = async () => {
       try {
@@ -108,15 +120,30 @@ const BeforePayment = ({
           const rawFee = Number(lot.price.registrationFee || 0);
           setRawFee(rawFee);
 
-          const totalFee = formValues.reduce((sum, user) => {
-            const age = calculateAge(new Date(user.personalInformation.birthday));
-            let fee = rawFee;
-            if (age <= 8) fee = 0;
-            else if (age <= 14) fee = fee / 2;
-            return sum + fee;
-          }, 0);
+          const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
+          const savedTotalFee = Number(sessionStorage.getItem('totalFee') || 0);
 
-          setIndividualBase(totalFee);
+          let feeToSet = 0;
+
+          if (enteredFromFinalReview) {
+            let calculatedTotalFee = validFormValues.reduce((sum, user) => {
+              const age = calculateAge(new Date(user.personalInformation.birthday));
+              let fee = rawFee;
+              if (age <= 8) fee = 0;
+              else if (age <= 14) fee = fee / 2;
+
+              return sum + fee;
+            }, 0);
+
+            feeToSet = calculatedTotalFee;
+
+            sessionStorage.setItem('totalFee', feeToSet);
+            sessionStorage.setItem('enteredFromFinalReview', 'false');
+          } else {
+            feeToSet = savedTotalFee;
+          }
+
+          setIndividualBase(feeToSet);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
@@ -127,9 +154,9 @@ const BeforePayment = ({
     };
 
     fetchLotsAndProducts();
-  }, [formValues]);
+  }, [validFormValues]);
 
-  const { totalPackage, totalDiscount, totalFinal } = getSummaryValues(formValues, rawFee);
+  const { totalPackage, totalDiscount, totalFinal } = getSummaryValues(validFormValues, rawFee);
 
   const totalGeral = totalFinal;
 
@@ -142,7 +169,7 @@ const BeforePayment = ({
               <Card.Title>Carrinho</Card.Title>
               <Cart
                 cartKey={cartKey}
-                formValues={formValues}
+                formValues={validFormValues}
                 goToEditStep={goToEditStep}
                 handleBasePriceChange={handleBasePriceChange}
                 setCartTotal={setCartTotal}
@@ -210,7 +237,7 @@ const BeforePayment = ({
                 </div>
 
                 <div className="summary-buttons d-grid gap-3">
-                  {formValues.length > 0 && (
+                  {validFormValues.length > 0 && (
                     <Button variant="info" size="lg" onClick={handleClick}>
                       {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                     </Button>
