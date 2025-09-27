@@ -124,12 +124,17 @@ const CpfReview = ({ handlePersonData }) => {
                 </Row>
                 <Row className="justify-content-end align-items-center mt-4">
                   <Col md={6}>
-                    <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
+                    <Button
+                      className="w-100 mb-3 mb-sm-3 mb-md-0"
+                      variant="secondary"
+                      size="lg"
+                      onClick={() => navigate('/')}
+                    >
                       Voltar pro Início
                     </Button>
                   </Col>
                   <Col className="justify-content-end d-flex" md={6}>
-                    <Button type="submit" variant="success" size="lg">
+                    <Button className="w-100" type="submit" variant="success" size="lg">
                       Consultar
                     </Button>
                   </Col>
