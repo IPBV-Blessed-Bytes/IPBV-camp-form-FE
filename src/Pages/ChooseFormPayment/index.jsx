@@ -46,6 +46,7 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
     handleSubmit();
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
       setValues({ formPayment: '' });
@@ -63,6 +64,7 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
     handleChange(e);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setBackStepFlag(true);
   }, []);

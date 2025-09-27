@@ -83,6 +83,7 @@ const PersonalData = ({
     validateOnChange: false,
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     sessionStorage.removeItem('previousUserData');
     const tempData = JSON.parse(sessionStorage.getItem('formTempData') || '{}');
@@ -112,6 +113,7 @@ const PersonalData = ({
     }
   }, [values.cpf]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setBackStepFlag(true);
   }, []);

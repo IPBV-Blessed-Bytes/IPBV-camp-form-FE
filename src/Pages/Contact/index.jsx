@@ -17,6 +17,8 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
     validateOnChange: false,
     validationSchema: additionalInformationSchema,
   });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const storedData = sessionStorage.getItem('previousUserData');
 
