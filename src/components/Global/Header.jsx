@@ -97,6 +97,7 @@ const Header = ({
                 className="cart-btn"
                 onClick={() => {
                   goToStep(enumSteps.beforePayment);
+                  sessionStorage.setItem('enteredFromFinalReview', 'false');
                 }}
               >
                 <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />

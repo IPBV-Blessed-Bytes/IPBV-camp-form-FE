@@ -100,6 +100,8 @@ const Cart = ({
   const [targetIndex, setTargetIndex] = useState(null);
   const [targetItemId, setTargetItemId] = useState(null);
 
+  const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
+
   const { removeItem, emptyCart } = useCart();
 
   const handleRemoveUser = (index, itemId) => {
@@ -134,21 +136,33 @@ const Cart = ({
     }
   }, [finalTotal, setCartTotal]);
 
-  useEffect(() => {
-    if (!formValues.length || rawFee === undefined) return;
+ useEffect(() => {
+  if (!formValues.length || rawFee === undefined) return;
+  
+    const validUsers = formValues.filter(
+      (user) => user?.personalInformation?.name?.trim()
+    );
 
-    const firstPayingUser = formValues.find((user) => {
-      const age = calculateAge(new Date(user?.personalInformation?.birthday));
+    if (!validUsers.length) {
+      handleBasePriceChange(0);
+      return;
+    }
+
+    const firstPayingUser = validUsers.find((user) => {
+      const age = calculateAge(new Date(user.personalInformation.birthday));
       const individualBase = getIndividualBaseFromLot(age, rawFee);
       return individualBase > 0;
     });
 
     const baseTotal = firstPayingUser
-      ? getIndividualBaseFromLot(calculateAge(new Date(firstPayingUser.personalInformation?.birthday)), rawFee)
+      ? getIndividualBaseFromLot(
+          calculateAge(new Date(firstPayingUser.personalInformation.birthday)),
+          rawFee
+        )
       : 0;
 
     handleBasePriceChange(baseTotal);
-  }, [formValues, rawFee, handleBasePriceChange]);
+  }, [enteredFromFinalReview, formValues, rawFee, handleBasePriceChange]);
 
   const clearCart = () => {
     emptyCart();

@@ -87,6 +87,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
     }
 
     toast.success('Usuário adicionado ao carrinho');
+    sessionStorage.setItem('enteredFromFinalReview', 'true');
 
     updateForm();
     emptyCart();
