@@ -229,10 +229,17 @@ const RoutesValidations = ({ formContext }) => {
       };
     });
 
+  const isUserValid = (user) => {
+    const hasName = user?.personalInformation?.name && user.personalInformation.name.trim() !== '';
+    const hasBirthday = user?.personalInformation?.birthday && user.personalInformation.birthday.trim() !== '';
+    return hasName || hasBirthday;
+  };
+
   const handleAddNewUser = () => {
     sessionStorage.removeItem('previousUserData');
     setFormValues((prev) => {
-      const updated = [...prev, initialValues[0]];
+      const validUsers = prev.filter(isUserValid);
+      const updated = [...validUsers, initialValues[0]];
       setCurrentFormIndex(updated.length - 1);
       return updated;
     });
