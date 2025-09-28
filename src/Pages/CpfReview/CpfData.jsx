@@ -146,14 +146,14 @@ const CpfData = ({ personData }) => {
                   <Row className="row-gap mt-3">
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Categoria do Pacote:</span> <br />
-                        {personData?.data.packageTitle}
+                        <span className="form-review__section-title">Preço:</span> <br />
+                        R$ {personData?.data.price},00
                       </Card.Text>
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Hospedagem:</span> <br />
-                        {personData?.data.accomodation.name} |{' '}
+                        {personData?.data.accomodationName}
                       </Card.Text>
                     </Col>
                   </Row>
@@ -166,19 +166,13 @@ const CpfData = ({ personData }) => {
                     </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
-                        <span className="form-review__section-title">Alimentação Extra:</span> <br />
-                        {personData?.data.extraMeals || 'Nenhuma'}
+                        <span className="form-review__section-title">Transporte:</span>
+                        <br />
+                        {personData?.data.transportation}
                       </Card.Text>
                     </Col>
                   </Row>
                   <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Transporte:</span>
-                        <br />
-                        {personData?.data.transportation.name}
-                      </Card.Text>
-                    </Col>
                     <Col md={6} className="fw-bold">
                       <Card.Text>
                         <span className="form-review__section-title">Alergia: </span>
@@ -231,16 +225,6 @@ const CpfData = ({ personData }) => {
                       </Col>
                     </Row>
                   )}
-
-                  <div className="packages-horizontal-line" />
-                  <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Preço:</span> <br />
-                        R$ {personData?.data.price},00
-                      </Card.Text>
-                    </Col>
-                  </Row>
                 </Form>
               </div>
             </Container>
