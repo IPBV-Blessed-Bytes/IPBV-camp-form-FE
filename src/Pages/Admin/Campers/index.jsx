@@ -526,7 +526,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }) =>
+          value === 'Boa Viagem'
+            ? 'Boa Viagem'
+            : value === 'IPBV'
+            ? 'Boa Viagem'
+            : value === 'Outra'
+            ? 'Outra'
+            : 'Não pagante',
       },
       {
         Header: 'Data de Nascimento:',
