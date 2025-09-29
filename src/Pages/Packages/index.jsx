@@ -217,7 +217,8 @@ const Packages = ({
                   <Card.Title>Alimentação</Card.Title>
                   <Card.Text>
                     Você pode incluir todas as refeições ou apenas algumas.{' '}
-                    <strong>Não teremos vendas de refeições avulsas</strong>.
+                    <strong>Não teremos vendas de refeições avulsas</strong>. A escolha do alimentação é{' '}
+                    <strong>obrigatória</strong>.
                     <em className="discount-description text-success small">
                       {getCategoryDiscountDescription('Alimentação')}
                     </em>
