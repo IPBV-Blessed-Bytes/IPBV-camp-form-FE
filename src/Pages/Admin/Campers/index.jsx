@@ -668,7 +668,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Categoria:',
-        accessor: (row) => row.personalInformation.gender?.replace(/ç/g, 'c') || '-',
+        accessor: (row) =>
+          row.personalInformation.gender
+            ?.replace(/ç/g, 'c')
+            .replace(/^Homem$/i, 'Homem')
+            .replace(/^Mulher$/i, 'Mulher')
+            .replace(/^Crianca$/i, 'Crianca') || '-',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -791,13 +796,26 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Hospedagem:',
-        accessor: 'package.accomodationName',
+        accessor: (row) =>
+          row.package.accomodationName === 'Colégio Quarto Coletivo' ||
+          row.package.accomodationName === 'Colegio Quarto Coletivo'
+            ? 'Colégio Quarto Coletivo'
+            : row.package.accomodationName === 'Colégio Quarto Família' ||
+              row.package.accomodationName === 'Colegio Quarto Familia'
+            ? 'Colégio Quarto Família'
+            : row.package.accomodationName === 'Colégio Camping' || row.package.accomodationName === 'Colegio Camping'
+            ? 'Colégio Camping'
+            : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
+            ? 'Seminário'
+            : row.package.accomodationName === 'Externo'
+            ? 'Externo'
+            : '',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
             options={[
               { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
-              { value: 'Colégio Quarto Familia', label: 'Colégio Quarto Família' },
+              { value: 'Colégio Quarto Família', label: 'Colégio Quarto Família' },
               { value: 'Colégio Camping', label: 'Colégio Camping' },
               { value: 'Seminário', label: 'Seminário São José' },
               { value: 'Externo', label: 'Outra Hospedagem Externa' },
@@ -808,10 +826,15 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Transporte:',
+        accessor: (row) =>
+          row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
+            ? 'Com Ônibus'
+            : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
+            ? 'Sem Ônibus'
+            : '',
         accessor: 'package.transportationName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
@@ -836,17 +859,23 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Alimentação:',
+        accessor: (row) =>
+          row.package.foodName === 'Alimentação Completa' || row.package.foodName === 'Alimentacao Completa'
+            ? 'Alimentação Completa'
+            : row.package.foodName === 'Sem Alimentação' || row.package.foodName === 'Sem Alimentacao'
+            ? 'Sem Alimentação'
+            : '',
         accessor: 'package.foodName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
             options={[
               {
-                value: 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)',
-                label: 'Alimentação Completa (Café, Almoço e Jantar)',
+                value: 'Alimentacao Completa',
+                label: 'Alimentação Completa',
               },
               {
-                value: 'Sem Alimentação',
+                value: 'Sem Alimentacao',
                 label: 'Sem Alimentação',
               },
               // { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
