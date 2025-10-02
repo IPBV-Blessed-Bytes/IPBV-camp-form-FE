@@ -11,6 +11,7 @@ import { useCart } from 'react-use-cart';
 import { BASE_URL, USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
+import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 
 import useAuth from '@/hooks/useAuth';
@@ -328,10 +329,7 @@ const RoutesValidations = ({ formContext }) => {
 
         const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
 
-        let registrationFee = registrationFeePerUser;
-        if (age <= 8) registrationFee = 0;
-        else if (age <= 14) registrationFee = registrationFee / 2;
-
+        const registrationFee = calculateRegistrationFee(registrationFeePerUser, age);
         const subtotal =
           Number(accomodationPrice) +
           Number(transportationPrice) +
