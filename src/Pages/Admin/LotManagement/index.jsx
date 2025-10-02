@@ -32,7 +32,7 @@ const defaultVacancies = {
   bus: '',
 };
 
-const AdminLotManagement = ({ loading, loggedUsername }) => {
+const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   const [loadingContent, setLoadingContent] = useState(false);
   const [lots, setLots] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -85,6 +85,17 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   };
 
   const updateLot = async (lot) => {
+    if (hasDateConflict(lot, lots)) {
+      toast.error('Datas em conflito com outro lote');
+      return;
+    }
+
+    const overflow = hasVacancyOverflow(lots, packageCount, lot);
+    if (overflow) {
+      toast.error(`As vagas de ${overflow} excedem o limite disponível`);
+      return;
+    }
+
     try {
       setLoadingContent(true);
       await fetcher.patch(`lots/${lot.id}`, {
@@ -122,7 +133,36 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
+  const hasDateConflict = (lotToCheck, allLots) => {
+    const start = parseDate(lotToCheck.startDate);
+    const end = parseDate(lotToCheck.endDate);
+
+    return allLots.some((lot) => {
+      if (lot.id === lotToCheck.id) return false;
+
+      const lotStart = parseDate(lot.startDate);
+      const lotEnd = parseDate(lot.endDate);
+
+      if (!start || !end || !lotStart || !lotEnd) return false;
+
+      const hasNoConflict = end < lotStart || start > lotEnd;
+
+      return !hasNoConflict;
+    });
+  };
+
   const handleAddLot = async () => {
+    if (hasDateConflict(newLot, lots)) {
+      toast.error('Datas em conflito com outro lote');
+      return;
+    }
+
+    const overflow = hasVacancyOverflow([...lots, newLot], packageCount);
+    if (overflow) {
+      toast.error(`As vagas de ${overflow} excedem o limite disponível`);
+      return;
+    }
+
     try {
       setLoadingContent(true);
       await fetcher.post('lots', {
@@ -149,6 +189,42 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     } finally {
       setLoadingContent(false);
     }
+  };
+
+  const hasVacancyOverflow = (lots, packageCount, lotToCheck = null) => {
+    const effectiveLots = lotToCheck ? lots.map((l) => (l.id === lotToCheck.id ? lotToCheck : l)) : lots;
+
+    const totalVacancies = effectiveLots.reduce(
+      (acc, lot) => {
+        acc.seminary += Number(lot.vacancies?.seminary || 0);
+        acc.school += Number(lot.vacancies?.school || 0);
+        acc.otherAccomodation += Number(lot.vacancies?.otherAccomodation || 0);
+        acc.bus += Number(lot.vacancies?.bus || 0);
+        return acc;
+      },
+      { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 },
+    );
+
+    const macro = {
+      seminary: packageCount?.totalPackages?.seminary || 0,
+      school:
+        (packageCount?.totalPackages?.schoolIndividual || 0) +
+        (packageCount?.totalPackages?.schoolFamily || 0) +
+        (packageCount?.totalPackages?.schoolCamping || 0),
+      otherAccomodation: packageCount?.totalPackages?.other || 0,
+      bus: packageCount?.totalBusVacancies || 0,
+    };
+
+    const totalSeatsMacro = packageCount?.totalSeats || 0;
+    const totalSeatsMicro = totalVacancies.seminary + totalVacancies.school + totalVacancies.otherAccomodation;
+
+    if (totalVacancies.seminary > macro.seminary) return 'Seminário';
+    if (totalVacancies.school > macro.school) return 'Escola';
+    if (totalVacancies.otherAccomodation > macro.otherAccomodation) return 'Externo';
+    if (totalVacancies.bus > macro.bus) return 'Ônibus';
+    if (totalSeatsMicro > totalSeatsMacro) return 'Total de Vagas';
+
+    return null;
   };
 
   const priceLabels = {
