@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -30,6 +30,65 @@ const defaultVacancies = {
   school: '',
   otherAccomodation: '',
   bus: '',
+};
+
+const LotsSummary = ({ lots, packageCount }) => {
+  const getTotalVacancies = (lots) => {
+    return lots.reduce(
+      (acc, lot) => {
+        acc.seminary += Number(lot.vacancies?.seminary || 0);
+        acc.school += Number(lot.vacancies?.school || 0);
+        acc.otherAccomodation += Number(lot.vacancies?.otherAccomodation || 0);
+        acc.bus += Number(lot.vacancies?.bus || 0);
+        return acc;
+      },
+      { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 },
+    );
+  };
+
+  const totals = getTotalVacancies(lots);
+
+  const macro = {
+    seminary: packageCount?.totalPackages?.seminary || 0,
+    school:
+      (packageCount?.totalPackages?.schoolIndividual || 0) +
+      (packageCount?.totalPackages?.schoolFamily || 0) +
+      (packageCount?.totalPackages?.schoolCamping || 0),
+    otherAccomodation: packageCount?.totalPackages?.other || 0,
+    bus: packageCount?.totalBusVacancies || 0,
+  };
+
+  const totalSeatsMacro = packageCount?.totalSeats || 0;
+  const totalSeatsMicro = totals.seminary + totals.school + totals.otherAccomodation;
+
+  const renderStat = (label, used, max) => (
+    <ListGroup.Item className="d-flex justify-content-between align-items-center">
+      {label}
+      <Badge bg={used > max ? 'danger' : 'primary'}>
+        {used}/{max}
+      </Badge>
+    </ListGroup.Item>
+  );
+
+  return (
+    <Card className="mb-3 shadow">
+      <Card.Header as="h5">
+        <b>Resumo das Vagas:</b>
+      </Card.Header>
+      <ListGroup variant="flush">
+        {renderStat('Seminário', totals.seminary, macro.seminary)}
+        {renderStat('Escola', totals.school, macro.school)}
+        {renderStat('Externo', totals.otherAccomodation, macro.otherAccomodation)}
+        {renderStat('Ônibus', totals.bus, macro.bus)}
+        <ListGroup.Item className="d-flex justify-content-between align-items-center">
+          <strong>Total Geral:</strong>
+          <Badge bg={totalSeatsMicro > totalSeatsMacro ? 'danger' : 'success'}>
+            {totalSeatsMicro}/{totalSeatsMacro}
+          </Badge>
+        </ListGroup.Item>
+      </ListGroup>
+    </Card>
+  );
 };
 
 const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
@@ -267,6 +326,8 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
         headerToolsButtonFill={'#fff'}
         headerToolsButtonName="Adicionar Novo Lote"
       />
+
+      <LotsSummary lots={lots} packageCount={packageCount} />
 
       <Row className="justify-content-center">
         <Col>
