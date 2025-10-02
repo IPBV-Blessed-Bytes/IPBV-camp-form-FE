@@ -497,7 +497,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value, row }) => {
           const totalPrice = row.original.totalPrice;
 
-          if (totalPrice === "0") {
+          if (totalPrice === '0') {
             return 'Não Pagante';
           }
 
@@ -749,7 +749,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Desconto:',
-        accessor: 'appliedDiscount',
+        accessor: (row) => ({
+          appliedDiscount: row.appliedDiscount,
+          hasDiscount: row.hasDiscount,
+        }),
         Filter: ({ column }) => (
           <ColumnFilterWithTwoValues
             column={column}
@@ -765,8 +768,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithDiscount',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const hasDiscount = value != null && value !== '' && value !== '0';
-          return hasDiscount ? `Sim | Valor: ${value}` : 'Não';
+          const hasDiscount = value.appliedDiscount ? 'Sim' : !value.appliedDiscount ? 'Não' : '-';
+          const discountValueText = value.appliedDiscount !== '0' ? value.appliedDiscount : '-';
+          return `${hasDiscount} ${
+            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
+          }`;
         },
       },
       {
