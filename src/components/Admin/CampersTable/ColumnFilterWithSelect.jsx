@@ -1,19 +1,15 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
 
 const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
 
-  useEffect(() => {
-    onFilterChange();
-  }, [filterValue]);
-
   const handleChange = (e) => {
     const value = e.target.value;
     setFilter(value === 'all' ? undefined : value);
+    onFilterChange?.(value);
   };
 
   return (

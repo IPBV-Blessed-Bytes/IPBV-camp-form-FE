@@ -1,19 +1,13 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import Icons from '@/components/Global/Icons';
 
 const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
-  const [localFilterValue, setLocalFilterValue] = useState(column?.filterValue || '');
-  const setFilter = column?.setFilter || (() => {});
-
-  useEffect(() => {
-    onFilterChange();
-  }, [localFilterValue, onFilterChange]);
+  const filterValue = column?.filterValue;
+  const setFilter = column?.setFilter ?? (() => {});
 
   const handleChange = (e) => {
     const value = e.target.value;
-    setLocalFilterValue(value);
     if (value === 'sim') {
       setFilter(true);
     } else if (value === 'não') {
@@ -21,13 +15,17 @@ const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
     } else {
       setFilter(undefined);
     }
+
+    onFilterChange?.(value);
   };
+
+  const selectValue = filterValue === true ? 'sim' : filterValue === false ? 'não' : '';
 
   return (
     <div className="d-flex position-relative">
       <Form.Select
-        className={`form-select-lg-custom ${localFilterValue && 'actived-filter'}`}
-        value={localFilterValue}
+        className={`form-select-lg-custom ${selectValue && 'actived-filter'}`}
+        value={selectValue}
         onChange={handleChange}
         size="lg"
       >
@@ -38,7 +36,7 @@ const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
           </option>
         ))}
       </Form.Select>
-      {localFilterValue && <Icons className="filter-icon" typeIcon="filter" iconSize={24} fill="#4267a7" />}
+      {selectValue && <Icons className="filter-icon" typeIcon="filter" iconSize={24} fill="#4267a7" />}
     </div>
   );
 };
@@ -46,7 +44,7 @@ const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
 ColumnFilterWithTwoValues.propTypes = {
   column: PropTypes.shape({
     setFilter: PropTypes.func,
-    filterValue: PropTypes.string,
+    filterValue: PropTypes.any,
   }),
   options: PropTypes.arrayOf(
     PropTypes.shape({
