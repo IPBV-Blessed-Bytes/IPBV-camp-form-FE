@@ -97,7 +97,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const booleanValue =
       name === 'crew' ||
       name === 'pastoralFamily' ||
-      name === 'extraMeals.someFood' ||
       name === 'contact.car' ||
       name === 'contact.needRide' ||
       name === 'contact.isWhatsApp'
@@ -160,12 +159,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         rideObservation: data.contact?.rideObservation || '',
         allergy: data.contact?.allergy || '',
         aggregate: data.contact?.aggregate || '',
-      },
-      extraMeals: {
-        someFood: data.extraMeals?.someFood === true || data.extraMeals?.someFood === 'true',
-        extraMeals: Array.isArray(data.extraMeals?.extraMeals)
-          ? data.extraMeals.extraMeals.join(', ')
-          : data.extraMeals?.extraMeals || '',
       },
       formPayment: {
         formPayment: typeof data.formPayment === 'object' ? data.formPayment.formPayment || '' : data.formPayment || '',
@@ -911,7 +904,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                 value: 'Sem Alimentacao',
                 label: 'Sem Alimentação',
               },
-              // { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -921,40 +913,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
-      // {
-      //   Header: 'Refeição Extra:',
-      //   accessor: (row) => ({
-      //     someFood: row.extraMeals.someFood,
-      //     extraMeals: Array.isArray(row.extraMeals.extraMeals)
-      //       ? row.extraMeals.extraMeals
-      //       : [row.extraMeals.extraMeals],
-      //   }),
-      //   Filter: ({ column }) => (
-      //     <ColumnFilterWithTwoValues
-      //       column={column}
-      //       options={[
-      //         { value: 'sim', label: 'Sim' },
-      //         { value: 'não', label: 'Não' },
-      //       ]}
-      //       onFilterChange={() => {
-      //         setFilteredRows(column.filteredRows);
-      //       }}
-      //     />
-      //   ),
-      //   filter: 'selectWithExtraMeals',
-      //   sortType: 'alphanumeric',
-      //   Cell: ({ value }) => {
-      //     const someFoodText = value.someFood ? 'Sim' : !value.someFood ? 'Não' : '-';
-      //     const extraMealsText =
-      //       !value.extraMeals || (Array.isArray(value.extraMeals) && value.extraMeals.every((item) => item === ''))
-      //         ? '-'
-      //         : Array.isArray(value.extraMeals)
-      //         ? value.extraMeals.filter(Boolean).join(', ')
-      //         : '-';
-
-      //     return `${someFoodText} ${extraMealsText !== '-' ? `| Dias: ${extraMealsText}` : ''}`;
-      //   },
-      // },
       {
         Header: 'Nome do Resp. Legal:',
         accessor: 'personalInformation.legalGuardianName',
@@ -1199,13 +1157,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
-  // const selectWithExtraMeals = (rows, id, filterValue) => {
-  //   return rows.filter((row) => {
-  //     const filterData = row.values[id];
-  //     return filterValue === undefined || filterData.someFood === filterValue;
-  //   });
-  // };
-
   const selectWithDiscount = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
@@ -1276,7 +1227,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       filterTypes: {
         selectWithRide,
         selectWithCellphone,
-        // selectWithExtraMeals,
         selectWithDiscount,
         selectWithCheckin,
         selectWithManualRegistration,
@@ -1338,9 +1288,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'package.transportationName': 'Transporte',
       'package.foodName': 'Alimentação',
       'package.price': 'Valor do pacote',
-      // 'extraMeals.someFood': 'Tem Refeição Extra',
-      // 'extraMeals.extraMeals': 'Refeições Extra',
-      // 'extraMeals.totalPrice': 'Valor Refeição Extra',
       'personalInformation.legalGuardianName': 'Nome do Responsável Legal',
       'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
@@ -1382,9 +1329,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Transporte',
       'Alimentação',
       'Valor do pacote',
-      // 'Tem Refeição Extra',
-      // 'Refeições Extra',
-      // 'Valor Refeição Extra',
       'Nome do Responsável Legal',
       'CPF do Responsável Legal',
       'Celular do Responsável Legal',

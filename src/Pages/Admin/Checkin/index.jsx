@@ -226,10 +226,6 @@ const AdminCheckin = ({ loggedUsername }) => {
               <p>
                 <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
               </p>
-              <p>
-                <strong>Dias de Refeição Extra:</strong>{' '}
-                {userInfo.extraMeals.extraMeals ? userInfo.extraMeals.extraMeals : '-'}
-              </p>
             </Col>
           </Row>
 
