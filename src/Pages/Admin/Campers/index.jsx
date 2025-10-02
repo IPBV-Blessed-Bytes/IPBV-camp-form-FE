@@ -160,6 +160,18 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         allergy: data.contact?.allergy || '',
         aggregate: data.contact?.aggregate || '',
       },
+      extraMeals: {
+        someFood: data.extraMeals?.someFood === true || data.extraMeals?.someFood === 'true',
+        extraMeals: Array.isArray(data.extraMeals?.extraMeals)
+          ? data.extraMeals.extraMeals.join(', ')
+          : data.extraMeals?.extraMeals || '',
+      },
+      extraMeals: {
+        someFood: data.extraMeals?.someFood === true || data.extraMeals?.someFood === 'true',
+        extraMeals: Array.isArray(data.extraMeals?.extraMeals)
+          ? data.extraMeals.extraMeals.join(', ')
+          : data.extraMeals?.extraMeals || '',
+      },
       formPayment: {
         formPayment: typeof data.formPayment === 'object' ? data.formPayment.formPayment || '' : data.formPayment || '',
       },
