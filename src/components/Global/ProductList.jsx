@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 
-const ProductList = forwardRef(({ age, cartKey, category, products, packageCount }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category, products, packageCount, vacancies }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [productsState, setProductsState] = useState(products || []);
   const hasRestoredCart = useRef(false);
@@ -38,39 +38,44 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     }
   }, [items]);
 
-  const getAvailability = (product, packageCount) => {
+  const getAvailability = (product, vacancies, usedValidPackages) => {
     if (age < 9) return true;
 
-    if (!packageCount) return true;
-
-    const { totalPackages, usedValidPackages, totalBusVacancies } = packageCount;
-
-    if (product.id === 'bus-yes') {
-      const usedBus = Object.entries(usedValidPackages)
-        .filter(([key]) => key.includes('WithBus'))
-        .reduce((acc, [, val]) => acc + val, 0);
-      return usedBus < totalBusVacancies;
-    }
-
-    const packageKeys = {
-      'host-seminario': 'seminary',
-      'host-college-collective': 'schoolIndividual',
-      'host-college-family': 'schoolFamily',
-      'host-college-camping': 'schoolCamping',
-      'host-external': 'other',
+    const getUsedCount = (matcher) => {
+      return Object.entries(usedValidPackages || {}).reduce((acc, [key, value]) => {
+        if (key.toLowerCase().includes(matcher.toLowerCase())) {
+          return acc + Number(value || 0);
+        }
+        return acc;
+      }, 0);
     };
 
-    const key = packageKeys[product.id];
-    if (key) {
-      const total = totalPackages[key] || 0;
+    if (product.id === 'bus-yes') {
+      const totalBus = Number(vacancies?.bus || 0);
+      const usedBus = getUsedCount('withBus');
+      return totalBus > usedBus;
+    }
 
-      const used =
-        (usedValidPackages[`${key}WithBusWithFood`] || 0) +
-        (usedValidPackages[`${key}WithBusWithoutFood`] || 0) +
-        (usedValidPackages[`${key}WithoutBusWithFood`] || 0) +
-        (usedValidPackages[`${key}WithoutBusWithoutFood`] || 0);
+    if (product.id === 'host-seminario') {
+      const total = Number(vacancies?.seminary || 0);
+      const used = getUsedCount('seminary');
+      return total > used;
+    }
 
-      return used < total;
+    if (product.id.startsWith('host-college')) {
+      const total = Number(vacancies?.school || 0);
+      const used = getUsedCount('school');
+      return total > used;
+    }
+
+    if (product.id === 'host-external') {
+      const total = Number(vacancies?.otherAccomodation || 0);
+      const used = getUsedCount('other');
+      return total > used;
+    }
+
+    if (product.category === 'Alimentação') {
+      return true;
     }
 
     return true;
@@ -120,7 +125,7 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
         <div className="product-grid">
           {filtered.map((product) => {
             const alreadySelected = !!getItem(product.id);
-            const isAvailable = getAvailability(product, packageCount);
+            const isAvailable = getAvailability(product, vacancies, packageCount?.usedValidPackages);
 
             return (
               <div
@@ -164,6 +169,7 @@ ProductList.propTypes = {
   category: PropTypes.string.isRequired,
   packageCount: PropTypes.object,
   products: PropTypes.array.isRequired,
+  vacancies: PropTypes.object,
 };
 
 export default ProductList;
