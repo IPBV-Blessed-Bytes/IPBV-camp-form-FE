@@ -64,13 +64,6 @@ export let products = [
     description: 'Sem refeições',
     category: 'Alimentação',
   },
-   // {
-  //   id: 'food-external',
-  //   name: 'Alimentação Parcial',
-  //   price: 240,
-  //   description: 'Apenas almoço e jantar. Café da manhã não incluso',
-  //   category: 'Alimentação',
-  // },
 ];
 
 export const loadProducts = async () => {
@@ -79,25 +72,39 @@ export const loadProducts = async () => {
     const data = response.data;
 
     if (data.lots && data.lots.length > 0) {
-      const lot = data.lots[0];
-      products = products.map((product) => {
-        switch (product.id) {
-          case 'host-seminario':
-            return { ...product, price: Number(lot.price.seminary) };
-          case 'host-college-collective':
-          case 'host-college-family':
-          case 'host-college-camping':
-            return { ...product, price: Number(lot.price.school) };
-          case 'host-external':
-            return { ...product, price: Number(lot.price.otherAccomodation) };
-          case 'bus-yes':
-            return { ...product, price: Number(lot.price.bus) };
-          case 'food-complete':
-            return { ...product, price: Number(lot.price.food) };
-          default:
-            return product;
-        }
+      const today = new Date();
+      const formatDate = (str) => {
+        const [day, month, year] = str.split('/');
+        return new Date(`${year}-${month}-${day}T00:00:00`);
+      };
+
+      const activeLot = data.lots.find((lot) => {
+        const start = formatDate(lot.startDate);
+        const end = formatDate(lot.endDate);
+        end.setHours(23, 59, 59, 999);
+        return today >= start && today <= end;
       });
+
+      if (activeLot) {
+        products = products.map((product) => {
+          switch (product.id) {
+            case 'host-seminario':
+              return { ...product, price: Number(activeLot.price.seminary) };
+            case 'host-college-collective':
+            case 'host-college-family':
+            case 'host-college-camping':
+              return { ...product, price: Number(activeLot.price.school) };
+            case 'host-external':
+              return { ...product, price: Number(activeLot.price.otherAccomodation) };
+            case 'bus-yes':
+              return { ...product, price: Number(activeLot.price.bus) };
+            case 'food-complete':
+              return { ...product, price: Number(activeLot.price.food) };
+            default:
+              return product;
+          }
+        });
+      }
     }
 
     return products;
