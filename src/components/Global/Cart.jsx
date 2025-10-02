@@ -3,6 +3,7 @@ import { Button, Modal, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 
@@ -80,12 +81,6 @@ const renderUserTotalInfo = (user, age) => {
   );
 };
 
-const getIndividualBaseFromLot = (age, rawFee) => {
-  if (age <= 8) return 0;
-  if (age <= 14) return rawFee / 2;
-  return rawFee;
-};
-
 const Cart = ({
   cartKey,
   formValues = [],
@@ -116,14 +111,14 @@ const Cart = ({
     const { accomodation, transportation, food } = getDiscountedPrices(user, age);
     const extraMeals = Number(user.extraMeals?.totalPrice || 0);
     const discount = Number(user.package?.discount || 0);
-    const individualBase = getIndividualBaseFromLot(age, rawFee);
+    const registrationFee = calculateRegistrationFee(rawFee, age);
 
     const total = Math.max(
       Number(accomodation) +
         Number(transportation) +
         Number(food) +
         (user.package?.food?.id ? 0 : Number(extraMeals)) +
-        Number(individualBase) -
+        Number(registrationFee) -
         Number(discount),
       0,
     );
@@ -136,12 +131,10 @@ const Cart = ({
     }
   }, [finalTotal, setCartTotal]);
 
- useEffect(() => {
-  if (!formValues.length || rawFee === undefined) return;
-  
-    const validUsers = formValues.filter(
-      (user) => user?.personalInformation?.name?.trim()
-    );
+  useEffect(() => {
+    if (!formValues.length || rawFee === undefined) return;
+
+    const validUsers = formValues.filter((user) => user?.personalInformation?.name?.trim());
 
     if (!validUsers.length) {
       handleBasePriceChange(0);
@@ -150,15 +143,13 @@ const Cart = ({
 
     const firstPayingUser = validUsers.find((user) => {
       const age = calculateAge(new Date(user.personalInformation.birthday));
-      const individualBase = getIndividualBaseFromLot(age, rawFee);
-      return individualBase > 0;
+      const registrationFee = calculateRegistrationFee(rawFee, age);
+
+      return registrationFee > 0;
     });
 
     const baseTotal = firstPayingUser
-      ? getIndividualBaseFromLot(
-          calculateAge(new Date(firstPayingUser.personalInformation.birthday)),
-          rawFee
-        )
+      ? calculateRegistrationFee(rawFee, calculateAge(new Date(firstPayingUser.personalInformation.birthday)))
       : 0;
 
     handleBasePriceChange(baseTotal);
@@ -196,7 +187,7 @@ const Cart = ({
       {validUsers.map((user, index) => {
         const userName = user.personalInformation.name || `Pessoa ${index + 1}`;
         const age = calculateAge(new Date(user.personalInformation.birthday));
-        const individualBase = getIndividualBaseFromLot(age, rawFee);
+        const registrationFee = calculateRegistrationFee(rawFee, age);
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
@@ -241,7 +232,7 @@ const Cart = ({
 
               <div className="packages-horizontal-line-cart"></div>
 
-              {renderUserTotalInfo(user, age, individualBase)}
+              {renderUserTotalInfo(user, age, registrationFee)}
             </Card.Body>
           </Card>
         );

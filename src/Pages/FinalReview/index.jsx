@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
+import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
@@ -106,11 +107,9 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
-  let individualBase = rawFee;
-  if (age <= 8) individualBase = 0;
-  else if (age <= 14) individualBase = rawFee / 2;
+  const registrationFee = calculateRegistrationFee(rawFee, age);
 
-  const totalBeforeDiscount = packageOriginalPrice + individualBase + extraMealsPrice;
+  const totalBeforeDiscount = packageOriginalPrice + registrationFee + extraMealsPrice;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
   return (
