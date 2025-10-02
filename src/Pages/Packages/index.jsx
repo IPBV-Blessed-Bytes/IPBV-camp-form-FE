@@ -30,6 +30,8 @@ const Packages = ({
   const [individualBase, setIndividualBase] = useState(0);
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
+  const [vacancies, setVacancies] = useState({});
+  const [activeLot, setActiveLot] = useState(null);
 
   useEffect(() => {
     const fetchLotsAndProducts = async () => {
@@ -40,16 +42,48 @@ const Packages = ({
         const lots = response.data?.lots || [];
 
         if (lots.length > 0) {
-          const lot = lots[0];
+          const today = new Date();
+          const formatDate = (str) => {
+            const [day, month, year] = str.split('/');
+            return new Date(`${year}-${month}-${day}T00:00:00`);
+          };
 
-          let fee = Number(lot.price.registrationFee || 0);
-          if (age <= 8) fee = 0;
-          else if (age <= 14) fee = fee / 2;
+          const foundLot = lots.find((lot) => {
+            const start = formatDate(lot.startDate);
+            const end = formatDate(lot.endDate);
+            end.setHours(23, 59, 59, 999);
 
-          setIndividualBase(fee);
+            return today >= start && today <= end;
+          });
+
+          if (foundLot) {
+            setActiveLot(foundLot);
+
+            let fee = Number(foundLot.price.registrationFee || 0);
+            if (age <= 8) fee = 0;
+            else if (age <= 14) fee = fee / 2;
+
+            setIndividualBase(fee);
+
+            const updatedWithLotPrices = updatedProducts.map((prod) => {
+              if (prod.category === 'Hospedagem') {
+                if (prod.id === 'host-seminario') return { ...prod, price: foundLot.price.seminary };
+                if (prod.id.startsWith('host-college')) return { ...prod, price: foundLot.price.school };
+                if (prod.id === 'host-external') return { ...prod, price: foundLot.price.otherAccomodation };
+              }
+              if (prod.category === 'Transporte' && prod.id === 'bus-yes') {
+                return { ...prod, price: foundLot.price.bus };
+              }
+              if (prod.category === 'Alimentação' && prod.id.startsWith('food')) {
+                return { ...prod, price: foundLot.price.food };
+              }
+              return prod;
+            });
+
+            setProductsState(updatedWithLotPrices);
+            setVacancies(foundLot.vacancies);
+          }
         }
-
-        setProductsState(updatedProducts);
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
         setIndividualBase(0);
@@ -125,10 +159,7 @@ const Packages = ({
     newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
-      // const foodId = newPackage.food?.id || '';
-      // const hasFood = foodId === 'food-complete' || foodId === 'food-external';
       const hasFood = true;
-
       const skipToReview = hasFood;
       nextStep(skipToReview);
     });
@@ -173,6 +204,7 @@ const Packages = ({
             <>
               <Card className="mb-3">
                 <Card.Body>
+                  <h1 className="packages-page__lot-title">• {activeLot?.name} •</h1>
                   <Card.Title>Hospedagem</Card.Title>
                   <Card.Text>
                     Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
@@ -187,6 +219,7 @@ const Packages = ({
                     products={productsState}
                     ref={productListRef}
                     packageCount={packageCount}
+                    vacancies={vacancies}
                   />
                 </Card.Body>
               </Card>
@@ -208,6 +241,7 @@ const Packages = ({
                     products={productsState}
                     ref={productListRef}
                     packageCount={packageCount}
+                    vacancies={vacancies}
                   />
                 </Card.Body>
               </Card>
@@ -230,6 +264,7 @@ const Packages = ({
                     products={productsState}
                     ref={productListRef}
                     packageCount={packageCount}
+                    vacancies={vacancies}
                   />
                 </Card.Body>
               </Card>
