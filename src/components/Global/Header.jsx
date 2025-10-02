@@ -22,7 +22,6 @@ const Header = ({
     'Informações Pessoais',
     'Contato',
     'Pacote',
-    // 'Refeição Extra',
     'Revisão',
     'Carrinho',
     'Pagamento',
