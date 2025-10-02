@@ -3,11 +3,10 @@ export const enumSteps = {
   personalData: 1,
   contact: 2,
   packages: 3,
-  extraMeals: 4,
-  finalReview: 5,
-  beforePayment: 6,
-  formPayment: 7,
-  success: 8,
+  finalReview: 4,
+  beforePayment: 5,
+  formPayment: 6,
+  success: 7,
 };
 
 export const initialValues = [
