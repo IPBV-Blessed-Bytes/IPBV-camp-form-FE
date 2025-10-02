@@ -203,7 +203,7 @@ const Packages = ({
             <>
               <Card className="mb-3">
                 <Card.Body>
-                  <h1 className="packages-page__lot-title">• {activeLot?.name} •</h1>
+                  <h1 className="packages-page__lot-title">{activeLot?.name}</h1>
                   <Card.Title>Hospedagem</Card.Title>
                   <Card.Text>
                     Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
