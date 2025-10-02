@@ -501,14 +501,24 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) =>
-          value === 'creditCard'
-            ? 'Cartão de Crédito'
-            : value === 'pix'
-            ? 'PIX'
-            : value === 'boleto'
-            ? 'Boleto Bancário'
-            : 'Não pagante',
+        Cell: ({ value, row }) => {
+          const totalPrice = row.original.totalPrice;
+
+          if (totalPrice === "0") {
+            return 'Não Pagante';
+          }
+
+          switch (value) {
+            case 'creditCard':
+              return 'Cartão de Crédito';
+            case 'pix':
+              return 'PIX';
+            case 'boleto':
+              return 'Boleto Bancário';
+            default:
+              return 'Não Pagante';
+          }
+        },
       },
       {
         Header: 'Igreja:',
