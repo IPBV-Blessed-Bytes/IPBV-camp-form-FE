@@ -378,7 +378,7 @@ const FormRoutes = ({
             path="/admin/lotes"
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminLotManagement loading={loading} loggedUsername={loggedUsername} />
+                <AdminLotManagement loading={loading} loggedUsername={loggedUsername} packageCount={packageCount} />
               </ProtectedRoute>
             }
           />
