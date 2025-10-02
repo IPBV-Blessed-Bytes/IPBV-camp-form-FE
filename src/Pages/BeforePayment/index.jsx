@@ -11,6 +11,7 @@ import Loading from '@/components/Global/Loading';
 import { loadProducts } from '../Packages/utils/products';
 import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
+import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 
 const BeforePayment = ({
   cartKey,
@@ -85,11 +86,9 @@ const BeforePayment = ({
         Number(food) +
         (user.package?.food?.id ? 0 : Number(extraMeals));
 
-      let fee = rawFee;
-      if (age <= 8) fee = 0;
-      else if (age <= 14) fee = rawFee / 2;
+      const registrationFee = calculateRegistrationFee(rawFee, age);
 
-      const userTotalWithFee = packageTotal + fee;
+      const userTotalWithFee = packageTotal + registrationFee;
 
       const appliedDiscount = Math.min(userTotalWithFee, discount);
       const finalPrice = userTotalWithFee - appliedDiscount;
@@ -128,11 +127,9 @@ const BeforePayment = ({
           if (enteredFromFinalReview) {
             let calculatedTotalFee = validFormValues.reduce((sum, user) => {
               const age = calculateAge(new Date(user.personalInformation.birthday));
-              let fee = rawFee;
-              if (age <= 8) fee = 0;
-              else if (age <= 14) fee = fee / 2;
+              const registrationFee = calculateRegistrationFee(rawFee, age);
 
-              return sum + fee;
+              return sum + registrationFee;
             }, 0);
 
             feeToSet = calculatedTotalFee;

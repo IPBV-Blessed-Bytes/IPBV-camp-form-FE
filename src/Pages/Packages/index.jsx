@@ -8,6 +8,7 @@ import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
+import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import fetcher from '@/fetchers';
 import Loading from '@/components/Global/Loading';
 
@@ -59,11 +60,9 @@ const Packages = ({
           if (foundLot) {
             setActiveLot(foundLot);
 
-            let fee = Number(foundLot.price.registrationFee || 0);
-            if (age <= 8) fee = 0;
-            else if (age <= 14) fee = fee / 2;
+            const registrationFee = calculateRegistrationFee(Number(foundLot.price.registrationFee || 0), age);
 
-            setIndividualBase(fee);
+            setIndividualBase(registrationFee);
 
             const updatedWithLotPrices = updatedProducts.map((prod) => {
               if (prod.category === 'Hospedagem') {
