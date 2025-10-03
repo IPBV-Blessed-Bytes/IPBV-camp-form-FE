@@ -112,35 +112,49 @@ const BeforePayment = ({
       try {
         await loadProducts();
         const response = await fetcher.get('lots');
-        const lots = response.data.lots || [];
+        const lots = response.data?.lots || [];
 
         if (lots.length > 0) {
-          const lot = lots[0];
-          const rawFee = Number(lot.price.registrationFee || 0);
-          setRawFee(rawFee);
+          const today = new Date();
+          const formatDate = (str) => {
+            const [day, month, year] = str.split('/');
+            return new Date(`${year}-${month}-${day}T00:00:00`);
+          };
 
-          const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
-          const savedTotalFee = Number(sessionStorage.getItem('totalFee') || 0);
+          const foundLot = lots.find((lot) => {
+            const start = formatDate(lot.startDate);
+            const end = formatDate(lot.endDate);
+            end.setHours(23, 59, 59, 999);
+            return today >= start && today <= end;
+          });
 
-          let feeToSet = 0;
+          if (foundLot) {
+            const rawFee = Number(foundLot.price.registrationFee || 0);
+            setRawFee(rawFee);
 
-          if (enteredFromFinalReview) {
-            let calculatedTotalFee = validFormValues.reduce((sum, user) => {
-              const age = calculateAge(new Date(user.personalInformation.birthday));
-              const registrationFee = calculateRegistrationFee(rawFee, age);
+            const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
+            const savedTotalFee = Number(sessionStorage.getItem('totalFee') || 0);
 
-              return sum + registrationFee;
-            }, 0);
+            let feeToSet = 0;
 
-            feeToSet = calculatedTotalFee;
+            if (enteredFromFinalReview) {
+              const calculatedTotalFee = validFormValues.reduce((sum, user) => {
+                const age = calculateAge(new Date(user.personalInformation.birthday));
+                const registrationFee = calculateRegistrationFee(rawFee, age);
 
-            sessionStorage.setItem('totalFee', feeToSet);
-            sessionStorage.setItem('enteredFromFinalReview', 'false');
-          } else {
-            feeToSet = savedTotalFee;
+                return sum + registrationFee;
+              }, 0);
+
+              feeToSet = calculatedTotalFee;
+
+              sessionStorage.setItem('totalFee', feeToSet);
+              sessionStorage.setItem('enteredFromFinalReview', 'false');
+            } else {
+              feeToSet = savedTotalFee;
+            }
+
+            setIndividualBase(feeToSet);
           }
-
-          setIndividualBase(feeToSet);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
