@@ -31,15 +31,32 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
     const fetchLots = async () => {
       try {
         const response = await fetcher.get('lots');
-        const lots = response.data.lots || [];
+        const lots = response.data?.lots || [];
+
         if (lots.length > 0) {
-          const lot = lots[0];
-          setRawFee(Number(lot.price.registrationFee || 0));
+          const today = new Date();
+
+          const formatDate = (str) => {
+            const [day, month, year] = str.split('/');
+            return new Date(`${year}-${month}-${day}T00:00:00`);
+          };
+
+          const foundLot = lots.find((lot) => {
+            const start = formatDate(lot.startDate);
+            const end = formatDate(lot.endDate);
+            end.setHours(23, 59, 59, 999);
+            return today >= start && today <= end;
+          });
+
+          if (foundLot) {
+            setRawFee(Number(foundLot.price.registrationFee || 0));
+          }
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
       }
     };
+
     fetchLots();
   }, []);
 
