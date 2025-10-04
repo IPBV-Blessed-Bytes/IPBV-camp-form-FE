@@ -6,20 +6,27 @@ import { toast } from 'react-toastify';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 
-const FormHome = ({ nextStep }) => {
+const FormHome = ({ nextStep, onLgpdClose }) => {
   const location = useLocation();
   const [showLgpdModal, setShowLgpdModal] = useState(false);
 
   useEffect(() => {
+    setShowLgpdModal(true);
+  }, []);
+
+  const handleCloseLgpdModal = () => {
+    setShowLgpdModal(false);
+
     if (location.pathname === '/') {
       toast.info(
         'Favor cadastrar todas as pessoas da sua família, de todas as idades, a partir de 6 meses de vida até idosos. Não se esqueça de incluir seus filhos, mesmo que sejam bem pequenos, pois isso é essencial para o nosso controle de alimentação e para o departamento infantil!',
       );
-      setShowLgpdModal(true);
     }
-  }, [location]);
 
-  const handleCloseLgpdModal = () => setShowLgpdModal(false);
+    if (onLgpdClose) {
+      onLgpdClose();
+    }
+  };
 
   return (
     <>
@@ -155,6 +162,7 @@ const FormHome = ({ nextStep }) => {
 
 FormHome.propTypes = {
   nextStep: PropTypes.func,
+  onLgpdClose: PropTypes.func,
 };
 
 export default FormHome;
