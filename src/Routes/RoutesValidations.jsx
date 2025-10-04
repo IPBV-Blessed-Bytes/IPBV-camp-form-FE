@@ -314,22 +314,19 @@ const RoutesValidations = ({ formContext }) => {
       const discountList = JSON.parse(sessionStorage.getItem('discountList') || '[]');
       const registrationFeePerUser = basePriceTotal;
 
-      const formsToSend = formValues.map((form, index) => {
-        const birthdayRaw = form?.personalInformation?.birthday;
-        const birthday = new Date(birthdayRaw);
+      const buildFormPayload = (form, index) => {
+        const birthday = new Date(form?.personalInformation?.birthday);
         const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
         const discountedProducts = getDiscountedProducts(age);
-
-        const getProductPrice = (productId) => discountedProducts.find((p) => p.id === productId)?.price || 0;
+        const getProductPrice = (id) => discountedProducts.find((p) => p.id === id)?.price || 0;
 
         const accomodationPrice = getProductPrice(form.package?.accomodation?.id);
         const transportationPrice = getProductPrice(form.package?.transportation?.id);
         const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
-
         const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
-
         const registrationFee = calculateRegistrationFee(registrationFeePerUser, age);
+
         const subtotal =
           Number(accomodationPrice) +
           Number(transportationPrice) +
@@ -338,11 +335,8 @@ const RoutesValidations = ({ formContext }) => {
           Number(registrationFee);
 
         const rawDiscount = Number(discountList[index] || 0);
-
         const discount = Math.min(subtotal, rawDiscount);
-
         const totalPrice = subtotal - discount;
-
         const appliedDiscount = Math.min(totalPrice, rawDiscount);
 
         return {
@@ -372,11 +366,10 @@ const RoutesValidations = ({ formContext }) => {
           manualRegistration: false,
           appliedDiscount,
         };
-      });
+      };
 
-      const totalFromForms = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-
-      const finalPriceCheckout = totalFromForms;
+      const formsToSend = formValues.map(buildFormPayload);
+      const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
       const sanitizedForms = sanitizeForms(formsToSend);
       const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
@@ -384,20 +377,7 @@ const RoutesValidations = ({ formContext }) => {
         finalPriceCheckout,
       });
 
-      const checkoutUrl = response.data.payment_url;
-      const checkoutStatus = response.data.checkout_status;
-      setStatus('loaded');
-
-      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
-        window.open(checkoutUrl, '_self');
-        toast.success('Redirecionando para pagamento...');
-      } else if (response.status === 201 || response.status === 200) {
-        goToSuccessPage();
-        setFormSubmitted(true);
-        toast.success('Inscrição validada com sucesso');
-      } else if (checkoutStatus === 'Checkout Error') {
-        toast.error('Erro ao criar checkout');
-      }
+      handleCheckoutResponse(response);
     } catch (error) {
       setStatus('error');
       toast.error(error?.response?.data || 'Ocorreu um erro');
@@ -405,6 +385,23 @@ const RoutesValidations = ({ formContext }) => {
       sessionStorage.removeItem('previousUserData');
       sessionStorage.removeItem('savedUsers');
       setLoading(false);
+    }
+  };
+
+  const handleCheckoutResponse = (response) => {
+    const checkoutUrl = response.data.payment_url;
+    const checkoutStatus = response.data.checkout_status;
+    setStatus('loaded');
+
+    if (checkoutUrl && checkoutStatus === 'Checkout generated') {
+      window.open(checkoutUrl, '_self');
+      toast.success('Redirecionando para pagamento...');
+    } else if ([200, 201].includes(response.status)) {
+      goToSuccessPage();
+      setFormSubmitted(true);
+      toast.success('Inscrição validada com sucesso');
+    } else if (checkoutStatus === 'Checkout Error') {
+      toast.error('Erro ao criar checkout');
     }
   };
 
