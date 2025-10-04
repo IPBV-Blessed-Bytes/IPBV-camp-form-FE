@@ -108,3 +108,11 @@
     }
   }
 }
+
+.packages-page {
+  &__lot-title {
+    color: $primary;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+}
