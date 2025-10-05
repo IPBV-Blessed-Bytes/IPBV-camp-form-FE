@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { enumSteps } from '@/utils/constants';
@@ -96,6 +97,8 @@ const FormRoutes = ({
   usedPackages,
   usedValidPackages,
 }) => {
+  const [showInfoButton, setShowInfoButton] = useState(false);
+
   return (
     <div className="form">
       {!adminPathname && formPath && (
@@ -121,7 +124,10 @@ const FormRoutes = ({
                 <div className="form__container container">
                   <Row className="justify-content-center">
                     <Col lg={10} className="px-0">
-                      {steps === enumSteps.home && isNotSuccessPathname && <FormHome nextStep={nextStep} />}
+                      {steps === enumSteps.home && isNotSuccessPathname && (
+                        <FormHome nextStep={nextStep} onLgpdClose={() => setShowInfoButton(true)} />
+                      )}
+
                       {steps === enumSteps.personalData && isNotSuccessPathname && (
                         <FormPersonalData
                           backStep={backStep}
@@ -240,7 +246,7 @@ const FormRoutes = ({
                 </div>
               )}
 
-              <InfoButton timeout />
+              {showInfoButton && <InfoButton timeout />}
 
               {/* {(steps === enumSteps.home || steps === enumSteps.success) && (
                 <CustomCarousel

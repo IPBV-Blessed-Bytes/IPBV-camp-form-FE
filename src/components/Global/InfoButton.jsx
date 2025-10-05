@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
 
-const InfoButton = ({ timeout }) => {
+const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const whatsappButtonRef = useRef(null);
@@ -13,7 +13,7 @@ const InfoButton = ({ timeout }) => {
     if (timeout) {
       const timer = setTimeout(() => {
         setShowWhatsAppIcon(true);
-      }, 6000);
+      }, time || 6000);
 
       return () => clearTimeout(timer);
     } else {
