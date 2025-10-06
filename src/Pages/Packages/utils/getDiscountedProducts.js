@@ -8,14 +8,12 @@ const getDiscountedProducts = (ageRaw) => {
     let discountDescription = '';
 
     if (product.category === 'Hospedagem') {
-      if (product.id === 'host-seminario') {
-        if (age <= 8) {
-          price = 0;
-          discountDescription = 'Criança até 8 anos não paga hospedagem';
-        } else if (age >= 9 && age <= 14) {
-          price = price * 0.5;
-          discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na hospedagem';
-        }
+      if (age <= 8) {
+        price = 0;
+        discountDescription = 'Criança até 8 anos não paga hospedagem';
+      } else if (age >= 9 && age <= 14) {
+        price = price * 0.5;
+        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na hospedagem';
       }
     }
 
@@ -30,13 +28,17 @@ const getDiscountedProducts = (ageRaw) => {
     }
 
     if (product.category === 'Alimentação') {
-      if (age <= 8) {
+      if (age <= 8 && product.id === 'food-complete') {
         price = 0;
         discountDescription = 'Criança até 8 anos não paga alimentação';
-      } else if (age >= 9 && age <= 14) {
+      } else if (age >= 9 && age <= 14 && product.id === 'food-complete') {
         price = price * 0.5;
         discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na alimentação';
       }
+    }
+
+    if (product.price === 0) {
+      discountDescription = '';
     }
 
     return {
