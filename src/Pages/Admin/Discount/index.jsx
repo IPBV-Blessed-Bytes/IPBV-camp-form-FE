@@ -21,7 +21,7 @@ const AdminDiscount = ({ loggedUsername }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingDiscount, setEditingDiscount] = useState(null);
   const [discountToDelete, setDiscountToDelete] = useState(null);
-  const [newDiscount, setNewDiscount] = useState({ cpf: '', discount: '', user: '' });
+  const [newDiscount, setNewDiscount] = useState({ cpf: '', discount: '', user: '', discountReason: '' });
 
   scrollUp();
 
@@ -93,14 +93,11 @@ const AdminDiscount = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const deleteDiscount = {
-        ...discountToDelete,
-      };
-      await fetcher.delete(`coupon/${discountToDelete.id}`, { data: deleteDiscount });
+      await fetcher.delete(`coupon/${discountToDelete.id}`, { data: discountToDelete });
       toast.success('Desconto excluído com sucesso');
       setShowConfirmDelete(false);
       fetchDiscounts();
-      registerLog(`Excluiu o desconto atrelado ao CPF ${deleteDiscount.cpf}`, loggedUsername);
+      registerLog(`Excluiu o desconto atrelado ao CPF ${discountToDelete.cpf}`, loggedUsername);
     } catch (error) {
       toast.error('Erro ao excluir desconto');
     } finally {
@@ -110,7 +107,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const openModal = (discount) => {
     setEditingDiscount(discount);
-    setNewDiscount({ cpf: '', discount: '' });
+    setNewDiscount({ cpf: '', discount: '', discountReason: '' });
     setShowModal(true);
   };
 
@@ -143,6 +140,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       return {
         CPF: discount.cpf,
         'Valor Desconto': discount.discount,
+        'Motivo do Desconto': discount.discountReason || '-',
         Usuário: camper ? discount.user : 'NÃO UTILIZADO',
         'Valor Pago': camper ? camper.totalPrice : '-',
       };
@@ -180,6 +178,7 @@ const AdminDiscount = ({ loggedUsername }) => {
               <th className="table-cells-header">CPF atrelado:</th>
               <th className="table-cells-header">Valor Desconto:</th>
               <th className="table-cells-header">Usuário:</th>
+              <th className="table-cells-header">Motivo:</th>
               <th className="table-cells-header">Valor Pago:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
@@ -201,6 +200,7 @@ const AdminDiscount = ({ loggedUsername }) => {
                       </b>
                     )}
                   </td>
+                  <td>{discount.discountReason || '-'}</td>
                   <td>{camper ? camper.totalPrice : '-'}</td>
                   <td>
                     <Button variant="outline-success" onClick={() => openModal(discount)}>
@@ -257,6 +257,23 @@ const AdminDiscount = ({ loggedUsername }) => {
                     : setNewDiscount({ ...newDiscount, discount: e.target.value })
                 }
                 placeholder="000"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Motivo do Desconto:</b>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={editingDiscount ? editingDiscount.discountReason : newDiscount.discountReason}
+                size="lg"
+                onChange={(e) =>
+                  editingDiscount
+                    ? setEditingDiscount({ ...editingDiscount, discountReason: e.target.value })
+                    : setNewDiscount({ ...newDiscount, discountReason: e.target.value })
+                }
+                placeholder="Ex: Desconto pastoral, equipe, financeiro..."
               />
             </Form.Group>
           </Form>

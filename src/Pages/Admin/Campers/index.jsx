@@ -786,6 +786,20 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
+        Header: 'Motivo do Desconto:',
+        accessor: 'discountReason',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+      },
+      {
         Header: 'Alergia:',
         accessor: 'contact.allergy',
         Filter: ({ column }) => (
