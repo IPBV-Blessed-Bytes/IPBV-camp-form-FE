@@ -504,7 +504,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value, row }) => {
           const totalPrice = row.original.totalPrice;
 
-          if (totalPrice === "0") {
+          if (totalPrice === '0') {
             return 'Não Pagante';
           }
 
@@ -756,11 +756,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
         Cell: ({ value }) => value || '-',
       },
-       {
+      {
         Header: 'Desconto:',
         accessor: (row) => ({
           appliedDiscount: row.appliedDiscount,
-          hasDiscount: row.hasDiscount,
+          discountCoupon: row.package.discountCoupon,
         }),
         Filter: ({ column }) => (
           <ColumnFilterWithTwoValues
@@ -777,8 +777,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         filter: 'selectWithDiscount',
         sortType: 'alphanumeric',
         Cell: ({ value }) => {
-          const hasDiscount = value.appliedDiscount ? 'Sim' : !value.appliedDiscount ? 'Não' : '-';
-          const discountValueText = value.appliedDiscount !== '0' ? value.appliedDiscount : '-';
+          const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
+          const discountValueText =
+            value.appliedDiscount !== '0' && value.appliedDiscount !== null ? value.appliedDiscount : '-';
           return `${hasDiscount} ${
             discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
           }`;
@@ -1194,7 +1195,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const selectWithDiscount = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
-      return filterValue === undefined || filterData === filterValue;
+      return filterValue === undefined || filterData.discountCoupon === filterValue;
     });
   };
 
