@@ -47,7 +47,7 @@ const InfoButton = ({ timeout, time }) => {
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
         <button
           className="whatsapp-message-button"
-          onClick={() => window.open('https://wa.me/5581998390194', '_blank')}
+          onClick={() => window.open('https://wa.me/5581999997767', '_blank')}
         >
           Fale Conosco&nbsp;
           <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
@@ -56,7 +56,7 @@ const InfoButton = ({ timeout, time }) => {
           className="whatsapp-share-button"
           onClick={() =>
             window.open(
-              'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202025%3A%20https://inscricaoipbv.com.br/',
+              'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202026%3A%20https://inscricaoipbv.com.br/',
               '_blank',
             )
           }

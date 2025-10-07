@@ -109,7 +109,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                       />
                       <span>
                         <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
-                        igreja pelo telefone <em>(81) 9 9839-0194</em> (WhatsApp).
+                        igreja pelo telefone <em>(81) 9 9999-7767</em> (WhatsApp).
                       </span>
                     </h6>
                   </li>
