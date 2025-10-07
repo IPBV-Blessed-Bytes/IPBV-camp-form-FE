@@ -166,12 +166,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           ? data.extraMeals.extraMeals.join(', ')
           : data.extraMeals?.extraMeals || '',
       },
-      extraMeals: {
-        someFood: data.extraMeals?.someFood === true || data.extraMeals?.someFood === 'true',
-        extraMeals: Array.isArray(data.extraMeals?.extraMeals)
-          ? data.extraMeals.extraMeals.join(', ')
-          : data.extraMeals?.extraMeals || '',
-      },
       formPayment: {
         formPayment: typeof data.formPayment === 'object' ? data.formPayment.formPayment || '' : data.formPayment || '',
       },
@@ -873,7 +867,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
             ? 'Sem Ônibus'
             : '',
-        accessor: 'package.transportationName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -897,12 +890,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Alimentação:',
-        accessor: (row) =>
-          row.package.foodName === 'Alimentação Completa' || row.package.foodName === 'Alimentacao Completa'
-            ? 'Alimentação Completa'
-            : row.package.foodName === 'Sem Alimentação' || row.package.foodName === 'Sem Alimentacao'
-            ? 'Sem Alimentação'
-            : '',
         accessor: 'package.foodName',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect

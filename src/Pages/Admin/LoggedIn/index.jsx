@@ -83,7 +83,7 @@ const AdminLoggedIn = ({
 
   const usedPackages = availablePackages?.usedPackages || {};
   const totalPackages = availablePackages?.totalPackages || {};
-  console.log('availablePackages: ',availablePackages.usedPackages )
+  
   const familyCollegeFilledVacancies = Number(usedPackages['host-college-family'] || 0);
   const collectiveFilledVacancies = Number(usedPackages['host-college-collective'] || 0);
   const campingFilledVacancies = Number(usedPackages['host-college-camping'] || 0);
@@ -93,7 +93,6 @@ const AdminLoggedIn = ({
   const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
   const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
   const busYesFilledVacancies = Number(usedPackages['bus-yes'] || 0);
-  const busNoFilledVacancies = Number(usedPackages['bus-no'] || 0);
 
   const familyCollegeRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeFilledVacancies;
   const collectiveRemaining = (totalPackages?.schoolIndividual || 0) - collectiveFilledVacancies;
@@ -369,7 +368,7 @@ AdminLoggedIn.propTypes = {
     totalAdultsNonPaid: PropTypes.number,
   }).isRequired,
   availablePackages: PropTypes.shape({
-    availablePackagesUsedValid: PropTypes.object,
+    usedPackages: PropTypes.object,
     totalPackages: PropTypes.shape({
       schoolIndividual: PropTypes.number,
       schoolFamily: PropTypes.number,

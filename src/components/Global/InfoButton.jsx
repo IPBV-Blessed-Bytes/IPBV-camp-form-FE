@@ -19,7 +19,7 @@ const InfoButton = ({ timeout, time }) => {
     } else {
       setShowWhatsAppIcon(true);
     }
-  }, [timeout]);
+  }, [timeout, time]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -79,6 +79,7 @@ const InfoButton = ({ timeout, time }) => {
 
 InfoButton.propTypes = {
   timeout: PropTypes.bool,
+  time: PropTypes.number, // <-- adicionamos a validação para 'time'
 };
 
 export default InfoButton;

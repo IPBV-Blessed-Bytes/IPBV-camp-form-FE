@@ -4,8 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
-import DatePicker from 'react-datepicker';
-import { registerLocale } from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -121,6 +120,30 @@ const LotsSummary = ({ lots, packageCount }) => {
       </ListGroup>
     </Card>
   );
+};
+
+LotsSummary.propTypes = {
+  lots: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string,
+      startDate: PropTypes.string,
+      endDate: PropTypes.string,
+      price: PropTypes.object,
+      vacancies: PropTypes.object,
+    }),
+  ).isRequired,
+  packageCount: PropTypes.shape({
+    totalPackages: PropTypes.shape({
+      seminary: PropTypes.number,
+      schoolIndividual: PropTypes.number,
+      schoolFamily: PropTypes.number,
+      schoolCamping: PropTypes.number,
+      other: PropTypes.number,
+    }),
+    totalBusVacancies: PropTypes.number,
+    totalSeats: PropTypes.number,
+  }).isRequired,
 };
 
 const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
@@ -347,7 +370,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     otherAccomodation: 'Vagas Externo',
     bus: 'Vagas Ônibus',
   };
-
+  
   return (
     <Container fluid>
       <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#204691'} />
@@ -634,8 +657,19 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 };
 
 AdminLotManagement.propTypes = {
-  loggedUsername: PropTypes.string,
-  loading: PropTypes.bool,
+  loggedUsername: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  packageCount: PropTypes.shape({
+    totalPackages: PropTypes.shape({
+      seminary: PropTypes.number,
+      schoolIndividual: PropTypes.number,
+      schoolFamily: PropTypes.number,
+      schoolCamping: PropTypes.number,
+      other: PropTypes.number,
+    }),
+    totalBusVacancies: PropTypes.number,
+    totalSeats: PropTypes.number,
+  }).isRequired,
 };
 
 export default AdminLotManagement;
