@@ -334,9 +334,19 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
           <Form>
             {lots.map((lot) => (
               <div key={lot.id} className="border rounded p-3 mb-3">
-                <h5 className="mb-3">
-                  <strong>{lot.name}:</strong>
-                </h5>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Nome do Lote:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={lot.name}
+                    onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
+                    className="form-control-lg"
+                    placeholder="Nome do Lote"
+                  />
+                </Form.Group>
+
                 <Row>
                   <Col xs={12} md={6} className="mb-3">
                     <Form.Group>
