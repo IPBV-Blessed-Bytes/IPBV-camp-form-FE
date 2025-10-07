@@ -110,7 +110,9 @@ const AdminSeatManagement = ({
 
             {packageOrder.map((packageType) => (
               <Form.Group className="mt-2" controlId={`input-${packageType}`} key={packageType}>
-                <Form.Label>{packageLabels[packageType]}:</Form.Label>
+                <Form.Label>
+                  <b>{packageLabels[packageType]}:</b>
+                </Form.Label>
                 <Form.Control
                   type="number"
                   min="0"
