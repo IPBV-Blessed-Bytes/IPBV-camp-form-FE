@@ -96,8 +96,7 @@ const ColumnFields = ({
               type={type}
               name={name}
               value={value}
-              onBlur={addForm ? onChange : undefined}
-              onChange={!addForm ? onChange : undefined}
+              onChange={onChange}
               className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
                 showError && 'msg-error'
               } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
