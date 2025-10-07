@@ -86,7 +86,7 @@ const FAQ = () => {
                     className="faq-link"
                     href="https://inscricaoipbv.com.br/verificacao"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     https://inscricaoipbv.com.br/verificacao
                   </a>
@@ -105,7 +105,7 @@ const FAQ = () => {
                     className="faq-link"
                     href="https://inscricaoipbv.com.br/verificacao"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     https://inscricaoipbv.com.br/verificacao
                   </a>{' '}
