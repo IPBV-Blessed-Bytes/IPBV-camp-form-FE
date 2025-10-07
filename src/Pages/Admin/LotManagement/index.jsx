@@ -32,18 +32,50 @@ const defaultVacancies = {
   bus: '',
 };
 
+const parseDate = (dateString) => {
+  if (!dateString) return null;
+  const parsed = parse(dateString, 'dd/MM/yyyy', new Date());
+  return isValid(parsed) ? parsed : null;
+};
+
+const formatDate = (date) => {
+  if (!date) return '';
+  return date.toLocaleDateString('pt-BR');
+};
+
 const LotsSummary = ({ lots, packageCount }) => {
   const getTotalVacancies = (lots) => {
-    return lots.reduce(
-      (acc, lot) => {
-        acc.seminary += Number(lot.vacancies?.seminary || 0);
-        acc.school += Number(lot.vacancies?.school || 0);
-        acc.otherAccomodation += Number(lot.vacancies?.otherAccomodation || 0);
-        acc.bus += Number(lot.vacancies?.bus || 0);
-        return acc;
-      },
-      { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 },
-    );
+    if (!lots || lots.length === 0) return { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 };
+
+    const today = new Date();
+
+    const currentLot = lots.find((lot) => {
+      const start = parseDate(lot.startDate);
+      const end = parseDate(lot.endDate);
+      return start && end && today >= start && today <= end;
+    });
+
+    if (currentLot) {
+      return {
+        seminary: Number(currentLot.vacancies?.seminary || 0),
+        school: Number(currentLot.vacancies?.school || 0),
+        otherAccomodation: Number(currentLot.vacancies?.otherAccomodation || 0),
+        bus: Number(currentLot.vacancies?.bus || 0),
+      };
+    }
+
+    const latestLot = [...lots].sort((a, b) => {
+      const endA = parseDate(a.endDate) || new Date(0);
+      const endB = parseDate(b.endDate) || new Date(0);
+      return endB - endA;
+    })[0];
+
+    return {
+      seminary: Number(latestLot?.vacancies?.seminary || 0),
+      school: Number(latestLot?.vacancies?.school || 0),
+      otherAccomodation: Number(latestLot?.vacancies?.otherAccomodation || 0),
+      bus: Number(latestLot?.vacancies?.bus || 0),
+    };
   };
 
   const totals = getTotalVacancies(lots);
@@ -251,18 +283,32 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   };
 
   const hasVacancyOverflow = (lots, packageCount, lotToCheck = null) => {
+    const today = new Date();
+
     const effectiveLots = lotToCheck ? lots.map((l) => (l.id === lotToCheck.id ? lotToCheck : l)) : lots;
 
-    const totalVacancies = effectiveLots.reduce(
-      (acc, lot) => {
-        acc.seminary += Number(lot.vacancies?.seminary || 0);
-        acc.school += Number(lot.vacancies?.school || 0);
-        acc.otherAccomodation += Number(lot.vacancies?.otherAccomodation || 0);
-        acc.bus += Number(lot.vacancies?.bus || 0);
-        return acc;
-      },
-      { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 },
-    );
+    const currentLot = effectiveLots.find((lot) => {
+      const start = parseDate(lot.startDate);
+      const end = parseDate(lot.endDate);
+      return start && end && today >= start && today <= end;
+    });
+
+    const relevantLot =
+      currentLot ||
+      [...effectiveLots].sort((a, b) => {
+        const endA = parseDate(a.endDate) || new Date(0);
+        const endB = parseDate(b.endDate) || new Date(0);
+        return endB - endA;
+      })[0];
+
+    if (!relevantLot) return null;
+
+    const totalVacancies = {
+      seminary: Number(relevantLot.vacancies?.seminary || 0),
+      school: Number(relevantLot.vacancies?.school || 0),
+      otherAccomodation: Number(relevantLot.vacancies?.otherAccomodation || 0),
+      bus: Number(relevantLot.vacancies?.bus || 0),
+    };
 
     const macro = {
       seminary: packageCount?.totalPackages?.seminary || 0,
@@ -302,17 +348,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     bus: 'Vagas Ônibus',
   };
 
-  const parseDate = (dateString) => {
-    if (!dateString) return null;
-    const parsed = parse(dateString, 'dd/MM/yyyy', new Date());
-    return isValid(parsed) ? parsed : null;
-  };
-
-  const formatDate = (date) => {
-    if (!date) return '';
-    return date.toLocaleDateString('pt-BR');
-  };
-
   return (
     <Container fluid>
       <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#204691'} />
@@ -332,107 +367,122 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       <Row className="justify-content-center">
         <Col>
           <Form>
-            {lots.map((lot) => (
-              <div key={lot.id} className="border rounded p-3 mb-3">
-                <Form.Group className="mb-3">
-                  <Form.Label>
-                    <strong>Nome do Lote:</strong>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={lot.name}
-                    onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
-                    className="form-control-lg"
-                    placeholder="Nome do Lote"
-                  />
-                </Form.Group>
+            {lots.map((lot) => {
+              const today = new Date();
+              const start = parseDate(lot.startDate);
+              const end = parseDate(lot.endDate);
+              const isCurrentLot = start && end && today >= start && today <= end;
 
-                <Row>
-                  <Col xs={12} md={6} className="mb-3">
-                    <Form.Group>
-                      <Form.Label>
-                        <strong>Data Início:</strong>
-                      </Form.Label>
-                      <DatePicker
-                        selected={parseDate(lot.startDate)}
-                        onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
-                        className="form-control form-control-lg"
-                        placeholderText="dd/mm/aaaa"
-                        dateFormat="dd/MM/yyyy"
-                        locale="ptBR"
-                        dropdownMode="select"
-                        showMonthDropdown
-                        showYearDropdown
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={6} className="mb-3">
-                    <Form.Group>
-                      <Form.Label>
-                        <strong>Data Fim:</strong>
-                      </Form.Label>
-                      <DatePicker
-                        selected={parseDate(lot.endDate)}
-                        onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
-                        className="form-control form-control-lg"
-                        placeholderText="dd/mm/aaaa"
-                        dateFormat="dd/MM/yyyy"
-                        locale="ptBR"
-                        dropdownMode="select"
-                        showMonthDropdown
-                        showYearDropdown
-                      />
-                    </Form.Group>
-                  </Col>
+              return (
+                <div
+                  key={lot.id}
+                  className="border rounded p-3 mb-3"
+                  style={{
+                    backgroundColor: isCurrentLot ? '#d4edda' : 'transparent',
+                    transition: 'background-color 0.3s ease',
+                  }}
+                >
+                  <Form.Group className="mb-3">
+                    <Form.Label>
+                      <strong>Nome do Lote:</strong>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={lot.name}
+                      onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
+                      className="form-control-lg"
+                      placeholder="Nome do Lote"
+                    />
+                  </Form.Group>
 
-                  {Object.keys(defaultPrice).map((field) => (
-                    <Col xs={12} md={4} key={field} className="mb-3">
+                  <Row>
+                    <Col xs={12} md={6} className="mb-3">
                       <Form.Group>
                         <Form.Label>
-                          <strong>{priceLabels[field]}:</strong>
+                          <strong>Data Início:</strong>
                         </Form.Label>
-                        <Form.Control
-                          type="text"
-                          value={lot.price?.[field] || ''}
-                          onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                        <DatePicker
+                          selected={parseDate(lot.startDate)}
+                          onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
+                          className="form-control form-control-lg"
+                          placeholderText="dd/mm/aaaa"
+                          dateFormat="dd/MM/yyyy"
+                          locale="ptBR"
+                          dropdownMode="select"
+                          showMonthDropdown
+                          showYearDropdown
                         />
                       </Form.Group>
                     </Col>
-                  ))}
 
-                  {Object.keys(defaultVacancies).map((field) => (
-                    <Col xs={12} md={4} key={field} className="mb-3">
+                    <Col xs={12} md={6} className="mb-3">
                       <Form.Group>
                         <Form.Label>
-                          <strong>{vacanciesLabels[field]}:</strong>
+                          <strong>Data Fim:</strong>
                         </Form.Label>
-                        <Form.Control
-                          type="number"
-                          min="0"
-                          value={lot.vacancies?.[field] ?? 0}
-                          onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
+                        <DatePicker
+                          selected={parseDate(lot.endDate)}
+                          onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
+                          className="form-control form-control-lg"
+                          placeholderText="dd/mm/aaaa"
+                          dateFormat="dd/MM/yyyy"
+                          locale="ptBR"
+                          dropdownMode="select"
+                          showMonthDropdown
+                          showYearDropdown
                         />
                       </Form.Group>
                     </Col>
-                  ))}
-                </Row>
 
-                <div className="d-flex mt-3 justify-content-end gap-2">
-                  <Button
-                    variant="danger"
-                    onClick={() => {
-                      setSelectedLot(lot);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    Deletar
-                  </Button>
-                  <Button variant="success" onClick={() => updateLot(lot)}>
-                    Salvar
-                  </Button>
+                    {Object.keys(defaultPrice).map((field) => (
+                      <Col xs={12} md={4} key={field} className="mb-3">
+                        <Form.Group>
+                          <Form.Label>
+                            <strong>{priceLabels[field]}:</strong>
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={lot.price?.[field] || ''}
+                            onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                          />
+                        </Form.Group>
+                      </Col>
+                    ))}
+
+                    {Object.keys(defaultVacancies).map((field) => (
+                      <Col xs={12} md={4} key={field} className="mb-3">
+                        <Form.Group>
+                          <Form.Label>
+                            <strong>{vacanciesLabels[field]}:</strong>
+                          </Form.Label>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            value={lot.vacancies?.[field] ?? 0}
+                            onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
+                          />
+                        </Form.Group>
+                      </Col>
+                    ))}
+                  </Row>
+
+                  <div className="d-flex mt-3 justify-content-end gap-2">
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        setSelectedLot(lot);
+                        setShowDeleteModal(true);
+                      }}
+                    >
+                      Deletar
+                    </Button>
+                    <Button variant="success" onClick={() => updateLot(lot)}>
+                      Salvar
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </Form>
         </Col>
       </Row>
