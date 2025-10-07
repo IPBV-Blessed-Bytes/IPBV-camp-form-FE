@@ -1,54 +1,41 @@
 import { Box, Typography, LinearProgress } from '@mui/material';
 import PropTypes from 'prop-types';
 
-const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
-  const calculateCheckinDetails = (packageNameKeyword, totalUsed) => {
+const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
+  const calculateCheckinDetails = (keyword, totalUsed) => {
     if (!totalUsed || totalUsed === 0) return { percentage: 0, checkins: 0 };
-
     const checkins =
-      fillingVacancies?.filter((vacancy) => {
-        return vacancy.accomodationName?.toLowerCase().includes(packageNameKeyword.toLowerCase()) && vacancy.checkin;
-      }).length || 0;
-
+      fillingVacancies?.filter(
+        (vacancy) => vacancy.accomodationName?.toLowerCase().includes(keyword.toLowerCase()) && vacancy.checkin,
+      ).length || 0;
     const percentage = Number(((checkins / totalUsed) * 100).toFixed(0));
     return { percentage, checkins };
   };
 
-  const usedIndividualSchool =
-    usedPackages?.schoolIndividualWithBusWithFood +
-    usedPackages?.schoolIndividualWithBusWithoutFood +
-    usedPackages?.schoolIndividualWithoutBusWithFood +
-    usedPackages?.schoolIndividualWithoutBusWithoutFood;
+  const usedCollectiveSchool = usedPackages?.['host-college-collective'] || 0;
 
-  const usedFamilySchool =
-    usedPackages?.schoolFamilyWithBusWithFood +
-    usedPackages?.schoolFamilyWithBusWithoutFood +
-    usedPackages?.schoolFamilyWithoutBusWithFood +
-    usedPackages?.schoolFamilyWithoutBusWithoutFood;
+  const usedFamilySchool = usedPackages?.['host-college-family'] || 0;
 
-  const usedCampingSchool =
-    usedPackages?.schoolCampingWithoutBusWithFood + usedPackages?.schoolCampingWithoutBusWithoutFood;
+  const usedCampingSchool = usedPackages?.['host-college-camping'] || 0;
 
-  const usedSeminary = usedPackages?.seminaryWithBusWithFood + usedPackages?.seminaryWithoutBusWithFood;
+  const usedSeminary = usedPackages?.['host-seminario'] || 0;
 
-  const usedOther =
-    usedPackages?.otherWithBusWithFood +
-    usedPackages?.otherWithoutBusWithFood +
-    usedPackages?.otherWithoutBusWithoutFood;
+  const usedOther = usedPackages?.['host-external'] || 0;
 
-  const schoolIndividualDetails = calculateCheckinDetails('Colegio Individual', usedIndividualSchool);
-  const schoolFamilyDetails = calculateCheckinDetails('Colegio Familia', usedFamilySchool);
-  const schoolCampingDetails = calculateCheckinDetails('Colegio Camping', usedCampingSchool);
-  const seminaryDetails = calculateCheckinDetails('Seminario Individual', usedSeminary);
+  const schoolCollectiveDetails = calculateCheckinDetails('Colégio Coletivo', usedCollectiveSchool);
+  const schoolFamilyDetails = calculateCheckinDetails('Colégio Família', usedFamilySchool);
+  const schoolCampingDetails = calculateCheckinDetails('Colégio Camping', usedCampingSchool);
+  const seminaryDetails = calculateCheckinDetails('Seminário', usedSeminary);
   const otherDetails = calculateCheckinDetails('Outra', usedOther);
 
-  const totalUsed = usedIndividualSchool + usedFamilySchool + usedCampingSchool + usedSeminary + usedOther;
+  const totalUsed = usedCollectiveSchool + usedFamilySchool + usedCampingSchool + usedSeminary + usedOther;
   const totalCheckins =
-    schoolIndividualDetails.checkins +
+    schoolCollectiveDetails.checkins +
     schoolFamilyDetails.checkins +
     schoolCampingDetails.checkins +
     seminaryDetails.checkins +
     otherDetails.checkins;
+
   const totalPercentage = totalUsed ? Number(((totalCheckins / totalUsed) * 100).toFixed(0)) : 0;
 
   const renderProgressBar = (label, details, usedByPackage, color) => (
@@ -60,9 +47,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
             variant="determinate"
             value={details.percentage}
             sx={{
-              '.MuiLinearProgress-bar': {
-                backgroundColor: color,
-              },
+              '.MuiLinearProgress-bar': { backgroundColor: color },
               backgroundColor: '#e0e0e0',
               height: 10,
               borderRadius: 5,
@@ -83,9 +68,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
             variant="determinate"
             value={totalPercentage}
             sx={{
-              '.MuiLinearProgress-bar': {
-                backgroundColor: '#9c27b0',
-              },
+              '.MuiLinearProgress-bar': { backgroundColor: '#9c27b0' },
               backgroundColor: '#e0e0e0',
               height: 10,
               borderRadius: 5,
@@ -99,11 +82,11 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 
   return (
     <Box>
-      {renderProgressBar('Colégio - Individual:', schoolIndividualDetails, usedIndividualSchool, '#4caf50')}
-      {renderProgressBar('Colégio - Família:', schoolFamilyDetails, usedFamilySchool, '#cfe2ff')}
-      {renderProgressBar('Colégio - Camping:', schoolCampingDetails, usedCampingSchool, '#ffcccc')}
-      {renderProgressBar('Seminário São José:', seminaryDetails, usedSeminary, '#2196f3')}
-      {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#ff9800')}
+      {renderProgressBar('Colégio - Coletivo:', schoolCollectiveDetails, usedCollectiveSchool, '#4caf50')}
+      {renderProgressBar('Colégio - Família:', schoolFamilyDetails, usedFamilySchool, '#2196f3')}
+      {renderProgressBar('Colégio - Camping:', schoolCampingDetails, usedCampingSchool, '#ff9800')}
+      {renderProgressBar('Seminário São José:', seminaryDetails, usedSeminary, '#9c27b0')}
+      {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#cfd8dc')}
       {renderTotalProgressBar()}
     </Box>
   );
@@ -112,26 +95,11 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages }) => {
 CheckinBalance.propTypes = {
   fillingVacancies: PropTypes.arrayOf(
     PropTypes.shape({
+      accomodationName: PropTypes.string,
       checkin: PropTypes.bool,
     }),
   ),
-  usedPackages: PropTypes.shape({
-    schoolCampingWithoutBusWithFood: PropTypes.number,
-    schoolCampingWithoutBusWithoutFood: PropTypes.number,
-    schoolFamilyWithBusWithFood: PropTypes.number,
-    schoolFamilyWithBusWithoutFood: PropTypes.number,
-    schoolFamilyWithoutBusWithFood: PropTypes.number,
-    schoolFamilyWithoutBusWithoutFood: PropTypes.number,
-    schoolIndividualWithBusWithFood: PropTypes.number,
-    schoolIndividualWithBusWithoutFood: PropTypes.number,
-    schoolIndividualWithoutBusWithFood: PropTypes.number,
-    schoolIndividualWithoutBusWithoutFood: PropTypes.number,
-    seminaryWithBusWithFood: PropTypes.number,
-    seminaryWithoutBusWithFood: PropTypes.number,
-    otherWithBusWithFood: PropTypes.number,
-    otherWithoutBusWithFood: PropTypes.number,
-    otherWithoutBusWithoutFood: PropTypes.number,
-  }),
+  usedPackages: PropTypes.object,
 };
 
 export default CheckinBalance;
