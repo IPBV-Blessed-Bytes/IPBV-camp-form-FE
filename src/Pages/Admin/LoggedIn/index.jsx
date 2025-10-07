@@ -25,7 +25,6 @@ const AdminLoggedIn = ({
   totalBusVacancies,
   totalRegistrations,
   totalSeats,
-  totalValidWithBus,
   user,
   userRole,
 }) => {
@@ -42,6 +41,10 @@ const AdminLoggedIn = ({
   const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
   const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
+
+  const navigate = useNavigate();
+
+  scrollUp();
 
   useEffect(() => {
     const fetchCampers = async () => {
@@ -64,37 +67,6 @@ const AdminLoggedIn = ({
     fetchCampers();
   }, []);
 
-  const navigate = useNavigate();
-
-  const handleTableClick = () => {
-    navigate('/admin/acampantes');
-  };
-
-  const handleRideClick = () => {
-    navigate('/admin/carona');
-  };
-
-  const handleDiscountClick = () => {
-    navigate('/admin/descontos');
-  };
-
-  const handleRoomsClick = () => {
-    navigate('/admin/quartos');
-  };
-
-  const handleCheckinClick = () => {
-    navigate('/admin/checkin');
-  };
-
-  const handleFeedbackClick = () => {
-    navigate('/admin/opiniao');
-  };
-
-  const handleExtraMealsClick = () => {
-    navigate('/admin/alimentacao');
-  };
-  scrollUp();
-
   useEffect(() => {
     if (sendLoggedMessage) {
       registerLog('Usuário logou', user);
@@ -109,73 +81,55 @@ const AdminLoggedIn = ({
   const totalAdultsNonPaid = totalRegistrations.totalAdultsNonPaid;
   const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
 
-  const availablePackagesUsedValid = availablePackages?.usedValidPackages || {};
-  const availablePackagesTotal = availablePackages?.totalPackages || {};
+  const usedPackages = availablePackages?.usedPackages || {};
+  const totalPackages = availablePackages?.totalPackages || {};
+  console.log('availablePackages: ',availablePackages.usedPackages )
+  const familyCollegeFilledVacancies = Number(usedPackages['host-college-family'] || 0);
+  const collectiveFilledVacancies = Number(usedPackages['host-college-collective'] || 0);
+  const campingFilledVacancies = Number(usedPackages['host-college-camping'] || 0);
+  const seminaryFilledVacancies = Number(usedPackages['host-seminario'] || 0);
+  const externalFilledVacancies = Number(usedPackages['host-external'] || 0);
 
-  const individualSchoolFilledVacanciesSum =
-    availablePackagesUsedValid?.schoolIndividualWithBusWithFood +
-    availablePackagesUsedValid?.schoolIndividualWithBusWithoutFood +
-    availablePackagesUsedValid?.schoolIndividualWithoutBusWithFood +
-    availablePackagesUsedValid?.schoolIndividualWithoutBusWithoutFood;
+  const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
+  const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
+  const busYesFilledVacancies = Number(usedPackages['bus-yes'] || 0);
+  const busNoFilledVacancies = Number(usedPackages['bus-no'] || 0);
 
-  const individualSchoolRemainingVacanciesSum =
-    availablePackagesTotal?.schoolIndividual - individualSchoolFilledVacanciesSum;
-
-  const familySchoolFilledVacanciesSum =
-    availablePackagesUsedValid?.schoolFamilyWithBusWithFood +
-    availablePackagesUsedValid?.schoolFamilyWithBusWithoutFood +
-    availablePackagesUsedValid?.schoolFamilyWithoutBusWithFood +
-    availablePackagesUsedValid?.schoolFamilyWithoutBusWithoutFood;
-
-  const familySchoolRemainingVacanciesSum = availablePackagesTotal?.schoolFamily - familySchoolFilledVacanciesSum;
-
-  const campingSchoolFilledVacanciesSum =
-    availablePackagesUsedValid?.schoolCampingWithoutBusWithFood +
-    availablePackagesUsedValid?.schoolCampingWithoutBusWithoutFood;
-
-  const campingSchoolRemainingVacanciesSum = availablePackagesTotal?.schoolCamping - campingSchoolFilledVacanciesSum;
-
-  const seminaryFilledVacanciesSum =
-    availablePackagesUsedValid?.seminaryWithBusWithFood + availablePackagesUsedValid?.seminaryWithoutBusWithFood;
-
-  const seminaryRemainingVacanciesSum = availablePackagesTotal?.seminary - seminaryFilledVacanciesSum;
-
-  const otherFilledVacanciesSum =
-    availablePackagesUsedValid?.otherWithBusWithFood +
-    availablePackagesUsedValid?.otherWithoutBusWithFood +
-    availablePackagesUsedValid?.otherWithoutBusWithoutFood;
-
-  const otherRemainingVacanciesSum = availablePackagesTotal?.other - otherFilledVacanciesSum;
+  const familyCollegeRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeFilledVacancies;
+  const collectiveRemaining = (totalPackages?.schoolIndividual || 0) - collectiveFilledVacancies;
+  const campingRemaining = (totalPackages?.schoolCamping || 0) - campingFilledVacancies;
+  const seminaryRemaining = (totalPackages?.seminary || 0) - seminaryFilledVacancies;
+  const externalRemaining = (totalPackages?.other || 0) - externalFilledVacancies;
 
   const packageCardsData = [
     {
-      title: 'Colégio Individual',
-      remainingVacancies: Number(individualSchoolRemainingVacanciesSum) || 0,
-      filledVacancies: Number(individualSchoolFilledVacanciesSum) || 0,
+      title: 'Colégio Coletivo',
+      remainingVacancies: Math.max(collectiveRemaining, 0),
+      filledVacancies: collectiveFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Família',
-      remainingVacancies: Number(familySchoolRemainingVacanciesSum) || 0,
-      filledVacancies: Number(familySchoolFilledVacanciesSum) || 0,
+      remainingVacancies: Math.max(familyCollegeRemaining, 0),
+      filledVacancies: familyCollegeFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Camping',
-      remainingVacancies: Number(campingSchoolRemainingVacanciesSum) || 0,
-      filledVacancies: Number(campingSchoolFilledVacanciesSum) || 0,
+      remainingVacancies: Math.max(campingRemaining, 0),
+      filledVacancies: campingFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Seminário',
-      remainingVacancies: Number(seminaryRemainingVacanciesSum) || 0,
-      filledVacancies: Number(seminaryFilledVacanciesSum) || 0,
+      remainingVacancies: Math.max(seminaryRemaining, 0),
+      filledVacancies: seminaryFilledVacancies,
       showRemainingVacancies: true,
     },
     {
-      title: 'Outra Hospedagem',
-      remainingVacancies: Number(otherRemainingVacanciesSum) || 0,
-      filledVacancies: Number(otherFilledVacanciesSum) || 0,
+      title: 'Hospedagem Externa',
+      remainingVacancies: Math.max(externalRemaining, 0),
+      filledVacancies: externalFilledVacancies,
       showRemainingVacancies: true,
     },
   ];
@@ -219,22 +173,35 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Total de Inscritos com Ônibus',
-      remainingVacancies: Number(totalBusVacancies - totalValidWithBus) || 0,
-      filledVacancies: Number(totalValidWithBus) || 0,
+      remainingVacancies: Number(totalBusVacancies - busYesFilledVacancies) || 0,
+      filledVacancies: Number(busYesFilledVacancies) || 0,
       showRemainingVacancies: true,
     },
+    {
+      title: 'Total com Alimentação',
+      filledVacancies: withFoodFilledVacancies,
+      showRemainingVacancies: false,
+    },
+    {
+      title: 'Total sem Alimentação',
+      filledVacancies: noFoodFilledVacancies,
+      showRemainingVacancies: false,
+    },
   ];
+
+  const handleTableClick = () => navigate('/admin/acampantes');
+  const handleRideClick = () => navigate('/admin/carona');
+  const handleDiscountClick = () => navigate('/admin/descontos');
+  const handleRoomsClick = () => navigate('/admin/quartos');
+  const handleCheckinClick = () => navigate('/admin/checkin');
+  const handleFeedbackClick = () => navigate('/admin/opiniao');
+  const handleExtraMealsClick = () => navigate('/admin/alimentacao');
 
   return (
     <>
       <Row className="mb-3">
         <Col className="admin-custom-col">
-          <Button
-            variant="secondary"
-            onClick={() => {
-              navigate('/');
-            }}
-          >
+          <Button variant="secondary" onClick={() => navigate('/')}>
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
           </Button>
@@ -402,23 +369,7 @@ AdminLoggedIn.propTypes = {
     totalAdultsNonPaid: PropTypes.number,
   }).isRequired,
   availablePackages: PropTypes.shape({
-    usedValidPackages: PropTypes.shape({
-      schoolIndividualWithBusWithFood: PropTypes.number,
-      schoolIndividualWithBusWithoutFood: PropTypes.number,
-      schoolIndividualWithoutBusWithFood: PropTypes.number,
-      schoolIndividualWithoutBusWithoutFood: PropTypes.number,
-      schoolFamilyWithBusWithFood: PropTypes.number,
-      schoolFamilyWithBusWithoutFood: PropTypes.number,
-      schoolFamilyWithoutBusWithFood: PropTypes.number,
-      schoolFamilyWithoutBusWithoutFood: PropTypes.number,
-      schoolCampingWithoutBusWithFood: PropTypes.number,
-      schoolCampingWithoutBusWithoutFood: PropTypes.number,
-      seminaryWithBusWithFood: PropTypes.number,
-      seminaryWithoutBusWithFood: PropTypes.number,
-      otherWithBusWithFood: PropTypes.number,
-      otherWithoutBusWithFood: PropTypes.number,
-      otherWithoutBusWithoutFood: PropTypes.number,
-    }),
+    availablePackagesUsedValid: PropTypes.object,
     totalPackages: PropTypes.shape({
       schoolIndividual: PropTypes.number,
       schoolFamily: PropTypes.number,
