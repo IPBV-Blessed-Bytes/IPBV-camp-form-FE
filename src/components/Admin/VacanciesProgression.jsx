@@ -24,11 +24,14 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
   const schoolSum =
     (totalPackages?.schoolIndividual || 0) + (totalPackages?.schoolFamily || 0) + (totalPackages?.schoolCamping || 0);
 
-  const schoolIndividualDetails = calculateVacanciesDetails('schoolindividual', totalPackages?.schoolIndividual || 0);
-  const schoolFamilyDetails = calculateVacanciesDetails('schoolfamily', totalPackages?.schoolFamily || 0);
-  const schoolCampingDetails = calculateVacanciesDetails('schoolcamping', totalPackages?.schoolCamping || 0);
-  const seminaryDetails = calculateVacanciesDetails('seminary', totalPackages?.seminary || 0);
-  const otherDetails = calculateVacanciesDetails('other', totalPackages?.other || 0);
+  const schoolIndividualDetails = calculateVacanciesDetails(
+    'host-college-collective',
+    totalPackages?.schoolIndividual || 0,
+  );
+  const schoolFamilyDetails = calculateVacanciesDetails('host-college-family', totalPackages?.schoolFamily || 0);
+  const schoolCampingDetails = calculateVacanciesDetails('host-college-camping', totalPackages?.schoolCamping || 0);
+  const seminaryDetails = calculateVacanciesDetails('host-seminario', totalPackages?.seminary || 0);
+  const otherDetails = calculateVacanciesDetails('host-external', totalPackages?.other || 0);
 
   const totalVacancies = schoolSum + (totalPackages?.seminary || 0) + (totalPackages?.other || 0);
   const totalFilledVacancies =
