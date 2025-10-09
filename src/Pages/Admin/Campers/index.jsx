@@ -94,42 +94,106 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const keys = name.split('.');
     const adjustedValue = value === '' ? '' : value;
 
-    const booleanValue =
-      name === 'crew' ||
-      name === 'pastoralFamily' ||
-      name === 'contact.car' ||
-      name === 'contact.needRide' ||
-      name === 'contact.isWhatsApp'
-        ? adjustedValue === 'true'
-        : adjustedValue;
+    const normalizeText = (str) =>
+      str
+        ?.normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\s]/gi, '')
+        .trim();
+
+    const accomodationMap = {
+      'host-college-collective': 'Colégio Quarto Coletivo',
+      'host-college-family': 'Colégio Quarto Família',
+      'host-college-camping': 'Colégio Camping',
+      'host-seminario': 'Seminário',
+      'host-external': 'Externo',
+    };
+
+    const transportationMap = {
+      'bus-yes': 'Com Ônibus',
+      'bus-no': 'Sem Ônibus',
+    };
+
+    const foodMap = {
+      'food-complete': 'Alimentação Completa (Café da manhã, Almoço e Jantar)',
+      'no-food': 'Sem Alimentação',
+    };
+
+    const reverseAccomodationMap = Object.fromEntries(
+      Object.entries(accomodationMap).map(([k, v]) => [normalizeText(v), k]),
+    );
+    const reverseTransportationMap = Object.fromEntries(
+      Object.entries(transportationMap).map(([k, v]) => [normalizeText(v), k]),
+    );
+    const reverseFoodMap = Object.fromEntries(Object.entries(foodMap).map(([k, v]) => [normalizeText(v), k]));
+
+    const booleanValue = ['crew', 'pastoralFamily', 'contact.car', 'contact.needRide', 'contact.isWhatsApp'].includes(
+      name,
+    )
+      ? adjustedValue === 'true'
+      : adjustedValue;
 
     const updateState = (setter) => {
       setter((prevData) => {
-        if (keys.length === 2) {
-          const [parentKey, childKey] = keys;
-          const newState = {
+        let newState = { ...prevData };
+
+        if (keys.length === 3) {
+          const [grandParentKey, parentKey, childKey] = keys;
+          newState = {
             ...prevData,
-            [parentKey]: {
-              ...prevData[parentKey],
-              [childKey]: booleanValue,
+            [grandParentKey]: {
+              ...prevData[grandParentKey],
+              [parentKey]: {
+                ...prevData[grandParentKey]?.[parentKey],
+                [childKey]: booleanValue,
+              },
             },
           };
-          return newState;
-        } else {
-          const newState = {
-            ...prevData,
-            [name]: booleanValue,
+          const mirrorField = `${parentKey}Name`;
+          if (prevData[grandParentKey]?.hasOwnProperty(mirrorField)) {
+            newState[grandParentKey][mirrorField] = booleanValue;
+          }
+        } else if (keys.length === 2) {
+          const [parentKey, childKey] = keys;
+          newState[parentKey] = {
+            ...prevData[parentKey],
+            [childKey]: booleanValue,
           };
-          return newState;
+        } else {
+          newState[name] = booleanValue;
         }
+
+        const updatePackage = (field, map, reverseMap) => {
+          const normalized = normalizeText(value);
+          const isReadable = Object.values(map).some((v) => normalizeText(v) === normalized);
+
+          const readable = isReadable ? value : map[value] || value;
+          const idValue = isReadable ? reverseMap[normalized] : value;
+
+          newState.package = {
+            ...newState.package,
+            [field]: {
+              ...newState.package[field],
+              id: idValue,
+            },
+            [`${field}Name`]: readable,
+          };
+        };
+
+        if (name.startsWith('package.accomodation'))
+          updatePackage('accomodation', accomodationMap, reverseAccomodationMap);
+
+        if (name.startsWith('package.transportation'))
+          updatePackage('transportation', transportationMap, reverseTransportationMap);
+
+        if (name.startsWith('package.food')) updatePackage('food', foodMap, reverseFoodMap);
+
+        return newState;
       });
     };
 
-    if (formType === 'edit') {
-      updateState(setEditFormData);
-    } else if (formType === 'add') {
-      updateState(setAddFormData);
-    }
+    const setter = formType === 'edit' ? setEditFormData : setAddFormData;
+    updateState(setter);
   };
 
   const sanitizeFields = (data) => {
