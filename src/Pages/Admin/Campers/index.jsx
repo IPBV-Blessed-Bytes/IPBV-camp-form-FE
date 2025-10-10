@@ -977,6 +977,20 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
+        Header: 'Lote:',
+        accessor: 'package.lot',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: alphabeticalSort,
+        Cell: ({ value }) => value || '-',
+      },
+      {
         Header: 'Nome do Resp. Legal:',
         accessor: 'personalInformation.legalGuardianName',
         Filter: ({ column }) => (
@@ -1351,6 +1365,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'package.transportationName': 'Transporte',
       'package.foodName': 'Alimentação',
       'package.price': 'Valor do pacote',
+      'package.lot': 'Lote',
       'personalInformation.legalGuardianName': 'Nome do Responsável Legal',
       'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
@@ -1392,6 +1407,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'Transporte',
       'Alimentação',
       'Valor do pacote',
+      'Lote',
       'Nome do Responsável Legal',
       'CPF do Responsável Legal',
       'Celular do Responsável Legal',
