@@ -267,15 +267,6 @@ const AdminLoggedIn = ({
         />
 
         <SessionCard
-          permission={extraMealsButtonHomePermissions}
-          onClick={handleExtraMealsClick}
-          cardType="extra-meals-card"
-          title="Alimentação Extra"
-          typeIcon="food"
-          iconSize={50}
-        />
-
-        <SessionCard
           permission={checkinPermissions}
           onClick={handleCheckinClick}
           cardType="checkin-card"
