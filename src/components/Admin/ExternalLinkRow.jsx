@@ -1,8 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 
-const OLD_SPREADSHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1Fxb0cYp42SNixTJC8VshUpN1IuZkiDADxO9hWHQ9exw/edit?usp=sharing';
+const OLD_SPREADSHEET_URL = 'https://drive.google.com/file/d/1y1mUKZzotMVwnjn16_JkDu-fJCzSEnKW/view?usp=drive_link';
 const PAGARME = 'https://id.pagar.me/signin';
 
 const ExternalLinkRow = () => {
@@ -12,7 +11,7 @@ const ExternalLinkRow = () => {
         <Card>
           <Card.Body>
             <Card.Title className="fw-bold text-success">Utilitários</Card.Title>
-            <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições de 2024 e Pagar.me</Card.Text>
+            <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições de 2025 e Pagar.me</Card.Text>
             <div className="btn-wrapper">
               <Button variant="info" href={PAGARME} target="_blank" rel="noopener noreferrer">
                 <strong>PAGAR.ME</strong>
