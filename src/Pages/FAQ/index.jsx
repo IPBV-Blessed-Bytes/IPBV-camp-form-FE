@@ -53,26 +53,10 @@ const FAQ = () => {
                   4. Posso cancelar minha inscrição? Existe a possibilidade de reembolso?
                 </Accordion.Header>
                 <Accordion.Body>
-                  Sim, você pode cancelar sua inscrição. Se o pedido for feito em até 48 horas úteis após a inscrição, o
-                  valor poderá ser reembolsado integralmente, desde que respeitado o prazo limite de 01/02/2026. Após
-                  esse período de 48 horas, o reembolso será limitado a 50% do valor pago.
+                Não é possível cancelar a inscrição e solicitar reembolso. Porém, é permitido transferir a inscrição para outra pessoa, desde que seja respeitado o prazo limite, que é até o dia 6 de fevereiro.
                   <br />
                   <br />
-                  Os pedidos de cancelamento devem ser realizados até duas semanas antes do acampamento (data limite em
-                  01/02/2026). Passado esse prazo, não haverá reembolso, devido aos custos já aplicados em fornecedores
-                  e insumos.
-                  <br />
-                  <br />
-                  Em caso de desistência, o valor pago não será convertido em crédito para outros eventos. Também não
-                  haverá devolução do valor correspondente às refeições caso o participante opte por não consumi-las.
-                  <br />
-                  <br />
-                  Situações excepcionais (como motivos de saúde comprovados) poderão ser analisadas individualmente, sem
-                  garantia de reembolso. Caso precise repassar sua inscrição para outra pessoa, os valores devem ser
-                  resolvidos entre os envolvidos, sendo obrigatório informar a organização para atualização do cadastro.
-                  <br />
-                  <br />
-                  Para solicitar cancelamento, entre em contato com a organização do evento pelo contato 81 9.9999-7767
+                  Para solicitar a transferência da sua inscrição, entre em contato com a organização do evento pelo número (81) 9 9999-7767 (WhatsApp).
                   (WhatsApp).
                 </Accordion.Body>
               </Accordion.Item>
