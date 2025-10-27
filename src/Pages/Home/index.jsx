@@ -54,7 +54,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                     <span>
                       Inscrições até{' '}
                       <em>
-                        <b>01 de Fevereiro</b>
+                        <b>06 de Fevereiro</b>
                       </em>{' '}
                       ou até o esgotamento das vagas!
                     </span>
