@@ -41,24 +41,37 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       ],
     },
     {
-      label: 'Igreja',
-      name: 'contact.church',
+      label: 'Hospedagem',
+      name: 'package.accomodationName',
       type: 'select',
-      placeholder: 'Selecione sua igreja',
+      placeholder: 'Selecione a hospedagem',
       oddOrEven: 'even',
       options: [
-        { label: 'Boa Viagem', value: 'Boa Viagem' },
-        { label: 'Outra', value: 'Outra' },
+        { label: 'Colégio Quarto Coletivo', value: 'Colégio Quarto Coletivo' },
+        { label: 'Colégio Quarto Família', value: 'Colégio Quarto Família' },
+        { label: 'Colégio Camping', value: 'Colégio Camping' },
+        { label: 'Seminário Sao Jose', value: 'Seminário' },
+        { label: 'Outra Hospedagem Externa', value: 'Externo' },
       ],
     },
     {
-      label: 'Data de Nascimento',
-      name: 'personalInformation.birthday',
-      type: 'date',
-      placeholder: 'dd/mm/aaaa',
+      label: 'Transporte',
+      name: 'package.transportationName',
+      type: 'select',
+      placeholder: 'Selecione tipo de transporte',
       oddOrEven: 'odd',
-      required: true,
-      errorMessage: 'Insira uma data de nascimento válida no formato (00/00/0000)',
+      options: [
+        { label: 'Com Ônibus', value: 'Com Onibus' },
+        { label: 'Sem Ônibus', value: 'Sem Onibus' },
+      ],
+    },
+    {
+      label: 'Alimentação',
+      name: 'package.foodName',
+      type: 'select',
+      placeholder: 'Selecione a alimentação',
+      oddOrEven: 'even',
+      options: normalizedFoodOptions,
     },
     {
       label: 'CPF',
@@ -86,8 +99,54 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
       options: issuingState,
     },
+    { label: 'Preço', name: 'totalPrice', type: 'number', placeholder: '500', oddOrEven: 'odd' },
     {
-      label: 'Tem Carona a oferecer',
+      label: 'Data de Nascimento',
+      name: 'personalInformation.birthday',
+      type: 'date',
+      placeholder: 'dd/mm/aaaa',
+      oddOrEven: 'odd',
+      required: true,
+      errorMessage: 'Insira uma data de nascimento válida no formato (00/00/0000)',
+    },
+    {
+      label: 'Categoria',
+      name: 'personalInformation.gender',
+      type: 'select',
+      placeholder: 'Selecione sua categoria/gênero',
+      oddOrEven: 'odd',
+      options: [
+        { label: 'Criança', value: 'Crianca' },
+        { label: 'Homem', value: 'Homem' },
+        { label: 'Mulher', value: 'Mulher' },
+      ],
+    },
+    {
+      label: 'Igreja',
+      name: 'contact.church',
+      type: 'select',
+      placeholder: 'Selecione sua igreja',
+      oddOrEven: 'even',
+      options: [
+        { label: 'Boa Viagem', value: 'Boa Viagem' },
+        { label: 'Outra', value: 'Outra' },
+      ],
+    },
+    { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
+    {
+      label: 'Whatsapp',
+      name: 'contact.isWhatsApp',
+      type: 'select',
+      placeholder: 'Selecione se número é whatsapp',
+      oddOrEven: 'odd',
+      options: [
+        { label: 'Sim', value: true },
+        { label: 'Não', value: false },
+      ],
+    },
+    { label: 'Email', name: 'contact.email', type: 'text', placeholder: 'teste@teste.com', oddOrEven: 'even' },
+    {
+      label: 'Tem Vaga de Carona',
       name: 'contact.car',
       type: 'select',
       placeholder: 'Selecione se vai de carro',
@@ -124,67 +183,8 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       disabled: true,
       oddOrEven: 'even',
     },
-    {
-      label: 'Categoria',
-      name: 'personalInformation.gender',
-      type: 'select',
-      placeholder: 'Selecione sua categoria/gênero',
-      oddOrEven: 'odd',
-      options: [
-        { label: 'Criança', value: 'Crianca' },
-        { label: 'Homem', value: 'Homem' },
-        { label: 'Mulher', value: 'Mulher' },
-      ],
-    },
-    { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
-    {
-      label: 'Whatsapp',
-      name: 'contact.isWhatsApp',
-      type: 'select',
-      placeholder: 'Selecione se número é whatsapp',
-      oddOrEven: 'odd',
-      options: [
-        { label: 'Sim', value: true },
-        { label: 'Não', value: false },
-      ],
-    },
-    { label: 'Email', name: 'contact.email', type: 'text', placeholder: 'teste@teste.com', oddOrEven: 'even' },
-    { label: 'Preço', name: 'totalPrice', type: 'number', placeholder: '500', oddOrEven: 'odd' },
     { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias', oddOrEven: 'even' },
     { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
-    {
-      label: 'Hospedagem',
-      name: 'package.accomodationName',
-      type: 'select',
-      placeholder: 'Selecione a hospedagem',
-      oddOrEven: 'even',
-      options: [
-        { label: 'Colégio Quarto Coletivo', value: 'Colégio Quarto Coletivo' },
-        { label: 'Colégio Quarto Família', value: 'Colégio Quarto Família' },
-        { label: 'Colégio Camping', value: 'Colégio Camping' },
-        { label: 'Seminário Sao Jose', value: 'Seminário' },
-        { label: 'Outra Hospedagem Externa', value: 'Externo' },
-      ],
-    },
-    {
-      label: 'Transporte',
-      name: 'package.transportationName',
-      type: 'select',
-      placeholder: 'Selecione tipo de transporte',
-      oddOrEven: 'odd',
-      options: [
-        { label: 'Com Ônibus', value: 'Com Onibus' },
-        { label: 'Sem Ônibus', value: 'Sem Onibus' },
-      ],
-    },
-    {
-      label: 'Alimentação',
-      name: 'package.foodName',
-      type: 'select',
-      placeholder: 'Selecione a alimentação',
-      oddOrEven: 'even',
-      options: normalizedFoodOptions,
-    },
     {
       label: 'Nome do Resp. Legal',
       name: 'personalInformation.legalGuardianName',
@@ -208,13 +208,6 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       oddOrEven: 'odd',
     },
     {
-      label: 'Observação Adm',
-      name: 'observation',
-      type: 'text',
-      placeholder: 'Observação sobre essa inscrição',
-      oddOrEven: 'even',
-    },
-    {
       label: 'Equipe',
       name: 'crew',
       type: 'select',
@@ -235,6 +228,13 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
         { label: 'Sim', value: true },
         { label: 'Não', value: false },
       ],
+    },
+    {
+      label: 'Observação Adm',
+      name: 'observation',
+      type: 'text',
+      placeholder: 'Observação sobre essa inscrição',
+      oddOrEven: 'even',
     },
   ];
 
@@ -280,12 +280,12 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
             ? editFormData.registrationDate
             : currentDate
           : isEditForm
-            ? isNestedField
-              ? getNestedValue(editFormData, field.name)
-              : editFormData[field.name]
-            : isNestedField
-              ? getNestedValue(addFormData, field.name)
-              : addFormData[field.name];
+          ? isNestedField
+            ? getNestedValue(editFormData, field.name)
+            : editFormData[field.name]
+          : isNestedField
+          ? getNestedValue(addFormData, field.name)
+          : addFormData[field.name];
 
         return (
           <ColumnsFields

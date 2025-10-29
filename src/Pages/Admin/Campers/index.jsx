@@ -586,14 +586,30 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
-        Header: 'Igreja:',
-        accessor: 'contact.church',
+        Header: 'Hospedagem:',
+        accessor: (row) =>
+          row.package.accomodationName === 'Colégio Quarto Coletivo' ||
+          row.package.accomodationName === 'Colegio Quarto Coletivo'
+            ? 'Colégio Quarto Coletivo'
+            : row.package.accomodationName === 'Colégio Quarto Família' ||
+              row.package.accomodationName === 'Colegio Quarto Familia'
+            ? 'Colégio Quarto Família'
+            : row.package.accomodationName === 'Colégio Camping' || row.package.accomodationName === 'Colegio Camping'
+            ? 'Colégio Camping'
+            : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
+            ? 'Seminário'
+            : row.package.accomodationName === 'Externo'
+            ? 'Externo'
+            : '',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
             options={[
-              { value: 'Boa Viagem', label: 'Boa Viagem' },
-              { value: 'Outra', label: 'Outra' },
+              { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
+              { value: 'Colégio Quarto Família', label: 'Colégio Quarto Família' },
+              { value: 'Colégio Camping', label: 'Colégio Camping' },
+              { value: 'Seminário', label: 'Seminário São José' },
+              { value: 'Externo', label: 'Outra Hospedagem Externa' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
@@ -601,27 +617,59 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value }) =>
-          value === 'Boa Viagem'
-            ? 'Boa Viagem'
-            : value === 'IPBV'
-            ? 'Boa Viagem'
-            : value === 'Outra'
-            ? 'Outra'
-            : 'Não pagante',
       },
       {
-        Header: 'Data de Nascimento:',
-        accessor: 'personalInformation.birthday',
+        Header: 'Transporte:',
+        accessor: (row) =>
+          row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
+            ? 'Com Ônibus'
+            : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
+            ? 'Sem Ônibus'
+            : '',
         Filter: ({ column }) => (
-          <ColumnFilter
+          <ColumnFilterWithSelect
             column={column}
+            options={[
+              { value: 'Com Ônibus', label: 'Com Ônibus' },
+              { value: 'Sem Ônibus', label: 'Sem Ônibus' },
+            ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
             }}
           />
         ),
         sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+        filter: (rows, id, filterValue) => {
+          return rows.filter((row) => {
+            const normalizedValue = row.values[id]?.toLowerCase().replace('onibus', 'ônibus');
+            return normalizedValue === filterValue.toLowerCase();
+          });
+        },
+      },
+      {
+        Header: 'Alimentação:',
+        accessor: 'package.foodName',
+        Filter: ({ column }) => (
+          <ColumnFilterWithSelect
+            column={column}
+            options={[
+              {
+                value: 'Alimentacao Completa',
+                label: 'Alimentação Completa',
+              },
+              {
+                value: 'Sem Alimentacao',
+                label: 'Sem Alimentação',
+              },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'CPF:',
@@ -655,6 +703,165 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         accessor: (row) =>
           `${row.personalInformation.rgShipper} -
           ${row.personalInformation.rgShipperState}`,
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+      },
+      {
+        Header: 'Preço:',
+        accessor: 'totalPrice',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+      },
+      {
+        Header: 'Desconto:',
+        accessor: (row) => ({
+          appliedDiscount: row.appliedDiscount,
+          discountCoupon: row.package.discountCoupon,
+        }),
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithDiscount',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
+          const discountValueText =
+            value.appliedDiscount !== '0' && value.appliedDiscount !== null ? value.appliedDiscount : '-';
+          return `${hasDiscount} ${
+            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
+          }`;
+        },
+      },
+      {
+        Header: 'Motivo do Desconto:',
+        accessor: 'discountReason',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+      },
+      {
+        Header: 'Data de Nascimento:',
+        accessor: 'personalInformation.birthday',
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Categoria:',
+        accessor: (row) =>
+          row.personalInformation.gender
+            ?.replace(/ç/g, 'c')
+            .replace(/^Homem$/i, 'Homem')
+            .replace(/^Mulher$/i, 'Mulher')
+            .replace(/^Crianca$/i, 'Crianca') || '-',
+        Filter: ({ column }) => (
+          <ColumnFilterWithSelect
+            column={column}
+            options={[
+              { value: 'Homem', label: 'Adulto Masculino' },
+              { value: 'Mulher', label: 'Adulto Feminino' },
+              { value: 'Crianca', label: 'Criança (até 10 anos)' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value.replace(/c/g, 'ç') || '-',
+      },
+      {
+        Header: 'Igreja:',
+        accessor: 'contact.church',
+        Filter: ({ column }) => (
+          <ColumnFilterWithSelect
+            column={column}
+            options={[
+              { value: 'Boa Viagem', label: 'Boa Viagem' },
+              { value: 'Outra', label: 'Outra' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) =>
+          value === 'Boa Viagem'
+            ? 'Boa Viagem'
+            : value === 'IPBV'
+            ? 'Boa Viagem'
+            : value === 'Outra'
+            ? 'Outra'
+            : 'Não pagante',
+      },
+      {
+        Header: 'Celular:',
+        accessor: (row) => ({
+          cellPhone: row.contact.cellPhone,
+          isWhatsApp: row.contact.isWhatsApp,
+        }),
+        Filter: ({ column }) => (
+          <ColumnFilterWithTwoValues
+            column={column}
+            options={[
+              { value: 'sim', label: 'Sim' },
+              { value: 'não', label: 'Não' },
+            ]}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        filter: 'selectWithCellphone',
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => {
+          const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
+          const isWhatsAppText = value.isWhatsApp ? 'Sim' : !value.isWhatsApp ? 'Não' : '-';
+          return `${cellPhoneText} ${cellPhoneText !== '-' ? `| Wpp: ${isWhatsAppText}` : ''}`;
+        },
+      },
+      {
+        Header: 'Email:',
+        accessor: 'contact.email',
         Filter: ({ column }) => (
           <ColumnFilter
             column={column}
@@ -742,58 +949,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sortType: 'alphanumeric',
       },
       {
-        Header: 'Categoria:',
-        accessor: (row) =>
-          row.personalInformation.gender
-            ?.replace(/ç/g, 'c')
-            .replace(/^Homem$/i, 'Homem')
-            .replace(/^Mulher$/i, 'Mulher')
-            .replace(/^Crianca$/i, 'Crianca') || '-',
-        Filter: ({ column }) => (
-          <ColumnFilterWithSelect
-            column={column}
-            options={[
-              { value: 'Homem', label: 'Adulto Masculino' },
-              { value: 'Mulher', label: 'Adulto Feminino' },
-              { value: 'Crianca', label: 'Criança (até 10 anos)' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value.replace(/c/g, 'ç') || '-',
-      },
-      {
-        Header: 'Celular:',
-        accessor: (row) => ({
-          cellPhone: row.contact.cellPhone,
-          isWhatsApp: row.contact.isWhatsApp,
-        }),
-        Filter: ({ column }) => (
-          <ColumnFilterWithTwoValues
-            column={column}
-            options={[
-              { value: 'sim', label: 'Sim' },
-              { value: 'não', label: 'Não' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        filter: 'selectWithCellphone',
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => {
-          const cellPhoneText = value.cellPhone ? value.cellPhone : '-';
-          const isWhatsAppText = value.isWhatsApp ? 'Sim' : !value.isWhatsApp ? 'Não' : '-';
-          return `${cellPhoneText} ${cellPhoneText !== '-' ? `| Wpp: ${isWhatsAppText}` : ''}`;
-        },
-      },
-      {
-        Header: 'Email:',
-        accessor: 'contact.email',
+        Header: 'Lote:',
+        accessor: 'package.lot',
         Filter: ({ column }) => (
           <ColumnFilter
             column={column}
@@ -802,64 +959,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             }}
           />
         ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
-      },
-      {
-        Header: 'Preço:',
-        accessor: 'totalPrice',
-        Filter: ({ column }) => (
-          <ColumnFilter
-            column={column}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
-      },
-      {
-        Header: 'Desconto:',
-        accessor: (row) => ({
-          appliedDiscount: row.appliedDiscount,
-          discountCoupon: row.package.discountCoupon,
-        }),
-        Filter: ({ column }) => (
-          <ColumnFilterWithTwoValues
-            column={column}
-            options={[
-              { value: 'sim', label: 'Sim' },
-              { value: 'não', label: 'Não' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        filter: 'selectWithDiscount',
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => {
-          const hasDiscount = value.discountCoupon ? 'Sim' : !value.discountCoupon ? 'Não' : '-';
-          const discountValueText =
-            value.appliedDiscount !== '0' && value.appliedDiscount !== null ? value.appliedDiscount : '-';
-          return `${hasDiscount} ${
-            discountValueText !== '-' && discountValueText !== '' ? `| Valor: ${discountValueText}` : ''
-          }`;
-        },
-      },
-      {
-        Header: 'Motivo do Desconto:',
-        accessor: 'discountReason',
-        Filter: ({ column }) => (
-          <ColumnFilter
-            column={column}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
+        sortType: alphabeticalSort,
         Cell: ({ value }) => value || '-',
       },
       {
@@ -889,106 +989,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         ),
         sortType: 'alphanumeric',
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
-      },
-      {
-        Header: 'Hospedagem:',
-        accessor: (row) =>
-          row.package.accomodationName === 'Colégio Quarto Coletivo' ||
-          row.package.accomodationName === 'Colegio Quarto Coletivo'
-            ? 'Colégio Quarto Coletivo'
-            : row.package.accomodationName === 'Colégio Quarto Família' ||
-              row.package.accomodationName === 'Colegio Quarto Familia'
-            ? 'Colégio Quarto Família'
-            : row.package.accomodationName === 'Colégio Camping' || row.package.accomodationName === 'Colegio Camping'
-            ? 'Colégio Camping'
-            : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
-            ? 'Seminário'
-            : row.package.accomodationName === 'Externo'
-            ? 'Externo'
-            : '',
-        Filter: ({ column }) => (
-          <ColumnFilterWithSelect
-            column={column}
-            options={[
-              { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
-              { value: 'Colégio Quarto Família', label: 'Colégio Quarto Família' },
-              { value: 'Colégio Camping', label: 'Colégio Camping' },
-              { value: 'Seminário', label: 'Seminário São José' },
-              { value: 'Externo', label: 'Outra Hospedagem Externa' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-      },
-      {
-        Header: 'Transporte:',
-        accessor: (row) =>
-          row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
-            ? 'Com Ônibus'
-            : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
-            ? 'Sem Ônibus'
-            : '',
-        Filter: ({ column }) => (
-          <ColumnFilterWithSelect
-            column={column}
-            options={[
-              { value: 'Com Ônibus', label: 'Com Ônibus' },
-              { value: 'Sem Ônibus', label: 'Sem Ônibus' },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value || '-',
-        filter: (rows, id, filterValue) => {
-          return rows.filter((row) => {
-            const normalizedValue = row.values[id]?.toLowerCase().replace('onibus', 'ônibus');
-            return normalizedValue === filterValue.toLowerCase();
-          });
-        },
-      },
-      {
-        Header: 'Alimentação:',
-        accessor: 'package.foodName',
-        Filter: ({ column }) => (
-          <ColumnFilterWithSelect
-            column={column}
-            options={[
-              {
-                value: 'Alimentacao Completa',
-                label: 'Alimentação Completa',
-              },
-              {
-                value: 'Sem Alimentacao',
-                label: 'Sem Alimentação',
-              },
-            ]}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
-      },
-      {
-        Header: 'Lote:',
-        accessor: 'package.lot',
-        Filter: ({ column }) => (
-          <ColumnFilter
-            column={column}
-            onFilterChange={() => {
-              setFilteredRows(column.filteredRows);
-            }}
-          />
-        ),
-        sortType: alphabeticalSort,
-        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Nome do Resp. Legal:',
@@ -1341,85 +1341,87 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const fieldMapping = {
       'personalInformation.name': 'Nome',
       'formPayment.formPayment': 'Forma de Pagamento',
-      'contact.church': 'Igreja',
-      'personalInformation.birthday': 'Data de Nascimento',
+      'package.accomodationName': 'Hospedagem',
+      'package.transportationName': 'Transporte',
+      'package.foodName': 'Alimentação',
       'personalInformation.cpf': 'CPF',
       'personalInformation.rg': 'RG',
       'personalInformation.rgShipper': 'Orgão Emissor',
       'personalInformation.rgShipperState': 'Estado Emissor',
+      'package.price': 'Valor do pacote',
+      appliedDiscount: 'Valor do Desconto',
+      discountReason: 'Motivo do Desconto',
+      totalPrice: 'Valor final',
+      'personalInformation.birthday': 'Data de Nascimento',
+      'personalInformation.gender': 'Categoria',
+      'contact.church': 'Igreja',
+      'contact.cellPhone': 'Celular',
+      'contact.isWhatsApp': 'WhatsApp',
+      'contact.email': 'Email',
       'contact.car': 'Tem Vaga de Carona',
       'contact.needRide': 'Precisa de Carona',
       'contact.numberVacancies': 'Vagas de Carona',
       'contact.rideObservation': 'Observação da Carona',
       registrationDate: 'Data de Inscrição',
-      'personalInformation.gender': 'Categoria',
-      'contact.cellPhone': 'Celular',
-      'contact.isWhatsApp': 'WhatsApp',
-      'contact.email': 'Email',
-      totalPrice: 'Valor final',
+      'package.lot': 'Lote',
       'contact.hasAllergy': 'Tem Alergia',
       'contact.allergy': 'Alergia',
       'contact.hasAggregate': 'Tem Agregados',
       'contact.aggregate': 'Agregados',
-      'package.accomodationName': 'Hospedagem',
-      'package.transportationName': 'Transporte',
-      'package.foodName': 'Alimentação',
-      'package.price': 'Valor do pacote',
-      'package.lot': 'Lote',
       'personalInformation.legalGuardianName': 'Nome do Responsável Legal',
       'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
       finalObservation: 'Observação Acampante',
+      checkin: 'Checkin',
+      checkinTime: 'Hora do Checkin',
       crew: 'Equipe',
       pastoralFamily: 'Família Pastoral',
       manualRegistration: 'Inscrição Manual',
-      appliedDiscount: 'Valor do Desconto',
       observation: 'Observação Adm',
       orderId: 'Chave do Pedido',
-      checkin: 'Checkin',
-      checkinTime: 'Hora do Checkin',
     };
 
     const orderedFields = [
       'Nome',
       'Forma de Pagamento',
-      'Igreja',
-      'Data de Nascimento',
+      'Hospedagem',
+      'Transporte',
+      'Alimentação',
       'CPF',
       'RG',
       'Orgão Emissor',
       'Estado Emissor',
+      'Valor do pacote',
+      'Valor do Desconto',
+      'Motivo do Desconto',
+      'Valor final',
+      'Data de Nascimento',
+      'Categoria',
+      'Igreja',
+      'Celular',
+      'WhatsApp',
+      'Email',
       'Tem Vaga de Carona',
       'Precisa de Carona',
       'Vagas de Carona',
       'Observação da Carona',
       'Data de Inscrição',
-      'Categoria',
-      'Celular',
-      'WhatsApp',
-      'Email',
-      'Valor final',
+      'Lote',
       'Tem Alergia',
       'Alergia',
       'Tem Agregados',
       'Agregados',
-      'Hospedagem',
-      'Transporte',
-      'Alimentação',
-      'Valor do pacote',
-      'Lote',
       'Nome do Responsável Legal',
       'CPF do Responsável Legal',
       'Celular do Responsável Legal',
       'Observação Acampante',
+      'Checkin',
+      'Hora do Checkin',
       'Equipe',
       'Família Pastoral',
       'Inscrição Manual',
-      'Valor do Desconto',
       'Observação Adm',
       'Chave do Pedido',
-      'Checkin',
-      'Hora do Checkin',
     ];
 
     const flattenObject = (obj, parent = '', res = {}) => {
