@@ -24,7 +24,7 @@ const Offline = () => {
                 <p className="form__success__contact">
                   <b>
                     Qualquer dúvida nos contacte no telefone da secretaria para mais informações. <br />
-                    (81) 9 9999-7767 (Whatsapp)
+                    (81) 99679-0140 (Whatsapp)
                   </b>
                 </p>
                 <small className="mt-5">
