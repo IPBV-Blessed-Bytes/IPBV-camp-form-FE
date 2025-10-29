@@ -26,15 +26,20 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
   return (
     <>
-      {primaryPermission && (
-        <button className="data-panel-btn" onClick={() => navigate('/admin/painel')}>
-          <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
+      {secondaryPermission && (
+        <button
+          ref={settingsButtonsRef}
+          className="settings-btn"
+          onClick={toggleSettingsButtons}
+          title="Ferramentas de Administrador"
+        >
+          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
         </button>
       )}
 
-      {secondaryPermission && (
-        <button ref={settingsButtonsRef} className="settings-btn" onClick={toggleSettingsButtons}>
-          <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
+      {primaryPermission && (
+        <button className="data-panel-btn" onClick={() => navigate('/admin/painel')} title="Painel de Dados">
+          <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
         </button>
       )}
 

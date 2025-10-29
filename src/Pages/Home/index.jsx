@@ -54,7 +54,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                     <span>
                       Inscrições até{' '}
                       <em>
-                        <b>01 de Fevereiro</b>
+                        <b>06 de Fevereiro</b>
                       </em>{' '}
                       ou até o esgotamento das vagas!
                     </span>
@@ -109,7 +109,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                       />
                       <span>
                         <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
-                        igreja pelo telefone <em>(81) 9 9999-7767</em> (WhatsApp).
+                        igreja pelo telefone <em>(81) 99679-0140</em> (WhatsApp).
                       </span>
                     </h6>
                   </li>
