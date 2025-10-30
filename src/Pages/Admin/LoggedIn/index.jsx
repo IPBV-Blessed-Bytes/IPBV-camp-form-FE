@@ -34,7 +34,6 @@ const AdminLoggedIn = ({
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
   const roomsButtonHomePermissions = permissions(userRole, 'rooms-button-home');
   const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
-  const extraMealsButtonHomePermissions = permissions(userRole, 'extra-meals-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
   const dataPanelButtonPermissions = permissions(userRole, 'data-panel-button-home');
@@ -194,7 +193,6 @@ const AdminLoggedIn = ({
   const handleRoomsClick = () => navigate('/admin/quartos');
   const handleCheckinClick = () => navigate('/admin/checkin');
   const handleFeedbackClick = () => navigate('/admin/opiniao');
-  const handleExtraMealsClick = () => navigate('/admin/alimentacao');
 
   return (
     <>

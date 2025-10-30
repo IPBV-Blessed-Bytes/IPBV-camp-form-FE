@@ -150,7 +150,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             },
           };
           const mirrorField = `${parentKey}Name`;
-          if (prevData[grandParentKey]?.hasOwnProperty(mirrorField)) {
+          if (Object.prototype.hasOwnProperty.call(prevData[grandParentKey] || {}, mirrorField)) {
             newState[grandParentKey][mirrorField] = booleanValue;
           }
         } else if (keys.length === 2) {
