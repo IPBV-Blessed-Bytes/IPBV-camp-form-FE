@@ -115,6 +115,9 @@ const CpfReview = ({ handlePersonData }) => {
                         placeholderText="dd/mm/aaaa"
                         showMonthDropdown={true}
                         showYearDropdown={true}
+                        customInput={
+                          <InputMask mask="99/99/9999">{(inputProps) => <Form.Control {...inputProps} />}</InputMask>
+                        }
                       />
                       <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
                         {errors.birthday}
