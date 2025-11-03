@@ -104,144 +104,148 @@ const CpfData = ({ personData }) => {
   return (
     <div className="components-container">
       <Header />
-      <div className="form__container">
-        <Card>
-          <Card.Body>
-            <Container>
-              <div className="form-review">
-                <Card.Title>Consulta de Dados</Card.Title>
-                <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dados.</Card.Text>
-                <Form className="mt-4">
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Nome:</span> <br />
-                        {personData?.data.name}
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Acompanhantes:</span> <br />
-                        {personData?.data.aggregate}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <div className="packages-horizontal-line" />
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text className="text-success">
-                        <span className="form-review__section-title"> Status de Pagamento:</span> <br />
-                        <em>{paymentMethodLabel}</em>
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Cadastrado em: </span>
-                        <br />
-                        {personData?.data.registrationDate}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <div className="packages-horizontal-line" />
-                  <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Preço:</span> <br />
-                        R$ {personData?.data.price},00
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Hospedagem:</span> <br />
-                        {personData?.data.accomodationName}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Alimentação:</span> <br />
-                        {personData?.data.food}
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Transporte:</span>
-                        <br />
-                        {personData?.data.transportation}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Alergia: </span>
-                        <br />
-                        {personData?.data.allergy || 'Nenhuma'}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <div className="packages-horizontal-line" />
-                  <Row className="row-gap mt-3">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Tem vaga de carona:</span> <br />
-                        {personData?.data.numberVacancies || 'Nenhuma vaga'}
-                      </Card.Text>
-                    </Col>
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Precisa de carona:</span> <br />
-                        {personData?.data.needRide ? 'Sim' : 'Não'}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-
-                  {rideNeed.length > 0 && (
-                    <Row className="row-gap mt-3">
-                      <Col md={12}>
-                        <Card.Text className="fw-bold">
-                          <span className="form-review__section-title">Vai oferecer carona para:</span>
+      <div className="form__container container">
+        <Row className="justify-content-center">
+          <div className="px-0 col-lg-10">
+            <Card>
+              <Card.Body>
+                <Container>
+                  <div className="form-review">
+                    <Card.Title>Consulta de Dados</Card.Title>
+                    <Card.Text>Consulte seus dados de inscrição cadastrados em nosso banco de dados.</Card.Text>
+                    <Form className="mt-4">
+                      <Row className="row-gap">
+                        <Col md={6} className="fw-bold">
                           <Card.Text>
-                            {rideNeed.map((ride, index) => (
-                              <li key={index} className="mt-2">
-                                {ride.name} | Contato: {ride.cellPhone}
-                              </li>
-                            ))}
+                            <span className="form-review__section-title">Nome:</span> <br />
+                            {personData?.data.name}
                           </Card.Text>
-                        </Card.Text>
-                      </Col>
-                    </Row>
-                  )}
+                        </Col>
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Acompanhantes:</span> <br />
+                            {personData?.data.aggregate}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <div className="packages-horizontal-line" />
+                      <Row className="row-gap">
+                        <Col md={6} className="fw-bold">
+                          <Card.Text className="text-success">
+                            <span className="form-review__section-title"> Status de Pagamento:</span> <br />
+                            <em>{paymentMethodLabel}</em>
+                          </Card.Text>
+                        </Col>
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Cadastrado em: </span>
+                            <br />
+                            {personData?.data.registrationDate}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <div className="packages-horizontal-line" />
+                      <Row className="row-gap mt-3">
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Preço:</span> <br />
+                            R$ {personData?.data.price},00
+                          </Card.Text>
+                        </Col>
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Hospedagem:</span> <br />
+                            {personData?.data.accomodationName}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <Row className="row-gap mt-3">
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Alimentação:</span> <br />
+                            {personData?.data.food}
+                          </Card.Text>
+                        </Col>
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Transporte:</span>
+                            <br />
+                            {personData?.data.transportation}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <Row className="row-gap mt-3">
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Alergia: </span>
+                            <br />
+                            {personData?.data.allergy || 'Nenhuma'}
+                          </Card.Text>
+                        </Col>
+                      </Row>
+                      <div className="packages-horizontal-line" />
+                      <Row className="row-gap mt-3">
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Tem vaga de carona:</span> <br />
+                            {personData?.data.numberVacancies || 'Nenhuma vaga'}
+                          </Card.Text>
+                        </Col>
+                        <Col md={6} className="fw-bold">
+                          <Card.Text>
+                            <span className="form-review__section-title">Precisa de carona:</span> <br />
+                            {personData?.data.needRide ? 'Sim' : 'Não'}
+                          </Card.Text>
+                        </Col>
+                      </Row>
 
-                  {rideOffer && rideNeed.length === 0 && (
-                    <Row className="row-gap mt-3">
-                      <Col md={12} className="fw-bold">
-                        <Card.Text>
-                          <span className="form-review__section-title">Vai de carona com:</span>
-                          <br />
-                          {rideOffer.name} | Contato: {rideOffer.cellPhone}
-                        </Card.Text>
-                      </Col>
-                    </Row>
-                  )}
-                </Form>
+                      {rideNeed.length > 0 && (
+                        <Row className="row-gap mt-3">
+                          <Col md={12}>
+                            <Card.Text className="fw-bold">
+                              <span className="form-review__section-title">Vai oferecer carona para:</span>
+                              <Card.Text>
+                                {rideNeed.map((ride, index) => (
+                                  <li key={index} className="mt-2">
+                                    {ride.name} | Contato: {ride.cellPhone}
+                                  </li>
+                                ))}
+                              </Card.Text>
+                            </Card.Text>
+                          </Col>
+                        </Row>
+                      )}
+
+                      {rideOffer && rideNeed.length === 0 && (
+                        <Row className="row-gap mt-3">
+                          <Col md={12} className="fw-bold">
+                            <Card.Text>
+                              <span className="form-review__section-title">Vai de carona com:</span>
+                              <br />
+                              {rideOffer.name} | Contato: {rideOffer.cellPhone}
+                            </Card.Text>
+                          </Col>
+                        </Row>
+                      )}
+                    </Form>
+                  </div>
+                </Container>
+              </Card.Body>
+
+              <div className="form__container__buttons">
+                <Button
+                  variant="warning"
+                  onClick={() => {
+                    navigate('/verificacao');
+                  }}
+                  size="lg"
+                >
+                  Voltar
+                </Button>
               </div>
-            </Container>
-          </Card.Body>
-
-          <div className="form__container__buttons">
-            <Button
-              variant="warning"
-              onClick={() => {
-                navigate('/verificacao');
-              }}
-              size="lg"
-            >
-              Voltar
-            </Button>
+            </Card>
           </div>
-        </Card>
+        </Row>
       </div>
       <Loading loading={loading} />
       <Footer handleAdminClick={() => navigate('/admin')} />
