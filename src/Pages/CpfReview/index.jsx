@@ -57,6 +57,8 @@ const CpfReview = ({ handlePersonData }) => {
     },
   });
 
+  const handleKeyDown = (e) => e.key === 'Enter' && handleLogin();
+
   scrollUp();
 
   return (
@@ -92,6 +94,7 @@ const CpfReview = ({ handlePersonData }) => {
                             id="cpf"
                             className="cpf-container"
                             placeholder="000.000.000-00"
+                            onKeyDown={handleKeyDown}
                             title="Preencher CPF válido"
                           />
                           <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
@@ -117,6 +120,7 @@ const CpfReview = ({ handlePersonData }) => {
                             placeholderText="dd/mm/aaaa"
                             showMonthDropdown={true}
                             showYearDropdown={true}
+                            onKeyDown={handleKeyDown}
                             customInput={
                               <InputMask mask="99/99/9999">
                                 {(inputProps) => <Form.Control {...inputProps} />}
