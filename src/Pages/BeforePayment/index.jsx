@@ -249,7 +249,7 @@ const BeforePayment = ({
 
                 <div className="summary-buttons d-grid gap-3">
                   {validFormValues.length > 0 && (
-                    <Button variant="info" size="lg" onClick={handleClick}>
+                    <Button variant="teal-blue" size="lg" onClick={handleClick}>
                       {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                     </Button>
                   )}

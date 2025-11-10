@@ -91,7 +91,7 @@ const AdminSeatManagement = ({
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Vagas" sessionTypeIcon="camp" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Vagas" sessionTypeIcon="camp" iconSize={80} fill={'#007185'} />
 
       <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
@@ -123,7 +123,7 @@ const AdminSeatManagement = ({
             ))}
 
             <div className="d-flex mt-3 justify-content-end">
-              <Button variant="success" onClick={updateSeats}>
+              <Button variant="teal-blue" onClick={updateSeats}>
                 Ajustar Vagas Pacotes
               </Button>
             </div>
@@ -145,7 +145,7 @@ const AdminSeatManagement = ({
             </Form.Group>
 
             <div className="d-flex mt-3 justify-content-end">
-              <Button variant="success" onClick={updateBusVacancies}>
+              <Button variant="teal-blue" onClick={updateBusVacancies}>
                 Ajustar Vagas Ônibus
               </Button>
             </div>
