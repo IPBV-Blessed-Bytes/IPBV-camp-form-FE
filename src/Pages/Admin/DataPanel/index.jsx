@@ -58,7 +58,7 @@ const AdminDataPanel = ({ totalPackages, usedPackages, usedValidPackages, userRo
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Painel de Dados" sessionTypeIcon="chart" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Painel de Dados" sessionTypeIcon="chart" iconSize={80} fill={'#007185'} />
 
       {vacanciesProgressionPermissions && (
         <Accordion className="mb-3">

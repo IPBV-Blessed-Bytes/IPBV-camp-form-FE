@@ -152,7 +152,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#007185'} />
 
       <Row className="mb-3">
         <Col lg={8} md={8} xs={8}>
@@ -171,7 +171,7 @@ const AdminCheckin = ({ loggedUsername }) => {
           </Form.Group>
         </Col>
         <Col lg={4} md={4} xs={4} className="d-flex align-items-end">
-          <Button onClick={handleSearchUser} size="lg" disabled={!cpf}>
+          <Button variant='teal-blue' onClick={handleSearchUser} size="lg" disabled={!cpf}>
             <Icons typeIcon="m-glass" iconSize={25} fill="#fff" />
             <span className="d-none d-md-inline">&nbsp;Buscar Usuário</span>
           </Button>

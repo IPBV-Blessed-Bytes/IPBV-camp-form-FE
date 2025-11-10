@@ -66,7 +66,7 @@ const AdminFormContext = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Contexto do Formulário" sessionTypeIcon="form-context" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Contexto do Formulário" sessionTypeIcon="form-context" iconSize={80} fill={'#007185'} />
 
       <Form>
         <Form.Group controlId="formContextSelect">
