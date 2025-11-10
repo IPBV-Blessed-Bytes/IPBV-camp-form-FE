@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Container, Row, Button, Form, Col } from 'react-bootstrap';
+import { Container, Row, Button, Form } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
 import { initialValues } from '@/utils/constants';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import Tools from '@/components/Admin/Header/Tools';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
@@ -1462,7 +1463,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     const worksheet = XLSX.utils.json_to_sheet(orderedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Inscrições');
-    XLSX.writeFile(workbook, 'planilha_inscricoes.xlsx');
+    XLSX.writeFile(workbook, 'inscricoes.xlsx');
   };
 
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -1482,76 +1483,63 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     };
   }, [storeSortByInSession]);
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 mb-3 mb-lg-0 d-flex flex-column align-items-center',
+      cols: { xs: 6, lg: 3 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'filters',
+      name: `${showFilters ? 'Ocultar Filtros' : 'Filtrar'}`,
+      onClick: handleFilterClick,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'filter',
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 mb-3 mb-lg-0 btn-bw-3 d-flex flex-column align-items-center',
+      cols: { xs: 6, lg: 3 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'campers-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center',
+      cols: { xs: 6, lg: 3 },
+      fill: '#dc3545',
+      iconSize: 40,
+      id: 'room-excel',
+      name: 'Deletar',
+      onClick: handleDeleteWithCheckbox,
+      typeButton: 'outline-danger',
+      typeIcon: 'delete',
+      condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRows,
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
+      cols: { xs: 6, lg: 3 },
+      fill: '#fff',
+      iconSize: 40,
+      id: 'add-camper',
+      name: 'Nova Inscrição',
+      onClick: () => {
+        setShowAddModal(true);
+        setFormSubmitted(false);
+      },
+      typeButton: 'teal-blue',
+      typeIcon: 'add-person',
+      condition: adminTableCreateRegistration,
+    },
+  ];
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Inscritos" sessionTypeIcon="person" iconSize={70} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Inscritos" sessionTypeIcon="person" iconSize={70} fill={'#007185'} />
 
-      <Row className="table-tools">
-        <Col xl={9}>
-          <div className="table-tools__left-buttons d-flex mb-3 gap-3">
-            <Button
-              variant="light"
-              onClick={handleFilterClick}
-              className="filter-btn text-light d-flex align-items-center"
-              size="lg"
-            >
-              <Icons typeIcon="filter" iconSize={30} fill="#fff" />
-              <span className="table-tools__button-name">&nbsp; {showFilters ? 'Ocultar Filtros' : 'Filtrar'}</span>
-            </Button>
-            <Button variant="success" onClick={generateExcel} className="d-flex align-items-center" size="lg">
-              <Icons typeIcon="excel" iconSize={30} fill="#fff" />{' '}
-              <span className="table-tools__button-name">&nbsp;Baixar Excel</span>
-            </Button>
-            {selectedRows.length > 0 && (
-              <>
-                {adminTableDeleteRegistrationsAndSelectRows && (
-                  <Button
-                    variant="danger"
-                    onClick={handleDeleteWithCheckbox}
-                    className="d-flex align-items-center"
-                    size="lg"
-                  >
-                    <Icons typeIcon="delete" iconSize={30} fill="#fff" />{' '}
-                    <span className="table-tools__button-name">
-                      &nbsp;{selectedRows.length === 1 ? 'Deletar' : 'Deletar Selecionados'}
-                    </span>
-                  </Button>
-                )}
-              </>
-            )}
-            {adminTableCreateRegistration && (
-              <Button
-                onClick={() => {
-                  setShowAddModal(true);
-                  setFormSubmitted(false);
-                }}
-                className="d-flex align-items-center d-lg-none"
-                size="lg"
-              >
-                <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
-                <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
-              </Button>
-            )}
-          </div>
-        </Col>
-        {adminTableCreateRegistration && (
-          <Col xl={3}>
-            <div className="table-tools__right-buttons mb-3">
-              <Button
-                onClick={() => {
-                  setShowAddModal(true);
-                  setFormSubmitted(false);
-                }}
-                className="d-flex align-items-center d-none d-lg-flex"
-                size="lg"
-              >
-                <Icons typeIcon="add-person" iconSize={30} fill="#fff" />{' '}
-                <span className="table-tools__button-name">&nbsp;Nova Inscrição</span>
-              </Button>
-            </div>
-          </Col>
-        )}
-      </Row>
+      <Tools buttons={toolsButtons} />
 
       <Row>
         <CoreTable

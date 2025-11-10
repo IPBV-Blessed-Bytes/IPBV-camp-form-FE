@@ -138,17 +138,25 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     fetchUsers();
   }, []);
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'add-new-user',
+      name: 'Criar Novo Usuário',
+      onClick: () => handleCreateClick(),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'add-person',
+    }
+  ];
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Usuários" sessionTypeIcon="add-person" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Usuários" sessionTypeIcon="add-person" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex mb-3 gap-2"
-        headerToolsTypeButton="primary"
-        headerToolsOpenModal={() => handleCreateClick()}
-        headerToolsButtonIcon="add-person"
-        headerToolsButtonName="Criar Novo Usuário"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Row>
         <Col>

@@ -52,19 +52,25 @@ const AdminFeedback = ({ loggedUsername }) => {
     }
   };
 
+   const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#dc3545',
+      iconSize: 35,
+      id: 'delete-all',
+      name: 'Deletar Todos Feedbacks',
+      onClick: () => setShowDeleteModal(true),
+      typeButton: 'outline-danger',
+      typeIcon: 'danger',
+    }
+  ];
+
   return (
     <Container fluid>
       <AdminHeader pageName="Gerenciamento de Feedbacks" sessionTypeIcon="feedback" iconSize={80} fill="#204691" />
 
-      <Tools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="danger"
-        headerToolsOpenModal={() => setShowDeleteModal(true)}
-        headerToolsButtonIcon="danger"
-        headerToolsButtonSize={20}
-        headerToolsButtonFill={'#fff'}
-        headerToolsButtonName="Deletar Todos Feedbacks"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Table striped bordered hover responsive className="custom-table mt-3">
         <thead>

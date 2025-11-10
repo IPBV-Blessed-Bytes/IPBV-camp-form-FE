@@ -48,17 +48,26 @@ const AdminExtraMeals = () => {
     XLSX.writeFile(workbook, 'alimentacao.xlsx');
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'extra-meals-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    }
+  ];
+
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Usuários com Refeições Extras" sessionTypeIcon="food" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Usuários com Refeições Extras" sessionTypeIcon="food" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="success"
-        headerToolsOpenModal={generateExcel}
-        headerToolsButtonIcon="excel"
-        headerToolsButtonName="Baixar Excel"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Table striped bordered hover responsive className="custom-table">
         <thead>

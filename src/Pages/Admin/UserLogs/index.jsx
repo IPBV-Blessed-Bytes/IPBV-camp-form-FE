@@ -68,19 +68,25 @@ const AdminUserLogs = ({ loggedUsername }) => {
     }
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#dc3545',
+      iconSize: 40,
+      id: 'delete-all-logs',
+      name: 'Deletar Todos Logs',
+      onClick: () => setShowDeleteModal(true),
+      typeButton: 'outline-danger',
+      typeIcon: 'danger',
+    }
+  ];
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Logs de Usuários" sessionTypeIcon="logs" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Logs de Usuários" sessionTypeIcon="logs" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="danger"
-        headerToolsOpenModal={() => setShowDeleteModal(true)}
-        headerToolsButtonIcon="danger"
-        headerToolsButtonSize={20}
-        headerToolsButtonFill={'#fff'}
-        headerToolsButtonName="Deletar Todos Logs"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Row>
         <Accordion defaultActiveKey="0">

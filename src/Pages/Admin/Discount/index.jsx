@@ -152,24 +152,36 @@ const AdminDiscount = ({ loggedUsername }) => {
     XLSX.writeFile(workbook, 'descontos.xlsx');
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'discount-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
+      cols: { xs: 12, md: 6 },
+      fill: '#fff',
+      iconSize: 40,
+      id: 'add-new-discount',
+      name: 'Criar Novo Desconto',
+      onClick: () => openModal(null),
+      typeButton: 'teal-blue',
+      typeIcon: 'discount',
+    },
+  ];
+
   return (
     <Container className="discounts" fluid>
-      <AdminHeader pageName="Gerenciamento de Descontos" sessionTypeIcon="discount" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Descontos" sessionTypeIcon="discount" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsCols={{ xl: 8 }}
-        headerToolsClassname="table-tools__left-buttons d-flex"
-        headerToolsTypeButton="success"
-        headerToolsOpenModal={generateExcel}
-        headerToolsButtonIcon="excel"
-        headerToolsButtonName="Baixar Excel"
-        secondaryButtonCols={{ xl: 4 }}
-        secondaryButtonClassname="table-tools__right-buttons"
-        secondaryButtonTypeButton="primary"
-        secondaryButtonOpenModal={() => openModal(null)}
-        secondaryButtonIcon="discount"
-        secondaryButtonName="Criar Novo Desconto"
-      />
+      <Tools buttons={toolsButtons} />
 
       <div className="table-responsive">
         <Table striped bordered hover className="custom-table">

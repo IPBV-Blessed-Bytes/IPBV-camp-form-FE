@@ -120,7 +120,7 @@ const AdminRide = ({ loggedUsername }) => {
     const worksheet = XLSX.utils.json_to_sheet(combinedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Rides');
-    XLSX.writeFile(workbook, 'rides_data.xlsx');
+    XLSX.writeFile(workbook, 'caronas.xlsx');
   };
 
   const handleShowDeleteRelationshipModal = (needRideId) => {
@@ -321,7 +321,7 @@ const AdminRide = ({ loggedUsername }) => {
                     <div className="d-flex justify-content-between align-items-center">
                       {column.render('Header')}
                       <span className="sort-icon-wrapper">
-                        <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
+                        <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
                       </span>
                     </div>
                   </th>
@@ -348,17 +348,25 @@ const AdminRide = ({ loggedUsername }) => {
     );
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'rooms-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    }
+  ];
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Caronas" sessionTypeIcon="ride" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Caronas" sessionTypeIcon="ride" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsClassname="table-tools__right-buttons-generic flex-sm-column flex-md-row  d-flex gap-2"
-        headerToolsTypeButton="success"
-        headerToolsOpenModal={generateExcel}
-        headerToolsButtonIcon="excel"
-        headerToolsButtonName="Baixar Excel"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Accordion className="mb-3">
         <Accordion.Header>Oferecem Carona</Accordion.Header>
