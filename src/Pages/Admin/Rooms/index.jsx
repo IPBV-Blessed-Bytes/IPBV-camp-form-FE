@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Table, Container, Accordion, Button, Form, Row, Col, Modal } from 'react-bootstrap';
+import { Table, Container, Accordion, Button, Form, Modal, Badge } from 'react-bootstrap';
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -27,7 +27,7 @@ const AdminRooms = ({ loggedUsername }) => {
   const [roomToDelete, setRoomToDelete] = useState(null);
   const [roomToRename, setRoomToRename] = useState(null);
   const [showDeleteCamperFromRoomModal, setShowDeleteCamperFromRoomModal] = useState(false);
-  const [camperToDelete, setCamperToDelete] = useState(false);
+  const [camperToDelete, setCamperToDelete] = useState(null);
 
   scrollUp();
 
@@ -112,12 +112,12 @@ const AdminRooms = ({ loggedUsername }) => {
     setShowEditModal(false);
   };
 
-  const handleShowDeleteCamperFromRoomModal = (camperId) => {
-    if (!camperId) {
+  const handleShowDeleteCamperFromRoomModal = (camper) => {
+    if (!camper || !camper.id) {
       toast.error('Erro: Acampante não encontrado.');
       return;
     }
-    setCamperToDelete(camperId);
+    setCamperToDelete(camper);
     setShowDeleteCamperFromRoomModal(true);
   };
 
@@ -253,7 +253,7 @@ const AdminRooms = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const response = await fetcher.delete(`aggregate/room/${camperToDelete}`);
+      const response = await fetcher.delete(`aggregate/room/${camperToDelete.id}`);
 
       if (response.data === 'Acampante removido do quarto com sucesso.') {
         toast.success('Acampante removido do quarto com sucesso');
@@ -310,25 +310,36 @@ const AdminRooms = ({ loggedUsername }) => {
     XLSX.writeFile(workbook, 'quartos.xlsx');
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'aggregate-excel',
+      name: 'Baixar Relatório Agregados',
+      onClick: generateAggregateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
+      cols: { xs: 12, md: 6 },
+      fill: '#fff',
+      iconSize: 40,
+      id: 'room-excel',
+      name: 'Baixar Relatório Quartos',
+      onClick: generateRoomExcel,
+      typeButton: 'teal-blue',
+      typeIcon: 'excel',
+    },
+  ];
+
   return (
     <Container className="rooms" fluid>
-      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#007185'} />
 
-      <Tools
-        headerToolsCols={{ xl: 8 }}
-        headerToolsClassname="table-tools__left-buttons d-flex"
-        headerToolsTypeButton="success"
-        headerToolsOpenModal={generateAggregateExcel}
-        headerToolsButtonIcon="excel"
-        headerToolsButtonName="Baixar Excel Agregados"
-        secondaryButtonCols={{ xl: 4 }}
-        secondaryButtonTypeButton="warning"
-        secondaryButtonOpenModal={generateRoomExcel}
-        secondaryButtonClassname="table-tools__right-buttons"
-        secondaryButtonIcon="excel"
-        secondaryButtonFill={'#000'}
-        secondaryButtonName="Baixar Excel Quartos"
-      />
+      <Tools buttons={toolsButtons} />
 
       <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
@@ -347,7 +358,7 @@ const AdminRooms = ({ loggedUsername }) => {
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
                           <span className="sort-icon-wrapper">
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
+                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
                           </span>
                         </div>
                       </th>
@@ -383,7 +394,7 @@ const AdminRooms = ({ loggedUsername }) => {
       </Accordion>
 
       <div className="d-flex justify-content-end">
-        <Button onClick={handleOpenModal} className="mb-3 d-flex align-items-center" size="lg">
+        <Button variant="teal-blue" onClick={handleOpenModal} className="mb-3 d-flex align-items-center" size="lg">
           <Icons typeIcon="plus" iconSize={20} fill="#fff" />
           &nbsp;Adicionar Novo Quarto
         </Button>
@@ -394,57 +405,76 @@ const AdminRooms = ({ loggedUsername }) => {
           <Accordion.Item eventKey={room.id} key={room.id}>
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
-              <div className="d-flex justify-content-end mb-3 gap-3">
-                <Button variant="success" onClick={() => handleShowEditModal(room)}>
-                  <Icons typeIcon="edit" iconSize={24} />
-                  &nbsp;Renomear Quarto
-                </Button>
-                <Button variant="danger" onClick={() => handleShowDeleteModal(room)}>
-                  <Icons typeIcon="delete" iconSize={24} fill="#fff" />
-                  &nbsp;Excluir Quarto
-                </Button>
-              </div>
-              <Row className="mb-3">
-                <Col lg="8" md="7" sm="12" className="mb-3 mb-md-0">
-                  <Form.Select
-                    onChange={(e) => {
-                      setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }));
-                    }}
-                    size="md"
+              <div className="p-3 rounded shadow-sm bg-light mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                  <div className="d-flex align-items-center">
+                    <Badge bg="teal-blue" className="px-3 py-2">
+                      {room.campers?.length || 0} membro{room.campers?.length === 1 ? '' : 's'}
+                    </Badge>
+                  </div>
+
+                  <div className="d-flex gap-2">
+                    <Button variant="outline-teal-blue" size="sm" onClick={() => handleShowEditModal(room)}>
+                      <Icons className="rooms-rename-icon" typeIcon="edit" iconSize={18} />
+                      &nbsp;Renomear
+                    </Button>
+                    <Button variant="outline-danger" size="sm" onClick={() => handleShowDeleteModal(room)}>
+                      <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
+                      &nbsp;Excluir
+                    </Button>
+                  </div>
+                </div>
+
+                <Form.Select
+                  size="sm"
+                  onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
+                >
+                  <option value="" selected>
+                    Selecione um acampante
+                  </option>
+                  {dropdownCampers
+                    .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
+                    .sort((a, b) => a.personalInformation.name.localeCompare(b.personalInformation.name))
+                    .map((camper) => (
+                      <option key={camper.id} value={camper.id}>
+                        {camper.personalInformation.name}
+                      </option>
+                    ))}
+                </Form.Select>
+
+                <div className="text-end mt-3">
+                  <Button
+                    variant="outline-teal-blue"
+                    size="sm"
+                    onClick={() => handleAddCamperToRoom(room.id, room.name)}
                   >
-                    <option value="" selected>
-                      Selecione um acampante para adicionar ao quarto
-                    </option>
-                    {dropdownCampers
-                      .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
-                      .sort((a, b) => a.personalInformation.name.localeCompare(b.personalInformation.name))
-                      .map((camper) => (
-                        <option key={camper.id} value={camper.id}>
-                          {camper.personalInformation.name}
-                        </option>
-                      ))}
-                  </Form.Select>
-                </Col>
-                <Col lg="4" md="5" sm="12" className="d-flex justify-content-end mb-3">
-                  <Button onClick={() => handleAddCamperToRoom(room.id, room.name)} size="md">
-                    <Icons typeIcon="add-person" iconSize={24} fill="#fff" />
+                    <Icons typeIcon="add-person" iconSize={18} fill="#007185" />
                     &nbsp;Adicionar ao Quarto
                   </Button>
-                </Col>
-              </Row>
-              <Col xs="12" md="12" lg="6">
-                <ol>
-                  {(room.campers || []).map((camper, index) => (
-                    <li key={index}>
-                      <span>{camper.name}</span>&nbsp;-&nbsp;
-                      <Button variant="danger" size="sm" onClick={() => handleShowDeleteCamperFromRoomModal(camper.id)}>
-                        <Icons typeIcon="delete" iconSize={24} fill="#fff" />
-                      </Button>
-                      <hr className="horizontal-line" />
-                    </li>
-                  ))}
-                </ol>
-              </Col>
+                </div>
+              </div>
+
+              {room.campers && room.campers.length > 0 && (
+                <div className="p-3 rounded border bg-white">
+                  <ul className="list-unstyled m-0">
+                    {room.campers.map((camper, index) => (
+                      <li key={index} className="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <Badge size="sm" bg="teal-blue" className="me-2">
+                          {camper.name}
+                        </Badge>
+
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => handleShowDeleteCamperFromRoomModal(camper)}
+                        >
+                          <Icons typeIcon="delete" iconSize={16} fill="#dc3545" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </Accordion.Body>
           </Accordion.Item>
         ))}
@@ -488,7 +518,9 @@ const AdminRooms = ({ loggedUsername }) => {
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Tem certeza de que deseja excluir este quarto?</Modal.Body>
+        <Modal.Body>
+          Tem certeza que deseja excluir <b>{roomToDelete?.name}</b>?
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteModal}>
             Cancelar
@@ -542,7 +574,9 @@ const AdminRooms = ({ loggedUsername }) => {
             <b>Confirmar Exclusão</b>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Tem certeza de que deseja excluir esse acampante do quarto?</Modal.Body>
+        <Modal.Body>
+          Tem certeza que deseja excluir <b>{camperToDelete?.name}</b> do quarto?
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
             Cancelar
