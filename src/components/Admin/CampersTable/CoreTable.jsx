@@ -20,7 +20,7 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
                           <span key={sortKey} {...restSortProps} className="sort-icon-wrapper px-3">
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} />
+                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill={'#fff'} />
                           </span>
                         </div>
                       </th>

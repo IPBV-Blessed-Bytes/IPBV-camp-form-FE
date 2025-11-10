@@ -21,7 +21,7 @@ const AdminHeader = ({
           </Button>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">
-          <h4 className="fw-bold m-0">{pageName}</h4>
+          <h4 className="admin-header-title fw-bold m-0">{pageName}</h4>
           <Icons className="m-left" typeIcon={sessionTypeIcon} iconSize={iconSize} fill={fill} />
         </Col>
       </Row>
