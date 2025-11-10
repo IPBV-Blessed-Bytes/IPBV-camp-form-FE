@@ -39,7 +39,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
       {primaryPermission && (
         <button className="data-panel-btn" onClick={() => navigate('/admin/painel')} title="Painel de Dados">
-          <Icons typeIcon="chart" iconSize={45} fill={'#ffc107'} />
+          <Icons typeIcon="chart" iconSize={45} fill={'#fff'} />
         </button>
       )}
 
