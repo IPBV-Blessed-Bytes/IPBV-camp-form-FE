@@ -151,7 +151,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
           </a>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" className="btn-inf" onClick={handleCloseLgpdModal}>
+          <Button className="btn-inf" onClick={handleCloseLgpdModal}>
             Ciente
           </Button>
         </Modal.Footer>

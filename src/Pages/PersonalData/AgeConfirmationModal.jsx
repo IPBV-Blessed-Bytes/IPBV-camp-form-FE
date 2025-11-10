@@ -24,7 +24,7 @@ const AgeConfirmationModal = ({
         <Button variant="outline-secondary" onClick={handleCancelAge}>
           Cancelar
         </Button>
-        <Button variant="info" className='btn-confirm' onClick={handleConfirmAge}>
+        <Button className='btn-confirm' onClick={handleConfirmAge}>
           Confirmar
         </Button>
       </Modal.Footer>

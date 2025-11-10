@@ -57,7 +57,7 @@ const CpfReview = ({ handlePersonData }) => {
     },
   });
 
-  const handleKeyDown = (e) => e.key === 'Enter' && handleLogin();
+  const handleKeyDown = (e) => e.key === 'Enter';
 
   scrollUp();
 
