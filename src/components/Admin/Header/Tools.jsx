@@ -1,122 +1,49 @@
-import { useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
-import SecondaryButton from './SecondaryButton';
+import Icons from '@/components/Global/Icons';
 
-const Tools = ({
-  headerToolsCols,
-  headerToolsTypeButton,
-  headerToolsOpenModal,
-  headerToolsClassname,
-  headerToolsButtonIcon,
-  headerToolsButtonSize,
-  headerToolsButtonFill,
-  headerToolsButtonName,
-  secondaryButtonCols,
-  secondaryButtonTypeButton,
-  secondaryButtonOpenModal,
-  secondaryButtonClassname,
-  secondaryButtonIcon,
-  secondaryButtonSize,
-  secondaryButtonFill,
-  secondaryButtonName,
-}) => {
-  const [showSecondaryButton, setShowSecondaryButton] = useState(false);
+const Tools = ({ buttons = [], flexType }) => {
+  if (!buttons.length) return null;
 
-  const showHeaderTools = () => {
-    if (
-      headerToolsCols ||
-      headerToolsTypeButton ||
-      headerToolsOpenModal ||
-      headerToolsClassname ||
-      headerToolsButtonIcon ||
-      headerToolsButtonSize ||
-      headerToolsButtonFill ||
-      headerToolsButtonName
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+  const renderButton = (btn, index) => {
+    if (btn.condition !== undefined && !btn.condition) return null;
+
+    return (
+      <Col key={btn.id || index} {...btn.cols}>
+        <div className={btn.className}>
+          <Button variant={btn.typeButton || 'primary'} onClick={btn.onClick} className={btn.buttonClassName || ''}>
+            {btn.typeIcon && <Icons typeIcon={btn.typeIcon} iconSize={btn.iconSize} fill={btn.fill} />}
+            <b className="mt-2">{btn.name}</b>
+          </Button>
+        </div>
+      </Col>
+    );
   };
 
-  const handleShowSecondaryButton = (value) => {
-    setShowSecondaryButton(value);
-  };
+  if (flexType) {
+    return <div className={`d-flex ${flexType} align-items-center mb-4`}>{buttons.map(renderButton)}</div>;
+  }
 
-  return (
-    <>
-      {showHeaderTools() && (
-        <Row className="mb-4">
-          <Col
-            className={showSecondaryButton && 'mb-3 mb-xl-0'}
-            xl={headerToolsCols?.xl || 12}
-            lg={headerToolsCols?.lg || 12}
-            md={headerToolsCols?.md || 12}
-            xs={headerToolsCols?.xs || 12}
-          >
-            <div className={headerToolsClassname}>
-              <Button
-                variant={headerToolsTypeButton}
-                onClick={headerToolsOpenModal}
-                className="d-flex align-items-center"
-                size="lg"
-              >
-                <Icons
-                  typeIcon={headerToolsButtonIcon}
-                  iconSize={headerToolsButtonSize || 30}
-                  fill={headerToolsButtonFill || '#fff'}
-                />
-                <span className="table-tools__button-name">&nbsp;{headerToolsButtonName}</span>
-              </Button>
-            </div>
-          </Col>
-
-          <SecondaryButton
-            showSecondaryButton={handleShowSecondaryButton}
-            secondaryButtonCols={secondaryButtonCols}
-            secondaryButtonTypeButton={secondaryButtonTypeButton}
-            secondaryButtonOpenModal={secondaryButtonOpenModal}
-            secondaryButtonClassname={secondaryButtonClassname}
-            secondaryButtonIcon={secondaryButtonIcon}
-            secondaryButtonSize={secondaryButtonSize}
-            secondaryButtonFill={secondaryButtonFill}
-            secondaryButtonName={secondaryButtonName}
-          />
-        </Row>
-      )}
-    </>
-  );
+  return <Row className="align-items-center mb-4">{buttons.map(renderButton)}</Row>;
 };
 
 Tools.propTypes = {
-  headerToolsCols: PropTypes.shape({
-    xl: PropTypes.number,
-    lg: PropTypes.number,
-    md: PropTypes.number,
-    xs: PropTypes.number,
-  }),
-  headerToolsTypeButton: PropTypes.string,
-  headerToolsOpenModal: PropTypes.func,
-  headerToolsClassname: PropTypes.string,
-  headerToolsButtonIcon: PropTypes.string,
-  headerToolsButtonSize: PropTypes.number,
-  headerToolsButtonFill: PropTypes.string,
-  headerToolsButtonName: PropTypes.string,
-  secondaryButtonCols: PropTypes.shape({
-    xl: PropTypes.number,
-    lg: PropTypes.number,
-    md: PropTypes.number,
-    xs: PropTypes.number,
-  }),
-  secondaryButtonTypeButton: PropTypes.string,
-  secondaryButtonOpenModal: PropTypes.func,
-  secondaryButtonClassname: PropTypes.string,
-  secondaryButtonIcon: PropTypes.string,
-  secondaryButtonSize: PropTypes.number,
-  secondaryButtonFill: PropTypes.string,
-  secondaryButtonName: PropTypes.string,
+  buttons: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      cols: PropTypes.object,
+      className: PropTypes.string,
+      typeButton: PropTypes.string,
+      onClick: PropTypes.func,
+      buttonClassName: PropTypes.string,
+      typeIcon: PropTypes.string,
+      iconSize: PropTypes.number,
+      fill: PropTypes.string,
+      name: PropTypes.string,
+      condition: PropTypes.bool,
+    }),
+  ),
+  flexType: PropTypes.string,
 };
 
 export default Tools;
