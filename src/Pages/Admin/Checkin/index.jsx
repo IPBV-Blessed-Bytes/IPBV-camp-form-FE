@@ -246,8 +246,8 @@ const AdminCheckin = ({ loggedUsername }) => {
               </Form.Group>
             </Col>
             <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
-              <Button variant="success" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
-                <Icons typeIcon="checked" iconSize={20} fill="#fff" />
+              <Button variant="outline-teal-blue" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
+                <Icons typeIcon="checked" iconSize={20} fill="#007185" />
                 <span className="d-none d-md-inline">&nbsp;Atualizar Check-in</span>
               </Button>
             </Col>
