@@ -298,6 +298,9 @@ button.accordion-button:not(.collapsed) {
 
 .btn.btn-outline-success,
 .btn.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-intense-green,
+.btn-outline-teal-blue,
 .cart-container .btn-outline-secondary {
   border-width: 3px !important;
 }
@@ -323,7 +326,8 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
 }
 
 .table-cells-header {
-  background-color: $medium-green !important;
+  background-color: $teal-blue !important;
+  color: $white !important;
   min-width: 275px;
   padding: 6px !important;
 
@@ -478,7 +482,8 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
   padding: 0.375rem 2.25rem 0.375rem 0.5rem !important;
 }
 
-.btn-info {
+// Custom Buttons
+.btn-teal-blue {
   --bs-btn-color: #fff;
   --bs-btn-bg: #007185;
   --bs-btn-border-color: #007185;
@@ -490,13 +495,60 @@ button.btn.btn-outline-secondary.plus-camper-button:hover svg {
   --bs-btn-disabled-border-color: #007185;
 }
 
-.btn.btn-info:hover {
+.btn-outline-teal-blue {
+  --bs-btn-color: #007185;
+  --bs-btn-border-color: #007185;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #007185;
+  --bs-btn-hover-border-color: #007185;
+  --bs-btn-focus-shadow-rgb: 13, 202, 240;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #007185;
+  --bs-btn-active-border-color: #007185;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #007185;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #007185;
+  --bs-gradient: none;
+}
+
+.btn-outline-intense-green {
+  --bs-btn-color: #79c879;
+  --bs-btn-border-color: #79c879;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #79c879;
+  --bs-btn-hover-border-color: #79c879;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #79c879;
+  --bs-btn-active-border-color: #79c879;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #79c879;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #79c879;
+  --bs-gradient: none;
+}
+
+.btn.btn-intense-green:hover,
+.btn-outline-intense-green:hover,
+.btn-outline-teal-blue:hover,
+.btn.btn-teal-blue:hover {
   color: $white;
   opacity: 0.9;
 
-  svg {
+  svg:not(.rooms-rename-icon) {
     fill: $white;
   }
+}
+
+.btn-bw-3 {
+  border-width: 3px;
+}
+
+// Custom Badges
+.bg-teal-blue {
+  --bs-bg-opacity: 1;
+  background-color: $teal-blue !important;
 }
 
 // Modal
