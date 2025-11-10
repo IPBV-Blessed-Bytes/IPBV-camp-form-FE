@@ -9,8 +9,6 @@ const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
 
   useEffect(() => {
     onFilterChange();
-    console.log('handleChange')
-
   }, [filterValue]);
 
   const handleChange = (e) => {
