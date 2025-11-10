@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Modal, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -371,144 +371,166 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     bus: 'Vagas Ônibus',
   };
 
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'add-new-lot',
+      name: 'Adicionar Novo Lote',
+      onClick: () => setShowAddModal(true),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'plus',
+    },
+  ];
+
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#204691'} />
+      <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#007185'} />
 
-      <Tools
-        headerToolsClassname="d-flex justify-content-end gap-2"
-        headerToolsTypeButton="primary"
-        headerToolsOpenModal={() => setShowAddModal(true)}
-        headerToolsButtonIcon="plus"
-        headerToolsButtonSize={20}
-        headerToolsButtonFill={'#fff'}
-        headerToolsButtonName="Adicionar Novo Lote"
-      />
+      <Tools buttons={toolsButtons} />
 
       <LotsSummary lots={lots} packageCount={packageCount} />
 
       <Row className="justify-content-center">
         <Col>
           <Form>
-            {lots.map((lot) => {
-              const today = new Date();
-              const start = parseDate(lot.startDate);
-              const end = parseDate(lot.endDate);
-              const isCurrentLot = start && end && today >= start && today <= end;
+            <Accordion alwaysOpen>
+              {lots.map((lot, index) => {
+                const today = new Date();
+                const start = parseDate(lot.startDate);
+                const end = parseDate(lot.endDate);
+                const isCurrentLot = start && end && today >= start && today <= end;
 
-              return (
-                <>
-                  <div
-                    key={lot.id}
-                    className="border rounded p-3 mb-3"
-                    style={{
-                      backgroundColor: isCurrentLot ? '#d4edda' : 'transparent',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                  >
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        <strong>Nome do Lote:</strong>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={lot.name}
-                        onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
-                        className="form-control-lg"
-                        placeholder="Nome do Lote"
-                      />
-                    </Form.Group>
+                return (
+                  <Accordion.Item eventKey={String(index)} key={lot.id}>
+                    <Accordion.Header>
+                      <div className="d-flex justify-content-between align-items-center w-100">
+                        <span>
+                          <strong>{lot.name || `Lote ${index + 1}`}</strong>
+                          {isCurrentLot && (
+                            <Badge bg="success" className="ms-2">
+                              Atual
+                            </Badge>
+                          )}
+                        </span>
+                        <small className="lot-range-date">
+                          {lot.startDate} - {lot.endDate}
+                        </small>
+                      </div>
+                    </Accordion.Header>
+                    <Accordion.Body
+                      style={{
+                        backgroundColor: isCurrentLot ? '#d4edda' : 'transparent',
+                        transition: 'background-color 0.3s ease',
+                      }}
+                    >
+                      <Form.Group className="mb-3">
+                        <Form.Label>
+                          <strong>Nome do Lote:</strong>
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={lot.name}
+                          onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
+                          className="form-control-lg"
+                          placeholder="Nome do Lote"
+                        />
+                      </Form.Group>
 
-                    <Row>
-                      <Col xs={12} md={6} className="mb-3">
-                        <Form.Group>
-                          <Form.Label>
-                            <strong>Data Início:</strong>
-                          </Form.Label>
-                          <DatePicker
-                            selected={parseDate(lot.startDate)}
-                            onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
-                            className="form-control form-control-lg"
-                            placeholderText="dd/mm/aaaa"
-                            dateFormat="dd/MM/yyyy"
-                            locale="ptBR"
-                            dropdownMode="select"
-                            showMonthDropdown
-                            showYearDropdown
-                          />
-                        </Form.Group>
-                      </Col>
-
-                      <Col xs={12} md={6} className="mb-3">
-                        <Form.Group>
-                          <Form.Label>
-                            <strong>Data Fim:</strong>
-                          </Form.Label>
-                          <DatePicker
-                            selected={parseDate(lot.endDate)}
-                            onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
-                            className="form-control form-control-lg"
-                            placeholderText="dd/mm/aaaa"
-                            dateFormat="dd/MM/yyyy"
-                            locale="ptBR"
-                            dropdownMode="select"
-                            showMonthDropdown
-                            showYearDropdown
-                          />
-                        </Form.Group>
-                      </Col>
-
-                      {Object.keys(defaultPrice).map((field) => (
-                        <Col xs={12} md={4} key={field} className="mb-3">
+                      <Row>
+                        <Col xs={12} md={6} className="mb-3">
                           <Form.Group>
                             <Form.Label>
-                              <strong>{priceLabels[field]}:</strong>
+                              <strong>Data Início:</strong>
                             </Form.Label>
-                            <Form.Control
-                              type="text"
-                              value={lot.price?.[field] || ''}
-                              onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                            <DatePicker
+                              selected={parseDate(lot.startDate)}
+                              onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
+                              className="form-control form-control-lg"
+                              placeholderText="dd/mm/aaaa"
+                              dateFormat="dd/MM/yyyy"
+                              locale="ptBR"
+                              dropdownMode="select"
+                              showMonthDropdown
+                              showYearDropdown
                             />
                           </Form.Group>
                         </Col>
-                      ))}
 
-                      {Object.keys(defaultVacancies).map((field) => (
-                        <Col xs={12} md={4} key={field} className="mb-3">
+                        <Col xs={12} md={6} className="mb-3">
                           <Form.Group>
                             <Form.Label>
-                              <strong>{vacanciesLabels[field]}:</strong>
+                              <strong>Data Fim:</strong>
                             </Form.Label>
-                            <Form.Control
-                              type="number"
-                              min="0"
-                              value={lot.vacancies?.[field] ?? 0}
-                              onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
+                            <DatePicker
+                              selected={parseDate(lot.endDate)}
+                              onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
+                              className="form-control form-control-lg"
+                              placeholderText="dd/mm/aaaa"
+                              dateFormat="dd/MM/yyyy"
+                              locale="ptBR"
+                              dropdownMode="select"
+                              showMonthDropdown
+                              showYearDropdown
                             />
                           </Form.Group>
                         </Col>
-                      ))}
-                    </Row>
 
-                    <div className="d-flex mt-3 justify-content-end gap-2">
-                      <Button
-                        variant="danger"
-                        onClick={() => {
-                          setSelectedLot(lot);
-                          setShowDeleteModal(true);
-                        }}
-                      >
-                        Deletar
-                      </Button>
-                      <Button variant="success" onClick={() => updateLot(lot)}>
-                        Salvar
-                      </Button>
-                    </div>
-                  </div>
-                  <hr className="horizontal-line" />
-                </>
-              );
-            })}
+                        {Object.keys(defaultPrice).map((field) => (
+                          <Col xs={12} md={4} key={field} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>
+                                <strong>{priceLabels[field]}:</strong>
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={lot.price?.[field] || ''}
+                                onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
+                              />
+                            </Form.Group>
+                          </Col>
+                        ))}
+
+                        {Object.keys(defaultVacancies).map((field) => (
+                          <Col xs={12} md={4} key={field} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>
+                                <strong>{vacanciesLabels[field]}:</strong>
+                              </Form.Label>
+                              <Form.Control
+                                type="number"
+                                min="0"
+                                value={lot.vacancies?.[field] ?? 0}
+                                onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
+                              />
+                            </Form.Group>
+                          </Col>
+                        ))}
+                      </Row>
+
+                      <div className="d-flex mt-3 justify-content-end gap-2">
+                        <Button
+                          variant="outline-danger"
+                          onClick={() => {
+                            setSelectedLot(lot);
+                            setShowDeleteModal(true);
+                          }}
+                        >
+                          <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
+                          &nbsp; Deletar
+                        </Button>
+                        <Button variant="teal-blue" onClick={() => updateLot(lot)}>
+                          <Icons typeIcon="checked" iconSize={20} fill="#fff" />
+                          &nbsp; Salvar
+                        </Button>
+                      </div>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                );
+              })}
+            </Accordion>
           </Form>
         </Col>
       </Row>
