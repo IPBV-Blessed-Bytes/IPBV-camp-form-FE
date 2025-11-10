@@ -13,7 +13,7 @@ const ExternalLinkRow = () => {
             <Card.Title className="fw-bold text-success">Utilitários</Card.Title>
             <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições de 2025 e Pagar.me</Card.Text>
             <div className="btn-wrapper">
-              <Button variant="info" href={PAGARME} target="_blank" rel="noopener noreferrer">
+              <Button variant="intense-green" href={PAGARME} target="_blank" rel="noopener noreferrer">
                 <strong>PAGAR.ME</strong>
               </Button>
               <Button variant="warning" href={OLD_SPREADSHEET_URL} target="_blank" rel="noopener noreferrer">
