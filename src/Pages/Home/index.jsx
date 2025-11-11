@@ -73,7 +73,16 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                       <span>
                         <b className="info-home-enphasis">Inscrição Individual:</b> Todas as pessoas devem ser
                         cadastradas, inclusive crianças, de qualquer faixa etária. Preencha todos os campos
-                        corretamente.
+                        corretamente. Qualquer dúvida, acesse a seção de perguntas e respostas{' '}
+                        <a
+                          className="info-home-link"
+                          href="https://inscricaoipbv.com.br/perguntas"
+                          target="_self"
+                          rel="noopener noreferrer"
+                        >
+                          aqui
+                        </a>
+                        .
                       </span>
                     </h6>
                   </li>
@@ -109,7 +118,17 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                       />
                       <span>
                         <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
-                        igreja pelo telefone <em>(81) 99679-0140</em> (WhatsApp).
+                        igreja pelo telefone <em>(81) 99679-0140</em> (WhatsApp). Para mais informações gerais, acesse o
+                        site informativo do acampamento{' '}
+                        <a
+                          className="info-home-link"
+                          href="https://acampamento-ipbv-2026-79d0177f.base44.app/Home"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          aqui
+                        </a>
+                        .
                       </span>
                     </h6>
                   </li>
