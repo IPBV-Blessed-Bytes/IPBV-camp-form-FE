@@ -117,8 +117,8 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                         stroke={'#007185'}
                       />
                       <span>
-                        <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a secretaria da
-                        igreja pelo telefone <em>(81) 99679-0140</em> (WhatsApp). Para mais informações gerais, acesse o
+                        <b className="info-home-enphasis">Em caso de erro ou dificuldade:</b> Contate a organização do
+                        evento pelo telefone <em>(81) 99999-7767</em> ou pelo <em>(81) 99839-0194</em> (WhatsApp). Para mais informações gerais, acesse o
                         site informativo do acampamento{' '}
                         <a
                           className="info-home-link"

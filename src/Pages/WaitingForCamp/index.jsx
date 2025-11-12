@@ -55,8 +55,8 @@ const WaitingForCamp = () => {
                 </div>
                 <p className="form__success__contact">
                   <b>
-                    Qualquer dúvida nos contacte no telefone da secretaria para mais informações. <br />
-                    (81) 99679-0140 (Whatsapp)
+                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações. <br />
+                    (81) 99999-7767 (Whatsapp) ou (81) 99839-0194.
                   </b>
                 </p>
                 <p>

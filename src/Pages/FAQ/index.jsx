@@ -20,7 +20,7 @@ const FAQ = () => {
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda
-              restem dúvidas, entre em contato com a organização do evento pelo contato (81) 99679-0140 (WhatsApp).
+              restem dúvidas, entre em contato com a organização do evento pelo contato (81) 99999-7767 (WhatsApp).
             </Card.Text>
             <Accordion>
               <Accordion.Item eventKey="0">
@@ -58,7 +58,7 @@ const FAQ = () => {
                   <br />
                   <br />
                   Para solicitar a transferência da sua inscrição, entre em contato com a organização do evento pelo
-                  número (81) 99679-0140 (WhatsApp). (WhatsApp).
+                  número (81) 99999-7767 (WhatsApp). (WhatsApp).
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="4">
@@ -79,7 +79,7 @@ const FAQ = () => {
                   <br />
                   <br />
                   Para corrigir algum dado incorreto, entre em contato com a organização do evento pelo contato (81)
-                  99679-0140 (WhatsApp) e solicite a alteração.
+                  99999-7767 (WhatsApp) e solicite a alteração.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="5">
@@ -95,7 +95,7 @@ const FAQ = () => {
                     https://inscricaoipbv.com.br/verificacao
                   </a>{' '}
                   e informe o CPF e a data de nascimento. O sistema exibirá seus dados cadastrados. Para editar algum
-                  dado, entre em contato com a organização do evento pelo contato (81) 99679-0140 (WhatsApp).
+                  dado, entre em contato com a organização do evento pelo contato (81) 99999-7767 (WhatsApp).
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="6">
@@ -103,7 +103,7 @@ const FAQ = () => {
                 <Accordion.Body>
                   Isso pode ocorrer se você informar incorretamente sua data de nascimento. Nesse caso, o sistema pode
                   interpretar que você é criança e não gerar cobrança. Entre em contato com a organização do evento pelo
-                  contato (81) 99679-0140 (WhatsApp) para corrigir o dado e efetuar o pagamento corretamente.
+                  contato (81) 99999-7767 (WhatsApp) para corrigir o dado e efetuar o pagamento corretamente.
                   <br />
                   <br />
                   Atenção ao preencher todos os campos!
@@ -120,7 +120,7 @@ const FAQ = () => {
                 <Accordion.Body>
                   Primeiro, observe a mensagem de erro exibida. Se for algo simples, corrija e tente novamente. Caso
                   persista, atualize a página e/ou tente mais tarde. Se o problema continuar, entre em contato com a
-                  organização do evento pelo contato (81) 99679-0140 (WhatsApp).
+                  organização do evento pelo contato (81) 99999-7767 (WhatsApp).
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="9">
@@ -215,7 +215,7 @@ const FAQ = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                   Sim, você deve digitalizar e enviar com antecedência o documento de identificação do seu filho (RG ou
-                  certidão de nascimento) para a organização do evento pelo contato (81) 99679-0140 (WhatsApp), além de
+                  certidão de nascimento) para a organização do evento pelo contato (81) 99999-7767 (WhatsApp), além de
                   levá-lo no dia da viagem.
                 </Accordion.Body>
               </Accordion.Item>
