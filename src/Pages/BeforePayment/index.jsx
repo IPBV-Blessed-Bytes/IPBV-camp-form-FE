@@ -171,6 +171,15 @@ const BeforePayment = ({
 
   const totalGeral = totalFinal;
 
+  const getFeeByAge = (age) => calculateRegistrationFee(rawFee, age);
+
+  const dynamicFeeTip = `
+Valor da taxa de inscrição conforme a idade:
+até 8 anos = ${getFeeByAge(8)} reais,
+9 a 14 anos = ${getFeeByAge(10)} reais,
+acima de 15 anos = ${getFeeByAge(20)} reais
+`;
+
   return (
     <Container className="form__container__cart-height">
       <Row>
@@ -213,7 +222,7 @@ const BeforePayment = ({
                       typeIcon="info"
                       size={15}
                       color={'#7f7878'}
-                      text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 80 reais, acima de 15 anos = 160 reais"
+                      text={dynamicFeeTip}
                     />
                   </div>
                   <h5 className="summary-individual-base-value">R$ {individualBase},00</h5>

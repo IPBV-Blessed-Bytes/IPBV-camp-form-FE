@@ -195,6 +195,17 @@ const Packages = ({
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount + individualBase - discountNumeric, 0);
 
+  const rawFee = Number(activeLot?.price?.registrationFee || 0);
+
+  const getFeeByAge = (ageValue) => (rawFee > 0 ? calculateRegistrationFee(rawFee, ageValue) : 0);
+
+  const dynamicFeeTip = `
+Valor da taxa de inscrição conforme a idade:
+até 8 anos = ${getFeeByAge(8)} reais,
+9 a 14 anos = ${getFeeByAge(10)} reais,
+acima de 15 anos = ${getFeeByAge(20)} reais
+`;
+
   return (
     <Container className="packages-page form__container__cart-height">
       <Row>
@@ -351,7 +362,7 @@ const Packages = ({
                           typeIcon="info"
                           size={15}
                           color={'#7f7878'}
-                          text="Valor da taxa de inscrição conforme a idade: até 8 anos = 0 reais, 9 a 14 anos = 80 reais, acima de 15 anos = 160 reais"
+                          text={dynamicFeeTip}
                         />
                       </div>
                       <div className="summary-individual-base-value"> R$ {individualBase},00 </div>
