@@ -1452,11 +1452,22 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       return flattenObject(newRow);
     });
 
+    const numericFields = ['Valor do pacote', 'Valor do Desconto', 'Valor final'];
+
     const orderedData = dataToExport.map((row) => {
       const orderedRow = {};
       orderedFields.forEach((field) => {
-        orderedRow[field] = row[field] || '';
+        let value = row[field] || '';
+
+        if (numericFields.includes(field)) {
+          const num = Number(String(value).replace('R$', '').replace('.', '').replace(',', '.').trim());
+
+          value = isNaN(num) ? '' : num;
+        }
+
+        orderedRow[field] = value;
       });
+
       return orderedRow;
     });
 

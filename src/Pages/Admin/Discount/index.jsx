@@ -135,15 +135,32 @@ const AdminDiscount = ({ loggedUsername }) => {
   };
 
   const generateExcel = () => {
+    const numericFields = ['Valor Desconto', 'Valor Pago'];
+
+    const parseNumber = (value) => {
+      if (value === undefined || value === null) return '';
+      const cleaned = String(value).replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+
+      const num = Number(cleaned);
+      return isNaN(num) ? '' : num;
+    };
+
     const fieldMapping = discount.map((discount) => {
       const camper = paidUsers.find((user) => user.personalInformation.cpf === discount.cpf);
-      return {
+
+      let row = {
         CPF: discount.cpf,
         'Valor Desconto': discount.discount,
         'Motivo do Desconto': discount.discountReason || '-',
         Usuário: camper ? discount.user : 'NÃO UTILIZADO',
         'Valor Pago': camper ? camper.totalPrice : '-',
       };
+
+      numericFields.forEach((key) => {
+        row[key] = parseNumber(row[key]);
+      });
+
+      return row;
     });
 
     const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
