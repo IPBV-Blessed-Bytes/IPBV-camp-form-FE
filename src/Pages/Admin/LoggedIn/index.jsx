@@ -28,7 +28,7 @@ const AdminLoggedIn = ({
   user,
   userRole,
 }) => {
-  const [filteredChildrenCount, setFilteredChildrenCount] = useState([]);
+  const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState([]);
   const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
@@ -52,10 +52,11 @@ const AdminLoggedIn = ({
         if (Array.isArray(response.data.content)) {
           const filteredCampers = response.data.content.filter(
             (camper) =>
-              camper.formPayment?.formPayment === 'nonPaid' && camper.personalInformation?.gender === 'Crianca',
+              camper.personalInformation?.gender === 'Crianca' &&
+              (camper.totalPrice === '0' || camper.totalPrice === '' || camper.totalPrice === 0),
           );
 
-          setFilteredChildrenCount(filteredCampers.length);
+          setFilteredCountNonPayingChildren(filteredCampers.length);
         } else {
           console.error('Erro: Dados não estão no formato esperado.');
         }
@@ -82,7 +83,7 @@ const AdminLoggedIn = ({
 
   const usedPackages = availablePackages?.usedPackages || {};
   const totalPackages = availablePackages?.totalPackages || {};
-  
+
   const familyCollegeFilledVacancies = Number(usedPackages['host-college-family'] || 0);
   const collectiveFilledVacancies = Number(usedPackages['host-college-collective'] || 0);
   const campingFilledVacancies = Number(usedPackages['host-college-camping'] || 0);
@@ -135,12 +136,12 @@ const AdminLoggedIn = ({
   const totalCardsData = [
     {
       title: 'Total de Crianças Pagantes',
-      filledVacancies: Number(totalChildren - filteredChildrenCount) || 0,
+      filledVacancies: Number(totalChildren - filteredCountNonPayingChildren) || 0,
       showRemainingVacancies: false,
     },
     {
       title: 'Total de Crianças Não Pagantes',
-      filledVacancies: Number(filteredChildrenCount) || 0,
+      filledVacancies: Number(filteredCountNonPayingChildren) || 0,
       showRemainingVacancies: false,
     },
     {
