@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Button, Modal, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
@@ -68,7 +69,50 @@ const AdminUserLogs = ({ loggedUsername }) => {
     }
   };
 
+  const generateExcel = () => {
+    if (!groupedLogs || Object.keys(groupedLogs).length === 0) {
+      toast.error('Nenhum log disponível para exportar');
+      return;
+    }
+
+    const workbook = XLSX.utils.book_new();
+
+    Object.entries(groupedLogs).forEach(([username, logs]) => {
+      const sheetData = logs.map((log, index) => ({
+        Nº: index + 1,
+        Usuário: username,
+        Ação: log.action,
+        Data: new Date(log.timestamp).toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        IP: log.ip,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(sheetData);
+
+      const safeSheetName = username.substring(0, 30);
+      XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
+    });
+
+    XLSX.writeFile(workbook, 'logs.xlsx');
+  };
+
   const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'export-logs',
+      name: 'Baixar Relatório',
+      onClick: () => generateExcel(),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
     {
       buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
       cols: { xs: 12, md: 6 },
@@ -79,7 +123,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
       onClick: () => setShowDeleteModal(true),
       typeButton: 'outline-danger',
       typeIcon: 'danger',
-    }
+    },
   ];
 
   return (
