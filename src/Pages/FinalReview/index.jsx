@@ -20,6 +20,9 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const location = useLocation();
   const { emptyCart } = useCart();
 
+  const MAX_CHAR_WARNING = 300;
+  const isLimitReached = observation.length >= MAX_CHAR_WARNING;
+
   const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
 
   const formValues = getTempData();
@@ -362,11 +365,18 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
                     </Form.Label>
                     <Form.Control
                       as="textarea"
+                      className="mb-2"
                       rows={3}
                       placeholder="Digite sua observação (opcional)"
                       value={observation}
+                      maxLength={300}
                       onChange={(e) => setObservation(e.target.value)}
                     />
+                    <Form.Text
+                      className={`d-flex justify-content-end ${isLimitReached ? 'text-danger fw-bold' : 'text-muted'}`}
+                    >
+                      {observation.length}/300 caracteres
+                    </Form.Text>
                   </Form.Group>
                   <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
                     <Form.Check
