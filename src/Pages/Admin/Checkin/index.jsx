@@ -17,6 +17,7 @@ const AdminCheckin = ({ loggedUsername }) => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
+  const [userWristbands, setUserWristbands] = useState([]);
 
   scrollUp();
 
@@ -51,6 +52,7 @@ const AdminCheckin = ({ loggedUsername }) => {
         if (user) {
           setUserInfo(user);
           setCheckinStatus(user.checkin);
+          fetchUserWristbands(user.id, user.package);
           toast.success('Usuário encontrado com sucesso');
 
           const [day, month, year] = user.personalInformation.birthday.split('/');
@@ -73,6 +75,52 @@ const AdminCheckin = ({ loggedUsername }) => {
       setCheckinStatus(false);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserWristbands = async (userId, userPackage) => {
+    try {
+      // const response = await fetcher.get('/user-wristbands', {
+      //   params: { userId },
+      // });
+      // if (response.status === 200) {
+      //   setUserWristbands(response.data);
+      //   return;
+      // }
+
+      const wristbands = [];
+
+      const foodName = userPackage?.foodName;
+      const teamColor = userPackage?.teamColor;
+
+      let foodColor = '#000000';
+
+      if (
+        foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
+        foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
+      ) {
+        foodColor = '#0000FF';
+      } else if (foodName === 'Alimentação Parcial (Almoço e Jantar)') {
+        foodColor = '#D36AD6';
+      }
+
+      wristbands.push({
+        id: 'food',
+        color: foodColor,
+        label: foodColor === '#000000' ? 'Sem Alimentação' : 'Com Alimentação',
+      });
+
+      wristbands.push({
+        id: 'team',
+        color: teamColor || '#000000',
+        label: 'Time',
+      });
+
+      setUserWristbands(wristbands);
+    } catch (error) {
+      console.error('Erro ao buscar pulseiras:', error);
+      toast.error('Erro ao carregar pulseiras do usuário');
+      setUserWristbands([]);
     }
   };
 
@@ -123,33 +171,6 @@ const AdminCheckin = ({ loggedUsername }) => {
 
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
-  const userWristbands = [];
-
-  const accomodationName = userInfo?.package?.accomodationName;
-  const foodName = userInfo?.package?.foodName;
-
-  const isSchoolAccommodation = [
-    'Colégio Quarto Coletivo',
-    'Colegio Quarto Coletivo',
-    'Colégio Quarto Família',
-    'Colegio Quarto Familia',
-    'Colégio Camping',
-    'Colegio Camping',
-  ].includes(accomodationName);
-  if (isSchoolAccommodation) {
-    userWristbands.push('#FFFF00');
-  }
-  if (
-    foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
-    foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
-  ) {
-    userWristbands.push('#0000FF');
-  } else if (foodName === 'Alimentação Parcial (Almoço e Jantar)') {
-    userWristbands.push('#D36AD6');
-  } else {
-    userWristbands.push('#000000');
-  }
-
   return (
     <Container fluid>
       <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#007185'} />
@@ -171,7 +192,7 @@ const AdminCheckin = ({ loggedUsername }) => {
           </Form.Group>
         </Col>
         <Col lg={4} md={4} xs={4} className="d-flex align-items-end">
-          <Button variant='teal-blue' onClick={handleSearchUser} size="lg" disabled={!cpf}>
+          <Button variant="teal-blue" onClick={handleSearchUser} size="lg" disabled={!cpf}>
             <Icons typeIcon="m-glass" iconSize={25} fill="#fff" />
             <span className="d-none d-md-inline">&nbsp;Buscar Usuário</span>
           </Button>
@@ -181,8 +202,13 @@ const AdminCheckin = ({ loggedUsername }) => {
       {userInfo && (
         <>
           <Row className="my-3 p-0 checkin-color-status-wrapper">
-            {userWristbands.map((color, index) => (
-              <div key={index} className="checkin-color-status-wrapper__line" style={{ background: color }} />
+            {userWristbands.map((band) => (
+              <div key={band.id} className="checkin-color-status-wrapper__item px-0">
+                <span className="checkin-color-status-wrapper__label pl-2">
+                  {band.id === 'food' ? 'Pulseira Alimentação:' : 'Pulseira Time:'}
+                </span>
+                <div className="checkin-color-status-wrapper__line" style={{ background: band.color }} />
+              </div>
             ))}
           </Row>
           <Row className="mb-2">

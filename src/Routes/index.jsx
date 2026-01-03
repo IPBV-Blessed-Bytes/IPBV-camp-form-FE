@@ -42,6 +42,7 @@ import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 // import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
+import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
 
 const FormRoutes = ({
   adminPathname,
@@ -395,6 +396,14 @@ const FormRoutes = ({
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUsersManagement loggedUsername={loggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/pulseiras"
+            element={
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminWristbandsManagement loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
