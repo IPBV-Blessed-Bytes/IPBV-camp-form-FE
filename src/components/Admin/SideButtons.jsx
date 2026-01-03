@@ -64,6 +64,11 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
           <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
         </button>
 
+        <button className="settings-message-button" onClick={() => navigate('/admin/pulseiras')}>
+          Controle de Pulseiras&nbsp;
+          <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
+        </button>
+
         <button className="settings-message-button" onClick={() => navigate('/admin/contexto')}>
           Contexto do Formulário&nbsp;
           <Icons className="settings-icons" typeIcon="form-context" iconSize={25} fill={'#fff'} />
