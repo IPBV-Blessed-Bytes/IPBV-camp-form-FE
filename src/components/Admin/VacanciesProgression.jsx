@@ -5,16 +5,14 @@ import { Box, Typography, LinearProgress } from '@mui/material';
 const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
   scrollUp();
 
-  const calculateVacanciesDetails = (packageNameKeyword, totalVacancies) => {
-    if (!totalVacancies || totalVacancies === 0) return { percentage: 0, filledVacancies: 0 };
+  const calculateVacanciesDetails = (labelName, totalVacancies) => {
+    if (!totalVacancies || totalVacancies === 0) {
+      return { percentage: 0, filledVacancies: 0 };
+    }
 
-    const filledVacancies =
-      Object.entries(usedValidPackages || {}).reduce((acc, [key, value]) => {
-        if (key.toLowerCase().includes(packageNameKeyword.toLowerCase())) {
-          acc += value;
-        }
-        return acc;
-      }, 0) || 0;
+    const filledVacancies = Array.isArray(usedValidPackages)
+  ? usedValidPackages.find((item) => item.name === labelName)?.value || 0
+  : 0;
 
     const percentage = Number(((filledVacancies / totalVacancies) * 100).toFixed(0));
 
@@ -24,14 +22,15 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
   const schoolSum =
     (totalPackages?.schoolIndividual || 0) + (totalPackages?.schoolFamily || 0) + (totalPackages?.schoolCamping || 0);
 
-  const schoolIndividualDetails = calculateVacanciesDetails(
-    'host-college-collective',
-    totalPackages?.schoolIndividual || 0,
-  );
-  const schoolFamilyDetails = calculateVacanciesDetails('host-college-family', totalPackages?.schoolFamily || 0);
-  const schoolCampingDetails = calculateVacanciesDetails('host-college-camping', totalPackages?.schoolCamping || 0);
-  const seminaryDetails = calculateVacanciesDetails('host-seminario', totalPackages?.seminary || 0);
-  const otherDetails = calculateVacanciesDetails('host-external', totalPackages?.other || 0);
+  const schoolIndividualDetails = calculateVacanciesDetails('Colégio Individual', totalPackages?.schoolIndividual || 0);
+
+  const schoolFamilyDetails = calculateVacanciesDetails('Colégio Família', totalPackages?.schoolFamily || 0);
+
+  const schoolCampingDetails = calculateVacanciesDetails('Colégio Camping', totalPackages?.schoolCamping || 0);
+
+  const seminaryDetails = calculateVacanciesDetails('Seminário', totalPackages?.seminary || 0);
+
+  const otherDetails = calculateVacanciesDetails('Externo', totalPackages?.other || 0);
 
   const totalVacancies = schoolSum + (totalPackages?.seminary || 0) + (totalPackages?.other || 0);
   const totalFilledVacancies =
@@ -108,7 +107,12 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
 };
 
 VacanciesProgression.propTypes = {
-  usedValidPackages: PropTypes.objectOf(PropTypes.number),
+  usedValidPackages: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+  ),
   totalPackages: PropTypes.shape({
     schoolIndividual: PropTypes.number,
     schoolFamily: PropTypes.number,

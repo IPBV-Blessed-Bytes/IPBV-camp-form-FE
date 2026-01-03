@@ -145,7 +145,7 @@ const AdminDataPanel = ({ totalPackages, usedPackages, usedValidPackages, userRo
         <Accordion className="mb-3">
           <Accordion.Header>Gráfico de Avanço de Inscrições</Accordion.Header>
           <Accordion.Body>
-            <VacanciesProgression usedValidPackages={usedValidPackages} totalPackages={totalPackages} />
+            <VacanciesProgression usedValidPackages={usedPackagesData} totalPackages={totalPackages} />
           </Accordion.Body>
         </Accordion>
       )}
