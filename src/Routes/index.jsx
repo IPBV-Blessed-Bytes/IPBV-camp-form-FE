@@ -40,7 +40,7 @@ import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
-// import CustomCarousel from '@/components/Global/CustomCarousel';
+import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
 
 const FormRoutes = ({
@@ -248,17 +248,9 @@ const FormRoutes = ({
 
               {showInfoButton && <InfoButton timeout />}
 
-              {/* {(steps === enumSteps.home || steps === enumSteps.success) && (
-                <CustomCarousel
-                  title="Parceiros"
-                  images={[
-                    '../../public/Images/hebron.png',
-                    '../../public/Images/oasis.png',
-                    '../../public/Images/canaa.png',
-                    '../../public/Images/serur.png',
-                  ]}
-                />
-              )} */}
+              {(steps === enumSteps.home || steps === enumSteps.success) && (
+                <CustomCarousel title="Parceiros" />
+              )}
 
               <Footer handleAdminClick={handleAdminClick} />
             </>
