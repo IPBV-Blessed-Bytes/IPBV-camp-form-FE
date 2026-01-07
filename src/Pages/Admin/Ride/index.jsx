@@ -359,7 +359,7 @@ const AdminRide = ({ loggedUsername }) => {
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
-    }
+    },
   ];
 
   return (
@@ -369,13 +369,17 @@ const AdminRide = ({ loggedUsername }) => {
       <Tools buttons={toolsButtons} />
 
       <Accordion className="mb-3">
-        <Accordion.Header>Oferecem Carona</Accordion.Header>
-        <Accordion.Body>{renderTable(offerRideTableInstance)}</Accordion.Body>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>Oferecem Carona</Accordion.Header>
+          <Accordion.Body>{renderTable(offerRideTableInstance)}</Accordion.Body>
+        </Accordion.Item>
       </Accordion>
 
       <Accordion>
-        <Accordion.Header>Precisam de Carona</Accordion.Header>
-        <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>Precisam de Carona</Accordion.Header>
+          <Accordion.Body>{renderTable(needRideTableInstance)}</Accordion.Body>
+        </Accordion.Item>
       </Accordion>
 
       <Modal className="custom-modal" show={showDeleteRelationshipModal} onHide={handleCloseDeleteRelationshipModal}>
