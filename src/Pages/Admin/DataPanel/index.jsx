@@ -22,7 +22,7 @@ const labelMap = {
 
 const translateLabel = (key) => labelMap[key] || key.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 
-const AdminDataPanel = ({ totalPackages, usedPackages, usedValidPackages, userRole }) => {
+const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
   const [loading, setLoading] = useState(true);
   const [fillingVacancies, setFillingVacancies] = useState();
   const [packageData, setPackageData] = useState(null);
@@ -195,7 +195,6 @@ AdminDataPanel.propTypes = {
   userRole: PropTypes.string,
   totalPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   usedPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  usedValidPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 };
 
 export default AdminDataPanel;

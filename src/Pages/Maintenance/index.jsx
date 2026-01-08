@@ -1,5 +1,4 @@
 import { Container, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 
