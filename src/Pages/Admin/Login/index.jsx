@@ -19,7 +19,7 @@ const Login = ({
   totalValidWithBus,
   userRole,
 }) => {
-  const isAdminPathname = window.location.pathname === '/admin';
+  const isAdminPathname = window.location.pathname === '/admin' || window.location.pathname === '/dev';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
   const { login, logout, user, isLoggedIn, loading } = useAuth();

@@ -42,6 +42,8 @@ import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 // import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
+import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
+import Maintenance from '@/Pages/Maintenance';
 
 const FormRoutes = ({
   adminPathname,
@@ -105,6 +107,7 @@ const FormRoutes = ({
         <div className="components-container">
           {formContext === 'form-waiting' && <WaitingForCamp />}
           {formContext === 'form-off' && <Offline />}
+          {formContext === 'maintenance' && <Maintenance />}
 
           {formContext === 'form-on' && (
             <>
@@ -269,7 +272,7 @@ const FormRoutes = ({
       <div className="routes">
         <Routes>
           <Route
-            path="/admin"
+            path={formContext === 'maintenance' ? '/dev' : "/admin"}
             element={
               <Login
                 availablePackages={availablePackages}
@@ -283,7 +286,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/acampantes"
+            path={formContext === 'maintenance' ? '/dev/acampantes' : "/admin/acampantes"}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
@@ -294,7 +297,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/carona"
+            path={formContext === 'maintenance' ? '/dev/carona' : "/admin/carona"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRide loggedUsername={loggedUsername} />
@@ -302,7 +305,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/descontos"
+            path={formContext === 'maintenance' ? '/dev/descontos' : "/admin/descontos"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
                 <AdminDiscount loggedUsername={loggedUsername} />
@@ -310,7 +313,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/quartos"
+            path={formContext === 'maintenance' ? '/dev/quartos' : "/admin/quartos"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRooms loggedUsername={loggedUsername} />
@@ -318,7 +321,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/alimentacao"
+            path={formContext === 'maintenance' ? '/dev/alimentacao' : "/admin/alimentacao"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminExtraMeals />
@@ -326,7 +329,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/checkin"
+            path={formContext === 'maintenance' ? '/dev/checkin' : "/admin/checkin"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
                 <AdminCheckin loggedUsername={loggedUsername} />
@@ -334,7 +337,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/painel"
+            path={formContext === 'maintenance' ? '/dev/painel' : "/admin/painel"}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
@@ -350,7 +353,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/logs"
+            path={formContext === 'maintenance' ? '/dev/logs' : "/admin/logs"}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUserLogs loggedUsername={loggedUsername} />
@@ -358,7 +361,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/vagas"
+            path={formContext === 'maintenance' ? '/dev/vagas' : "/admin/vagas"}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminSeatManagement
@@ -375,7 +378,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/lotes"
+            path={formContext === 'maintenance' ? '/dev/lotes' : "/admin/lotes"}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminLotManagement loading={loading} loggedUsername={loggedUsername} packageCount={packageCount} />
@@ -383,7 +386,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/contexto"
+            path={formContext === 'maintenance' ? '/dev/contexto' : "/admin/contexto"}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminFormContext loggedUsername={loggedUsername} />
@@ -391,7 +394,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/usuarios"
+            path={formContext === 'maintenance' ? '/dev/usuarios' : "/admin/usuarios"}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUsersManagement loggedUsername={loggedUsername} />
@@ -399,7 +402,15 @@ const FormRoutes = ({
             }
           />
           <Route
-            path="/admin/opiniao"
+            path={formContext === 'maintenance' ? '/dev/pulseiras' : "/admin/pulseiras"}
+            element={
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminWristbandsManagement loggedUsername={loggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={formContext === 'maintenance' ? '/dev/opiniao' : "/admin/opiniao"}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminFeedback loggedUsername={loggedUsername} />

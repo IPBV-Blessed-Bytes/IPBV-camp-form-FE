@@ -38,17 +38,12 @@ function App() {
 
   return (
     <>
-      {(formContext === 'form-on' || formContext === 'form-off' || formContext === 'form-waiting') && (
-        <RoutesValidations formContext={formContext} />
-      )}
+      {(formContext === 'form-on' ||
+        formContext === 'form-off' ||
+        formContext === 'form-waiting' ||
+        formContext === 'maintenance') && <RoutesValidations formContext={formContext} />}
 
       {formContext === 'form-closed' && <CloseForm />}
-
-      {formContext === 'maintenance' && (
-        <b className="display-6 d-flex flex-column align-items-center px-4 mt-5">
-          SITE EM MANUTENÇÃO. RETORNE EM OUTRO MOMENTO!
-        </b>
-      )}
 
       {formContext === 'google-forms' && (
         <div

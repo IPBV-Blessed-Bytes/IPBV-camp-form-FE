@@ -1,4 +1,5 @@
-const isAdminPath = (pathname) => pathname.startsWith('/admin') || pathname === '/unauthorized';
+const isAdminPath = (pathname) =>
+  pathname.startsWith('/admin') || pathname.startsWith('/dev') || pathname === '/unauthorized';
 
 const shouldRenderForm = (pathname) => {
   return (
