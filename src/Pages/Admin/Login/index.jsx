@@ -81,13 +81,13 @@ const Login = ({
 };
 
 Login.propTypes = {
-  totalRegistrations: PropTypes.object.isRequired,
-  userRole: PropTypes.string,
-  totalValidWithBus: PropTypes.number,
   availablePackages: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   spinnerLoading: PropTypes.bool,
+  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  totalRegistrations: PropTypes.object.isRequired,
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  totalValidWithBus: PropTypes.number,
+  userRole: PropTypes.string,
 };
 
 export default Login;
