@@ -1,21 +1,22 @@
 import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 
-const AdminHeader = ({
-  pageName,
-  sessionTypeIcon,
-  iconSize,
-  fill,
-}) => {
+const AdminHeader = ({ pageName, sessionTypeIcon, iconSize, fill }) => {
   const navigate = useNavigate();
+  const { formContext } = useContext(AuthContext);
 
   return (
     <>
       <Row className="mt-3">
         <Col>
-          <Button variant="secondary" onClick={() => navigate('/admin')}>
+          <Button
+            variant="secondary"
+            onClick={formContext === 'maintenance' ? () => navigate('/dev') : () => navigate('/admin')}
+          >
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar
           </Button>
