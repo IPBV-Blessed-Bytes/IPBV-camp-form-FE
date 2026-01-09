@@ -104,15 +104,17 @@ const FormRoutes = ({
 
   const { formContext } = useContext(AuthContext);
 
+  const effectiveFormContext = formContextCloseForm === 'form-on' ? formContextCloseForm : formContext;
+
   return (
     <div className="form">
       {!adminPathname && formPath && (
         <div className="components-container">
-          {formContext === 'form-waiting' && <WaitingForCamp />}
-          {formContext === 'form-off' && <Offline />}
-          {formContext === 'maintenance' && <Maintenance />}
+          {effectiveFormContext === 'form-waiting' && <WaitingForCamp />}
+          {effectiveFormContext === 'form-off' && <Offline />}
+          {effectiveFormContext === 'maintenance' && <Maintenance />}
 
-          {formContext === 'form-on' && (
+          {effectiveFormContext === 'form-on' && (
             <>
               <Header
                 backStepFlag={backStepFlag}
@@ -275,7 +277,7 @@ const FormRoutes = ({
       <div className="routes">
         <Routes>
           <Route
-            path={formContext === 'maintenance' ? '/dev' : '/admin'}
+            path={effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}
             element={
               <Login
                 availablePackages={availablePackages}
@@ -290,7 +292,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/acampantes' : '/admin/acampantes'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/acampantes' : '/admin/acampantes'}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
@@ -301,7 +303,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/carona' : '/admin/carona'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/carona' : '/admin/carona'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
@@ -309,7 +311,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/descontos' : '/admin/descontos'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/descontos' : '/admin/descontos'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
                 <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
@@ -317,7 +319,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/quartos' : '/admin/quartos'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/quartos' : '/admin/quartos'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
@@ -325,7 +327,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/alimentacao' : '/admin/alimentacao'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/alimentacao' : '/admin/alimentacao'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminExtraMeals />
@@ -333,7 +335,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/checkin' : '/admin/checkin'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/checkin' : '/admin/checkin'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
                 <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} />
@@ -341,7 +343,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/painel' : '/admin/painel'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/painel' : '/admin/painel'}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
@@ -358,7 +360,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/logs' : '/admin/logs'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/logs' : '/admin/logs'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
@@ -366,7 +368,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/vagas' : '/admin/vagas'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/vagas' : '/admin/vagas'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminSeatManagement
@@ -384,7 +386,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/lotes' : '/admin/lotes'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/lotes' : '/admin/lotes'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminLotManagement
@@ -397,7 +399,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/contexto' : '/admin/contexto'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/contexto' : '/admin/contexto'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
@@ -405,7 +407,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/usuarios' : '/admin/usuarios'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/usuarios' : '/admin/usuarios'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
@@ -413,7 +415,7 @@ const FormRoutes = ({
             }
           />
           {/* <Route
-            path={formContext === 'maintenance' ? '/dev/pulseiras' : '/admin/pulseiras'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/pulseiras' : '/admin/pulseiras'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
@@ -421,7 +423,7 @@ const FormRoutes = ({
             }
           /> */}
           <Route
-            path={formContext === 'maintenance' ? '/dev/opiniao' : '/admin/opiniao'}
+            path={effectiveFormContext === 'maintenance' ? '/dev/opiniao' : '/admin/opiniao'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
@@ -433,7 +435,7 @@ const FormRoutes = ({
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
           />
 
-          {formContext === 'form-on' && (
+          {effectiveFormContext === 'form-on' && (
             <>
               <Route path="/opiniao" element={<FormFeedback />} />
               <Route path="/verificacao" element={<CpfReview handlePersonData={handlePersonData} />} />

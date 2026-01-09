@@ -19,7 +19,7 @@ import calculateAge from '../Pages/Packages/utils/calculateAge';
 
 import FormRoutes from '.';
 
-const RoutesValidations = ({ formContext }) => {
+const RoutesValidations = ({ formContextCloseForm }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const { items } = useCart();
@@ -416,7 +416,7 @@ const RoutesValidations = ({ formContext }) => {
       currentFormIndex={currentFormIndex}
       currentFormValues={currentFormValues}
       discount={discount}
-      formContext={formContext}
+      formContextCloseForm={formContextCloseForm}
       formPath={formPath}
       formSubmitted={formSubmitted}
       formValues={formValues}
@@ -464,7 +464,7 @@ const RoutesValidations = ({ formContext }) => {
 };
 
 RoutesValidations.propTypes = {
-  formContext: PropTypes.string,
+  formContextCloseForm: PropTypes.string,
 };
 
 export default RoutesValidations;
