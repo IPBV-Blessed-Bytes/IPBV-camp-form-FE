@@ -8,6 +8,7 @@ import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import PackageCard from '@/components/Admin/PackageCard';
@@ -41,6 +42,7 @@ const AdminLoggedIn = ({
   const checkinPermissions = permissions(userRole, 'checkin');
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
+  const { formContext } = useContext(AuthContext);
   const navigate = useNavigate();
 
   scrollUp();
@@ -188,12 +190,23 @@ const AdminLoggedIn = ({
     },
   ];
 
-  const handleTableClick = () => navigate('/admin/acampantes');
-  const handleRideClick = () => navigate('/admin/carona');
-  const handleDiscountClick = () => navigate('/admin/descontos');
-  const handleRoomsClick = () => navigate('/admin/quartos');
-  const handleCheckinClick = () => navigate('/admin/checkin');
-  const handleFeedbackClick = () => navigate('/admin/opiniao');
+  const handleTableClick =
+    formContext === 'maintenance' ? () => navigate('/dev/acampantes') : () => navigate('/admin/acampantes');
+
+  const handleRideClick =
+    formContext === 'maintenance' ? () => navigate('/dev/carona') : () => navigate('/admin/carona');
+
+  const handleDiscountClick =
+    formContext === 'maintenance' ? () => navigate('/dev/descontos') : () => navigate('/admin/descontos');
+
+  const handleRoomsClick =
+    formContext === 'maintenance' ? () => navigate('/dev/quartos') : () => navigate('/admin/quartos');
+
+  const handleCheckinClick =
+    formContext === 'maintenance' ? () => navigate('/dev/checkin') : () => navigate('/admin/checkin');
+
+  const handleFeedbackClick =
+    formContext === 'maintenance' ? () => navigate('/dev/opiniao') : () => navigate('/admin/opiniao');
 
   return (
     <>
@@ -343,20 +356,6 @@ const AdminLoggedIn = ({
 };
 
 AdminLoggedIn.propTypes = {
-  loggedInUsername: PropTypes.string.isRequired,
-  logout: PropTypes.func.isRequired,
-  userRole: PropTypes.string,
-  sendLoggedMessage: PropTypes.bool,
-  setSendLoggedMessage: PropTypes.func,
-  user: PropTypes.string,
-  totalValidWithBus: PropTypes.number,
-  totalRegistrations: PropTypes.shape({
-    totalRegistrations: PropTypes.number,
-    totalChildren: PropTypes.number,
-    totalFilledVacancies: PropTypes.number,
-    totalValidRegistrations: PropTypes.number,
-    totalAdultsNonPaid: PropTypes.number,
-  }).isRequired,
   availablePackages: PropTypes.shape({
     usedPackages: PropTypes.object,
     totalPackages: PropTypes.shape({
@@ -367,9 +366,23 @@ AdminLoggedIn.propTypes = {
       other: PropTypes.number,
     }),
   }),
-  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  loggedInUsername: PropTypes.string.isRequired,
+  logout: PropTypes.func.isRequired,
+  user: PropTypes.string,
+  totalValidWithBus: PropTypes.number,
+  totalRegistrations: PropTypes.shape({
+    totalRegistrations: PropTypes.number,
+    totalChildren: PropTypes.number,
+    totalFilledVacancies: PropTypes.number,
+    totalValidRegistrations: PropTypes.number,
+    totalAdultsNonPaid: PropTypes.number,
+  }).isRequired,
+  sendLoggedMessage: PropTypes.bool,
+  setSendLoggedMessage: PropTypes.func,
   spinnerLoading: PropTypes.bool,
+  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  userRole: PropTypes.string,
 };
 
 export default AdminLoggedIn;
