@@ -11,37 +11,6 @@ import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 
-const mockWristbands = [
-  {
-    id: '1',
-    type: 'FOOD',
-    label: 'Alimentação Completa',
-    color: '#0000FF',
-    active: true,
-  },
-  {
-    id: '2',
-    type: 'FOOD',
-    label: 'Sem Alimentação',
-    color: '#000000',
-    active: true,
-  },
-  {
-    id: '3',
-    type: 'TEAM',
-    label: 'Time Azul',
-    color: '#1E90FF',
-    active: true,
-  },
-  {
-    id: '4',
-    type: 'TEAM',
-    label: 'Time Amarelo',
-    color: '#FFD700',
-    active: false,
-  },
-];
-
 const AdminWristbandsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [wristbands, setWristbands] = useState([]);
@@ -61,10 +30,11 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   const fetchWristbands = async () => {
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      const response = await fetcher.get('/user-wristbands');
 
-      setWristbands(mockWristbands);
+      setWristbands(response?.data || []);
     } catch (error) {
+      console.error('[AdminWristbandsManagement] erro ao buscar pulseiras', error);
       toast.error('Erro ao buscar pulseiras');
     } finally {
       setLoading(false);
@@ -281,7 +251,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
             Cancelar
           </Button>
           <Button className="btn-confirm" variant="primary" onClick={handleSubmit}>
-            {editingWristband ? 'Salvar alterações': 'Criar Pulseira'}
+            {editingWristband ? 'Salvar alterações' : 'Criar Pulseira'}
           </Button>
         </Modal.Footer>
       </Modal>
