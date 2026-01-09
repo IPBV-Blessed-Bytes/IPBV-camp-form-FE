@@ -12,6 +12,7 @@ export const permissions = (userRole, context) => {
     'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'discount-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'rooms-button-home': userRole === ADMIN || userRole === COLLABORATOR,
+    'teams-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'feedback-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'extra-meals-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'packages-and-totals-cards-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === JOKER_MANAGER,

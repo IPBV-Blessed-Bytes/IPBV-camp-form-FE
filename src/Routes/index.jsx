@@ -28,6 +28,7 @@ import AdminCampers from '../Pages/Admin/Campers';
 import AdminRide from '../Pages/Admin/Ride';
 import AdminDiscount from '../Pages/Admin/Discount';
 import AdminRooms from '../Pages/Admin/Rooms';
+import AdminTeams from '@/Pages/Admin/Teams';
 import AdminExtraMeals from '../Pages/Admin/ExtraMeals';
 import AdminCheckin from '../Pages/Admin/Checkin';
 import AdminUserLogs from '../Pages/Admin/UserLogs';
@@ -36,15 +37,15 @@ import AdminUsersManagement from '../Pages/Admin/UsersManagement';
 import AdminFeedback from '../Pages/Admin/Feedback';
 import AdminDataPanel from '../Pages/Admin/DataPanel';
 import AdminFormContext from '@/Pages/Admin/FormContext';
+import AdminLotManagement from '@/Pages/Admin/LotManagement';
+import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
+import Maintenance from '@/Pages/Maintenance';
 
 import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 // import CustomCarousel from '@/components/Global/CustomCarousel';
-import AdminLotManagement from '@/Pages/Admin/LotManagement';
-import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
-import Maintenance from '@/Pages/Maintenance';
 
 const FormRoutes = ({
   adminPathname,
@@ -323,6 +324,14 @@ const FormRoutes = ({
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path={effectiveFormContext === 'maintenance' ? '/dev/times' : '/admin/times'}
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+               <AdminTeams formContext={formContext} loggedUsername={loggedUsername}/>
               </ProtectedRoute>
             }
           />

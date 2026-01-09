@@ -34,6 +34,7 @@ const AdminLoggedIn = ({
   const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
   const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
   const roomsButtonHomePermissions = permissions(userRole, 'rooms-button-home');
+  const teamsButtonHomePermissions = permissions(userRole, 'teams-button-home');
   const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
   const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
   const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
@@ -202,6 +203,9 @@ const AdminLoggedIn = ({
   const handleRoomsClick =
     formContext === 'maintenance' ? () => navigate('/dev/quartos') : () => navigate('/admin/quartos');
 
+  const handleTeamsClick =
+    formContext === 'maintenance' ? () => navigate('/dev/times') : () => navigate('/admin/times');
+
   const handleCheckinClick =
     formContext === 'maintenance' ? () => navigate('/dev/checkin') : () => navigate('/admin/checkin');
 
@@ -266,6 +270,15 @@ const AdminLoggedIn = ({
           cardType="rooms-card"
           title="Quartos"
           typeIcon="rooms"
+          iconSize={50}
+        />
+
+        <SessionCard
+          permission={teamsButtonHomePermissions}
+          onClick={handleTeamsClick}
+          cardType="teams-card"
+          title="Times"
+          typeIcon="team"
           iconSize={50}
         />
 

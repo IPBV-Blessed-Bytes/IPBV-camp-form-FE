@@ -18,6 +18,10 @@
       background-color: $light-yellow;
     }
 
+    &__teams-card {
+      background-color: $heavy-baby-blue;
+    }
+
     &__feedback-card {
       background-color: $light-orange;
     }
@@ -35,6 +39,7 @@
     &__discount-card,
     &__checkin-card,
     &__rooms-card,
+    &__teams-card,
     &__feedback-card,
     &__extra-meals-card {
       align-items: center;
