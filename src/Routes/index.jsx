@@ -327,11 +327,11 @@ const FormRoutes = ({
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path={effectiveFormContext === 'maintenance' ? '/dev/times' : '/admin/times'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-               <AdminTeams formContext={formContext} loggedUsername={loggedUsername}/>
+                <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />

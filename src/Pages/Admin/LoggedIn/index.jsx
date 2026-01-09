@@ -273,14 +273,14 @@ const AdminLoggedIn = ({
           iconSize={50}
         />
 
-        <SessionCard
+        {/* <SessionCard
           permission={teamsButtonHomePermissions}
           onClick={handleTeamsClick}
           cardType="teams-card"
           title="Times"
           typeIcon="team"
           iconSize={50}
-        />
+        /> */}
 
         <SessionCard
           permission={feedbackButtonHomePermissions}
