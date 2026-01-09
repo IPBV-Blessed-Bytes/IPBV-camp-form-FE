@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { isAdminPath } from './utils/pathname';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
-import fetcher from '@/fetchers/fetcherWithCredentials';
 import Skelleton from './components/Global/Skelleton';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 
 function App() {
-  const [formContext, setFormContext] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { formContext, loading } = useContext(AuthContext);
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
 
@@ -16,21 +15,6 @@ function App() {
       return;
     }
   };
-
-  useEffect(() => {
-    const fetchFormContext = async () => {
-      try {
-        const response = await fetcher.get('form-context');
-        setFormContext(response.data.formContext);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFormContext();
-  }, []);
 
   if (loading && !adminPathname) {
     return <Skelleton />;
