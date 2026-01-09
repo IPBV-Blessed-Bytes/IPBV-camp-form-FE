@@ -18,4 +18,10 @@
     border-top: 2px solid $black;
     height: 2.5rem;
   }
+
+  &__label {
+    color: $slime-green;
+    font-weight: bold;
+    padding-left: 1rem;
+  }
 }

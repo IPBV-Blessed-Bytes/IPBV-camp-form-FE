@@ -88,7 +88,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
             formContext === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
           }
         >
-          Pulseiras e Parceiros&nbsp;
+          Controle de Pulseiras&nbsp;
           <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
         </button>
 

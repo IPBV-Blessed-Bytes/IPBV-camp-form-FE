@@ -43,7 +43,7 @@ import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 // import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
-// import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
+import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
 import Maintenance from '@/Pages/Maintenance';
 
 const FormRoutes = ({
@@ -414,14 +414,14 @@ const FormRoutes = ({
               </ProtectedRoute>
             }
           />
-          {/* <Route
+          <Route
             path={effectiveFormContext === 'maintenance' ? '/dev/pulseiras' : '/admin/pulseiras'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
-          /> */}
+          />
           <Route
             path={effectiveFormContext === 'maintenance' ? '/dev/opiniao' : '/admin/opiniao'}
             element={
