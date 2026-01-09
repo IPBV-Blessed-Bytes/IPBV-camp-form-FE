@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { enumSteps } from '@/utils/constants';
@@ -8,6 +8,7 @@ import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { Col, Row } from 'react-bootstrap';
 
 import FormHome from '../Pages/Home';
@@ -42,7 +43,7 @@ import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 // import CustomCarousel from '@/components/Global/CustomCarousel';
 import AdminLotManagement from '@/Pages/Admin/LotManagement';
-import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
+// import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
 import Maintenance from '@/Pages/Maintenance';
 
 const FormRoutes = ({
@@ -55,7 +56,7 @@ const FormRoutes = ({
   currentFormIndex,
   currentFormValues,
   discount,
-  formContext,
+  formContextCloseForm,
   formPath,
   formSubmitted,
   formValues,
@@ -100,6 +101,8 @@ const FormRoutes = ({
   usedValidPackages,
 }) => {
   const [showInfoButton, setShowInfoButton] = useState(false);
+
+  const { formContext } = useContext(AuthContext);
 
   return (
     <div className="form">
@@ -272,10 +275,11 @@ const FormRoutes = ({
       <div className="routes">
         <Routes>
           <Route
-            path={formContext === 'maintenance' ? '/dev' : "/admin"}
+            path={formContext === 'maintenance' ? '/dev' : '/admin'}
             element={
               <Login
                 availablePackages={availablePackages}
+                formContext={formContext}
                 spinnerLoading={loading}
                 totalBusVacancies={totalBusVacancies}
                 totalRegistrations={totalRegistrations}
@@ -286,42 +290,42 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/acampantes' : "/admin/acampantes"}
+            path={formContext === 'maintenance' ? '/dev/acampantes' : '/admin/acampantes'}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
                 userRole={userRole}
               >
-                <AdminCampers loggedUsername={loggedUsername} userRole={userRole} />
+                <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/carona' : "/admin/carona"}
+            path={formContext === 'maintenance' ? '/dev/carona' : '/admin/carona'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminRide loggedUsername={loggedUsername} />
+                <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/descontos' : "/admin/descontos"}
+            path={formContext === 'maintenance' ? '/dev/descontos' : '/admin/descontos'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
-                <AdminDiscount loggedUsername={loggedUsername} />
+                <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/quartos' : "/admin/quartos"}
+            path={formContext === 'maintenance' ? '/dev/quartos' : '/admin/quartos'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminRooms loggedUsername={loggedUsername} />
+                <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/alimentacao' : "/admin/alimentacao"}
+            path={formContext === 'maintenance' ? '/dev/alimentacao' : '/admin/alimentacao'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminExtraMeals />
@@ -329,21 +333,22 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/checkin' : "/admin/checkin"}
+            path={formContext === 'maintenance' ? '/dev/checkin' : '/admin/checkin'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
-                <AdminCheckin loggedUsername={loggedUsername} />
+                <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/painel' : "/admin/painel"}
+            path={formContext === 'maintenance' ? '/dev/painel' : '/admin/painel'}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
                 userRole={userRole}
               >
                 <AdminDataPanel
+                  formContext={formContext}
                   totalPackages={totalPackages}
                   usedPackages={usedPackages}
                   usedValidPackages={usedValidPackages}
@@ -353,18 +358,19 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/logs' : "/admin/logs"}
+            path={formContext === 'maintenance' ? '/dev/logs' : '/admin/logs'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminUserLogs loggedUsername={loggedUsername} />
+                <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/vagas' : "/admin/vagas"}
+            path={formContext === 'maintenance' ? '/dev/vagas' : '/admin/vagas'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminSeatManagement
+                  formContext={formContext}
                   loading={loading}
                   loggedUsername={loggedUsername}
                   handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
@@ -378,42 +384,47 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/lotes' : "/admin/lotes"}
+            path={formContext === 'maintenance' ? '/dev/lotes' : '/admin/lotes'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminLotManagement loading={loading} loggedUsername={loggedUsername} packageCount={packageCount} />
+                <AdminLotManagement
+                  formContext={formContext}
+                  loading={loading}
+                  loggedUsername={loggedUsername}
+                  packageCount={packageCount}
+                />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/contexto' : "/admin/contexto"}
+            path={formContext === 'maintenance' ? '/dev/contexto' : '/admin/contexto'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminFormContext loggedUsername={loggedUsername} />
+                <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
           <Route
-            path={formContext === 'maintenance' ? '/dev/usuarios' : "/admin/usuarios"}
+            path={formContext === 'maintenance' ? '/dev/usuarios' : '/admin/usuarios'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminUsersManagement loggedUsername={loggedUsername} />
+                <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
-          <Route
-            path={formContext === 'maintenance' ? '/dev/pulseiras' : "/admin/pulseiras"}
+          {/* <Route
+            path={formContext === 'maintenance' ? '/dev/pulseiras' : '/admin/pulseiras'}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminWristbandsManagement loggedUsername={loggedUsername} />
+                <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
-            path={formContext === 'maintenance' ? '/dev/opiniao' : "/admin/opiniao"}
+            path={formContext === 'maintenance' ? '/dev/opiniao' : '/admin/opiniao'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminFeedback loggedUsername={loggedUsername} />
+                <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
@@ -489,6 +500,7 @@ FormRoutes.propTypes = {
   isNotSuccessPathname: PropTypes.bool,
   loading: PropTypes.bool,
   userRole: PropTypes.string,
+  formContext: PropTypes.string,
   nextStep: PropTypes.func,
   packageCount: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
   personData: PropTypes.object,
