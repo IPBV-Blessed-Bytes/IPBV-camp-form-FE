@@ -97,7 +97,6 @@ const AuthProvider = ({ children }) => {
 
     setIsLoggedIn(false);
     setUser(undefined);
-    setFormContextState('');
 
     toast.success('Logout realizado com sucesso!');
   }, []);
