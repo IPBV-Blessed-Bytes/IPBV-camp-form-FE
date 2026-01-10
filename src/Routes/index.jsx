@@ -478,6 +478,7 @@ FormRoutes.propTypes = {
   }),
   discount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   formContext: PropTypes.string,
+  formContextCloseForm: PropTypes.string,
   formPath: PropTypes.bool,
   formSubmitted: PropTypes.bool,
   formValues: PropTypes.arrayOf(
@@ -511,7 +512,6 @@ FormRoutes.propTypes = {
   isNotSuccessPathname: PropTypes.bool,
   loading: PropTypes.bool,
   userRole: PropTypes.string,
-  formContext: PropTypes.string,
   nextStep: PropTypes.func,
   packageCount: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
   personData: PropTypes.object,

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Form, Modal, Table } from 'react-bootstrap';
+import { Container, Button, Form, Modal, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import Icons from '@/components/Global/Icons';
@@ -237,6 +238,10 @@ const AdminTeams = ({ loggedUsername }) => {
       <Loading loading={loading} />
     </Container>
   );
+};
+
+AdminTeams.propTypes = {
+  loggedUsername: PropTypes.string,
 };
 
 export default AdminTeams;
