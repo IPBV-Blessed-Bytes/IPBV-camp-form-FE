@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
     }
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [formContext, setFormContextState] = useState(() => {
     return sessionStorage.getItem(FORM_CONTEXT_KEY) || '';
@@ -50,6 +50,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchFormContext = async () => {
+      setLoading(true);
       try {
         const response = await fetcher.get('/form-context');
         const context = response?.data?.formContext || '';
@@ -67,6 +68,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = useCallback(async (userName, passWord) => {
+    setLoading(true);
     try {
       const response = await fetcher.post('/auth/login', {
         login: userName,
