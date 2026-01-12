@@ -444,7 +444,7 @@ const PersonalData = ({
                 <Col md={6} className="mb-3">
                   <Form.Group>
                     <Form.Label>
-                      <b>Estado de emissão órgão Expedidor:</b>
+                      <b>Estado de emissão órgão Exp.:</b>
                     </Form.Label>
                     <Form.Select
                       value={values.rgShipperState}
