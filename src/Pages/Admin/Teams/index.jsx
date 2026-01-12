@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Button, Form, Modal, Table } from 'react-bootstrap';
+import { Container, Button, Form, Modal, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
@@ -15,6 +15,14 @@ const AdminTeams = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
+  const [teamWristbands, setTeamWristbands] = useState([]);
+  const [showRemoveCamperModal, setShowRemoveCamperModal] = useState(false);
+  const [showAddCamperModal, setShowAddCamperModal] = useState(false);
+  const [showRemoveTeamModal, setShowRemoveTeamModal] = useState(false);
+  const [selectedCamperId, setSelectedCamperId] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [campers, setCampers] = useState([]);
+  const [selectedTeamToRemove, setSelectedTeamToRemove] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     wristbandId: '',
@@ -23,11 +31,8 @@ const AdminTeams = ({ loggedUsername }) => {
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const response = await fetcher.get('/team');
-      console.log('response: ', response);
-      if (response.status === 200) {
-        setTeams(response.data || []);
-      }
+      const { data } = await fetcher.get('/team');
+      setTeams(data || []);
     } catch (error) {
       toast.error('Erro ao carregar times');
       console.error(error);
@@ -36,16 +41,55 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
+  const fetchTeamWristbands = async () => {
+    try {
+      const { data } = await fetcher.get('/user-wristbands');
+
+      const onlyTeamWristbands = (data || []).filter((wristband) => wristband.type === 'TEAM' && wristband.active);
+
+      setTeamWristbands(onlyTeamWristbands);
+    } catch (error) {
+      toast.error('Erro ao carregar pulseiras dos times');
+      console.error(error);
+    }
+  };
+
+  const fetchCampers = async () => {
+    try {
+      const { data } = await fetcher.get('/camper', {
+        params: { size: 100000 },
+      });
+
+      const campersList = Array.isArray(data?.content) ? data.content : [];
+      setCampers(campersList);
+    } catch (error) {
+      toast.error('Erro ao carregar acampantes');
+      console.error(error);
+      setCampers([]);
+    }
+  };
+
   useEffect(() => {
     fetchTeams();
+    fetchTeamWristbands();
+    fetchCampers();
   }, []);
 
   const handleOpenModal = (team = null) => {
     setEditTeam(team);
+    let wristbandId = '';
+
+    if (team?.wristbandColor) {
+      const matchedWristband = teamWristbands.find((wristband) => wristband.color === team.wristbandColor);
+
+      wristbandId = matchedWristband?.id ?? '';
+    }
+
     setFormData({
       name: team?.name || '',
-      wristbandId: team?.wristbandId || '',
+      wristbandId,
     });
+
     setShowModal(true);
   };
 
@@ -54,18 +98,24 @@ const AdminTeams = ({ loggedUsername }) => {
     setEditTeam(null);
   };
 
+  const buildPayload = () => ({
+    name: formData.name.trim(),
+    wristbandId: Number(formData.wristbandId),
+  });
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
+      const payload = buildPayload();
 
       if (editTeam) {
-        await fetcher.patch(`/team/${editTeam.id}`, formData);
+        await fetcher.patch(`/team/${editTeam.id}`, payload);
         toast.success('Time atualizado com sucesso');
         registerLog(`Editou o time "${editTeam.name}"`, loggedUsername);
       } else {
-        await fetcher.post('/team', formData);
+        await fetcher.post('/team', payload);
         toast.success('Time criado com sucesso');
-        registerLog(`Criou o time "${formData.name}"`, loggedUsername);
+        registerLog(`Criou o time "${payload.name}"`, loggedUsername);
       }
 
       handleCloseModal();
@@ -78,17 +128,84 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
-  const handleDelete = async (teamId) => {
-    if (!window.confirm('Deseja realmente remover este time?')) return;
+  const addCamperToTeam = async (camperId, teamColor) => {
+    try {
+      setLoading(true);
+
+      await fetcher.patch(`/team/camper/${camperId}`, {
+        teamColor,
+      });
+
+      toast.success('Acampante adicionado ao time');
+      registerLog(`Adicionou o acampante ${camperId} ao time ${teamColor}`, loggedUsername);
+
+      fetchTeams();
+    } catch (error) {
+      toast.error('Erro ao adicionar acampante ao time');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirmAddCamper = async () => {
+    if (!selectedCamperId || !selectedTeam) return;
+
+    await addCamperToTeam(Number(selectedCamperId), selectedTeam.wristbandColor);
+
+    setSelectedCamperId('');
+    setSelectedTeam(null);
+    setShowAddCamperModal(false);
+
+    fetchCampers();
+  };
+
+  const handleConfirmRemoveCamper = async () => {
+    try {
+      setLoading(true);
+
+      await fetcher.delete(`/team/camper/${selectedCamperId}`);
+
+      fetchTeams();
+      fetchCampers();
+
+      toast.success('Acampante removido do time');
+      registerLog(`Removeu o acampante ${selectedCamperId} de um time`, loggedUsername);
+
+      setShowRemoveCamperModal(false);
+    } catch (error) {
+      toast.error('Erro ao remover acampante do time');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenAddCamperModal = (team) => {
+    setSelectedTeam(team);
+    setSelectedCamperId('');
+    setShowAddCamperModal(true);
+  };
+
+  const handleOpenRemoveCamperModal = (camperId) => {
+    setSelectedCamperId(camperId);
+    setShowRemoveCamperModal(true);
+  };
+
+  const handleConfirmRemoveTeam = async () => {
+    if (!selectedTeamToRemove) return;
 
     try {
       setLoading(true);
-      const teamToDelete = teams.find((team) => team.id === teamId);
-      
-      await fetcher.delete(`/team/${teamId}`);
+
+      await fetcher.delete(`/team/${selectedTeamToRemove.id}`);
+
       toast.success('Time removido com sucesso');
-      registerLog(`Removeu o time "${teamToDelete?.name}"`, loggedUsername);
+      registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);
+
       fetchTeams();
+      setShowRemoveTeamModal(false);
+      setSelectedTeamToRemove(null);
     } catch (error) {
       toast.error('Erro ao remover time');
       console.error(error);
@@ -97,30 +214,26 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
+  const handleCloseRemoveTeamModal = () => {
+    setShowRemoveTeamModal(false);
+    setSelectedTeamToRemove(null);
+  };
+  const availableCampers = campers
+    .filter((camper) => !camper.teamColor || camper.teamColor === '')
+    .sort((a, b) =>
+      (a.personalInformation?.name || '').localeCompare(b.personalInformation?.name || '', 'pt-BR', {
+        sensitivity: 'base',
+      }),
+    );
+
   const generateExcel = () => {
-    const numericFields = ['Qtd. Campers'];
+    const rows = teams.map((team) => ({
+      'Nome do Time': team.name,
+      'Cor da Pulseira': team.wristbandColor || '-',
+      'Qtd. Acampantes': Number(team.campersCount ?? 0),
+    }));
 
-    const parseNumber = (value) => {
-      if (value === undefined || value === null) return '';
-      const num = Number(value);
-      return isNaN(num) ? '' : num;
-    };
-
-    const fieldMapping = teams.map((team) => {
-      let row = {
-        'Nome do Time': team.name,
-        'Cor da Pulseira': team.wristbandColor || '-',
-        'Qtd. Campers': team.campersCount ?? 0,
-      };
-
-      numericFields.forEach((key) => {
-        row[key] = parseNumber(row[key]);
-      });
-
-      return row;
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
+    const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Times');
@@ -146,7 +259,7 @@ const AdminTeams = ({ loggedUsername }) => {
       iconSize: 40,
       id: 'team-add',
       name: 'Criar Novo Time',
-      onClick: handleOpenModal,
+      onClick: () => handleOpenModal(),
       typeButton: 'teal-blue',
       typeIcon: 'plus',
     },
@@ -162,29 +275,76 @@ const AdminTeams = ({ loggedUsername }) => {
         <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">Nome:</th>
+              <th className="table-cells-header">Nome do Time:</th>
               <th className="table-cells-header">Cor da Pulseira:</th>
-              <th className="table-cells-header">Qtd. Campers:</th>
+              <th className="table-cells-header">Acampantes:</th>
+              <th className="table-cells-header">Quantidade:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
+
           <tbody>
             {teams.map((team) => (
               <tr key={team.id}>
                 <td>{team.name}</td>
+
                 <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 20, height: 20, background: team.wristbandColor }} />
+                  <div className="d-flex align-items-center gap-2">
+                    <div
+                      style={{
+                        width: 24,
+                        height: 24,
+                        backgroundColor: team.wristbandColor,
+                        borderRadius: 4,
+                      }}
+                    />
                     {team.wristbandColor}
                   </div>
                 </td>
+                <td>
+                  <Accordion>
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>Mostrar Acampantes</Accordion.Header>
+
+                      <Accordion.Body>
+                        {team.campers.length ? (
+                          team.campers.map((camper) => (
+                            <div key={camper.id} className="d-flex justify-content-between align-items-center mb-2">
+                              <span>{camper.name}</span>
+
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => handleOpenRemoveCamperModal(camper.id)}
+                              >
+                                <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                              </Button>
+                            </div>
+                          ))
+                        ) : (
+                          <small className="text-muted">Nenhum Acampante</small>
+                        )}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                </td>
                 <td>{team.campersCount}</td>
                 <td>
-                  <Button variant="link" onClick={() => handleOpenModal(team)}>
-                    <Icons typeIcon="edit" />
+                  <Button variant="outline-primary" className="me-2" onClick={() => handleOpenAddCamperModal(team)}>
+                    <Icons typeIcon="plus" iconSize={20} fill="#0d6efd" />
                   </Button>
-                  <Button variant="link" onClick={() => handleDelete(team.id)}>
-                    <Icons typeIcon="trash" fill="#c00" />
+
+                  <Button variant="outline-success" className="me-2" onClick={() => handleOpenModal(team)}>
+                    <Icons typeIcon="edit" iconSize={24} />
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => {
+                      setSelectedTeamToRemove(team);
+                      setShowRemoveTeamModal(true);
+                    }}
+                  >
+                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                   </Button>
                 </td>
               </tr>
@@ -196,10 +356,11 @@ const AdminTeams = ({ loggedUsername }) => {
       <Modal className="custom-modal" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton className="custom-modal__header--confirm">
           <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon={editTeam ? 'edit' : 'team'} iconSize={25} fill={editTeam ? '' : '#057c05'} />
+            <Icons typeIcon={editTeam ? 'edit' : 'plus'} iconSize={25} fill={editTeam ? '' : '#057c05'} />
             <b>{editTeam ? 'Editar Time' : 'Criar Novo Time'}</b>
           </Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>
@@ -209,28 +370,142 @@ const AdminTeams = ({ loggedUsername }) => {
               type="text"
               value={formData.name}
               size="lg"
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>ID da Pulseira:</b>
+              <b>Pulseira do Time:</b>
             </Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.wristbandId}
+
+            <Form.Select
               size="lg"
-              onChange={(e) => setFormData({ ...formData, wristbandId: e.target.value })}
-            />
+              value={formData.wristbandId}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  wristbandId: e.target.value,
+                }))
+              }
+            >
+              <option value="">Selecione uma pulseira</option>
+
+              {teamWristbands.map((wristband) => (
+                <option key={wristband.id} value={wristband.id}>
+                  {wristband.label}
+                </option>
+              ))}
+            </Form.Select>
+
+            {formData.wristbandId && (
+              <div className="d-flex align-items-center gap-2 mt-3">
+                <div
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: 4,
+                    backgroundColor: teamWristbands.find((w) => w.id === Number(formData.wristbandId))?.color,
+                  }}
+                />
+                <small className="text-muted">Cor da pulseira selecionada</small>
+              </div>
+            )}
           </Form.Group>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Cancelar
           </Button>
           <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
             {editTeam ? 'Salvar Alterações' : 'Criar Time'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal className="custom-modal" show={showAddCamperModal} onHide={() => setShowAddCamperModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="plus" iconSize={25} fill="#057c05" />
+            <b>Adicionar Acampante</b>
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Acampante:</b>
+              </Form.Label>
+
+              <Form.Select size="lg" value={selectedCamperId} onChange={(e) => setSelectedCamperId(e.target.value)}>
+                <option value="">Selecione um acampante</option>
+
+                {availableCampers.map((camper) => (
+                  <option key={camper.id} value={camper.id}>
+                    {camper.personalInformation.name}
+                  </option>
+                ))}
+              </Form.Select>
+
+              {!availableCampers.length && <small className="text-muted">Todos os acampantes já estão em times</small>}
+            </Form.Group>
+          </Form.Group>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleConfirmAddCamper} disabled={!selectedCamperId}>
+            Adicionar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal className="custom-modal" show={showRemoveCamperModal} onHide={() => setShowRemoveCamperModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
+            <b>Excluir Acampante</b>
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>Deseja realmente remover este acampante do time?</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRemoveCamperModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleConfirmRemoveCamper}>
+            Remover
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal className="custom-modal" show={showRemoveTeamModal} onHide={handleCloseRemoveTeamModal}>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
+            <b>Excluir Time</b>
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            Deseja realmente remover o time <b>{selectedTeamToRemove?.name}</b>?
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRemoveTeamModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleConfirmRemoveTeam}>
+            Excluir
           </Button>
         </Modal.Footer>
       </Modal>

@@ -36,46 +36,56 @@ const PersonalData = ({
   const [currentAge, setCurrentAge] = useState(null);
   const [showLegalGuardianFields, setShowLegalGuardianFields] = useState(false);
   const [hasValidatedAge, setHasValidatedAge] = useState(false);
+  const [isForeigner, setIsForeigner] = useState(false);
 
   const { values, errors, handleChange, submitForm, setFieldValue, setValues } = useFormik({
     initialValues,
     enableReinitialize: true,
     onSubmit: async () => {
-      if (cpf.isValid(values.cpf)) {
-        const cpfIsEqualToLegualGuardianCpf = values.cpf === values.legalGuardianCpf;
-        const cpfAlreadyExists = formValues?.some((user, index) => {
-          if (index === currentFormIndex) return false;
-          return user?.personalInformation?.cpf === values.cpf;
+      const documentValue = isForeigner ? values.passport : values.cpf;
+
+      if (!isForeigner && !cpf.isValid(values.cpf)) {
+        toast.error('CPF inválido! Por favor, insira um CPF válido.');
+        return;
+      }
+
+      const cpfIsEqualToLegualGuardianCpf = !isForeigner && values.cpf === values.legalGuardianCpf;
+
+      if (cpfIsEqualToLegualGuardianCpf) {
+        toast.error('CPF do acampante não pode ser igual ao CPF do responsável legal');
+        return;
+      }
+
+      const cpfAlreadyExists = formValues?.some((user, index) => {
+        if (index === currentFormIndex) return false;
+        return user?.personalInformation?.cpf === documentValue;
+      });
+
+      if (cpfAlreadyExists) {
+        toast.error('Este documento já foi adicionado ao carrinho');
+        return;
+      }
+
+      try {
+        const payload = {
+          ...values,
+          cpf: documentValue,
+        };
+
+        const response = await fetcher.post(`${BASE_URL}/coupon/check`, {
+          cpf: documentValue,
+          birthday: values.birthday,
         });
 
-        if (cpfIsEqualToLegualGuardianCpf) {
-          toast.error('CPF do acampante não pode ser igual ao CPF do responsável legal');
-          return;
+        if (handleDiscountChange) {
+          handleDiscountChange(response.data.discount, currentFormIndex);
         }
 
-        if (cpfAlreadyExists) {
-          toast.error('Este CPF já foi adicionado ao carrinho');
-          return;
-        }
-
-        try {
-          const response = await fetcher.post(`${BASE_URL}/coupon/check`, {
-            cpf: values.cpf,
-            birthday: values.birthday,
-          });
-
-          if (handleDiscountChange) {
-            handleDiscountChange(response.data.discount, currentFormIndex);
-          }
-
-          nextStep();
-          updateForm(values);
-        } catch (error) {
-          console.error('Erro ao verificar o CPF:', error);
-          toast.error('Erro ao verificar o CPF. Por favor, tente novamente.');
-        }
-      } else {
-        toast.error('CPF inválido! Por favor, insira um CPF válido.');
+        updateForm(payload);
+        nextStep();
+      } catch (error) {
+        console.error('Erro ao verificar documento:', error);
+        toast.error('Erro ao verificar documento. Por favor, tente novamente.');
       }
     },
     validationSchema: personalInformationSchema,
@@ -296,32 +306,71 @@ const PersonalData = ({
             </Card.Text>
             <Form>
               <Row>
+                <Form.Check
+                  type="checkbox"
+                  id="isForeigner"
+                  label="Não sou brasileiro(a) e não possuo CPF (apenas para estrangeiros)"
+                  checked={isForeigner}
+                  onChange={(e) => {
+                    setIsForeigner(e.target.checked);
+                    setFieldValue('cpf', '');
+                    setFieldValue('passport', '');
+                  }}
+                  className="mb-3"
+                />
+              </Row>
+              <Row>
                 <Col md={6} className="mb-3">
-                  <Form.Group>
-                    <Form.Label>
-                      <b>CPF:</b>
-                    </Form.Label>
-                    <Form.Control
-                      as={InputMask}
-                      isInvalid={!!errors.cpf}
-                      mask="999.999.999-99"
-                      name="cpf"
-                      id="cpf"
-                      className="cpf-container"
-                      value={values.cpf}
-                      onChange={(event) =>
-                        handleChange({
-                          target: {
-                            name: 'cpf',
-                            value: extractNumbers(event.target.value),
-                          },
-                        })
-                      }
-                      placeholder="000.000000-00"
-                      title="Preencher CPF válido"
-                    ></Form.Control>
-                    <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
-                  </Form.Group>
+                  {!isForeigner ? (
+                    <Form.Group>
+                      <Form.Label>
+                        <b>CPF:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as={InputMask}
+                        isInvalid={!!errors.cpf}
+                        mask="999.999.999-99"
+                        name="cpf"
+                        id="cpf"
+                        className="cpf-container"
+                        value={values.cpf}
+                        onChange={(event) =>
+                          handleChange({
+                            target: {
+                              name: 'cpf',
+                              value: extractNumbers(event.target.value),
+                            },
+                          })
+                        }
+                        placeholder="000.000.000-00"
+                        title="Preencher CPF válido"
+                      ></Form.Control>
+                      <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
+                    </Form.Group>
+                  ) : (
+                    <Form.Group>
+                      <Form.Label>
+                        <b>Passaporte:</b>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="passport"
+                        id="passport"
+                        value={values.passport}
+                        onChange={handleChange}
+                        placeholder="Número do passaporte"
+                        isInvalid={!!errors.passport}
+                      />
+                      <Form.Control.Feedback type="invalid">{errors.passport}</Form.Control.Feedback>
+
+                      <Card.Text className="mt-2 mb-0">
+                        <em>
+                          Este campo é destinado apenas a participantes estrangeiros. O número do passaporte será
+                          utilizado no lugar do CPF.
+                        </em>
+                      </Card.Text>
+                    </Form.Group>
+                  )}
                 </Col>
                 <Col md={6} className="mb-3">
                   <Form.Group>
