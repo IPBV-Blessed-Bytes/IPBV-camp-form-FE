@@ -148,9 +148,7 @@ const Cart = ({
       return registrationFee > 0;
     });
 
-    const baseTotal = firstPayingUser
-      ? calculateRegistrationFee(rawFee, calculateAge(new Date(firstPayingUser.personalInformation.birthday)))
-      : 0;
+    const baseTotal = firstPayingUser ? rawFee : 0;
 
     handleBasePriceChange(baseTotal);
   }, [enteredFromFinalReview, formValues, rawFee, handleBasePriceChange]);

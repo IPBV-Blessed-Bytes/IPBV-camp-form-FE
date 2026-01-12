@@ -337,7 +337,7 @@ const RoutesValidations = ({ formContextCloseForm }) => {
         const rawDiscount = Number(discountList[index] || 0);
         const discount = Math.min(subtotal, rawDiscount);
         const totalPrice = subtotal - discount;
-        const appliedDiscount = Math.min(totalPrice, rawDiscount);
+        const appliedDiscount = discount;
 
         return {
           ...form,
