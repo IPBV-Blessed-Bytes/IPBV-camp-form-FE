@@ -8,6 +8,7 @@ import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
+import CustomCarousel from '@/components/Global/CustomCarousel';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { Col, Row } from 'react-bootstrap';
 
@@ -45,7 +46,6 @@ import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
-// import CustomCarousel from '@/components/Global/CustomCarousel';
 
 const FormRoutes = ({
   adminPathname,
@@ -257,17 +257,9 @@ const FormRoutes = ({
 
               {showInfoButton && <InfoButton timeout />}
 
-              {/* {(steps === enumSteps.home || steps === enumSteps.success) && (
-                <CustomCarousel
-                  title="Parceiros"
-                  images={[
-                    '../../public/Images/hebron.png',
-                    '../../public/Images/oasis.png',
-                    '../../public/Images/canaa.png',
-                    '../../public/Images/serur.png',
-                  ]}
-                />
-              )} */}
+              {(steps === enumSteps.home || steps === enumSteps.success) && (
+                <CustomCarousel title="Parceiros" images={[]} />
+              )}
 
               <Footer handleAdminClick={handleAdminClick} />
             </>
