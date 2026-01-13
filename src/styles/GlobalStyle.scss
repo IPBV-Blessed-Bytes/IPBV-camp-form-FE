@@ -301,12 +301,14 @@ button.accordion-button:not(.collapsed) {
 .btn-outline-warning,
 .btn-outline-intense-green,
 .btn-outline-teal-blue,
+.btn-outline-primary,
 .cart-container .btn-outline-secondary {
   border-width: 3px !important;
 }
 
 button.btn.btn-outline-danger:hover svg,
-button.btn.btn-outline-secondary.plus-camper-button:hover svg {
+button.btn.btn-outline-secondary.plus-camper-button:hover svg,
+button.btn.btn-outline-primary:hover svg {
   fill: #fff;
 }
 

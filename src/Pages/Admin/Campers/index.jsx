@@ -1048,6 +1048,20 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
+        Header: 'Cor do Time:',
+        accessor: 'teamColor',
+         Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: 'alphanumeric',
+        Cell: ({ value }) => value || '-',
+      },
+      {
         Header: 'Check-in:',
         accessor: (row) => ({
           checkin: row.checkin,
