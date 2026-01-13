@@ -18,12 +18,9 @@ const getDiscountedProducts = (ageRaw) => {
     }
 
     if (product.category === 'Transporte') {
-      if (age <= 8 && product.id === 'bus-yes') {
+      if (age <= 5 && product.id === 'bus-yes') {
         price = 0;
-        discountDescription = 'Criança até 8 anos não paga transporte';
-      } else if (age >= 9 && age <= 14 && product.id === 'bus-yes') {
-        price = price * 0.5;
-        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% no transporte';
+        discountDescription = 'Criança até 5 anos não paga transporte (no colo dos pais)';
       }
     }
 
