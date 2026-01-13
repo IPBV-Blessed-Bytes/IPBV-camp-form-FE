@@ -2,12 +2,26 @@ import { Box, Typography, LinearProgress } from '@mui/material';
 import PropTypes from 'prop-types';
 
 const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
+  const normalizeString = (str = '') =>
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
   const calculateCheckinDetails = (keyword, totalUsed) => {
     if (!totalUsed || totalUsed === 0) return { percentage: 0, checkins: 0 };
+
+    const normalizedKeyword = normalizeString(keyword);
+
     const checkins =
-      fillingVacancies?.filter(
-        (vacancy) => vacancy.accomodationName?.toLowerCase().includes(keyword.toLowerCase()) && vacancy.checkin,
-      ).length || 0;
+      fillingVacancies?.filter((vacancy) => {
+        const normalizedName = normalizeString(vacancy.accomodationName);
+
+        const nameMatch = normalizedName.includes(normalizedKeyword);
+
+        return nameMatch && vacancy.checkin;
+      }).length || 0;
+
     const percentage = Number(((checkins / totalUsed) * 100).toFixed(0));
     return { percentage, checkins };
   };
