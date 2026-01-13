@@ -549,7 +549,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       {
         Header: 'Forma de Pagamento:',
-        accessor: 'formPayment.formPayment',
+        accessor: (row) => {
+          if (row.totalPrice === '0') {
+            return 'nonPaid';
+          }
+
+          return row.formPayment?.formPayment || 'nonPaid';
+        },
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
             column={column}
@@ -565,13 +571,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
-        Cell: ({ value, row }) => {
-          const totalPrice = row.original.totalPrice;
-
-          if (totalPrice === '0') {
-            return 'Não Pagante';
-          }
-
+        Cell: ({ value }) => {
           switch (value) {
             case 'creditCard':
               return 'Cartão de Crédito';
@@ -1050,7 +1050,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Cor do Time:',
         accessor: 'teamColor',
-         Filter: ({ column }) => (
+        Filter: ({ column }) => (
           <ColumnFilter
             column={column}
             onFilterChange={() => {
