@@ -3,6 +3,7 @@ import { Container, Accordion, Row, Col, Card } from 'react-bootstrap';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { permissions } from '@/fetchers/permissions';
 import PropTypes from 'prop-types';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -52,7 +53,7 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
     const fetchCampers = async () => {
       try {
         const response = await fetcher.get('camper', {
-          params: { size: 100000 },
+          params: { size: MAX_SIZE_CAMPERS },
         });
 
         if (Array.isArray(response.data.content)) {

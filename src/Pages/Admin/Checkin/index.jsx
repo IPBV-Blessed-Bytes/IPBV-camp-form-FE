@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
@@ -42,7 +43,7 @@ const AdminCheckin = ({ loggedUsername }) => {
       setLoading(true);
       const response = await fetcher.get('camper', {
         params: {
-          size: 100000,
+          size: MAX_SIZE_CAMPERS,
         },
       });
 

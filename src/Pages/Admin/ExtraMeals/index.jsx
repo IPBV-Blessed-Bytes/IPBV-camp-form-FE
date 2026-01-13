@@ -3,6 +3,7 @@ import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
 import * as XLSX from 'xlsx';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -21,7 +22,7 @@ const AdminExtraMeals = () => {
 
   const fetchUsersWithExtraMeals = async () => {
     try {
-      const response = await fetcher.get('camper', { params: { size: 100000 } });
+      const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
       if (Array.isArray(response.data.content)) {
         const filteredUsers = response.data.content.filter((user) => user.extraMeals.someFood);
         setUsersWithExtraMeals(filteredUsers);

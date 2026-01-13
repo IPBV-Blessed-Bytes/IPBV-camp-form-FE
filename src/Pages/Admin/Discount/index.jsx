@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import * as XLSX from 'xlsx';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
@@ -43,7 +44,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const fetchPaidUsers = async () => {
     try {
-      const response = await fetcher.get('camper', { params: { size: 100000 } });
+      const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
       if (Array.isArray(response.data.content)) {
         setPaidUsers(response.data.content);
       } else {

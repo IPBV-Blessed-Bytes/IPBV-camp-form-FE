@@ -118,7 +118,6 @@ export const issuingState = [
 
 export const food = [
   { value: 'Alimentação Completa (Café da manhã, Almoço e Jantar)', label: 'Alimentação Completa (Café da manhã, Almoço e Jantar)' },
-  // { value: 'Alimentação Parcial (Almoço e Jantar)', label: 'Alimentação Parcial (Almoço e Jantar)' },
   { value: 'Sem Alimentação', label: 'Sem Alimentação' },
 ];
 
@@ -149,3 +148,5 @@ export const TABLE_HEADERS = [
   'Probabilidade de Volta',
   'Campo Aberto',
 ];
+
+export const MAX_SIZE_CAMPERS = 1000;

@@ -3,6 +3,7 @@ import { Container, Button, Form, Modal, Table, Accordion } from 'react-bootstra
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import Icons from '@/components/Global/Icons';
@@ -57,7 +58,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const fetchCampers = async () => {
     try {
       const { data } = await fetcher.get('/camper', {
-        params: { size: 100000 },
+        params: { size: MAX_SIZE_CAMPERS },
       });
 
       const campersList = Array.isArray(data?.content) ? data.content : [];

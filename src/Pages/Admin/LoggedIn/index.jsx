@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
+import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
@@ -51,7 +52,7 @@ const AdminLoggedIn = ({
   useEffect(() => {
     const fetchCampers = async () => {
       try {
-        const response = await fetcher.get('camper', { params: { size: 100000 } });
+        const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
         if (Array.isArray(response.data.content)) {
           const filteredCampers = response.data.content.filter(
             (camper) =>
