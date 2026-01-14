@@ -154,7 +154,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   return (
     <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Usuários" sessionTypeIcon="add-person" iconSize={80} fill={'#007185'} />
+      <AdminHeader pageName="Gerenciamento de Acampantes" sessionTypeIcon="add-person" iconSize={80} fill={'#007185'} />
 
       <Tools buttons={toolsButtons} />
 
