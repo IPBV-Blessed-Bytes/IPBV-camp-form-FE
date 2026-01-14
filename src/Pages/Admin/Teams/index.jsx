@@ -227,6 +227,19 @@ const AdminTeams = ({ loggedUsername }) => {
       }),
     );
 
+  const wristbandColorMap = teamWristbands.reduce((acc, wristband) => {
+    acc[wristband.label] = wristband.color;
+    return acc;
+  }, {});
+
+  const getTeamColor = (team) => {
+    if (team.wristbandColor?.startsWith('#')) {
+      return team.wristbandColor;
+    }
+
+    return wristbandColorMap[team.wristbandColor] || '#ccc';
+  };
+
   const generateExcel = () => {
     const rows = teams.map((team) => ({
       'Nome do Time': team.name,
@@ -295,7 +308,7 @@ const AdminTeams = ({ loggedUsername }) => {
                       style={{
                         width: 24,
                         height: 24,
-                        backgroundColor: team.wristbandColor,
+                        backgroundColor: getTeamColor(team),
                         borderRadius: 4,
                       }}
                     />
