@@ -25,3 +25,25 @@
     padding-left: 1rem;
   }
 }
+
+.cpf-suggestions {
+  background: $white;
+  border: 1px solid $border-gray;
+  border-top: none;
+  max-height: 12.5rem;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 10;
+}
+
+.cpf-suggestion-item {
+  border-bottom: 1px solid $border-gray;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+
+  &:hover {
+    background-color: $hover-gray;
+  }
+}
