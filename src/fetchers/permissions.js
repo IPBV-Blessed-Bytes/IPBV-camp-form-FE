@@ -25,6 +25,7 @@ export const permissions = (userRole, context) => {
     'filled-vacancies-chart-panel': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === CHECKER,
     'all-info-chart-panel': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === CHECKER,
     'checkin': userRole === ADMIN || userRole === CHECKER || userRole === JOKER_MANAGER,
+    'campers-table-button-checkin': userRole === ADMIN || userRole === JOKER_MANAGER,
   };
 
   return permissionsMap[context] || false;
