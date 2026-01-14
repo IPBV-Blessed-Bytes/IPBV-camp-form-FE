@@ -310,17 +310,20 @@ const AdminTeams = ({ loggedUsername }) => {
                       <Accordion.Body>
                         {team.campers.length ? (
                           team.campers.map((camper) => (
-                            <div key={camper.id} className="d-flex justify-content-between align-items-center mb-2">
-                              <span>{camper.name}</span>
+                            <>
+                              <div key={camper.id} className="d-flex justify-content-between align-items-center mb-2">
+                                <span>{camper.name}</span>
 
-                              <Button
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => handleOpenRemoveCamperModal(camper.id)}
-                              >
-                                <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                              </Button>
-                            </div>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleOpenRemoveCamperModal(camper.id)}
+                                >
+                                  <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+                                </Button>
+                              </div>
+                              <hr className="horizontal-line" />
+                            </>
                           ))
                         ) : (
                           <small className="text-muted">Nenhum Acampante</small>
