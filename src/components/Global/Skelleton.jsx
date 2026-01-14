@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Header from './Header';
 import Footer from './Footer';
 
 const Skelleton = () => {
   const navigate = useNavigate();
+  const { formContext } = useContext(AuthContext);
 
   return (
     <div className="form">
@@ -16,7 +19,9 @@ const Skelleton = () => {
           </Card>
         </div>
 
-        <Footer handleAdminClick={() => navigate('/admin')} />
+        <Footer
+          handleAdminClick={formContext === 'maintenance' ? () => navigate('/dev') : () => navigate('/admin')}
+        />
       </div>
     </div>
   );
