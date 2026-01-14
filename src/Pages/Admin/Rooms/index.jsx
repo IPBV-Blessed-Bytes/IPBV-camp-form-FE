@@ -17,6 +17,7 @@ import Tools from '@/components/Admin/Header/Tools';
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [roomSortOrder, setRoomSortOrder] = useState('asc');
   const [selectedCamper, setSelectedCamper] = useState({});
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -281,6 +282,14 @@ const AdminRooms = ({ loggedUsername }) => {
     [],
   );
 
+  const sortedRooms = useMemo(() => {
+    return [...rooms].sort((a, b) =>
+      roomSortOrder === 'asc'
+        ? a.name.localeCompare(b.name, 'pt-BR', { numeric: true, sensitivity: 'base' })
+        : b.name.localeCompare(a.name, 'pt-BR', { numeric: true, sensitivity: 'base' }),
+    );
+  }, [rooms, roomSortOrder]);
+
   const tableInstance = useTable({ columns, data: dropdownCampers }, useSortBy);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
@@ -400,8 +409,18 @@ const AdminRooms = ({ loggedUsername }) => {
         </Button>
       </div>
 
+      <div className="d-flex justify-content-end mb-3">
+        <Button
+          variant="outline-teal-blue"
+          onClick={() => setRoomSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+        >
+          <Icons typeIcon="sort" iconSize={18} fill="#007185" />
+          &nbsp; Ordenar quartos ({roomSortOrder === 'asc' ? 'A ⭢ Z' : 'Z ⭢ A'})
+        </Button>
+      </div>
+
       <Accordion className="mb-4" defaultActiveKey="1">
-        {rooms.map((room) => (
+        {sortedRooms.map((room) => (
           <Accordion.Item eventKey={room.id} key={room.id}>
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
