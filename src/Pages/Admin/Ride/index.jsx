@@ -213,15 +213,18 @@ const AdminRide = ({ loggedUsername }) => {
         Cell: ({ row }) => {
           return (
             <Accordion>
-              <Accordion.Header className="accordion-header-custom">Vínculos</Accordion.Header>
-              <Accordion.Body className="accordion-body-custom">
-                <ul>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header className="">Vínculos</Accordion.Header>
+                <Accordion.Body className="">
                   {row.original.relationship && row.original.relationship.length > 0 ? (
                     row.original.relationship.map(
                       (relatedRide, index) =>
                         relatedRide && (
-                          <li key={`${relatedRide.id}-${index}`}>
-                            <div className="d-flex justify-content-between">
+                          <>
+                            <div
+                              key={`${relatedRide.id}-${index}`}
+                              className="d-flex justify-content-between align-items-center mb-2"
+                            >
                               <span>{relatedRide.name}</span>&nbsp;
                               <Button
                                 variant="danger"
@@ -232,14 +235,14 @@ const AdminRide = ({ loggedUsername }) => {
                               </Button>
                             </div>
                             <hr className="horizontal-line" />
-                          </li>
+                          </>
                         ),
                     )
                   ) : (
                     <span>Sem caronas relacionadas</span>
                   )}
-                </ul>
-              </Accordion.Body>
+                </Accordion.Body>
+              </Accordion.Item>
             </Accordion>
           );
         },

@@ -1,15 +1,1 @@
 @use '../../../styles/Variables.scss' as *;
-
-.accordion-body-custom {
-  border: 2px solid $alternate-dark-gray;
-  border-top: 0;
-
-  ul {
-    padding-left: 1rem !important;
-    margin: 0;
-  }
-}
-
-.accordion-header-custom {
-  border: 2px solid $alternate-dark-gray;
-}
