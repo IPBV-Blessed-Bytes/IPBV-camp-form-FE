@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -6,19 +7,28 @@ import './style.scss';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
+import { permissions } from '@/fetchers/permissions';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import Tools from '@/components/Admin/Header/Tools';
 
-const AdminCheckin = ({ loggedUsername }) => {
+const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
+  const [cpfLoading, setCpfLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
   const [userWristbands, setUserWristbands] = useState([]);
+  const [cpfMatches, setCpfMatches] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const { formContext } = useContext(AuthContext);
+  const campersTableButton = permissions(userRole, 'campers-table-button-checkin');
+  const navigate = useNavigate();
 
   scrollUp();
 
@@ -38,9 +48,12 @@ const AdminCheckin = ({ loggedUsername }) => {
     fetchRooms();
   }, []);
 
-  const handleSearchUser = async () => {
+  const searchUsersByCpfPrefix = async (cpfPrefix) => {
     try {
-      setLoading(true);
+      setCpfLoading(true);
+      setCpfMatches([]);
+      setShowSuggestions(true);
+
       const response = await fetcher.get('camper', {
         params: {
           size: MAX_SIZE_CAMPERS,
@@ -48,74 +61,78 @@ const AdminCheckin = ({ loggedUsername }) => {
       });
 
       if (response.status === 200) {
-        const user = response.data.content.find((u) => u.personalInformation.cpf === cpf);
+        const matches = response.data.content.filter((u) => u.personalInformation.cpf.startsWith(cpfPrefix));
 
-        if (user) {
-          setUserInfo(user);
-          setCheckinStatus(user.checkin);
-          fetchUserWristbands(user.id, user.package);
-          toast.success('Usuário encontrado com sucesso');
-
-          const [day, month, year] = user.personalInformation.birthday.split('/');
-          const birthDate = new Date(`${year}-${month}-${day}`);
-          const age = calculateAge(birthDate);
-
-          if (age <= 10) {
-            toast.warn(`Usuário tem ${age < 2 ? `${age} ano` : `${age} anos`} de idade. Atenção ao revisar os dados!`);
-          }
-        } else {
-          toast.error('Usuário não encontrado');
-          setUserInfo(null);
-          setCheckinStatus(false);
-        }
+        setCpfMatches(matches);
       }
     } catch (error) {
-      console.error('Erro ao buscar usuário:', error);
-      toast.error('Erro ao buscar usuário');
-      setUserInfo(null);
-      setCheckinStatus(false);
+      console.error('Erro ao buscar usuários:', error);
     } finally {
-      setLoading(false);
+      setCpfLoading(false);
     }
   };
 
-  const fetchUserWristbands = async (userId, userPackage) => {
+  useEffect(() => {
+    if (cpf.length < 3) {
+      setCpfMatches([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      searchUsersByCpfPrefix(cpf);
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [cpf]);
+
+  const normalizeText = (text = '') =>
+    text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ç/g, 'c')
+      .trim();
+
+  const fetchUserWristbands = async (userId, foodName, teamName) => {
     try {
-      // const response = await fetcher.get('/user-wristbands', {
-      //   params: { userId },
-      // });
-      // if (response.status === 200) {
-      //   setUserWristbands(response.data);
-      //   return;
-      // }
+      const response = await fetcher.get('/user-wristbands', {
+        params: { userId },
+      });
+
+      if (response.status !== 200) return;
+
+      const wristbandsResponse = response.data;
+
+      const activeBands = wristbandsResponse.filter((band) => band.active);
+
+      const teamBands = activeBands.filter((band) => band.type === 'TEAM');
+      const foodBands = activeBands.filter((band) => band.type === 'FOOD');
 
       const wristbands = [];
 
-      const foodName = userPackage?.foodName;
-      const teamColor = userPackage?.teamColor;
+      if (foodName) {
+        const normalizedFoodName = normalizeText(foodName);
+        const matchedFood = foodBands.find((band) => normalizeText(band.label) === normalizedFoodName);
 
-      let foodColor = '#000000';
-
-      if (
-        foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
-        foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)'
-      ) {
-        foodColor = '#0000FF';
-      } else if (foodName === 'Alimentação Parcial (Almoço e Jantar)') {
-        foodColor = '#D36AD6';
+        wristbands.push({
+          id: 'food',
+          label: matchedFood?.label || '',
+          color: matchedFood?.color || '',
+        });
       }
 
-      wristbands.push({
-        id: 'food',
-        color: foodColor,
-        label: foodColor === '#000000' ? 'Sem Alimentação' : 'Com Alimentação',
-      });
+      if (teamName) {
+        const normalizedTeamName = normalizeText(teamName);
 
-      wristbands.push({
-        id: 'team',
-        color: teamColor || '#000000',
-        label: 'Time',
-      });
+        const matchedTeam = teamBands.find((band) => normalizeText(band.label) === normalizedTeamName);
+
+        wristbands.push({
+          id: 'team',
+          label: matchedTeam?.label || '',
+          color: matchedTeam?.color || '',
+        });
+      }
 
       setUserWristbands(wristbands);
     } catch (error) {
@@ -168,36 +185,99 @@ const AdminCheckin = ({ loggedUsername }) => {
     }
   };
 
-  const handleKeyDown = (e) => e.key === 'Enter' && handleSearchUser();
-
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
+
+  const goToCampersTable = () => {
+    formContext === 'maintenance' ? navigate('/dev/acampantes') : navigate('/admin/acampantes');
+  };
+
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'campers-table',
+      name: 'Tabela de Acampantes',
+      onClick: () => goToCampersTable(),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'add-person',
+    },
+  ];
 
   return (
     <Container fluid>
       <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#007185'} />
 
+      {campersTableButton && <Tools buttons={toolsButtons} />}
+
       <Row className="mb-3">
-        <Col lg={8} md={8} xs={8}>
+        <Col xs={12}>
           <Form.Group controlId="cpf">
             <Form.Label>
               <b>CPF do Usuário:</b>
             </Form.Label>
             <Form.Control
-              type="number"
+              autoComplete="off"
+              type="text"
               placeholder="Digite o CPF"
               value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, '');
+                setCpf(value);
+                setUserInfo(null);
+              }}
               size="lg"
-              onKeyDown={handleKeyDown}
             />
           </Form.Group>
         </Col>
-        <Col lg={4} md={4} xs={4} className="d-flex align-items-end">
-          <Button variant="teal-blue" onClick={handleSearchUser} size="lg" disabled={!cpf}>
-            <Icons typeIcon="m-glass" iconSize={25} fill="#fff" />
-            <span className="d-none d-md-inline">&nbsp;Buscar Usuário</span>
-          </Button>
-        </Col>
+        {showSuggestions && !userInfo && (
+          <Col xs={12}>
+            <div className="cpf-suggestions">
+              {cpfLoading ? (
+                <div className="cpf-suggestions-loading">
+                  <span className="dot-typing">
+                    <span />
+                  </span>
+                </div>
+              ) : cpfMatches.length > 0 ? (
+                cpfMatches.map((user) => (
+                  <div
+                    key={user.id}
+                    className="cpf-suggestions-item"
+                    onClick={() => {
+                      setCpf(user.personalInformation.cpf);
+                      setUserInfo(user);
+                      setCheckinStatus(user.checkin);
+                      setCpfMatches([]);
+                      setShowSuggestions(false);
+                      fetchUserWristbands(user.id, user.package.foodName, user.teamName);
+
+                      toast.success('Usuário selecionado');
+
+                      const [day, month, year] = user.personalInformation.birthday.split('/');
+                      const birthDate = new Date(`${year}-${month}-${day}`);
+                      const age = calculateAge(birthDate);
+
+                      if (age <= 10) {
+                        toast.warn(
+                          `Usuário tem ${
+                            age < 2 ? `${age} ano` : `${age} anos`
+                          } de idade. Atenção ao revisar os dados!`,
+                        );
+                      }
+                    }}
+                  >
+                    <strong>{user.personalInformation.name}</strong>
+                    <span>{user.personalInformation.cpf}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="cpf-suggestions-empty">Nenhum usuário encontrado para este CPF</div>
+              )}
+            </div>
+          </Col>
+        )}
       </Row>
 
       {userInfo && (
@@ -253,6 +333,9 @@ const AdminCheckin = ({ loggedUsername }) => {
               <p>
                 <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
               </p>
+              <p>
+                <strong>Time:</strong> {userInfo.teamName || '-'}
+              </p>
             </Col>
           </Row>
 
@@ -289,6 +372,7 @@ const AdminCheckin = ({ loggedUsername }) => {
 
 AdminCheckin.propTypes = {
   loggedUsername: PropTypes.string,
+  userRole: PropTypes.string,
 };
 
 export default AdminCheckin;

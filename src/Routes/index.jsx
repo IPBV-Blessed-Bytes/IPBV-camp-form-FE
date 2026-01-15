@@ -339,7 +339,7 @@ const FormRoutes = ({
             path={effectiveFormContext === 'maintenance' ? '/dev/checkin' : '/admin/checkin'}
             element={
               <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
-                <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} />
+                <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
               </ProtectedRoute>
             }
           />
