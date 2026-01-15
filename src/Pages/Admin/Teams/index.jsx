@@ -44,6 +44,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const fetchTeamWristbands = async () => {
     try {
+      setLoading(true);
       const { data } = await fetcher.get('/user-wristbands');
 
       const onlyTeamWristbands = (data || []).filter((wristband) => wristband.type === 'TEAM' && wristband.active);
@@ -52,14 +53,19 @@ const AdminTeams = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao carregar pulseiras dos times');
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchCampers = async () => {
     try {
-      const { data } = await fetcher.get('/camper', {
+      setLoading(true);
+      const response = await fetcher.get('/camper', {
         params: { size: MAX_SIZE_CAMPERS },
       });
+
+      const data = response?.data;
 
       const campersList = Array.isArray(data?.content) ? data.content : [];
       setCampers(campersList);
@@ -67,6 +73,8 @@ const AdminTeams = ({ loggedUsername }) => {
       toast.error('Erro ao carregar acampantes');
       console.error(error);
       setCampers([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,11 +137,12 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
-  const addCamperToTeam = async (camperId, teamColor) => {
+  const addCamperToTeam = async (camperId, teamName, teamColor) => {
     try {
       setLoading(true);
 
       await fetcher.patch(`/team/camper/${camperId}`, {
+        teamName,
         teamColor,
       });
 
@@ -152,7 +161,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const handleConfirmAddCamper = async () => {
     if (!selectedCamperId || !selectedTeam) return;
 
-    await addCamperToTeam(Number(selectedCamperId), selectedTeam.wristbandColor);
+    await addCamperToTeam(Number(selectedCamperId), selectedTeam.name, selectedTeam.wristbandColor);
 
     setSelectedCamperId('');
     setSelectedTeam(null);
@@ -220,7 +229,7 @@ const AdminTeams = ({ loggedUsername }) => {
     setSelectedTeamToRemove(null);
   };
   const availableCampers = campers
-    .filter((camper) => !camper.teamColor || camper.teamColor === '')
+    .filter((camper) => !camper.teamColor || camper.teamColor === '' || !camper.teamName || camper.teamName === '')
     .sort((a, b) =>
       (a.personalInformation?.name || '').localeCompare(b.personalInformation?.name || '', 'pt-BR', {
         sensitivity: 'base',
@@ -406,7 +415,9 @@ const AdminTeams = ({ loggedUsername }) => {
                 }))
               }
             >
-              <option value="">Selecione uma pulseira</option>
+              <option value="" disabled selected>
+                Selecione uma pulseira
+              </option>
 
               {teamWristbands.map((wristband) => (
                 <option key={wristband.id} value={wristband.id}>
@@ -457,7 +468,9 @@ const AdminTeams = ({ loggedUsername }) => {
               </Form.Label>
 
               <Form.Select size="lg" value={selectedCamperId} onChange={(e) => setSelectedCamperId(e.target.value)}>
-                <option value="">Selecione um acampante</option>
+                <option value="" disabled selected>
+                  Selecione um acampante
+                </option>
 
                 {availableCampers.map((camper) => (
                   <option key={camper.id} value={camper.id}>
