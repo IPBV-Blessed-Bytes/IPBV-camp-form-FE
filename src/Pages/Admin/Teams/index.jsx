@@ -161,7 +161,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const handleConfirmAddCamper = async () => {
     if (!selectedCamperId || !selectedTeam) return;
 
-    await addCamperToTeam(Number(selectedCamperId), selectedTeam.name, selectedTeam.wristbandColor);
+    await addCamperToTeam(Number(selectedCamperId), selectedTeam.wristbandLabel, selectedTeam.wristbandColor);
 
     setSelectedCamperId('');
     setSelectedTeam(null);
@@ -253,7 +253,8 @@ const AdminTeams = ({ loggedUsername }) => {
     const rows = teams.map((team) => ({
       'Nome do Time': team.name,
       'Cor da Pulseira': team.wristbandColor || '-',
-      'Qtd. Acampantes': Number(team.campersCount ?? 0),
+      'Qtd. Acampantes': Number(team.campersCount ?? team.campers?.length ?? 0),
+      Acampantes: team.campers?.length ? team.campers.map((camper) => camper.name).join(', ') : '-',
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
@@ -300,8 +301,8 @@ const AdminTeams = ({ loggedUsername }) => {
             <tr>
               <th className="table-cells-header">Nome do Time:</th>
               <th className="table-cells-header">Cor da Pulseira:</th>
-              <th className="table-cells-header">Acampantes:</th>
               <th className="table-cells-header">Quantidade:</th>
+              <th className="table-cells-header">Acampantes:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
@@ -324,6 +325,7 @@ const AdminTeams = ({ loggedUsername }) => {
                     {team.wristbandColor}
                   </div>
                 </td>
+                <td>{team.campersCount}</td>
                 <td>
                   <Accordion>
                     <Accordion.Item eventKey="0">
@@ -354,7 +356,6 @@ const AdminTeams = ({ loggedUsername }) => {
                     </Accordion.Item>
                   </Accordion>
                 </td>
-                <td>{team.campersCount}</td>
                 <td>
                   <Button variant="outline-primary" className="me-2" onClick={() => handleOpenAddCamperModal(team)}>
                     <Icons typeIcon="plus" iconSize={20} fill="#0d6efd" />
@@ -488,7 +489,12 @@ const AdminTeams = ({ loggedUsername }) => {
           <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleConfirmAddCamper} disabled={!selectedCamperId}>
+          <Button
+            variant="primary"
+            className="btn-confirm"
+            onClick={handleConfirmAddCamper}
+            disabled={!selectedCamperId}
+          >
             Adicionar
           </Button>
         </Modal.Footer>
