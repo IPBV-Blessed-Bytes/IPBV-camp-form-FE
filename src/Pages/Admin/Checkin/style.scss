@@ -15,7 +15,7 @@
 
   &__line {
     border-bottom: 1px solid $black;
-    border-top: 2px solid $black;
+    border-top: 1px solid $black;
     height: 2.5rem;
   }
 
@@ -34,16 +34,85 @@
   overflow-y: auto;
   width: 100%;
   z-index: 10;
-}
 
-.cpf-suggestion-item {
-  border-bottom: 1px solid $border-gray;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
+  &-item {
+    border-bottom: 1px solid $border-gray;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
 
-  &:hover {
-    background-color: $hover-gray;
+    &:hover {
+      background-color: $hover-gray;
+    }
+  }
+
+  &-empty {
+    background: $background-gray;
+    border-radius: 4px;
+    color: $alternate-dark-dark-gray;
+    font-style: italic;
+    padding: 12px;
+    text-align: center;
+  }
+
+  &-loading {
+    padding: 12px;
+    background: $newborn-blue;
+    text-align: center;
   }
 }
+
+.dot-typing {
+  position: relative;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1rem;
+  margin-left: 6px;
+
+  &::before,
+  &::after,
+  span {
+    content: '';
+    position: absolute;
+    top: 0.4rem;
+    width: 0.3rem;
+    height: 0.3rem;
+    background: #007185;
+    border-radius: 50%;
+    animation: dotTyping 1.4s infinite ease-in-out both;
+  }
+
+  &::before {
+    left: 0;
+    animation-delay: 0s;
+  }
+
+  span {
+    left: 0.5rem;
+    animation-delay: 0.2s;
+  }
+
+  &::after {
+    left: 1rem;
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes dotTyping {
+  0% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+
+  20% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+
+  40% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+}
+
