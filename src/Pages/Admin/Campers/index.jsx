@@ -1049,8 +1049,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
-        Header: 'Cor do Time:',
-        accessor: 'teamColor',
+        Header: 'Nome do Time:',
+        accessor: 'teamName',
         Filter: ({ column }) => (
           <ColumnFilter
             column={column}
@@ -1388,6 +1388,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'personalInformation.legalGuardianCpf': 'CPF do Responsável Legal',
       'personalInformation.legalGuardianCellPhone': 'Celular do Responsável Legal',
       finalObservation: 'Observação Acampante',
+      teamName: 'Nome do Time',
       checkin: 'Checkin',
       checkinTime: 'Hora do Checkin',
       crew: 'Equipe',
@@ -1431,6 +1432,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       'CPF do Responsável Legal',
       'Celular do Responsável Legal',
       'Observação Acampante',
+      'Nome do Time',
       'Checkin',
       'Hora do Checkin',
       'Equipe',
