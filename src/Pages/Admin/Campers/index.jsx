@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import * as XLSX from 'xlsx';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
+import { MAX_SIZE_CAMPERS, CREW_OPTIONS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissions } from '@/fetchers/permissions';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -129,9 +129,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     );
     const reverseFoodMap = Object.fromEntries(Object.entries(foodMap).map(([k, v]) => [normalizeText(v), k]));
 
-    const booleanValue = ['crew', 'pastoralFamily', 'contact.car', 'contact.needRide', 'contact.isWhatsApp'].includes(
-      name,
-    )
+    const booleanValue = ['pastoralFamily', 'contact.car', 'contact.needRide', 'contact.isWhatsApp'].includes(name)
       ? adjustedValue === 'true'
       : adjustedValue;
 
@@ -268,7 +266,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       id: editFormData.id,
       observation: editFormData.observation || '',
       pastoralFamily: !!editFormData.pastoralFamily,
-      crew: !!editFormData.crew,
+      crew: editFormData.crew || '',
       package: {
         ...sanitizedFormData.package,
         accomodationName: editFormData.package?.accomodationName || '',
@@ -309,7 +307,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       manualRegistration: true,
       observation: addFormData.observation || '',
       pastoralFamily: !!addFormData.pastoralFamily,
-      crew: !!addFormData.crew,
+      crew: addFormData.crew || '',
       ...sanitizedFormData,
       package: {
         ...sanitizedFormData.package,
@@ -563,7 +561,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             options={[
               { value: 'creditCard', label: 'Cartão de Crédito' },
               { value: 'pix', label: 'PIX' },
-              { value: 'boleto', label: 'Boleto Bancário' },
+              { value: 'ticket', label: 'Boleto Bancário' },
               { value: 'nonPaid', label: 'Não Pagante' },
             ]}
             onFilterChange={() => {
@@ -1101,20 +1099,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Equipe:',
         accessor: 'crew',
         Filter: ({ column }) => (
-          <ColumnFilterWithTwoValues
+          <ColumnFilterWithSelect
             column={column}
-            options={[
-              { value: 'sim', label: 'Sim' },
-              { value: 'não', label: 'Não' },
-            ]}
+            options={CREW_OPTIONS}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
             }}
           />
         ),
-        filter: 'selectWithCrew',
         sortType: 'alphanumeric',
-        Cell: ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-'),
+        Cell: ({ value }) => value.replace(/\|/g, ', ') || '-',
       },
       {
         Header: 'Família Pastoral:',
@@ -1271,13 +1265,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     });
   };
 
-  const selectWithCrew = (rows, id, filterValue) => {
-    return rows.filter((row) => {
-      const filterData = row.values[id];
-      return filterValue === undefined || filterData === filterValue;
-    });
-  };
-
   const selectWithPastoralFamily = (rows, id, filterValue) => {
     return rows.filter((row) => {
       const filterData = row.values[id];
@@ -1323,7 +1310,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         selectWithDiscount,
         selectWithCheckin,
         selectWithManualRegistration,
-        selectWithCrew,
         selectWithPastoralFamily,
         selectWithConfirmationUserData,
       },

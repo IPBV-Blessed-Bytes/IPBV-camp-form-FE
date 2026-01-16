@@ -117,7 +117,10 @@ export const issuingState = [
 ];
 
 export const food = [
-  { value: 'Alimentação Completa (Café da manhã, Almoço e Jantar)', label: 'Alimentação Completa (Café da manhã, Almoço e Jantar)' },
+  {
+    value: 'Alimentação Completa (Café da manhã, Almoço e Jantar)',
+    label: 'Alimentação Completa (Café da manhã, Almoço e Jantar)',
+  },
   { value: 'Sem Alimentação', label: 'Sem Alimentação' },
 ];
 
@@ -150,3 +153,17 @@ export const TABLE_HEADERS = [
 ];
 
 export const MAX_SIZE_CAMPERS = 1000;
+
+export const FOOD_NAME_OPTIONS = [
+  { label: 'Com Alimentação', value: 'Alimentação Completa' },
+  { label: 'Sem Alimentação', value: 'Sem Alimentação' },
+];
+
+export const CREW_OPTIONS = [
+  { value: 'Logística', label: 'Logística' },
+  { value: 'Credenciamento', label: 'Credenciamento' },
+  { value: 'Programação', label: 'Programação' },
+  { value: 'Cozinha', label: 'Cozinha' },
+  { value: 'Cantina', label: 'Cantina' },
+  { value: 'Sistema', label: 'Sistema' },
+];

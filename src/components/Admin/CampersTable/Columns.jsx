@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ColumnsFields from './ColumnsFields';
-import { issuingState, rgShipper, food } from '@/utils/constants';
+import { issuingState, rgShipper, food, CREW_OPTIONS } from '@/utils/constants';
 
 const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate }) => {
   const [missingFields, setMissingFields] = useState([]);
@@ -36,7 +36,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       options: [
         { label: 'Cartão de Crédito', value: 'creditCard' },
         { label: 'PIX', value: 'pix' },
-        { label: 'Boleto Bancário', value: 'boleto' },
+        { label: 'Boleto Bancário', value: 'ticket' },
         { label: 'Não Pagante', value: 'nonPaid' },
       ],
     },
@@ -211,12 +211,9 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       label: 'Equipe',
       name: 'crew',
       type: 'select',
-      placeholder: 'Selecione se é equipante',
+      placeholder: 'Selecione qual equipe',
       oddOrEven: 'odd',
-      options: [
-        { label: 'Sim', value: true },
-        { label: 'Não', value: false },
-      ],
+      options: CREW_OPTIONS,
     },
     {
       label: 'Família Pastoral',
