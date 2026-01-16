@@ -309,7 +309,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   ? 'Cartão de Crédito'
                   : userInfo.formPayment.formPayment === 'pix'
                   ? 'PIX'
-                  : userInfo.formPayment.formPayment === 'boleto'
+                  : userInfo.formPayment.formPayment === 'ticket'
                   ? 'Boleto Bancário'
                   : 'Não Pagante'}
               </p>
@@ -334,7 +334,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                 <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
               </p>
               <p>
-                <strong>Time:</strong> {userInfo.teamName || '-'}
+                <strong>Time:</strong> {userInfo.teamName || 'Time Não Selecionado'}
               </p>
             </Col>
           </Row>

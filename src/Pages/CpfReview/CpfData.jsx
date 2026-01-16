@@ -18,7 +18,7 @@ const CpfData = ({ personData }) => {
   const paymentMethodMapping = {
     creditCard: 'Cartão de Crédito',
     pix: 'PIX',
-    boleto: 'Boleto Bancário',
+    ticket: 'Boleto Bancário',
   };
 
   scrollUp();
