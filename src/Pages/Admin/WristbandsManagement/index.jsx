@@ -6,6 +6,7 @@ import './style.scss';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
+import { FOOD_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -140,7 +141,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
             <thead>
               <tr>
                 <th className="table-cells-header">Tipo:</th>
-                <th className="table-cells-header">Descrição:</th>
+                <th className="table-cells-header">Nome:</th>
                 <th className="table-cells-header">Cor:</th>
                 <th className="table-cells-header">Status:</th>
                 <th className="table-cells-header">Ações:</th>
@@ -194,23 +195,45 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               <Form.Label>
                 <b>Tipo:</b>
               </Form.Label>
-              <Form.Select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
+              <Form.Select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value, label: '' })}
+              >
                 <option selected disabled value="">
                   Selecione uma opção
                 </option>
-                <option value="FOOD">Alimentação</option>
                 <option value="TEAM">Time</option>
+                <option value="FOOD">Alimentação</option>
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mt-3">
               <Form.Label>
-                <b>Descrição:</b>
+                <b>Nome:</b>
               </Form.Label>
-              <Form.Control
-                value={formData.label}
-                onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-              />
+
+              {formData.type === 'FOOD' ? (
+                <Form.Select
+                  value={formData.label}
+                  onChange={(e) => setFormData({ ...formData, label: e.target.value })}
+                >
+                  <option value="" disabled selected>
+                    Selecione uma opção
+                  </option>
+                  {FOOD_NAME_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              ) : (
+                <Form.Control
+                  type="text"
+                  placeholder="Digite o nome"
+                  value={formData.label}
+                  onChange={(e) => setFormData({ ...formData, label: e.target.value })}
+                />
+              )}
             </Form.Group>
 
             <Form.Group className="mt-3">
@@ -257,8 +280,11 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       </Modal>
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} className="custom-modal">
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão</Modal.Title>
+        <Modal.Header closeButton className="custom-modal__header--cancel">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
+            <b>Confirmar Exclusão</b>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
