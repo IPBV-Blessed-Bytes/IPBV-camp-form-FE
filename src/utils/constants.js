@@ -166,4 +166,6 @@ export const CREW_OPTIONS = [
   { value: 'Cozinha', label: 'Cozinha' },
   { value: 'Cantina', label: 'Cantina' },
   { value: 'Sistema', label: 'Sistema' },
+  { value: 'Financeiro', label: 'Financeiro' },
+  { value: '', label: 'Selecione uma opção' },
 ];
