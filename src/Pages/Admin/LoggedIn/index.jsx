@@ -86,6 +86,7 @@ const AdminLoggedIn = ({
   const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
 
   const usedPackages = availablePackages?.usedPackages || {};
+  const usedValidPackages = availablePackages?.usedValidPackages || {};
   const totalPackages = availablePackages?.totalPackages || {};
 
   const familyCollegeFilledVacancies = Number(usedPackages['host-college-family'] || 0);
@@ -96,7 +97,7 @@ const AdminLoggedIn = ({
 
   const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
   const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
-  const busYesFilledVacancies = Number(usedPackages['bus-yes'] || 0);
+  const busYesFilledVacancies = Number(usedValidPackages['bus-yes'] || 0);
 
   const familyCollegeRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeFilledVacancies;
   const collectiveRemaining = (totalPackages?.schoolIndividual || 0) - collectiveFilledVacancies;
