@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -29,6 +29,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const { formContext } = useContext(AuthContext);
   const campersTableButton = permissions(userRole, 'campers-table-button-checkin');
   const navigate = useNavigate();
+  const abortControllerRef = useRef(null);
 
   scrollUp();
 
@@ -49,6 +50,13 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   }, []);
 
   const searchUsersByCpfPrefix = async (cpfPrefix) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       setCpfLoading(true);
       setCpfMatches([]);
@@ -58,6 +66,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         params: {
           size: MAX_SIZE_CAMPERS,
         },
+        signal: controller.signal,
       });
 
       if (response.status === 200) {
@@ -66,16 +75,27 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         setCpfMatches(matches);
       }
     } catch (error) {
+      if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+        return;
+      }
+
       console.error('Erro ao buscar usuários:', error);
     } finally {
-      setCpfLoading(false);
+      if (abortControllerRef.current === controller) {
+        setCpfLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     if (cpf.length < 3) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
       setCpfMatches([]);
       setShowSuggestions(false);
+      setCpfLoading(false);
       return;
     }
 
@@ -83,7 +103,9 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       searchUsersByCpfPrefix(cpf);
     }, 400);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [cpf]);
 
   const normalizeText = (text = '') =>
@@ -228,7 +250,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   const value = e.target.value.replace(/\D/g, '');
                   setCpf(value);
                   setUserInfo(null);
-                }}  
+                }}
                 size="lg"
               />
 
