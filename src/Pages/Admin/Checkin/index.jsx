@@ -217,18 +217,37 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
             <Form.Label>
               <b>CPF do Usuário:</b>
             </Form.Label>
-            <Form.Control
-              autoComplete="off"
-              type="text"
-              placeholder="Digite o CPF"
-              value={cpf}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, '');
-                setCpf(value);
-                setUserInfo(null);
-              }}
-              size="lg"
-            />
+
+            <div className="cpf-input-wrapper">
+              <Form.Control
+                autoComplete="off"
+                type="text"
+                placeholder="Digite o CPF"
+                value={cpf}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '');
+                  setCpf(value);
+                  setUserInfo(null);
+                }}  
+                size="lg"
+              />
+
+              {cpf && (
+                <button
+                  aria-label="Limpar CPF"
+                  className="cpf-clear-button"
+                  type="button"
+                  onClick={() => {
+                    setCpf('');
+                    setUserInfo(null);
+                    setCpfMatches([]);
+                    setShowSuggestions(false);
+                  }}
+                >
+                  <Icons typeIcon="close" iconSize={30} fill="#6c757d" />
+                </button>
+              )}
+            </div>
           </Form.Group>
         </Col>
         {showSuggestions && !userInfo && (
