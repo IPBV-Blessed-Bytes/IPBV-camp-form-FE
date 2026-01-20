@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import * as XLSX from 'xlsx';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
@@ -16,7 +15,6 @@ import Tools from '@/components/Admin/Header/Tools';
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
-  const [paidUsers, setPaidUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -28,7 +26,6 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   useEffect(() => {
     fetchDiscounts();
-    fetchPaidUsers();
   }, []);
 
   const fetchDiscounts = async () => {
@@ -39,19 +36,6 @@ const AdminDiscount = ({ loggedUsername }) => {
       toast.error('Erro ao buscar descontos');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchPaidUsers = async () => {
-    try {
-      const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
-      if (Array.isArray(response.data.content)) {
-        setPaidUsers(response.data.content);
-      } else {
-        console.error('Erro: Dados não estão no formato esperado.');
-      }
-    } catch (error) {
-      console.error('Erro ao buscar usuários pagos:', error);
     }
   };
 
@@ -147,14 +131,12 @@ const AdminDiscount = ({ loggedUsername }) => {
     };
 
     const fieldMapping = discount.map((discount) => {
-      const camper = paidUsers.find((user) => user.personalInformation.cpf === discount.cpf);
-
       let row = {
         CPF: discount.cpf,
         'Valor Desconto': discount.discount,
         'Motivo do Desconto': discount.discountReason || '-',
-        Usuário: camper ? discount.user : 'NÃO UTILIZADO',
-        'Valor Pago': camper ? camper.totalPrice : '-',
+        Usuário: discount.user ? discount.user : 'NÃO UTILIZADO',
+        'Valor Pago': discount.totalPrice ? discount.totalPrice : '-',
       };
 
       numericFields.forEach((key) => {
@@ -215,14 +197,12 @@ const AdminDiscount = ({ loggedUsername }) => {
           </thead>
           <tbody>
             {discount.map((discount) => {
-              const camper = paidUsers.find((user) => user.personalInformation.cpf === discount.cpf);
-
               return (
                 <tr key={discount.id}>
                   <td>{discount.cpf}</td>
                   <td>{discount.discount}</td>
                   <td>
-                    {camper ? (
+                    {discount.user ? (
                       discount.user
                     ) : (
                       <b>
@@ -231,7 +211,7 @@ const AdminDiscount = ({ loggedUsername }) => {
                     )}
                   </td>
                   <td>{discount.discountReason || '-'}</td>
-                  <td>{camper ? camper.totalPrice : '-'}</td>
+                  <td>{discount.totalPrice ? discount.totalPrice : '-'}</td>
                   <td>
                     <Button variant="outline-success" onClick={() => openModal(discount)}>
                       <Icons typeIcon="edit" iconSize={24} />
