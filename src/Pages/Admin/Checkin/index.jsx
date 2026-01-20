@@ -7,7 +7,7 @@ import './style.scss';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import { registerLog } from '@/fetchers/userLogs';
-import { permissions } from '@/fetchers/permissions';
+import { permissionsSections } from '@/fetchers/permissions';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -27,7 +27,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpfMatches, setCpfMatches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { formContext } = useContext(AuthContext);
-  const campersTableButton = permissions(userRole, 'campers-table-button-checkin');
+  const { campersTableButtonPermissions } = permissionsSections(userRole);
   const navigate = useNavigate();
   const abortControllerRef = useRef(null);
 
@@ -64,15 +64,17 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
       const response = await fetcher.get('camper', {
         params: {
+          cpfPrefix,
           size: MAX_SIZE_CAMPERS,
         },
         signal: controller.signal,
       });
 
       if (response.status === 200) {
-        const matches = response.data.content.filter((u) => u.personalInformation.cpf.startsWith(cpfPrefix));
+        const data = response.data;
+        const users = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
 
-        setCpfMatches(matches);
+        setCpfMatches(users);
       }
     } catch (error) {
       if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
@@ -80,6 +82,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       }
 
       console.error('Erro ao buscar usuários:', error);
+      toast.error('Erro ao buscar usuários');
     } finally {
       if (abortControllerRef.current === controller) {
         setCpfLoading(false);
@@ -103,9 +106,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       searchUsersByCpfPrefix(cpf);
     }, 400);
 
-    return () => {
-      clearTimeout(timeout);
-    };
+    return () => clearTimeout(timeout);
   }, [cpf]);
 
   const normalizeText = (text = '') =>
@@ -231,7 +232,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     <Container fluid>
       <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#007185'} />
 
-      {campersTableButton && <Tools buttons={toolsButtons} />}
+      {campersTableButtonPermissions && <Tools buttons={toolsButtons} />}
 
       <Row className="mb-3">
         <Col xs={12}>

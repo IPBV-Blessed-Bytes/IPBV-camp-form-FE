@@ -1,15 +1,14 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Container, Row, Button, Form } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import { initialValues } from '@/utils/constants';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import * as XLSX from 'xlsx';
-import { MAX_SIZE_CAMPERS, CREW_OPTIONS } from '@/utils/constants';
+import { MAX_SIZE_CAMPERS, CREW_OPTIONS, initialValues } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
-import { permissions } from '@/fetchers/permissions';
+import { permissionsSections } from '@/fetchers/permissions';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -39,9 +38,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const filteredRowsRef = useRef([]);
-  const adminTableEditDeletePermissions = permissions(userRole, 'edit-delete-admin-table');
-  const adminTableCreateRegistration = permissions(userRole, 'create-registration-admin-table');
-  const adminTableDeleteRegistrationsAndSelectRows = permissions(userRole, 'delete-registrations-admin-table');
+
+  const {
+    adminTableEditDeletePermissions,
+    adminTableCreateRegistrationPermissions,
+    adminTableDeleteRegistrationsAndSelectRowsPermissions,
+  } = permissionsSections(userRole);
 
   const now = new Date();
   const day = now.getDate().toString().padStart(2, '0');
@@ -417,7 +419,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: () => (
           <>
-            {adminTableDeleteRegistrationsAndSelectRows ? (
+            {adminTableDeleteRegistrationsAndSelectRowsPermissions ? (
               <div className="d-flex justify-content-between w-100">
                 <span className="d-flex">
                   <Form.Check
@@ -451,7 +453,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           <>
             {adminTableEditDeletePermissions ? (
               <div className="d-flex gap-5">
-                {adminTableDeleteRegistrationsAndSelectRows && (
+                {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
                   <Form.Check
                     className="table-checkbox"
                     type="checkbox"
@@ -463,7 +465,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                   <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
                     <Icons typeIcon="edit" iconSize={24} />
                   </Button>{' '}
-                  {adminTableDeleteRegistrationsAndSelectRows && (
+                  {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
                     <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
@@ -1206,7 +1208,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
-        Header: `${adminTableDeleteRegistrationsAndSelectRows ? 'Editar / Deletar' : 'Editar Acampantes'}`,
+        Header: `${adminTableDeleteRegistrationsAndSelectRowsPermissions ? 'Editar / Deletar' : 'Editar Acampantes'}`,
         Cell: ({ row }) => (
           <>
             {adminTableEditDeletePermissions ? (
@@ -1214,7 +1216,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
                 <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
                   <Icons typeIcon="edit" iconSize={24} />
                 </Button>{' '}
-                {adminTableDeleteRegistrationsAndSelectRows && (
+                {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
                   <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
                     <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                   </Button>
@@ -1530,7 +1532,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       onClick: handleDeleteWithCheckbox,
       typeButton: 'outline-danger',
       typeIcon: 'delete',
-      condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRows,
+      condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRowsPermissions,
     },
     {
       buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
@@ -1545,7 +1547,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       },
       typeButton: 'teal-blue',
       typeIcon: 'add-person',
-      condition: adminTableCreateRegistration,
+      condition: adminTableCreateRegistrationPermissions,
     },
   ];
 

@@ -30,3 +30,25 @@ export const permissions = (userRole, context) => {
 
   return permissionsMap[context] || false;
 };
+
+export const permissionsSections = (userRole) => ({
+  adminTableEditDeletePermissions: permissions(userRole, 'edit-delete-admin-table'),
+  adminTableCreateRegistrationPermissions: permissions(userRole, 'create-registration-admin-table'),
+  adminTableDeleteRegistrationsAndSelectRowsPermissions: permissions(userRole, 'delete-registrations-admin-table'),
+  campersTableButtonPermissions: permissions(userRole, 'campers-table-button-checkin'),
+  vacanciesProgressionPermissions: permissions(userRole, 'vacancies-progression-panel'),
+  checkinBalancePermissions: permissions(userRole, 'checkin-balance-panel'),
+  filledVacanciesChartPermissions: permissions(userRole, 'filled-vacancies-chart-panel'),
+  allInfoChartPermissions: permissions(userRole, 'all-info-chart-panel'),
+  registeredButtonHomePermissions: permissions(userRole, 'registered-button-home'),
+  rideButtonHomePermissions: permissions(userRole, 'ride-button-home'),
+  discountButtonHomePermissions: permissions(userRole, 'discount-button-home'),
+  roomsButtonHomePermissions: permissions(userRole, 'rooms-button-home'),
+  teamsButtonHomePermissions: permissions(userRole, 'teams-button-home'),
+  feedbackButtonHomePermissions: permissions(userRole, 'feedback-button-home'),
+  settingsButtonPermissions: permissions(userRole, 'settings-button-home'),
+  packagesAndTotalCardsPermissions: permissions(userRole, 'packages-and-totals-cards-home'),
+  dataPanelButtonPermissions: permissions(userRole, 'data-panel-button-home'),
+  utilitiesLinksPermissions: permissions(userRole, 'utilities-links-home'),
+  checkinPermissions: permissions(userRole, 'checkin'),
+});

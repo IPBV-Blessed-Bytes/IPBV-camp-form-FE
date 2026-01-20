@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Accordion, Row, Col, Card } from 'react-bootstrap';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { permissions } from '@/fetchers/permissions';
+import { permissionsSections } from '@/fetchers/permissions';
 import PropTypes from 'prop-types';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import fetcher from '@/fetchers/fetcherWithCredentials';
@@ -28,10 +28,12 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
   const [fillingVacancies, setFillingVacancies] = useState();
   const [packageData, setPackageData] = useState(null);
 
-  const vacanciesProgressionPermissions = permissions(userRole, 'vacancies-progression-panel');
-  const checkinBalancePermissions = permissions(userRole, 'checkin-balance-panel');
-  const filledVacanciesChartPermissions = permissions(userRole, 'filled-vacancies-chart-panel');
-  const allInfoChartPermissions = permissions(userRole, 'all-info-chart-panel');
+  const {
+    vacanciesProgressionPermissions,
+    checkinBalancePermissions,
+    filledVacanciesChartPermissions,
+    allInfoChartPermissions,
+  } = permissionsSections(userRole);
 
   scrollUp();
 

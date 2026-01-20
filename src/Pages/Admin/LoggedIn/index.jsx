@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
-import { permissions } from '@/fetchers/permissions';
+import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
@@ -30,18 +30,22 @@ const AdminLoggedIn = ({
   user,
   userRole,
 }) => {
+  const {
+    registeredButtonHomePermissions,
+    rideButtonHomePermissions,
+    discountButtonHomePermissions,
+    roomsButtonHomePermissions,
+    teamsButtonHomePermissions,
+    feedbackButtonHomePermissions,
+    settingsButtonPermissions,
+    packagesAndTotalCardsPermissions,
+    dataPanelButtonPermissions,
+    utilitiesLinksPermissions,
+    checkinPermissions,
+  } = permissionsSections(userRole);
+
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState([]);
-  const registeredButtonHomePermissions = permissions(userRole, 'registered-button-home');
-  const rideButtonHomePermissions = permissions(userRole, 'ride-button-home');
-  const discountButtonHomePermissions = permissions(userRole, 'discount-button-home');
-  const roomsButtonHomePermissions = permissions(userRole, 'rooms-button-home');
-  const teamsButtonHomePermissions = permissions(userRole, 'teams-button-home');
-  const feedbackButtonHomePermissions = permissions(userRole, 'feedback-button-home');
-  const settingsButtonPermissions = permissions(userRole, 'settings-button-home');
-  const packagesAndTotalCardsPermissions = permissions(userRole, 'packages-and-totals-cards-home');
-  const dataPanelButtonPermissions = permissions(userRole, 'data-panel-button-home');
-  const utilitiesLinksPermissions = permissions(userRole, 'utilities-links-home');
-  const checkinPermissions = permissions(userRole, 'checkin');
+
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const { formContext } = useContext(AuthContext);
@@ -373,6 +377,7 @@ const AdminLoggedIn = ({
 AdminLoggedIn.propTypes = {
   availablePackages: PropTypes.shape({
     usedPackages: PropTypes.object,
+    usedValidPackages: PropTypes.object,
     totalPackages: PropTypes.shape({
       schoolIndividual: PropTypes.number,
       schoolFamily: PropTypes.number,
