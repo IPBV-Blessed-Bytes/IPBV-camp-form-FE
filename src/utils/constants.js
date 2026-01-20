@@ -167,5 +167,6 @@ export const CREW_OPTIONS = [
   { value: 'Cantina', label: 'Cantina' },
   { value: 'Sistema', label: 'Sistema' },
   { value: 'Financeiro', label: 'Financeiro' },
-  { value: '', label: 'Selecione uma opção' },
+  { value: 'Mídia', label: 'Mídia' },
+  { value: '', label: 'Nenhum' },
 ];
