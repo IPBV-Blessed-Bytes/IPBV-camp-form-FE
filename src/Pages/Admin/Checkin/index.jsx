@@ -328,7 +328,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
             {userWristbands.map((band) => (
               <div key={band.id} className="checkin-color-status-wrapper__item px-0">
                 <span className="checkin-color-status-wrapper__label pl-2">
-                  {band.id === 'food' ? 'Pulseira Alimentação:' : 'Pulseira Time:'}
+                  {band.id === 'food' ? 'Pulseira Alimentação (com e sem):' : 'Pulseira Time:'}
                 </span>
                 <div className="checkin-color-status-wrapper__line" style={{ background: band.color }} />
               </div>
