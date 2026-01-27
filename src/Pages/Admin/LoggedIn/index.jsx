@@ -200,13 +200,13 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Ônibus Geral',
-      remainingVacancies: Number(totalBusVacancies - busYesFilledVacancies) || 0,
+      remainingVacancies: Math.max(Number(totalBusVacancies - busYesFilledVacancies) || 0, 0),
       filledVacancies: Number(busYesFilledVacancies) || 0,
       showRemainingVacancies: true,
     },
     {
       title: 'Ônibus Equipe',
-      remainingVacancies: Number(28 - crewBusUsers) || 0,
+      remainingVacancies: Math.max(Number(28 - crewBusUsers) || 0, 0),
       filledVacancies: Number(crewBusUsers) || 0,
       showRemainingVacancies: true,
     },
