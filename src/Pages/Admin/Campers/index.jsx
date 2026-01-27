@@ -501,7 +501,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
               ? '[EXTERNO]'
               : ''
           } ${
-            row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
+            row.package.transportationName === 'Com Ônibus' ||
+            row.package.transportationName === 'Com Onibus' ||
+            row.package.transportationName === 'Ônibus Equipe' ||
+            row.package.transportationName === 'Onibus Equipe'
               ? 'COM ÔNIBUS'
               : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
               ? 'SEM ÔNIBUS'
@@ -627,6 +630,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             ? 'Com Ônibus'
             : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
             ? 'Sem Ônibus'
+            : row.package.transportationName === 'Ônibus Equipe' || row.package.transportationName === 'Onibus Equipe'
+            ? 'Ônibus Equipe'
             : '',
         Filter: ({ column }) => (
           <ColumnFilterWithSelect
@@ -634,6 +639,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
             options={[
               { value: 'Com Ônibus', label: 'Com Ônibus' },
               { value: 'Sem Ônibus', label: 'Sem Ônibus' },
+              { value: 'Ônibus Equipe', label: 'Ônibus Equipe' },
             ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);

@@ -63,6 +63,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
       options: [
         { label: 'Com Ônibus', value: 'Com Onibus' },
         { label: 'Sem Ônibus', value: 'Sem Onibus' },
+        { label: 'Ônibus Equipe', value: 'Onibus Equipe' },
       ],
     },
     {
