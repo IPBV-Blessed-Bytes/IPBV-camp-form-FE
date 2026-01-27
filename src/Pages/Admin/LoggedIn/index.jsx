@@ -199,13 +199,13 @@ const AdminLoggedIn = ({
       showRemainingVacancies: false,
     },
     {
-      title: 'Total de Inscritos com Ônibus',
+      title: 'Ônibus Geral',
       remainingVacancies: Number(totalBusVacancies - busYesFilledVacancies) || 0,
       filledVacancies: Number(busYesFilledVacancies) || 0,
       showRemainingVacancies: true,
     },
     {
-      title: 'Total de Inscritos com Ônibus Equipe',
+      title: 'Ônibus Equipe',
       remainingVacancies: Number(28 - crewBusUsers) || 0,
       filledVacancies: Number(crewBusUsers) || 0,
       showRemainingVacancies: true,
