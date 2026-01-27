@@ -45,6 +45,8 @@ const AdminLoggedIn = ({
   } = permissionsSections(userRole);
 
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState([]);
+  const [crewBusUsers, setCrewBusUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
@@ -55,23 +57,40 @@ const AdminLoggedIn = ({
 
   useEffect(() => {
     const fetchCampers = async () => {
+      setLoading(true);
+
       try {
-        const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
+        const response = await fetcher.get('camper', {
+          params: { size: MAX_SIZE_CAMPERS },
+        });
+
         if (Array.isArray(response.data.content)) {
-          const filteredCampers = response.data.content.filter(
+          const campers = response.data.content;
+
+          const nonPayingChildren = campers.filter(
             (camper) =>
               camper.personalInformation?.gender === 'Crianca' &&
               (camper.totalPrice === '0' || camper.totalPrice === '' || camper.totalPrice === 0),
           );
 
-          setFilteredCountNonPayingChildren(filteredCampers.length);
+          const usersOnCrewBus = campers.filter(
+            (camper) =>
+              camper.package?.transportationName === 'Ônibus Equipe' ||
+              camper.package?.transportationName === 'Onibus Equipe',
+          );
+
+          setFilteredCountNonPayingChildren(nonPayingChildren.length);
+          setCrewBusUsers(usersOnCrewBus.length);
         } else {
           console.error('Erro: Dados não estão no formato esperado.');
         }
       } catch (error) {
-        console.error('Erro ao buscar usuários pagos:', error);
+        console.error('Erro ao buscar usuários:', error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchCampers();
   }, []);
 
@@ -183,6 +202,12 @@ const AdminLoggedIn = ({
       title: 'Total de Inscritos com Ônibus',
       remainingVacancies: Number(totalBusVacancies - busYesFilledVacancies) || 0,
       filledVacancies: Number(busYesFilledVacancies) || 0,
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Total de Inscritos com Ônibus Equipe',
+      remainingVacancies: Number(28 - crewBusUsers) || 0,
+      filledVacancies: Number(crewBusUsers) || 0,
       showRemainingVacancies: true,
     },
     {
@@ -309,7 +334,7 @@ const AdminLoggedIn = ({
 
       {packagesAndTotalCardsPermissions && (
         <>
-          {!spinnerLoading && (
+          {!spinnerLoading && !loading && (
             <>
               <Row>
                 <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
@@ -363,7 +388,7 @@ const AdminLoggedIn = ({
 
       <SideButtons primaryPermission={dataPanelButtonPermissions} secondaryPermission={settingsButtonPermissions} />
 
-      <Loading loading={spinnerLoading} />
+      <Loading loading={spinnerLoading || loading} />
 
       {utilitiesLinksPermissions && (
         <Row>
