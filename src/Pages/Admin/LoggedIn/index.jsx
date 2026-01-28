@@ -56,42 +56,25 @@ const AdminLoggedIn = ({
   scrollUp();
 
   useEffect(() => {
-    const fetchCampers = async () => {
+    const fetchAdminHomeCounters = async () => {
       setLoading(true);
 
       try {
-        const response = await fetcher.get('camper', {
-          params: { size: MAX_SIZE_CAMPERS },
-        });
+        const [nonPayingChildrenRes, crewBusRes] = await Promise.all([
+          fetcher.get('/non-paying-children'),
+          fetcher.get('/crew-bus'),
+        ]);
 
-        if (Array.isArray(response.data.content)) {
-          const campers = response.data.content;
-
-          const nonPayingChildren = campers.filter(
-            (camper) =>
-              camper.personalInformation?.gender === 'Crianca' &&
-              (camper.totalPrice === '0' || camper.totalPrice === '' || camper.totalPrice === 0),
-          );
-
-          const usersOnCrewBus = campers.filter(
-            (camper) =>
-              camper.package?.transportationName === 'Ônibus Equipe' ||
-              camper.package?.transportationName === 'Onibus Equipe',
-          );
-
-          setFilteredCountNonPayingChildren(nonPayingChildren.length);
-          setCrewBusUsers(usersOnCrewBus.length);
-        } else {
-          console.error('Erro: Dados não estão no formato esperado.');
-        }
+        setFilteredCountNonPayingChildren(nonPayingChildrenRes.data?.quantity || 0);
+        setCrewBusUsers(crewBusRes.data?.quantity || 0);
       } catch (error) {
-        console.error('Erro ao buscar usuários:', error);
+        console.error('Erro ao buscar contadores do admin:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCampers();
+    fetchAdminHomeCounters();
   }, []);
 
   useEffect(() => {
