@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { registerLog } from '@/fetchers/userLogs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
