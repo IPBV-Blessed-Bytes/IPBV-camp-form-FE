@@ -301,7 +301,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                       const birthDate = new Date(`${year}-${month}-${day}`);
                       const age = calculateAge(birthDate);
 
-                      if (age <= 10) {
+                      if (age <= 8) {
                         toast.warn(
                           `Usuário tem ${
                             age < 2 ? `${age} ano` : `${age} anos`
