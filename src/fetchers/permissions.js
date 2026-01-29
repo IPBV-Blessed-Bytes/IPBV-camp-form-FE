@@ -3,6 +3,7 @@ const COLLABORATOR = 'collaborator';
 const COLLABORATOR_VIEWER = 'collaborator-viewer';
 const CHECKER = 'checker';
 const JOKER_MANAGER = 'ride-manager';
+const TEAM_CREATOR = 'team-creator';
 
 export const permissions = (userRole, context) => {
   const permissionsMap = {
@@ -12,7 +13,7 @@ export const permissions = (userRole, context) => {
     'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'discount-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'rooms-button-home': userRole === ADMIN || userRole === COLLABORATOR,
-    'teams-button-home': userRole === ADMIN || userRole === COLLABORATOR,
+    'teams-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === TEAM_CREATOR,
     'feedback-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'extra-meals-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'packages-and-totals-cards-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === JOKER_MANAGER,

@@ -129,6 +129,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         return 'Checker';
       case 'ride-manager':
         return 'Gerenciador Coringa';
+      case 'team-creator':
+        return 'Criador de Times';
       default:
         return role;
     }
@@ -149,7 +151,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'add-person',
-    }
+    },
   ];
 
   return (
@@ -255,6 +257,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <option value="collaborator-viewer">Colaborador Visualizador</option>
                 <option value="checker">Checker</option>
                 <option value="ride-manager">Gerenciador Coringa</option>
+                <option value="team-creator">Criador de Times</option>
               </Form.Select>
             </Form.Group>
           </Form>
