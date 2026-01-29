@@ -168,5 +168,6 @@ export const CREW_OPTIONS = [
   { value: 'Sistema', label: 'Sistema' },
   { value: 'Financeiro', label: 'Financeiro' },
   { value: 'Mídia', label: 'Mídia' },
+  { value: 'Departamento Infantil', label: 'Departamento Infantil' },
   { value: '', label: 'Nenhum' },
 ];
