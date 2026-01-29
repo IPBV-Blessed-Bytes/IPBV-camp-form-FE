@@ -359,7 +359,10 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                 <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
               </p>
               <p>
-                <strong>Observação:</strong> {userInfo.observation}
+                <strong>Observação da Equipe:</strong> {userInfo.observation || '-'}
+              </p>
+              <p>
+                <strong>Observação do Usuário:</strong> {userInfo.finalObservation || '-'}
               </p>
             </Col>
             <Col lg={6} md={6} xs={12}>
