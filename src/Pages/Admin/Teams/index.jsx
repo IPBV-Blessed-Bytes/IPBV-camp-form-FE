@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { Container, Button, Form, Modal, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -14,13 +15,15 @@ import Tools from '@/components/Admin/Header/Tools';
 const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingCampers, setLoadingCampers] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
   const [teamWristbands, setTeamWristbands] = useState([]);
   const [showRemoveCamperModal, setShowRemoveCamperModal] = useState(false);
   const [showAddCamperModal, setShowAddCamperModal] = useState(false);
   const [showRemoveTeamModal, setShowRemoveTeamModal] = useState(false);
-  const [selectedCamperId, setSelectedCamperId] = useState('');
+  const [selectedCampersIds, setSelectedCampersIds] = useState([]);
+  const [selectedCamperId, setSelectedCamperId] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [campers, setCampers] = useState([]);
   const [selectedTeamToRemove, setSelectedTeamToRemove] = useState(null);
@@ -60,7 +63,8 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const fetchCampers = async () => {
     try {
-      setLoading(true);
+      setLoadingCampers(true);
+
       const response = await fetcher.get('/camper', {
         params: { size: MAX_SIZE_CAMPERS },
       });
@@ -68,13 +72,14 @@ const AdminTeams = ({ loggedUsername }) => {
       const data = response?.data;
 
       const campersList = Array.isArray(data?.content) ? data.content : [];
+
       setCampers(campersList);
     } catch (error) {
       toast.error('Erro ao carregar acampantes');
       console.error(error);
       setCampers([]);
     } finally {
-      setLoading(false);
+      setLoadingCampers(false);
     }
   };
 
@@ -137,40 +142,42 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
-  const addCamperToTeam = async (camperId, teamName, teamColor) => {
+  const addCampersToTeam = async () => {
+    if (!selectedCampersIds.length || !selectedTeam) return;
+
     try {
       setLoading(true);
 
-      await fetcher.patch(`/team/camper/${camperId}`, {
-        teamName,
-        teamColor,
-      });
+      const payload = {
+        campers: selectedCampersIds.map((id) => ({
+          id: Number(id),
+          teamName: selectedTeam?.name || '',
+          teamColor: selectedTeam?.wristbandColor || '',
+        })),
+      };
 
-      toast.success('Acampante adicionado ao time');
-      registerLog(`Adicionou o acampante ${camperId} ao time ${teamColor}`, loggedUsername);
+      await fetcher.patch('/team/camper', payload);
+
+      toast.success('Acampantes adicionados ao time');
+      registerLog(`Adicionou ${selectedCampersIds.length} acampantes ao time ${selectedTeam.name}`, loggedUsername);
+
+      setSelectedCampersIds([]);
+      setSelectedTeam(null);
+      setShowAddCamperModal(false);
 
       fetchTeams();
+      fetchCampers();
     } catch (error) {
-      toast.error('Erro ao adicionar acampante ao time');
+      toast.error('Erro ao adicionar acampantes ao time');
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleConfirmAddCamper = async () => {
-    if (!selectedCamperId || !selectedTeam) return;
-
-    await addCamperToTeam(Number(selectedCamperId), selectedTeam.wristbandLabel, selectedTeam.wristbandColor);
-
-    setSelectedCamperId('');
-    setSelectedTeam(null);
-    setShowAddCamperModal(false);
-
-    fetchCampers();
-  };
-
   const handleConfirmRemoveCamper = async () => {
+    if (!selectedCamperId) return;
+
     try {
       setLoading(true);
 
@@ -193,7 +200,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const handleOpenAddCamperModal = (team) => {
     setSelectedTeam(team);
-    setSelectedCamperId('');
+    setSelectedCampersIds([]);
     setShowAddCamperModal(true);
   };
 
@@ -208,12 +215,18 @@ const AdminTeams = ({ loggedUsername }) => {
     try {
       setLoading(true);
 
+      if (selectedTeamToRemove.campers?.length) {
+        await Promise.all(selectedTeamToRemove.campers.map((camper) => fetcher.delete(`/team/camper/${camper.id}`)));
+      }
+
       await fetcher.delete(`/team/${selectedTeamToRemove.id}`);
 
       toast.success('Time removido com sucesso');
       registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);
 
       fetchTeams();
+      fetchCampers();
+
       setShowRemoveTeamModal(false);
       setSelectedTeamToRemove(null);
     } catch (error) {
@@ -228,6 +241,7 @@ const AdminTeams = ({ loggedUsername }) => {
     setShowRemoveTeamModal(false);
     setSelectedTeamToRemove(null);
   };
+
   const availableCampers = campers
     .filter((camper) => !camper.teamColor || camper.teamColor === '' || !camper.teamName || camper.teamName === '')
     .sort((a, b) =>
@@ -332,10 +346,10 @@ const AdminTeams = ({ loggedUsername }) => {
                       <Accordion.Header>Mostrar Acampantes</Accordion.Header>
 
                       <Accordion.Body>
-                        {team.campers.length ? (
+                        {team.campers?.length ? (
                           team.campers.map((camper) => (
-                            <>
-                              <div key={camper.id} className="d-flex justify-content-between align-items-center mb-2">
+                            <React.Fragment key={camper.id}>
+                              <div className="d-flex justify-content-between align-items-center mb-2">
                                 <span>{camper.name}</span>
 
                                 <Button
@@ -347,7 +361,7 @@ const AdminTeams = ({ loggedUsername }) => {
                                 </Button>
                               </div>
                               <hr className="horizontal-line" />
-                            </>
+                            </React.Fragment>
                           ))
                         ) : (
                           <small className="text-muted">Nenhum Acampante</small>
@@ -416,7 +430,7 @@ const AdminTeams = ({ loggedUsername }) => {
                 }))
               }
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Selecione uma pulseira
               </option>
 
@@ -462,26 +476,41 @@ const AdminTeams = ({ loggedUsername }) => {
         </Modal.Header>
 
         <Modal.Body>
-          <Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>Acampante:</b>
-              </Form.Label>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <b>Acampante:</b>
+            </Form.Label>
 
-              <Form.Select size="lg" value={selectedCamperId} onChange={(e) => setSelectedCamperId(e.target.value)}>
-                <option value="" disabled selected>
-                  Selecione um acampante
-                </option>
-
-                {availableCampers.map((camper) => (
+            <Form.Select
+              disabled={loadingCampers}
+              multiple
+              onChange={(e) => {
+                const values = Array.from(e.target.selectedOptions, (opt) => opt.value);
+                setSelectedCampersIds(values);
+              }}
+              size="lg"
+              value={selectedCampersIds}
+            >
+              {loadingCampers ? (
+                <option disabled>Buscando lista de acampantes...</option>
+              ) : availableCampers.length ? (
+                availableCampers.map((camper) => (
                   <option key={camper.id} value={camper.id}>
-                    {camper.personalInformation.name}
+                    {camper.personalInformation?.name || 'Sem nome'}
                   </option>
-                ))}
-              </Form.Select>
+                ))
+              ) : (
+                <option disabled>Nenhum acampante disponível</option>
+              )}
+            </Form.Select>
 
-              {!availableCampers.length && <small className="text-muted">Todos os acampantes já estão em times</small>}
-            </Form.Group>
+            {selectedCampersIds.length > 0 && (
+              <small className="text-success">{selectedCampersIds.length} selecionado(s)</small>
+            )}
+            <br />
+            <small className="text-muted">Segure CTRL (ou CMD no Mac) para selecionar vários</small>
+
+            {!availableCampers.length && <small className="text-muted">Todos os acampantes já estão em times</small>}
           </Form.Group>
         </Modal.Body>
 
@@ -492,8 +521,8 @@ const AdminTeams = ({ loggedUsername }) => {
           <Button
             variant="primary"
             className="btn-confirm"
-            onClick={handleConfirmAddCamper}
-            disabled={!selectedCamperId}
+            onClick={addCampersToTeam}
+            disabled={!selectedCampersIds.length}
           >
             Adicionar
           </Button>
