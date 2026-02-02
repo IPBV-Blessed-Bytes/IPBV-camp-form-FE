@@ -44,10 +44,24 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
 
   const validateForm = () => {
     const { type, label, color } = formData;
+
     if (!type || !label || !color) {
       toast.error('Todos os campos são obrigatórios');
       return false;
     }
+
+    if (type === 'FOOD') {
+      const duplicatedFood = wristbands.find(
+        (band) =>
+          band.type === 'FOOD' && band.label === label && (!editingWristband || band.id !== editingWristband.id),
+      );
+
+      if (duplicatedFood) {
+        toast.error(`Já existe uma pulseira de alimentação do tipo ${label}. Não é possível cadastrar outra igual.`);
+        return false;
+      }
+    }
+
     return true;
   };
 
