@@ -820,26 +820,15 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Igreja:',
         accessor: 'contact.church',
         Filter: ({ column }) => (
-          <ColumnFilterWithSelect
+          <ColumnFilter
             column={column}
-            options={[
-              { value: 'Boa Viagem', label: 'Boa Viagem' },
-              { value: 'Outra', label: 'Outra' },
-            ]}
             onFilterChange={() => {
               setFilteredRows(column.filteredRows);
             }}
           />
         ),
-        sortType: 'alphanumeric',
-        Cell: ({ value }) =>
-          value === 'Boa Viagem'
-            ? 'Boa Viagem'
-            : value === 'IPBV'
-            ? 'Boa Viagem'
-            : value === 'Outra'
-            ? 'Outra'
-            : 'Não pagante',
+        sortType: alphabeticalSort,
+        Cell: ({ value }) => value || '-',
       },
       {
         Header: 'Celular:',

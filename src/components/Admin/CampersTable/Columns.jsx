@@ -125,13 +125,9 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
     {
       label: 'Igreja',
       name: 'contact.church',
-      type: 'select',
-      placeholder: 'Selecione sua igreja',
+      type: 'text',
+      placeholder: 'Nome da Igreja',
       oddOrEven: 'even',
-      options: [
-        { label: 'Boa Viagem', value: 'Boa Viagem' },
-        { label: 'Outra', value: 'Outra' },
-      ],
     },
     { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
     {

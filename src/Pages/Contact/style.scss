@@ -1,1 +1,11 @@
 @use '../../styles/Variables.scss' as *;
+
+.back-to-list-btn {
+  align-items: center;
+  color: $primary;
+  cursor: pointer;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: end;
+  text-decoration: none;
+}

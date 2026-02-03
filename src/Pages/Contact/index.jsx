@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
 import { additionalInformationSchema } from '@/form/validations/schema';
+import Icons from '@/components/Global/Icons';
 import './style.scss';
 
 const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm }) => {
@@ -17,6 +18,8 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
     validateOnChange: false,
     validationSchema: additionalInformationSchema,
   });
+
+  const [isOtherChurch, setIsOtherChurch] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -140,19 +143,59 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
                   <Form.Label>
                     <b>Igreja:</b>
                   </Form.Label>
-                  <Form.Select
-                    id="church"
-                    name="church"
-                    isInvalid={!!errors.church}
-                    value={values.church}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>
-                      Selecione uma opção
-                    </option>
-                    <option value="Boa Viagem">IP. Boa Viagem</option>
-                    <option value="Outra">Outra</option>
-                  </Form.Select>
+
+                  {isOtherChurch ? (
+                    <>
+                      <Form.Control
+                        autoFocus
+                        type="text"
+                        name="church"
+                        isInvalid={!!errors.church}
+                        value={values.church}
+                        placeholder="Digite o nome da sua igreja"
+                        onChange={handleChange}
+                      />
+
+                      <a
+                        className="back-to-list-btn p-0 mt-2"
+                        onClick={() => {
+                          setIsOtherChurch(false);
+                          setValues((prev) => ({
+                            ...prev,
+                            church: '',
+                          }));
+                        }}
+                      >
+                        <Icons typeIcon="arrow-left" iconSize={20} fill="#007185" />
+                        Voltar para lista
+                      </a>
+                    </>
+                  ) : (
+                    <Form.Select
+                      id="church"
+                      name="church"
+                      isInvalid={!!errors.church}
+                      value={values.church}
+                      onChange={(e) => {
+                        if (e.target.value === 'Outra') {
+                          setIsOtherChurch(true);
+                          setValues((prev) => ({
+                            ...prev,
+                            church: '',
+                          }));
+                        } else {
+                          setIsOtherChurch(false);
+                          handleChange(e);
+                        }
+                      }}
+                    >
+                      <option value="" disabled>
+                        Selecione uma opção
+                      </option>
+                      <option value="Boa Viagem">IP. Boa Viagem</option>
+                      <option value="Outra">Outra</option>
+                    </Form.Select>
+                  )}
                   <Form.Control.Feedback type="invalid">{errors.church}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
