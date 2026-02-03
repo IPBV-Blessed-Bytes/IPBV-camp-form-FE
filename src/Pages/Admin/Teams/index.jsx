@@ -509,8 +509,6 @@ const AdminTeams = ({ loggedUsername }) => {
             )}
             <br />
             <small className="text-muted">Segure CTRL (ou CMD no Mac) para selecionar vários</small>
-
-            {!availableCampers.length && <small className="text-muted">Todos os acampantes já estão em times</small>}
           </Form.Group>
         </Modal.Body>
 
