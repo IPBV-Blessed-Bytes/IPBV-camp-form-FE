@@ -288,7 +288,7 @@ const FormRoutes = ({
             path={effectiveFormContext === 'maintenance' ? '/dev/acampantes' : '/admin/acampantes'}
             element={
               <ProtectedRoute
-                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager']}
+                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
                 userRole={userRole}
               >
                 <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />

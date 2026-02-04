@@ -9,7 +9,7 @@ export const permissions = (userRole, context) => {
   const permissionsMap = {
     'settings-button-home': userRole === ADMIN,
     'data-panel-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === CHECKER,
-    'registered-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === JOKER_MANAGER,
+    'registered-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER || userRole === TEAM_CREATOR || userRole === JOKER_MANAGER,
     'ride-button-home': userRole === ADMIN || userRole === COLLABORATOR,
     'discount-button-home': userRole === ADMIN || userRole === COLLABORATOR || userRole === COLLABORATOR_VIEWER,
     'rooms-button-home': userRole === ADMIN || userRole === COLLABORATOR,
