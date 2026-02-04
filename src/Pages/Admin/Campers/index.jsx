@@ -418,64 +418,56 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     return [
       {
         Header: () => (
-          <>
-            {adminTableDeleteRegistrationsAndSelectRowsPermissions ? (
-              <div className="d-flex justify-content-between w-100">
-                <span className="d-flex">
-                  <Form.Check
-                    className="table-checkbox"
-                    type="checkbox"
-                    onChange={handleSelectAll}
-                    checked={
-                      filteredRows.length > 0
-                        ? selectedRows.length === filteredRows.length
-                        : selectedRows.length === rows.length
-                    }
-                  />
-                  &nbsp;
-                  {selectedRows.length === 1
-                    ? selectedRows.length + ' selecionado'
-                    : selectedRows.length > 1
-                    ? selectedRows.length + ' selecionados'
-                    : 'Selecionar Todos'}
-                </span>
-              </div>
-            ) : (
-              'Editar Acampantes'
-            )}
-          </>
+          <div className="d-flex justify-content-between w-100">
+            <span className="d-flex">
+              <Form.Check
+                className="table-checkbox"
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={
+                  filteredRows.length > 0
+                    ? selectedRows.length === filteredRows.length
+                    : selectedRows.length === rows.length
+                }
+              />
+              &nbsp;
+              {selectedRows.length === 1
+                ? selectedRows.length + ' selecionado'
+                : selectedRows.length > 1
+                ? selectedRows.length + ' selecionados'
+                : 'Selecionar Todos'}
+            </span>
+          </div>
         ),
         accessor: 'selection',
         Filter: '',
         filter: '',
         sortType: 'alphanumeric',
         Cell: ({ row }) => (
-          <>
-            {adminTableEditDeletePermissions ? (
-              <div className="d-flex gap-5">
-                {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
-                  <Form.Check
-                    className="table-checkbox"
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
-                    checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
-                  />
-                )}
-                <div>
-                  <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
-                    <Icons typeIcon="edit" iconSize={24} />
-                  </Button>{' '}
-                  {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
-                    <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
-                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ) : (
-              '-'
-            )}
-          </>
+          <div className="d-flex gap-5">
+            <Form.Check
+              className="table-checkbox"
+              type="checkbox"
+              onChange={() => handleCheckboxChange(row.index, row.original.personalInformation.name)}
+              checked={selectedRows.some((selectedRow) => selectedRow.index === row.index)}
+            />
+            <div>
+              <Button
+                disabled={!adminTableEditDeletePermissions}
+                variant="outline-success"
+                onClick={() => handleEditClick(row.index)}
+              >
+                <Icons typeIcon="edit" iconSize={24} />
+              </Button>{' '}
+              <Button
+                disabled={!adminTableEditDeletePermissions}
+                variant="outline-danger"
+                onClick={() => handleDeleteClick(row.index, row)}
+              >
+                <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+              </Button>
+            </div>
+          </div>
         ),
       },
       {
@@ -1203,24 +1195,24 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         },
       },
       {
-        Header: `${adminTableDeleteRegistrationsAndSelectRowsPermissions ? 'Editar / Deletar' : 'Editar Acampantes'}`,
+        Header: 'Editar / Deletar',
         Cell: ({ row }) => (
-          <>
-            {adminTableEditDeletePermissions ? (
-              <div>
-                <Button variant="outline-success" onClick={() => handleEditClick(row.index)}>
-                  <Icons typeIcon="edit" iconSize={24} />
-                </Button>{' '}
-                {adminTableDeleteRegistrationsAndSelectRowsPermissions && (
-                  <Button variant="outline-danger" onClick={() => handleDeleteClick(row.index, row)}>
-                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                  </Button>
-                )}
-              </div>
-            ) : (
-              '-'
-            )}
-          </>
+          <div>
+            <Button
+              disabled={!adminTableEditDeletePermissions}
+              variant="outline-success"
+              onClick={() => handleEditClick(row.index)}
+            >
+              <Icons typeIcon="edit" iconSize={24} />
+            </Button>{' '}
+            <Button
+              disabled={!adminTableEditDeletePermissions}
+              variant="outline-danger"
+              onClick={() => handleDeleteClick(row.index, row)}
+            >
+              <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
+            </Button>
+          </div>
         ),
         disableFilters: true,
       },
