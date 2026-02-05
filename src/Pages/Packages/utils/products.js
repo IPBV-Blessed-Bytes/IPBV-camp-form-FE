@@ -8,13 +8,13 @@ export let products = [
     description: 'Quartos coletivos, separados por idade',
     category: 'Hospedagem',
   },
-  // {
-  //   id: 'host-college-family',
-  //   name: 'Colégio Quarto Família',
-  //   price: 0,
-  //   description: 'Quartos separados para cada família',
-  //   category: 'Hospedagem',
-  // },
+  {
+    id: 'host-college-family',
+    name: 'Colégio Quarto Família',
+    price: 0,
+    description: 'Quartos separados para cada família',
+    category: 'Hospedagem',
+  },
   {
     id: 'host-college-camping',
     name: 'Colégio Camping',
