@@ -307,7 +307,7 @@ const Feedback = () => {
                 <Form.Group as={Row} className="mb-3">
                   <Form.Label column sm="6">
                     <b>
-                      Qual é a probabilidade de você participar acampamento de 2026?
+                      Qual é a probabilidade de você participar novamente do acampamento no próximo ano?
                       <span className="required-field"> *</span>
                     </b>
                     {touched.probability && errors.probability && (
