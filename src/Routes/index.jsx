@@ -436,7 +436,7 @@ const FormRoutes = ({
             element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
           />
 
-          {effectiveFormContext === 'form-on' && (
+          {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
             <>
               <Route path="/opiniao" element={<FormFeedback />} />
               <Route path="/verificacao" element={<CpfReview handlePersonData={handlePersonData} />} />
