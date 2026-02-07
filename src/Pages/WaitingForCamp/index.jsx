@@ -59,12 +59,6 @@ const WaitingForCamp = () => {
                     (81) 99999-7767 (Whatsapp) ou (81) 99839-0194.
                   </b>
                 </p>
-                <p>
-                  <em>
-                    Informamos que cancelamentos devem ser solicitados com, no máximo, 30 dias de antecedência da data
-                    do acampamento, sendo essa data 14 de Janeiro de 2026, com reembolso limitado a 50% do valor total.
-                  </em>
-                </p>
                 <small className="mt-5">
                   <em>Igreja Presbiteriana de Boa Viagem</em>
                 </small>
