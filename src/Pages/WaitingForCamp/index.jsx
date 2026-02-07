@@ -16,7 +16,7 @@ const WaitingForCamp = () => {
           <Card.Body>
             <Container>
               <div className="form__success text-center">
-                <div className="form__success__title">
+                <div className="form__success__waiting">
                   <h2>
                     <b>As inscrições para o acampamento de 2026 foram encerradas. Nos vemos no sábado em Garanhuns!</b>
                   </h2>
@@ -30,9 +30,9 @@ const WaitingForCamp = () => {
                       outros.
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <Button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
+                      <Button variant="outline-teal-blue" onClick={() => navigate('/verificacao')}>
                         Verificar Inscrição&nbsp;
-                        <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
+                        <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#007185'} />
                       </Button>
                     </div>
                   </div>
@@ -46,9 +46,9 @@ const WaitingForCamp = () => {
                       a sua também!
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <Button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+                      <Button variant="teal-blue" onClick={() => navigate('/perguntas')}>
                         Perguntas Frequentes&nbsp;
-                        <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
+                        <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#fff'} />
                       </Button>
                     </div>
                   </div>

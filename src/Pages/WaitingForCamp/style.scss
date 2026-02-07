@@ -1,25 +1,11 @@
 @use '../../styles/Variables.scss' as *;
 
-.waiting-for-camp-buttons {
-  button {
-    background-color: $light-yellow;
-    border: none;
-    border-radius: 5px;
-    color: $black;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-    transition: transform 0.3s ease;
+.form__success__waiting {
+  color: $teal-blue;
+  margin-bottom: 2rem;
+}
 
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-
-  &__verify-button {
-    display: flex;
-    justify-content: center;
-  }
+.waiting-for-camp-buttons__verify-button {
+  display: flex;
+  justify-content: center;
 }
