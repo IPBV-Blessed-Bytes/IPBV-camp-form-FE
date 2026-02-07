@@ -137,15 +137,15 @@ const CpfReview = ({ handlePersonData }) => {
                       <Col md={6}>
                         <Button
                           className="w-100 mb-3 mb-sm-3 mb-md-0"
-                          variant="secondary"
+                          variant="outline-teal-blue"
                           size="lg"
                           onClick={() => navigate('/')}
                         >
-                          Voltar pro Início
+                          Voltar
                         </Button>
                       </Col>
                       <Col className="justify-content-end d-flex" md={6}>
-                        <Button className="w-100" type="submit" variant="success" size="lg">
+                        <Button className="w-100" type="submit" variant="teal-blue" size="lg">
                           Consultar
                         </Button>
                       </Col>

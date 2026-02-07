@@ -292,8 +292,8 @@ const FAQ = () => {
               </Accordion.Item>
             </Accordion>
             <div className="d-flex justify-content-end mt-4">
-              <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
-                Voltar pro Início
+              <Button variant="teal-blue" size="lg" onClick={() => navigate('/')}>
+                Voltar
               </Button>
             </div>
           </Card.Body>
