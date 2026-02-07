@@ -79,7 +79,7 @@ const InfoButton = ({ timeout, time }) => {
 
 InfoButton.propTypes = {
   timeout: PropTypes.bool,
-  time: PropTypes.number, // <-- adicionamos a validação para 'time'
+  time: PropTypes.number,
 };
 
 export default InfoButton;
