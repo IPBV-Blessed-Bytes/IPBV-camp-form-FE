@@ -194,143 +194,6 @@ body {
   opacity: 0.5;
 }
 
-// Utility classes
-input,
-textarea,
-select {
-  background-color: $light-gray;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  width: 100%;
-}
-
-.mail-to,
-.order-url {
-  color: inherit;
-  text-decoration: none;
-}
-
-.lgpd-link {
-  color: inherit;
-  font-weight: bold;
-
-  &:hover {
-    color: $primary;
-  }
-}
-
-a:not(
-    .form-success__button,
-    .mail-to,
-    .order-url,
-    .lgpd-link,
-    .faq-link,
-    .pagarme-btn,
-    .info-home-link,
-    .back-to-list-btn
-  ) {
-  color: $white;
-  text-decoration: none;
-}
-
-.horizontal-line {
-  background-color: $blue;
-  border: none;
-  height: 0.125rem;
-  margin: 0.75rem 0;
-}
-
-.packages-horizontal-line {
-  background-color: $medium-gray;
-  border: none;
-  display: block;
-  height: 0.125rem;
-  margin: 1rem 0;
-}
-
-.packages-horizontal-line-cart {
-  background-color: $medium-gray;
-  border: none;
-  height: 0.125rem;
-  margin: 1rem 0;
-  opacity: 0.3;
-}
-
-.packages-horizontal-line-mobile {
-  @media (max-width: $md) {
-    background-color: $medium-gray;
-    border: none;
-    height: 0.125rem;
-    margin: 1rem 0;
-  }
-}
-
-.msg-error {
-  border-color: $red;
-}
-
-button.accordion-button:not(.collapsed) {
-  background-color: $primary;
-  color: $white;
-  font-weight: bold;
-}
-
-::selection {
-  background-color: $light-yellow;
-}
-
-.components-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.bg-dark.card {
-  color: $white;
-}
-
-.row-gap {
-  @media (max-width: $md) {
-    gap: 0.5rem;
-  }
-}
-
-.form-review {
-  &__section-title {
-    color: $primary !important;
-  }
-
-  input {
-    width: auto;
-  }
-}
-
-.btn.btn-outline-success,
-.btn.btn-outline-danger,
-.btn-outline-warning,
-.btn-outline-intense-green,
-.btn-outline-teal-blue,
-.btn-outline-primary,
-.cart-container .btn-outline-secondary {
-  border-width: 3px !important;
-}
-
-button.btn.btn-outline-danger:hover svg,
-button.btn.btn-outline-secondary.plus-camper-button:hover svg,
-button.btn.btn-outline-primary:hover svg {
-  fill: #fff;
-}
-
-.sort-icon,
-.sort-icon-wrapper {
-  user-select: none;
-}
-
-.text-danger-custom,
-.required-field {
-  color: $red !important;
-}
-
 // Admin table
 .table-hover > tbody > tr:hover > * {
   --bs-table-bg-state: #b2dfb2;
@@ -661,4 +524,145 @@ button.btn.btn-outline-primary:hover svg {
       }
     }
   }
+}
+
+// Utility classes
+input,
+textarea,
+select {
+  background-color: $light-gray;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.mail-to,
+.order-url {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lgpd-link {
+  color: inherit;
+  font-weight: bold;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+a:not(
+    .form-success__button,
+    .mail-to,
+    .order-url,
+    .lgpd-link,
+    .faq-link,
+    .pagarme-btn,
+    .info-home-link,
+    .back-to-list-btn
+  ) {
+  color: $white;
+  text-decoration: none;
+}
+
+.horizontal-line {
+  background-color: $blue;
+  border: none;
+  height: 0.125rem;
+  margin: 0.75rem 0;
+}
+
+.packages-horizontal-line {
+  background-color: $medium-gray;
+  border: none;
+  display: block;
+  height: 0.125rem;
+  margin: 1rem 0;
+}
+
+.packages-horizontal-line-cart {
+  background-color: $medium-gray;
+  border: none;
+  height: 0.125rem;
+  margin: 1rem 0;
+  opacity: 0.3;
+}
+
+.packages-horizontal-line-mobile {
+  @media (max-width: $md) {
+    background-color: $medium-gray;
+    border: none;
+    height: 0.125rem;
+    margin: 1rem 0;
+  }
+}
+
+.msg-error {
+  border-color: $red;
+}
+
+button.accordion-button:not(.collapsed) {
+  background-color: $primary;
+  color: $white;
+  font-weight: bold;
+}
+
+::selection {
+  background-color: $light-yellow;
+}
+
+.components-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.bg-dark.card {
+  color: $white;
+}
+
+.row-gap {
+  @media (max-width: $md) {
+    gap: 0.5rem;
+  }
+}
+
+.form-review {
+  &__section-title {
+    color: $primary !important;
+  }
+
+  input {
+    width: auto;
+  }
+}
+
+.btn.btn-outline-success,
+.btn.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-intense-green,
+.btn-outline-teal-blue,
+.btn-outline-primary,
+.cart-container .btn-outline-secondary {
+  border-width: 3px !important;
+}
+
+button.btn.btn-outline-danger:hover svg,
+button.btn.btn-outline-secondary.plus-camper-button:hover svg,
+button.btn.btn-outline-primary:hover svg {
+  fill: #fff;
+}
+
+.sort-icon,
+.sort-icon-wrapper {
+  user-select: none;
+}
+
+.text-danger-custom,
+.required-field {
+  color: $red !important;
+}
+
+.text-teal-blue {
+  color: $teal-blue;
 }
