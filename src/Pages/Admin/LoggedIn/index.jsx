@@ -188,7 +188,7 @@ const AdminLoggedIn = ({
     },
     {
       title: 'Ônibus Equipe',
-      remainingVacancies: Math.max(Number(28 - crewBusUsers) || 0, 0),
+      remainingVacancies: Math.max(Number(22 - crewBusUsers) || 0, 0),
       filledVacancies: Number(crewBusUsers) || 0,
       showRemainingVacancies: true,
     },
