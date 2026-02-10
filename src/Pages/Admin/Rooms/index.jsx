@@ -457,6 +457,9 @@ const AdminRooms = ({ loggedUsername }) => {
                     .map((camper) => (
                       <option key={camper.id} value={camper.id}>
                         {camper.personalInformation.name}
+                        {camper.contact?.hasAggregate && camper.contact?.aggregate
+                          ? ` | 🧑‍🤝‍🧑 Acompanhantes: ${camper.contact.aggregate}`
+                          : ''}
                       </option>
                     ))}
                 </Form.Select>
