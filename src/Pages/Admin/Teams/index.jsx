@@ -15,6 +15,7 @@ import Tools from '@/components/Admin/Header/Tools';
 const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingTeams, setLoadingTeams] = useState(false);
   const [loadingCampers, setLoadingCampers] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
@@ -34,14 +35,14 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const fetchTeams = async () => {
     try {
-      setLoading(true);
+      setLoadingTeams(true);
       const { data } = await fetcher.get('/team');
       setTeams(data || []);
     } catch (error) {
       toast.error('Erro ao carregar times');
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingTeams(false);
     }
   };
 
@@ -573,7 +574,7 @@ const AdminTeams = ({ loggedUsername }) => {
         </Modal.Footer>
       </Modal>
 
-      <Loading loading={loading} />
+      <Loading loading={loading || loadingTeams} />
     </Container>
   );
 };
