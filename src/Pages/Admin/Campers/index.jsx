@@ -414,6 +414,39 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     if (a < b) return -1;
     return 0;
   };
+
+  // 14/fev/2026
+  const REFERENCE_DATE = new Date(2026, 1, 14);
+
+  const getAgeAtReferenceDate = (birthdayString) => {
+    if (!birthdayString) return '';
+
+    const [day, month, year] = birthdayString.split('/').map(Number);
+
+    const birthDate = new Date(year, month - 1, day);
+
+    let age = REFERENCE_DATE.getFullYear() - birthDate.getFullYear();
+
+    const hasHadBirthday =
+      REFERENCE_DATE.getMonth() > birthDate.getMonth() ||
+      (REFERENCE_DATE.getMonth() === birthDate.getMonth() && REFERENCE_DATE.getDate() >= birthDate.getDate());
+
+    if (!hasHadBirthday) age--;
+
+    return age;
+  };
+
+  const ageFilterFn = (rows, id, filterValue) => {
+    if (!filterValue) return rows;
+
+    return rows.filter((row) => {
+      const birthday = row.values[id];
+      const age = getAgeAtReferenceDate(birthday);
+
+      return String(age).includes(String(filterValue));
+    });
+  };
+
   const columns = useMemo(() => {
     return [
       {
@@ -774,6 +807,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       {
         Header: 'Data de Nascimento:',
         accessor: 'personalInformation.birthday',
+        id: 'birthday',
         Filter: ({ column }) => (
           <ColumnFilter
             column={column}
@@ -783,6 +817,26 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: 'alphanumeric',
+      },
+      {
+        Header: 'Idade:',
+        accessor: 'personalInformation.birthday',
+        id: 'age',
+        Cell: ({ value }) => getAgeAtReferenceDate(value),
+        filter: ageFilterFn,
+        Filter: ({ column }) => (
+          <ColumnFilter
+            column={column}
+            onFilterChange={() => {
+              setFilteredRows(column.filteredRows);
+            }}
+          />
+        ),
+        sortType: (rowA, rowB, columnId) => {
+          const a = getAgeAtReferenceDate(rowA.values[columnId]);
+          const b = getAgeAtReferenceDate(rowB.values[columnId]);
+          return a - b;
+        },
       },
       {
         Header: 'Categoria:',
