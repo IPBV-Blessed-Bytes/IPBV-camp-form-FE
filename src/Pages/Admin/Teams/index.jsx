@@ -265,17 +265,33 @@ const AdminTeams = ({ loggedUsername }) => {
   };
 
   const generateExcel = () => {
-    const rows = teams.map((team) => ({
-      'Nome do Time': team.name,
-      'Cor da Pulseira': team.wristbandColor || '-',
-      'Qtd. Acampantes': Number(team.campersCount ?? team.campers?.length ?? 0),
-      Acampantes: team.campers?.length ? team.campers.map((camper) => camper.name).join(', ') : '-',
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Times');
+    teams.forEach((team) => {
+      const campers = team.campers || [];
+      const campersCount = Number(team.campersCount ?? campers.length ?? 0);
+
+      const rows = [];
+
+      rows.push(['Acampantes', 'Qtd. Acampantes']);
+
+      rows.push([campers[0]?.name || '', campersCount]);
+
+      for (let i = 1; i < campers.length; i++) {
+        rows.push([campers[i]?.name || '', '']);
+      }
+
+      if (!campers.length) {
+        rows.push(['', campersCount]);
+      }
+
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+      const safeSheetName = (team.name || 'Time').substring(0, 31);
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
+    });
+
     XLSX.writeFile(workbook, 'times.xlsx');
   };
 
