@@ -119,7 +119,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     };
 
     const foodMap = {
-      'food-complete': 'Alimentação Completa (Café da manhã, Almoço e Jantar)',
+      'food-complete': 'Alimentação Completa',
       'no-food': 'Sem Alimentação',
     };
 
