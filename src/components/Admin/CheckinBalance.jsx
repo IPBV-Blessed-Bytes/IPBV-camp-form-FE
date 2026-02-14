@@ -36,11 +36,11 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
 
   const usedOther = usedPackages?.['host-external'] || 0;
 
-  const schoolCollectiveDetails = calculateCheckinDetails('Colégio Coletivo', usedCollectiveSchool);
-  const schoolFamilyDetails = calculateCheckinDetails('Colégio Família', usedFamilySchool);
+  const schoolCollectiveDetails = calculateCheckinDetails('Colégio Quarto Coletivo', usedCollectiveSchool);
+  const schoolFamilyDetails = calculateCheckinDetails('Colégio Quarto Família', usedFamilySchool);
   const schoolCampingDetails = calculateCheckinDetails('Colégio Camping', usedCampingSchool);
   const seminaryDetails = calculateCheckinDetails('Seminário', usedSeminary);
-  const otherDetails = calculateCheckinDetails('Outra', usedOther);
+  const otherDetails = calculateCheckinDetails('Externo', usedOther);
 
   const totalUsed = usedCollectiveSchool + usedFamilySchool + usedCampingSchool + usedSeminary + usedOther;
   const totalCheckins =
@@ -82,7 +82,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
             variant="determinate"
             value={totalPercentage}
             sx={{
-              '.MuiLinearProgress-bar': { backgroundColor: '#9c27b0' },
+              '.MuiLinearProgress-bar': { backgroundColor: '#d32f2f' },
               backgroundColor: '#e0e0e0',
               height: 10,
               borderRadius: 5,
@@ -100,7 +100,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
       {renderProgressBar('Colégio - Família:', schoolFamilyDetails, usedFamilySchool, '#2196f3')}
       {renderProgressBar('Colégio - Camping:', schoolCampingDetails, usedCampingSchool, '#ff9800')}
       {renderProgressBar('Seminário São José:', seminaryDetails, usedSeminary, '#9c27b0')}
-      {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#cfd8dc')}
+      {renderProgressBar('Outras Acomodações:', otherDetails, usedOther, '#000')}
       {renderTotalProgressBar()}
     </Box>
   );
