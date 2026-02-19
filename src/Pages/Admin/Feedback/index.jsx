@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Table, Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/fetchers/userLogs';
@@ -45,14 +46,69 @@ const AdminFeedback = ({ loggedUsername }) => {
         fetchFeedbacks();
       }
     } catch (error) {
-      console.error('Error adding data:', error);
+      console.error('Erro ao deletar feedbacks:', error);
       toast.error('Erro ao deletar feedbacks');
     } finally {
       setLoading(false);
     }
   };
 
-   const toolsButtons = [
+  const generateExcel = () => {
+    if (!feedbacks || feedbacks.length === 0) {
+      toast.error('Nenhum feedback disponível para exportar');
+      return;
+    }
+
+    const workbook = XLSX.utils.book_new();
+
+    const filteredHeaders = TABLE_HEADERS.filter((header) => header !== 'ID');
+
+    const sheetData = feedbacks.map((feedback) => {
+      const values = Object.values(feedback);
+      const row = {};
+
+      TABLE_HEADERS.forEach((header, index) => {
+        if (header !== 'ID') {
+          const value = values[index];
+
+          if (value && !isNaN(Date.parse(value))) {
+            row[header] = new Date(value).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            });
+          } else {
+            row[header] = value;
+          }
+        }
+      });
+
+      return row;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(sheetData, {
+      header: filteredHeaders,
+    });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Feedbacks');
+
+    XLSX.writeFile(workbook, 'feedbacks.xlsx');
+  };
+
+  const toolsButtons = [
+    {
+      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
+      cols: { xs: 12, md: 6 },
+      fill: '#007185',
+      iconSize: 40,
+      id: 'export-feedbacks',
+      name: 'Baixar Relatório',
+      onClick: () => generateExcel(),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
     {
       buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
       cols: { xs: 12, md: 6 },
@@ -63,7 +119,7 @@ const AdminFeedback = ({ loggedUsername }) => {
       onClick: () => setShowDeleteModal(true),
       typeButton: 'outline-danger',
       typeIcon: 'danger',
-    }
+    },
   ];
 
   return (
