@@ -143,7 +143,7 @@ export const TABLE_HEADERS = [
   'ID',
   'Nome',
   'Organização',
-  'Experiência',
+  'Experiência nas Inscrições',
   'Alimentação',
   'Programação',
   'Estrutura Física',
