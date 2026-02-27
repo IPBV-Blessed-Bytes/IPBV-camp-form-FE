@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format, isValid } from 'date-fns';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
@@ -14,6 +14,7 @@ import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import useAuth from '@/hooks/useAuth';
 import calculateAge from '../Pages/Packages/utils/calculateAge';
 
@@ -58,6 +59,9 @@ const RoutesValidations = ({ formContextCloseForm }) => {
   const adminPathname = isAdminPath(windowPathname);
   const formPath = shouldRenderForm(windowPathname);
 
+  const { formContext } = useContext(AuthContext);
+  const effectiveFormContext = formContextCloseForm === 'form-on' ? formContextCloseForm : formContext;
+
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
@@ -101,7 +105,7 @@ const RoutesValidations = ({ formContextCloseForm }) => {
 
   useEffect(() => {
     if (!isLoggedIn && adminPathname) {
-      navigate('/admin');
+      effectiveFormContext === 'maintenance' ? navigate('/dev') : navigate('/admin');
     }
   }, [isLoggedIn, adminPathname, navigate]);
 
