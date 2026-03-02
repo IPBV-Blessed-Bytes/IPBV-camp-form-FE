@@ -92,6 +92,16 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
           <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
         </button>
 
+         <button
+          className="settings-message-button"
+          onClick={
+            formContext === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')
+          }
+        >
+          Controle de Info Home&nbsp;
+          <Icons className="settings-icons" typeIcon="info" iconSize={25} fill={'#fff'} />
+        </button>
+
         <button
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/contexto') : () => navigate('/admin/contexto')}
