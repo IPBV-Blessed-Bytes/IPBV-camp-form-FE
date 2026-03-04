@@ -26,7 +26,9 @@ const defaultPrice = {
 
 const defaultVacancies = {
   seminary: '',
-  school: '',
+  schoolIndividual: '',
+  schoolCollective: '',
+  schoolCamping: '',
   otherAccomodation: '',
   bus: '',
 };
@@ -57,7 +59,9 @@ const LotsSummary = ({ lots, packageCount }) => {
     if (currentLot) {
       return {
         seminary: Number(currentLot.vacancies?.seminary || 0),
-        school: Number(currentLot.vacancies?.school || 0),
+        schoolIndividual: Number(currentLot.vacancies?.schoolIndividual || 0),
+        schoolCollective: Number(currentLot.vacancies?.schoolCollective || 0),
+        schoolCamping: Number(currentLot.vacancies?.schoolCamping || 0),
         otherAccomodation: Number(currentLot.vacancies?.otherAccomodation || 0),
         bus: Number(currentLot.vacancies?.bus || 0),
       };
@@ -71,7 +75,9 @@ const LotsSummary = ({ lots, packageCount }) => {
 
     return {
       seminary: Number(latestLot?.vacancies?.seminary || 0),
-      school: Number(latestLot?.vacancies?.school || 0),
+      schoolIndividual: Number(latestLot?.vacancies?.schoolIndividual || 0),
+      schoolCollective: Number(latestLot?.vacancies?.schoolCollective || 0),
+      schoolCamping: Number(latestLot?.vacancies?.schoolCamping || 0),
       otherAccomodation: Number(latestLot?.vacancies?.otherAccomodation || 0),
       bus: Number(latestLot?.vacancies?.bus || 0),
     };
@@ -90,7 +96,12 @@ const LotsSummary = ({ lots, packageCount }) => {
   };
 
   const totalSeatsMacro = packageCount?.totalSeats || 0;
-  const totalSeatsMicro = totals.seminary + totals.school + totals.otherAccomodation;
+  const totalSeatsMicro =
+    totals.seminary +
+    totals.schoolIndividual +
+    totals.schoolCollective +
+    totals.schoolCamping +
+    totals.otherAccomodation;
 
   const renderStat = (label, used, max) => (
     <ListGroup.Item className="d-flex justify-content-between align-items-center">
@@ -108,7 +119,9 @@ const LotsSummary = ({ lots, packageCount }) => {
       </Card.Header>
       <ListGroup variant="flush">
         {renderStat('Seminário', totals.seminary, macro.seminary)}
-        {renderStat('Escola', totals.school, macro.school)}
+        {renderStat('Escola Individual', totals.schoolIndividual, macro.school)}
+        {renderStat('Escola Família', totals.schoolCollective, macro.school)}
+        {renderStat('Escola Camping', totals.schoolCamping, macro.school)}
         {renderStat('Externo', totals.otherAccomodation, macro.otherAccomodation)}
         {renderStat('Ônibus', totals.bus, macro.bus)}
         <ListGroup.Item className="d-flex justify-content-between align-items-center">
@@ -328,7 +341,9 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
     const totalVacancies = {
       seminary: Number(relevantLot.vacancies?.seminary || 0),
-      school: Number(relevantLot.vacancies?.school || 0),
+      schoolIndividual: Number(relevantLot.vacancies?.schoolIndividual || 0),
+      schoolCollective: Number(relevantLot.vacancies?.schoolCollective || 0),
+      schoolCamping: Number(relevantLot.vacancies?.schoolCamping || 0),
       otherAccomodation: Number(relevantLot.vacancies?.otherAccomodation || 0),
       bus: Number(relevantLot.vacancies?.bus || 0),
     };
@@ -344,7 +359,12 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     };
 
     const totalSeatsMacro = packageCount?.totalSeats || 0;
-    const totalSeatsMicro = totalVacancies.seminary + totalVacancies.school + totalVacancies.otherAccomodation;
+    const totalSeatsMicro =
+      totalVacancies.seminary +
+      totalVacancies.schoolIndividual +
+      totalVacancies.schoolCollective +
+      totalVacancies.schoolCamping +
+      totalVacancies.otherAccomodation;
 
     if (totalVacancies.seminary > macro.seminary) return 'Seminário';
     if (totalVacancies.school > macro.school) return 'Escola';
@@ -366,7 +386,9 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
   const vacanciesLabels = {
     seminary: 'Vagas Seminário',
-    school: 'Vagas Colégio',
+    schoolIndividual: 'Vagas Colégio Individual',
+    schoolCollective: 'Vagas Colégio Família',
+    schoolCamping: 'Vagas Colégio Camping',
     otherAccomodation: 'Vagas Externo',
     bus: 'Vagas Ônibus',
   };

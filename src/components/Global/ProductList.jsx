@@ -63,21 +63,19 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     }
 
     if (product.id === 'host-college-collective') {
-      const total = Number(vacancies?.school || 0);
+      const total = Number(vacancies?.schoolIndividual || 0);
       const used = getUsedCount('school');
       return total > used;
     }
 
-    // Remember to replace this mock when vacancies.school is separated into 
-    // schoolCollective, schoolFamily, and schoolCamping.
     if (product.id === 'host-college-family') {
-      const total = 0;
+      const total = Number(vacancies?.schoolCollective || 0);
       const used = getUsedCount('school');
       return total > used;
     }
 
     if (product.id === 'host-college-camping') {
-      const total = Number(vacancies?.school || 0);
+      const total = Number(vacancies?.schoolCamping || 0);
       const used = getUsedCount('school');
       return total > used;
     }
