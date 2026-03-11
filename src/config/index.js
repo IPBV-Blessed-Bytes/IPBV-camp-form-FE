@@ -2,7 +2,7 @@ export const JWT_LOCAL_STORAGE_KEY = 'token_jwt';
 
 export const PROD_URL = 'https://www.blessedbytes-campform.camp';
 
-export const TEST_URL = 'http://3.144.213.175:8080';
+export const TEST_URL = 'http://3.134.99.201:8080';
 
 export const BASE_URL = 'https://www.blessedbytes-campform.camp';
 
