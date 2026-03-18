@@ -46,6 +46,7 @@ import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
+import AdminHomepageInfoManagement from '@/Pages/Admin/HomeInfo';
 
 const FormRoutes = ({
   adminPathname,
@@ -420,6 +421,14 @@ const FormRoutes = ({
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={effectiveFormContext === 'maintenance' ? '/dev/info' : '/admin/info'}
+            element={
+              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
               </ProtectedRoute>
             }
           />
