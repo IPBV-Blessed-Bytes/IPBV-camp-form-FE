@@ -1,0 +1,12 @@
+@use '../../../styles/Variables.scss' as *;
+
+.icon-preview {
+  align-items: center;
+  background: $background-gray;
+  border: 1px solid $alternate-gray;
+  border-radius: 0.375rem;
+  display: flex;
+  justify-content: center;
+  height: 2.375rem;
+  width: 2.375rem;
+}
