@@ -127,13 +127,13 @@ const FAQ = () => {
                 <Accordion.Header>10. Não sei usar computador. Como faço?</Accordion.Header>
                 <Accordion.Body>
                   A equipe de credenciamento poderá, excepcionalmente, realizar sua inscrição aos domingos ou por meio
-                  da secretaria da igreja até o dia 01/02/2026.
+                  da secretaria da igreja até a data final das inscrições.
                 </Accordion.Body>
               </Accordion.Item>
               <Accordion.Item eventKey="10">
                 <Accordion.Header>11. Por que preciso pagar uma taxa de inscrição?</Accordion.Header>
                 <Accordion.Body>
-                  Para o acampamento de 2026, os produtos foram separados para melhor organização dos custos. Cada
+                  Para o acampamento desse ano, os produtos foram separados para melhor organização dos custos. Cada
                   participante poderá visualizar e adquirir transporte, hospedagem e alimentação separadamente. Além
                   disso, há a taxa de inscrição, obrigatória a todos, que cobre despesas gerais (preletor, utilização do
                   colégio, equipe de limpeza, etc.).

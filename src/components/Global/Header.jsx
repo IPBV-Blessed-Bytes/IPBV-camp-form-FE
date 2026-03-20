@@ -29,6 +29,7 @@ const Header = ({
 
   const navigateTo = useNavigate();
   const location = useLocation();
+  const currentYear = new Date().getFullYear();
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {
@@ -53,7 +54,7 @@ const Header = ({
         <div className="form__header__left">
           <h2>
             <a className="header-title" href="/">
-              ACAMPAMENTO IPBV 2026
+              ACAMPAMENTO IPBV {currentYear}
             </a>
           </h2>
 

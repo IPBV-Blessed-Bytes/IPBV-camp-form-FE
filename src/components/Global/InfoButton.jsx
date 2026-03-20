@@ -56,7 +56,7 @@ const InfoButton = ({ timeout, time }) => {
           className="whatsapp-share-button"
           onClick={() =>
             window.open(
-              'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%202026%3A%20https://inscricaoipbv.com.br/',
+              'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%20%3A%20https://inscricaoipbv.com.br/',
               '_blank',
             )
           }

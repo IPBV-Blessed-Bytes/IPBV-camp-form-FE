@@ -7,6 +7,7 @@ import Icons from '@/components/Global/Icons';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear() + 1;
 
   return (
     <>
@@ -18,7 +19,7 @@ const WaitingForCamp = () => {
               <div className="form__success text-center">
                 <div className="form__success__waiting">
                   <h2>
-                    <b>As inscrições para o acampamento de 2026 foram encerradas. Nos vemos no sábado em Garanhuns!</b>
+                    <b>As inscrições para o acampamento de {currentYear} foram encerradas. Nos vemos no sábado em Garanhuns!</b>
                   </h2>
                 </div>
                 <div className="waiting-for-camp-buttons mb-4">
