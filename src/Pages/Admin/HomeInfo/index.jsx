@@ -8,6 +8,7 @@ import { registerLog } from '@/fetchers/userLogs';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
@@ -406,10 +407,15 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                   <Form.Label>
                     <b>Descrição:</b>
                   </Form.Label>
-                  <Form.Control
-                    type="text"
+
+                  <CustomEditor
                     value={newBottomItem.description}
-                    onChange={(e) => setNewBottomItem({ ...newBottomItem, description: e.target.value })}
+                    onChange={(value) =>
+                      setNewBottomItem((prev) => ({
+                        ...prev,
+                        description: value,
+                      }))
+                    }
                   />
                 </Form.Group>
 
