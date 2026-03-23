@@ -14,11 +14,37 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
   const [homepageInfo, setHomepageInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const CACHE_KEY = 'homepageInfo';
+  const CACHE_TTL = 1000 * 60 * 60;
+
   const fetchHomepageInfo = async () => {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+
+      const isValid = Date.now() - timestamp < CACHE_TTL;
+
+      if (isValid) {
+        setHomepageInfo(data);
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const response = await fetcher.get('/homepage-info');
-      setHomepageInfo(response?.data || null);
+      const data = response?.data || null;
+
+      setHomepageInfo(data);
+
+      sessionStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        }),
+      );
     } catch (error) {
       console.error('[FormHome] erro ao buscar homepage-info', error);
       toast.error('Erro ao carregar informações da página');
