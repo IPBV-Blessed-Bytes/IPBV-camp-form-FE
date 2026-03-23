@@ -84,10 +84,6 @@ const RoutesValidations = ({ formContextCloseForm }) => {
       }
     };
 
-    fetchPackages();
-  }, []);
-
-  useEffect(() => {
     const fetchTotalRegistrations = async () => {
       try {
         const response = await fetcher.get(`${BASE_URL}/total-registrations`);
@@ -100,6 +96,8 @@ const RoutesValidations = ({ formContextCloseForm }) => {
         );
       }
     };
+
+    fetchPackages();
     fetchTotalRegistrations();
   }, []);
 
