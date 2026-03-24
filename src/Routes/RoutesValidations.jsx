@@ -20,6 +20,8 @@ import calculateAge from '../Pages/Packages/utils/calculateAge';
 
 import FormRoutes from '.';
 
+let isFetchingGlobal = false;
+
 const RoutesValidations = ({ formContextCloseForm }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
@@ -65,8 +67,13 @@ const RoutesValidations = ({ formContextCloseForm }) => {
   const isNotSuccessPathname = windowPathname !== '/sucesso';
 
   useEffect(() => {
+    
+    if(isFetchingGlobal) return;
+  
+    isFetchingGlobal = true;
+
+    setLoading(true);
     const fetchPackages = async () => {
-      setLoading(true);
 
       try {
         const response = await fetcher.get(`${BASE_URL}/package-count`);
