@@ -84,7 +84,7 @@ Este projeto é **open source** e está aberto a contribuições! Sinta-se à vo
 ## 🧑‍💻 **Equipe**
 
 - **Frontend**: Álvaro Leal, Isaac Araujo
-- **Backend**: Rodrigo Moura, José Wilson
+- **Backend**: Rodrigo Moura
 
 ## 🙏 **Agradecimentos**
 
