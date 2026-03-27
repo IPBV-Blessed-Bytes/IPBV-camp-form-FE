@@ -319,7 +319,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
           <Form className="my-4">
-            <h5 className="mb-3">Topo da Página:</h5>
+            <h5 className="mb-3 fw-bold">Informações Base:</h5>
 
             {Object.keys(formData.top).map((field) => (
               <Form.Group key={field} className="mt-2">
@@ -351,7 +351,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         <Col xs={12} md={6} lg={4}>
           <Form className="my-4">
             <div className="d-flex justify-content-between mb-3">
-              <h5>Informações:</h5>
+              <h5 className="fw-bold">Lista de Informações Importantes:</h5>
               <Button
                 variant="outline-teal-blue"
                 className="mb-3 d-flex align-items-center"
@@ -425,17 +425,12 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
               </div>
             )}
 
-            <Accordion className='homeinfo-custom-accordion' alwaysOpen>
+            <Accordion className="homeinfo-custom-accordion" alwaysOpen>
               {formData.bottom.map((item, index) => (
                 <Accordion.Item eventKey={String(index)} key={item.id}>
                   <Accordion.Header>
                     <div className="d-flex align-items-center gap-2">
-                      {item.icon && (
-                        <Icons
-                          typeIcon={item.icon}
-                          iconSize={18}
-                        />
-                      )}
+                      {item.icon && <Icons typeIcon={item.icon} iconSize={18} />}
                       <span>{item.title || `Item ${index + 1}`}</span>
                     </div>
                   </Accordion.Header>
