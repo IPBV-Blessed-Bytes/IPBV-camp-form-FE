@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Modal, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -425,71 +425,87 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
               </div>
             )}
 
-            {formData.bottom.map((item, index) => (
-              <div key={item.id} className="border rounded p-3 mb-3">
-                <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Ícone:</b>
-                  </Form.Label>
+            <Accordion className='homeinfo-custom-accordion' alwaysOpen>
+              {formData.bottom.map((item, index) => (
+                <Accordion.Item eventKey={String(index)} key={item.id}>
+                  <Accordion.Header>
+                    <div className="d-flex align-items-center gap-2">
+                      {item.icon && (
+                        <Icons
+                          typeIcon={item.icon}
+                          iconSize={18}
+                        />
+                      )}
+                      <span>{item.title || `Item ${index + 1}`}</span>
+                    </div>
+                  </Accordion.Header>
 
-                  <div className="d-flex align-items-center gap-2">
-                    <Form.Select
-                      value={item.icon || ''}
-                      onChange={(e) => handleBottomChange(index, 'icon', e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Selecione um Ícone
-                      </option>
+                  <Accordion.Body>
+                    <Form.Group className="mt-2">
+                      <Form.Label>
+                        <b>Ícone:</b>
+                      </Form.Label>
 
-                      {sortedIconsOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </Form.Select>
+                      <div className="d-flex align-items-center gap-2">
+                        <Form.Select
+                          value={item.icon || ''}
+                          onChange={(e) => handleBottomChange(index, 'icon', e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Selecione um Ícone
+                          </option>
 
-                    {item.icon && (
-                      <div className="icon-preview">
-                        <Icons typeIcon={item.icon} iconSize={20} />
+                          {sortedIconsOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Form.Select>
+
+                        {item.icon && (
+                          <div className="icon-preview">
+                            <Icons typeIcon={item.icon} iconSize={20} />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </Form.Group>
+                    </Form.Group>
 
-                <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Título:</b>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={item.title}
-                    onChange={(e) => handleBottomChange(index, 'title', e.target.value)}
-                  />
-                </Form.Group>
+                    <Form.Group className="mt-2">
+                      <Form.Label>
+                        <b>Título:</b>
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => handleBottomChange(index, 'title', e.target.value)}
+                      />
+                    </Form.Group>
 
-                <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Descrição:</b>
-                  </Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    value={item.description}
-                    onChange={(e) => handleBottomChange(index, 'description', e.target.value)}
-                  />
-                </Form.Group>
+                    <Form.Group className="mt-2">
+                      <Form.Label>
+                        <b>Descrição:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={5}
+                        value={item.description}
+                        onChange={(e) => handleBottomChange(index, 'description', e.target.value)}
+                      />
+                    </Form.Group>
 
-                <div className="d-flex justify-content-end gap-2 mt-2">
-                  <Button variant="outline-danger" size="sm" onClick={() => confirmRemoveBottomItem(index)}>
-                    Remover
-                  </Button>
+                    <div className="d-flex justify-content-end gap-2 mt-3">
+                      <Button variant="outline-danger" size="sm" onClick={() => confirmRemoveBottomItem(index)}>
+                        Remover
+                      </Button>
 
-                  <Button variant="outline-teal-blue" size="sm" onClick={() => handleUpdateBottomItem(index)}>
-                    Salvar
-                  </Button>
-                </div>
-              </div>
-            ))}
+                      <Button variant="outline-teal-blue" size="sm" onClick={() => handleUpdateBottomItem(index)}>
+                        Salvar
+                      </Button>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
           </Form>
         </Col>
       </Row>

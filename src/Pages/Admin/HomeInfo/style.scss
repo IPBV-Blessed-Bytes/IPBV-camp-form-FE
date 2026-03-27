@@ -10,3 +10,11 @@
   height: 2.375rem;
   width: 2.375rem;
 }
+
+.homeinfo-custom-accordion {
+  .accordion-button:not(.collapsed) {
+    svg {
+      fill: #fff !important;
+    }
+  }
+}
