@@ -486,11 +486,9 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                       <Form.Label>
                         <b>Descrição:</b>
                       </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={5}
+                      <CustomEditor
                         value={item.description}
-                        onChange={(e) => handleBottomChange(index, 'description', e.target.value)}
+                        onChange={(value) => handleBottomChange(index, 'description', value)}
                       />
                     </Form.Group>
 
