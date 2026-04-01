@@ -1,22 +1,30 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { isAdminPath } from './utils/pathname';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
 import Skelleton from './components/Global/Skelleton';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
+import { initBaseDate } from './Pages/Packages/utils/calculateAge';
 
 function App() {
   const { formContext, loading } = useContext(AuthContext);
+  const [baseDateLoading, setBaseDateLoading] = useState(true);
+
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
 
-  console.error = (message) => {
-    if (message.startsWith('Uncaught ReferenceError: originalError is not defined at App.console.error')) {
-      return;
-    }
-  };
+  useEffect(() => {
+    const loadBaseDate = async () => {
+      await initBaseDate();
+      setBaseDateLoading(false);
+    };
 
-  if (loading && !adminPathname) {
+    loadBaseDate();
+  }, []);
+
+  const isAppLoading = loading || baseDateLoading;
+
+  if (isAppLoading && !adminPathname) {
     return <Skelleton />;
   }
 
