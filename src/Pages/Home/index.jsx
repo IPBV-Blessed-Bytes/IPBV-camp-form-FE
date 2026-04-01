@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Button, Card, Modal, Row, Col } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
 import fetcher from '@/fetchers/fetcherWithCredentials';
 import './style.scss';
@@ -118,8 +119,13 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                     <li key={item.id} className="mb-3">
                       <h6 className="d-flex gap-3 align-items-center">
                         <Icons className="flex-shrink-0" typeIcon={item.icon} iconSize={32} fill="#007185" />
-                        <span>
-                          <b className="info-home-enphasis">{item.title}:</b> {item.description}
+                        <span className="d-flex gap-2">
+                          <b className="info-home-enphasis">{item.title}:</b>{' '}
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: DOMPurify.sanitize(item.description),
+                            }}
+                          />
                         </span>
                       </h6>
                     </li>
