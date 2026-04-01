@@ -565,6 +565,13 @@ a:not(
   text-decoration: none;
 }
 
+.ck.ck-editor__main a,
+.info-home-itens a {
+  color: $primary;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .horizontal-line {
   background-color: $blue;
   border: none;
