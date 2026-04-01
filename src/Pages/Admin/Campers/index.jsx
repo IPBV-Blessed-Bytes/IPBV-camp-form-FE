@@ -17,6 +17,7 @@ import Tools from '@/components/Admin/Header/Tools';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
+import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
 import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
@@ -415,33 +416,12 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     return 0;
   };
 
-  // 14/fev/2026
-  const REFERENCE_DATE = new Date(2026, 1, 14);
-
-  const getAgeAtReferenceDate = (birthdayString) => {
-    if (!birthdayString) return '';
-
-    const [day, month, year] = birthdayString.split('/').map(Number);
-
-    const birthDate = new Date(year, month - 1, day);
-
-    let age = REFERENCE_DATE.getFullYear() - birthDate.getFullYear();
-
-    const hasHadBirthday =
-      REFERENCE_DATE.getMonth() > birthDate.getMonth() ||
-      (REFERENCE_DATE.getMonth() === birthDate.getMonth() && REFERENCE_DATE.getDate() >= birthDate.getDate());
-
-    if (!hasHadBirthday) age--;
-
-    return age;
-  };
-
   const ageFilterFn = (rows, id, filterValue) => {
     if (!filterValue) return rows;
 
     return rows.filter((row) => {
       const birthday = row.values[id];
-      const age = getAgeAtReferenceDate(birthday);
+      const age = calculateAge(birthday);
 
       return String(age).includes(String(filterValue));
     });
@@ -822,7 +802,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Header: 'Idade:',
         accessor: 'personalInformation.birthday',
         id: 'age',
-        Cell: ({ value }) => getAgeAtReferenceDate(value),
+        Cell: ({ value }) => calculateAge(value),
         filter: ageFilterFn,
         Filter: ({ column }) => (
           <ColumnFilter
@@ -833,8 +813,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           />
         ),
         sortType: (rowA, rowB, columnId) => {
-          const a = getAgeAtReferenceDate(rowA.values[columnId]);
-          const b = getAgeAtReferenceDate(rowB.values[columnId]);
+          const a = calculateAge(rowA.values[columnId]);
+          const b = calculateAge(rowB.values[columnId]);
           return a - b;
         },
       },
