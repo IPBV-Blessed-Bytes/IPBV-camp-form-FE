@@ -172,6 +172,9 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     startDate: '',
     endDate: '',
   });
+  const [baseDate, setBaseDate] = useState('');
+  const [baseDateExists, setBaseDateExists] = useState(false);
+  const [showBaseDateModal, setShowBaseDateModal] = useState(false);
 
   scrollUp();
 
@@ -190,8 +193,26 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     }
   };
 
+  const fetchBaseDate = async () => {
+    try {
+      setLoadingContent(true);
+      const response = await fetcher.get('/base-date');
+      if (response.data && response.data.baseDate) {
+        setBaseDate(response.data.baseDate);
+        setBaseDateExists(true);
+      }
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        console.error('Erro ao buscar data base:', error);
+      }
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
   useEffect(() => {
     fetchLots();
+    fetchBaseDate();
   }, []);
 
   const handleLotChange = (id, field, value, nestedField = null) => {
@@ -318,6 +339,33 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     }
   };
 
+  const handleSaveBaseDate = async () => {
+    if (!baseDate) {
+      toast.warning('Por favor, selecione uma data válida');
+      return;
+    }
+
+    try {
+      setLoadingContent(true);
+      if (baseDateExists) {
+        await fetcher.put('/base-date', { baseDate: baseDate });
+        toast.success('Data do evento atualizada com sucesso');
+        registerLog(`Alterou a data do evento para ${baseDate}`, loggedUsername);
+      } else {
+        await fetcher.post('/base-date', { baseDate: baseDate });
+        toast.success('Data do evento criada com sucesso');
+        registerLog(`Criou a data do evento: ${baseDate}`, loggedUsername);
+        setBaseDateExists(true);
+      }
+      setShowBaseDateModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao salvar data base');
+    } finally {
+      setLoadingContent(false);
+    }
+  };
+
   const hasVacancyOverflow = (lots, packageCount, lotToCheck = null) => {
     const today = new Date();
 
@@ -404,6 +452,20 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       onClick: () => setShowAddModal(true),
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
+    },
+    {
+      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
+      cols: { xs: 12, md: 6 },
+      fill: '#fff',
+      iconSize: 40,
+      id: 'edit-base-date',
+      name: 'Alterar Data do Evento',
+      onClick: async () => {
+        await fetchBaseDate();
+        setShowBaseDateModal(true);
+      },
+      typeButton: 'teal-blue',
+      typeIcon: 'calendar-alt',
     },
   ];
 
@@ -694,6 +756,44 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
           </Button>
           <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
             Adicionar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal className="custom-modal" show={showBaseDateModal} onHide={() => setShowBaseDateModal(false)}>
+        <Modal.Header closeButton className="custom-modal__header--confirm">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
+            <b>Alterar Data do Evento</b>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>
+              <b>Selecione a data do evento:</b>
+            </Form.Label>
+            <DatePicker
+              selected={parseDate(baseDate)}
+              onChange={(date) => setBaseDate(formatDate(date))}
+              className="form-control form-control-lg mb-2"
+              placeholderText="dd/mm/aaaa"
+              dateFormat="dd/MM/yyyy"
+              locale="ptBR"
+              dropdownMode="select"
+              showMonthDropdown
+              showYearDropdown
+            />
+            <Form.Text>
+              Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
+            </Form.Text>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
+            Salvar
           </Button>
         </Modal.Footer>
       </Modal>
