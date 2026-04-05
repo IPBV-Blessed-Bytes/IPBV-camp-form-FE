@@ -1,7 +1,7 @@
 @use '../../../styles/Variables.scss' as *;
 
 .form-label:not(.form-label-admin) {
-  color: $slime-green !important;
+  color: $primary !important;
 }
 
 .emphasize-checkin-username {
