@@ -14,7 +14,6 @@ import AdminHeader from '@/components/Admin/Header/AdminHeader';
 
 const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
-  const [homepageInfo, setHomepageInfo] = useState(null);
   const [loadingContent, setLoadingContent] = useState(false);
   const [showNewBottomForm, setShowNewBottomForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -50,7 +49,6 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       const response = await fetcher.get('/homepage-info');
 
       if (response?.data) {
-        setHomepageInfo(response.data);
         setFormData({
           ...response.data,
           bottom:
@@ -262,7 +260,6 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       toast.success('Informações removidas com sucesso');
       registerLog('Removeu informações da homepage', loggedUsername);
 
-      setHomepageInfo(null);
       setFormData({
         top: {
           title: '',
