@@ -337,11 +337,6 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
             ))}
 
             <div className="d-flex mt-3 justify-content-end gap-2">
-              {homepageInfo && (
-                <Button variant="danger" onClick={() => setShowDeleteAllModal(true)}>
-                  Limpar Todos Campos
-                </Button>
-              )}
               <Button type="button" variant="teal-blue" onClick={handleSubmit}>
                 {editing ? 'Salvar Alterações' : 'Criar Homepage'}
               </Button>
@@ -351,16 +346,26 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
         <Col xs={12} md={6} lg={4}>
           <Form className="my-4">
-            <div className="d-flex justify-content-between mb-3">
-              <h5 className="fw-bold">Lista de Informações Importantes:</h5>
-              <Button
-                variant="outline-teal-blue"
-                className="mb-3 d-flex align-items-center"
-                onClick={() => setShowNewBottomForm(true)}
-              >
-                <Icons typeIcon="plus" iconSize={16} fill="#007185" />
-                &nbsp;Adicionar
-              </Button>
+            <div className="d-xl-flex justify-content-between mb-3">
+              <h5 className="fw-bold">Informações Importantes:</h5>
+              <div className="d-flex gap-2">
+                <Button
+                  variant="outline-teal-blue"
+                  className="mb-3 d-flex align-items-center"
+                  onClick={() => setShowNewBottomForm(true)}
+                >
+                  <Icons typeIcon="plus" iconSize={16} fill="#007185" />
+                  &nbsp;Adicionar
+                </Button>
+                <Button
+                  variant="danger"
+                  className="mb-3 d-flex align-items-center"
+                  onClick={() => setShowDeleteAllModal(true)}
+                >
+                  <Icons typeIcon="danger" iconSize={16} fill="#fff" />
+                  &nbsp;Limpar Campos
+                </Button>
+              </div>
             </div>
 
             {showNewBottomForm && (
