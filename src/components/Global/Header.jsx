@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { enumSteps } from '@/utils/constants';
 import '../Style/style.scss';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import Icons from './Icons';
 
@@ -17,19 +18,28 @@ const Header = ({
   showNavMenu,
   steps,
 }) => {
-  const headerSteps = [
-    'Início',
-    'Informações Pessoais',
-    'Contato',
-    'Pacote',
-    'Revisão',
-    'Carrinho',
-    'Pagamento',
-  ];
+  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
+  const [baseYear, setBaseYear] = useState('');
   const navigateTo = useNavigate();
   const location = useLocation();
-  const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    const fetchBaseDate = async () => {
+      try {
+        const response = await fetcher.get('/base-date');
+        const dateStr = response?.data?.baseDate;
+        if (dateStr && typeof dateStr === 'string') {
+          const year = dateStr.split('/')[2];
+          setBaseYear(year);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar base date', error);
+      }
+    };
+
+    fetchBaseDate();
+  }, []);
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {
@@ -54,7 +64,7 @@ const Header = ({
         <div className="form__header__left">
           <h2>
             <a className="header-title" href="/">
-              ACAMPAMENTO IPBV {currentYear}
+              ACAMPAMENTO IPBV {baseYear}
             </a>
           </h2>
 
