@@ -84,7 +84,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
                   <b>{homepageInfo?.top?.title}</b>
                 </h4>
                 <h5>
-                  <b>{homepageInfo?.top?.subtitle}</b>
+                  <b className="home-page-subtitle">{homepageInfo?.top?.subtitle}</b>
                 </h5>
                 <h5 className="info-home-text mb-2">
                   <span className="info-home-enphasis">

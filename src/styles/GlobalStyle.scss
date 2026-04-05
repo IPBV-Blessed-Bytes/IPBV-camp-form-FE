@@ -12,6 +12,8 @@ body {
   font-style: normal;
 }
 
+@import url('');
+
 // Form
 .form {
   display: flex;
@@ -606,6 +608,10 @@ a:not(
 
 .msg-error {
   border-color: $red;
+}
+
+.home-page-subtitle {
+  font-family: '', system-ui, serif;
 }
 
 button.accordion-button:not(.collapsed) {
