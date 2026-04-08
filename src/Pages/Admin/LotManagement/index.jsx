@@ -145,7 +145,7 @@ LotsSummary.propTypes = {
       price: PropTypes.object,
       vacancies: PropTypes.object,
     }),
-  ).isRequired,
+  ),
   packageCount: PropTypes.shape({
     totalPackages: PropTypes.shape({
       seminary: PropTypes.number,
@@ -156,7 +156,7 @@ LotsSummary.propTypes = {
     }),
     totalBusVacancies: PropTypes.number,
     totalSeats: PropTypes.number,
-  }).isRequired,
+  }),
 };
 
 const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
@@ -804,8 +804,8 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 };
 
 AdminLotManagement.propTypes = {
-  loggedUsername: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loggedUsername: PropTypes.string,
+  loading: PropTypes.bool,
   packageCount: PropTypes.shape({
     totalPackages: PropTypes.shape({
       seminary: PropTypes.number,
@@ -816,7 +816,7 @@ AdminLotManagement.propTypes = {
     }),
     totalBusVacancies: PropTypes.number,
     totalSeats: PropTypes.number,
-  }).isRequired,
+  }),
 };
 
 export default AdminLotManagement;
