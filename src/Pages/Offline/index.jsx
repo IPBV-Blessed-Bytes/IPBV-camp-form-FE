@@ -1,12 +1,31 @@
+import { useState, useEffect } from 'react';
 import { Container, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 
 const Offline = () => {
   const navigate = useNavigate();
-  const currentYear = new Date().getFullYear() + 1;
+  const [baseYear, setBaseYear] = useState('');
+
+  useEffect(() => {
+    const fetchBaseDate = async () => {
+      try {
+        const response = await fetcher.get('/base-date');
+        const dateStr = response?.data?.baseDate;
+        if (dateStr && typeof dateStr === 'string') {
+          const year = dateStr.split('/')[2];
+          setBaseYear(year);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar base date', error);
+      }
+    };
+
+    fetchBaseDate();
+  }, []);
 
   return (
     <>
@@ -18,7 +37,7 @@ const Offline = () => {
               <div className="form__success text-center">
                 <div className="form__success__title">
                   <h2>
-                    <b>As inscrições para o acampamento de {currentYear} começarão em breve. Aguarde!</b>
+                    <b>As inscrições para o acampamento de {baseYear} começarão em breve. Aguarde!</b>
                   </h2>
                 </div>
                 <p className="form__success__message"></p>

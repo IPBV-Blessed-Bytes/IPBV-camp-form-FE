@@ -1,13 +1,32 @@
+import { useState, useEffect } from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import Icons from '@/components/Global/Icons';
+import fetcher from '@/fetchers/fetcherWithCredentials';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
-  const currentYear = new Date().getFullYear() + 1;
+  const [baseYear, setBaseYear] = useState('');
+
+  useEffect(() => {
+    const fetchBaseDate = async () => {
+      try {
+        const response = await fetcher.get('/base-date');
+        const dateStr = response?.data?.baseDate;
+        if (dateStr && typeof dateStr === 'string') {
+          const year = dateStr.split('/')[2];
+          setBaseYear(year);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar base date', error);
+      }
+    };
+
+    fetchBaseDate();
+  }, []);
 
   return (
     <>
@@ -19,7 +38,7 @@ const WaitingForCamp = () => {
               <div className="form__success text-center">
                 <div className="form__success__waiting">
                   <h2>
-                    <b>As inscrições para o acampamento de {currentYear} foram encerradas. Nos vemos no sábado em Garanhuns!</b>
+                    <b>As inscrições para o acampamento de {baseYear} foram encerradas. Nos vemos no sábado em Garanhuns!</b>
                   </h2>
                 </div>
                 <div className="waiting-for-camp-buttons mb-4">
