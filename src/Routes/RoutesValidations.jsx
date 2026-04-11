@@ -16,7 +16,7 @@ import fetcher from '@/fetchers/fetcherWithCredentials';
 
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import useAuth from '@/hooks/useAuth';
-import calculateAge from '../Pages/Packages/utils/calculateAge';
+import calculateAge, { initBaseDate } from '../Pages/Packages/utils/calculateAge';
 
 import FormRoutes from '.';
 
@@ -99,6 +99,7 @@ const RoutesValidations = ({ formContextCloseForm }) => {
 
     fetchPackages();
     fetchTotalRegistrations();
+    initBaseDate();
   }, []);
 
   useEffect(() => {

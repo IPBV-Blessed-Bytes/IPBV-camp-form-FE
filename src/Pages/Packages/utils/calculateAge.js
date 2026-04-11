@@ -32,7 +32,7 @@ export const initBaseDate = async () => {
 export function calculateAge(date) {
   if (!baseDate) return 0;
   const eventDate = baseDate;
-  const birthDate = typeof date === 'string' ? parseBRDate(date) : new Date(date);
+  const birthDate = typeof date === 'string' && date.includes('/') ? parseBRDate(date) : new Date(date);
 
   if (!birthDate || isNaN(birthDate)) return 0;
 
