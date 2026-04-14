@@ -92,56 +92,123 @@ const AdminLoggedIn = ({
 
   const usedPackages = availablePackages?.usedPackages || {};
   const usedValidPackages = availablePackages?.usedValidPackages || {};
+  const pendingPackages = availablePackages?.pendingPackages || {};
   const totalPackages = availablePackages?.totalPackages || {};
 
-  const familyCollegeFilledVacancies = Number(usedPackages['host-college-family'] || 0);
-  const collectiveFilledVacancies = Number(usedPackages['host-college-collective'] || 0);
-  const campingFilledVacancies = Number(usedPackages['host-college-camping'] || 0);
-  const seminaryFilledVacancies = Number(usedPackages['host-seminario'] || 0);
-  const externalFilledVacancies = Number(usedPackages['host-external'] || 0);
+  // Valid Packages
+  const familyCollegeValidFilledVacancies =
+    Number(usedValidPackages['host-college-family'] || 0) + Number(pendingPackages['host-college-family'] || 0);
 
-  const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
-  const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
-  const busYesFilledVacancies = Number(usedValidPackages['bus-yes'] || 0);
+  const collectiveValidFilledVacancies =
+    Number(usedValidPackages['host-college-collective'] || 0) + Number(pendingPackages['host-college-collective'] || 0);
 
-  const familyCollegeRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeFilledVacancies;
-  const collectiveRemaining = (totalPackages?.schoolIndividual || 0) - collectiveFilledVacancies;
-  const campingRemaining = (totalPackages?.schoolCamping || 0) - campingFilledVacancies;
-  const seminaryRemaining = (totalPackages?.seminary || 0) - seminaryFilledVacancies;
-  const externalRemaining = (totalPackages?.other || 0) - externalFilledVacancies;
+  const campingValidFilledVacancies =
+    Number(usedValidPackages['host-college-camping'] || 0) + Number(pendingPackages['host-college-camping'] || 0);
 
-  const packageCardsData = [
+  const seminaryValidFilledVacancies =
+    Number(usedValidPackages['host-seminario'] || 0) + Number(pendingPackages['host-seminario'] || 0);
+
+  const externalValidFilledVacancies =
+    Number(usedValidPackages['host-external'] || 0) + Number(pendingPackages['host-external'] || 0);
+
+  const familyCollegeValidRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeValidFilledVacancies;
+  const collectiveValidRemaining = (totalPackages?.schoolIndividual || 0) - collectiveValidFilledVacancies;
+  const campingValidRemaining = (totalPackages?.schoolCamping || 0) - campingValidFilledVacancies;
+  const seminaryValidRemaining = (totalPackages?.seminary || 0) - seminaryValidFilledVacancies;
+  const externalValidRemaining = (totalPackages?.other || 0) - externalValidFilledVacancies;
+
+  const validPackageCardsData = [
     {
       title: 'Colégio Coletivo',
-      remainingVacancies: Math.max(collectiveRemaining, 0),
-      filledVacancies: collectiveFilledVacancies,
+      remainingVacancies: Math.max(collectiveValidRemaining, 0),
+      filledVacancies: collectiveValidFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Família',
-      remainingVacancies: Math.max(familyCollegeRemaining, 0),
-      filledVacancies: familyCollegeFilledVacancies,
+      remainingVacancies: Math.max(familyCollegeValidRemaining, 0),
+      filledVacancies: familyCollegeValidFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Colégio Camping',
-      remainingVacancies: Math.max(campingRemaining, 0),
-      filledVacancies: campingFilledVacancies,
+      remainingVacancies: Math.max(campingValidRemaining, 0),
+      filledVacancies: campingValidFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Seminário',
-      remainingVacancies: Math.max(seminaryRemaining, 0),
-      filledVacancies: seminaryFilledVacancies,
+      remainingVacancies: Math.max(seminaryValidRemaining, 0),
+      filledVacancies: seminaryValidFilledVacancies,
       showRemainingVacancies: true,
     },
     {
       title: 'Hospedagem Externa',
-      remainingVacancies: Math.max(externalRemaining, 0),
-      filledVacancies: externalFilledVacancies,
+      remainingVacancies: Math.max(externalValidRemaining, 0),
+      filledVacancies: externalValidFilledVacancies,
       showRemainingVacancies: true,
     },
   ];
+
+  // All Packages
+  const familyCollegeAllFilledVacancies =
+    Number(usedPackages['host-college-family'] || 0) + Number(pendingPackages['host-college-family'] || 0);
+
+  const collectiveAllFilledVacancies =
+    Number(usedPackages['host-college-collective'] || 0) + Number(pendingPackages['host-college-collective'] || 0);
+
+  const campingAllFilledVacancies =
+    Number(usedPackages['host-college-camping'] || 0) + Number(pendingPackages['host-college-camping'] || 0);
+
+  const seminaryAllFilledVacancies =
+    Number(usedPackages['host-seminario'] || 0) + Number(pendingPackages['host-seminario'] || 0);
+
+  const externalAllFilledVacancies =
+    Number(usedPackages['host-external'] || 0) + Number(pendingPackages['host-external'] || 0);
+
+  const familyCollegeAllRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeAllFilledVacancies;
+  const collectiveAllRemaining = (totalPackages?.schoolIndividual || 0) - collectiveAllFilledVacancies;
+  const campingAllRemaining = (totalPackages?.schoolCamping || 0) - campingAllFilledVacancies;
+  const seminaryAllRemaining = (totalPackages?.seminary || 0) - seminaryAllFilledVacancies;
+  const externalAllRemaining = (totalPackages?.other || 0) - externalAllFilledVacancies;
+
+  const allPackageCardsData = [
+    {
+      title: 'Colégio Coletivo',
+      remainingVacancies: Math.max(collectiveAllRemaining, 0),
+      filledVacancies: collectiveAllFilledVacancies,
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Colégio Família',
+      remainingVacancies: Math.max(familyCollegeAllRemaining, 0),
+      filledVacancies: familyCollegeAllFilledVacancies,
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Colégio Camping',
+      remainingVacancies: Math.max(campingAllRemaining, 0),
+      filledVacancies: campingAllFilledVacancies,
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Seminário',
+      remainingVacancies: Math.max(seminaryAllRemaining, 0),
+      filledVacancies: seminaryAllFilledVacancies,
+      showRemainingVacancies: true,
+    },
+    {
+      title: 'Hospedagem Externa',
+      remainingVacancies: Math.max(externalAllRemaining, 0),
+      filledVacancies: externalAllFilledVacancies,
+      showRemainingVacancies: true,
+    },
+  ];
+
+  // Food and Bus Packages
+  const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
+  const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
+  const busYesFilledVacancies = Number(usedValidPackages['bus-yes'] || 0) + Number(pendingPackages['bus-yes'] || 0);
 
   const totalCardsData = [
     {
@@ -319,9 +386,16 @@ const AdminLoggedIn = ({
           {!spinnerLoading && !loading && (
             <>
               <Row>
-                <h4 className="text-center fw-bold mb-4">PACOTES:</h4>
-                {packageCardsData.map((card) => (
-                  <PackageCard key={card.title} {...card} cardType="package-card" />
+                <h4 className="text-center fw-bold mb-4">PACOTES (válidos):</h4>
+                {validPackageCardsData.map((card) => (
+                  <PackageCard key={card.title} {...card} cardType="valid-package-card" />
+                ))}
+              </Row>
+
+              <Row className="mt-4">
+                <h4 className="text-center fw-bold mb-4">PACOTES (todos):</h4>
+                {allPackageCardsData.map((card) => (
+                  <PackageCard key={card.title} {...card} cardType="all-package-card" />
                 ))}
               </Row>
 
