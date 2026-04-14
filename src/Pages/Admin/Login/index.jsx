@@ -43,7 +43,7 @@ const Login = ({
   return (
     <>
       {isAdminPathname && (
-        <Container className="p-4 admin" fluid>
+        <Container className="admin p-0" fluid>
           {!isLoggedIn && (
             <AdminLoggedOut
               handleKeyDown={handleKeyDown}

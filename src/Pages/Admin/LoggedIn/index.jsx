@@ -293,7 +293,7 @@ const AdminLoggedIn = ({
     formContext === 'maintenance' ? () => navigate('/dev/opiniao') : () => navigate('/admin/opiniao');
 
   return (
-    <>
+    <div className='p-4'>
       <Row className="mb-3">
         <Col className="admin-custom-col">
           <Button variant="secondary" onClick={() => navigate('/')}>
@@ -451,7 +451,7 @@ const AdminLoggedIn = ({
           <ExternalLinkRow />
         </Row>
       )}
-    </>
+    </div>
   );
 };
 

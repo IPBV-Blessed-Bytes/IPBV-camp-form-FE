@@ -1,51 +1,113 @@
 @use '../../../styles/Variables.scss' as *;
 
-.admin {
-  .input-login-wrapper {
-    position: relative;
+.admin-login-container {
+  background-color: $background-gray;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2rem;
+
+  .back-button-wrapper {
+    max-width: 450px;
+    width: 100%;
+
+    .btn-back-home {
+      border: 2px solid $primary;
+      border-radius: 0.5rem;
+      color: $primary;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $white;
+        border-color: $secondary;
+        color: $secondary;
+        transform: translateX(-5px);
+      }
+    }
   }
 
-  &__user,
-  &__password {
-    border-color: $blue;
-    color: $blue;
-    font-weight: bold;
+  .login-content {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .login-admin-card {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: $black;
+    padding: 3.5rem 2.5rem;
+    max-width: 450px;
+    width: 100%;
+
+    &__title {
+      color: $primary;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .input-login-wrapper {
+    margin-bottom: 1.5rem;
+
+    label {
+      color: $dark-gray;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .admin__input {
+    border: 1.5px solid $alternate-light-gray;
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.1);
+      outline: none;
+    }
 
     &::placeholder {
-      color: $blue;
+      color: $border-gray;
       font-weight: normal;
     }
   }
 
-  &__password {
-    padding-right: 3rem;
+  .password-field-container {
+    align-items: center;
+    display: flex;
+    position: relative;
   }
 
   .login-icon {
-    padding: 0.25rem;
+    cursor: pointer;
+    opacity: 0.6;
     position: absolute;
-    right: 0;
-    transform: translate(-0.625rem, -2.1875rem);
-  }
+    right: 1rem;
 
-  .input-login-btn-wrapper {
-    button {
-      background-color: $secondary;
-      border-color: $secondary;
-      color: $black;
+    &:hover {
+      opacity: 1;
     }
   }
 
-  .login-admin-card {
-    background: $primary;
-    color: #fff;
-    border-radius: 3.125rem 0rem;
-    padding: 3.125rem 1.875rem;
-    box-shadow: 0.5625rem 0.5625rem 0.625rem rgb(0 0 0 / 21%);
-    width: 25rem;
+  .btn-login-submit {
+    background-color: $primary;
+    border: none;
+    border-radius: 10px;
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease;
 
-    &__title {
-      color: $secondary;
+    &:hover {
+      background-color: darken($primary, 10%);
+      transform: translateY(-2px);
     }
   }
 }

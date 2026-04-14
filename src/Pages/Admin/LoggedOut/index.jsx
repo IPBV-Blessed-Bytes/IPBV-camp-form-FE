@@ -1,4 +1,4 @@
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -17,45 +17,41 @@ const AdminLoggedOut = ({
   scrollUp();
 
   return (
-    <Row className="justify-content-center">
-      <Row>
-        <Col xs={12} className="text-end mb-4">
-          <p className="d-none d-sm-block">Clique para voltar ao Formulário de inscrição:</p>
-          <Button
-            className="fw-bold"
-            variant="secondary"
-            onClick={() => {
-              navigateTo('/');
-            }}
-          >
-            Voltar pro Formulário
-          </Button>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col xs={12} md={6} className="d-flex justify-content-center">
-          <Form className="login-admin-card">
-            <h4 className="login-admin-card__title text-center fw-bold mb-5">ACESSO ADMINISTRAÇÃO</h4>
+    <div className="admin-login-container">
+      <div className="back-button-wrapper">
+        <Button className="btn-back-home" variant="outline-secondary" onClick={() => navigateTo('/')}>
+          <span className="me-2">←</span>
+          Voltar ao site
+        </Button>
+      </div>
 
-            <Form.Group className="input-login-wrapper mb-3" controlId="login">
-              <Form.Label className="fw-bold form-label-admin">Nome de Usuário:</Form.Label>
-              <Form.Control
-                className="admin__user"
-                type="text"
-                placeholder="Digite seu nome de usuário"
-                value={loginData.login || ''}
-                onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
-                onKeyDown={handleKeyDown}
-              />
-            </Form.Group>
+      <div className="login-content">
+        <Form className="login-admin-card">
+          <header className="text-center mb-5">
+            <h4 className="login-admin-card__title fw-bold">ADMINISTRAÇÃO</h4>
+            <p className="text-muted small">Entre com suas credenciais para acessar o painel</p>
+          </header>
 
-            <Form.Group className="input-login-wrapper mb-3" controlId="password">
-              <Form.Label className="fw-bold form-label-admin">Senha:</Form.Label>
+          <Form.Group className="input-login-wrapper mb-4" controlId="login">
+            <Form.Label className="fw-bold small">Nome de Usuário</Form.Label>
+            <Form.Control
+              className="admin__input"
+              type="text"
+              placeholder="Seu usuário"
+              value={loginData.login || ''}
+              onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
+              onKeyDown={handleKeyDown}
+            />
+          </Form.Group>
+
+          <Form.Group className="input-login-wrapper mb-4" controlId="password">
+            <Form.Label className="fw-bold small">Senha</Form.Label>
+            <div className="password-field-container">
               <Form.Control
                 autoComplete="off"
-                className="admin__password"
+                className="admin__input admin__password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Digite sua senha"
+                placeholder="Sua senha"
                 value={loginData.password || ''}
                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                 onKeyDown={handleKeyDown}
@@ -65,17 +61,15 @@ const AdminLoggedOut = ({
                 typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
                 onClick={handleShowPassword}
               />
-            </Form.Group>
-
-            <div className="input-login-btn-wrapper d-flex justify-content-end">
-              <Button className="fw-bold" variant="primary" onClick={handleLogin}>
-                Entrar
-              </Button>
             </div>
-          </Form>
-        </Col>
-      </Row>
-    </Row>
+          </Form.Group>
+
+          <Button className="w-100 btn-login-submit py-2 fw-bold" onClick={handleLogin}>
+            Acessar Painel
+          </Button>
+        </Form>
+      </div>
+    </div>
   );
 };
 
