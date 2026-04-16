@@ -1,4 +1,5 @@
 @use '../../../styles/Variables.scss' as *;
+@use "sass:color";
 
 .admin-login-container {
   background-color: $background-gray;
@@ -106,7 +107,7 @@
       background-color 0.2s ease;
 
     &:hover {
-      background-color: darken($primary, 10%);
+      background-color: color.adjust($primary, $lightness: -10%);
       transform: translateY(-2px);
     }
   }
