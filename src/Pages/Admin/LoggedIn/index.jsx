@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -15,6 +15,14 @@ import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SideButtons from '@/components/Admin/SideButtons';
+
+const PACKAGE_MAPPING = [
+  { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
+  { key: 'host-college-family', totalKey: 'schoolFamily', title: 'Colégio Família' },
+  { key: 'host-college-camping', totalKey: 'schoolCamping', title: 'Colégio Camping' },
+  { key: 'host-seminario', totalKey: 'seminary', title: 'Seminário' },
+  { key: 'host-external', totalKey: 'other', title: 'Hospedagem Externa' },
+];
 
 const AdminLoggedIn = ({
   availablePackages,
@@ -43,14 +51,15 @@ const AdminLoggedIn = ({
     checkinPermissions,
   } = permissionsSections(userRole);
 
-  const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState([]);
-  const [crewBusUsers, setCrewBusUsers] = useState([]);
+  const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
+  const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const { formContext } = useContext(AuthContext);
   const navigate = useNavigate();
+  const routePrefix = formContext === 'maintenance' ? '/dev' : '/admin';
 
   scrollUp();
 
@@ -84,216 +93,160 @@ const AdminLoggedIn = ({
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
-  const totalRegistrationsGlobal = totalRegistrations.totalRegistrations;
-  const totalValidRegistrations = totalRegistrations.totalValidRegistrations;
-  const totalChildren = totalRegistrations.totalChildren;
-  const totalAdultsNonPaid = totalRegistrations.totalAdultsNonPaid;
-  const totalAdultsPaid = totalValidRegistrations - totalAdultsNonPaid;
+  const { validPackageCardsData, allPackageCardsData, totalCardsData } = useMemo(() => {
+    const {
+      totalRegistrations: totalGlobal,
+      totalValidRegistrations,
+      totalChildren,
+      totalAdultsNonPaid,
+    } = totalRegistrations;
+    const {
+      usedPackages = {},
+      usedValidPackages = {},
+      pendingPackages = {},
+      totalPackages = {},
+    } = availablePackages || {};
 
-  const usedPackages = availablePackages?.usedPackages || {};
-  const usedValidPackages = availablePackages?.usedValidPackages || {};
-  const pendingPackages = availablePackages?.pendingPackages || {};
-  const totalPackages = availablePackages?.totalPackages || {};
+    const calculatePackages = (dataSource) =>
+      PACKAGE_MAPPING.map(({ key, totalKey, title }) => {
+        const filled = Number(dataSource[key] || 0) + Number(pendingPackages[key] || 0);
+        const total = totalPackages[totalKey] || 0;
+        return {
+          title,
+          filledVacancies: filled,
+          remainingVacancies: Math.max(total - filled, 0),
+          showRemainingVacancies: true,
+        };
+      });
 
-  // Valid Packages
-  const familyCollegeValidFilledVacancies =
-    Number(usedValidPackages['host-college-family'] || 0) + Number(pendingPackages['host-college-family'] || 0);
+    const busYesFilled = Number(usedValidPackages['bus-yes'] || 0) + Number(pendingPackages['bus-yes'] || 0);
 
-  const collectiveValidFilledVacancies =
-    Number(usedValidPackages['host-college-collective'] || 0) + Number(pendingPackages['host-college-collective'] || 0);
+    return {
+      validPackageCardsData: calculatePackages(usedValidPackages),
+      allPackageCardsData: calculatePackages(usedPackages),
+      totalCardsData: [
+        {
+          title: 'Total de Crianças Pagantes',
+          filledVacancies: Math.max(totalChildren - filteredCountNonPayingChildren, 0),
+        },
+        {
+          title: 'Total de Crianças Não Pagantes',
+          filledVacancies: Number(filteredCountNonPayingChildren),
+        },
+        {
+          title: 'Total de Crianças',
+          filledVacancies: Number(totalChildren),
+        },
+        {
+          title: 'Total de Adultos Pagantes',
+          filledVacancies: totalValidRegistrations - totalAdultsNonPaid,
+        },
+        {
+          title: 'Total de Adultos Não Pagantes',
+          filledVacancies: Number(totalAdultsNonPaid),
+        },
+        {
+          title: 'Total de Adultos',
+          filledVacancies: Number(totalValidRegistrations),
+          remainingVacancies: Math.max(totalSeats - totalValidRegistrations, 0),
+          showRemainingVacancies: true,
+        },
+        {
+          title: 'Total de Inscritos Geral',
+          filledVacancies: Number(totalGlobal),
+        },
+        {
+          title: 'Ônibus Geral',
+          filledVacancies: busYesFilled,
+          remainingVacancies: Math.max(totalBusVacancies - busYesFilled, 0),
+          showRemainingVacancies: true,
+        },
+        {
+          title: 'Ônibus Equipe',
+          filledVacancies: Number(crewBusUsers),
+          remainingVacancies: Math.max(22 - crewBusUsers, 0),
+          showRemainingVacancies: true,
+        },
+        {
+          title: 'Total com Alimentação',
+          filledVacancies: Number(usedPackages['food-complete'] || 0),
+        },
+        {
+          title: 'Total sem Alimentação',
+          filledVacancies: Number(usedPackages['no-food'] || 0),
+        },
+      ],
+    };
+  }, [
+    availablePackages,
+    totalRegistrations,
+    filteredCountNonPayingChildren,
+    crewBusUsers,
+    totalSeats,
+    totalBusVacancies,
+  ]);
 
-  const campingValidFilledVacancies =
-    Number(usedValidPackages['host-college-camping'] || 0) + Number(pendingPackages['host-college-camping'] || 0);
-
-  const seminaryValidFilledVacancies =
-    Number(usedValidPackages['host-seminario'] || 0) + Number(pendingPackages['host-seminario'] || 0);
-
-  const externalValidFilledVacancies =
-    Number(usedValidPackages['host-external'] || 0) + Number(pendingPackages['host-external'] || 0);
-
-  const familyCollegeValidRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeValidFilledVacancies;
-  const collectiveValidRemaining = (totalPackages?.schoolIndividual || 0) - collectiveValidFilledVacancies;
-  const campingValidRemaining = (totalPackages?.schoolCamping || 0) - campingValidFilledVacancies;
-  const seminaryValidRemaining = (totalPackages?.seminary || 0) - seminaryValidFilledVacancies;
-  const externalValidRemaining = (totalPackages?.other || 0) - externalValidFilledVacancies;
-
-  const validPackageCardsData = [
+  const navigationSessions = [
     {
-      title: 'Colégio Coletivo',
-      remainingVacancies: Math.max(collectiveValidRemaining, 0),
-      filledVacancies: collectiveValidFilledVacancies,
-      showRemainingVacancies: true,
+      permission: registeredButtonHomePermissions,
+      path: 'acampantes',
+      cardType: 'registered-card',
+      title: 'Inscritos',
+      typeIcon: 'person',
+      iconSize: 40,
     },
     {
-      title: 'Colégio Família',
-      remainingVacancies: Math.max(familyCollegeValidRemaining, 0),
-      filledVacancies: familyCollegeValidFilledVacancies,
-      showRemainingVacancies: true,
+      permission: rideButtonHomePermissions,
+      path: 'carona',
+      cardType: 'ride-card',
+      title: 'Caronas',
+      typeIcon: 'ride',
+      iconSize: 50,
     },
     {
-      title: 'Colégio Camping',
-      remainingVacancies: Math.max(campingValidRemaining, 0),
-      filledVacancies: campingValidFilledVacancies,
-      showRemainingVacancies: true,
+      permission: discountButtonHomePermissions,
+      path: 'descontos',
+      cardType: 'discount-card',
+      title: 'Descontos',
+      typeIcon: 'discount',
+      iconSize: 50,
     },
     {
-      title: 'Seminário',
-      remainingVacancies: Math.max(seminaryValidRemaining, 0),
-      filledVacancies: seminaryValidFilledVacancies,
-      showRemainingVacancies: true,
+      permission: roomsButtonHomePermissions,
+      path: 'quartos',
+      cardType: 'rooms-card',
+      title: 'Quartos',
+      typeIcon: 'rooms',
+      iconSize: 50,
     },
     {
-      title: 'Hospedagem Externa',
-      remainingVacancies: Math.max(externalValidRemaining, 0),
-      filledVacancies: externalValidFilledVacancies,
-      showRemainingVacancies: true,
-    },
-  ];
-
-  // All Packages
-  const familyCollegeAllFilledVacancies =
-    Number(usedPackages['host-college-family'] || 0) + Number(pendingPackages['host-college-family'] || 0);
-
-  const collectiveAllFilledVacancies =
-    Number(usedPackages['host-college-collective'] || 0) + Number(pendingPackages['host-college-collective'] || 0);
-
-  const campingAllFilledVacancies =
-    Number(usedPackages['host-college-camping'] || 0) + Number(pendingPackages['host-college-camping'] || 0);
-
-  const seminaryAllFilledVacancies =
-    Number(usedPackages['host-seminario'] || 0) + Number(pendingPackages['host-seminario'] || 0);
-
-  const externalAllFilledVacancies =
-    Number(usedPackages['host-external'] || 0) + Number(pendingPackages['host-external'] || 0);
-
-  const familyCollegeAllRemaining = (totalPackages?.schoolFamily || 0) - familyCollegeAllFilledVacancies;
-  const collectiveAllRemaining = (totalPackages?.schoolIndividual || 0) - collectiveAllFilledVacancies;
-  const campingAllRemaining = (totalPackages?.schoolCamping || 0) - campingAllFilledVacancies;
-  const seminaryAllRemaining = (totalPackages?.seminary || 0) - seminaryAllFilledVacancies;
-  const externalAllRemaining = (totalPackages?.other || 0) - externalAllFilledVacancies;
-
-  const allPackageCardsData = [
-    {
-      title: 'Colégio Coletivo',
-      remainingVacancies: Math.max(collectiveAllRemaining, 0),
-      filledVacancies: collectiveAllFilledVacancies,
-      showRemainingVacancies: true,
+      permission: teamsButtonHomePermissions,
+      path: 'times',
+      cardType: 'teams-card',
+      title: 'Times',
+      typeIcon: 'team',
+      iconSize: 50,
     },
     {
-      title: 'Colégio Família',
-      remainingVacancies: Math.max(familyCollegeAllRemaining, 0),
-      filledVacancies: familyCollegeAllFilledVacancies,
-      showRemainingVacancies: true,
+      permission: feedbackButtonHomePermissions,
+      path: 'opiniao',
+      cardType: 'feedback-card',
+      title: 'Feedbacks',
+      typeIcon: 'feedback',
+      iconSize: 50,
     },
     {
-      title: 'Colégio Camping',
-      remainingVacancies: Math.max(campingAllRemaining, 0),
-      filledVacancies: campingAllFilledVacancies,
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Seminário',
-      remainingVacancies: Math.max(seminaryAllRemaining, 0),
-      filledVacancies: seminaryAllFilledVacancies,
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Hospedagem Externa',
-      remainingVacancies: Math.max(externalAllRemaining, 0),
-      filledVacancies: externalAllFilledVacancies,
-      showRemainingVacancies: true,
-    },
-  ];
-
-  // Food and Bus Packages
-  const withFoodFilledVacancies = Number(usedPackages['food-complete'] || 0);
-  const noFoodFilledVacancies = Number(usedPackages['no-food'] || 0);
-  const busYesFilledVacancies = Number(usedValidPackages['bus-yes'] || 0) + Number(pendingPackages['bus-yes'] || 0);
-
-  const totalCardsData = [
-    {
-      title: 'Total de Crianças Pagantes',
-      filledVacancies: Number(totalChildren - filteredCountNonPayingChildren) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total de Crianças Não Pagantes',
-      filledVacancies: Number(filteredCountNonPayingChildren) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total de Crianças',
-      filledVacancies: Number(totalChildren) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total de Adultos Pagantes',
-      filledVacancies: Number(totalAdultsPaid) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total de Adultos Não Pagantes',
-      filledVacancies: Number(totalAdultsNonPaid) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total de Adultos',
-      remainingVacancies: Number(totalSeats - totalValidRegistrations) || 0,
-      filledVacancies: Number(totalValidRegistrations) || 0,
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Total de Inscritos Geral',
-      filledVacancies: Number(totalRegistrationsGlobal) || 0,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Ônibus Geral',
-      remainingVacancies: Math.max(Number(totalBusVacancies - busYesFilledVacancies) || 0, 0),
-      filledVacancies: Number(busYesFilledVacancies) || 0,
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Ônibus Equipe',
-      remainingVacancies: Math.max(Number(22 - crewBusUsers) || 0, 0),
-      filledVacancies: Number(crewBusUsers) || 0,
-      showRemainingVacancies: true,
-    },
-    {
-      title: 'Total com Alimentação',
-      filledVacancies: withFoodFilledVacancies,
-      showRemainingVacancies: false,
-    },
-    {
-      title: 'Total sem Alimentação',
-      filledVacancies: noFoodFilledVacancies,
-      showRemainingVacancies: false,
+      permission: checkinPermissions,
+      path: 'checkin',
+      cardType: 'checkin-card',
+      title: 'Check-in',
+      typeIcon: 'checkin',
+      iconSize: 50,
     },
   ];
-
-  const handleTableClick =
-    formContext === 'maintenance' ? () => navigate('/dev/acampantes') : () => navigate('/admin/acampantes');
-
-  const handleRideClick =
-    formContext === 'maintenance' ? () => navigate('/dev/carona') : () => navigate('/admin/carona');
-
-  const handleDiscountClick =
-    formContext === 'maintenance' ? () => navigate('/dev/descontos') : () => navigate('/admin/descontos');
-
-  const handleRoomsClick =
-    formContext === 'maintenance' ? () => navigate('/dev/quartos') : () => navigate('/admin/quartos');
-
-  const handleTeamsClick =
-    formContext === 'maintenance' ? () => navigate('/dev/times') : () => navigate('/admin/times');
-
-  const handleCheckinClick =
-    formContext === 'maintenance' ? () => navigate('/dev/checkin') : () => navigate('/admin/checkin');
-
-  const handleFeedbackClick =
-    formContext === 'maintenance' ? () => navigate('/dev/opiniao') : () => navigate('/admin/opiniao');
 
   return (
-    <div className='p-4'>
+    <div className="p-4">
       <Row className="mb-3">
         <Col className="admin-custom-col">
           <Button variant="secondary" onClick={() => navigate('/')}>
@@ -317,68 +270,9 @@ const AdminLoggedIn = ({
       </Row>
 
       <Row className="mb-md-5 navigation-header">
-        <SessionCard
-          permission={registeredButtonHomePermissions}
-          onClick={handleTableClick}
-          cardType="registered-card"
-          title="Inscritos"
-          typeIcon="person"
-          iconSize={40}
-        />
-
-        <SessionCard
-          permission={rideButtonHomePermissions}
-          onClick={handleRideClick}
-          cardType="ride-card"
-          title="Caronas"
-          typeIcon="ride"
-          iconSize={50}
-        />
-
-        <SessionCard
-          permission={discountButtonHomePermissions}
-          onClick={handleDiscountClick}
-          cardType="discount-card"
-          title="Descontos"
-          typeIcon="discount"
-          iconSize={50}
-        />
-
-        <SessionCard
-          permission={roomsButtonHomePermissions}
-          onClick={handleRoomsClick}
-          cardType="rooms-card"
-          title="Quartos"
-          typeIcon="rooms"
-          iconSize={50}
-        />
-
-        <SessionCard
-          permission={teamsButtonHomePermissions}
-          onClick={handleTeamsClick}
-          cardType="teams-card"
-          title="Times"
-          typeIcon="team"
-          iconSize={50}
-        />
-
-        <SessionCard
-          permission={feedbackButtonHomePermissions}
-          onClick={handleFeedbackClick}
-          cardType="feedback-card"
-          title="Feedbacks"
-          typeIcon="feedback"
-          iconSize={50}
-        />
-
-        <SessionCard
-          permission={checkinPermissions}
-          onClick={handleCheckinClick}
-          cardType="checkin-card"
-          title="Check-in"
-          typeIcon="checkin"
-          iconSize={50}
-        />
+        {navigationSessions.map((session) => (
+          <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
+        ))}
       </Row>
 
       {packagesAndTotalCardsPermissions && (
