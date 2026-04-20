@@ -10,6 +10,7 @@ import { useCart } from 'react-use-cart';
 import useActiveLot from '@/hooks/useActiveLot';
 import { saveConfirmationUserData, saveFinalObservation } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
+import { getTempData } from '@/utils/formStorage';
 import './style.scss';
 
 const FinalReview = () => {
@@ -24,8 +25,6 @@ const FinalReview = () => {
 
   const MAX_CHAR_WARNING = 300;
   const isLimitReached = observation.length >= MAX_CHAR_WARNING;
-
-  const getTempData = () => JSON.parse(sessionStorage.getItem('formTempData')) || {};
 
   const formValues = getTempData();
 

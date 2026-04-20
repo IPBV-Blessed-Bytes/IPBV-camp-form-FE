@@ -18,10 +18,8 @@ import useAgeValidation from './hooks/useAgeValidation';
 import usePreviousYearPrefill from './hooks/usePreviousYearPrefill';
 import { restoreScrollWhenMobile } from './utils/fieldHelpers';
 
+import { FORM_STORAGE_KEYS, getTempData } from '@/utils/formStorage';
 import './style.scss';
-
-const PREVIOUS_USER_DATA_KEY = 'previousUserData';
-const FORM_TEMP_DATA_KEY = 'formTempData';
 
 const PersonalData = () => {
   const {
@@ -83,8 +81,8 @@ const PersonalData = () => {
   const ageValidation = useAgeValidation(formik, { onAgeConfirmed: prefill.maybeOpenPrefillModal });
 
   useEffect(() => {
-    sessionStorage.removeItem(PREVIOUS_USER_DATA_KEY);
-    const tempData = JSON.parse(sessionStorage.getItem(FORM_TEMP_DATA_KEY) || '{}');
+    sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
+    const tempData = getTempData();
 
     if (Object.keys(tempData).length > 0) {
       const merged = { ...formik.values, ...tempData.personalInformation };

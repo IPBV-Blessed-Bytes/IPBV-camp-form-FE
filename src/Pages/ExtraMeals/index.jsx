@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import calculateAge from '../Packages/utils/calculateAge';
 import { ExtraMealsSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
+import { getTempData } from '@/utils/formStorage';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import { mealOptions } from '@/utils/constants';
@@ -26,7 +27,7 @@ const ExtraMeals = () => {
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [extraMealSelected, setExtraMealSelected] = useState(false);
 
-  const tempData = JSON.parse(sessionStorage.getItem('formTempData') || '{}');
+  const tempData = getTempData();
   const birthDate = tempData.personalInformation?.birthday;
   const age = calculateAge(birthDate);
 

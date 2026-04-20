@@ -4,9 +4,8 @@ import { cpf } from 'cpf-cnpj-validator';
 
 import { deleteUserPreviousYear, getUserPreviousYear } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
+import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import { formatDate } from '../utils/fieldHelpers';
-
-const PREVIOUS_USER_DATA_KEY = 'previousUserData';
 
 const usePreviousYearPrefill = (formik, { updateForm }) => {
   const { preFill, setPreFill } = useFormState();
@@ -69,7 +68,7 @@ const usePreviousYearPrefill = (formik, { updateForm }) => {
         ...contactData,
       });
 
-      sessionStorage.setItem(PREVIOUS_USER_DATA_KEY, JSON.stringify(previousUserData));
+      sessionStorage.setItem(FORM_STORAGE_KEYS.previousUserData, JSON.stringify(previousUserData));
     }
     setShowPrefillModal(false);
   };
@@ -85,7 +84,7 @@ const usePreviousYearPrefill = (formik, { updateForm }) => {
 
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);
-      sessionStorage.removeItem(PREVIOUS_USER_DATA_KEY);
+      sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
       setShowPrefillModal(false);
     } catch (error) {
       console.error('Erro ao excluir usuário anterior:', error);

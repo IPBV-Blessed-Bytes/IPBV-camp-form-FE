@@ -9,6 +9,7 @@ import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
+import { FORM_STORAGE_KEYS, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import { createCheckout } from '@/services/checkout';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
@@ -16,21 +17,9 @@ import calculateAge, { initBaseDate } from '@/Pages/Packages/utils/calculateAge'
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import { products } from '@/Pages/Packages/utils/products';
 
-const FORM_TEMP_DATA_KEY = 'formTempData';
-const SAVED_USERS_KEY = 'savedUsers';
-const DISCOUNT_LIST_KEY = 'discountList';
-const PREVIOUS_USER_DATA_KEY = 'previousUserData';
-
 const SKIP_PERSIST_SECTIONS = ['personalInformation', 'contact', 'package', 'extraMeals'];
 
 const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-const getTempData = () => JSON.parse(sessionStorage.getItem(FORM_TEMP_DATA_KEY)) || {};
-const saveTempData = (key, data) => {
-  const existing = getTempData();
-  existing[key] = data;
-  sessionStorage.setItem(FORM_TEMP_DATA_KEY, JSON.stringify(existing));
-};
 
 const sanitizeForms = (forms) =>
   forms.map(({ personalInformation, contact, ...rest }) => ({
@@ -51,7 +40,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
 
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(() => {
-    const stored = sessionStorage.getItem(SAVED_USERS_KEY);
+    const stored = sessionStorage.getItem(FORM_STORAGE_KEYS.savedUsers);
     return stored ? JSON.parse(stored) : initialValues;
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -129,11 +118,11 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   }, [isLoggedIn, adminPathname, effectiveFormContext, navigate]);
 
   useEffect(() => {
-    sessionStorage.setItem(SAVED_USERS_KEY, JSON.stringify(formValues));
+    sessionStorage.setItem(FORM_STORAGE_KEYS.savedUsers, JSON.stringify(formValues));
   }, [formValues]);
 
   useEffect(() => {
-    const storedList = sessionStorage.getItem(DISCOUNT_LIST_KEY);
+    const storedList = sessionStorage.getItem(FORM_STORAGE_KEYS.discountList);
     if (!storedList) return;
 
     const parsedList = JSON.parse(storedList);
@@ -163,9 +152,9 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   const handleUpdateTotalPackages = useCallback((value) => setTotalPackages(value), []);
 
   const handleDiscountChange = useCallback((discountValue, userIndex) => {
-    const currentDiscounts = JSON.parse(sessionStorage.getItem(DISCOUNT_LIST_KEY) || '[]');
+    const currentDiscounts = JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.discountList) || '[]');
     currentDiscounts[userIndex] = Number(discountValue);
-    sessionStorage.setItem(DISCOUNT_LIST_KEY, JSON.stringify(currentDiscounts));
+    sessionStorage.setItem(FORM_STORAGE_KEYS.discountList, JSON.stringify(currentDiscounts));
 
     setDiscount(discountValue);
     setHasDiscount(Number(discountValue) !== 0);
@@ -199,7 +188,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
             ...sessionData,
             ...(typeof newData === 'object' && newData !== null ? newData : {}),
           };
-          sessionStorage.removeItem(FORM_TEMP_DATA_KEY);
+          clearTempData();
         } else {
           updated[currentFormIndex] = { ...previous, [sectionKey]: newData };
         }
@@ -213,7 +202,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   );
 
   const handleAddNewUser = useCallback(() => {
-    sessionStorage.removeItem(PREVIOUS_USER_DATA_KEY);
+    sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
     setFormValues((prev) => {
       const validUsers = prev.filter(isUserValid);
       const updated = [...validUsers, initialValues[0]];
@@ -294,7 +283,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       try {
         setStatus('loading');
 
-        const discountList = JSON.parse(sessionStorage.getItem(DISCOUNT_LIST_KEY) || '[]');
+        const discountList = JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.discountList) || '[]');
         const registrationFeePerUser = basePriceTotal;
 
         const buildFormPayload = (form, index) => {
@@ -363,8 +352,8 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
         setStatus('error');
         toast.error(error?.response?.data || 'Ocorreu um erro');
       } finally {
-        sessionStorage.removeItem(PREVIOUS_USER_DATA_KEY);
-        sessionStorage.removeItem(SAVED_USERS_KEY);
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.savedUsers);
         setLoading(false);
       }
     },

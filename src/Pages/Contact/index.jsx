@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 import { additionalInformationSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
+import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
@@ -25,9 +26,8 @@ const Contact = () => {
 
   const [isOtherChurch, setIsOtherChurch] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const storedData = sessionStorage.getItem('previousUserData');
+    const storedData = sessionStorage.getItem(FORM_STORAGE_KEYS.previousUserData);
 
     if (storedData) {
       const parsedPreviousUserData = JSON.parse(storedData);
