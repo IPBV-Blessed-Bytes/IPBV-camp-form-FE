@@ -8,8 +8,8 @@ import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
-import { BASE_URL } from '@/config';
-import fetcher from '@/fetchers';
+import useActiveLot from '@/hooks/useActiveLot';
+import { saveConfirmationUserData, saveFinalObservation } from '@/services/campers';
 import './style.scss';
 
 const FinalReview = ({ backStep, nextStep, updateForm }) => {
@@ -30,38 +30,13 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
   const birthday = new Date(formValues.personalInformation?.birthday);
   const age = isValid(birthday) ? calculateAge(birthday) : 0;
 
+  const { activeLot } = useActiveLot();
+
   useEffect(() => {
-    const fetchLots = async () => {
-      try {
-        const response = await fetcher.get('lots');
-        const lots = response.data?.lots || [];
-
-        if (lots.length > 0) {
-          const today = new Date();
-
-          const formatDate = (str) => {
-            const [day, month, year] = str.split('/');
-            return new Date(`${year}-${month}-${day}T00:00:00`);
-          };
-
-          const foundLot = lots.find((lot) => {
-            const start = formatDate(lot.startDate);
-            const end = formatDate(lot.endDate);
-            end.setHours(23, 59, 59, 999);
-            return today >= start && today <= end;
-          });
-
-          if (foundLot) {
-            setRawFee(Number(foundLot.price.registrationFee || 0));
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao buscar lotes:', error);
-      }
-    };
-
-    fetchLots();
-  }, []);
+    if (activeLot) {
+      setRawFee(Number(activeLot.price.registrationFee || 0));
+    }
+  }, [activeLot]);
 
   const discountedProducts = getDiscountedProducts(age);
 
@@ -69,12 +44,12 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
 
   const handleAuthorizationChange = (e) => {
     setIsDataAuthorized(e.target.checked);
-    saveConfirmationUserData(e.target.checked);
+    handleAuthorizationSave(e.target.checked);
   };
 
-  const saveConfirmationUserData = async (authorizationValue) => {
+  const handleAuthorizationSave = async (authorizationValue) => {
     try {
-      await fetcher.post(`${BASE_URL}/camper/confirmationUserData`, {
+      await saveConfirmationUserData({
         cpf: formValues.personalInformation.cpf,
         authorization: authorizationValue,
       });
@@ -89,10 +64,7 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
     if (observation.trim() !== '') {
       try {
         const { cpf } = formValues.personalInformation || {};
-        await fetcher.post(`${BASE_URL}/camper/finalObservation`, {
-          cpf,
-          text: observation,
-        });
+        await saveFinalObservation({ cpf, text: observation });
 
         toast.success('Observação salva com sucesso!', {
           position: 'top-right',

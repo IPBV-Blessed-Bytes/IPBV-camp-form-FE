@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { enumSteps } from '@/utils/constants';
 import '../Style/style.scss';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import useBaseYear from '@/hooks/useBaseYear';
 import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import Icons from './Icons';
 
@@ -20,26 +20,9 @@ const Header = ({
 }) => {
   const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
-  const [baseYear, setBaseYear] = useState('');
+  const baseYear = useBaseYear();
   const navigateTo = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const fetchBaseDate = async () => {
-      try {
-        const response = await fetcher.get('/base-date');
-        const dateStr = response?.data?.baseDate;
-        if (dateStr && typeof dateStr === 'string') {
-          const year = dateStr.split('/')[2];
-          setBaseYear(year);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar base date', error);
-      }
-    };
-
-    fetchBaseDate();
-  }, []);
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {

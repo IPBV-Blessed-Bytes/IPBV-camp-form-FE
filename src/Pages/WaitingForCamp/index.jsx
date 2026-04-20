@@ -1,32 +1,14 @@
-import { useState, useEffect } from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import Icons from '@/components/Global/Icons';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import useBaseYear from '@/hooks/useBaseYear';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
-  const [baseYear, setBaseYear] = useState('');
-
-  useEffect(() => {
-    const fetchBaseDate = async () => {
-      try {
-        const response = await fetcher.get('/base-date');
-        const dateStr = response?.data?.baseDate;
-        if (dateStr && typeof dateStr === 'string') {
-          const year = dateStr.split('/')[2];
-          setBaseYear(year);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar base date', error);
-      }
-    };
-
-    fetchBaseDate();
-  }, []);
+  const baseYear = useBaseYear();
 
   return (
     <>

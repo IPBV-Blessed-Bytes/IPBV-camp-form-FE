@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './style.scss';
-import fetcher from '@/fetchers';
+import { getLots } from '@/services/lots';
+import { findActiveLot } from '@/utils/activeLot';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
@@ -111,50 +112,35 @@ const BeforePayment = ({
     const fetchLotsAndProducts = async () => {
       try {
         await loadProducts();
-        const response = await fetcher.get('lots');
-        const lots = response.data?.lots || [];
+        const data = await getLots();
+        const foundLot = findActiveLot(data?.lots);
 
-        if (lots.length > 0) {
-          const today = new Date();
-          const formatDate = (str) => {
-            const [day, month, year] = str.split('/');
-            return new Date(`${year}-${month}-${day}T00:00:00`);
-          };
+        if (foundLot) {
+          const rawFee = Number(foundLot.price.registrationFee || 0);
+          setRawFee(rawFee);
 
-          const foundLot = lots.find((lot) => {
-            const start = formatDate(lot.startDate);
-            const end = formatDate(lot.endDate);
-            end.setHours(23, 59, 59, 999);
-            return today >= start && today <= end;
-          });
+          const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
+          const savedTotalFee = Number(sessionStorage.getItem('totalFee') || 0);
 
-          if (foundLot) {
-            const rawFee = Number(foundLot.price.registrationFee || 0);
-            setRawFee(rawFee);
+          let feeToSet = 0;
 
-            const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
-            const savedTotalFee = Number(sessionStorage.getItem('totalFee') || 0);
+          if (enteredFromFinalReview) {
+            const calculatedTotalFee = validFormValues.reduce((sum, user) => {
+              const age = calculateAge(new Date(user.personalInformation.birthday));
+              const registrationFee = calculateRegistrationFee(rawFee, age);
 
-            let feeToSet = 0;
+              return sum + registrationFee;
+            }, 0);
 
-            if (enteredFromFinalReview) {
-              const calculatedTotalFee = validFormValues.reduce((sum, user) => {
-                const age = calculateAge(new Date(user.personalInformation.birthday));
-                const registrationFee = calculateRegistrationFee(rawFee, age);
+            feeToSet = calculatedTotalFee;
 
-                return sum + registrationFee;
-              }, 0);
-
-              feeToSet = calculatedTotalFee;
-
-              sessionStorage.setItem('totalFee', feeToSet);
-              sessionStorage.setItem('enteredFromFinalReview', 'false');
-            } else {
-              feeToSet = savedTotalFee;
-            }
-
-            setIndividualBase(feeToSet);
+            sessionStorage.setItem('totalFee', feeToSet);
+            sessionStorage.setItem('enteredFromFinalReview', 'false');
+          } else {
+            feeToSet = savedTotalFee;
           }
+
+          setIndividualBase(feeToSet);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);

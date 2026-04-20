@@ -9,7 +9,8 @@ import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
-import fetcher from '@/fetchers';
+import { findActiveLot } from '@/utils/activeLot';
+import { getLots } from '@/services/lots';
 import Loading from '@/components/Global/Loading';
 
 const Packages = ({
@@ -39,49 +40,33 @@ const Packages = ({
       try {
         const updatedProducts = await loadProducts();
 
-        const response = await fetcher.get('lots');
-        const lots = response.data?.lots || [];
+        const data = await getLots();
+        const foundLot = findActiveLot(data?.lots);
 
-        if (lots.length > 0) {
-          const today = new Date();
-          const formatDate = (str) => {
-            const [day, month, year] = str.split('/');
-            return new Date(`${year}-${month}-${day}T00:00:00`);
-          };
+        if (foundLot) {
+          setActiveLot(foundLot);
 
-          const foundLot = lots.find((lot) => {
-            const start = formatDate(lot.startDate);
-            const end = formatDate(lot.endDate);
-            end.setHours(23, 59, 59, 999);
+          const registrationFee = calculateRegistrationFee(Number(foundLot.price.registrationFee || 0), age);
 
-            return today >= start && today <= end;
+          setIndividualBase(registrationFee);
+
+          const updatedWithLotPrices = updatedProducts.map((prod) => {
+            if (prod.category === 'Hospedagem') {
+              if (prod.id === 'host-seminario') return { ...prod, price: foundLot.price.seminary };
+              if (prod.id.startsWith('host-college')) return { ...prod, price: foundLot.price.school };
+              if (prod.id === 'host-external') return { ...prod, price: foundLot.price.otherAccomodation };
+            }
+            if (prod.category === 'Transporte' && prod.id === 'bus-yes') {
+              return { ...prod, price: foundLot.price.bus };
+            }
+            if (prod.category === 'Alimentação' && prod.id.startsWith('food')) {
+              return { ...prod, price: foundLot.price.food };
+            }
+            return prod;
           });
 
-          if (foundLot) {
-            setActiveLot(foundLot);
-
-            const registrationFee = calculateRegistrationFee(Number(foundLot.price.registrationFee || 0), age);
-
-            setIndividualBase(registrationFee);
-
-            const updatedWithLotPrices = updatedProducts.map((prod) => {
-              if (prod.category === 'Hospedagem') {
-                if (prod.id === 'host-seminario') return { ...prod, price: foundLot.price.seminary };
-                if (prod.id.startsWith('host-college')) return { ...prod, price: foundLot.price.school };
-                if (prod.id === 'host-external') return { ...prod, price: foundLot.price.otherAccomodation };
-              }
-              if (prod.category === 'Transporte' && prod.id === 'bus-yes') {
-                return { ...prod, price: foundLot.price.bus };
-              }
-              if (prod.category === 'Alimentação' && prod.id.startsWith('food')) {
-                return { ...prod, price: foundLot.price.food };
-              }
-              return prod;
-            });
-
-            setProductsState(updatedWithLotPrices);
-            setVacancies(foundLot.vacancies);
-          }
+          setProductsState(updatedWithLotPrices);
+          setVacancies(foundLot.vacancies);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
