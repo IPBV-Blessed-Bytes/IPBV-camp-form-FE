@@ -1,32 +1,34 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { enumSteps } from '@/utils/constants';
-import '../Style/style.scss';
-import useBaseYear from '@/hooks/useBaseYear';
 import { Container, Breadcrumb, Button } from 'react-bootstrap';
+
+import { enumSteps } from '@/utils/constants';
+import useBaseYear from '@/hooks/useBaseYear';
+import { useFormState } from '@/contexts/FormStateContext';
+import '../Style/style.scss';
 import Icons from './Icons';
 
-const Header = ({
-  backStepFlag,
-  formSubmitted,
-  formValues,
-  goToStep,
-  handlePreFill,
-  hasFood,
-  highestStepReached,
-  showNavMenu,
-  steps,
-}) => {
-  const headerSteps = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
+const HEADER_STEPS = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
+const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
+  const {
+    backStepFlag,
+    formSubmitted,
+    formValues,
+    goToStep,
+    handlePreFill,
+    hasFood,
+    highestStepReached,
+    steps,
+  } = useFormState();
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {
-      navigateTo('/');
+      navigate('/');
       return;
     }
 
@@ -35,11 +37,14 @@ const Header = ({
     if (newStep === 4 && hasFood) return;
     if (newStep > highestStepReached) return;
 
-    if (newStep <= highestStepReached) {
-      handlePreFill(false);
-      goToStep(newStep);
-    }
+    handlePreFill(false);
+    goToStep(newStep);
   };
+
+  const hasAnyUserName =
+    Array.isArray(formValues) && formValues.some((user) => user?.personalInformation?.name?.trim());
+
+  const showCartButton = location.pathname !== '/sucesso' && hasAnyUserName;
 
   return (
     <header className="form__header">
@@ -53,7 +58,7 @@ const Header = ({
 
           {showNavMenu && (
             <Breadcrumb className="mt-4">
-              {headerSteps.map((step, index) => (
+              {HEADER_STEPS.map((step, index) => (
                 <React.Fragment key={index}>
                   <Breadcrumb.Item
                     className={`${
@@ -64,7 +69,7 @@ const Header = ({
                   >
                     {step}
                   </Breadcrumb.Item>
-                  {index < headerSteps.length - 1 && (
+                  {index < HEADER_STEPS.length - 1 && (
                     <>
                       <Icons
                         className="d-none d-lg-block"
@@ -82,19 +87,17 @@ const Header = ({
         </div>
 
         <div className="form__header__right">
-          {location.pathname !== '/sucesso' &&
-            Array.isArray(formValues) &&
-            formValues.some((user) => user?.personalInformation?.name?.trim()) && (
-              <Button
-                className="cart-btn"
-                onClick={() => {
-                  goToStep(enumSteps.beforePayment);
-                  sessionStorage.setItem('enteredFromFinalReview', 'false');
-                }}
-              >
-                <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
-              </Button>
-            )}
+          {showCartButton && (
+            <Button
+              className="cart-btn"
+              onClick={() => {
+                goToStep(enumSteps.beforePayment);
+                sessionStorage.setItem('enteredFromFinalReview', 'false');
+              }}
+            >
+              <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+            </Button>
+          )}
         </div>
       </Container>
     </header>
@@ -102,15 +105,7 @@ const Header = ({
 };
 
 Header.propTypes = {
-  backStepFlag: PropTypes.bool,
-  formSubmitted: PropTypes.bool,
-  formValues: PropTypes.array,
-  goToStep: PropTypes.func,
-  handlePreFill: PropTypes.func,
-  highestStepReached: PropTypes.number,
   showNavMenu: PropTypes.bool,
-  steps: PropTypes.number,
-  hasFood: PropTypes.bool,
 };
 
 export default Header;

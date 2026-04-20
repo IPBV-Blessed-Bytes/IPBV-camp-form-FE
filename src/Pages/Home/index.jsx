@@ -5,12 +5,14 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
 import { getHomeInfo } from '@/services/homeInfo';
+import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 
-const FormHome = ({ nextStep, onLgpdClose }) => {
+const FormHome = ({ onLgpdClose }) => {
   const location = useLocation();
+  const { nextStep } = useFormState();
   const [showLgpdModal, setShowLgpdModal] = useState(false);
   const [homepageInfo, setHomepageInfo] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -178,7 +180,6 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
 };
 
 FormHome.propTypes = {
-  nextStep: PropTypes.func,
   onLgpdClose: PropTypes.func,
 };
 

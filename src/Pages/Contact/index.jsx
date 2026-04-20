@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
 import { additionalInformationSchema } from '@/form/validations/schema';
+import { useFormState } from '@/contexts/FormStateContext';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
-const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm }) => {
+const Contact = () => {
+  const { backStep, currentFormIndex, formValues, handlePreFill, nextStep, updateFormValues } = useFormState();
+  const initialValues = formValues[currentFormIndex]?.contact || {};
+  const updateForm = updateFormValues('contact');
+
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues,
     onSubmit: () => {
@@ -442,22 +446,6 @@ const Contact = ({ backStep, handlePreFill, initialValues, nextStep, updateForm 
       </div>
     </Card>
   );
-};
-
-Contact.propTypes = {
-  backStep: PropTypes.func,
-  handlePreFill: PropTypes.func,
-  initialValues: PropTypes.shape({
-    cellPhone: PropTypes.string,
-    email: PropTypes.string,
-    isWhatsApp: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-    hasAllergy: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-    allergy: PropTypes.string,
-    hasAggregate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-    aggregate: PropTypes.string,
-  }),
-  nextStep: PropTypes.func,
-  updateForm: PropTypes.func,
 };
 
 export default Contact;

@@ -1,13 +1,14 @@
 import { Container, Card, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import campLogo from '../../../public/Images/camp_logo.png';
-import './style.scss'
+import { useFormState } from '@/contexts/FormStateContext';
+import './style.scss';
 
-const Success = ({ initialStep, resetForm, resetFormSubmitted }) => {
+const Success = () => {
+  const { initialStep, resetFormValues, resetFormSubmitted } = useFormState();
   const pathnamePagarme = window.location.search;
 
   const handleNewRegistration = () => {
-    resetForm();
+    resetFormValues();
     initialStep();
     resetFormSubmitted();
     window.location.pathname = '/';
@@ -42,14 +43,6 @@ const Success = ({ initialStep, resetForm, resetFormSubmitted }) => {
       </div>
     </Card>
   );
-};
-
-Success.propTypes = {
-  formPayment: PropTypes.string,
-  initialStep: PropTypes.func,
-  resetForm: PropTypes.func,
-  resetFormSubmitted: PropTypes.func,
-  noPaymentRequired: PropTypes.bool,
 };
 
 export default Success;

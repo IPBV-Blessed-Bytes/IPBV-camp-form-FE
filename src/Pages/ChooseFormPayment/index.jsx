@@ -3,12 +3,16 @@ import { useFormik } from 'formik';
 import { Container, Card, Form, Button, Modal } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
+import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 
-const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBackStepFlag, status, updateForm }) => {
+const ChooseFormPayment = () => {
+  const { backStep, currentFormValues, loading, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
+  const initialValues = currentFormValues;
+  const updateForm = updateFormValues('formPayment');
+
   const [showConfirm, setShowConfirm] = useState(false);
 
   const formik = useFormik({
@@ -153,19 +157,6 @@ const ChooseFormPayment = ({ backStep, initialValues, loading, sendForm, setBack
       </Modal>
     </>
   );
-};
-
-ChooseFormPayment.propTypes = {
-  backStep: PropTypes.func,
-  formValues: PropTypes.array.isRequired,
-  initialValues: PropTypes.shape({
-    formPayment: PropTypes.string,
-  }),
-  loading: PropTypes.bool,
-  sendForm: PropTypes.func,
-  setBackStepFlag: PropTypes.func,
-  status: PropTypes.string,
-  updateForm: PropTypes.func,
 };
 
 export default ChooseFormPayment;

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import DatePicker from 'react-datepicker';
 import InputMask from 'react-input-mask';
@@ -14,22 +13,26 @@ import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
 import { checkCoupon } from '@/services/coupons';
 import { deleteUserPreviousYear, getUserPreviousYear } from '@/services/campers';
+import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 import Icons from '@/components/Global/Icons';
 
-const PersonalData = ({
-  backStep,
-  currentFormIndex,
-  formValues,
-  handleDiscountChange,
-  initialValues,
-  nextStep,
-  preFill,
-  setBackStepFlag,
-  setPreFill,
-  updateForm,
-}) => {
+const PersonalData = () => {
+  const {
+    backStep,
+    currentFormIndex,
+    formValues,
+    handleDiscountChange,
+    nextStep,
+    preFill,
+    setBackStepFlag,
+    setPreFill,
+    updateFormValues,
+  } = useFormState();
+  const initialValues = formValues[currentFormIndex]?.personalInformation || {};
+  const updateForm = updateFormValues('personalInformation');
+
   const [showModal, setShowModal] = useState(false);
   const [showPrefillModal, setShowPrefillModal] = useState(false);
   const [previousUserData, setPreviousUserData] = useState(null);
@@ -635,36 +638,6 @@ const PersonalData = ({
       </Modal>
     </>
   );
-};
-
-PersonalData.propTypes = {
-  backStep: PropTypes.func,
-  currentFormIndex: PropTypes.number,
-  formValues: PropTypes.arrayOf(
-    PropTypes.shape({
-      personalInformation: PropTypes.shape({
-        cpf: PropTypes.string,
-      }),
-    }),
-  ),
-  handleDiscountChange: PropTypes.func,
-  initialValues: PropTypes.shape({
-    birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-    cpf: PropTypes.string,
-    gender: PropTypes.string,
-    legalGuardianCellPhone: PropTypes.string,
-    legalGuardianCpf: PropTypes.string,
-    legalGuardianName: PropTypes.string,
-    name: PropTypes.string,
-    rg: PropTypes.string,
-    rgShipper: PropTypes.string,
-    rgShipperState: PropTypes.string,
-  }),
-  nextStep: PropTypes.func,
-  preFill: PropTypes.bool,
-  setBackStepFlag: PropTypes.func,
-  setPreFill: PropTypes.func,
-  updateForm: PropTypes.func,
 };
 
 export default PersonalData;

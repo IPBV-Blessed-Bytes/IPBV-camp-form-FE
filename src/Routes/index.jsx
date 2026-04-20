@@ -1,16 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
-import { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
 
 import { enumSteps } from '@/utils/constants';
+import { useFormState } from '@/contexts/FormStateContext';
 
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
-import { AuthContext } from '@/hooks/useAuth/AuthProvider';
-import { Col, Row } from 'react-bootstrap';
 
 import FormHome from '../Pages/Home';
 import FormPersonalData from '../Pages/PersonalData';
@@ -48,65 +47,33 @@ import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 import AdminHomepageInfoManagement from '@/Pages/Admin/HomeInfo';
 
-const FormRoutes = ({
-  adminPathname,
-  age,
-  availablePackages,
-  backStep,
-  backStepFlag,
-  cartKey,
-  currentFormIndex,
-  currentFormValues,
-  discount,
-  formContextCloseForm,
-  formPath,
-  formSubmitted,
-  formValues,
-  goToEditStep,
-  goToStep,
-  handleAddNewUser,
-  handleAdminClick,
-  handleBasePriceChange,
-  handleDiscountChange,
-  handlePersonData,
-  handlePreFill,
-  handleUpdateTotalBusVacancies,
-  handleUpdateTotalPackages,
-  handleUpdateTotalSeats,
-  hasDiscount,
-  hasFood,
-  highestStepReached,
-  initialStep,
-  isNotSuccessPathname,
-  loading,
-  userRole,
-  nextStep,
-  packageCount,
-  personData,
-  preFill,
-  resetFormSubmitted,
-  resetFormValues,
-  sendForm,
-  setBackStepFlag,
-  setFormValues,
-  setPreFill,
-  loggedUsername,
-  status,
-  steps,
-  goToSuccessPage,
-  totalBusVacancies,
-  totalPackages,
-  totalRegistrations,
-  totalSeats,
-  updateFormValues,
-  usedPackages,
-  usedValidPackages,
-}) => {
+const FormRoutes = () => {
   const [showInfoButton, setShowInfoButton] = useState(false);
+  const {
+    adminPathname,
+    availablePackages,
+    effectiveFormContext,
+    formContext,
+    formPath,
+    handleAdminClick,
+    handleUpdateTotalBusVacancies,
+    handleUpdateTotalPackages,
+    handleUpdateTotalSeats,
+    isNotSuccessPathname,
+    loading,
+    loggedUsername,
+    packageCount,
+    steps,
+    totalBusVacancies,
+    totalPackages,
+    totalRegistrations,
+    totalSeats,
+    usedPackages,
+    usedValidPackages,
+    userRole,
+  } = useFormState();
 
-  const { formContext } = useContext(AuthContext);
-
-  const effectiveFormContext = formContextCloseForm === 'form-on' ? formContextCloseForm : formContext;
+  const adminPath = (segment) => `${effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
   return (
     <div className="form">
@@ -118,93 +85,28 @@ const FormRoutes = ({
 
           {effectiveFormContext === 'form-on' && (
             <>
-              <Header
-                backStepFlag={backStepFlag}
-                formSubmitted={formSubmitted}
-                formValues={formValues}
-                goToStep={goToStep}
-                handlePreFill={handlePreFill}
-                hasFood={hasFood}
-                highestStepReached={highestStepReached}
-                showNavMenu={true}
-                steps={steps}
-              />
+              <Header showNavMenu />
 
               {steps !== enumSteps.packages && steps !== enumSteps.beforePayment && (
                 <div className="form__container container">
                   <Row className="justify-content-center">
                     <Col lg={10} className="px-0">
                       {steps === enumSteps.home && isNotSuccessPathname && (
-                        <FormHome nextStep={nextStep} onLgpdClose={() => setShowInfoButton(true)} />
+                        <FormHome onLgpdClose={() => setShowInfoButton(true)} />
                       )}
 
-                      {steps === enumSteps.personalData && isNotSuccessPathname && (
-                        <FormPersonalData
-                          backStep={backStep}
-                          currentFormIndex={currentFormIndex}
-                          formUsername={currentFormValues.personalInformation?.name}
-                          formValues={formValues}
-                          handleDiscountChange={handleDiscountChange}
-                          initialValues={formValues[currentFormIndex]?.personalInformation || {}}
-                          nextStep={nextStep}
-                          preFill={preFill}
-                          setBackStepFlag={setBackStepFlag}
-                          setPreFill={setPreFill}
-                          updateForm={updateFormValues('personalInformation')}
-                        />
-                      )}
+                      {steps === enumSteps.personalData && isNotSuccessPathname && <FormPersonalData />}
 
-                      {steps === enumSteps.contact && isNotSuccessPathname && (
-                        <FormContact
-                          backStep={backStep}
-                          handlePreFill={handlePreFill}
-                          initialValues={formValues[currentFormIndex]?.contact || {}}
-                          nextStep={nextStep}
-                          updateForm={updateFormValues('contact')}
-                        />
-                      )}
+                      {steps === enumSteps.contact && isNotSuccessPathname && <FormContact />}
 
-                      {steps === enumSteps.extraMeals && isNotSuccessPathname && (
-                        <ExtraMeals
-                          backStep={backStep}
-                          initialValues={formValues[currentFormIndex]?.extraMeals || {}}
-                          nextStep={nextStep}
-                          updateForm={updateFormValues('extraMeals')}
-                        />
-                      )}
+                      {steps === enumSteps.extraMeals && isNotSuccessPathname && <ExtraMeals />}
 
-                      {steps === enumSteps.finalReview && isNotSuccessPathname && (
-                        <FinalReview
-                          backStep={backStep}
-                          nextStep={nextStep}
-                          updateForm={updateFormValues('finalReview')}
-                        />
-                      )}
+                      {steps === enumSteps.finalReview && isNotSuccessPathname && <FinalReview />}
 
-                      {steps === enumSteps.formPayment && isNotSuccessPathname && (
-                        <ChooseFormPayment
-                          backStep={backStep}
-                          formValues={formValues}
-                          initialValues={currentFormValues}
-                          loading={loading}
-                          sendForm={sendForm}
-                          setBackStepFlag={setBackStepFlag}
-                          status={status}
-                          updateForm={updateFormValues('formPayment')}
-                        />
-                      )}
+                      {steps === enumSteps.formPayment && isNotSuccessPathname && <ChooseFormPayment />}
 
                       <Routes>
-                        <Route
-                          path="/sucesso"
-                          element={
-                            <FormSuccess
-                              initialStep={initialStep}
-                              resetForm={resetFormValues}
-                              resetFormSubmitted={resetFormSubmitted}
-                            />
-                          }
-                        />
+                        <Route path="/sucesso" element={<FormSuccess />} />
                       </Routes>
                     </Col>
                   </Row>
@@ -215,20 +117,7 @@ const FormRoutes = ({
                 <div className="form__container container-fluid ">
                   <Row className="justify-content-center">
                     <Col lg={10} className="px-0">
-                      <FormPackages
-                        age={age}
-                        backStep={backStep}
-                        cartKey={cartKey}
-                        currentFormIndex={currentFormIndex}
-                        currentFormValues={currentFormValues}
-                        discount={discount}
-                        hasDiscount={hasDiscount}
-                        nextStep={nextStep}
-                        packageCount={packageCount}
-                        totalRegistrationsGlobal={totalRegistrations}
-                        totalSeats={totalSeats}
-                        updateForm={updateFormValues('package')}
-                      />
+                      <FormPackages />
                     </Col>
                   </Row>
                 </div>
@@ -238,19 +127,7 @@ const FormRoutes = ({
                 <div className="form__container container-fluid ">
                   <Row className="justify-content-center">
                     <Col lg={10} className="px-0">
-                      <BeforePayment
-                        cartKey={cartKey}
-                        formValues={formValues}
-                        goToEditStep={goToEditStep}
-                        goToPersonalData={handleAddNewUser}
-                        goToSuccessPage={goToSuccessPage}
-                        handleBasePriceChange={handleBasePriceChange}
-                        nextStep={nextStep}
-                        sendForm={sendForm}
-                        setBackStepFlag={setBackStepFlag}
-                        setFormValues={setFormValues}
-                        status={status}
-                      />
+                      <BeforePayment />
                     </Col>
                   </Row>
                 </div>
@@ -271,7 +148,7 @@ const FormRoutes = ({
       <div className="routes">
         <Routes>
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}
+            path={adminPath('')}
             element={
               <Login
                 availablePackages={availablePackages}
@@ -286,7 +163,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/acampantes' : '/admin/acampantes'}
+            path={adminPath('/acampantes')}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
@@ -297,7 +174,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/carona' : '/admin/carona'}
+            path={adminPath('/carona')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
@@ -305,7 +182,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/descontos' : '/admin/descontos'}
+            path={adminPath('/descontos')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
                 <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
@@ -313,7 +190,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/quartos' : '/admin/quartos'}
+            path={adminPath('/quartos')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
@@ -321,7 +198,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/times' : '/admin/times'}
+            path={adminPath('/times')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole}>
                 <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
@@ -329,7 +206,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/alimentacao' : '/admin/alimentacao'}
+            path={adminPath('/alimentacao')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminExtraMeals />
@@ -337,7 +214,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/checkin' : '/admin/checkin'}
+            path={adminPath('/checkin')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
                 <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
@@ -345,7 +222,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/painel' : '/admin/painel'}
+            path={adminPath('/painel')}
             element={
               <ProtectedRoute
                 allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
@@ -362,7 +239,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/logs' : '/admin/logs'}
+            path={adminPath('/logs')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
@@ -370,7 +247,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/vagas' : '/admin/vagas'}
+            path={adminPath('/vagas')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminSeatManagement
@@ -388,7 +265,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/lotes' : '/admin/lotes'}
+            path={adminPath('/lotes')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminLotManagement
@@ -401,7 +278,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/contexto' : '/admin/contexto'}
+            path={adminPath('/contexto')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
@@ -409,7 +286,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/usuarios' : '/admin/usuarios'}
+            path={adminPath('/usuarios')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
@@ -417,7 +294,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/pulseiras' : '/admin/pulseiras'}
+            path={adminPath('/pulseiras')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
@@ -425,7 +302,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/info' : '/admin/info'}
+            path={adminPath('/info')}
             element={
               <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                 <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
@@ -433,7 +310,7 @@ const FormRoutes = ({
             }
           />
           <Route
-            path={effectiveFormContext === 'maintenance' ? '/dev/opiniao' : '/admin/opiniao'}
+            path={adminPath('/opiniao')}
             element={
               <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
                 <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
@@ -448,8 +325,8 @@ const FormRoutes = ({
           {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
             <>
               <Route path="/opiniao" element={<FormFeedback />} />
-              <Route path="/verificacao" element={<CpfReview handlePersonData={handlePersonData} />} />
-              <Route path="/verificacao/dados" element={<CpfData personData={personData} />} />
+              <Route path="/verificacao" element={<CpfReview />} />
+              <Route path="/verificacao/dados" element={<CpfData />} />
               <Route path="/perguntas" element={<FAQ />} />
             </>
           )}
@@ -457,84 +334,6 @@ const FormRoutes = ({
       </div>
     </div>
   );
-};
-
-FormRoutes.propTypes = {
-  adminPathname: PropTypes.bool,
-  age: PropTypes.number,
-  availablePackages: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  backStep: PropTypes.func,
-  backStepFlag: PropTypes.bool,
-  cartKey: PropTypes.string,
-  currentFormIndex: PropTypes.number,
-  currentFormValues: PropTypes.shape({
-    personalInformation: PropTypes.shape({
-      name: PropTypes.string,
-      birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-    }),
-    contact: PropTypes.object,
-    package: PropTypes.object,
-    extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    formPayment: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  }),
-  discount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  formContext: PropTypes.string,
-  formContextCloseForm: PropTypes.string,
-  formPath: PropTypes.bool,
-  formSubmitted: PropTypes.bool,
-  formValues: PropTypes.arrayOf(
-    PropTypes.shape({
-      personalInformation: PropTypes.shape({
-        name: PropTypes.string,
-        birthday: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-      }),
-      contact: PropTypes.object,
-      package: PropTypes.object,
-      extraMeals: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-      formPayment: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    }),
-  ),
-  goToEditStep: PropTypes.func,
-  goToStep: PropTypes.func,
-  goToSuccessPage: PropTypes.func,
-  handleAddNewUser: PropTypes.func,
-  handleAdminClick: PropTypes.func,
-  handleBasePriceChange: PropTypes.func,
-  handleDiscountChange: PropTypes.func,
-  handlePersonData: PropTypes.func,
-  handlePreFill: PropTypes.func,
-  highestStepReached: PropTypes.number,
-  handleUpdateTotalBusVacancies: PropTypes.func,
-  handleUpdateTotalPackages: PropTypes.func,
-  handleUpdateTotalSeats: PropTypes.func,
-  hasDiscount: PropTypes.bool,
-  hasFood: PropTypes.bool,
-  initialStep: PropTypes.func,
-  isNotSuccessPathname: PropTypes.bool,
-  loading: PropTypes.bool,
-  userRole: PropTypes.string,
-  nextStep: PropTypes.func,
-  packageCount: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
-  personData: PropTypes.object,
-  preFill: PropTypes.bool,
-  resetFormSubmitted: PropTypes.func,
-  resetFormValues: PropTypes.func,
-  sendForm: PropTypes.func,
-  setBackStepFlag: PropTypes.func,
-  setFormValues: PropTypes.func,
-  setPreFill: PropTypes.func,
-  loggedUsername: PropTypes.string,
-  status: PropTypes.string,
-  steps: PropTypes.number,
-  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  totalPackages: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  totalRegistrations: PropTypes.shape({
-    totalValidWithBus: PropTypes.number,
-  }),
-  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  updateFormValues: PropTypes.func,
-  usedPackages: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  usedValidPackages: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 export default FormRoutes;

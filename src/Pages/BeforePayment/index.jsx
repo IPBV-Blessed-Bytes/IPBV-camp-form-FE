@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import './style.scss';
 import { getLots } from '@/services/lots';
 import { findActiveLot } from '@/utils/activeLot';
+import { useFormState } from '@/contexts/FormStateContext';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
@@ -14,18 +14,19 @@ import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 
-const BeforePayment = ({
-  cartKey,
-  formValues,
-  goToEditStep,
-  goToPersonalData,
-  handleBasePriceChange,
-  nextStep,
-  sendForm,
-  setBackStepFlag,
-  setFormValues,
-  status,
-}) => {
+const BeforePayment = () => {
+  const {
+    cartKey,
+    formValues,
+    goToEditStep,
+    handleAddNewUser: goToPersonalData,
+    handleBasePriceChange,
+    nextStep,
+    sendForm,
+    setBackStepFlag,
+    setFormValues,
+    status,
+  } = useFormState();
   const [cartTotal, setCartTotal] = useState(0);
   const [individualBase, setIndividualBase] = useState(0);
   const [rawFee, setRawFee] = useState(0);
@@ -257,20 +258,6 @@ acima de 15 anos = ${getFeeByAge(20)} reais
       <Loading loading={loading} />
     </Container>
   );
-};
-
-BeforePayment.propTypes = {
-  cartKey: PropTypes.string.isRequired,
-  formValues: PropTypes.array.isRequired,
-  goToEditStep: PropTypes.func.isRequired,
-  goToPersonalData: PropTypes.func.isRequired,
-  goToSuccessPage: PropTypes.func.isRequired,
-  handleBasePriceChange: PropTypes.func.isRequired,
-  nextStep: PropTypes.func.isRequired,
-  sendForm: PropTypes.func.isRequired,
-  setBackStepFlag: PropTypes.func.isRequired,
-  setFormValues: PropTypes.func.isRequired,
-  status: PropTypes.string,
 };
 
 export default BeforePayment;

@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import './style.scss';
 import { listRideOffers } from '@/services/rides';
+import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import Loading from '@/components/Global/Loading';
 
-const CpfData = ({ personData }) => {
+const CpfData = () => {
   const [rideOffer, setRideOffer] = useState(null);
   const [rideNeed, setRideNeed] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { personData } = useFormState();
 
   const paymentMethodMapping = {
     creditCard: 'Cartão de Crédito',
@@ -251,10 +252,6 @@ const CpfData = ({ personData }) => {
       <Footer handleAdminClick={() => navigate('/admin')} />
     </div>
   );
-};
-
-CpfData.propTypes = {
-  personData: PropTypes.object,
 };
 
 export default CpfData;

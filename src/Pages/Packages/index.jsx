@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import { loadProducts } from './utils/products';
@@ -11,22 +10,25 @@ import getDiscountedProducts from './utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { findActiveLot } from '@/utils/activeLot';
 import { getLots } from '@/services/lots';
+import { useFormState } from '@/contexts/FormStateContext';
 import Loading from '@/components/Global/Loading';
 
-const Packages = ({
-  age,
-  backStep,
-  cartKey,
-  currentFormIndex,
-  currentFormValues,
-  discount,
-  hasDiscount,
-  nextStep,
-  packageCount,
-  totalRegistrationsGlobal,
-  totalSeats,
-  updateForm,
-}) => {
+const Packages = () => {
+  const {
+    age,
+    backStep,
+    cartKey,
+    currentFormIndex,
+    currentFormValues,
+    discount,
+    hasDiscount,
+    nextStep,
+    packageCount,
+    totalRegistrations: totalRegistrationsGlobal,
+    totalSeats,
+    updateFormValues,
+  } = useFormState();
+  const updateForm = updateFormValues('package');
   const productListRef = useRef();
   const { items, addItem } = useCart();
   const [individualBase, setIndividualBase] = useState(0);
@@ -403,21 +405,6 @@ acima de 15 anos = ${getFeeByAge(20)} reais
       <Loading loading={loading} />
     </Container>
   );
-};
-
-Packages.propTypes = {
-  nextStep: PropTypes.func,
-  backStep: PropTypes.func.isRequired,
-  age: PropTypes.number.isRequired,
-  totalRegistrationsGlobal: PropTypes.object.isRequired,
-  discount: PropTypes.string,
-  hasDiscount: PropTypes.bool,
-  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  updateForm: PropTypes.func.isRequired,
-  currentFormIndex: PropTypes.number.isRequired,
-  currentFormValues: PropTypes.object.isRequired,
-  cartKey: PropTypes.string.isRequired,
-  packageCount: PropTypes.number,
 };
 
 export default Packages;

@@ -6,13 +6,15 @@ import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 import { useCart } from 'react-use-cart';
 import useActiveLot from '@/hooks/useActiveLot';
 import { saveConfirmationUserData, saveFinalObservation } from '@/services/campers';
+import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 
-const FinalReview = ({ backStep, nextStep, updateForm }) => {
+const FinalReview = () => {
+  const { backStep, nextStep, updateFormValues } = useFormState();
+  const updateForm = updateFormValues('finalReview');
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const [observation, setObservation] = useState('');
@@ -390,56 +392,6 @@ const FinalReview = ({ backStep, nextStep, updateForm }) => {
       )}
     </>
   );
-};
-
-FinalReview.propTypes = {
-  nextStep: PropTypes.func.isRequired,
-  backStep: PropTypes.func.isRequired,
-  formValues: PropTypes.shape({
-    personalInformation: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      gender: PropTypes.string.isRequired,
-      birthday: PropTypes.string.isRequired,
-      cpf: PropTypes.string.isRequired,
-      rg: PropTypes.string.isRequired,
-    }).isRequired,
-    package: PropTypes.shape({
-      accomodation: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      }).isRequired,
-      transportation: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      }).isRequired,
-      food: PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      }).isRequired,
-      price: PropTypes.number.isRequired,
-      finalPrice: PropTypes.number.isRequired,
-      discount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }).isRequired,
-    contact: PropTypes.shape({
-      cellPhone: PropTypes.string.isRequired,
-      isWhatsApp: PropTypes.bool.isRequired,
-      email: PropTypes.string.isRequired,
-      hasAllergy: PropTypes.bool.isRequired,
-      allergy: PropTypes.string,
-      hasAggregate: PropTypes.bool.isRequired,
-      aggregate: PropTypes.string,
-      church: PropTypes.string.isRequired,
-      car: PropTypes.bool.isRequired,
-      needRide: PropTypes.bool,
-      numberVacancies: PropTypes.number,
-    }).isRequired,
-    extraMeals: PropTypes.shape({
-      totalPrice: PropTypes.number,
-      someFood: PropTypes.bool,
-    }),
-  }),
-  updateForm: PropTypes.func,
 };
 
 export default FinalReview;

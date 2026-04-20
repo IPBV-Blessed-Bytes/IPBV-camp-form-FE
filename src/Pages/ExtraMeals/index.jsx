@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import calculateAge from '../Packages/utils/calculateAge';
 import { ExtraMealsSchema } from '@/form/validations/schema';
+import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import { mealOptions } from '@/utils/constants';
@@ -17,7 +17,11 @@ const groupedMealOptions = mealOptions.reduce((acc, meal) => {
   return acc;
 }, {});
 
-const ExtraMeals = ({ backStep, initialValues, nextStep, updateForm }) => {
+const ExtraMeals = () => {
+  const { backStep, currentFormIndex, formValues, nextStep, updateFormValues } = useFormState();
+  const initialValues = formValues[currentFormIndex]?.extraMeals || {};
+  const updateForm = updateFormValues('extraMeals');
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkboxHasError, setCheckboxHasError] = useState(false);
   const [extraMealSelected, setExtraMealSelected] = useState(false);
@@ -331,15 +335,5 @@ const ExtraMeals = ({ backStep, initialValues, nextStep, updateForm }) => {
   );
 };
 
-ExtraMeals.propTypes = {
-  birthDate: PropTypes.instanceOf(Date),
-  backStep: PropTypes.func,
-  nextStep: PropTypes.func,
-  updateForm: PropTypes.func,
-  initialValues: PropTypes.shape({
-    someFood: PropTypes.bool,
-    extraMeals: PropTypes.arrayOf(PropTypes.string),
-  }),
-};
 
 export default ExtraMeals;

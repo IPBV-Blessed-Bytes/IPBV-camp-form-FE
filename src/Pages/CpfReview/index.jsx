@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import InputMask from 'react-input-mask';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { getPersonData } from '@/services/campers';
+import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import { cpfReviewSchema } from '@/form/validations/schema';
@@ -17,9 +17,10 @@ import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import { useFormik } from 'formik';
 
-const CpfReview = ({ handlePersonData }) => {
+const CpfReview = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { handlePersonData } = useFormState();
 
   const { values, errors, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
@@ -160,10 +161,6 @@ const CpfReview = ({ handlePersonData }) => {
       <Footer handleAdminClick={() => navigate('/admin')} />
     </div>
   );
-};
-
-CpfReview.propTypes = {
-  handlePersonData: PropTypes.func,
 };
 
 export default CpfReview;
