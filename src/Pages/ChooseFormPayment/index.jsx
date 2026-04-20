@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { Container, Card, Form, Button, Modal } from 'react-bootstrap';
+import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
-import Icons from '@/components/Global/Icons';
+import CustomModal from '@/components/Global/CustomModal';
 
 const ChooseFormPayment = () => {
   const { backStep, currentFormValues, loading, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
@@ -128,32 +128,31 @@ const ChooseFormPayment = () => {
         </div>
       </Card>
 
-      <Modal className="custom-modal" show={showConfirm} onHide={() => setShowConfirm(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Avançar para Pagamento</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            Ao continuar, <b>seu carrinho será apagado</b> e não será possível alterar os dados já preenchidos ou a
-            forma de pagamento.
-          </p>
-          <p>
-            Caso prefira, você poderá <b>refazer a inscrição do zero</b> posteriormente.
-          </p>
-          <p>Deseja realmente prosseguir?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-secondary" onClick={() => setShowConfirm(false)}>
-            Voltar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={handleConfirmAdvance}>
-            Avançar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showConfirm}
+        onHide={() => setShowConfirm(false)}
+        variant="cancel"
+        title="Avançar para Pagamento"
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setShowConfirm(false)}>
+              Voltar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={handleConfirmAdvance}>
+              Avançar
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Ao continuar, <b>seu carrinho será apagado</b> e não será possível alterar os dados já preenchidos ou a
+          forma de pagamento.
+        </p>
+        <p>
+          Caso prefira, você poderá <b>refazer a inscrição do zero</b> posteriormente.
+        </p>
+        <p>Deseja realmente prosseguir?</p>
+      </CustomModal>
     </>
   );
 };

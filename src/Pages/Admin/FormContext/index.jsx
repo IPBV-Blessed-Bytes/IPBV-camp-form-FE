@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Form, Button, Modal } from 'react-bootstrap';
+import { Container, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,8 +8,8 @@ import { registerLog } from '@/services/logs';
 import { getFormContext, updateFormContext } from '@/services/formContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Icons from '@/components/Global/Icons';
 
 const AdminFormContext = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(true);
@@ -84,26 +84,25 @@ const AdminFormContext = ({ loggedUsername }) => {
         </Form.Group>
       </Form>
 
-      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="checked" iconSize={25} fill={'#057c05'} />
-            <b>Confirmar Alteração</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleConfirmChange}>
-            Confirmar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        variant="confirm"
+        title="Confirmar Alteração"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={handleConfirmChange}>
+              Confirmar
+            </Button>
+          </>
+        }
+      >
+        Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

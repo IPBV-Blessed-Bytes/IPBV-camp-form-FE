@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal, Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
+import CustomModal from '@/components/Global/CustomModal';
 
 const getDiscountedPrices = (user, age) => {
   const discounted = getDiscountedProducts(age);
@@ -236,26 +237,25 @@ const Cart = ({
         );
       })}
 
-      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmação de {modalType === 'removeUser' ? 'Exclusão' : 'Limpeza'}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modalType === 'removeUser' && <p>Tem certeza que deseja remover este usuário?</p>}
-          {modalType === 'clearCart' && <p>Tem certeza que deseja esvaziar o carrinho?</p>}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={handleConfirmAction}>
-            Confirmar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        variant="cancel"
+        title={`Confirmação de ${modalType === 'removeUser' ? 'Exclusão' : 'Limpeza'}`}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={handleConfirmAction}>
+              Confirmar
+            </Button>
+          </>
+        }
+      >
+        {modalType === 'removeUser' && <p>Tem certeza que deseja remover este usuário?</p>}
+        {modalType === 'clearCart' && <p>Tem certeza que deseja esvaziar o carrinho?</p>}
+      </CustomModal>
     </div>
   );
 };

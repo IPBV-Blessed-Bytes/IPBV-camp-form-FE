@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Modal, Accordion } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -14,6 +14,7 @@ import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -515,47 +516,43 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         </Col>
       </Row>
 
-      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
+      <CustomModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancelar
+            </Button>
+            <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteItem}>
+              Remover
+            </Button>
+          </>
+        }
+      >
+        Tem certeza que deseja remover este item?
+      </CustomModal>
 
-        <Modal.Body>Tem certeza que deseja remover este item?</Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
-          </Button>
-
-          <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteItem}>
-            Remover
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal className="custom-modal" show={showDeleteAllModal} onHide={() => setShowDeleteAllModal(false)} centered>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Remover todas as informações</b>
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>Essa ação removerá todas as informações da homepage. Deseja continuar?</Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteAllModal(false)}>
-            Cancelar
-          </Button>
-
-          <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteAll}>
-            Remover Tudo
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showDeleteAllModal}
+        onHide={() => setShowDeleteAllModal(false)}
+        variant="cancel"
+        title="Remover todas as informações"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteAllModal(false)}>
+              Cancelar
+            </Button>
+            <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteAll}>
+              Remover Tudo
+            </Button>
+          </>
+        }
+      >
+        Essa ação removerá todas as informações da homepage. Deseja continuar?
+      </CustomModal>
 
       <Loading loading={loading || loadingContent} />
     </Container>

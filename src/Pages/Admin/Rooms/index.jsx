@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Table, Container, Accordion, Button, Form, Modal, Badge } from 'react-bootstrap';
+import { Table, Container, Accordion, Button, Form, Badge } from 'react-bootstrap';
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import './style.scss';
 import * as XLSX from 'xlsx';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import {
   listAggregates,
   listRooms,
@@ -510,112 +511,110 @@ const AdminRooms = ({ loggedUsername }) => {
         ))}
       </Accordion>
 
-      <Modal className="custom-modal" show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
-            <b>Adicionar Novo Quarto</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group controlId="newRoomName">
+      <CustomModal
+        show={showModal}
+        onHide={handleCloseModal}
+        variant="confirm"
+        icon="plus"
+        title="Adicionar Novo Quarto"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={createRoom}>
+              Criar Quarto
+            </Button>
+          </>
+        }
+      >
+        <Form.Group controlId="newRoomName">
+          <Form.Label>
+            <b>Nome do Quarto:</b>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            value={newRoomName}
+            onChange={(e) => setNewRoomName(e.target.value)}
+            placeholder="Nome do novo quarto"
+            size="lg"
+          />
+        </Form.Group>
+      </CustomModal>
+
+      <CustomModal
+        show={showDeleteModal}
+        onHide={handleCloseDeleteModal}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={handleCloseDeleteModal}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={confirmDeleteRoom}>
+              Excluir
+            </Button>
+          </>
+        }
+      >
+        Tem certeza que deseja excluir <b>{roomToDelete?.name}</b>?
+      </CustomModal>
+
+      {roomToRename && (
+        <CustomModal
+          show={showEditModal}
+          onHide={handleCloseEditModal}
+          variant="confirm"
+          icon="refresh"
+          title="Renomear Quarto"
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={handleCloseEditModal}>
+                Cancelar
+              </Button>
+              <Button variant="success" className="btn-confirm" onClick={renameRoom}>
+                Salvar
+              </Button>
+            </>
+          }
+        >
+          <Form.Group controlId="renameRoom">
             <Form.Label>
-              <b>Nome do Quarto:</b>
+              <b>Novo Nome do Quarto:</b>
             </Form.Label>
             <Form.Control
               type="text"
-              value={newRoomName}
-              onChange={(e) => setNewRoomName(e.target.value)}
-              placeholder="Nome do novo quarto"
+              value={renamedRoomName}
+              onChange={(e) => setRenamedRoomName(e.target.value)}
               size="lg"
             />
           </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={createRoom}>
-            Criar Quarto
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal className="custom-modal" show={showDeleteModal} onHide={handleCloseDeleteModal}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza que deseja excluir <b>{roomToDelete?.name}</b>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={confirmDeleteRoom}>
-            Excluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {roomToRename && (
-        <Modal className="custom-modal" show={showEditModal} onHide={handleCloseEditModal}>
-          <Modal.Header closeButton className="custom-modal__header--confirm">
-            <Modal.Title className="d-flex align-items-center gap-2">
-              <Icons typeIcon="refresh" iconSize={25} fill={'#057c05'} />
-              <b>Renomear Quarto</b>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group controlId="renameRoom">
-              <Form.Label>
-                <b>Novo Nome do Quarto:</b>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                value={renamedRoomName}
-                onChange={(e) => setRenamedRoomName(e.target.value)}
-                size="lg"
-              />
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseEditModal}>
-              Cancelar
-            </Button>
-            <Button variant="success" className="btn-confirm" onClick={renameRoom}>
-              Salvar
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        </CustomModal>
       )}
 
-      <Modal
-        className="custom-modal"
+      <CustomModal
         show={showDeleteCamperFromRoomModal}
         onHide={handleCloseDeleteCamperFromRoomModal}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={() => deleteCamperFromRoom(camperToDelete)}>
+              Excluir
+            </Button>
+          </>
+        }
       >
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza que deseja excluir <b>{camperToDelete?.name}</b> do quarto?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={() => deleteCamperFromRoom(camperToDelete)}>
-            Excluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        Tem certeza que deseja excluir <b>{camperToDelete?.name}</b> do quarto?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

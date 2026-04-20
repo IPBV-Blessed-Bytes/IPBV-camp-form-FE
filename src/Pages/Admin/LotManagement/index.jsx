@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Modal, Accordion } from 'react-bootstrap';
+import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -17,6 +17,7 @@ import {
 import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 import Icons from '@/components/Global/Icons';
@@ -620,35 +621,46 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
         </Col>
       </Row>
 
-      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
-            Deletar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
+              Deletar
+            </Button>
+          </>
+        }
+      >
+        Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
+      </CustomModal>
 
-      <Modal className="custom-modal" show={showAddModal} size="xl" onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
-            <b>Adicionar Novo Lote</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <CustomModal
+        show={showAddModal}
+        size="xl"
+        onHide={() => setShowAddModal(false)}
+        variant="confirm"
+        icon="plus"
+        title="Adicionar Novo Lote"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
+              Adicionar
+            </Button>
+          </>
+        }
+      >
+        <Form>
             <Row>
               <Col md={12} lg={4} className="mb-3">
                 <Form.Group className="mb-3">
@@ -750,54 +762,46 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
               ))}
             </Row>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
-            Adicionar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      </CustomModal>
 
-      <Modal className="custom-modal" show={showBaseDateModal} onHide={() => setShowBaseDateModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="plus" iconSize={25} fill={'#057c05'} />
-            <b>Alterar Data do Evento</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group>
-            <Form.Label>
-              <b>Selecione a data do evento:</b>
-            </Form.Label>
-            <DatePicker
-              selected={parseDate(baseDate)}
-              onChange={(date) => setBaseDate(formatDate(date))}
-              className="form-control form-control-lg mb-2"
-              placeholderText="dd/mm/aaaa"
-              dateFormat="dd/MM/yyyy"
-              locale="ptBR"
-              dropdownMode="select"
-              showMonthDropdown
-              showYearDropdown
-            />
-            <Form.Text>
-              Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
-            </Form.Text>
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
-            Salvar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showBaseDateModal}
+        onHide={() => setShowBaseDateModal(false)}
+        variant="confirm"
+        icon="plus"
+        title="Alterar Data do Evento"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
+              Salvar
+            </Button>
+          </>
+        }
+      >
+        <Form.Group>
+          <Form.Label>
+            <b>Selecione a data do evento:</b>
+          </Form.Label>
+          <DatePicker
+            selected={parseDate(baseDate)}
+            onChange={(date) => setBaseDate(formatDate(date))}
+            className="form-control form-control-lg mb-2"
+            placeholderText="dd/mm/aaaa"
+            dateFormat="dd/MM/yyyy"
+            locale="ptBR"
+            dropdownMode="select"
+            showMonthDropdown
+            showYearDropdown
+          />
+          <Form.Text>
+            Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
+          </Form.Text>
+        </Form.Group>
+      </CustomModal>
 
       <Loading loading={loading || loadingContent} />
     </Container>

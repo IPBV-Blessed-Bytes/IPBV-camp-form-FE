@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Form, Modal, Container } from 'react-bootstrap';
+import { Table, Button, Form, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -9,6 +9,7 @@ import { listCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/service
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 
@@ -223,15 +224,26 @@ const AdminDiscount = ({ loggedUsername }) => {
         </Table>
       </div>
 
-      <Modal className="custom-modal" show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon={editingDiscount ? 'edit' : 'plus'} iconSize={25} fill={editingDiscount ? '' : '#057c05'} />
-            <b>{editingDiscount ? 'Editar Desconto' : 'Criar Novo Desconto'}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <CustomModal
+        show={showModal}
+        onHide={closeModal}
+        variant="confirm"
+        icon={editingDiscount ? 'edit' : 'plus'}
+        iconFill={editingDiscount ? '' : '#057c05'}
+        title={editingDiscount ? 'Editar Desconto' : 'Criar Novo Desconto'}
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={closeModal}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
+              {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
+            </Button>
+          </>
+        }
+      >
+        <Form>
             <Form.Group className="mb-3">
               <Form.Label>
                 <b>CPF atrelado:</b>
@@ -283,40 +295,31 @@ const AdminDiscount = ({ loggedUsername }) => {
               />
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
-            {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      </CustomModal>
 
-      <Modal className="custom-modal" show={showConfirmDelete} onHide={closeConfirmDeleteModal}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Excluir Desconto</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeConfirmDeleteModal}>
-            Cancelar
-          </Button>
-          <Button
-            variant="danger"
-            className="btn-cancel"
-            onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}
-          >
-            Excluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showConfirmDelete}
+        onHide={closeConfirmDeleteModal}
+        variant="cancel"
+        title="Excluir Desconto"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={closeConfirmDeleteModal}>
+              Cancelar
+            </Button>
+            <Button
+              variant="danger"
+              className="btn-cancel"
+              onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}
+            >
+              Excluir
+            </Button>
+          </>
+        }
+      >
+        Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

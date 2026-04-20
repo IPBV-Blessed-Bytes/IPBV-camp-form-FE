@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { Form, Container, Accordion, Table, Button, Modal } from 'react-bootstrap';
+import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +17,7 @@ import {
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 
@@ -387,23 +388,25 @@ const AdminRide = ({ loggedUsername }) => {
         </Accordion.Item>
       </Accordion>
 
-      <Modal className="custom-modal" show={showDeleteRelationshipModal} onHide={handleCloseDeleteRelationshipModal}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Tem certeza de que deseja excluir esse acampante dessa carona?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteRelationshipModal}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={() => handleDeleteRelationship(camperToDelete)}>
-            Excluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showDeleteRelationshipModal}
+        onHide={handleCloseDeleteRelationshipModal}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={handleCloseDeleteRelationshipModal}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={() => handleDeleteRelationship(camperToDelete)}>
+              Excluir
+            </Button>
+          </>
+        }
+      >
+        Tem certeza de que deseja excluir esse acampante dessa carona?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

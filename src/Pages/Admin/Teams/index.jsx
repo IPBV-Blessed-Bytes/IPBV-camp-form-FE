@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container, Button, Form, Modal, Table, Accordion } from 'react-bootstrap';
+import { Container, Button, Form, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
@@ -19,6 +19,7 @@ import { registerLog } from '@/services/logs';
 import Icons from '@/components/Global/Icons';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import Tools from '@/components/Admin/Header/Tools';
 
 const AdminTeams = ({ loggedUsername }) => {
@@ -409,16 +410,26 @@ const AdminTeams = ({ loggedUsername }) => {
         </Table>
       </div>
 
-      <Modal className="custom-modal" show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon={editTeam ? 'edit' : 'plus'} iconSize={25} fill={editTeam ? '' : '#057c05'} />
-            <b>{editTeam ? 'Editar Time' : 'Criar Novo Time'}</b>
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <Form.Group className="mb-3">
+      <CustomModal
+        show={showModal}
+        onHide={handleCloseModal}
+        variant="confirm"
+        icon={editTeam ? 'edit' : 'plus'}
+        iconFill={editTeam ? '' : '#057c05'}
+        title={editTeam ? 'Editar Time' : 'Criar Novo Time'}
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Cancelar
+            </Button>
+            <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
+              {editTeam ? 'Salvar Alterações' : 'Criar Time'}
+            </Button>
+          </>
+        }
+      >
+        <Form.Group className="mb-3">
             <Form.Label>
               <b>Nome do Time:</b>
             </Form.Label>
@@ -467,124 +478,109 @@ const AdminTeams = ({ loggedUsername }) => {
                 <small className="text-muted">Cor da pulseira selecionada</small>
               </div>
             )}
-          </Form.Group>
-        </Modal.Body>
+        </Form.Group>
+      </CustomModal>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
-            {editTeam ? 'Salvar Alterações' : 'Criar Time'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal className="custom-modal" show={showAddCamperModal} onHide={() => setShowAddCamperModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="plus" iconSize={25} fill="#057c05" />
-            <b>Adicionar Acampante</b>
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Acampante:</b>
-            </Form.Label>
-
-            <Form.Select
-              disabled={loadingCampers}
-              multiple
-              onChange={(e) => {
-                const values = Array.from(e.target.selectedOptions, (opt) => opt.value);
-                setSelectedCampersIds(values);
-              }}
-              size="lg"
-              value={selectedCampersIds}
+      <CustomModal
+        show={showAddCamperModal}
+        onHide={() => setShowAddCamperModal(false)}
+        variant="confirm"
+        icon="plus"
+        title="Adicionar Acampante"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              className="btn-confirm"
+              onClick={addCampersToTeam}
+              disabled={!selectedCampersIds.length}
             >
-              {loadingCampers ? (
-                <option disabled>Buscando lista de acampantes...</option>
-              ) : availableCampers.length ? (
-                availableCampers.map((camper) => (
-                  <option key={camper.id} value={camper.id}>
-                    {camper.personalInformation?.name || 'Sem nome'}
-                  </option>
-                ))
-              ) : (
-                <option disabled>Nenhum acampante disponível</option>
-              )}
-            </Form.Select>
+              Adicionar
+            </Button>
+          </>
+        }
+      >
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <b>Acampante:</b>
+          </Form.Label>
 
-            {selectedCampersIds.length > 0 && (
-              <small className="text-success">{selectedCampersIds.length} selecionado(s)</small>
-            )}
-            <br />
-            <small className="text-muted">Segure CTRL (ou CMD no Mac) para selecionar vários</small>
-          </Form.Group>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            className="btn-confirm"
-            onClick={addCampersToTeam}
-            disabled={!selectedCampersIds.length}
+          <Form.Select
+            disabled={loadingCampers}
+            multiple
+            onChange={(e) => {
+              const values = Array.from(e.target.selectedOptions, (opt) => opt.value);
+              setSelectedCampersIds(values);
+            }}
+            size="lg"
+            value={selectedCampersIds}
           >
-            Adicionar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            {loadingCampers ? (
+              <option disabled>Buscando lista de acampantes...</option>
+            ) : availableCampers.length ? (
+              availableCampers.map((camper) => (
+                <option key={camper.id} value={camper.id}>
+                  {camper.personalInformation?.name || 'Sem nome'}
+                </option>
+              ))
+            ) : (
+              <option disabled>Nenhum acampante disponível</option>
+            )}
+          </Form.Select>
 
-      <Modal className="custom-modal" show={showRemoveCamperModal} onHide={() => setShowRemoveCamperModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Excluir Acampante</b>
-          </Modal.Title>
-        </Modal.Header>
+          {selectedCampersIds.length > 0 && (
+            <small className="text-success">{selectedCampersIds.length} selecionado(s)</small>
+          )}
+          <br />
+          <small className="text-muted">Segure CTRL (ou CMD no Mac) para selecionar vários</small>
+        </Form.Group>
+      </CustomModal>
 
-        <Modal.Body>
-          <p>Deseja realmente remover este acampante do time?</p>
-        </Modal.Body>
+      <CustomModal
+        show={showRemoveCamperModal}
+        onHide={() => setShowRemoveCamperModal(false)}
+        variant="cancel"
+        title="Excluir Acampante"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowRemoveCamperModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={handleConfirmRemoveCamper}>
+              Remover
+            </Button>
+          </>
+        }
+      >
+        <p>Deseja realmente remover este acampante do time?</p>
+      </CustomModal>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowRemoveCamperModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleConfirmRemoveCamper}>
-            Remover
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal className="custom-modal" show={showRemoveTeamModal} onHide={handleCloseRemoveTeamModal}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Excluir Time</b>
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>
-            Deseja realmente remover o time <b>{selectedTeamToRemove?.name}</b>?
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowRemoveTeamModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleConfirmRemoveTeam}>
-            Excluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showRemoveTeamModal}
+        onHide={handleCloseRemoveTeamModal}
+        variant="cancel"
+        title="Excluir Time"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowRemoveTeamModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={handleConfirmRemoveTeam}>
+              Excluir
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Deseja realmente remover o time <b>{selectedTeamToRemove?.name}</b>?
+        </p>
+      </CustomModal>
 
       <Loading loading={loading || loadingTeams} />
     </Container>

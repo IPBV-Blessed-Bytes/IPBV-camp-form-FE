@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -8,6 +8,7 @@ import { listUsers, createUser, updateUser, deleteUser } from '@/services/users'
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 
@@ -196,15 +197,32 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         </Col>
       </Row>
 
-      <Modal className="custom-modal" show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon={editingUser ? 'edit' : 'plus'} iconSize={25} fill={editingUser ? '' : '#057c05'} />
-            <b>{editingUser ? 'Editar Usuário' : 'Criar Usuário'}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <CustomModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        variant="confirm"
+        icon={editingUser ? 'edit' : 'plus'}
+        iconFill={editingUser ? '' : '#057c05'}
+        title={editingUser ? 'Editar Usuário' : 'Criar Usuário'}
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button
+              className="btn-confirm"
+              variant="primary"
+              type="submit"
+              onClick={handleSubmit}
+              disabled={editingUser?.userName === 'admin@ipbv'}
+            >
+              {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
+            </Button>
+          </>
+        }
+      >
+        <Form>
             <Form.Group controlId="formLogin">
               <Form.Label>
                 <b>Usuário:</b>
@@ -256,42 +274,27 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               </Form.Select>
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button
-            className="btn-confirm"
-            variant="primary"
-            type="submit"
-            onClick={handleSubmit}
-            disabled={editingUser?.userName === 'admin@ipbv'}
-          >
-            {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      </CustomModal>
 
-      <Modal className="custom-modal" show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Tem certeza que deseja excluir o usuário <strong>{userToDelete?.userName}</strong>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
-            Deletar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
+              Deletar
+            </Button>
+          </>
+        }
+      >
+        Tem certeza que deseja excluir o usuário <strong>{userToDelete?.userName}</strong>?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

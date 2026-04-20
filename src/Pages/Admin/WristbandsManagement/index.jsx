@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -14,6 +14,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import { FOOD_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
 
@@ -190,19 +191,26 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         </Col>
       </Row>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} className="custom-modal">
-        <Modal.Header closeButton className="custom-modal__header--confirm">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons
-              typeIcon={editingWristband ? 'edit' : 'plus'}
-              iconSize={25}
-              fill={editingWristband ? '' : '#057c05'}
-            />
-            <b>{editingWristband ? 'Editar Pulseira' : 'Criar Pulseira'}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <CustomModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        variant="confirm"
+        icon={editingWristband ? 'edit' : 'plus'}
+        iconFill={editingWristband ? '' : '#057c05'}
+        title={editingWristband ? 'Editar Pulseira' : 'Criar Pulseira'}
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancelar
+            </Button>
+            <Button className="btn-confirm" variant="primary" onClick={handleSubmit}>
+              {editingWristband ? 'Salvar alterações' : 'Criar Pulseira'}
+            </Button>
+          </>
+        }
+      >
+        <Form>
             <Form.Group>
               <Form.Label>
                 <b>Tipo:</b>
@@ -280,36 +288,27 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               />
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
-          <Button className="btn-confirm" variant="primary" onClick={handleSubmit}>
-            {editingWristband ? 'Salvar alterações' : 'Criar Pulseira'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      </CustomModal>
 
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} className="custom-modal">
-        <Modal.Header closeButton className="custom-modal__header--cancel">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={25} fill={'#dc3545'} />
-            <b>Confirmar Exclusão</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
-            Deletar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        variant="cancel"
+        title="Confirmar Exclusão"
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={handleDelete}>
+              Deletar
+            </Button>
+          </>
+        }
+      >
+        Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
+      </CustomModal>
 
       <Loading loading={loading} />
     </Container>

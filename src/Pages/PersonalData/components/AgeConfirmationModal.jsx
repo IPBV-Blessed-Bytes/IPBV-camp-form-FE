@@ -1,6 +1,7 @@
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Icons from '@/components/Global/Icons';
+
+import CustomModal from '@/components/Global/CustomModal';
 
 const AgeConfirmationModal = ({
   showModal,
@@ -8,29 +9,28 @@ const AgeConfirmationModal = ({
   handleCancelAge,
   handleConfirmAge,
   restoreScrollWhenMobile,
-}) => {
-  return (
-    <Modal className="custom-modal" show={showModal} onHide={handleCancelAge} onExited={restoreScrollWhenMobile}>
-      <Modal.Header closeButton className="custom-modal__header--confirm">
-        <Modal.Title className="d-flex align-items-center gap-2">
-          <Icons typeIcon="checked" iconSize={25} fill={'#057c05'} />
-          <b>Confirmação de Idade</b>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        A sua idade no período do acampamento será de <strong>{currentAge} anos</strong>. Confirma essa idade?
-      </Modal.Body>
-      <Modal.Footer>
+}) => (
+  <CustomModal
+    show={showModal}
+    onHide={handleCancelAge}
+    onExited={restoreScrollWhenMobile}
+    variant="confirm"
+    title="Confirmação de Idade"
+    centered={false}
+    footer={
+      <>
         <Button variant="outline-secondary" onClick={handleCancelAge}>
           Cancelar
         </Button>
-        <Button className='btn-confirm' onClick={handleConfirmAge}>
+        <Button className="btn-confirm" onClick={handleConfirmAge}>
           Confirmar
         </Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
+      </>
+    }
+  >
+    A sua idade no período do acampamento será de <strong>{currentAge} anos</strong>. Confirma essa idade?
+  </CustomModal>
+);
 
 AgeConfirmationModal.propTypes = {
   showModal: PropTypes.bool,

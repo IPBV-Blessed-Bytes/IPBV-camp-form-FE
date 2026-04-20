@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Button, Card, Modal, Row, Col } from 'react-bootstrap';
+import { Container, Button, Card, Row, Col } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
@@ -9,6 +9,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import CustomModal from '@/components/Global/CustomModal';
 
 const FormHome = ({ onLgpdClose }) => {
   const location = useLocation();
@@ -145,36 +146,35 @@ const FormHome = ({ onLgpdClose }) => {
         </div>
       </Card>
 
-      <Modal className="custom-modal" show={showLgpdModal} onHide={handleCloseLgpdModal}>
-        <Modal.Header closeButton className="custom-modal__header--inf">
-          <Modal.Title className="d-flex align-items-center gap-2">
-            <Icons typeIcon="info" iconSize={23} fill="#2E5AAC" />
-            <b>Conformidade com a LGPD</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Nosso sistema está em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>. Os dados
-          fornecidos neste formulário são coletados exclusivamente para fins de organização e segurança do evento. Ao
-          continuar, você concorda com a utilização das informações para esses propósitos.
-          <br />
-          <br />
-          Consulte a legislação completa em:
-          <br />
-          <a
-            className="lgpd-link"
-            href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Lei Geral de Proteção de Dados Pessoais (LGPD)
-          </a>
-        </Modal.Body>
-        <Modal.Footer>
+      <CustomModal
+        show={showLgpdModal}
+        onHide={handleCloseLgpdModal}
+        variant="info"
+        title="Conformidade com a LGPD"
+        iconSize={23}
+        centered={false}
+        footer={
           <Button className="btn-inf" onClick={handleCloseLgpdModal}>
             Ciente
           </Button>
-        </Modal.Footer>
-      </Modal>
+        }
+      >
+        Nosso sistema está em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>. Os dados
+        fornecidos neste formulário são coletados exclusivamente para fins de organização e segurança do evento. Ao
+        continuar, você concorda com a utilização das informações para esses propósitos.
+        <br />
+        <br />
+        Consulte a legislação completa em:
+        <br />
+        <a
+          className="lgpd-link"
+          href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Lei Geral de Proteção de Dados Pessoais (LGPD)
+        </a>
+      </CustomModal>
     </>
   );
 };
