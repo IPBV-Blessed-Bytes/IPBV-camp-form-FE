@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
-import * as XLSX from 'xlsx';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { listCampers } from '@/services/campers';
 import scrollUp from '@/hooks/useScrollUp';
@@ -38,15 +38,12 @@ const AdminExtraMeals = () => {
   };
 
   const generateExcel = () => {
-    const fieldMapping = usersWithExtraMeals.flatMap((users) => ({
-      Acampante: users.personalInformation.name,
-      Refeições: users.extraMeals.extraMeals[0],
+    const rows = usersWithExtraMeals.map((user) => ({
+      Acampante: user.personalInformation.name,
+      Refeições: user.extraMeals.extraMeals[0],
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Alimentação');
-    XLSX.writeFile(workbook, 'alimentacao.xlsx');
+    downloadSingleSheet({ filename: 'alimentacao.xlsx', sheetName: 'Alimentação', rows });
   };
 
   const toolsButtons = [

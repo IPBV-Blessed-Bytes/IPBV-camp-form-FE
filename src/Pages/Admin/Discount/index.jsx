@@ -3,7 +3,7 @@ import { Table, Button, Form, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import * as XLSX from 'xlsx';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import { registerLog } from '@/services/logs';
 import { listCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/services/coupons';
 import scrollUp from '@/hooks/useScrollUp';
@@ -122,18 +122,17 @@ const AdminDiscount = ({ loggedUsername }) => {
     const parseNumber = (value) => {
       if (value === undefined || value === null) return '';
       const cleaned = String(value).replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-
       const num = Number(cleaned);
       return isNaN(num) ? '' : num;
     };
 
-    const fieldMapping = discount.map((discount) => {
-      let row = {
-        CPF: discount.cpf,
-        'Valor Desconto': discount.discount,
-        'Motivo do Desconto': discount.discountReason || '-',
-        Usuário: discount.user ? discount.user : 'NÃO UTILIZADO',
-        'Valor Pago': discount.totalPrice ? discount.totalPrice : '-',
+    const rows = discount.map((item) => {
+      const row = {
+        CPF: item.cpf,
+        'Valor Desconto': item.discount,
+        'Motivo do Desconto': item.discountReason || '-',
+        Usuário: item.user ? item.user : 'NÃO UTILIZADO',
+        'Valor Pago': item.totalPrice ? item.totalPrice : '-',
       };
 
       numericFields.forEach((key) => {
@@ -143,10 +142,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       return row;
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Descontos');
-    XLSX.writeFile(workbook, 'descontos.xlsx');
+    downloadSingleSheet({ filename: 'descontos.xlsx', sheetName: 'Descontos', rows });
   };
 
   const toolsButtons = [

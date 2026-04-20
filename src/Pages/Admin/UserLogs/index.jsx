@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Button, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
+import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog, listLogs, deleteAllLogs } from '@/services/logs';
@@ -71,10 +71,9 @@ const AdminUserLogs = ({ loggedUsername }) => {
       return;
     }
 
-    const workbook = XLSX.utils.book_new();
-
-    Object.entries(groupedLogs).forEach(([username, logs]) => {
-      const sheetData = logs.map((log, index) => ({
+    const sheets = Object.entries(groupedLogs).map(([username, logs]) => ({
+      name: username,
+      rows: logs.map((log, index) => ({
         Nº: index + 1,
         Usuário: username,
         Ação: log.action,
@@ -86,15 +85,10 @@ const AdminUserLogs = ({ loggedUsername }) => {
           minute: '2-digit',
         }),
         IP: log.ip,
-      }));
+      })),
+    }));
 
-      const worksheet = XLSX.utils.json_to_sheet(sheetData);
-
-      const safeSheetName = username.substring(0, 30);
-      XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
-    });
-
-    XLSX.writeFile(workbook, 'logs.xlsx');
+    downloadMultiSheet({ filename: 'logs.xlsx', sheets });
   };
 
   const toolsButtons = [

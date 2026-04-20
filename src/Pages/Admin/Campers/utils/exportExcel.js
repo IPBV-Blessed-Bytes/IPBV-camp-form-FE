@@ -1,4 +1,4 @@
-import * as XLSX from 'xlsx';
+import { downloadSingleSheet, flattenForExcel } from '@/utils/excelExport';
 
 const FIELD_MAPPING = {
   'personalInformation.name': 'Nome',
@@ -90,25 +90,6 @@ const ORDERED_FIELDS = [
 
 const NUMERIC_FIELDS = ['Valor do pacote', 'Valor do Desconto', 'Valor final'];
 
-const flattenObject = (obj, parent = '', res = {}) => {
-  for (const key in obj) {
-    const propName = parent ? `${parent}.${key}` : key;
-
-    if (Array.isArray(obj[key])) {
-      res[FIELD_MAPPING[propName] || propName] = obj[key].join(' | ');
-    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-      flattenObject(obj[key], propName, res);
-    } else {
-      let value = obj[key];
-      if (typeof value === 'boolean') {
-        value = value ? 'Sim' : 'Não';
-      }
-      res[FIELD_MAPPING[propName] || propName] = value;
-    }
-  }
-  return res;
-};
-
 const parseNumeric = (value) => {
   const num = Number(String(value).replace('R$', '').replace('.', '').replace(',', '.').trim());
   return isNaN(num) ? '' : num;
@@ -118,25 +99,19 @@ export const exportCampersToExcel = ({ data, filteredRows }) => {
   const isFilterApplied = filteredRows.length > 0;
 
   const dataToExport = (isFilterApplied ? filteredRows.map((row) => row.original) : data).map((row) => {
-    const newRow = { ...row };
-    delete newRow.id;
-    return flattenObject(newRow);
+    const rest = { ...row };
+    delete rest.id;
+    return flattenForExcel(rest, FIELD_MAPPING);
   });
 
-  const orderedData = dataToExport.map((row) => {
+  const rows = dataToExport.map((row) => {
     const orderedRow = {};
     ORDERED_FIELDS.forEach((field) => {
-      let value = row[field] || '';
-      if (NUMERIC_FIELDS.includes(field)) {
-        value = parseNumeric(value);
-      }
-      orderedRow[field] = value;
+      const raw = row[field] || '';
+      orderedRow[field] = NUMERIC_FIELDS.includes(field) ? parseNumeric(raw) : raw;
     });
     return orderedRow;
   });
 
-  const worksheet = XLSX.utils.json_to_sheet(orderedData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Inscrições');
-  XLSX.writeFile(workbook, 'inscricoes.xlsx');
+  downloadSingleSheet({ filename: 'inscricoes.xlsx', sheetName: 'Inscrições', rows });
 };

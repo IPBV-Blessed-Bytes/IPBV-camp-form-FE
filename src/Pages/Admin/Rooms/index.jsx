@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import * as XLSX from 'xlsx';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
@@ -303,29 +303,23 @@ const AdminRooms = ({ loggedUsername }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   const generateAggregateExcel = () => {
-    const fieldMapping = dropdownCampers.map((camper) => ({
+    const rows = dropdownCampers.map((camper) => ({
       Nome: camper.personalInformation.name,
       Agregados: camper.contact.aggregate ? camper.contact.aggregate.split('|').join(', ') : 'Nenhum agregado',
       Gênero: camper.personalInformation.gender,
       'Data de Nascimento': camper.personalInformation.birthday,
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Agregados');
-    XLSX.writeFile(workbook, 'agregados.xlsx');
+    downloadSingleSheet({ filename: 'agregados.xlsx', sheetName: 'Agregados', rows });
   };
 
   const generateRoomExcel = () => {
-    const fieldMapping = rooms.flatMap((room) => ({
+    const rows = rooms.map((room) => ({
       Quarto: room.name,
-      Acampantes: room.campers.map((campers) => campers.name).join(', '),
+      Acampantes: room.campers.map((camper) => camper.name).join(', '),
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(fieldMapping);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Quartos');
-    XLSX.writeFile(workbook, 'quartos.xlsx');
+    downloadSingleSheet({ filename: 'quartos.xlsx', sheetName: 'Quartos', rows });
   };
 
   const toolsButtons = [

@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Container, Button, Form, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
+import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import {
@@ -271,34 +271,25 @@ const AdminTeams = ({ loggedUsername }) => {
   };
 
   const generateExcel = () => {
-    const workbook = XLSX.utils.book_new();
-
-    teams.forEach((team) => {
+    const sheets = teams.map((team) => {
       const campers = team.campers || [];
       const campersCount = Number(team.campersCount ?? campers.length ?? 0);
 
-      const rows = [];
+      const rows = [['Acampantes', 'Qtd. Acampantes']];
 
-      rows.push(['Acampantes', 'Qtd. Acampantes']);
-
-      rows.push([campers[0]?.name || '', campersCount]);
-
-      for (let i = 1; i < campers.length; i++) {
-        rows.push([campers[i]?.name || '', '']);
-      }
-
-      if (!campers.length) {
+      if (campers.length) {
+        rows.push([campers[0]?.name || '', campersCount]);
+        for (let i = 1; i < campers.length; i++) {
+          rows.push([campers[i]?.name || '', '']);
+        }
+      } else {
         rows.push(['', campersCount]);
       }
 
-      const worksheet = XLSX.utils.aoa_to_sheet(rows);
-
-      const safeSheetName = (team.name || 'Time').substring(0, 31);
-
-      XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
+      return { name: team.name || 'Time', rows, aoa: true };
     });
 
-    XLSX.writeFile(workbook, 'times.xlsx');
+    downloadMultiSheet({ filename: 'times.xlsx', sheets });
   };
 
   const toolsButtons = [

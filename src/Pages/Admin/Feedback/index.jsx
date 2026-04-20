@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import './style.scss';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import { registerLog } from '@/services/logs';
 import { listFeedback, deleteAllFeedback } from '@/services/feedback';
 import scrollUp from '@/hooks/useScrollUp';
@@ -57,42 +57,36 @@ const AdminFeedback = ({ loggedUsername }) => {
       return;
     }
 
-    const workbook = XLSX.utils.book_new();
-
     const filteredHeaders = TABLE_HEADERS.filter((header) => header !== 'ID');
 
-    const sheetData = feedbacks.map((feedback) => {
+    const rows = feedbacks.map((feedback) => {
       const values = Object.values(feedback);
       const row = {};
 
       TABLE_HEADERS.forEach((header, index) => {
-        if (header !== 'ID') {
-          const value = values[index];
-
-          if (value && !isNaN(Date.parse(value))) {
-            row[header] = new Date(value).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            });
-          } else {
-            row[header] = value;
-          }
-        }
+        if (header === 'ID') return;
+        const value = values[index];
+        row[header] =
+          value && !isNaN(Date.parse(value))
+            ? new Date(value).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            : value;
       });
 
       return row;
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(sheetData, {
-      header: filteredHeaders,
+    downloadSingleSheet({
+      filename: 'feedbacks.xlsx',
+      sheetName: 'Feedbacks',
+      rows,
+      headers: filteredHeaders,
     });
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Feedbacks');
-
-    XLSX.writeFile(workbook, 'feedbacks.xlsx');
   };
 
   const toolsButtons = [

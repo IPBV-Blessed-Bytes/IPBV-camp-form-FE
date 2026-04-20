@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import * as XLSX from 'xlsx';
+import { downloadSingleSheet, flattenForExcel } from '@/utils/excelExport';
 import { registerLog } from '@/services/logs';
 import {
   listRideOffers,
@@ -103,27 +103,9 @@ const AdminRide = ({ loggedUsername }) => {
       checked: 'Checked',
     };
 
-    const flattenObject = (obj, parent = '', res = {}) => {
-      for (let key in obj) {
-        let propName = parent ? `${parent}.${key}` : key;
+    const rows = [...rideData.offerRide, ...rideData.needRide].map((row) => flattenForExcel(row, fieldMapping));
 
-        let value = obj[key];
-        if (typeof value === 'boolean') {
-          value = value ? 'Sim' : 'Não';
-        }
-        res[fieldMapping[propName] || propName] = value;
-      }
-      return res;
-    };
-
-    const combinedData = [...rideData.offerRide, ...rideData.needRide].map((row) => {
-      return flattenObject(row);
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(combinedData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Rides');
-    XLSX.writeFile(workbook, 'caronas.xlsx');
+    downloadSingleSheet({ filename: 'caronas.xlsx', sheetName: 'Rides', rows });
   };
 
   const handleShowDeleteRelationshipModal = (needRideId) => {
