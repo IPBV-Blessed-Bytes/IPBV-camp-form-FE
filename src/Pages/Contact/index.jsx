@@ -316,7 +316,6 @@ const Contact = () => {
                       placeholder="Descreva sua observação sobre a carona"
                       value={values.rideObservation}
                       onChange={handleChange}
-                      style={{ resize: 'none' }}
                     />
                   </Form.Group>
                 </Col>
@@ -364,7 +363,6 @@ const Contact = () => {
                       placeholder="Descreva sua alergia"
                       value={values.allergy}
                       onChange={handleChange}
-                      style={{ resize: 'none' }}
                     />
                     <Form.Control.Feedback type="invalid">{errors.allergy}</Form.Control.Feedback>
                   </Form.Group>
@@ -418,7 +416,6 @@ const Contact = () => {
                       placeholder="NOME e SOBRENOME dos acompanhantes APENAS QUE IRÃO DORMIR NO MESMO QUARTO para fins de alocação e organização"
                       value={values.aggregate}
                       onChange={handleChange}
-                      style={{ resize: 'none' }}
                     />
                     <Form.Control.Feedback type="invalid">{errors.aggregate}</Form.Control.Feedback>
                   </Form.Group>

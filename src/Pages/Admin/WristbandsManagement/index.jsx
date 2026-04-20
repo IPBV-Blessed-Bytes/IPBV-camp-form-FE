@@ -172,14 +172,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                   <td>{band.type === 'FOOD' ? 'Alimentação' : 'Time'}</td>
                   <td>{band.label}</td>
                   <td>
-                    <div
-                      style={{
-                        width: 24,
-                        height: 24,
-                        background: band.color,
-                        borderRadius: 4,
-                      }}
-                    />
+                    <div className="color-swatch" style={{ background: band.color }} />
                   </td>
                   <td>{band.active ? 'Ativa' : 'Inativa'}</td>
                   <td>
@@ -262,9 +255,9 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               <div className="d-flex align-items-center gap-3">
                 <Form.Control
                   type="color"
+                  className="color-input"
                   value={formData.color}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  style={{ width: 60, height: 40, padding: 0 }}
                 />
 
                 <Form.Control

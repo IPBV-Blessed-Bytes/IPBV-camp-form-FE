@@ -76,7 +76,7 @@ const IdentificationRow = ({ onDateChange, onDateBlur }) => {
               }
             />
           </div>
-          <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+          <Form.Control.Feedback className="d-block" type="invalid">
             {errors.birthday}
           </Form.Control.Feedback>
         </Form.Group>

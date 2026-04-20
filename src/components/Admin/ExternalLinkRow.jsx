@@ -7,7 +7,7 @@ const PAGARME = 'https://id.pagar.me/signin';
 const ExternalLinkRow = () => {
   return (
     <Row className="mt-4 p-0">
-      <Col xs={12} className="text-center" style={{ padding: '0 0 0 1.25rem' }}>
+      <Col xs={12} className="text-center ps-5-custom">
         <Card>
           <Card.Body>
             <Card.Title className="fw-bold text-teal-blue">Utilitários</Card.Title>

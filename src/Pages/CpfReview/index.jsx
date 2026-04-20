@@ -125,7 +125,7 @@ const CpfReview = () => {
                               </InputMask>
                             }
                           />
-                          <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+                          <Form.Control.Feedback className="d-block" type="invalid">
                             {errors.birthday}
                           </Form.Control.Feedback>
                         </Form.Group>

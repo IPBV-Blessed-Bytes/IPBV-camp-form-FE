@@ -122,7 +122,7 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
     <Card className="mb-4 shadow-sm">
       <Card.Body>
         <Card.Title className="text-center mb-3">{title}</Card.Title>
-        <div style={{ width: '100%', height: 350 }}>
+        <div className="chart-container-fixed">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie dataKey="value" data={data} label outerRadius="80%">

@@ -38,13 +38,7 @@ function App() {
       {formContext === 'form-closed' && <CloseForm />}
 
       {formContext === 'google-forms' && (
-        <div
-          style={{
-            width: '100vw',
-            height: '100vh',
-            overflowX: 'hidden',
-          }}
-        >
+        <div className="google-forms-frame">
           <iframe></iframe>
         </div>
       )}

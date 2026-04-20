@@ -634,6 +634,43 @@ button.accordion-button:not(.collapsed) {
   min-height: 100vh;
 }
 
+.google-forms-frame {
+  height: 100vh;
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+.color-swatch {
+  border-radius: 0.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+
+  &--sm {
+    height: 1.125rem;
+    width: 1.125rem;
+  }
+}
+
+.color-input {
+  height: 2.5rem;
+  padding: 0;
+  width: 3.75rem;
+}
+
+.chart-container-fixed {
+  height: 21.875rem;
+  width: 100%;
+}
+
+.accordion-body--highlight {
+  background-color: #d4edda;
+  transition: background-color 0.3s ease;
+}
+
+.ps-5-custom {
+  padding: 0 0 0 1.25rem;
+}
+
 .bg-dark.card {
   color: $white;
 }

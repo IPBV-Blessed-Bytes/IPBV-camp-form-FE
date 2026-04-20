@@ -350,14 +350,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
                 <td>
                   <div className="d-flex align-items-center gap-2">
-                    <div
-                      style={{
-                        width: 24,
-                        height: 24,
-                        backgroundColor: getTeamColor(team),
-                        borderRadius: 4,
-                      }}
-                    />
+                    <div className="color-swatch" style={{ backgroundColor: getTeamColor(team) }} />
                     {team.wristbandColor}
                   </div>
                 </td>
@@ -466,10 +459,8 @@ const AdminTeams = ({ loggedUsername }) => {
             {formData.wristbandId && (
               <div className="d-flex align-items-center gap-2 mt-3">
                 <div
+                  className="color-swatch color-swatch--sm"
                   style={{
-                    width: 18,
-                    height: 18,
-                    borderRadius: 4,
                     backgroundColor: teamWristbands.find((w) => w.id === Number(formData.wristbandId))?.color,
                   }}
                 />

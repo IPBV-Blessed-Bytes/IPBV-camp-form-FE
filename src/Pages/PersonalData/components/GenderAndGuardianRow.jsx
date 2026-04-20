@@ -60,7 +60,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                   onPersistGuardianName({ ...values, legalGuardianName: e.target.value });
                 }}
               />
-              <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+              <Form.Control.Feedback className="d-block" type="invalid">
                 {errors.legalGuardianName}
               </Form.Control.Feedback>
             </Form.Group>

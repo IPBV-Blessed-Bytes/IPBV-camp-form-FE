@@ -510,12 +510,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                         </small>
                       </div>
                     </Accordion.Header>
-                    <Accordion.Body
-                      style={{
-                        backgroundColor: isCurrentLot ? '#d4edda' : 'transparent',
-                        transition: 'background-color 0.3s ease',
-                      }}
-                    >
+                    <Accordion.Body className={isCurrentLot ? 'accordion-body--highlight' : ''}>
                       <Form.Group className="mb-3">
                         <Form.Label>
                           <strong>Nome do Lote:</strong>
