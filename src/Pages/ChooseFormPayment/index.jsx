@@ -50,11 +50,11 @@ const ChooseFormPayment = () => {
     handleSubmit();
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (initialValues.formPayment !== values.formPayment) {
       setValues({ formPayment: '' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues.formPayment]);
 
   useEffect(() => {
@@ -68,10 +68,9 @@ const ChooseFormPayment = () => {
     handleChange(e);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setBackStepFlag(true);
-  }, []);
+  }, [setBackStepFlag]);
 
   return (
     <>
