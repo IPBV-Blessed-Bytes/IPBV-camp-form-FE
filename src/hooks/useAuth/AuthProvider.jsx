@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE, FORM_CONTEXT_KEY } from '@/config';
-import { isTokenValid } from './helpers';
+import { isTokenValid } from '@/fetchers/helpers';
 import { login as loginRequest } from '@/services/auth';
 import { getFormContext } from '@/services/formContext';
 
