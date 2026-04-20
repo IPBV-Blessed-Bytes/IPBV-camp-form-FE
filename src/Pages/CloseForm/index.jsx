@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import fetcher from '@/fetchers';
+import { login as loginRequest } from '@/services/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
@@ -17,18 +17,11 @@ const CloseForm = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetcher.post('auth/login', {
-        login: loginData.login,
-        password: loginData.password,
-      });
+      await loginRequest({ login: loginData.login, password: loginData.password });
 
-      if (response.status === 200) {
-        setIsLoggedIn(true);
-        setLoginData({ login: '', password: '' });
-        toast.success('Usuário logado com sucesso!');
-      } else {
-        toast.error('Credenciais Inválidas. Tente novamente!');
-      }
+      setIsLoggedIn(true);
+      setLoginData({ login: '', password: '' });
+      toast.success('Usuário logado com sucesso!');
     } catch (error) {
       console.error(error.message);
       toast.error('Credenciais Inválidas. Tente novamente.');

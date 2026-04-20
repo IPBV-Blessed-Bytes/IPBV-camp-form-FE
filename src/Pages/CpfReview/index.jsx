@@ -7,8 +7,7 @@ import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
-import { BASE_URL } from '@/config';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { getPersonData } from '@/services/campers';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import { cpfReviewSchema } from '@/form/validations/schema';
@@ -42,13 +41,11 @@ const CpfReview = ({ handlePersonData }) => {
           },
         };
 
-        const response = await fetcher.post(`${BASE_URL}/camper/get-person-data`, payload);
+        const data = await getPersonData(payload);
 
-        if (response.status === 200) {
-          handlePersonData(response);
-          navigate('/verificacao/dados');
-          toast.success('Usuário encontrado com sucesso');
-        }
+        handlePersonData(data);
+        navigate('/verificacao/dados');
+        toast.success('Usuário encontrado com sucesso');
       } catch (error) {
         toast.error('Usuário não encontrado');
       } finally {

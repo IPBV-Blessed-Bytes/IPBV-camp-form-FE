@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Form, Modal, Container } from 'react-bootstrap';
-import { BASE_URL } from '@/config';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import * as XLSX from 'xlsx';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import { listCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/services/coupons';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -30,8 +29,8 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const fetchDiscounts = async () => {
     try {
-      const response = await fetcher.get(`${BASE_URL}/coupon`);
-      setDiscount(response.data.coupons);
+      const data = await listCoupons();
+      setDiscount(data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar descontos');
     } finally {
@@ -43,10 +42,7 @@ const AdminDiscount = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      await fetcher.post('coupon/create', {
-        ...newDiscount,
-        id: Date.now().toString(),
-      });
+      await createCoupon({ ...newDiscount, id: Date.now().toString() });
       toast.success('Desconto criado com sucesso');
       setShowModal(false);
       fetchDiscounts();
@@ -62,7 +58,7 @@ const AdminDiscount = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      await fetcher.put(`coupon/${editingDiscount.id}`, editingDiscount);
+      await updateCoupon(editingDiscount.id, editingDiscount);
       toast.success('Desconto atualizado com sucesso');
       setShowModal(false);
       fetchDiscounts();
@@ -78,7 +74,7 @@ const AdminDiscount = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      await fetcher.delete(`coupon/${discountToDelete.id}`, { data: discountToDelete });
+      await deleteCoupon(discountToDelete.id, discountToDelete);
       toast.success('Desconto excluído com sucesso');
       setShowConfirmDelete(false);
       fetchDiscounts();

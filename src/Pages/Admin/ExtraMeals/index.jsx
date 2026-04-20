@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import './style.scss';
 import * as XLSX from 'xlsx';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { listCampers } from '@/services/campers';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -22,9 +22,9 @@ const AdminExtraMeals = () => {
 
   const fetchUsersWithExtraMeals = async () => {
     try {
-      const response = await fetcher.get('camper', { params: { size: MAX_SIZE_CAMPERS } });
-      if (Array.isArray(response.data.content)) {
-        const filteredUsers = response.data.content.filter((user) => user.extraMeals.someFood);
+      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
+      if (Array.isArray(data.content)) {
+        const filteredUsers = data.content.filter((user) => user.extraMeals.someFood);
         setUsersWithExtraMeals(filteredUsers);
       } else {
         console.error('Erro: Dados não estão no formato esperado.');

@@ -3,8 +3,13 @@ import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { registerLog } from '@/fetchers/userLogs';
+import {
+  listWristbands,
+  createWristband,
+  updateWristband,
+  deleteWristband,
+} from '@/services/wristbands';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import { FOOD_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
@@ -31,9 +36,9 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   const fetchWristbands = async () => {
     setLoading(true);
     try {
-      const response = await fetcher.get('/user-wristbands');
+      const data = await listWristbands();
 
-      setWristbands(response?.data || []);
+      setWristbands(data || []);
     } catch (error) {
       console.error('[AdminWristbandsManagement] erro ao buscar pulseiras', error);
       toast.error('Erro ao buscar pulseiras');
@@ -73,11 +78,11 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       if (editingWristband) {
-        await fetcher.patch(`/user-wristbands/${editingWristband.id}`, formData);
+        await updateWristband(editingWristband.id, formData);
         toast.success('Pulseira editada com sucesso');
         registerLog(`Editou pulseira ${formData.label}`, loggedUsername);
       } else {
-        await fetcher.post('/user-wristbands', formData);
+        await createWristband(formData);
         toast.success('Pulseira criada com sucesso');
         registerLog(`Criou pulseira ${formData.label}`, loggedUsername);
       }
@@ -96,7 +101,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await fetcher.delete(`/user-wristbands/${wristbandToDelete.id}`);
+      await deleteWristband(wristbandToDelete.id);
       toast.success('Pulseira removida com sucesso');
       registerLog(`Removeu pulseira ${wristbandToDelete.label}`, loggedUsername);
       fetchWristbands();

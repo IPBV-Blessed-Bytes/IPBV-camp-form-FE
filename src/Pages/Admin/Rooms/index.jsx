@@ -8,8 +8,16 @@ import './style.scss';
 import * as XLSX from 'xlsx';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { registerLog } from '@/fetchers/userLogs';
+import {
+  listAggregates,
+  listRooms,
+  createRoom as createRoomRequest,
+  updateRoom,
+  renameRoom as renameRoomRequest,
+  deleteRoom,
+  removeCamperFromRoom,
+} from '@/services/rooms';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Tools from '@/components/Admin/Header/Tools';
@@ -35,8 +43,8 @@ const AdminRooms = ({ loggedUsername }) => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetcher.get('aggregate');
-      setDropdownCampers(response.data);
+      const data = await listAggregates();
+      setDropdownCampers(data);
     } catch (error) {
       toast.error('Erro ao carregar usuários');
       console.error('Erro ao buscar usuários:', error);
@@ -47,8 +55,8 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetcher.get('aggregate/room');
-      setRooms(response.data);
+      const data = await listRooms();
+      setRooms(data);
     } catch (error) {
       toast.error('Erro ao carregar quartos');
       console.error('Erro ao buscar quartos:', error);
@@ -76,11 +84,11 @@ const AdminRooms = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const response = await fetcher.post('aggregate', newRoom);
+      const data = await createRoomRequest(newRoom);
 
-      if (response.data === 'Quarto criado com sucesso.') {
+      if (data === 'Quarto criado com sucesso.') {
         fetchRooms();
-        setRooms([...rooms, { ...response.data, name: newRoomName }]);
+        setRooms([...rooms, { ...newRoom }]);
         toast.success('Quarto criado com sucesso');
         registerLog(`Criou o quarto com nome ${newRoomName}`, loggedUsername);
         handleCloseModal();
@@ -137,9 +145,9 @@ const AdminRooms = ({ loggedUsername }) => {
       setLoading(true);
 
       try {
-        const response = await fetcher.delete(`aggregate/${roomToDelete.id}`, { data: roomData });
+        const data = await deleteRoom(roomToDelete.id, roomData);
 
-        if (response.data === 'Quarto removido com sucesso.') {
+        if (data === 'Quarto removido com sucesso.') {
           fetchRooms();
           fetchUsers();
           setRooms(rooms.filter((room) => room.id !== roomToDelete.id));
@@ -170,9 +178,9 @@ const AdminRooms = ({ loggedUsername }) => {
       setLoading(true);
 
       try {
-        const response = await fetcher.put(`aggregate/name/${roomToRename.id}`, roomData);
+        const data = await renameRoomRequest(roomToRename.id, roomData);
 
-        if (response.data === 'Nome do quarto atualizado com sucesso.') {
+        if (data === 'Nome do quarto atualizado com sucesso.') {
           fetchRooms();
           toast.success('Quarto renomeado com sucesso');
           registerLog(`Renomeou o quarto com nome ${roomToRename.name}`, loggedUsername);
@@ -207,9 +215,9 @@ const AdminRooms = ({ loggedUsername }) => {
       setLoading(true);
 
       try {
-        const response = await fetcher.put(`aggregate/${roomId}`, updatedRoom);
+        const data = await updateRoom(roomId, updatedRoom);
 
-        if (response.data === 'Quarto atualizado com sucesso.') {
+        if (data === 'Quarto atualizado com sucesso.') {
           fetchRooms();
           fetchUsers();
           toast.success('Acampante adicionado ao quarto');
@@ -254,9 +262,9 @@ const AdminRooms = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const response = await fetcher.delete(`aggregate/room/${camperToDelete.id}`);
+      const data = await removeCamperFromRoom(camperToDelete.id);
 
-      if (response.data === 'Acampante removido do quarto com sucesso.') {
+      if (data === 'Acampante removido do quarto com sucesso.') {
         toast.success('Acampante removido do quarto com sucesso');
         fetchRooms();
         fetchUsers();

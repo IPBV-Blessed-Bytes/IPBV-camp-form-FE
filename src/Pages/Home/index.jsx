@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { getHomeInfo } from '@/services/homeInfo';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -34,8 +34,7 @@ const FormHome = ({ nextStep, onLgpdClose }) => {
 
     setLoading(true);
     try {
-      const response = await fetcher.get('/homepage-info');
-      const data = response?.data || null;
+      const data = (await getHomeInfo()) || null;
 
       setHomepageInfo(data);
 

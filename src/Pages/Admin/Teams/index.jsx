@@ -5,8 +5,17 @@ import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { registerLog } from '@/fetchers/userLogs';
+import {
+  listTeams,
+  createTeam,
+  updateTeam,
+  deleteTeam,
+  assignCamperToTeam,
+  removeCamperFromTeam,
+} from '@/services/teams';
+import { listWristbands } from '@/services/wristbands';
+import { listCampers } from '@/services/campers';
+import { registerLog } from '@/services/logs';
 import Icons from '@/components/Global/Icons';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
 import Loading from '@/components/Global/Loading';
@@ -36,7 +45,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const fetchTeams = async () => {
     try {
       setLoadingTeams(true);
-      const { data } = await fetcher.get('/team');
+      const data = await listTeams();
       setTeams(data || []);
     } catch (error) {
       toast.error('Erro ao carregar times');
@@ -49,7 +58,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const fetchTeamWristbands = async () => {
     try {
       setLoading(true);
-      const { data } = await fetcher.get('/user-wristbands');
+      const data = await listWristbands();
 
       const onlyTeamWristbands = (data || []).filter((wristband) => wristband.type === 'TEAM' && wristband.active);
 
@@ -66,11 +75,7 @@ const AdminTeams = ({ loggedUsername }) => {
     try {
       setLoadingCampers(true);
 
-      const response = await fetcher.get('/camper', {
-        params: { size: MAX_SIZE_CAMPERS },
-      });
-
-      const data = response?.data;
+      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
 
       const campersList = Array.isArray(data?.content) ? data.content : [];
 
@@ -124,11 +129,11 @@ const AdminTeams = ({ loggedUsername }) => {
       const payload = buildPayload();
 
       if (editTeam) {
-        await fetcher.patch(`/team/${editTeam.id}`, payload);
+        await updateTeam(editTeam.id, payload);
         toast.success('Time atualizado com sucesso');
         registerLog(`Editou o time "${editTeam.name}"`, loggedUsername);
       } else {
-        await fetcher.post('/team', payload);
+        await createTeam(payload);
         toast.success('Time criado com sucesso');
         registerLog(`Criou o time "${payload.name}"`, loggedUsername);
       }
@@ -157,7 +162,7 @@ const AdminTeams = ({ loggedUsername }) => {
         })),
       };
 
-      await fetcher.patch('/team/camper', payload);
+      await assignCamperToTeam(payload);
 
       toast.success('Acampantes adicionados ao time');
       registerLog(`Adicionou ${selectedCampersIds.length} acampantes ao time ${selectedTeam.name}`, loggedUsername);
@@ -182,7 +187,7 @@ const AdminTeams = ({ loggedUsername }) => {
     try {
       setLoading(true);
 
-      await fetcher.delete(`/team/camper/${selectedCamperId}`);
+      await removeCamperFromTeam(selectedCamperId);
 
       fetchTeams();
       fetchCampers();
@@ -217,10 +222,10 @@ const AdminTeams = ({ loggedUsername }) => {
       setLoading(true);
 
       if (selectedTeamToRemove.campers?.length) {
-        await Promise.all(selectedTeamToRemove.campers.map((camper) => fetcher.delete(`/team/camper/${camper.id}`)));
+        await Promise.all(selectedTeamToRemove.campers.map((camper) => removeCamperFromTeam(camper.id)));
       }
 
-      await fetcher.delete(`/team/${selectedTeamToRemove.id}`);
+      await deleteTeam(selectedTeamToRemove.id);
 
       toast.success('Time removido com sucesso');
       registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);

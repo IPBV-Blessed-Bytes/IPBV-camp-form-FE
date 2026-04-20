@@ -5,8 +5,10 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { registerLog } from '@/fetchers/userLogs';
+import { listRooms } from '@/services/rooms';
+import { listCampers, checkinCamper } from '@/services/campers';
+import { listWristbands } from '@/services/wristbands';
+import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import scrollUp from '@/hooks/useScrollUp';
@@ -36,10 +38,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await fetcher.get('aggregate/room');
-        if (response.status === 200) {
-          setRooms(response.data);
-        }
+        const data = await listRooms();
+        setRooms(data);
       } catch (error) {
         toast.error('Erro ao carregar quartos');
         console.error('Erro ao buscar quartos:', error);
@@ -62,20 +62,14 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       setCpfMatches([]);
       setShowSuggestions(true);
 
-      const response = await fetcher.get('camper', {
-        params: {
-          cpfPrefix,
-          size: MAX_SIZE_CAMPERS,
-        },
-        signal: controller.signal,
-      });
+      const data = await listCampers(
+        { cpfPrefix, size: MAX_SIZE_CAMPERS },
+        { signal: controller.signal },
+      );
 
-      if (response.status === 200) {
-        const data = response.data;
-        const users = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+      const users = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
 
-        setCpfMatches(users);
-      }
+      setCpfMatches(users);
     } catch (error) {
       if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
         return;
@@ -119,13 +113,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
   const fetchUserWristbands = async (userId, foodName, teamName) => {
     try {
-      const response = await fetcher.get('/user-wristbands', {
-        params: { userId },
-      });
-
-      if (response.status !== 200) return;
-
-      const wristbandsResponse = response.data;
+      const wristbandsResponse = await listWristbands({ userId });
 
       const activeBands = wristbandsResponse.filter((band) => band.active);
 
@@ -185,7 +173,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       setLoading(true);
       const checkinTime = formatDateTimeBR();
 
-      await fetcher.patch(`camper/checkin/${userInfo.id}`, {
+      await checkinCamper(userInfo.id, {
         checkin: checkinStatus,
         checkinTime: checkinTime,
       });

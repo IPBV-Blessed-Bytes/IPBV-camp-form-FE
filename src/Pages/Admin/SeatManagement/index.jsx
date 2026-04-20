@@ -3,8 +3,8 @@ import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import { updatePackageCount, updateTotalBusVacancies } from '@/services/packages';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -46,10 +46,7 @@ const AdminSeatManagement = ({
     try {
       setLoadingContent(true);
 
-      await fetcher.put('package-count', {
-        totalSeats: totalSeats,
-        totalPackages,
-      });
+      await updatePackageCount({ totalSeats, totalPackages });
       toast.success(`Quantidade de vagas totais e por pacote ajustadas com sucesso`);
       registerLog(`Ajustou a quantidade de vagas totais e por pacote`, loggedUsername);
     } catch (error) {
@@ -69,9 +66,7 @@ const AdminSeatManagement = ({
     try {
       setLoadingContent(true);
 
-      await fetcher.put('package-count/total-bus-vacancies', {
-        totalBusVacancies: totalBusVacancies,
-      });
+      await updateTotalBusVacancies({ totalBusVacancies });
       toast.success(`Quantidade de vagas totais do ônibus ajustadas com sucesso`);
       registerLog(`Ajustou a quantidade de vagas totais do ônibus para ${totalBusVacancies}`, loggedUsername);
     } catch (error) {

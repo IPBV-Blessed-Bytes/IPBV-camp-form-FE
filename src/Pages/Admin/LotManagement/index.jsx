@@ -3,12 +3,18 @@ import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Modal, Accor
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
+import { registerLog } from '@/services/logs';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import {
+  getLotsAuthenticated,
+  createLot,
+  updateLot as updateLotRequest,
+  deleteLot,
+} from '@/services/lots';
+import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -183,8 +189,8 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   const fetchLots = async () => {
     try {
       setLoadingContent(true);
-      const response = await fetcher.get('lots');
-      setLots(response.data?.lots || []);
+      const data = await getLotsAuthenticated();
+      setLots(data?.lots || []);
     } catch (error) {
       console.error(error);
       toast.error('Erro ao carregar lotes');
@@ -196,9 +202,9 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   const fetchBaseDate = async () => {
     try {
       setLoadingContent(true);
-      const response = await fetcher.get('/base-date');
-      if (response.data && response.data.baseDate) {
-        setBaseDate(response.data.baseDate);
+      const data = await getBaseDate();
+      if (data && data.baseDate) {
+        setBaseDate(data.baseDate);
         setBaseDateExists(true);
       }
     } catch (error) {
@@ -246,7 +252,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
     try {
       setLoadingContent(true);
-      await fetcher.patch(`lots/${lot.id}`, {
+      await updateLotRequest(lot.id, {
         name: lot.name,
         startDate: lot.startDate,
         endDate: lot.endDate,
@@ -268,7 +274,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
     try {
       setLoadingContent(true);
-      await fetcher.delete(`lots/${selectedLot.id}`);
+      await deleteLot(selectedLot.id);
       toast.success(`${selectedLot.name} deletado com sucesso`);
       registerLog(`Deletou o ${selectedLot.name}`, loggedUsername);
       setShowDeleteModal(false);
@@ -313,7 +319,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
     try {
       setLoadingContent(true);
-      await fetcher.post('lots', {
+      await createLot({
         name: newLot.name,
         startDate: newLot.startDate,
         endDate: newLot.endDate,
@@ -348,11 +354,11 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     try {
       setLoadingContent(true);
       if (baseDateExists) {
-        await fetcher.put('/base-date', { baseDate: baseDate });
+        await updateBaseDate(baseDate);
         toast.success('Data do evento atualizada com sucesso');
         registerLog(`Alterou a data do evento para ${baseDate}`, loggedUsername);
       } else {
-        await fetcher.post('/base-date', { baseDate: baseDate });
+        await createBaseDate(baseDate);
         toast.success('Data do evento criada com sucesso');
         registerLog(`Criou a data do evento: ${baseDate}`, loggedUsername);
         setBaseDateExists(true);

@@ -8,11 +8,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { products } from '@/Pages/Packages/utils/products';
 import { useCart } from 'react-use-cart';
 
-import { BASE_URL, USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
+import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { getPackageCount, getTotalRegistrations } from '@/services/packages';
+import { createCheckout } from '@/services/checkout';
 
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import useAuth from '@/hooks/useAuth';
@@ -69,14 +70,14 @@ const RoutesValidations = ({ formContextCloseForm }) => {
       setLoading(true);
 
       try {
-        const response = await fetcher.get(`${BASE_URL}/package-count`);
-        setPackageCount(response.data);
-        setAvailablePackages(response.data);
-        setTotalSeats(response.data?.totalSeats || 0);
-        setTotalBusVacancies(response.data?.totalBusVacancies || 0);
-        setTotalPackages(response.data?.totalPackages || {});
-        setUsedPackages(response.data?.usedPackages || {});
-        setUsedValidPackages(response.data?.usedValidPackages || {});
+        const data = await getPackageCount();
+        setPackageCount(data);
+        setAvailablePackages(data);
+        setTotalSeats(data?.totalSeats || 0);
+        setTotalBusVacancies(data?.totalBusVacancies || 0);
+        setTotalPackages(data?.totalPackages || {});
+        setUsedPackages(data?.usedPackages || {});
+        setUsedValidPackages(data?.usedValidPackages || {});
       } catch (error) {
         console.error('Erro ao buscar pacotes:', error);
       } finally {
@@ -86,8 +87,8 @@ const RoutesValidations = ({ formContextCloseForm }) => {
 
     const fetchTotalRegistrations = async () => {
       try {
-        const response = await fetcher.get(`${BASE_URL}/total-registrations`);
-        setTotalRegistrations(response.data);
+        const data = await getTotalRegistrations();
+        setTotalRegistrations(data);
       } catch (error) {
         console.error(
           error.message === 'Request failed with status code 503'
@@ -375,7 +376,7 @@ const RoutesValidations = ({ formContextCloseForm }) => {
       const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
       const sanitizedForms = sanitizeForms(formsToSend);
-      const response = await fetcher.post(`${BASE_URL}/checkout/create`, {
+      const response = await createCheckout({
         forms: sanitizedForms,
         finalPriceCheckout,
       });

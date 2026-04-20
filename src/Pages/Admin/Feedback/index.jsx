@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import { listFeedback, deleteAllFeedback } from '@/services/feedback';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -22,7 +22,7 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   const fetchFeedbacks = async () => {
     try {
-      const { data } = await fetcher.get('feedback');
+      const data = await listFeedback();
       setFeedbacks(data);
     } catch (error) {
       console.error('Erro ao carregar feedbacks:', error);
@@ -37,14 +37,12 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   const handleDeleteFeedbacks = async () => {
     try {
-      const response = await fetcher.delete('feedback');
+      await deleteAllFeedback();
 
-      if (response.status === 200) {
-        toast.success('Todos os feedbacks foram deletados com sucesso');
-        registerLog(`Deletou todos os feedbacks`, loggedUsername);
-        setShowDeleteModal(false);
-        fetchFeedbacks();
-      }
+      toast.success('Todos os feedbacks foram deletados com sucesso');
+      registerLog(`Deletou todos os feedbacks`, loggedUsername);
+      setShowDeleteModal(false);
+      fetchFeedbacks();
     } catch (error) {
       console.error('Erro ao deletar feedbacks:', error);
       toast.error('Erro ao deletar feedbacks');

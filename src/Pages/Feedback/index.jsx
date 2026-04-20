@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { Container, Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { formFeedbackSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { submitFeedback } from '@/services/feedback';
 import useScrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
@@ -35,7 +35,7 @@ const Feedback = () => {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
-        await fetcher.post('feedback', values);
+        await submitFeedback(values);
         toast.success('Opinião enviada com sucesso. Agradecemos sua participação!');
         resetForm();
       } catch (error) {

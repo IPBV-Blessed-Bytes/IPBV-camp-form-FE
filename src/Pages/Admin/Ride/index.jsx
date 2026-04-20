@@ -6,8 +6,14 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import * as XLSX from 'xlsx';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import {
+  listRideOffers,
+  listRideNeeds,
+  setRideChecked,
+  matchRide,
+  deleteRide,
+} from '@/services/rides';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -25,13 +31,9 @@ const AdminRide = ({ loggedUsername }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await fetcher.get(`ride/offer`);
-        const needRideResponse = await fetcher.get(`ride/need`);
+        const [offerRide, needRide] = await Promise.all([listRideOffers(), listRideNeeds()]);
 
-        setRideData({
-          offerRide: rideResponse.data,
-          needRide: needRideResponse.data,
-        });
+        setRideData({ offerRide, needRide });
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
       } finally {
@@ -44,7 +46,7 @@ const AdminRide = ({ loggedUsername }) => {
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
-      await fetcher.patch(`ride/${id}`, { checked });
+      await setRideChecked(id, checked);
 
       setRideData((prevData) => ({
         ...prevData,
@@ -60,7 +62,7 @@ const AdminRide = ({ loggedUsername }) => {
       const needRide = rideData.needRide.find((ride) => ride.id === needRideId);
       const offerRide = rideData.offerRide.find((ride) => ride.id === offerRideId);
 
-      await fetcher.put(`ride/${offerRideId}/${needRideId}`);
+      await matchRide(offerRideId, needRideId);
       setRideData((prevData) => {
         const updatedOfferRide = prevData.offerRide.map((offer) => {
           if (offer.id === offerRideId) {
@@ -135,7 +137,7 @@ const AdminRide = ({ loggedUsername }) => {
 
   const handleDeleteRelationship = async (needRideId) => {
     try {
-      await fetcher.delete(`ride/${needRideId}`);
+      await deleteRide(needRideId);
 
       const removedNeedRide = rideData.offerRide
         .flatMap((offer) => offer.relationship)

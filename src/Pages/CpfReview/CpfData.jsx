@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './style.scss';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { listRideOffers } from '@/services/rides';
 import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
@@ -23,14 +23,14 @@ const CpfData = ({ personData }) => {
 
   scrollUp();
 
-  const paymentMethodLabel = paymentMethodMapping[personData?.data.formPayment] || 'Não Pagante';
+  const paymentMethodLabel = paymentMethodMapping[personData?.formPayment] || 'Não Pagante';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rideResponse = await fetcher.get('ride/offer');
+        const rideOffers = await listRideOffers();
 
-        const rideOfferVacancies = rideResponse.data.find((offer) => offer.name === personData?.data.name);
+        const rideOfferVacancies = rideOffers.find((offer) => offer.name === personData?.name);
 
         if (rideOfferVacancies) {
           setRideOffer(rideOfferVacancies);
@@ -43,8 +43,8 @@ const CpfData = ({ personData }) => {
             setRideNeed([]);
           }
         } else {
-          const rideNeedVacancies = rideResponse.data.find((offer) =>
-            offer.relationship.some((rider) => rider.name === personData?.data.name && rider.type === 'needRide'),
+          const rideNeedVacancies = rideOffers.find((offer) =>
+            offer.relationship.some((rider) => rider.name === personData?.name && rider.type === 'needRide'),
           );
 
           if (rideNeedVacancies) {
@@ -65,7 +65,7 @@ const CpfData = ({ personData }) => {
     fetchData();
   }, [personData]);
 
-  if (!personData || !personData?.data) {
+  if (!personData) {
     return (
       <div className="components-container">
         <Header />
@@ -118,13 +118,13 @@ const CpfData = ({ personData }) => {
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Nome:</span> <br />
-                            {personData?.data.name}
+                            {personData?.name}
                           </Card.Text>
                         </Col>
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Acompanhantes:</span> <br />
-                            {personData?.data.aggregate}
+                            {personData?.aggregate}
                           </Card.Text>
                         </Col>
                       </Row>
@@ -140,7 +140,7 @@ const CpfData = ({ personData }) => {
                           <Card.Text>
                             <span className="form-review__section-title">Cadastrado em: </span>
                             <br />
-                            {personData?.data.registrationDate}
+                            {personData?.registrationDate}
                           </Card.Text>
                         </Col>
                       </Row>
@@ -149,13 +149,13 @@ const CpfData = ({ personData }) => {
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Preço:</span> <br />
-                            R$ {personData?.data.price},00
+                            R$ {personData?.price},00
                           </Card.Text>
                         </Col>
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Hospedagem:</span> <br />
-                            {personData?.data.accomodationName}
+                            {personData?.accomodationName}
                           </Card.Text>
                         </Col>
                       </Row>
@@ -163,14 +163,14 @@ const CpfData = ({ personData }) => {
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Alimentação:</span> <br />
-                            {personData?.data.food}
+                            {personData?.food}
                           </Card.Text>
                         </Col>
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Transporte:</span>
                             <br />
-                            {personData?.data.transportation}
+                            {personData?.transportation}
                           </Card.Text>
                         </Col>
                       </Row>
@@ -179,7 +179,7 @@ const CpfData = ({ personData }) => {
                           <Card.Text>
                             <span className="form-review__section-title">Alergia: </span>
                             <br />
-                            {personData?.data.allergy || 'Nenhuma'}
+                            {personData?.allergy || 'Nenhuma'}
                           </Card.Text>
                         </Col>
                       </Row>
@@ -188,13 +188,13 @@ const CpfData = ({ personData }) => {
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Tem vaga de carona:</span> <br />
-                            {personData?.data.numberVacancies || 'Nenhuma vaga'}
+                            {personData?.numberVacancies || 'Nenhuma vaga'}
                           </Card.Text>
                         </Col>
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Precisa de carona:</span> <br />
-                            {personData?.data.needRide ? 'Sim' : 'Não'}
+                            {personData?.needRide ? 'Sim' : 'Não'}
                           </Card.Text>
                         </Col>
                       </Row>

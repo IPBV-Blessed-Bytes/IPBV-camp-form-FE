@@ -3,8 +3,8 @@ import { Container, Row, Col, Button, Form, Table, Modal } from 'react-bootstrap
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import { listUsers, createUser, updateUser, deleteUser } from '@/services/users';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -25,8 +25,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetcher.get('users');
-      const sortedUsers = response.data.sort((a, b) => a.userName.localeCompare(b.userName));
+      const data = await listUsers();
+      const sortedUsers = data.sort((a, b) => a.userName.localeCompare(b.userName));
       setUsers(sortedUsers);
     } catch (error) {
       toast.error('Erro ao buscar usuários');
@@ -61,18 +61,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
     try {
       if (editingUser) {
-        await fetcher.put(`users/${editingUser.id}`, formData);
+        await updateUser(editingUser.id, formData);
         toast.success('Usuário editado com sucesso');
         registerLog(`Editou usuário ${editingUser.userName}`, loggedUsername);
       } else {
-        const response = await fetcher.post('users', formData);
-
-        if (response.status === 200) {
-          toast.success('Usuário criado com sucesso');
-          registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
-        } else {
-          toast.error('Erro ao criar usuário');
-        }
+        await createUser(formData);
+        toast.success('Usuário criado com sucesso');
+        registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
       }
       setFormData({ userName: '', password: '', role: '' });
       setEditingUser(null);
@@ -88,7 +83,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await fetcher.delete(`users/${userToDelete.id}`);
+      await deleteUser(userToDelete.id);
       toast.success('Usuário deletado com sucesso');
       fetchUsers();
       registerLog(`Deletou usuário ${userToDelete.userName}`, loggedUsername);

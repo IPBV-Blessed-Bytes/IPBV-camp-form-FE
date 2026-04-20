@@ -4,8 +4,7 @@ import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog, listLogs, deleteAllLogs } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -23,8 +22,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const response = await fetcher.get('logs');
-      const logs = response.data;
+      const logs = await listLogs();
       const grouped = groupByUser(logs);
       setGroupedLogs(grouped);
     } catch (error) {
@@ -53,14 +51,12 @@ const AdminUserLogs = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const response = await fetcher.delete('logs');
+      await deleteAllLogs();
 
-      if (response.status === 200) {
-        toast.success('Todos os logs foram deletados com sucesso');
-        registerLog(`Deletou todos os logs`, loggedUsername);
-        setShowDeleteModal(false);
-        setGroupedLogs({});
-      }
+      toast.success('Todos os logs foram deletados com sucesso');
+      registerLog(`Deletou todos os logs`, loggedUsername);
+      setShowDeleteModal(false);
+      setGroupedLogs({});
     } catch (error) {
       console.error('Error adding data:', error);
       toast.error('Erro ao deletar logs');

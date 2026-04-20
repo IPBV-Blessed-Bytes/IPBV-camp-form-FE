@@ -12,8 +12,8 @@ import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '../../form/validations/schema';
 import { issuingState, rgShipper } from '../../utils/constants';
 import calculateAge from '../Packages/utils/calculateAge';
-import { BASE_URL } from '@/config';
-import fetcher from '@/fetchers';
+import { checkCoupon } from '@/services/coupons';
+import { deleteUserPreviousYear, getUserPreviousYear } from '@/services/campers';
 import './style.scss';
 import AgeConfirmationModal from './AgeConfirmationModal';
 import Icons from '@/components/Global/Icons';
@@ -59,13 +59,13 @@ const PersonalData = ({
         }
 
         try {
-          const response = await fetcher.post(`${BASE_URL}/coupon/check`, {
+          const data = await checkCoupon({
             cpf: values.cpf,
             birthday: values.birthday,
           });
 
           if (handleDiscountChange) {
-            handleDiscountChange(response.data.discount, currentFormIndex);
+            handleDiscountChange(data.discount, currentFormIndex);
           }
 
           nextStep();
@@ -154,7 +154,7 @@ const PersonalData = ({
     }
 
     try {
-      await fetcher.delete(`${BASE_URL}/camper/user-previous-year/${previousUserData.personalInformation.cpf}`);
+      await deleteUserPreviousYear(previousUserData.personalInformation.cpf);
 
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);
@@ -192,12 +192,10 @@ const PersonalData = ({
   const fetchPreviousData = async () => {
     if (cpf.isValid(values.cpf) && preFill === true) {
       try {
-        const response = await fetcher.post(`${BASE_URL}/camper/user-previous-year`, {
+        const fullUserData = await getUserPreviousYear({
           cpf: values.cpf,
           birthday: formatDate(values.birthday),
         });
-
-        const fullUserData = response.data;
 
         const filteredUserData = {
           personalInformation: fullUserData.personalInformation,

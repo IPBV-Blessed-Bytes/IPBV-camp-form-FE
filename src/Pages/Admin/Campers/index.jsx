@@ -7,9 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import * as XLSX from 'xlsx';
 import { MAX_SIZE_CAMPERS, CREW_OPTIONS, initialValues } from '@/utils/constants';
-import { registerLog } from '@/fetchers/userLogs';
+import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { listCampers, createCamper, updateCamper, deleteCamper, deleteCampers } from '@/services/campers';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -64,15 +64,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetcher.get('camper', {
-        params: {
-          size: MAX_SIZE_CAMPERS,
-        },
-      });
-      if (Array.isArray(response.data.content)) {
-        setData(response.data.content);
+      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
+      if (Array.isArray(data.content)) {
+        setData(data.content);
       } else {
-        console.error('Data received is not an array:', response.data);
+        console.error('Data received is not an array:', data);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -281,17 +277,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     };
 
     try {
-      const response = await fetcher.put(`camper/${editFormData.id}`, updatedFormValues);
-      if (response.status === 200) {
-        toast.success('Inscrição alterada com sucesso');
-        setFormSubmitted(true);
-        const newData = data.map((item, index) => (index === editRowIndex ? { ...editFormData } : item));
-        setData(newData);
-        setShowEditModal(false);
-        registerLog(`Editou a inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
-      } else {
-        toast.error('Erro ao editar a inscrição. Verifique os dados e tente novamente');
-      }
+      await updateCamper(editFormData.id, updatedFormValues);
+      toast.success('Inscrição alterada com sucesso');
+      setFormSubmitted(true);
+      const newData = data.map((item, index) => (index === editRowIndex ? { ...editFormData } : item));
+      setData(newData);
+      setShowEditModal(false);
+      registerLog(`Editou a inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
     } catch (error) {
       setFormSubmitted(true);
       console.error('Error updating data:', error);
@@ -324,18 +316,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     };
 
     try {
-      const response = await fetcher.post('camper', updatedFormValues);
+      await createCamper(updatedFormValues);
 
-      if (response.status === 200) {
-        toast.success('Inscrição criada com sucesso');
-        setFormSubmitted(true);
-        fetchData();
-        setShowAddModal(false);
-        setAddFormData({});
-        registerLog(`Adicionou manualmente inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
-      } else {
-        toast.error('Erro ao criar a inscrição. Verifique os dados e tente novamente');
-      }
+      toast.success('Inscrição criada com sucesso');
+      setFormSubmitted(true);
+      fetchData();
+      setShowAddModal(false);
+      setAddFormData({});
+      registerLog(`Adicionou manualmente inscrição de ${updatedFormValues.personalInformation.name}`, loggedUsername);
     } catch (error) {
       setFormSubmitted(true);
       console.error('Error adding data:', error);
@@ -372,7 +360,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     try {
       const idsToDelete = selectedRows.map((row) => data[row.index].id);
       const namesToDelete = selectedRows.map((row) => row.name);
-      await Promise.all(idsToDelete.map((id) => fetcher.delete(`camper/${id}`)));
+      await deleteCampers(idsToDelete);
       const newData = data.filter((_, index) => !selectedRows.some((row) => row.index === index));
       setData(newData);
       setSelectedRows([]);
@@ -394,7 +382,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
     try {
       const itemToDelete = data[editRowIndex];
-      await fetcher.delete(`camper/${itemToDelete.id}`);
+      await deleteCamper(itemToDelete.id);
       const newData = data.filter((_, index) => index !== editRowIndex);
       setData(newData);
       setEditRowIndex(null);

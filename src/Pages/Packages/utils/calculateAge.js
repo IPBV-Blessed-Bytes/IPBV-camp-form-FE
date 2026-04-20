@@ -1,4 +1,4 @@
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { getBaseDate as fetchBaseDate } from '@/services/baseDate';
 
 let baseDate = null;
 let isLoading = false;
@@ -17,10 +17,8 @@ export const initBaseDate = async () => {
 
     isLoading = true;
 
-    const response = await fetcher.get('/base-date');
-    const baseDateString = response.data.baseDate;
-
-    baseDate = parseBRDate(baseDateString);
+    const data = await fetchBaseDate();
+    baseDate = parseBRDate(data.baseDate);
   } catch (error) {
     console.error('Erro ao buscar baseDate:', error);
     baseDate = null;

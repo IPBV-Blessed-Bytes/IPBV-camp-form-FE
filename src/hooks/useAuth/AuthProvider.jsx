@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 
 import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE, FORM_CONTEXT_KEY } from '@/config';
 import { isTokenValid } from './helpers';
-import fetcher from '@/fetchers';
+import { login as loginRequest } from '@/services/auth';
+import { getFormContext } from '@/services/formContext';
 
 export const AuthContext = createContext({
   user: {},
@@ -52,8 +53,8 @@ const AuthProvider = ({ children }) => {
     const fetchFormContext = async () => {
       setLoading(true);
       try {
-        const response = await fetcher.get('/form-context');
-        const context = response?.data?.formContext || '';
+        const data = await getFormContext();
+        const context = data?.formContext || '';
 
         setFormContextState(context);
         sessionStorage.setItem(FORM_CONTEXT_KEY, context);
@@ -70,17 +71,14 @@ const AuthProvider = ({ children }) => {
   const login = useCallback(async (userName, passWord) => {
     setLoading(true);
     try {
-      const response = await fetcher.post('/auth/login', {
-        login: userName,
-        password: passWord,
-      });
+      const data = await loginRequest({ login: userName, password: passWord });
 
       setIsLoggedIn(true);
       setUser(userName);
 
-      localStorage.setItem(JWT_LOCAL_STORAGE_KEY, response.data.token);
+      localStorage.setItem(JWT_LOCAL_STORAGE_KEY, data.token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
-      localStorage.setItem(USER_STORAGE_ROLE, response.data.role);
+      localStorage.setItem(USER_STORAGE_ROLE, data.role);
 
       toast.success('Usuário logado com sucesso');
     } catch (error) {

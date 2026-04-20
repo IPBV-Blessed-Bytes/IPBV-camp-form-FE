@@ -3,8 +3,14 @@ import { Container, Row, Col, Button, Form, Modal, Accordion } from 'react-boots
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
-import fetcher from '@/fetchers/fetcherWithCredentials';
-import { registerLog } from '@/fetchers/userLogs';
+import {
+  getHomeInfo,
+  createHomeInfo,
+  updateHomeInfo,
+  deleteHomeInfo,
+  deleteOnDemandHomeInfo,
+} from '@/services/homeInfo';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -46,13 +52,13 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const fetchHomepageInfo = async () => {
     try {
       setLoading(true);
-      const response = await fetcher.get('/homepage-info');
+      const data = await getHomeInfo();
 
-      if (response?.data) {
+      if (data) {
         setFormData({
-          ...response.data,
+          ...data,
           bottom:
-            response.data.bottom?.map((item) => ({
+            data.bottom?.map((item) => ({
               id: item.id ?? 0,
               icon: item.icon,
               title: item.title,
@@ -114,7 +120,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         bottom: [newItem],
       };
 
-      await fetcher.post('/homepage-info', payload);
+      await createHomeInfo(payload);
 
       toast.success('Item adicionado com sucesso');
       registerLog('Adicionou item bottom', loggedUsername);
@@ -154,9 +160,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         bottom: [{ id: itemToRemove.id }],
       };
 
-      await fetcher.delete('/homepage-info/on-demand', {
-        data: payload,
-      });
+      await deleteOnDemandHomeInfo(payload);
 
       toast.success('Item removido com sucesso');
       registerLog('Removeu item bottom', loggedUsername);
@@ -187,7 +191,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
           },
         ],
       };
-      await fetcher.put('/homepage-info', payload);
+      await updateHomeInfo(payload);
 
       toast.success('Item atualizado com sucesso');
       registerLog('Editou item bottom', loggedUsername);
@@ -234,11 +238,11 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
             description: item.description,
           })),
         };
-        await fetcher.put('/homepage-info', payload);
+        await updateHomeInfo(payload);
         toast.success('Homepage atualizada com sucesso');
         registerLog('Editou informações da homepage', loggedUsername);
       } else {
-        await fetcher.post('/homepage-info', formData);
+        await createHomeInfo(formData);
         toast.success('Homepage criada com sucesso');
         registerLog('Criou informações da homepage', loggedUsername);
       }
@@ -256,7 +260,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
     try {
       setLoadingContent(true);
 
-      await fetcher.delete('/homepage-info');
+      await deleteHomeInfo();
       toast.success('Informações removidas com sucesso');
       registerLog('Removeu informações da homepage', loggedUsername);
 

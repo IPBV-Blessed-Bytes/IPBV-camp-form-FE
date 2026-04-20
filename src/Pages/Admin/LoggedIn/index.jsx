@@ -2,10 +2,10 @@ import { useEffect, useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import fetcher from '@/fetchers/fetcherWithCredentials';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
+import { getNonPayingChildren, getCrewBus } from '@/services/stats';
+import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
@@ -68,13 +68,13 @@ const AdminLoggedIn = ({
       setLoading(true);
 
       try {
-        const [nonPayingChildrenRes, crewBusRes] = await Promise.all([
-          fetcher.get('/non-paying-children'),
-          fetcher.get('/crew-bus'),
+        const [nonPayingChildren, crewBus] = await Promise.all([
+          getNonPayingChildren(),
+          getCrewBus(),
         ]);
 
-        setFilteredCountNonPayingChildren(nonPayingChildrenRes.data?.quantity || 0);
-        setCrewBusUsers(crewBusRes.data?.quantity || 0);
+        setFilteredCountNonPayingChildren(nonPayingChildren?.quantity || 0);
+        setCrewBusUsers(crewBus?.quantity || 0);
       } catch (error) {
         console.error('Erro ao buscar contadores do admin:', error);
       } finally {

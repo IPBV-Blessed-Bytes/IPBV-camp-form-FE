@@ -4,7 +4,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import { permissionsSections } from '@/fetchers/permissions';
 import PropTypes from 'prop-types';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { listCampers } from '@/services/campers';
+import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -54,12 +55,10 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
 
     const fetchCampers = async () => {
       try {
-        const response = await fetcher.get('camper', {
-          params: { size: MAX_SIZE_CAMPERS },
-        });
+        const data = await listCampers({ size: MAX_SIZE_CAMPERS });
 
-        if (Array.isArray(response.data.content)) {
-          const checkinData = extractCheckinAndAccommodation(response.data.content);
+        if (Array.isArray(data.content)) {
+          const checkinData = extractCheckinAndAccommodation(data.content);
           setFillingVacancies(checkinData);
         }
       } catch (error) {
@@ -73,11 +72,11 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
   useEffect(() => {
     const fetchPieData = async () => {
       try {
-        const [packageRes] = await Promise.all([fetcher.get('/package-count'), fetcher.get('/total-registrations')]);
+        const [packages] = await Promise.all([getPackageCount(), getTotalRegistrations()]);
 
         setPackageData({
-          usedPackages: packageRes.data?.usedPackages || {},
-          usedValidPackages: packageRes.data?.usedValidPackages || {},
+          usedPackages: packages?.usedPackages || {},
+          usedValidPackages: packages?.usedValidPackages || {},
         });
       } catch (error) {
         console.error('Erro ao buscar dados do Pie Dashboard:', error);

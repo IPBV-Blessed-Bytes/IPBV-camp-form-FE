@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import { registerLog } from '@/fetchers/userLogs';
-import fetcher from '@/fetchers/fetcherWithCredentials';
+import { registerLog } from '@/services/logs';
+import { getFormContext, updateFormContext } from '@/services/formContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminHeader from '@/components/Admin/Header/AdminHeader';
@@ -31,8 +31,8 @@ const AdminFormContext = ({ loggedUsername }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetcher.get('form-context');
-        setFormContext(response.data.formContext);
+        const data = await getFormContext();
+        setFormContext(data.formContext);
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
         toast.error('Erro ao carregar contexto do formulário');
@@ -53,7 +53,7 @@ const AdminFormContext = ({ loggedUsername }) => {
     setShowModal(false);
     setLoading(true);
     try {
-      await fetcher.put('form-context', { formContext: selectedContext });
+      await updateFormContext(selectedContext);
       toast.success('Contexto do formulário atualizado com sucesso');
       registerLog(`Alterou o contexto do formulário para ${contextLabels[selectedContext]}`, loggedUsername);
     } catch (error) {
