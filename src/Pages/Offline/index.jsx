@@ -7,7 +7,7 @@ import useBaseYear from '@/hooks/useBaseYear';
 
 const Offline = () => {
   const navigate = useNavigate();
-  const baseYear = useBaseYear();
+  const baseYear = useBaseYear() || new Date().getFullYear() + 1;
 
   return (
     <>
