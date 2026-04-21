@@ -15,6 +15,7 @@ const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
   const navigate = useNavigate();
   const location = useLocation();
+  const formState = useFormState({ optional: true });
   const {
     backStepFlag,
     formSubmitted,
@@ -24,7 +25,7 @@ const Header = ({ showNavMenu = false }) => {
     hasFood,
     highestStepReached,
     steps,
-  } = useFormState();
+  } = formState ?? {};
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {

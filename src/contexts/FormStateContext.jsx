@@ -480,9 +480,9 @@ FormStateProvider.propTypes = {
   formContextCloseForm: PropTypes.string,
 };
 
-export const useFormState = () => {
+export const useFormState = ({ optional = false } = {}) => {
   const context = useContext(FormStateContext);
-  if (!context) {
+  if (!context && !optional) {
     throw new Error('useFormState must be used within a FormStateProvider');
   }
   return context;
