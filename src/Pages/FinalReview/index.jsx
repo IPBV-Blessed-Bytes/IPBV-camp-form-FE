@@ -14,7 +14,7 @@ import { getTempData } from '@/utils/formStorage';
 import './style.scss';
 
 const FinalReview = () => {
-  const { backStep, nextStep, updateFormValues } = useFormState();
+  const { backStep, nextStep, prepareNewDraft, updateFormValues } = useFormState();
   const updateForm = updateFormValues('finalReview');
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
@@ -84,6 +84,7 @@ const FinalReview = () => {
     sessionStorage.setItem('enteredFromFinalReview', 'true');
 
     updateForm();
+    prepareNewDraft();
     emptyCart();
     nextStep();
   };

@@ -57,7 +57,10 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [personData, setPersonData] = useState(null);
-  const [currentFormIndex, setCurrentFormIndex] = useState(0);
+  const [currentFormIndex, setCurrentFormIndex] = useState(() => {
+    const stored = sessionStorage.getItem(FORM_STORAGE_KEYS.currentFormIndex);
+    return stored !== null ? Number(stored) : 0;
+  });
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
@@ -122,6 +125,10 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   }, [formValues]);
 
   useEffect(() => {
+    sessionStorage.setItem(FORM_STORAGE_KEYS.currentFormIndex, String(currentFormIndex));
+  }, [currentFormIndex]);
+
+  useEffect(() => {
     const storedList = sessionStorage.getItem(FORM_STORAGE_KEYS.discountList);
     if (!storedList) return;
 
@@ -160,7 +167,10 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
     setHasDiscount(Number(discountValue) !== 0);
   }, []);
 
-  const resetFormValues = useCallback(() => setFormValues(initialValues), []);
+  const resetFormValues = useCallback(() => {
+    setFormValues(initialValues);
+    setCurrentFormIndex(0);
+  }, []);
   const resetFormSubmitted = useCallback(() => setFormSubmitted(false), []);
   const handlePreFill = useCallback((value) => setPreFill(Boolean(value)), []);
   const handleBasePriceChange = useCallback((value) => setBasePriceTotal(value), []);
@@ -211,6 +221,19 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
     });
     setSteps(enumSteps.personalData);
     scrollTop();
+  }, []);
+
+  const prepareNewDraft = useCallback(() => {
+    sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
+    setFormValues((prev) => {
+      const last = prev[prev.length - 1];
+      if (last && !isUserValid(last)) {
+        setCurrentFormIndex(prev.length - 1);
+        return prev;
+      }
+      setCurrentFormIndex(prev.length);
+      return [...prev, initialValues[0]];
+    });
   }, []);
 
   const initialStep = useCallback(() => {
@@ -354,6 +377,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       } finally {
         sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
         sessionStorage.removeItem(FORM_STORAGE_KEYS.savedUsers);
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.currentFormIndex);
         setLoading(false);
       }
     },
@@ -400,6 +424,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       packageCount,
       personData,
       preFill,
+      prepareNewDraft,
       resetFormSubmitted,
       resetFormValues,
       sendForm,
@@ -456,6 +481,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       packageCount,
       personData,
       preFill,
+      prepareNewDraft,
       resetFormSubmitted,
       resetFormValues,
       sendForm,
