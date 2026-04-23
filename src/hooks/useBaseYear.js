@@ -1,31 +1,24 @@
 import { useEffect, useState } from 'react';
 
-import { getBaseDate } from '@/services/baseDate';
+import { getBaseDate, initBaseDate } from '@/Pages/Packages/utils/calculateAge';
+
+const extractYear = (date) => (date instanceof Date ? String(date.getFullYear()) : '');
 
 const useBaseYear = () => {
-  const [baseYear, setBaseYear] = useState('');
+  const [baseYear, setBaseYear] = useState(() => extractYear(getBaseDate()));
 
   useEffect(() => {
+    if (baseYear) return undefined;
+
     let canceled = false;
-
-    const fetchBaseDate = async () => {
-      try {
-        const data = await getBaseDate();
-        const dateStr = data?.baseDate;
-        if (!canceled && typeof dateStr === 'string') {
-          setBaseYear(dateStr.split('/')[2] || '');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar base date', error);
-      }
-    };
-
-    fetchBaseDate();
+    initBaseDate().then((date) => {
+      if (!canceled) setBaseYear(extractYear(date));
+    });
 
     return () => {
       canceled = true;
     };
-  }, []);
+  }, [baseYear]);
 
   return baseYear;
 };

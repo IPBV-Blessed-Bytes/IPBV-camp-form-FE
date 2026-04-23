@@ -1,7 +1,7 @@
 import { getBaseDate as fetchBaseDate } from '@/services/baseDate';
 
 let baseDate = null;
-let isLoading = false;
+let baseDatePromise = null;
 
 export const getBaseDate = () => baseDate;
 
@@ -11,20 +11,22 @@ const parseBRDate = (dateString) => {
   return new Date(year, month - 1, day);
 };
 
-export const initBaseDate = async () => {
-  try {
-    if (baseDate || isLoading) return;
+export const initBaseDate = () => {
+  if (baseDate) return Promise.resolve(baseDate);
+  if (baseDatePromise) return baseDatePromise;
 
-    isLoading = true;
+  baseDatePromise = fetchBaseDate()
+    .then((data) => {
+      baseDate = parseBRDate(data?.baseDate);
+      return baseDate;
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar baseDate:', error);
+      baseDatePromise = null;
+      return null;
+    });
 
-    const data = await fetchBaseDate();
-    baseDate = parseBRDate(data.baseDate);
-  } catch (error) {
-    console.error('Erro ao buscar baseDate:', error);
-    baseDate = null;
-  } finally {
-    isLoading = false;
-  }
+  return baseDatePromise;
 };
 
 export function calculateAge(date) {
