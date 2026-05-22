@@ -191,7 +191,7 @@ const AdminDiscount = ({ loggedUsername }) => {
           <tbody>
             {discount.map((discount) => {
               return (
-                <tr key={discount.id}>
+                <tr key={discount.id} data-testid={`discount-row-${discount.cpf}`}>
                   <td>{discount.cpf}</td>
                   <td>{discount.discount}</td>
                   <td>
@@ -206,10 +206,20 @@ const AdminDiscount = ({ loggedUsername }) => {
                   <td>{discount.discountReason || '-'}</td>
                   <td>{discount.totalPrice ? discount.totalPrice : '-'}</td>
                   <td>
-                    <Button variant="outline-success" onClick={() => openModal(discount)}>
+                    <Button
+                      variant="outline-success"
+                      data-testid={`discount-edit-${discount.cpf}`}
+                      aria-label="Editar desconto"
+                      onClick={() => openModal(discount)}
+                    >
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>{' '}
-                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(discount)}>
+                    <Button
+                      variant="outline-danger"
+                      data-testid={`discount-delete-${discount.cpf}`}
+                      aria-label="Excluir desconto"
+                      onClick={() => openConfirmDeleteModal(discount)}
+                    >
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
                   </td>

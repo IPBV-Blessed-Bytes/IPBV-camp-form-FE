@@ -9,9 +9,10 @@ export class AdminHomeComponent {
   readonly discountHeading: Locator;
   readonly roomsButton: Locator;
   readonly roomsHeading: Locator;
+  readonly teamsButton: Locator;
+  readonly teamsHeading: Locator;
   readonly feedbacksButton: Locator;
   readonly feedbacksHeading: Locator;
-  readonly extraMealsButton: Locator;
   readonly extraMealsHeading: Locator;
   readonly checkinButton: Locator;
   readonly checkinHeading: Locator;
@@ -30,39 +31,41 @@ export class AdminHomeComponent {
   readonly settingsItems: { button: Locator; heading: Locator }[];
 
   constructor(readonly page: Page) {
-    this.registeredButton = page.getByText('Inscritos', { exact: true });
+    this.registeredButton = page.getByTestId('session-card-registered-card');
     this.registeredHeading = page.getByRole('heading', { name: 'Gerenciamento de Inscritos' });
-    this.rideButton = page.getByText('Caronas');
+    this.rideButton = page.getByTestId('session-card-ride-card');
     this.rideHeading = page.getByRole('heading', { name: 'Gerenciamento de Caronas' });
-    this.discountButton = page.getByText('Descontos');
+    this.discountButton = page.getByTestId('session-card-discount-card');
     this.discountHeading = page.getByRole('heading', { name: 'Gerenciamento de Descontos' });
-    this.roomsButton = page.getByText('Quartos');
+    this.roomsButton = page.getByTestId('session-card-rooms-card');
     this.roomsHeading = page.getByRole('heading', { name: 'Gerenciamento de Quartos' });
-    this.feedbacksButton = page.getByText('Feedbacks');
+    this.teamsButton = page.getByTestId('session-card-teams-card');
+    this.teamsHeading = page.getByRole('heading', { name: 'Gerenciamento de Times' });
+    this.feedbacksButton = page.getByTestId('session-card-feedback-card');
     this.feedbacksHeading = page.getByRole('heading', { name: 'Gerenciamento de Feedbacks' });
-    this.extraMealsButton = page.getByText('Alimentação Extra');
     this.extraMealsHeading = page.getByRole('heading', { name: 'Usuários com Refeições Extras' });
-    this.checkinButton = page.getByText('Check-in');
+    this.checkinButton = page.getByTestId('session-card-checkin-card');
     this.checkinHeading = page.getByRole('heading', { name: 'Check-in de Usuário' });
-    this.userLogsButton = page.getByRole('button', { name: 'Logs de Usuários' });
+
+    this.settingsButton = page.getByTestId('settings-button');
+    this.userLogsButton = page.getByTestId('settings-menu-logs');
     this.userLogsHeading = page.getByRole('heading', { name: 'Logs de Usuários' });
-    this.vacanciesManagementButton = page.getByRole('button', { name: 'Controle de Vagas' });
+    this.vacanciesManagementButton = page.getByTestId('settings-menu-vacancies');
     this.vacanciesManagementHeading = page.getByRole('heading', { name: 'Gerenciamento de Vagas' });
-    this.usersManagementButton = page.getByRole('button', { name: 'Controle de Usuários' });
-    this.usersManagementHeading = page.getByRole('heading', { name: 'Gerenciamento de Usuários' });
-    this.dataPanelButton = page.getByRole('button').filter({ hasText: /^$/ }).first();
+    this.usersManagementButton = page.getByTestId('settings-menu-users');
+    this.usersManagementHeading = page.getByRole('heading', { name: 'Gerenciamento de Acampantes' });
+    this.dataPanelButton = page.getByTestId('data-panel-button');
     this.dataPanelHeading = page.getByRole('heading', { name: 'Painel de Dados' });
-    this.settingsButton = page.getByRole('button').filter({ hasText: /^$/ }).nth(1);
-    this.backButton = page.getByRole('button', { name: 'Voltar' });
-    this.logoutButton = page.getByRole('button', { name: 'Desconectar' });
+    this.backButton = page.getByTestId('admin-header-back');
+    this.logoutButton = page.getByTestId('admin-logout');
 
     this.cardsItems = [
       { button: this.registeredButton, heading: this.registeredHeading },
       { button: this.rideButton, heading: this.rideHeading },
       { button: this.discountButton, heading: this.discountHeading },
       { button: this.roomsButton, heading: this.roomsHeading },
+      { button: this.teamsButton, heading: this.teamsHeading },
       { button: this.feedbacksButton, heading: this.feedbacksHeading },
-      { button: this.extraMealsButton, heading: this.extraMealsHeading },
       { button: this.checkinButton, heading: this.checkinHeading },
     ];
 

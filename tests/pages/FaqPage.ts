@@ -2,33 +2,29 @@ import { Locator, Page } from '@playwright/test';
 
 export class FaqComponent {
   readonly infoButton: Locator;
-  readonly ageToast: Locator;
   readonly faqButton: Locator;
   readonly faqHeading: Locator;
-  readonly firstQuestionButton: Locator;
-  readonly firstQuestionContent: Locator;
-  readonly secondQuestionButton: Locator;
-  readonly secondQuestionContent: Locator;
-  readonly thirdQuestionButton: Locator;
-  readonly thirdQuestionContent: Locator;
+  readonly inscriptionQuestionButton: Locator;
+  readonly inscriptionQuestionContent: Locator;
+  readonly childrenQuestionButton: Locator;
+  readonly childrenQuestionContent: Locator;
+  readonly roomQuestionButton: Locator;
+  readonly roomQuestionContent: Locator;
   readonly question: Locator;
   readonly backButton: Locator;
-  readonly formMainTitle: Locator;
 
   constructor(readonly page: Page) {
-    this.infoButton = page.getByRole('button').filter({ hasText: /^$/ });
-    this.ageToast = page.getByRole('button', { name: 'close' });
-    this.faqButton = page.getByRole('button', { name: 'Perguntas Frequentes' });
+    this.infoButton = page.getByTestId('info-button');
+    this.faqButton = page.getByTestId('info-menu-faq');
     this.faqHeading = page.getByText('Perguntas Frequentes:');
-    this.firstQuestionButton = page.getByRole('button', { name: '1. Como faço minha inscrição' });
-    this.firstQuestionContent = page.getByText('Você pode fazer sua inscrição');
-    this.secondQuestionButton = page.getByRole('button', { name: '13. Meu filho menor de idade' });
-    this.secondQuestionContent = page.getByText('Sim, você deve digitalizar e');
-    this.thirdQuestionButton = page.getByRole('button', { name: 'Posso escolher meu quarto?' });
-    this.thirdQuestionContent = page.getByText('Não é possível escolher');
+    this.inscriptionQuestionButton = page.getByRole('button', { name: /Como faço minha inscrição/ });
+    this.inscriptionQuestionContent = page.getByText('Exclusivamente pelo link', { exact: false });
+    this.childrenQuestionButton = page.getByRole('button', { name: /Meu filho menor de idade/ });
+    this.childrenQuestionContent = page.getByText('Sim, você deve digitalizar', { exact: false });
+    this.roomQuestionButton = page.getByRole('button', { name: /Posso escolher meu quarto\?/ });
+    this.roomQuestionContent = page.getByText('Não é possível escolher quartos', { exact: false });
     this.question = page.locator('.accordion-header');
-    this.backButton = page.getByRole('button', { name: 'Voltar pro formulário' });
-    this.formMainTitle = page.getByRole('heading', { name: 'Acampamento no período de' });
+    this.backButton = page.getByRole('button', { name: 'Voltar' });
   }
 
   async openFaqPage() {

@@ -15,12 +15,21 @@ test.describe('Permissions flow', () => {
 
     await authentication.login(adminUser);
     await expect(permission.logoutButton).toBeVisible();
-    await expect(permission.allAdminCards).toBeVisible();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
-    await expect(permission.managementSession).toBeVisible();
-    await expect(permission.dataPanelSession).toBeVisible();
-    await permission.registeredButton.click();
+
+    await expect(permission.registeredCard).toBeVisible();
+    await expect(permission.rideCard).toBeVisible();
+    await expect(permission.discountCard).toBeVisible();
+    await expect(permission.roomsCard).toBeVisible();
+    await expect(permission.teamsCard).toBeVisible();
+    await expect(permission.feedbackCard).toBeVisible();
+    await expect(permission.checkinCard).toBeVisible();
+
+    await expect(permission.validPackagesSection).toBeVisible();
+    await expect(permission.totalSection).toBeVisible();
+    await expect(permission.managementSection).toBeVisible();
+    await expect(permission.dataPanelSection).toBeVisible();
+
+    await permission.registeredCard.click();
     await expect(permission.selectAllColumn).toBeVisible();
     await expect(permission.editDeleteColumn).toBeVisible();
     await expect(permission.newCamperButton).toBeVisible();
@@ -31,30 +40,46 @@ test.describe('Permissions flow', () => {
 
     await authentication.login(collaboratorUser);
     await expect(permission.logoutButton).toBeVisible();
-    await expect(permission.allAdminCards).toBeHidden();
-    await expect(permission.allAdminCardsWithoutCheckin).toBeVisible();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
-    await expect(permission.managementSession).toBeHidden();
-    await expect(permission.dataPanelSession).toBeVisible();
-    await permission.registeredButton.click();
+
+    await expect(permission.registeredCard).toBeVisible();
+    await expect(permission.rideCard).toBeVisible();
+    await expect(permission.discountCard).toBeVisible();
+    await expect(permission.roomsCard).toBeVisible();
+    await expect(permission.teamsCard).toBeVisible();
+    await expect(permission.feedbackCard).toBeVisible();
+    await expect(permission.checkinCard).toBeHidden();
+
+    await expect(permission.validPackagesSection).toBeVisible();
+    await expect(permission.totalSection).toBeVisible();
+    await expect(permission.managementSection).toBeHidden();
+    await expect(permission.dataPanelSection).toBeVisible();
+
+    await permission.registeredCard.click();
     await expect(permission.selectAllColumn).toBeVisible();
     await expect(permission.editDeleteColumn).toBeVisible();
     await expect(permission.newCamperButton).toBeVisible();
   });
 
-  test('Check collaboratorUser viewer permissions', async ({ authentication, permission }) => {
+  test('Check collaborator viewer permissions', async ({ authentication, permission }) => {
     const collaboratorViewerUser = testsConfig.users.collaboratorViewer;
 
     await authentication.login(collaboratorViewerUser);
     await expect(permission.logoutButton).toBeVisible();
-    await expect(permission.allAdminCards).toBeHidden();
-    await expect(permission.registeredAndDiscountCards).toBeVisible();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
-    await expect(permission.managementSession).toBeHidden();
-    await expect(permission.dataPanelSession).toBeVisible();
-    await permission.registeredButton.click();
+
+    await expect(permission.registeredCard).toBeVisible();
+    await expect(permission.discountCard).toBeVisible();
+    await expect(permission.rideCard).toBeHidden();
+    await expect(permission.roomsCard).toBeHidden();
+    await expect(permission.teamsCard).toBeHidden();
+    await expect(permission.feedbackCard).toBeHidden();
+    await expect(permission.checkinCard).toBeHidden();
+
+    await expect(permission.validPackagesSection).toBeVisible();
+    await expect(permission.totalSection).toBeVisible();
+    await expect(permission.managementSection).toBeHidden();
+    await expect(permission.dataPanelSection).toBeVisible();
+
+    await permission.registeredCard.click();
     await expect(permission.selectAllColumn).toBeHidden();
     await expect(permission.editDeleteColumn).toBeHidden();
     await expect(permission.newCamperButton).toBeHidden();
@@ -65,11 +90,18 @@ test.describe('Permissions flow', () => {
 
     await authentication.login(checkerUser);
     await expect(permission.logoutButton).toBeVisible();
-    await expect(permission.allAdminCards).toBeHidden();
-    await expect(permission.justCheckinCard).toBeVisible();
-    await expect(permission.packagesSession).toBeHidden();
-    await expect(permission.totalSession).toBeHidden();
-    await expect(permission.managementSession).toBeHidden();
-    await expect(permission.dataPanelSession).toBeVisible();
+
+    await expect(permission.checkinCard).toBeVisible();
+    await expect(permission.registeredCard).toBeHidden();
+    await expect(permission.rideCard).toBeHidden();
+    await expect(permission.discountCard).toBeHidden();
+    await expect(permission.roomsCard).toBeHidden();
+    await expect(permission.teamsCard).toBeHidden();
+    await expect(permission.feedbackCard).toBeHidden();
+
+    await expect(permission.validPackagesSection).toBeHidden();
+    await expect(permission.totalSection).toBeHidden();
+    await expect(permission.managementSection).toBeHidden();
+    await expect(permission.dataPanelSection).toBeVisible();
   });
 });

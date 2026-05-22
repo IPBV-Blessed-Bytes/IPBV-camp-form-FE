@@ -1,6 +1,11 @@
 import { Locator, Page } from '@playwright/test';
 
+const TEST_USERNAME = 'usuario@test';
+const EDITED_USERNAME = 'test@usuario';
+
 export class UserCreationComponent {
+  readonly testUsername: string;
+  readonly editedUsername: string;
   readonly settingsButton: Locator;
   readonly usersManagementButton: Locator;
   readonly usersManagementHeading: Locator;
@@ -17,7 +22,6 @@ export class UserCreationComponent {
   readonly editUserButton: Locator;
   readonly editUserHeading: Locator;
   readonly obsEditUser: Locator;
-  readonly editPasswordInput: Locator;
   readonly userSuccessfulyEditedToast: Locator;
   readonly userUpdated: Locator;
   readonly saveChangesButton: Locator;
@@ -28,46 +32,30 @@ export class UserCreationComponent {
   readonly userSuccessfulyDeletedToast: Locator;
 
   constructor(readonly page: Page) {
-    this.settingsButton = this.page.getByRole('button').filter({ hasText: /^$/ }).nth(2);
-    this.usersManagementButton = page.getByRole('button', { name: 'Controle de Usuários' });
-    this.usersManagementHeading = page.getByRole('heading', { name: 'Gerenciamento de Usuários' });
+    this.testUsername = TEST_USERNAME;
+    this.editedUsername = EDITED_USERNAME;
+    this.settingsButton = page.getByTestId('settings-button');
+    this.usersManagementButton = page.getByTestId('settings-menu-users');
+    this.usersManagementHeading = page.getByRole('heading', { name: 'Gerenciamento de Acampantes' });
     this.createNewUserButton = page.getByRole('button', { name: 'Criar Novo Usuário' });
-    this.createUserHeading = page
-      .locator('div')
-      .filter({ hasText: /^Criar Usuário$/ })
-      .first();
-    this.userInput = page.getByRole('textbox', { name: 'Usuário:' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Senha:' });
+    this.createUserHeading = page.getByRole('dialog').filter({ hasText: 'Criar Usuário' }).first();
+    this.userInput = page.getByPlaceholder('Digite o nome de usuário');
+    this.passwordInput = page.getByPlaceholder('Digite a senha');
     this.roleSelect = page.getByLabel('Função:');
-    this.createUserButton = page.getByRole('button', { name: 'Criar Usuário' });
+    this.createUserButton = page.getByRole('button', { name: 'Criar Usuário', exact: true });
     this.userSuccessfulyCreatedToast = page.getByText('Usuário criado com sucesso');
-    this.userCreated = page
-      .locator('tbody tr')
-      .filter({
-        has: page.locator('td').filter({ hasText: 'usuario@test' }),
-      })
-      .filter({
-        has: page.locator('td').filter({ hasText: 'Admin' }),
-      });
+    this.userCreated = page.getByTestId(`user-row-${TEST_USERNAME}`);
     this.usernameAlreadyUsedToast = page.getByText('Este nome de usuário já está em uso');
-    this.modalCloseButton = page.getByRole('button', { name: 'Cancelar' });
-    this.editUserButton = page.getByRole('row', { name: 'usuario@test Admin' }).getByRole('button').first();
-    this.editUserHeading = page.locator('div').filter({ hasText: 'Editar Usuário' }).nth(3);
-    this.obsEditUser = page.getByText('* (Irá substituir a senha');
-    this.editPasswordInput = page.getByRole('textbox', { name: 'Nova Senha: * (Irá substituir' });
+    this.modalCloseButton = page.getByRole('button', { name: 'Cancelar' }).first();
+    this.editUserButton = page.getByTestId(`user-edit-${TEST_USERNAME}`);
+    this.editUserHeading = page.getByRole('dialog').filter({ hasText: 'Editar Usuário' });
+    this.obsEditUser = page.getByText('Irá substituir a senha');
     this.userSuccessfulyEditedToast = page.getByText('Usuário editado com sucesso');
-    this.userUpdated = page
-      .locator('tbody tr')
-      .filter({
-        has: page.locator('td').filter({ hasText: 'test@usuario' }),
-      })
-      .filter({
-        has: page.locator('td').filter({ hasText: 'Colaborador' }),
-      });
+    this.userUpdated = page.getByTestId(`user-row-${EDITED_USERNAME}`);
     this.saveChangesButton = page.getByRole('button', { name: 'Salvar Alterações' });
-    this.deleteUserButton = page.getByRole('row', { name: 'test@usuario Colaborador' }).getByRole('button').nth(1);
-    this.deleteUserDuplicatedButton = page.getByRole('row', { name: 'usuario@test Admin' }).getByRole('button').nth(1);
-    this.deleteUserHeading = page.locator('div').filter({ hasText: 'Confirmar Exclusão' }).nth(3);
+    this.deleteUserButton = page.getByTestId(`user-delete-${EDITED_USERNAME}`);
+    this.deleteUserDuplicatedButton = page.getByTestId(`user-delete-${TEST_USERNAME}`);
+    this.deleteUserHeading = page.getByRole('dialog').filter({ hasText: 'Confirmar Exclusão' });
     this.confirmDeleteUserButton = page.getByRole('button', { name: 'Deletar' });
     this.userSuccessfulyDeletedToast = page.getByText('Usuário deletado com sucesso');
   }
@@ -78,15 +66,15 @@ export class UserCreationComponent {
   }
 
   async fillUserData() {
-    await this.userInput.fill('usuario@test');
+    await this.userInput.fill(TEST_USERNAME);
     await this.passwordInput.fill('senha@test');
     await this.roleSelect.selectOption('admin');
     await this.createUserButton.click();
   }
 
   async editUserData() {
-    await this.userInput.fill('test@usuario');
-    await this.editPasswordInput.fill('test@senha');
+    await this.userInput.fill(EDITED_USERNAME);
+    await this.passwordInput.fill('test@senha');
     await this.roleSelect.selectOption('collaborator');
     await this.saveChangesButton.click();
   }

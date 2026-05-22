@@ -6,7 +6,7 @@ import Icons from '@/components/Global/Icons';
 const SessionCard = ({ permission, onClick, cardType, title, typeIcon, iconSize, iconFill }) => (
   <>
     {permission && (
-      <Col xs={12} md={6} lg={4} className="mb-3">
+      <Col xs={12} md={6} lg={4} className="mb-3" data-testid={`session-card-${cardType}`}>
         <Card className="h-100" onClick={onClick}>
           <Card.Body className={`navigation-header__${cardType}`}>
             <Card.Title className="text-center mb-0">

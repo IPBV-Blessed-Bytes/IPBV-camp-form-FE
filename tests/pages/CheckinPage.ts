@@ -3,23 +3,20 @@ import { Locator, Page } from '@playwright/test';
 export class CheckinComponent {
   readonly registeredButton: Locator;
   readonly registeredHeading: Locator;
-  readonly checkinFieldInTheCampersTable: Locator;
+  readonly checkinCellInFirstCampersRow: Locator;
   readonly backButton: Locator;
   readonly checkinButton: Locator;
   readonly checkinHeading: Locator;
   readonly cpfInput: Locator;
-  readonly searchUserButton: Locator;
   readonly colorStatus: Locator;
   readonly nameField: Locator;
-  readonly packageField: Locator;
   readonly paymentField: Locator;
   readonly valueField: Locator;
   readonly birthdayField: Locator;
-  readonly accomodationField: Locator;
-  readonly subAccomodationField: Locator;
+  readonly accommodationField: Locator;
   readonly roomField: Locator;
   readonly foodField: Locator;
-  readonly extraMealsField: Locator;
+  readonly teamField: Locator;
   readonly checkinSelect: Locator;
   readonly updateCheckinButton: Locator;
   readonly checkinSuccessfulyUpdatedToast: Locator;
@@ -27,41 +24,40 @@ export class CheckinComponent {
   readonly checkinItems: Locator[];
 
   constructor(readonly page: Page) {
-    this.registeredButton = page.getByText('Inscritos', { exact: true });
+    this.registeredButton = page.getByTestId('session-card-registered-card');
     this.registeredHeading = page.getByRole('heading', { name: 'Gerenciamento de Inscritos' });
-    this.checkinFieldInTheCampersTable = page.locator('table tbody tr:first-child td:nth-of-type(29)');
+    this.checkinCellInFirstCampersRow = page
+      .getByTestId('campers-row-0')
+      .getByTestId('campers-cell-checkin');
 
-    this.backButton = page.getByRole('button', { name: 'Voltar' });
-    this.checkinButton = page.getByText('Check-in', { exact: true });
+    this.backButton = page.getByTestId('admin-header-back');
+    this.checkinButton = page.getByTestId('session-card-checkin-card');
     this.checkinHeading = page.getByRole('heading', { name: 'Check-in de Usuário' });
-    this.cpfInput = page.getByRole('spinbutton', { name: 'CPF do Usuário:' });
-    this.searchUserButton = page.getByRole('button', { name: 'Buscar Usuário' });
-    this.colorStatus = page.locator('.checkin-color-status-wrapper__line');
-    this.nameField = page.getByText('Nome: Yuri Galeno Pinheiro');
-    this.packageField = page.getByText('Pacote: PACOTE 14 -');
-    this.paymentField = page.getByText('Forma de Pagamento: Cartão de');
-    this.valueField = page.getByText('Valor do Pagamento: 208');
-    this.birthdayField = page.getByText('Data de Nascimento: 23/10/');
-    this.accomodationField = page.getByText('Acomodação: Outra Acomodacao');
-    this.subAccomodationField = page.getByText('Sub Acomodação: Outra');
-    this.roomField = page.getByText('Quarto: Não alocado');
-    this.foodField = page.getByText('Alimentação: Almoco e jantar');
-    this.extraMealsField = page.getByText('Dias de Refeição Extra:');
+    this.cpfInput = page.getByTestId('checkin-cpf-input');
+    this.colorStatus = page.locator('.checkin-color-status-wrapper__line').first();
+
+    this.nameField = page.getByTestId('checkin-field-name');
+    this.paymentField = page.getByTestId('checkin-field-payment');
+    this.valueField = page.getByTestId('checkin-field-value');
+    this.birthdayField = page.getByTestId('checkin-field-birthday');
+    this.accommodationField = page.getByTestId('checkin-field-accommodation');
+    this.roomField = page.getByTestId('checkin-field-room');
+    this.foodField = page.getByTestId('checkin-field-food');
+    this.teamField = page.getByTestId('checkin-field-team');
+
     this.checkinItems = [
-      this.colorStatus,
       this.nameField,
-      this.packageField,
       this.paymentField,
       this.valueField,
       this.birthdayField,
-      this.accomodationField,
-      this.subAccomodationField,
+      this.accommodationField,
       this.roomField,
       this.foodField,
-      this.extraMealsField,
+      this.teamField,
     ];
-    this.checkinSelect = page.getByLabel('Check-in realizado?');
-    this.updateCheckinButton = page.getByRole('button', { name: 'Atualizar Check-in' });
+
+    this.checkinSelect = page.getByTestId('checkin-status-select');
+    this.updateCheckinButton = page.getByTestId('checkin-submit');
     this.checkinSuccessfulyUpdatedToast = page.getByText('Check-in realizado com sucesso');
     this.checkinUpdatedToFalseToast = page.getByText('Status de Check-in atualizado para não checado');
   }
@@ -76,9 +72,9 @@ export class CheckinComponent {
     await this.registeredButton.click();
   }
 
-  async findUser() {
-    await this.cpfInput.fill('03561746462');
-    await this.searchUserButton.click();
+  async findUser(cpf: string = '03561746462') {
+    await this.cpfInput.fill(cpf);
+    await this.page.getByTestId(`checkin-suggestion-${cpf}`).click();
   }
 
   async checkinSelectToggle(option: string) {

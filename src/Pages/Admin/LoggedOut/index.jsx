@@ -28,7 +28,9 @@ const AdminLoggedOut = ({
       <div className="login-content">
         <Form className="login-admin-card">
           <header className="text-center mb-5">
-            <h4 className="login-admin-card__title fw-bold">ADMINISTRAÇÃO</h4>
+            <h4 className="login-admin-card__title fw-bold" data-testid="admin-heading">
+              ADMINISTRAÇÃO
+            </h4>
             <p className="text-muted small">Entre com suas credenciais para acessar o painel</p>
           </header>
 
@@ -36,6 +38,7 @@ const AdminLoggedOut = ({
             <Form.Label className="fw-bold small">Nome de Usuário</Form.Label>
             <Form.Control
               className="admin__input"
+              data-testid="login-username"
               type="text"
               placeholder="Seu usuário"
               value={loginData.login || ''}
@@ -50,6 +53,7 @@ const AdminLoggedOut = ({
               <Form.Control
                 autoComplete="off"
                 className="admin__input admin__password"
+                data-testid="login-password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Sua senha"
                 value={loginData.password || ''}
@@ -64,7 +68,7 @@ const AdminLoggedOut = ({
             </div>
           </Form.Group>
 
-          <Button className="w-100 btn-login-submit py-2 fw-bold" onClick={handleLogin}>
+          <Button className="w-100 btn-login-submit py-2 fw-bold" data-testid="login-submit" onClick={handleLogin}>
             Acessar Painel
           </Button>
         </Form>

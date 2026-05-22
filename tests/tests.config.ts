@@ -1,6 +1,10 @@
-import { loadEnvFile } from 'process';
+import { existsSync } from 'node:fs';
+import { loadEnvFile } from 'node:process';
 
-loadEnvFile(process.cwd() + '/.env');
+const envPath = process.cwd() + '/.env';
+if (existsSync(envPath)) {
+	loadEnvFile(envPath);
+}
 
 export const testsConfig = {
 	environment: {
