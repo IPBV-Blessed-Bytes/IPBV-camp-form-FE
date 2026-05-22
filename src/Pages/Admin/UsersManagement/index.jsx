@@ -168,7 +168,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id}>
+                <tr key={user.id} data-testid={`user-row-${user.userName}`}>
                   <td>
                     <em>{user.userName}</em>
                   </td>
@@ -177,6 +177,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                     <Button
                       variant="outline-success"
                       className="me-2"
+                      data-testid={`user-edit-${user.userName}`}
+                      aria-label={`Editar usuário ${user.userName}`}
                       onClick={() => handleEditClick(user)}
                       disabled={user.userName === 'admin@ipbv'}
                     >
@@ -184,6 +186,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                     </Button>
                     <Button
                       variant="outline-danger"
+                      data-testid={`user-delete-${user.userName}`}
+                      aria-label={`Deletar usuário ${user.userName}`}
                       onClick={() => handleDeleteClick(user)}
                       disabled={user.userName === 'admin@ipbv'}
                     >

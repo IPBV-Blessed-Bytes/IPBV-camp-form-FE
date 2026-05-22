@@ -11,7 +11,7 @@ test.describe('Extra Meals flow', () => {
 
     await authentication.login(testCredentials);
 
-    await extraMeals.extraMealsButton.click();
+    await extraMeals.goToExtraMealsPage();
     await expect(extraMeals.extraMealsHeading).toBeVisible();
     await expect(extraMeals.extraMealsTable).toBeVisible();
     await expect(extraMeals.tableCamperColumn).toBeVisible();

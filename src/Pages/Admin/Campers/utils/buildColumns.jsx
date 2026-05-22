@@ -464,6 +464,7 @@ export const buildCampersColumns = ({
       Cell: renderOrDash,
     },
     {
+      id: 'checkin',
       Header: 'Check-in:',
       accessor: (row) => ({
         checkin: row.checkin,

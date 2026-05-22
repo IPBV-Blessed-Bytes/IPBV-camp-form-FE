@@ -19,36 +19,21 @@ export class DiscountComponent {
   readonly discountDeletedToast: Locator;
 
   constructor(readonly page: Page) {
-    this.discountButton = page.getByText('Descontos');
+    this.discountButton = page.getByTestId('session-card-discount-card');
     this.discountHeading = page.getByRole('heading', { name: 'Gerenciamento de Descontos' });
     this.createNewDiscountButton = page.getByRole('button', { name: 'Criar Novo Desconto' });
     this.cpfAttachedInput = page.getByPlaceholder('00000000000', { exact: true });
     this.discountValueInput = page.getByPlaceholder('000', { exact: true });
-    this.confirmCreateDiscountButton = page.getByRole('button', { name: 'Criar Desconto' });
+    this.confirmCreateDiscountButton = page.getByRole('button', { name: 'Criar Desconto', exact: true });
     this.discountCreatedToast = page.getByText('Desconto criado com sucesso');
-    this.discountCreated = page
-      .locator('tbody tr')
-      .filter({
-        has: page.locator('td').nth(0).filter({ hasText: '00000000011' }),
-      })
-      .filter({
-        has: page.locator('td').nth(1).filter({ hasText: '100' }),
-      });
-    this.editButton = page.getByRole('row', { name: '100' }).getByRole('button').first();
+    this.discountCreated = page.getByTestId('discount-row-00000000011');
+    this.editButton = page.getByTestId('discount-edit-00000000011');
     this.saveChangesButton = page.getByRole('button', { name: 'Salvar Alterações' });
     this.discountUpdatedToast = page.getByText('Desconto atualizado com sucesso');
-    this.discountUpdated = page
-      .locator('tbody tr')
-      .filter({
-        has: page.locator('td').nth(0).filter({ hasText: '00000000022' }),
-      })
-      .filter({
-        has: page.locator('td').nth(1).filter({ hasText: '200' }),
-      });
-
-    this.deleteButton = page.getByRole('row', { name: '200' }).getByRole('button').nth(1);
-    this.deleteDiscountModal = page.locator('div').filter({ hasText: 'Excluir Desconto' }).nth(3);
-    this.confirmDeleteDiscountButton = page.getByRole('button', { name: 'Excluir' });
+    this.discountUpdated = page.getByTestId('discount-row-00000000022');
+    this.deleteButton = page.getByTestId('discount-delete-00000000022');
+    this.deleteDiscountModal = page.getByRole('dialog').filter({ hasText: 'Excluir Desconto' });
+    this.confirmDeleteDiscountButton = page.getByRole('button', { name: 'Excluir', exact: true });
     this.discountDeletedToast = page.getByText('Desconto excluído com sucesso');
   }
 

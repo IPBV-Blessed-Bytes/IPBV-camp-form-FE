@@ -15,6 +15,7 @@ const AdminHeader = ({ pageName, sessionTypeIcon, iconSize, fill }) => {
         <Col>
           <Button
             variant="secondary"
+            data-testid="admin-header-back"
             onClick={formContext === 'maintenance' ? () => navigate('/dev') : () => navigate('/admin')}
           >
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />

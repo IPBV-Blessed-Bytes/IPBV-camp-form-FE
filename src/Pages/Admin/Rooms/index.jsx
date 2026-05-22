@@ -406,7 +406,13 @@ const AdminRooms = ({ loggedUsername }) => {
       </Accordion>
 
       <div className="d-flex justify-content-end">
-        <Button variant="teal-blue" onClick={handleOpenModal} className="mb-3 d-flex align-items-center" size="lg">
+        <Button
+          variant="teal-blue"
+          data-testid="add-new-room"
+          onClick={handleOpenModal}
+          className="mb-3 d-flex align-items-center"
+          size="lg"
+        >
           <Icons typeIcon="plus" iconSize={20} fill="#fff" />
           &nbsp;Adicionar Novo Quarto
         </Button>
@@ -424,7 +430,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
       <Accordion className="mb-4" defaultActiveKey="1">
         {sortedRooms.map((room) => (
-          <Accordion.Item eventKey={room.id} key={room.id}>
+          <Accordion.Item eventKey={room.id} key={room.id} data-testid={`room-item-${room.name}`}>
             <Accordion.Header>{room.name}</Accordion.Header>
             <Accordion.Body>
               <div className="p-3 rounded shadow-sm bg-light mb-3">
@@ -436,11 +442,21 @@ const AdminRooms = ({ loggedUsername }) => {
                   </div>
 
                   <div className="d-flex gap-2">
-                    <Button variant="outline-teal-blue" size="sm" onClick={() => handleShowEditModal(room)}>
+                    <Button
+                      variant="outline-teal-blue"
+                      size="sm"
+                      data-testid={`room-rename-${room.name}`}
+                      onClick={() => handleShowEditModal(room)}
+                    >
                       <Icons className="rooms-rename-icon" typeIcon="edit" iconSize={18} />
                       &nbsp;Renomear
                     </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => handleShowDeleteModal(room)}>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      data-testid={`room-delete-${room.name}`}
+                      onClick={() => handleShowDeleteModal(room)}
+                    >
                       <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
                       &nbsp;Excluir
                     </Button>
@@ -449,6 +465,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
                 <Form.Select
                   size="sm"
+                  data-testid={`room-camper-select-${room.name}`}
                   onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
                 >
                   <option value="" selected>
@@ -471,6 +488,7 @@ const AdminRooms = ({ loggedUsername }) => {
                   <Button
                     variant="outline-teal-blue"
                     size="sm"
+                    data-testid={`room-add-camper-${room.name}`}
                     onClick={() => handleAddCamperToRoom(room.id, room.name)}
                   >
                     <Icons typeIcon="add-person" iconSize={18} fill="#007185" />
@@ -481,7 +499,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
               {room.campers && room.campers.length > 0 && (
                 <div className="p-3 rounded border bg-white">
-                  <ul className="list-unstyled m-0">
+                  <ul className="list-unstyled m-0" data-testid={`room-campers-list-${room.name}`}>
                     {room.campers.map((camper, index) => (
                       <li key={index} className="d-flex justify-content-between align-items-center py-2 border-bottom">
                         <Badge size="sm" bg="teal-blue" className="me-2">
@@ -491,6 +509,7 @@ const AdminRooms = ({ loggedUsername }) => {
                         <Button
                           variant="outline-danger"
                           size="sm"
+                          aria-label={`Remover ${camper.name} do quarto`}
                           onClick={() => handleShowDeleteCamperFromRoomModal(camper)}
                         >
                           <Icons typeIcon="delete" iconSize={16} fill="#dc3545" />

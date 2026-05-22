@@ -233,6 +233,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
               <Form.Control
                 autoComplete="off"
                 type="text"
+                data-testid="checkin-cpf-input"
                 placeholder="Digite o CPF"
                 value={cpf}
                 onChange={(e) => {
@@ -275,6 +276,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   <div
                     key={user.id}
                     className="cpf-suggestions-item"
+                    data-testid={`checkin-suggestion-${user.personalInformation.cpf}`}
                     onClick={() => {
                       setCpf(user.personalInformation.cpf);
                       setUserInfo(user);
@@ -327,13 +329,13 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
               <b>Informações do Usuário:</b>
             </Col>
           </Row>
-          <Row>
+          <Row data-testid="checkin-user-info">
             <Col lg={6} md={6} xs={12}>
-              <p>
+              <p data-testid="checkin-field-name">
                 <strong>Nome:</strong>{' '}
                 <span className="emphasize-checkin-username">{userInfo.personalInformation.name}</span>
               </p>
-              <p>
+              <p data-testid="checkin-field-payment">
                 <strong>Forma de Pagamento:</strong>{' '}
                 {userInfo.formPayment.formPayment === 'creditCard'
                   ? 'Cartão de Crédito'
@@ -343,30 +345,30 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   ? 'Boleto Bancário'
                   : 'Não Pagante'}
               </p>
-              <p>
+              <p data-testid="checkin-field-value">
                 <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
               </p>
-              <p>
+              <p data-testid="checkin-field-team-observation">
                 <strong>Observação da Equipe:</strong> {userInfo.observation || '-'}
               </p>
-              <p>
+              <p data-testid="checkin-field-user-observation">
                 <strong>Observação do Usuário:</strong> {userInfo.finalObservation || '-'}
               </p>
             </Col>
             <Col lg={6} md={6} xs={12}>
-              <p>
+              <p data-testid="checkin-field-birthday">
                 <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
               </p>
-              <p>
+              <p data-testid="checkin-field-accommodation">
                 <strong>Hospedagem:</strong> {userInfo.package.accomodationName}
               </p>
-              <p>
+              <p data-testid="checkin-field-room">
                 <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
               </p>
-              <p>
+              <p data-testid="checkin-field-food">
                 <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
               </p>
-              <p>
+              <p data-testid="checkin-field-team">
                 <strong>Time:</strong> {userInfo.teamName || 'Time Não Selecionado'}
               </p>
             </Col>
@@ -380,6 +382,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                 </Form.Label>
                 <Form.Select
                   value={checkinStatus}
+                  data-testid="checkin-status-select"
                   onChange={(e) => setCheckinStatus(e.target.value === 'true')}
                   size="lg"
                 >
@@ -389,7 +392,13 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
               </Form.Group>
             </Col>
             <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
-              <Button variant="outline-teal-blue" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
+              <Button
+                variant="outline-teal-blue"
+                data-testid="checkin-submit"
+                onClick={handleCheckin}
+                size="lg"
+                disabled={checkinStatus === null}
+              >
                 <Icons typeIcon="checked" iconSize={20} fill="#007185" />
                 <span className="d-none d-md-inline">&nbsp;Atualizar Check-in</span>
               </Button>

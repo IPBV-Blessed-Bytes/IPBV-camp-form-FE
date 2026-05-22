@@ -249,7 +249,7 @@ const AdminLoggedIn = ({
     <div className="p-4">
       <Row className="mb-3">
         <Col className="admin-custom-col">
-          <Button variant="secondary" onClick={() => navigate('/')}>
+          <Button variant="secondary" data-testid="admin-back-to-form" onClick={() => navigate('/')}>
             <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
             &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
           </Button>
@@ -262,7 +262,7 @@ const AdminLoggedIn = ({
             </span>
             &ldquo;
           </p>
-          <Button variant="danger" onClick={logout}>
+          <Button variant="danger" data-testid="admin-logout" onClick={logout}>
             <Icons typeIcon="logout" iconSize={20} fill="#fff" />
             &nbsp;Desconectar
           </Button>

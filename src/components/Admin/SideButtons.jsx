@@ -32,6 +32,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
         <button
           ref={settingsButtonsRef}
           className="settings-btn"
+          data-testid="settings-button"
           onClick={toggleSettingsButtons}
           title="Ferramentas de Administrador"
         >
@@ -42,6 +43,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
       {primaryPermission && (
         <button
           className="data-panel-btn"
+          data-testid="data-panel-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/painel') : () => navigate('/admin/painel')}
           title="Painel de Dados"
         >
@@ -52,6 +54,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
         <button
           className="settings-message-button"
+          data-testid="settings-menu-logs"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/logs') : () => navigate('/admin/logs')}
         >
           Logs de Usuários&nbsp;
@@ -60,6 +63,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          data-testid="settings-menu-vacancies"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/vagas') : () => navigate('/admin/vagas')}
         >
           Controle de Vagas&nbsp;
@@ -68,6 +72,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          data-testid="settings-menu-lots"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/lotes') : () => navigate('/admin/lotes')}
         >
           Lotes e Data Base&nbsp;
@@ -76,6 +81,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          data-testid="settings-menu-users"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/usuarios') : () => navigate('/admin/usuarios')}
         >
           Controle de Usuários&nbsp;
@@ -84,6 +90,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          data-testid="settings-menu-wristbands"
           onClick={
             formContext === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
           }
@@ -94,6 +101,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
          <button
           className="settings-message-button"
+          data-testid="settings-menu-home-info"
           onClick={
             formContext === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')
           }
@@ -104,6 +112,7 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          data-testid="settings-menu-form-context"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/contexto') : () => navigate('/admin/contexto')}
         >
           Contexto do Formulário&nbsp;

@@ -39,7 +39,13 @@ const InfoButton = ({ timeout, time }) => {
   return (
     <>
       {showWhatsAppIcon && (
-        <button ref={whatsappButtonRef} className="info-btn" onClick={toggleWhatsAppButtons}>
+        <button
+          ref={whatsappButtonRef}
+          className="info-btn"
+          data-testid="info-button"
+          aria-label="Informações"
+          onClick={toggleWhatsAppButtons}
+        >
           <Icons typeIcon="info" iconSize={25} fill={'#ffc107'} />
         </button>
       )}
@@ -47,6 +53,7 @@ const InfoButton = ({ timeout, time }) => {
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
         <button
           className="whatsapp-message-button"
+          data-testid="info-menu-contact"
           onClick={() => window.open('https://wa.me/5581999997767', '_blank')}
         >
           Fale Conosco&nbsp;
@@ -54,6 +61,7 @@ const InfoButton = ({ timeout, time }) => {
         </button>
         <button
           className="whatsapp-share-button"
+          data-testid="info-menu-share"
           onClick={() =>
             window.open(
               'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%20%3A%20https://inscricaoipbv.com.br/',
@@ -64,11 +72,19 @@ const InfoButton = ({ timeout, time }) => {
           Compartilhar&nbsp;
           <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />
         </button>
-        <button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
+        <button
+          className="verify-registration-button"
+          data-testid="info-menu-verify-registration"
+          onClick={() => navigate('/verificacao')}
+        >
           Verificar Inscrição&nbsp;
           <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
         </button>
-        <button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+        <button
+          className="verify-registration-button"
+          data-testid="info-menu-faq"
+          onClick={() => navigate('/perguntas')}
+        >
           Perguntas Frequentes&nbsp;
           <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
         </button>

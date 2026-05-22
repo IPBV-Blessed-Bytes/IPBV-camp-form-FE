@@ -43,7 +43,7 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
             prepareRow(row);
             const { key: rowKey, ...restRowProps } = row.getRowProps();
             return (
-              <tr key={rowKey} {...restRowProps}>
+              <tr key={rowKey} {...restRowProps} data-testid={`campers-row-${row.index}`}>
                 {row.cells.map((cell) => (
                   <td
                     className={`table-cells-cols${
@@ -51,6 +51,7 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
                     }`}
                     key={cell.id}
                     {...cell.getCellProps()}
+                    data-testid={`campers-cell-${cell.column.id}`}
                   >
                     {cell.render('Cell')}
                   </td>
