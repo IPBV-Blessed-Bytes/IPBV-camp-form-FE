@@ -7,6 +7,7 @@ import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { getPersonData } from '@/services/campers';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
@@ -48,7 +49,13 @@ const CpfReview = () => {
         navigate('/verificacao/dados');
         toast.success('Usuário encontrado com sucesso');
       } catch (error) {
-        toast.error('Usuário não encontrado');
+        const status = error?.response?.status;
+        const apiMessage = getApiErrorMessage(error);
+        if (status === 404) {
+          toast.error(apiMessage || 'Usuário não encontrado');
+        } else {
+          toast.error('Ocorreu um erro ao consultar a inscrição. Tente novamente mais tarde');
+        }
       } finally {
         setLoading(false);
       }

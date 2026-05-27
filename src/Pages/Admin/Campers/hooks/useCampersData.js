@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { listCampers, createCamper, updateCamper, deleteCamper, deleteCampers } from '@/services/campers';
 import { registerLog } from '@/services/logs';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 
 import { sanitizeFields } from '../utils/sanitizeFields';
 
@@ -84,7 +85,15 @@ const useCampersData = ({ loggedUsername }) => {
     } catch (error) {
       setFormSubmitted(true);
       console.error('Error updating data:', error);
-      toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
+      const status = error?.response?.status;
+      const apiMessage = getApiErrorMessage(error);
+      if (status === 409) {
+        toast.error(apiMessage || 'CPF já cadastrado para outro acampante');
+      } else if (status === 404) {
+        toast.error(apiMessage || 'Acampante não encontrado');
+      } else {
+        toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
+      }
       return false;
     } finally {
       setLoading(false);
@@ -105,7 +114,13 @@ const useCampersData = ({ loggedUsername }) => {
     } catch (error) {
       setFormSubmitted(true);
       console.error('Error adding data:', error);
-      toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
+      const status = error?.response?.status;
+      const apiMessage = getApiErrorMessage(error);
+      if (status === 409) {
+        toast.error(apiMessage || 'CPF já cadastrado para outro acampante');
+      } else {
+        toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
+      }
       return false;
     } finally {
       setLoading(false);

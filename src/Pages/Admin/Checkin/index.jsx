@@ -10,6 +10,7 @@ import { listCampers, checkinCamper } from '@/services/campers';
 import { listWristbands } from '@/services/wristbands';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -190,7 +191,13 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       }
     } catch (error) {
       console.error('Erro ao fazer check-in:', error);
-      toast.error('Erro ao realizar check-in');
+      const status = error?.response?.status;
+      const apiMessage = getApiErrorMessage(error);
+      if (status === 404) {
+        toast.error(apiMessage || 'Acampante não encontrado');
+      } else {
+        toast.error('Erro ao realizar check-in');
+      }
     } finally {
       setLoading(false);
     }

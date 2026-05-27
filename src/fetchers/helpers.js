@@ -9,3 +9,10 @@ export const isTokenValid = (token) => {
     return false;
   }
 };
+
+export const getApiErrorMessage = (error) => {
+  const data = error?.response?.data;
+  if (typeof data === 'string') return data;
+  if (data && typeof data.message === 'string') return data.message;
+  return null;
+};
