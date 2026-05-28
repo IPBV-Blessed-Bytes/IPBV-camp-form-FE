@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import InputMask from 'react-input-mask';
+import { InputMask, format } from '@react-input/mask';
+import { PHONE_MASK } from '@/utils/masks';
 import { additionalInformationSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
 import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
@@ -78,13 +79,13 @@ const Contact = () => {
                   <Form.Label>
                     <b>Telefone:</b>
                   </Form.Label>
-                  <Form.Control
+                  <InputMask
+                    component={Form.Control}
                     type="text"
-                    as={InputMask}
+                    {...PHONE_MASK}
                     isInvalid={!!errors.cellPhone}
-                    mask="(99) 99999-9999"
                     id="cellPhone"
-                    value={values.cellPhone}
+                    value={format(values.cellPhone || '', PHONE_MASK)}
                     onChange={(event) => {
                       handleChange({
                         target: {

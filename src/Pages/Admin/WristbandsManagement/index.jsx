@@ -219,7 +219,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value, label: '' })}
               >
-                <option selected disabled value="">
+                <option disabled value="">
                   Selecione uma opção
                 </option>
                 <option value="TEAM">Time</option>
@@ -237,7 +237,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     Selecione uma opção
                   </option>
                   {FOOD_NAME_OPTIONS.map((option) => (

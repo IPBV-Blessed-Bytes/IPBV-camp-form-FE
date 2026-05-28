@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -205,11 +205,8 @@ const AdminRide = ({ loggedUsername }) => {
                     row.original.relationship.map(
                       (relatedRide, index) =>
                         relatedRide && (
-                          <>
-                            <div
-                              key={`${relatedRide.id}-${index}`}
-                              className="d-flex justify-content-between align-items-center mb-2"
-                            >
+                          <Fragment key={`${relatedRide.id}-${index}`}>
+                            <div className="d-flex justify-content-between align-items-center mb-2">
                               <span>{relatedRide.name}</span>&nbsp;
                               <Button
                                 variant="danger"
@@ -220,7 +217,7 @@ const AdminRide = ({ loggedUsername }) => {
                               </Button>
                             </div>
                             <hr className="horizontal-line" />
-                          </>
+                          </Fragment>
                         ),
                     )
                   ) : (
@@ -298,35 +295,43 @@ const AdminRide = ({ loggedUsername }) => {
       <div className="table-responsive ride">
         <Table striped bordered hover className="custom-table" {...getTableProps()}>
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    className="table-cells-header"
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    key={column.id}
-                  >
-                    <div className="d-flex justify-content-between align-items-center">
-                      {column.render('Header')}
-                      <span className="sort-icon-wrapper">
-                        <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
-                      </span>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
+            {headerGroups.map((headerGroup) => {
+              const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
+              return (
+                <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                  {headerGroup.headers.map((column) => {
+                    const { key: columnKey, ...restColumnProps } = column.getHeaderProps(
+                      column.getSortByToggleProps(),
+                    );
+                    return (
+                      <th className="table-cells-header" key={columnKey} {...restColumnProps}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          {column.render('Header')}
+                          <span className="sort-icon-wrapper">
+                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
+                          </span>
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </thead>
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
+              const { key: rowKey, ...restRowProps } = row.getRowProps();
               return (
-                <tr {...row.getRowProps()} key={`row-${row.original.id}`}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()} key={`cell-${row.original.id}-${cell.column.id}`}>
-                      {cell.render('Cell')}
-                    </td>
-                  ))}
+                <tr key={rowKey} {...restRowProps}>
+                  {row.cells.map((cell) => {
+                    const { key: cellKey, ...restCellProps } = cell.getCellProps();
+                    return (
+                      <td key={cellKey} {...restCellProps}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}

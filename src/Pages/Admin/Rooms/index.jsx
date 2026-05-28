@@ -359,24 +359,28 @@ const AdminRooms = ({ loggedUsername }) => {
           <Accordion.Body>
             <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
               <thead>
-                {headerGroups.map((headerGroup, index) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                    {headerGroup.headers.map((column, index) => (
-                      <th
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                        className="table-cells-header"
-                        key={index}
-                      >
-                        <div className="d-flex justify-content-between align-items-center">
-                          {column.render('Header')}
-                          <span className="sort-icon-wrapper">
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
-                          </span>
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {headerGroups.map((headerGroup) => {
+                  const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } = column.getHeaderProps(
+                          column.getSortByToggleProps(),
+                        );
+                        return (
+                          <th key={columnKey} {...restColumnProps} className="table-cells-header">
+                            <div className="d-flex justify-content-between align-items-center">
+                              {column.render('Header')}
+                              <span className="sort-icon-wrapper">
+                                <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
+                              </span>
+                            </div>
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...getTableBodyProps()}>
                 {rows.length === 0 ? (
@@ -386,15 +390,19 @@ const AdminRooms = ({ loggedUsername }) => {
                     </td>
                   </tr>
                 ) : (
-                  rows.map((row, index) => {
+                  rows.map((row) => {
                     prepareRow(row);
+                    const { key: rowKey, ...restRowProps } = row.getRowProps();
                     return (
-                      <tr {...row.getRowProps()} key={index}>
-                        {row.cells.map((cell, index) => (
-                          <td {...cell.getCellProps()} key={index}>
-                            {cell.render('Cell')}
-                          </td>
-                        ))}
+                      <tr key={rowKey} {...restRowProps}>
+                        {row.cells.map((cell) => {
+                          const { key: cellKey, ...restCellProps } = cell.getCellProps();
+                          return (
+                            <td key={cellKey} {...restCellProps}>
+                              {cell.render('Cell')}
+                            </td>
+                          );
+                        })}
                       </tr>
                     );
                   })
@@ -449,11 +457,10 @@ const AdminRooms = ({ loggedUsername }) => {
 
                 <Form.Select
                   size="sm"
+                  defaultValue=""
                   onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
                 >
-                  <option value="" selected>
-                    Selecione um acampante
-                  </option>
+                  <option value="">Selecione um acampante</option>
                   {dropdownCampers
                     .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
                     .sort((a, b) => a.personalInformation.name.localeCompare(b.personalInformation.name))

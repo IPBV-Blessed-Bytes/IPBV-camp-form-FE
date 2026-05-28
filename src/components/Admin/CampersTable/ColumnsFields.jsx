@@ -64,7 +64,7 @@ const ColumnFields = ({
               showError && 'msg-error'
             } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               {addForm ? placeholder : 'Selecione uma opção'}
             </option>
             {options.map((option, index) => (

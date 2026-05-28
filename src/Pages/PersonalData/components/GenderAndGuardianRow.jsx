@@ -1,9 +1,10 @@
 import { Row, Col, Form } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
-import InputMask from 'react-input-mask';
+import { InputMask, format } from '@react-input/mask';
 import PropTypes from 'prop-types';
 
 import Tips from '@/components/Global/Tips';
+import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
 import { extractNumbers } from '../utils/fieldHelpers';
 
 const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }) => {
@@ -75,14 +76,14 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
               <Form.Label>
                 <b>CPF do Responsável Legal:</b>
               </Form.Label>
-              <Form.Control
-                as={InputMask}
+              <InputMask
+                component={Form.Control}
+                {...CPF_MASK}
                 isInvalid={!!errors.legalGuardianCpf}
-                mask="999.999.999-99"
                 name="legalGuardianCpf"
                 id="legalGuardianCpf"
                 className="cpf-container"
-                value={values.legalGuardianCpf}
+                value={format(values.legalGuardianCpf || '', CPF_MASK)}
                 onChange={(event) =>
                   handleChange({
                     target: {
@@ -91,7 +92,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                     },
                   })
                 }
-                placeholder="000.000000-00"
+                placeholder="000.000.000-00"
                 title="Preencher CPF válido"
               />
               <Form.Control.Feedback type="invalid">{errors.legalGuardianCpf}</Form.Control.Feedback>
@@ -102,13 +103,13 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
               <Form.Label>
                 <b>Telefone do Responsável Legal:</b>
               </Form.Label>
-              <Form.Control
+              <InputMask
+                component={Form.Control}
                 type="text"
-                as={InputMask}
+                {...PHONE_MASK}
                 isInvalid={!!errors.legalGuardianCellPhone}
-                mask="(99) 99999-9999"
                 id="legalGuardianCellPhone"
-                value={values.legalGuardianCellPhone}
+                value={format(values.legalGuardianCellPhone || '', PHONE_MASK)}
                 onChange={(event) => {
                   handleChange({
                     target: {

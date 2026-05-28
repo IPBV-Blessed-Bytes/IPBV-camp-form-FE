@@ -2,10 +2,12 @@ import { Row, Col, Form } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
-import InputMask from 'react-input-mask';
+import { InputMask, format } from '@react-input/mask';
 import { ptBR } from 'date-fns/locale';
 
 import Tips from '@/components/Global/Tips';
+import MaskedDateInput from '@/components/Global/MaskedDateInput';
+import { CPF_MASK } from '@/utils/masks';
 import { extractNumbers, parseDate } from '../utils/fieldHelpers';
 
 const IdentificationRow = ({ onDateChange, onDateBlur }) => {
@@ -18,14 +20,14 @@ const IdentificationRow = ({ onDateChange, onDateBlur }) => {
           <Form.Label>
             <b>CPF:</b>
           </Form.Label>
-          <Form.Control
-            as={InputMask}
+          <InputMask
+            component={Form.Control}
+            {...CPF_MASK}
             isInvalid={!!errors.cpf}
-            mask="999.999.999-99"
             name="cpf"
             id="cpf"
             className="cpf-container"
-            value={values.cpf}
+            value={format(values.cpf || '', CPF_MASK)}
             onChange={(event) =>
               handleChange({
                 target: {
@@ -34,7 +36,7 @@ const IdentificationRow = ({ onDateChange, onDateBlur }) => {
                 },
               })
             }
-            placeholder="000.000000-00"
+            placeholder="000.000.000-00"
             title="Preencher CPF válido"
           />
           <Form.Control.Feedback type="invalid">{errors.cpf}</Form.Control.Feedback>
@@ -71,9 +73,7 @@ const IdentificationRow = ({ onDateChange, onDateBlur }) => {
               placeholderText="dd/mm/aaaa"
               showMonthDropdown
               showYearDropdown
-              customInput={
-                <InputMask mask="99/99/9999">{(inputProps) => <Form.Control {...inputProps} />}</InputMask>
-              }
+              customInput={<MaskedDateInput />}
             />
           </div>
           <Form.Control.Feedback className="d-block" type="invalid">

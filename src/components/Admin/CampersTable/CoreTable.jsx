@@ -44,17 +44,20 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
             const { key: rowKey, ...restRowProps } = row.getRowProps();
             return (
               <tr key={rowKey} {...restRowProps}>
-                {row.cells.map((cell) => (
-                  <td
-                    className={`table-cells-cols${
-                      selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
-                    }`}
-                    key={cell.id}
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                ))}
+                {row.cells.map((cell) => {
+                  const { key: cellKey, ...restCellProps } = cell.getCellProps();
+                  return (
+                    <td
+                      className={`table-cells-cols${
+                        selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
+                      }`}
+                      key={cellKey}
+                      {...restCellProps}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}

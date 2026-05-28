@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import InputMask from 'react-input-mask';
+import { InputMask, format as formatMask } from '@react-input/mask';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
@@ -16,6 +16,8 @@ import InfoButton from '../../components/Global/InfoButton';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
+import MaskedDateInput from '@/components/Global/MaskedDateInput';
+import { CPF_MASK } from '@/utils/masks';
 import { useFormik } from 'formik';
 
 const CpfReview = () => {
@@ -89,12 +91,12 @@ const CpfReview = () => {
                           <Form.Label>
                             <b>CPF:</b>
                           </Form.Label>
-                          <Form.Control
-                            as={InputMask}
-                            value={values.cpf}
+                          <InputMask
+                            component={Form.Control}
+                            {...CPF_MASK}
+                            value={formatMask(values.cpf || '', CPF_MASK)}
                             isInvalid={errors.cpf}
                             onChange={(e) => setFieldValue('cpf', e.target.value.replace(/\D/g, ''))}
-                            mask="999.999.999-99"
                             name="cpf"
                             id="cpf"
                             className="cpf-container"
@@ -126,11 +128,7 @@ const CpfReview = () => {
                             showMonthDropdown={true}
                             showYearDropdown={true}
                             onKeyDown={handleKeyDown}
-                            customInput={
-                              <InputMask mask="99/99/9999">
-                                {(inputProps) => <Form.Control {...inputProps} />}
-                              </InputMask>
-                            }
+                            customInput={<MaskedDateInput />}
                           />
                           <Form.Control.Feedback className="d-block" type="invalid">
                             {errors.birthday}
