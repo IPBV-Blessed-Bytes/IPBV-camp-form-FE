@@ -2,6 +2,7 @@ import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
+import campLogo from '../../../../public/Images/camp_logo.png';
 import Icons from '@/components/Global/Icons';
 import scrollUp from '@/hooks/useScrollUp';
 
@@ -18,21 +19,15 @@ const AdminLoggedOut = ({
 
   return (
     <div className="admin-login-container">
-      <div className="back-button-wrapper">
-        <Button className="btn-back-home" variant="outline-secondary" onClick={() => navigateTo('/')}>
-          <span className="me-2">←</span>
-          Voltar ao site
-        </Button>
-      </div>
-
       <div className="login-content">
         <Form className="login-admin-card">
-          <header className="text-center mb-5">
-            <h4 className="login-admin-card__title fw-bold">ADMINISTRAÇÃO</h4>
-            <p className="text-muted small">Entre com suas credenciais para acessar o painel</p>
+          <header className="login-admin-card__header">
+            <img src={campLogo} alt="Logo do acampamento" className="login-admin-card__logo" />
+            <h4 className="login-admin-card__title">Painel Administrativo</h4>
+            <p className="login-admin-card__subtitle">Entre com suas credenciais para acessar</p>
           </header>
 
-          <Form.Group className="input-login-wrapper mb-4" controlId="login">
+          <Form.Group className="input-login-wrapper" controlId="login">
             <Form.Label className="fw-bold small">Nome de Usuário</Form.Label>
             <Form.Control
               className="admin__input"
@@ -44,7 +39,7 @@ const AdminLoggedOut = ({
             />
           </Form.Group>
 
-          <Form.Group className="input-login-wrapper mb-4" controlId="password">
+          <Form.Group className="input-login-wrapper" controlId="password">
             <Form.Label className="fw-bold small">Senha</Form.Label>
             <div className="password-field-container">
               <Form.Control
@@ -56,17 +51,24 @@ const AdminLoggedOut = ({
                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                 onKeyDown={handleKeyDown}
               />
-              <Icons
-                className="login-icon"
-                typeIcon={showPassword ? 'visible-password' : 'hidden-password'}
+              <button
+                type="button"
+                className="password-toggle-btn"
                 onClick={handleShowPassword}
-              />
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} />
+              </button>
             </div>
           </Form.Group>
 
-          <Button className="w-100 btn-login-submit py-2 fw-bold" onClick={handleLogin}>
+          <Button className="w-100 btn-login-submit fw-bold" onClick={handleLogin}>
             Acessar Painel
           </Button>
+
+          <button type="button" className="btn-back-link" onClick={() => navigateTo('/')}>
+            ← Voltar ao site público
+          </button>
         </Form>
       </div>
     </div>

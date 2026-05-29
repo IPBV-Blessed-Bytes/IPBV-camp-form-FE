@@ -142,73 +142,88 @@
 
 // Package Card
 .admin-card {
+  background: $white;
+  border: 1px solid $medium-gray !important;
+  border-radius: 12px !important;
   height: 100%;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
-  .card-container {
-    border-radius: 0.625rem;
-    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+  &:hover {
+    border-color: var(--admin-card-accent, #{$primary}) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  &__body {
     display: flex;
     flex-direction: column;
-    padding: 1.25rem;
-    transition: transform 0.2s ease-in-out;
+    gap: 0.5rem;
+    padding: 1rem 1.15rem !important;
+  }
 
-    &-title {
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-bottom: 0.625rem;
-    }
+  &__title {
+    color: $alternate-dark-gray;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
 
-    &:hover {
-      transform: scale(1.05);
+  &__metric {
+    align-items: baseline;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  &__value {
+    color: var(--admin-card-accent, #{$primary});
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__total {
+    color: $alternate-dark-gray;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  &__progress {
+    background-color: $alternate-light-gray !important;
+    border-radius: 999px !important;
+    height: 6px !important;
+    margin-top: 0.25rem;
+    overflow: hidden;
+
+    .progress-bar {
+      background-color: var(--admin-card-accent, #{$primary}) !important;
+      border-radius: 999px;
     }
   }
 
-  .valid-package-card {
-    background-color: $light-blue;
-    color: $medium-blue;
+  &__footer {
+    color: $alternate-dark-gray;
+    display: flex;
+    font-size: 0.78rem;
+    justify-content: space-between;
 
-    .card-container {
-      &-title {
-        color: $blue;
-      }
-
-      &-content {
-        color: $blue;
-        font-size: 1.2rem;
-      }
+    strong {
+      color: $dark-gray;
+      font-weight: 700;
     }
   }
 
-  .all-package-card {
-    background-color: $light-green;
-    color: $militar-green;
-
-    .card-container {
-      &-title {
-        color: $militar-green;
-      }
-
-      &-content {
-        color: $militar-green;
-        font-size: 1.2rem;
-      }
-    }
+  &--valid-package-card {
+    --admin-card-accent: #{$primary};
   }
-
-  .total-card {
-    background-color: $light-brown;
-    color: $medium-brown;
-
-    .card-container {
-      &-title {
-        color: $brown;
-      }
-
-      &-content {
-        font-size: 1.2rem;
-        color: $brown;
-      }
-    }
+  &--all-package-card {
+    --admin-card-accent: #{$intense-green};
+  }
+  &--total-card {
+    --admin-card-accent: #{$medium-brown};
   }
 }
 
@@ -350,54 +365,91 @@
 
 // Settings Button
 .settings-btn {
-  background-color: $alternate-dark-gray;
+  align-items: center;
+  background-color: $dark-gray;
   border: none;
   border-radius: 50%;
-  bottom: 94px;
+  bottom: 88px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   cursor: pointer;
-  padding: 10px;
-  opacity: 0.8;
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  padding: 0;
   position: fixed;
   right: 20px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 56px;
   z-index: 9000;
 
   &:hover {
-    opacity: 1;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+    transform: translateY(-2px);
+  }
+
+  svg {
+    height: 28px;
+    width: 28px;
   }
 }
 
 .settings-floating-buttons {
-  bottom: 160px;
+  bottom: 156px;
   display: flex;
   flex-direction: column;
-  right: 16px;
+  gap: 0.5rem;
+  right: 20px;
   opacity: 0;
   position: fixed;
+  transform: translateY(8px);
   transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s ease;
   visibility: hidden;
   z-index: 9999;
 
   button {
-    background-color: $alternate-dark-gray;
-    border: none;
-    border-radius: 5px;
-    color: $white;
+    align-items: center;
+    background-color: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    color: $dark-gray;
     cursor: pointer;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-    transition: transform 0.3s ease;
-    text-align: end;
+    display: flex;
+    font-size: 0.88rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding: 0.55rem 0.85rem;
+    transition:
+      transform 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
 
     &:hover {
-      transform: scale(1.05);
+      border-color: $primary;
+      color: $primary;
+      transform: translateX(-3px);
+    }
+
+    .settings-icons path {
+      fill: $alternate-dark-gray;
+      transition: fill 0.15s ease;
+    }
+
+    &:hover .settings-icons path {
+      fill: $primary;
     }
   }
 }
 
 .settings-floating-buttons.show {
   opacity: 1;
+  transform: translateY(0);
   visibility: visible;
 }
 
@@ -413,23 +465,33 @@
 
 // Data Panel Button
 .data-panel-btn {
+  align-items: center;
   background-color: $primary;
   border: none;
   border-radius: 50%;
   bottom: 20px;
+  box-shadow: 0 6px 20px rgba($primary, 0.32);
   cursor: pointer;
-  padding: 10px;
-  opacity: 0.8;
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  padding: 0;
   position: fixed;
   right: 20px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 56px;
   z-index: 9000;
 
   &:hover {
-    opacity: 1;
+    box-shadow: 0 10px 26px rgba($primary, 0.44);
+    transform: translateY(-2px);
   }
 
   svg {
-    padding: 4px;
+    height: 28px;
+    width: 28px;
   }
 }
 

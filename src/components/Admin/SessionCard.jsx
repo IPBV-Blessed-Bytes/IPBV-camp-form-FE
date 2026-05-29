@@ -6,17 +6,16 @@ import Icons from '@/components/Global/Icons';
 const SessionCard = ({ permission, onClick, cardType, title, typeIcon, iconSize, iconFill }) => (
   <>
     {permission && (
-      <Col xs={12} md={6} lg={4} className="mb-3">
-        <Card className="h-100" onClick={onClick}>
-          <Card.Body className={`navigation-header__${cardType}`}>
-            <Card.Title className="text-center mb-0">
-              <div className={`navigation-header__${cardType}__content-wrapper`}>
-                <em>
-                  <b>{title}</b>
-                </em>
-                <Icons typeIcon={typeIcon} iconSize={iconSize} fill={iconFill || '#204691'} />
-              </div>
-            </Card.Title>
+      <Col xs={12} sm={6} lg={4} xl={3} className="mb-3">
+        <Card className={`session-card session-card--${cardType}`} onClick={onClick}>
+          <Card.Body className="session-card__body">
+            <div className="session-card__icon-wrapper">
+              <Icons typeIcon={typeIcon} iconSize={iconSize} fill={iconFill || '#fff'} />
+            </div>
+            <div className="session-card__content">
+              <h5 className="session-card__title">{title}</h5>
+              <span className="session-card__cta">Acessar →</span>
+            </div>
           </Card.Body>
         </Card>
       </Col>

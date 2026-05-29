@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -10,11 +10,12 @@ import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
-import Icons from '@/components/Global/Icons';
 import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SideButtons from '@/components/Admin/SideButtons';
+import AdminTopbar from '@/components/Admin/AdminTopbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -246,105 +247,65 @@ const AdminLoggedIn = ({
   ];
 
   return (
-    <div className="p-4">
-      <Row className="mb-3">
-        <Col className="admin-custom-col">
-          <Button variant="secondary" onClick={() => navigate('/')}>
-            <Icons typeIcon="arrow-left" iconSize={30} fill="#fff" />
-            &nbsp;Voltar <span className="d-sm-inline d-none">pro Formulário</span>
-          </Button>
-        </Col>
-        <Col className="admin-custom-col text-end mb-2 mt-3 mt-lg-0">
-          <p>
-            Bem vindo(a),
-            <span>
-              <strong className="text-uppercase"> {splitedLoggedInUsername}</strong>
-            </span>
-            &ldquo;
-          </p>
-          <Button variant="danger" onClick={logout}>
-            <Icons typeIcon="logout" iconSize={20} fill="#fff" />
-            &nbsp;Desconectar
-          </Button>
-        </Col>
-      </Row>
+    <div className="admin-home">
+      <AdminTopbar username={splitedLoggedInUsername} logout={logout} />
 
-      <Row className="mb-md-5 navigation-header">
-        {navigationSessions.map((session) => (
-          <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
-        ))}
-      </Row>
+      <div className="admin-home__content">
+        <Row className="navigation-header gx-3">
+          {navigationSessions.map((session) => (
+            <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
+          ))}
+        </Row>
 
-      {packagesAndTotalCardsPermissions && (
-        <>
-          {!spinnerLoading && !loading && (
-            <>
-              <Row>
-                <h4 className="text-center fw-bold mb-4">PACOTES (válidos):</h4>
-                {validPackageCardsData.map((card) => (
-                  <PackageCard key={card.title} {...card} cardType="valid-package-card" />
-                ))}
-              </Row>
+        {packagesAndTotalCardsPermissions && (
+          <>
+            {!spinnerLoading && !loading && (
+              <>
+                <SectionHeader title="Pacotes válidos" count={validPackageCardsData.length} />
+                <Row className="gx-3">
+                  {validPackageCardsData.map((card) => (
+                    <PackageCard key={card.title} {...card} cardType="valid-package-card" />
+                  ))}
+                </Row>
 
-              <Row className="mt-4">
-                <h4 className="text-center fw-bold mb-4">PACOTES (todos):</h4>
-                {allPackageCardsData.map((card) => (
-                  <PackageCard key={card.title} {...card} cardType="all-package-card" />
-                ))}
-              </Row>
+                <SectionHeader title="Pacotes (todos)" count={allPackageCardsData.length} />
+                <Row className="gx-3">
+                  {allPackageCardsData.map((card) => (
+                    <PackageCard key={card.title} {...card} cardType="all-package-card" />
+                  ))}
+                </Row>
 
-              <Row className="mt-4">
-                <h4 className="text-center fw-bold mb-4">TOTAL:</h4>
-                {totalCardsData.map((card) => (
-                  <PackageCard key={card.title} {...card} cardType="total-card" />
-                ))}
-              </Row>
-            </>
-          )}
+                <SectionHeader title="Totais gerais" count={totalCardsData.length} />
+                <Row className="gx-3">
+                  {totalCardsData.map((card) => (
+                    <PackageCard key={card.title} {...card} cardType="total-card" />
+                  ))}
+                </Row>
+              </>
+            )}
 
-          <div className="packages-horizontal-line" />
-          <h4>Notas:</h4>
-          <div>
-            <ul>
-              <li>
-                <em>
-                  <b>Total de Inscritos Geral</b>
-                </em>
-                : Contagem de adultos e crianças
-              </li>
-              <li>
-                <em>
-                  <b>Total de Adultos</b>
-                </em>
-                : Contagem de adultos
-              </li>
-              <li>
-                <em>
-                  <b>Total de Crianças</b>
-                </em>
-                : Contagem de crianças
-              </li>
-              <li>
-                <em>
-                  <b>Total de Inscritos Com Ônibus</b>
-                </em>
-                : Contagem de pessoas válidas que irão de ônibus
-              </li>
-            </ul>
-          </div>
-          <div className="packages-horizontal-line" />
-        </>
-      )}
+            <div className="admin-notes">
+              <h5 className="admin-notes__title">Notas</h5>
+              <ul className="admin-notes__list">
+                <li><strong>Total de Inscritos Geral:</strong> contagem de adultos e crianças</li>
+                <li><strong>Total de Adultos:</strong> contagem de adultos</li>
+                <li><strong>Total de Crianças:</strong> contagem de crianças</li>
+                <li><strong>Total de Inscritos Com Ônibus:</strong> contagem de pessoas válidas que irão de ônibus</li>
+              </ul>
+            </div>
+          </>
+        )}
 
       <SideButtons primaryPermission={dataPanelButtonPermissions} secondaryPermission={settingsButtonPermissions} />
 
-      <Loading loading={spinnerLoading || loading} />
+        <Loading loading={spinnerLoading || loading} />
 
-      {utilitiesLinksPermissions && (
-        <Row>
-          <ExternalLinkRow />
-        </Row>
-      )}
+        {utilitiesLinksPermissions && (
+          <Row>
+            <ExternalLinkRow />
+          </Row>
+        )}
+      </div>
     </div>
   );
 };

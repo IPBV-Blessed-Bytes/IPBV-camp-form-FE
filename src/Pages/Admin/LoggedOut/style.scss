@@ -1,64 +1,99 @@
 @use '../../../styles/Variables.scss' as *;
-@use "sass:color";
+@use 'sass:color';
 
 .admin-login-container {
-  background-color: $background-gray;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    $background-gray 0%,
+    $newborn-blue 60%,
+    color.adjust($primary, $lightness: 60%) 100%
+  );
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
 
-  .back-button-wrapper {
-    max-width: 450px;
-    width: 100%;
+  &::before,
+  &::after {
+    border-radius: 50%;
+    content: '';
+    filter: blur(80px);
+    opacity: 0.35;
+    position: absolute;
+    pointer-events: none;
+  }
 
-    .btn-back-home {
-      border: 2px solid $primary;
-      border-radius: 0.5rem;
-      color: $primary;
-      font-size: 0.9rem;
-      font-weight: bold;
-      transition: all 0.3s ease;
+  &::before {
+    background: $primary;
+    height: 320px;
+    left: -80px;
+    top: -80px;
+    width: 320px;
+  }
 
-      &:hover {
-        background-color: $white;
-        border-color: $secondary;
-        color: $secondary;
-        transform: translateX(-5px);
-      }
-    }
+  &::after {
+    background: $secondary;
+    bottom: -100px;
+    height: 280px;
+    right: -80px;
+    width: 280px;
   }
 
   .login-content {
-    align-items: center;
-    display: flex;
-    flex: 1;
-    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    z-index: 1;
   }
 
   .login-admin-card {
     background: $white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
     color: $black;
-    padding: 3.5rem 2.5rem;
-    max-width: 450px;
+    padding: 2.25rem 2rem;
     width: 100%;
+
+    &__header {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.75rem;
+      text-align: center;
+    }
+
+    &__logo {
+      height: 64px;
+      margin-bottom: 1rem;
+      object-fit: contain;
+      width: auto;
+    }
 
     &__title {
       color: $primary;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    &__subtitle {
+      color: $alternate-dark-gray;
+      font-size: 0.85rem;
+      margin: 0;
     }
   }
 
   .input-login-wrapper {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.1rem;
 
     label {
       color: $dark-gray;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
   }
 
@@ -66,12 +101,12 @@
     border: 1.5px solid $alternate-light-gray;
     border-radius: 10px;
     font-weight: 500;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
+    padding: 0.7rem 1rem;
+    transition: all 0.2s ease;
 
     &:focus {
       border-color: $primary;
-      box-shadow: 0 0 0 4px rgba($primary, 0.1);
+      box-shadow: 0 0 0 4px rgba($primary, 0.12);
       outline: none;
     }
 
@@ -81,20 +116,39 @@
     }
   }
 
+  .admin__password {
+    padding-right: 2.75rem;
+  }
+
   .password-field-container {
-    align-items: center;
-    display: flex;
     position: relative;
   }
 
-  .login-icon {
+  .password-toggle-btn {
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: $alternate-dark-gray;
     cursor: pointer;
-    opacity: 0.6;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    opacity: 0.65;
+    padding: 0 0.75rem;
     position: absolute;
-    right: 1rem;
+    right: 0;
+    top: 0;
+    transition: opacity 0.2s ease;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       opacity: 1;
+      outline: none;
+    }
+
+    svg {
+      height: 20px;
+      width: 20px;
     }
   }
 
@@ -102,13 +156,36 @@
     background-color: $primary;
     border: none;
     border-radius: 10px;
+    margin-top: 0.5rem;
+    padding: 0.7rem;
     transition:
-      transform 0.2s ease,
-      background-color 0.2s ease;
+      transform 0.15s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:hover {
-      background-color: color.adjust($primary, $lightness: -10%);
-      transform: translateY(-2px);
+      background-color: color.adjust($primary, $lightness: -8%);
+      box-shadow: 0 6px 16px rgba($primary, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .btn-back-link {
+    background: transparent;
+    border: none;
+    color: $alternate-dark-gray;
+    display: block;
+    font-size: 0.85rem;
+    margin: 1.25rem auto 0;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $primary;
     }
   }
 }
