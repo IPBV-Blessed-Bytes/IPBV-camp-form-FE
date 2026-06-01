@@ -16,6 +16,7 @@ import InfoButton from '../../components/Global/InfoButton';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import MaskedDateInput from '@/components/Global/MaskedDateInput';
 import { CPF_MASK } from '@/utils/masks';
 import { useFormik } from 'formik';
@@ -74,8 +75,7 @@ const CpfReview = () => {
       <div className="form__container container">
         <Row className="justify-content-center">
           <div className="px-0 col-lg-10">
-            <Card className="form__container__general-height">
-              <Card.Body>
+            <FormStepLayout>
                 <Container>
                   <Row className="mb-4">
                     <Card.Title>Consulte Status da sua Inscrição:</Card.Title>
@@ -156,8 +156,7 @@ const CpfReview = () => {
                   </Form>
                   <Loading loading={loading} />
                 </Container>
-              </Card.Body>
-            </Card>
+            </FormStepLayout>
           </div>
         </Row>
 

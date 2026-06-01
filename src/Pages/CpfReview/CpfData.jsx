@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import { listRideOffers } from '@/services/rides';
@@ -7,6 +7,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
 
 const CpfData = () => {
@@ -71,8 +72,7 @@ const CpfData = () => {
       <div className="components-container">
         <Header />
         <div className="form__container">
-          <Card>
-            <Card.Body className="align-items-center d-flex">
+          <FormStepLayout onBack={() => navigate('/verificacao')} backLabel="Voltar para Início">
               <Container>
                 <p className="text-center">
                   <em>
@@ -81,21 +81,8 @@ const CpfData = () => {
                     faça a sua inscrição ou procure a secretaria da IPBV para obter mais informações.
                   </em>
                 </p>
-
-                <div className="justify-content-end d-flex mt-5">
-                  <Button
-                    variant="warning"
-                    onClick={() => {
-                      navigate('/verificacao');
-                    }}
-                    size="lg"
-                  >
-                    Voltar para Início
-                  </Button>
-                </div>
               </Container>
-            </Card.Body>
-          </Card>
+          </FormStepLayout>
         </div>
         <Footer handleAdminClick={() => navigate('/admin')} />
       </div>
@@ -108,8 +95,7 @@ const CpfData = () => {
       <div className="form__container container">
         <Row className="justify-content-center">
           <div className="px-0 col-lg-10">
-            <Card>
-              <Card.Body>
+            <FormStepLayout onBack={() => navigate('/verificacao')}>
                 <Container>
                   <div className="form-review">
                     <Card.Title>Consulta de Dados</Card.Title>
@@ -231,20 +217,7 @@ const CpfData = () => {
                     </Form>
                   </div>
                 </Container>
-              </Card.Body>
-
-              <div className="form__container__buttons">
-                <Button
-                  variant="warning"
-                  onClick={() => {
-                    navigate('/verificacao');
-                  }}
-                  size="lg"
-                >
-                  Voltar
-                </Button>
-              </div>
-            </Card>
+            </FormStepLayout>
           </div>
         </Row>
       </div>
