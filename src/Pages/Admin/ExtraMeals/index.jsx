@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Container } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -7,8 +7,9 @@ import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import { listCampers } from '@/services/campers';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminExtraMeals = () => {
   const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);
@@ -48,27 +49,32 @@ const AdminExtraMeals = () => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'extra-meals-excel',
       name: 'Baixar Relatório',
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
-    }
+    },
   ];
 
-
   return (
-    <Container fluid>
-      <AdminHeader pageName="Usuários com Refeições Extras" sessionTypeIcon="food" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--meals">
+      <AdminSubpageHeader
+        title="Usuários com Refeições Extras"
+        subtitle="Acampantes que solicitaram refeições adicionais"
+        typeIcon="food"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Table striped bordered hover responsive className="custom-table">
-        <thead>
+        <SectionHeader title="Refeições extras" count={usersWithExtraMeals.length} />
+
+        <div className="admin-table-card">
+          <Table striped bordered hover responsive className="custom-table">
+            <thead>
           <tr>
             <th className="table-cells-header">Acampante:</th>
             <th className="table-cells-header">Refeições Extras (Dias):</th>
@@ -82,10 +88,12 @@ const AdminExtraMeals = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+          </Table>
+        </div>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
