@@ -181,7 +181,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
         <SectionHeader title="Descontos cadastrados" count={discount.length} />
 
-        <div className="admin-card">
+        <div className="admin-table-card">
           <div className="table-responsive">
             <Table striped bordered hover className="custom-table">
           <thead>
