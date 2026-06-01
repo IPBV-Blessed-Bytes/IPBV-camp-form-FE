@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -16,8 +16,8 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 
 const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
@@ -211,10 +211,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'campers-table',
       name: 'Tabela de Acampantes',
       onClick: () => goToCampersTable(),
@@ -224,10 +222,16 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Check-in de Usuário" sessionTypeIcon="checkin" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--checkin">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Check-in de Usuário"
+        subtitle="Confirmação de presença dos acampantes"
+        typeIcon="checkin"
+      />
 
-      {campersTableButtonPermissions && <Tools buttons={toolsButtons} />}
+      <div className="admin-subpage__content">
+        {campersTableButtonPermissions && <AdminToolbar buttons={toolsButtons} />}
 
       <Row className="mb-3">
         <Col xs={12}>
@@ -405,8 +409,9 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         </>
       )}
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
