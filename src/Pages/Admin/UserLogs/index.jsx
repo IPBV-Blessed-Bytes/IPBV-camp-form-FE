@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Button, Accordion } from 'react-bootstrap';
+import { Button, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
@@ -7,8 +7,9 @@ import './style.scss';
 import { registerLog, listLogs, deleteAllLogs } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 import CustomModal from '@/components/Global/CustomModal';
 
 const AdminUserLogs = ({ loggedUsername }) => {
@@ -93,10 +94,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'export-logs',
       name: 'Baixar Relatório',
       onClick: () => generateExcel(),
@@ -104,10 +103,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#dc3545',
-      iconSize: 40,
+      iconSize: 22,
       id: 'delete-all-logs',
       name: 'Deletar Todos Logs',
       onClick: () => setShowDeleteModal(true),
@@ -117,12 +114,19 @@ const AdminUserLogs = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Logs de Usuários" sessionTypeIcon="logs" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--logs">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Logs de Usuários"
+        subtitle="Histórico de ações por usuário"
+        typeIcon="logs"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Row>
+        <SectionHeader title="Logs por usuário" count={Object.keys(groupedLogs).length} />
+
         <Accordion defaultActiveKey="0">
           {Object.entries(groupedLogs).map(([username, logs], index) => (
             <Accordion.Item eventKey={index.toString()} key={index}>
@@ -151,7 +155,6 @@ const AdminUserLogs = ({ loggedUsername }) => {
             </Accordion.Item>
           ))}
         </Accordion>
-      </Row>
 
       <CustomModal
         show={showDeleteModal}
@@ -176,8 +179,9 @@ const AdminUserLogs = ({ loggedUsername }) => {
         </em>
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
