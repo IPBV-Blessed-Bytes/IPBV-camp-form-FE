@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { InputMask, format } from '@react-input/mask';
 import { PHONE_MASK } from '@/utils/masks';
 import { additionalInformationSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
@@ -67,12 +68,18 @@ const Contact = () => {
   }, []);
 
   return (
-    <Card className="form__container__general-height">
-      <Card.Body>
-        <Container>
-          <Card.Title>Informações de Contato</Card.Title>
-          <Card.Text>Nos informe como poderemos te contactar caso necessário.</Card.Text>
-          <Form>
+    <FormStepLayout
+      title="Informações de Contato"
+      description="Nos informe como poderemos te contactar caso necessário."
+      onBack={() => {
+        backStep();
+        updateForm(values);
+        handlePreFill(false);
+      }}
+      onNext={submitForm}
+    >
+      <Container>
+        <Form>
             <Row>
               <Col md={6} className="mb-3">
                 <Form.Group>
@@ -425,24 +432,7 @@ const Contact = () => {
             </Row>
           </Form>
         </Container>
-      </Card.Body>
-      <div className="form__container__buttons">
-        <Button
-          variant="light"
-          onClick={() => {
-            backStep();
-            updateForm(values);
-            handlePreFill(false);
-          }}
-          size="lg"
-        >
-          Voltar
-        </Button>
-        <Button variant="warning" onClick={submitForm} size="lg">
-          Avançar
-        </Button>
-      </div>
-    </Card>
+      </FormStepLayout>
   );
 };
 
