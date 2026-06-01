@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Table, Button } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -8,8 +8,9 @@ import { registerLog } from '@/services/logs';
 import { listFeedback, deleteAllFeedback } from '@/services/feedback';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 import CustomModal from '@/components/Global/CustomModal';
 import { TABLE_HEADERS } from '@/utils/constants';
 
@@ -91,10 +92,8 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'export-feedbacks',
       name: 'Baixar Relatório',
       onClick: () => generateExcel(),
@@ -102,10 +101,8 @@ const AdminFeedback = ({ loggedUsername }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#dc3545',
-      iconSize: 35,
+      iconSize: 22,
       id: 'delete-all',
       name: 'Deletar Todos Feedbacks',
       onClick: () => setShowDeleteModal(true),
@@ -115,12 +112,21 @@ const AdminFeedback = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Feedbacks" sessionTypeIcon="feedback" iconSize={80} fill="#204691" />
+    <div className="admin-subpage admin-subpage--feedback">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Feedbacks"
+        subtitle="Opiniões enviadas pelos participantes"
+        typeIcon="feedback"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Table striped bordered hover responsive className="custom-table mt-3">
+        <SectionHeader title="Feedbacks" count={feedbacks.length} />
+
+        <div className="admin-table-card">
+          <Table striped bordered hover responsive className="custom-table">
         <thead>
           <tr>
             {TABLE_HEADERS.map((header, index) => (
@@ -139,7 +145,8 @@ const AdminFeedback = ({ loggedUsername }) => {
             </tr>
           ))}
         </tbody>
-      </Table>
+          </Table>
+        </div>
 
       <CustomModal
         show={showDeleteModal}
@@ -164,8 +171,9 @@ const AdminFeedback = ({ loggedUsername }) => {
         </em>
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
