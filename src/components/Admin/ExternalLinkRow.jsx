@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
+import '../Style/ExternalLinkRow.scss';
 
 const OLD_SPREADSHEET_URL = 'https://drive.google.com/file/d/1y1mUKZzotMVwnjn16_JkDu-fJCzSEnKW/view?usp=drive_link';
 const PAGARME = 'https://id.pagar.me/signin';

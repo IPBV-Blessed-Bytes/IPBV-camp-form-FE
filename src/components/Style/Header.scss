@@ -1,0 +1,100 @@
+@use '../../styles/Variables.scss' as *;
+
+.form__header {
+  background-color: $primary;
+  color: $white;
+  padding: 1.25rem 1.875rem 3rem;
+  text-align: center;
+
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__left {
+    text-align: center;
+  }
+
+  &__right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  ol {
+    align-items: center;
+  }
+
+  .header-title {
+    font-family: 'Norwester', sans-serif;
+    font-size: 50px;
+    font-weight: normal;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $secondary;
+    }
+  }
+
+  &--future-step {
+    cursor: default;
+
+    a {
+      cursor: default;
+    }
+  }
+
+  &--previous-step a {
+    color: $secondary !important;
+  }
+
+  h2 {
+    font-weight: bold;
+  }
+
+  nav {
+    ol {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        &:hover,
+        &.active {
+          color: $secondary;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.active {
+          font-weight: bold;
+        }
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $md) {
+  .form__header {
+    .container {
+      flex-direction: column;
+    }
+
+    &__right {
+      position: static;
+      transform: none;
+      margin-bottom: 0.75rem;
+    }
+  }
+}

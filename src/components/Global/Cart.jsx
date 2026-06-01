@@ -7,6 +7,7 @@ import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import CustomModal from '@/components/Global/CustomModal';
+import '../Style/Cart.scss';
 
 const getDiscountedPrices = (user, age) => {
   const discounted = getDiscountedProducts(age);

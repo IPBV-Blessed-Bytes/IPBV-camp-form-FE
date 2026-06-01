@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
+import '../Style/InfoButton.scss';
 
 const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);

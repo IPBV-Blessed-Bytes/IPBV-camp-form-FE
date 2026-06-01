@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Icons from '@/components/Global/Icons';
+import '../Style/SideButtons.scss';
 
 const SideButtons = ({ primaryPermission, secondaryPermission }) => {
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);

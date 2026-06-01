@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
+import '../../Style/AdminHeader.scss';
 
 const AdminHeader = ({ pageName, sessionTypeIcon, iconSize, fill }) => {
   const navigate = useNavigate();

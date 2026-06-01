@@ -6,7 +6,8 @@ import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import { enumSteps } from '@/utils/constants';
 import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
-import '../Style/style.scss';
+import '../Style/Header.scss';
+import '../Style/Cart.scss';
 import Icons from './Icons';
 
 const HEADER_STEPS = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];

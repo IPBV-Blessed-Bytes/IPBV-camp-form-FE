@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
+import '../../Style/ColumnFilter.scss';
 
 const ColumnFilter = ({ column, onFilterChange }) => {
   const filterValue = column?.filterValue || '';

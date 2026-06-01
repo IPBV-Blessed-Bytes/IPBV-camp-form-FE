@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import '../Style/style.scss';
+import '../Style/CustomCarousel.scss';
 
 const CustomCarousel = ({ title, images }) => {
   if (!images || images.length === 0) return null;

@@ -5,6 +5,7 @@ import Icons from '@/components/Global/Icons';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format, parse } from 'date-fns';
+import '../../Style/ColumnsFields.scss';
 
 const ColumnFields = ({
   type,

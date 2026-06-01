@@ -2,6 +2,7 @@ import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
+import '../../Style/ColumnFilter.scss';
 
 const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
   const filterValue = column?.filterValue || '';

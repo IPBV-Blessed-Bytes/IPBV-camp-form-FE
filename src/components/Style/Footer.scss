@@ -1,0 +1,35 @@
+@use '../../styles/Variables.scss' as *;
+
+.form__footer {
+  &-logo {
+    cursor: pointer;
+    height: 6.25rem;
+  }
+
+  &__powered {
+    @media (max-width: $md) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: $sm) {
+      display: flex;
+      flex-direction: column;
+
+      span {
+        display: none;
+      }
+    }
+  }
+
+  &__copyright {
+    align-items: end;
+    display: flex;
+    font-style: italic;
+    justify-self: center;
+    margin: 0;
+
+    @media (max-width: $md) {
+      font-size: 0.875rem;
+    }
+  }
+}

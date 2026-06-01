@@ -1,0 +1,12 @@
+@use '../../styles/Variables.scss' as *;
+
+.btn-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  a {
+    align-items: center;
+    display: flex;
+  }
+}

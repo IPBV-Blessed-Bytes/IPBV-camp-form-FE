@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import '../Style/Loading.scss';
 
 const Loading = ({ loading, messageText }) => {
   return (

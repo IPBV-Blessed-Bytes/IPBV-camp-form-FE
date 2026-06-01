@@ -1,0 +1,76 @@
+@use '../../styles/Variables.scss' as *;
+
+.cart {
+  &-title {
+    font-size: 1.625rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  &-btn {
+    background-color: $white;
+    border: none;
+    border-radius: 50%;
+    bottom: 1.25rem;
+    cursor: pointer;
+    left: 1.25rem;
+    padding: 0.625rem;
+    z-index: 9000;
+
+    &:hover {
+      background-color: $heavy-baby-blue;
+      opacity: 0.8;
+    }
+
+    &:active,
+    &:focus-visible {
+      background-color: $white !important;
+      border-color: $white !important;
+    }
+
+    &-responsive {
+      width: auto;
+
+      @media (max-width: 48rem) {
+        width: 100%;
+      }
+    }
+  }
+
+  &-item {
+    .item-info {
+      h5 {
+        margin-bottom: 0;
+      }
+
+      p {
+        color: $alternate-dark-gray;
+        font-size: 1.125rem;
+        margin: 0.25rem 0;
+      }
+    }
+
+    .remove-user-btn,
+    .edit-user-btn {
+      @media (max-width: $xxxl) {
+        width: 100%;
+      }
+
+      @media (max-width: $md) {
+        display: none;
+      }
+    }
+  }
+
+  &-total {
+    margin-top: 1.25rem;
+    font-size: 1.25rem;
+    text-align: right;
+  }
+}
+
+.empty-cart {
+  text-align: center;
+  color: $alternate-dark-gray;
+  margin: 3.75rem auto;
+}

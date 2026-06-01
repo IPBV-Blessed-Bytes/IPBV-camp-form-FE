@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Card, ProgressBar } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import '../Style/style.scss';
+import '../Style/PackageCard.scss';
 
 const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, showRemainingVacancies }) => {
   const filled = Number(filledVacancies || 0);

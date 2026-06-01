@@ -1,6 +1,5 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { PropTypes } from 'prop-types';
-import '../Style/style.scss';
 import Icons from '@/components/Global/Icons';
 
 const Tips = ({ classNameWrapper, color, placement, size, text, typeIcon }) => {

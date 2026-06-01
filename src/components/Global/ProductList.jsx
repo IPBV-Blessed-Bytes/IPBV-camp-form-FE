@@ -3,6 +3,7 @@ import { useCart } from 'react-use-cart';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import '../Style/ProductList.scss';
 
 const ProductList = forwardRef(({ age, cartKey, category, products, packageCount, vacancies }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();

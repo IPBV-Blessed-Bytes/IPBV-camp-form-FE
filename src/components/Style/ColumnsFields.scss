@@ -1,0 +1,15 @@
+@use '../../styles/Variables.scss' as *;
+
+.custom-new-registration::placeholder {
+  opacity: 0.5;
+}
+
+.admin-field {
+  &--odd {
+    background-color: $intense-green-light;
+  }
+
+  &--even {
+    background-color: $light-green;
+  }
+}

@@ -1,0 +1,15 @@
+@use '../../styles/Variables.scss' as *;
+
+.filter-icon {
+  margin: 0.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.filter-input {
+  padding: 0.5rem 2.25rem 0.5rem 0.5rem !important;
+}
+
+.actived-filter {
+  background-color: $turquoise !important;
+}

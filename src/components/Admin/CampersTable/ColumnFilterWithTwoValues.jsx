@@ -2,6 +2,7 @@ import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Icons from '@/components/Global/Icons';
+import '../../Style/ColumnFilter.scss';
 
 const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
   const [localFilterValue, setLocalFilterValue] = useState(column?.filterValue || '');
