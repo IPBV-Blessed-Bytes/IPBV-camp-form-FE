@@ -7,6 +7,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 
 const ChooseFormPayment = () => {
   const { backStep, currentFormValues, loading, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
@@ -74,10 +75,13 @@ const ChooseFormPayment = () => {
 
   return (
     <>
-      <Card className="form__container__general-height">
-        <Card.Body className="choose-form-payment-custom-padding">
-          <Container>
-            <Card.Title>Pagamento</Card.Title>
+      <FormStepLayout
+        title="Pagamento"
+        onBack={backStep}
+        onNext={handleManualSubmit}
+        nextDisabled={status === 'loading' || status === 'loaded'}
+      >
+        <Container>
             <Card.Text>
               Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você será
               redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção.
@@ -111,22 +115,7 @@ const ChooseFormPayment = () => {
 
             <Loading loading={loading} />
           </Container>
-        </Card.Body>
-
-        <div className="form__container__buttons">
-          <Button variant="light" onClick={backStep} size="lg">
-            Voltar
-          </Button>
-          <Button
-            variant="warning"
-            onClick={handleManualSubmit}
-            size="lg"
-            disabled={status === 'loading' || status === 'loaded'}
-          >
-            Avançar
-          </Button>
-        </div>
-      </Card>
+      </FormStepLayout>
 
       <CustomModal
         show={showConfirm}
