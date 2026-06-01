@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Container, Accordion, Button, Card, Form, Row, Col } from 'react-bootstrap';
+import { Container, Accordion, Card, Form, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import calculateAge from '../Packages/utils/calculateAge';
 import { ExtraMealsSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import { getTempData } from '@/utils/formStorage';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
@@ -136,10 +137,8 @@ const ExtraMeals = () => {
   };
 
   return (
-    <Card className="form__container__general-height">
-      <Card.Body>
-        <Container>
-          <Card.Title>Refeição Extra</Card.Title>
+    <FormStepLayout title="Refeição Extra" onBack={backStep} onNext={submitForm}>
+      <Container>
           <Card.Text>
             Nesta seção, você escolhe se deseja adquirir refeições adicionais avulsas (café, almoço ou jantar). O valor
             das refeições será adicionado ao valor do seu pacote base.
@@ -322,17 +321,7 @@ const ExtraMeals = () => {
             </>
           )}
         </Container>
-      </Card.Body>
-
-      <div className="form__container__buttons">
-        <Button variant="light" onClick={backStep} size="lg">
-          Voltar
-        </Button>
-        <Button variant="warning" onClick={submitForm} size="lg">
-          Avançar
-        </Button>
-      </div>
-    </Card>
+      </FormStepLayout>
   );
 };
 
