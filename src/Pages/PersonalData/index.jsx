@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import { FormikProvider, useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { cpf } from 'cpf-cnpj-validator';
@@ -7,6 +7,7 @@ import { cpf } from 'cpf-cnpj-validator';
 import { personalInformationSchema } from '@/form/validations/schema';
 import { checkCoupon } from '@/services/coupons';
 import { useFormState } from '@/contexts/FormStateContext';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 
 import AgeConfirmationModal from './components/AgeConfirmationModal';
 import PrefillModal from './components/PrefillModal';
@@ -103,42 +104,27 @@ const PersonalData = () => {
 
   return (
     <FormikProvider value={formik}>
-      <Card className="form__container__general-height">
-        <Card.Body>
-          <Container>
-            <Card.Title>Informações Pessoais</Card.Title>
-            <Card.Text>
-              Informe seus dados pessoais, pois eles são essenciais para a administração de sua inscrição.
-            </Card.Text>
-            <Form>
-              <IdentificationRow onDateChange={ageValidation.handleDateChange} onDateBlur={handleDateBlur} />
-              <NameAndRgRow onPersistName={updateForm} />
-              <RgShipperRow />
-              <GenderAndGuardianRow
-                showLegalGuardianFields={ageValidation.showLegalGuardianFields}
-                onPersistGuardianName={updateForm}
-              />
-            </Form>
-          </Container>
-        </Card.Body>
-
-        <div className="form__container__buttons">
-          <Button
-            variant="light"
-            onClick={() => {
-              backStep();
-              updateForm(values);
-            }}
-            size="lg"
-          >
-            Voltar
-          </Button>
-
-          <Button variant="warning" onClick={submitForm} size="lg">
-            Avançar
-          </Button>
-        </div>
-      </Card>
+      <FormStepLayout
+        title="Informações Pessoais"
+        description="Informe seus dados pessoais, pois eles são essenciais para a administração de sua inscrição."
+        onBack={() => {
+          backStep();
+          updateForm(values);
+        }}
+        onNext={submitForm}
+      >
+        <Container>
+          <Form>
+            <IdentificationRow onDateChange={ageValidation.handleDateChange} onDateBlur={handleDateBlur} />
+            <NameAndRgRow onPersistName={updateForm} />
+            <RgShipperRow />
+            <GenderAndGuardianRow
+              showLegalGuardianFields={ageValidation.showLegalGuardianFields}
+              onPersistGuardianName={updateForm}
+            />
+          </Form>
+        </Container>
+      </FormStepLayout>
 
       <AgeConfirmationModal
         showModal={ageValidation.showModal}
