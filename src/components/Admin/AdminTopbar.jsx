@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
+import '../Style/AdminTopbar.scss';
 
 const getInitials = (name) => {
   if (!name) return '?';

@@ -1,0 +1,146 @@
+@use '../../styles/Variables.scss' as *;
+@use 'sass:color';
+
+.admin-topbar {
+  align-items: center;
+  background: $white;
+  border-bottom: 1px solid $alternate-light-gray;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @media (max-width: $md) {
+    padding: 0.75rem 1rem;
+  }
+
+  &__brand {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  &__brand-dot {
+    background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: 15%) 100%);
+    border-radius: 6px;
+    height: 28px;
+    width: 28px;
+  }
+
+  &__brand-title {
+    color: $dark-gray;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0;
+
+    @media (max-width: $sm) {
+      font-size: 0.95rem;
+    }
+  }
+
+  &__actions {
+    position: relative;
+  }
+
+  &__user {
+    align-items: center;
+    background: $background-gray;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $hover-gray;
+      border-color: $border-gray;
+    }
+  }
+
+  &__avatar {
+    align-items: center;
+    background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: 15%) 100%);
+    border-radius: 50%;
+    color: $white;
+    display: flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+  }
+
+  &__user-name {
+    color: $dark-gray;
+    font-size: 0.9rem;
+    font-weight: 600;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: $sm) {
+      display: none;
+    }
+  }
+
+  &__chevron {
+    color: $alternate-dark-gray;
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+
+    &.is-open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__menu {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    min-width: 220px;
+    overflow: hidden;
+    padding: 0.4rem;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    z-index: 200;
+  }
+
+  &__menu-item {
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: $dark-gray;
+    cursor: pointer;
+    display: flex;
+    font-size: 0.9rem;
+    gap: 0.65rem;
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    transition: background 0.15s ease;
+    width: 100%;
+
+    &:hover {
+      background: $hover-gray;
+    }
+
+    &--danger {
+      color: $medium-red;
+    }
+  }
+
+  &__menu-divider {
+    background: $alternate-light-gray;
+    height: 1px;
+    margin: 0.25rem 0;
+  }
+}

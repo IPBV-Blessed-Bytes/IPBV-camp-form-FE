@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import '../Style/SectionHeader.scss';
 
 const SectionHeader = ({ title, count }) => (
   <div className="admin-section-header">

@@ -1,0 +1,32 @@
+@use '../../styles/Variables.scss' as *;
+
+.admin-section-header {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0 1rem;
+
+  &__title {
+    color: $dark-gray;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  &__count {
+    background: $alternate-light-gray;
+    border-radius: 999px;
+    color: $alternate-dark-gray;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+  }
+
+  &__line {
+    background: $alternate-light-gray;
+    flex: 1;
+    height: 1px;
+  }
+}
