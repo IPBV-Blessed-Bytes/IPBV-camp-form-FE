@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import Tools from '@/components/Admin/Header/Tools';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 
@@ -198,10 +198,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 mb-3 mb-lg-0 d-flex flex-column align-items-center',
-      cols: { xs: 6, lg: 3 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'filters',
       name: showFilters ? 'Ocultar Filtros' : 'Filtrar',
       onClick: () => setShowFilters((prev) => !prev),
@@ -209,10 +207,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeIcon: 'filter',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 mb-3 mb-lg-0 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 6, lg: 3 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'campers-excel',
       name: 'Baixar Relatório',
       onClick: handleGenerateExcel,
@@ -220,10 +216,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center',
-      cols: { xs: 6, lg: 3 },
       fill: '#dc3545',
-      iconSize: 40,
+      iconSize: 22,
       id: 'room-excel',
       name: 'Deletar',
       onClick: handleDeleteWithCheckbox,
@@ -232,10 +226,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRowsPermissions,
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 6, lg: 3 },
       fill: '#fff',
-      iconSize: 40,
+      iconSize: 22,
       id: 'add-camper',
       name: 'Nova Inscrição',
       onClick: () => {
@@ -249,12 +241,18 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Inscritos" sessionTypeIcon="person" iconSize={70} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--registered">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Inscritos"
+        subtitle="Todos os acampantes inscritos"
+        typeIcon="person"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Row>
+        <Row>
         <CoreTable
           getTableProps={getTableProps}
           getTableBodyProps={getTableBodyProps}
@@ -286,8 +284,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
       />
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
