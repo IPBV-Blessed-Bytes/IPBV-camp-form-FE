@@ -1,10 +1,11 @@
-import { Accordion, Button, Card } from 'react-bootstrap';
+import { Accordion, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 
 const FAQ = () => {
   const navigate = useNavigate();
@@ -15,8 +16,7 @@ const FAQ = () => {
     <div className="components-container">
       <Header />
       <div className="form__container faq">
-        <Card>
-          <Card.Body>
+        <FormStepLayout onBack={() => navigate('/')}>
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda
@@ -291,13 +291,7 @@ const FAQ = () => {
                 <Accordion.Body>Animais de estimação não são permitidos.</Accordion.Body>
               </Accordion.Item>
             </Accordion>
-            <div className="d-flex justify-content-end mt-4">
-              <Button variant="teal-blue" size="lg" onClick={() => navigate('/')}>
-                Voltar
-              </Button>
-            </div>
-          </Card.Body>
-        </Card>
+        </FormStepLayout>
         <InfoButton />
       </div>
       <Footer handleAdminClick={() => navigate('/admin')} />
