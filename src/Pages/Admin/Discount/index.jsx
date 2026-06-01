@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Form, Container } from 'react-bootstrap';
+import { Table, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -10,8 +10,9 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
@@ -147,10 +148,8 @@ const AdminDiscount = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'discount-excel',
       name: 'Baixar Relatório',
       onClick: generateExcel,
@@ -158,10 +157,8 @@ const AdminDiscount = ({ loggedUsername }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 12, md: 6 },
       fill: '#fff',
-      iconSize: 40,
+      iconSize: 22,
       id: 'add-new-discount',
       name: 'Criar Novo Desconto',
       onClick: () => openModal(null),
@@ -171,13 +168,22 @@ const AdminDiscount = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container className="discounts" fluid>
-      <AdminHeader pageName="Gerenciamento de Descontos" sessionTypeIcon="discount" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--discount discounts">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Descontos"
+        subtitle="Cupons e descontos atrelados a CPFs"
+        typeIcon="discount"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <div className="table-responsive">
-        <Table striped bordered hover className="custom-table">
+        <SectionHeader title="Descontos cadastrados" count={discount.length} />
+
+        <div className="admin-card">
+          <div className="table-responsive">
+            <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
               <th className="table-cells-header">CPF atrelado:</th>
@@ -217,8 +223,9 @@ const AdminDiscount = ({ loggedUsername }) => {
               );
             })}
           </tbody>
-        </Table>
-      </div>
+            </Table>
+          </div>
+        </div>
 
       <CustomModal
         show={showModal}
@@ -317,8 +324,9 @@ const AdminDiscount = ({ loggedUsername }) => {
         Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
