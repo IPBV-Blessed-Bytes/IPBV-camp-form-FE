@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import Icons from '@/components/Global/Icons';
 import useBaseYear from '@/hooks/useBaseYear';
 
@@ -14,8 +15,7 @@ const WaitingForCamp = () => {
     <>
       <Header />
       <div className="form__container container">
-        <Card className="form__container__general-height">
-          <Card.Body>
+        <FormStepLayout>
             <Container>
               <div className="form__success text-center">
                 <div className="form__success__waiting">
@@ -66,8 +66,7 @@ const WaitingForCamp = () => {
                 </small>
               </div>
             </Container>
-          </Card.Body>
-        </Card>
+        </FormStepLayout>
       </div>
       <Footer handleAdminClick={() => navigate('/admin')} />
     </>
