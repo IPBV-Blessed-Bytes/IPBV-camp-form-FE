@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { Form, Container, Accordion, Table, Button } from 'react-bootstrap';
+import { Form, Accordion, Table, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,8 +18,8 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -343,10 +343,8 @@ const AdminRide = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'rooms-excel',
       name: 'Baixar Relatório',
       onClick: generateExcel,
@@ -356,12 +354,18 @@ const AdminRide = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Caronas" sessionTypeIcon="ride" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--ride">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Caronas"
+        subtitle="Ofertas e pedidos de carona dos inscritos"
+        typeIcon="ride"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Accordion className="mb-3">
+        <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Oferecem Carona</Accordion.Header>
           <Accordion.Body>{renderTable(offerRideTableInstance)}</Accordion.Body>
@@ -395,8 +399,9 @@ const AdminRide = ({ loggedUsername }) => {
         Tem certeza de que deseja excluir esse acampante dessa carona?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
