@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
+import { Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -17,7 +17,7 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
 const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -316,12 +316,18 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento da Info Home" sessionTypeIcon="simple-info" iconSize={80} fill="#007185" />
+    <div className="admin-subpage admin-subpage--settings">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento da Info Home"
+        subtitle="Conteúdo exibido na página inicial do formulário"
+        typeIcon="simple-info"
+      />
 
-      <Row className="justify-content-center">
+      <div className="admin-subpage__content">
+        <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
-          <Form className="my-4">
+          <Form className="admin-panel my-4">
             <h5 className="mb-3 fw-bold">Informações Base:</h5>
 
             {Object.keys(formData.top).map((field) => (
@@ -347,7 +353,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         </Col>
 
         <Col xs={12} md={6} lg={4}>
-          <Form className="my-4">
+          <Form className="admin-panel my-4">
             <div className="d-xl-flex justify-content-between mb-3">
               <h5 className="fw-bold">Informações Importantes:</h5>
               <div className="d-flex gap-2">
@@ -554,8 +560,9 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         Essa ação removerá todas as informações da homepage. Deseja continuar?
       </CustomModal>
 
-      <Loading loading={loading || loadingContent} />
-    </Container>
+        <Loading loading={loading || loadingContent} />
+      </div>
+    </div>
   );
 };
 
