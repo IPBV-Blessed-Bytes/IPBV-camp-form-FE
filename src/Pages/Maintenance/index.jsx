@@ -1,14 +1,14 @@
-import { Container, Card } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import './style.scss';
 import Header from '@/components/Global/Header';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 
 const Maintenance = () => {
   return (
     <>
       <Header />
       <div className="form__container container">
-        <Card className="form__container__general-height">
-          <Card.Body>
+        <FormStepLayout>
             <Container>
               <div className="form__success text-center">
                 <div className="form__success__title">
@@ -30,8 +30,7 @@ const Maintenance = () => {
                 </small>
               </div>
             </Container>
-          </Card.Body>
-        </Card>
+        </FormStepLayout>
       </div>
     </>
   );
