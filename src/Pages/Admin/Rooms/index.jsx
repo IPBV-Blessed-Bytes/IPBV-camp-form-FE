@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Table, Container, Accordion, Button, Form, Badge } from 'react-bootstrap';
+import { Table, Accordion, Button, Form, Badge } from 'react-bootstrap';
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -20,8 +20,8 @@ import {
 } from '@/services/rooms';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
@@ -324,10 +324,8 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'aggregate-excel',
       name: 'Baixar Relatório Agregados',
       onClick: generateAggregateExcel,
@@ -335,10 +333,8 @@ const AdminRooms = ({ loggedUsername }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 12, md: 6 },
       fill: '#fff',
-      iconSize: 40,
+      iconSize: 22,
       id: 'room-excel',
       name: 'Baixar Relatório Quartos',
       onClick: generateRoomExcel,
@@ -348,12 +344,18 @@ const AdminRooms = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container className="rooms" fluid>
-      <AdminHeader pageName="Gerenciamento de Quartos" sessionTypeIcon="rooms" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--rooms rooms">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Quartos"
+        subtitle="Distribuição de acampantes por quarto"
+        typeIcon="rooms"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Accordion className="mb-3">
+        <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lista de Agregados</Accordion.Header>
           <Accordion.Body>
@@ -617,8 +619,9 @@ const AdminRooms = ({ loggedUsername }) => {
         Tem certeza que deseja excluir <b>{camperToDelete?.name}</b> do quarto?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
