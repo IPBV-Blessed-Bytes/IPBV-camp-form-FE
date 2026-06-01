@@ -1,7 +1,6 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Container, Breadcrumb, Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 
 import { enumSteps } from '@/utils/constants';
 import useBaseYear from '@/hooks/useBaseYear';
@@ -9,6 +8,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 import '../Style/Header.scss';
 import '../Style/Cart.scss';
 import Icons from './Icons';
+import FormStepper from './FormStepper';
 
 const HEADER_STEPS = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
@@ -59,32 +59,13 @@ const Header = ({ showNavMenu = false }) => {
           </h2>
 
           {showNavMenu && (
-            <Breadcrumb className="mt-4">
-              {HEADER_STEPS.map((step, index) => (
-                <React.Fragment key={index}>
-                  <Breadcrumb.Item
-                    className={`${
-                      index > steps ? 'form__header--future-step' : index < steps ? 'form__header--previous-step' : ''
-                    } ${index === 4 && hasFood ? 'disabled-link' : ''}`}
-                    active={steps === index}
-                    onClick={() => handleStepChange(index)}
-                  >
-                    {step}
-                  </Breadcrumb.Item>
-                  {index < HEADER_STEPS.length - 1 && (
-                    <>
-                      <Icons
-                        className="d-none d-lg-block"
-                        typeIcon="simple-arrow"
-                        iconSize={15}
-                        fill={index < steps ? '#ffc107' : '#fff'}
-                      />
-                      <span className="d-lg-none">•</span>
-                    </>
-                  )}
-                </React.Fragment>
-              ))}
-            </Breadcrumb>
+            <FormStepper
+              steps={HEADER_STEPS}
+              current={steps}
+              maxReached={highestStepReached}
+              lockedIndexes={hasFood ? [4] : []}
+              onSelect={handleStepChange}
+            />
           )}
         </div>
 
