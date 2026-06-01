@@ -7,25 +7,22 @@ const Footer = ({ handleAdminClick }) => {
 
   return (
     <footer className="form__footer">
-      <div className="form__footer__brand">
-        <a className="form__footer__admin" onClick={handleAdminClick}>
-          <img src={logoFooter} className="form__footer-logo" alt="logo" />
-        </a>
-
-        <div className="form__footer__credits">
-          <p className="form__footer__powered">
-            <a className="mail-to" href="mailto:alvinho.leal@live.com">
-              Powered by Blessed Bytes Team
-            </a>
-            <span className="form__footer__sep"> • </span>
-            <em>
-              <b>1 Coríntios 15:58</b>
-            </em>
-          </p>
-          <p className="form__footer__copyright">
-            © {currentYear} Igreja Presbiteriana de Boa Viagem • Todos os Direitos Reservados
-          </p>
-        </div>
+      <a className="form__footer__admin" onClick={handleAdminClick}>
+        <img src={logoFooter} className="form__footer-logo" alt="logo" />
+      </a>
+      <div className="form__footer__credits">
+        <p className="form__footer__powered">
+          <a className="mail-to" href="mailto:alvinho.leal@live.com">
+            Powered by Blessed Bytes Team
+          </a>
+          <span className="form__footer__sep"> • </span>
+          <em>
+            <b>1 Coríntios 15:58</b>
+          </em>
+        </p>
+        <p className="form__footer__copyright">
+          © {currentYear} Igreja Presbiteriana de Boa Viagem • Todos os Direitos Reservados
+        </p>
       </div>
     </footer>
   );

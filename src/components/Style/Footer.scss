@@ -2,29 +2,16 @@
 
 .form__footer {
   align-items: center;
-  background: $white;
   border-top: 1px solid $alternate-light-gray;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: space-between;
   padding: 1rem 2rem;
 
   @media (max-width: $md) {
     justify-content: center;
     padding: 1rem;
     text-align: center;
-  }
-
-  &__brand {
-    align-items: center;
-    display: flex;
-    gap: 1rem;
-
-    @media (max-width: $sm) {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
   }
 
   &__admin {
