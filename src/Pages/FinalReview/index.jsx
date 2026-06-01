@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form } from 'react-bootstrap';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import { format, isValid } from 'date-fns';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
@@ -109,11 +110,14 @@ const FinalReview = () => {
   return (
     <>
       {!isSuccessPathname && (
-        <Card className="form__container__general-height">
-          <Card.Body>
-            <Container>
+        <FormStepLayout
+          title="Revisão de Dados"
+          onBack={backStep}
+          onNext={handleSaveUser}
+          nextDisabled={!isConfirmed || !isDataAuthorized}
+        >
+          <Container>
               <div className="form-review">
-                <Card.Title>Revisão de Dados</Card.Title>
                 <Card.Text>Revise os dados do formulário antes de submeter.</Card.Text>
 
                 <Form>
@@ -377,18 +381,7 @@ const FinalReview = () => {
                 </Form>
               </div>
             </Container>
-          </Card.Body>
-
-          <div className="form__container__buttons">
-            <Button variant="light" onClick={backStep} size="lg">
-              Voltar
-            </Button>
-
-            <Button variant="warning" onClick={handleSaveUser} size="lg" disabled={!isConfirmed || !isDataAuthorized}>
-              Avançar
-            </Button>
-          </div>
-        </Card>
+        </FormStepLayout>
       )}
     </>
   );
