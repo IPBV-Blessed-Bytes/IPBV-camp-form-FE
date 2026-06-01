@@ -75,7 +75,7 @@ const renderUserTotalInfo = (user, age) => {
   return (
     <div className="cart-item">
       <div className="item-info">
-        <h5 className="fw-bold d-flex justify-content-between">
+        <h5 className="cart-user-total fw-bold d-flex justify-content-between">
           Total Acampante: <span>R$ {sumBeforeDiscount},00</span>
         </h5>
       </div>
@@ -179,7 +179,12 @@ const Cart = ({
   };
 
   if (!validUsers.length) {
-    return <p className="empty-cart">Nenhum usuário adicionado ao carrinho</p>;
+    return (
+      <div className="empty-cart">
+        <Icons typeIcon="cart" iconSize={48} fill="#ced4da" />
+        <p>Nenhum usuário adicionado ao carrinho</p>
+      </div>
+    );
   }
 
   return (
@@ -191,7 +196,7 @@ const Cart = ({
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
-          <Card key={index} className="mb-4 shadow-sm">
+          <Card key={index} className="cart-user-card mb-4">
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4 className="cart-user-title mb-0">
