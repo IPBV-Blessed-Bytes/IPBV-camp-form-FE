@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -7,7 +7,7 @@ import { registerLog } from '@/services/logs';
 import { updatePackageCount, updateTotalBusVacancies } from '@/services/packages';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
 const AdminSeatManagement = ({
   loading,
@@ -85,12 +85,19 @@ const AdminSeatManagement = ({
   };
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Vagas" sessionTypeIcon="camp" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--seats">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Vagas"
+        subtitle="Vagas totais, por pacote e de ônibus"
+        typeIcon="camp"
+      />
 
-      <Row className="justify-content-center">
+      <div className="admin-subpage__content">
+        <Row className="justify-content-center">
         <Col xs={12} md={6} lg={4}>
-          <Form className="my-4">
+          <Form className="admin-panel my-4">
+            <h2 className="admin-panel__title">Vagas e pacotes</h2>
             <Form.Group controlId="inputSeats">
               <Form.Label>
                 <b>Vagas Totais Inscritos:</b>
@@ -126,7 +133,8 @@ const AdminSeatManagement = ({
         </Col>
 
         <Col xs={12} md={6} lg={4}>
-          <Form className="my-4">
+          <Form className="admin-panel my-4">
+            <h2 className="admin-panel__title">Vagas de ônibus</h2>
             <Form.Group controlId="inputSeats">
               <Form.Label>
                 <b>Vagas Totais no Ônibus:</b>
@@ -146,9 +154,10 @@ const AdminSeatManagement = ({
             </div>
           </Form>
         </Col>
-      </Row>
-      <Loading loading={loading || loadingContent} />
-    </Container>
+        </Row>
+        <Loading loading={loading || loadingContent} />
+      </div>
+    </div>
   );
 };
 

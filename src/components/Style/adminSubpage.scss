@@ -172,6 +172,22 @@ $admin-accents: (
   overflow: hidden;
 }
 
+// Card for form-centric panels (settings, seat/lot management, etc.).
+.admin-panel {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+}
+
 .admin-subpage {
   .table-responsive:not(.ride) {
     height: auto;
