@@ -3,6 +3,7 @@ import { useCart } from 'react-use-cart';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import Icons from '@/components/Global/Icons';
 import '../Style/ProductList.scss';
 
 const ProductList = forwardRef(({ age, cartKey, category, products, packageCount, vacancies }, ref) => {
@@ -154,12 +155,13 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
                 {product.description && <p className="discount-description small mb-4">{product.description}</p>}
 
                 {!isAvailable ? (
-                  <p className="text-danger small fw-bold">Indisponível</p>
+                  <span className="product-card__badge">Indisponível</span>
                 ) : (
                   <button
                     className={`product-button ${alreadySelected ? 'selected' : ''}`}
                     onClick={() => handlePackageButton(product, filtered)}
                   >
+                    {alreadySelected && <Icons typeIcon="checked" iconSize={18} fill="#fff" />}
                     {alreadySelected ? 'Selecionado' : 'Selecionar'}
                   </button>
                 )}

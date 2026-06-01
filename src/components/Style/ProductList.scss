@@ -1,35 +1,53 @@
 @use '../../styles/Variables.scss' as *;
+@use 'sass:color';
 
 .product {
   &-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
+    gap: 1.25rem;
   }
 
   &-card {
     background: $white;
-    border: 1px solid transparent;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+    border: 1px solid $alternate-light-gray;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 2rem;
-    transition: transform 0.2s ease;
+    padding: 1.5rem;
+    position: relative;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover {
-      transform: translateY(-0.25rem);
+      border-color: $medium-gray;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09);
+      transform: translateY(-3px);
     }
 
     &-is-active {
-      background-color: $pastel-green;
-      border: 1px solid $green;
+      border-color: $intense-green;
+      box-shadow:
+        0 0 0 2px rgba($intense-green, 0.25),
+        0 8px 20px rgba(0, 0, 0, 0.07);
+
+      &:hover {
+        border-color: $intense-green;
+      }
     }
 
     &-unavailable {
-      background-color: $light-red;
-      border: 1px solid $medium-red;
+      filter: grayscale(0.6);
+      opacity: 0.65;
+
+      &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        transform: none;
+      }
     }
 
     .product {
@@ -42,30 +60,37 @@
       }
 
       &-title {
-        font-size: 1.125rem;
-        font-weight: 600;
+        color: $dark-gray;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0;
       }
 
       &-price {
         color: $primary;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 1.5rem;
-        font-weight: bold;
+        font-size: 1.6rem;
+        font-weight: 700;
         margin-bottom: 0.75rem;
       }
 
       &-button {
+        align-items: center;
         background: $primary;
         border: none;
-        border-radius: 0.25rem;
+        border-radius: 10px;
         color: $white;
         cursor: pointer;
+        display: flex;
         font-weight: 600;
-        padding: 0.625rem;
+        gap: 0.4rem;
+        justify-content: center;
+        padding: 0.65rem;
         transition: background 0.2s ease;
+        width: 100%;
 
         &:hover {
-          background: $primary;
+          background: color.adjust($primary, $lightness: -6%);
         }
 
         &:focus-visible {
@@ -73,9 +98,31 @@
         }
 
         &.selected {
-          background: $intense-medium-green;
+          background: $intense-green;
+
+          &:hover {
+            background: color.adjust($intense-green, $lightness: -6%);
+          }
         }
       }
     }
   }
+
+  &-card__badge {
+    align-items: center;
+    background: $light-red;
+    border-radius: 999px;
+    color: $medium-red;
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 0.3rem;
+    justify-content: center;
+    padding: 0.45rem 0.75rem;
+    width: 100%;
+  }
+}
+
+.discount-description {
+  color: $alternate-dark-gray;
 }
