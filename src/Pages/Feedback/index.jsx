@@ -10,6 +10,7 @@ import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 
@@ -68,8 +69,7 @@ const Feedback = () => {
     <div className="components-container">
       <Header />
       <div className="form__container">
-        <Card>
-          <Card.Body>
+        <FormStepLayout>
             <Container>
               <Row className="mb-4">
                 <Card.Title>Nos Envie sua Opinião:</Card.Title>
@@ -360,8 +360,7 @@ const Feedback = () => {
               </Form>
               <Loading loading={loading} />
             </Container>
-          </Card.Body>
-        </Card>
+        </FormStepLayout>
         <InfoButton />
       </div>
       <Footer handleAdminClick={() => navigate('/admin')} />
