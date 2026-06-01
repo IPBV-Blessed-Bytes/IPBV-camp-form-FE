@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -9,8 +9,9 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -138,10 +139,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'add-new-user',
       name: 'Criar Novo Usuário',
       onClick: () => handleCreateClick(),
@@ -151,13 +150,20 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Acampantes" sessionTypeIcon="add-person" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--users">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Usuários"
+        subtitle="Contas de acesso ao painel e suas permissões"
+        typeIcon="add-person"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Row>
-        <Col>
+        <SectionHeader title="Usuários" count={users.length} />
+
+        <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
@@ -194,8 +200,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               ))}
             </tbody>
           </Table>
-        </Col>
-      </Row>
+        </div>
 
       <CustomModal
         show={showModal}
@@ -296,8 +301,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         Tem certeza que deseja excluir o usuário <strong>{userToDelete?.userName}</strong>?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
