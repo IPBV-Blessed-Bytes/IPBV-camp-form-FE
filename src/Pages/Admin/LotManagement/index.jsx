@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Card, ListGroup, Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
+import { Card, ListGroup, Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -18,8 +18,8 @@ import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 import Icons from '@/components/Global/Icons';
 
 const defaultPrice = {
@@ -450,10 +450,8 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'add-new-lot',
       name: 'Adicionar Novo Lote',
       onClick: () => setShowAddModal(true),
@@ -461,10 +459,8 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       typeIcon: 'plus',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 12, md: 6 },
       fill: '#fff',
-      iconSize: 40,
+      iconSize: 22,
       id: 'edit-base-date',
       name: 'Alterar Data do Evento',
       onClick: async () => {
@@ -477,12 +473,18 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Lotes" sessionTypeIcon="calendar" iconSize={65} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--lots">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Lotes"
+        subtitle="Lotes de preço e data do evento"
+        typeIcon="calendar"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <LotsSummary lots={lots} packageCount={packageCount} />
+        <LotsSummary lots={lots} packageCount={packageCount} />
 
       <Row className="justify-content-center">
         <Col>
@@ -803,8 +805,9 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
         </Form.Group>
       </CustomModal>
 
-      <Loading loading={loading || loadingContent} />
-    </Container>
+        <Loading loading={loading || loadingContent} />
+      </div>
+    </div>
   );
 };
 
