@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +9,7 @@ import { getFormContext, updateFormContext } from '@/services/formContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
 const AdminFormContext = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(true);
@@ -65,10 +65,16 @@ const AdminFormContext = ({ loggedUsername }) => {
   };
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Contexto do Formulário" sessionTypeIcon="form-context" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--settings">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Contexto do Formulário"
+        subtitle="Estado atual do formulário de inscrição"
+        typeIcon="form-context"
+      />
 
-      <Form>
+      <div className="admin-subpage__content">
+        <Form className="admin-panel">
         <Form.Group controlId="formContextSelect">
           <Form.Label>
             <strong>Selecione o contexto do formulário:</strong>
@@ -104,8 +110,9 @@ const AdminFormContext = ({ loggedUsername }) => {
         Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
