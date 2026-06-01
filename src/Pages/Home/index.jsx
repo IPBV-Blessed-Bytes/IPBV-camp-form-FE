@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Button, Card, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
@@ -10,6 +10,7 @@ import './style.scss';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 
 const FormHome = ({ onLgpdClose }) => {
   const location = useLocation();
@@ -77,9 +78,8 @@ const FormHome = ({ onLgpdClose }) => {
 
   return (
     <>
-      <Card className="form__container__general-height">
-        <Card.Body>
-          <Container>
+      <FormStepLayout onNext={nextStep}>
+        <Container>
             <Row className="text-center">
               <Col>
                 <h4 className="mb-3">
@@ -137,14 +137,7 @@ const FormHome = ({ onLgpdClose }) => {
             </Row>
             <Loading loading={loading} />
           </Container>
-        </Card.Body>
-
-        <div className="form__container__buttons justify-content-end">
-          <Button variant="warning" onClick={nextStep} size="lg">
-            Avançar
-          </Button>
-        </div>
-      </Card>
+      </FormStepLayout>
 
       <CustomModal
         show={showLgpdModal}
