@@ -65,22 +65,4 @@
     font-style: italic;
     margin: 0;
   }
-
-  &__contact {
-    align-items: center;
-    background: $primary;
-    border-radius: 999px;
-    color: $white;
-    display: inline-flex;
-    font-weight: 600;
-    gap: 0.45rem;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      color: $white;
-      opacity: 0.92;
-    }
-  }
 }

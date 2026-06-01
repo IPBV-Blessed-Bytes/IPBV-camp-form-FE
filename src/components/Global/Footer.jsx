@@ -1,7 +1,6 @@
 import { PropTypes } from 'prop-types';
 import '../Style/Footer.scss';
 import logoFooter from '../../../public/Images/logo.png';
-import Icons from '@/components/Global/Icons';
 
 const Footer = ({ handleAdminClick }) => {
   const currentYear = new Date().getFullYear();
@@ -28,16 +27,6 @@ const Footer = ({ handleAdminClick }) => {
           </p>
         </div>
       </div>
-
-      <a
-        className="form__footer__contact"
-        href="https://wa.me/5581999997767"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Icons typeIcon="whatsapp" iconSize={20} fill="#fff" />
-        <span>(81) 99999-7767</span>
-      </a>
     </footer>
   );
 };
