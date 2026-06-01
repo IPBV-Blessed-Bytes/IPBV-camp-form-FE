@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Accordion, Row, Col, Card } from 'react-bootstrap';
+import { Accordion, Row, Col, Card } from 'react-bootstrap';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { permissionsSections } from '@/fetchers/permissions';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import { listCampers } from '@/services/campers';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import CheckinBalance from '@/components/Admin/CheckinBalance';
 import VacanciesProgression from '@/components/Admin/VacanciesProgression';
 
@@ -140,10 +140,15 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
   );
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Painel de Dados" sessionTypeIcon="chart" iconSize={80} fill={'#007185'} />
+    <div className="admin-subpage admin-subpage--data">
+      <AdminSubpageHeader
+        title="Painel de Dados"
+        subtitle="Gráficos e indicadores das inscrições"
+        typeIcon="chart"
+      />
 
-      {vacanciesProgressionPermissions && (
+      <div className="admin-subpage__content">
+        {vacanciesProgressionPermissions && (
         <Accordion className="mb-3">
           <Accordion.Header>Gráfico de Avanço de Inscrições</Accordion.Header>
           <Accordion.Body>
@@ -188,8 +193,9 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
         </Accordion>
       )}
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
