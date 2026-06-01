@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container, Button, Form, Table, Accordion } from 'react-bootstrap';
+import { Button, Form, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
@@ -17,10 +17,11 @@ import { listWristbands } from '@/services/wristbands';
 import { listCampers } from '@/services/campers';
 import { registerLog } from '@/services/logs';
 import Icons from '@/components/Global/Icons';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
@@ -294,10 +295,8 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center mb-3 mb-md-0',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'team-excel',
       name: 'Baixar Relatório Times',
       onClick: generateExcel,
@@ -305,10 +304,8 @@ const AdminTeams = ({ loggedUsername }) => {
       typeIcon: 'excel',
     },
     {
-      buttonClassName: 'w-100 h-100 py-3 btn-bw-3 d-flex flex-column align-items-center',
-      cols: { xs: 12, md: 6 },
       fill: '#fff',
-      iconSize: 40,
+      iconSize: 22,
       id: 'team-add',
       name: 'Criar Novo Time',
       onClick: () => handleOpenModal(),
@@ -318,13 +315,22 @@ const AdminTeams = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Times" sessionTypeIcon="team" iconSize={80} fill="#007185" />
+    <div className="admin-subpage admin-subpage--teams">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Times"
+        subtitle="Times e seus acampantes"
+        typeIcon="team"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <div className="table-responsive">
-        <Table striped bordered hover className="custom-table">
+        <SectionHeader title="Times" count={teams.length} />
+
+        <div className="admin-table-card">
+          <div className="table-responsive">
+            <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
               <th className="table-cells-header">Nome do Time:</th>
@@ -398,8 +404,9 @@ const AdminTeams = ({ loggedUsername }) => {
               </tr>
             ))}
           </tbody>
-        </Table>
-      </div>
+            </Table>
+          </div>
+        </div>
 
       <CustomModal
         show={showModal}
@@ -573,8 +580,9 @@ const AdminTeams = ({ loggedUsername }) => {
         </p>
       </CustomModal>
 
-      <Loading loading={loading || loadingTeams} />
-    </Container>
+        <Loading loading={loading || loadingTeams} />
+      </div>
+    </div>
   );
 };
 
