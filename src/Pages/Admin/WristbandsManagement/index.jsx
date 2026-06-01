@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -15,8 +15,9 @@ import { FOOD_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
-import AdminHeader from '@/components/Admin/Header/AdminHeader';
-import Tools from '@/components/Admin/Header/Tools';
+import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminWristbandsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -137,10 +138,8 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
 
   const toolsButtons = [
     {
-      buttonClassName: 'w-100 h-100 py-3 d-flex flex-column align-items-center',
-      cols: { xs: 12, md: 6 },
       fill: '#007185',
-      iconSize: 40,
+      iconSize: 22,
       id: 'add-wristband',
       name: 'Criar Nova Pulseira',
       onClick: handleCreateClick,
@@ -150,13 +149,20 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   ];
 
   return (
-    <Container fluid>
-      <AdminHeader pageName="Gerenciamento de Pulseiras" sessionTypeIcon="wristband" iconSize={80} fill="#007185" />
+    <div className="admin-subpage admin-subpage--wristbands">
+      <AdminSubpageHeader
+        username={loggedUsername}
+        title="Gerenciamento de Pulseiras"
+        subtitle="Pulseiras de times e de alimentação"
+        typeIcon="wristband"
+      />
 
-      <Tools buttons={toolsButtons} />
+      <div className="admin-subpage__content">
+        <AdminToolbar buttons={toolsButtons} />
 
-      <Row>
-        <Col>
+        <SectionHeader title="Pulseiras" count={wristbands.length} />
+
+        <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
@@ -188,8 +194,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               ))}
             </tbody>
           </Table>
-        </Col>
-      </Row>
+        </div>
 
       <CustomModal
         show={showModal}
@@ -310,8 +315,9 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
       </CustomModal>
 
-      <Loading loading={loading} />
-    </Container>
+        <Loading loading={loading} />
+      </div>
+    </div>
   );
 };
 
