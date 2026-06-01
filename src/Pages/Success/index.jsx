@@ -1,6 +1,7 @@
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import campLogo from '../../../public/Images/camp_logo.png';
 import { useFormState } from '@/contexts/FormStateContext';
+import FormStepLayout from '@/components/Global/FormStepLayout';
 import './style.scss';
 
 const Success = () => {
@@ -15,9 +16,16 @@ const Success = () => {
   };
 
   return (
-    <Card className="form__container__general-height">
-      <Card.Body>
-        <Container>
+    <FormStepLayout
+      footer={
+        <div className="d-flex justify-content-center w-100">
+          <Button variant="warning" size="lg" onClick={handleNewRegistration} className="form-success__button">
+            Novo Cadastro
+          </Button>
+        </div>
+      }
+    >
+      <Container>
           <div className="form__success text-center">
             <div className="form__success__title">
               <b>Formulário enviado com sucesso!</b>
@@ -34,14 +42,7 @@ const Success = () => {
             <img src={campLogo} className="form__success__logo" alt="logo" />
           </div>
         </Container>
-      </Card.Body>
-
-      <div className="form__container__buttons text-center justify-content-center">
-        <Button variant="warning" size="lg" onClick={handleNewRegistration} className="form-success__button">
-          Novo Cadastro
-        </Button>
-      </div>
-    </Card>
+    </FormStepLayout>
   );
 };
 
