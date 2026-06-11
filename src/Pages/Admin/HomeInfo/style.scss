@@ -11,7 +11,41 @@
   width: 2.375rem;
 }
 
+.homeinfo-section-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+.homeinfo-new-item {
+  background: $background-gray;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
 .homeinfo-custom-accordion {
+  .accordion-item {
+    border: 1px solid $alternate-light-gray;
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+  }
+
+  .accordion-button {
+    font-weight: 600;
+  }
+
   .accordion-button:not(.collapsed) {
     svg {
       fill: #fff !important;

@@ -325,10 +325,10 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       />
 
       <div className="admin-subpage__content">
-        <Row className="justify-content-center">
-        <Col xs={12} md={6} lg={4}>
-          <Form className="admin-panel my-4">
-            <h5 className="mb-3 fw-bold">Informações Base:</h5>
+        <Row className="g-4">
+        <Col xs={12} lg={5} xl={4}>
+          <Form className="admin-panel">
+            <h2 className="admin-panel__title">Informações Base</h2>
 
             {Object.keys(formData.top).map((field) => (
               <Form.Group key={field} className="mt-2">
@@ -352,14 +352,14 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
           </Form>
         </Col>
 
-        <Col xs={12} md={6} lg={4}>
-          <Form className="admin-panel my-4">
-            <div className="d-xl-flex justify-content-between mb-3">
-              <h5 className="fw-bold">Informações Importantes:</h5>
-              <div className="d-flex gap-2">
+        <Col xs={12} lg={7} xl={8}>
+          <Form className="admin-panel">
+            <div className="homeinfo-section-head">
+              <h2 className="admin-panel__title mb-0">Informações Importantes</h2>
+              <div className="homeinfo-section-head__actions">
                 <Button
                   variant="outline-teal-blue"
-                  className="mb-3 d-flex align-items-center"
+                  className="d-flex align-items-center"
                   onClick={() => setShowNewBottomForm(true)}
                 >
                   <Icons typeIcon="plus" iconSize={16} fill="#007185" />
@@ -367,7 +367,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Button>
                 <Button
                   variant="danger"
-                  className="mb-3 d-flex align-items-center"
+                  className="d-flex align-items-center"
                   onClick={() => setShowDeleteAllModal(true)}
                 >
                   <Icons typeIcon="danger" iconSize={16} fill="#fff" />
@@ -377,7 +377,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
             </div>
 
             {showNewBottomForm && (
-              <div className="border rounded p-3 mb-3 bg-light">
+              <div className="homeinfo-new-item">
                 <Form.Group className="mt-2">
                   <Form.Label>
                     <b>Ícone:</b>
