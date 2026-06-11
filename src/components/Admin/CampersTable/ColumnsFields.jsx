@@ -121,11 +121,16 @@ ColumnFields.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   addForm: PropTypes.bool,
-  options: PropTypes.string,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+  ),
   disabled: PropTypes.bool,
   formSubmitted: PropTypes.bool,
   oddOrEven: PropTypes.string,

@@ -40,12 +40,12 @@ const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
 ColumnFilterWithSelect.propTypes = {
   column: PropTypes.shape({
     setFilter: PropTypes.func,
-    filterValue: PropTypes.string,
+    filterValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
   }),
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
   ).isRequired,
   onFilterChange: PropTypes.func,
