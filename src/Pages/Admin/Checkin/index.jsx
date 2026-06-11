@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -233,47 +233,44 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       <div className="admin-subpage__content">
         {campersTableButtonPermissions && <AdminToolbar buttons={toolsButtons} />}
 
-      <Row className="mb-3">
-        <Col xs={12}>
-          <Form.Group controlId="cpf">
-            <Form.Label>
-              <b>CPF do Usuário:</b>
-            </Form.Label>
+      <div className="admin-panel checkin-search">
+        <Form.Group controlId="cpf">
+          <Form.Label>
+            <b>CPF do Usuário:</b>
+          </Form.Label>
 
-            <div className="cpf-input-wrapper">
-              <Form.Control
-                autoComplete="off"
-                type="text"
-                placeholder="Digite o CPF"
-                value={cpf}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '');
-                  setCpf(value);
+          <div className="cpf-input-wrapper">
+            <Form.Control
+              autoComplete="off"
+              type="text"
+              placeholder="Digite o CPF"
+              value={cpf}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, '');
+                setCpf(value);
+                setUserInfo(null);
+              }}
+              size="lg"
+            />
+
+            {cpf && (
+              <button
+                aria-label="Limpar CPF"
+                className="cpf-clear-button"
+                type="button"
+                onClick={() => {
+                  setCpf('');
                   setUserInfo(null);
+                  setCpfMatches([]);
+                  setShowSuggestions(false);
                 }}
-                size="lg"
-              />
+              >
+                <Icons typeIcon="close" iconSize={30} fill="#6c757d" />
+              </button>
+            )}
+          </div>
 
-              {cpf && (
-                <button
-                  aria-label="Limpar CPF"
-                  className="cpf-clear-button"
-                  type="button"
-                  onClick={() => {
-                    setCpf('');
-                    setUserInfo(null);
-                    setCpfMatches([]);
-                    setShowSuggestions(false);
-                  }}
-                >
-                  <Icons typeIcon="close" iconSize={30} fill="#6c757d" />
-                </button>
-              )}
-            </div>
-          </Form.Group>
-        </Col>
-        {showSuggestions && !userInfo && (
-          <Col xs={12}>
+          {showSuggestions && !userInfo && (
             <div className="cpf-suggestions">
               {cpfLoading ? (
                 <div className="cpf-suggestions-loading">
@@ -317,35 +314,49 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                 <div className="cpf-suggestions-empty">Nenhum usuário encontrado para este CPF</div>
               )}
             </div>
-          </Col>
-        )}
-      </Row>
+          )}
+        </Form.Group>
+      </div>
 
       {userInfo && (
-        <>
-          <Row className="my-3 p-0 checkin-color-status-wrapper">
-            {userWristbands.map((band) => (
-              <div key={band.id} className="checkin-color-status-wrapper__item px-0">
-                <span className="checkin-color-status-wrapper__label pl-2">
-                  {band.id === 'food' ? 'Pulseira Alimentação (com e sem):' : 'Pulseira Time:'}
-                </span>
-                <div className="checkin-color-status-wrapper__line" style={{ background: band.color }} />
-              </div>
-            ))}
-          </Row>
-          <Row className="mb-2">
-            <Col className="form-label">
-              <b>Informações do Usuário:</b>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={6} md={6} xs={12}>
-              <p>
-                <strong>Nome:</strong>{' '}
-                <span className="emphasize-checkin-username">{userInfo.personalInformation.name}</span>
-              </p>
-              <p>
-                <strong>Forma de Pagamento:</strong>{' '}
+        <div className="admin-panel checkin-user">
+          <div className="checkin-user__head">
+            <div className="checkin-user__identity">
+              <span className="checkin-user__eyebrow">Acampante</span>
+              <h2 className="checkin-user__name">{userInfo.personalInformation.name}</h2>
+            </div>
+            <span className={`checkin-status-badge checkin-status-badge--${checkinStatus ? 'in' : 'out'}`}>
+              <Icons
+                typeIcon={checkinStatus ? 'checked' : 'close'}
+                iconSize={16}
+                fill={checkinStatus ? '#0c9183' : '#d32f2f'}
+              />
+              {checkinStatus ? 'Check-in feito' : 'Sem check-in'}
+            </span>
+          </div>
+
+          {userWristbands.length > 0 && (
+            <div className="checkin-wristbands">
+              {userWristbands.map((band) => (
+                <div key={band.id} className="checkin-wristbands__item">
+                  <span className="checkin-wristbands__label">
+                    {band.id === 'food' ? 'Pulseira Alimentação' : 'Pulseira Time'}
+                  </span>
+                  <span className="checkin-wristbands__swatch" style={{ background: band.color || 'transparent' }} />
+                  {band.label && <span className="checkin-wristbands__name">{band.label}</span>}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="checkin-info">
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Data de Nascimento</span>
+              <span className="checkin-info__value">{userInfo.personalInformation.birthday}</span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Forma de Pagamento</span>
+              <span className="checkin-info__value">
                 {userInfo.formPayment.formPayment === 'creditCard'
                   ? 'Cartão de Crédito'
                   : userInfo.formPayment.formPayment === 'pix'
@@ -353,60 +364,64 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   : userInfo.formPayment.formPayment === 'ticket'
                   ? 'Boleto Bancário'
                   : 'Não Pagante'}
-              </p>
-              <p>
-                <strong>Valor do Pagamento:</strong> {userInfo.totalPrice}
-              </p>
-              <p>
-                <strong>Observação da Equipe:</strong> {userInfo.observation || '-'}
-              </p>
-              <p>
-                <strong>Observação do Usuário:</strong> {userInfo.finalObservation || '-'}
-              </p>
-            </Col>
-            <Col lg={6} md={6} xs={12}>
-              <p>
-                <strong>Data de Nascimento:</strong> {userInfo.personalInformation.birthday}
-              </p>
-              <p>
-                <strong>Hospedagem:</strong> {userInfo.package.accomodationName}
-              </p>
-              <p>
-                <strong>Quarto:</strong> {userRoom?.name || 'Não alocado'}
-              </p>
-              <p>
-                <strong>Alimentação:</strong> {userInfo.package.foodName || '-'}
-              </p>
-              <p>
-                <strong>Time:</strong> {userInfo.teamName || 'Time Não Selecionado'}
-              </p>
-            </Col>
-          </Row>
+              </span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Valor do Pagamento</span>
+              <span className="checkin-info__value">{userInfo.totalPrice}</span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Hospedagem</span>
+              <span className="checkin-info__value">{userInfo.package.accomodationName}</span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Quarto</span>
+              <span className="checkin-info__value">{userRoom?.name || 'Não alocado'}</span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Alimentação</span>
+              <span className="checkin-info__value">{userInfo.package.foodName || '-'}</span>
+            </div>
+            <div className="checkin-info__item">
+              <span className="checkin-info__label">Time</span>
+              <span className="checkin-info__value">{userInfo.teamName || 'Time Não Selecionado'}</span>
+            </div>
+            <div className="checkin-info__item checkin-info__item--full">
+              <span className="checkin-info__label">Observação da Equipe</span>
+              <span className="checkin-info__value">{userInfo.observation || '-'}</span>
+            </div>
+            <div className="checkin-info__item checkin-info__item--full">
+              <span className="checkin-info__label">Observação do Usuário</span>
+              <span className="checkin-info__value">{userInfo.finalObservation || '-'}</span>
+            </div>
+          </div>
 
-          <Row className="mt-4">
-            <Col lg={8} md={7} xs={8} className="mb-2">
-              <Form.Group controlId="checkinStatus">
-                <Form.Label>
-                  <b>Check-in realizado?</b>
-                </Form.Label>
-                <Form.Select
-                  value={checkinStatus}
-                  onChange={(e) => setCheckinStatus(e.target.value === 'true')}
-                  size="lg"
-                >
-                  <option value={false}>Não</option>
-                  <option value={true}>Sim</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col lg={4} md={5} xs={4} className="d-flex align-items-end mb-2">
-              <Button variant="outline-teal-blue" onClick={handleCheckin} size="lg" disabled={checkinStatus === null}>
-                <Icons typeIcon="checked" iconSize={20} fill="#007185" />
-                <span className="d-none d-md-inline">&nbsp;Atualizar Check-in</span>
-              </Button>
-            </Col>
-          </Row>
-        </>
+          <div className="checkin-user__action">
+            <Form.Group controlId="checkinStatus" className="checkin-user__select">
+              <Form.Label>
+                <b>Check-in realizado?</b>
+              </Form.Label>
+              <Form.Select
+                value={checkinStatus}
+                onChange={(e) => setCheckinStatus(e.target.value === 'true')}
+                size="lg"
+              >
+                <option value={false}>Não</option>
+                <option value={true}>Sim</option>
+              </Form.Select>
+            </Form.Group>
+            <Button
+              variant="teal-blue"
+              onClick={handleCheckin}
+              size="lg"
+              disabled={checkinStatus === null}
+              className="checkin-user__submit"
+            >
+              <Icons typeIcon="checked" iconSize={20} fill="#fff" />
+              <span>&nbsp;Atualizar Check-in</span>
+            </Button>
+          </div>
+        </div>
       )}
 
         <Loading loading={loading} />
