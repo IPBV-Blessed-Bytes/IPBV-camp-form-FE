@@ -53,7 +53,7 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
               '.MuiLinearProgress-bar': {
                 backgroundColor: color,
               },
-              backgroundColor: '#e0e0e0',
+              backgroundColor: 'var(--c-alternate-gray)',
               height: 10,
               borderRadius: 5,
             }}
@@ -76,7 +76,7 @@ const VacanciesProgression = ({ usedValidPackages, totalPackages }) => {
               '.MuiLinearProgress-bar': {
                 backgroundColor: '#cddc39',
               },
-              backgroundColor: '#e0e0e0',
+              backgroundColor: 'var(--c-alternate-gray)',
               height: 10,
               borderRadius: 5,
             }}

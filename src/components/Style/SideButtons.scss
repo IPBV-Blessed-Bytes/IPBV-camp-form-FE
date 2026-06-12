@@ -3,7 +3,8 @@
 // Settings Button
 .settings-btn {
   align-items: center;
-  background-color: $dark-gray;
+  // FAB neutro escuro fixo (ícone branco) — não inverte com o tema.
+  background-color: #555050;
   border: none;
   border-radius: 50%;
   bottom: 88px;
@@ -50,7 +51,7 @@
 
   button {
     align-items: center;
-    background-color: $white;
+    background-color: var(--surface-1);
     border: 1px solid $alternate-light-gray;
     border-radius: 10px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);

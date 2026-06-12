@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
+import ThemeToggle from '@/components/Global/ThemeToggle';
 import '../Style/AdminTopbar.scss';
 
 const getInitials = (name) => {
@@ -34,6 +35,8 @@ const AdminTopbar = ({ username, logout }) => {
       </div>
 
       <div className="admin-topbar__actions" ref={menuRef}>
+        <ThemeToggle />
+
         <button
           type="button"
           className="admin-topbar__user"

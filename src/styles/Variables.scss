@@ -33,18 +33,21 @@ $brown: #994c00;
 $medium-brown: #cc6d00;
 $orange: #FF7F50;
 $light-brown: #fffbf0;
-$black: #000;
+// Neutros theme-aware: resolvem para tokens CSS definidos em Theme.scss
+// (claro = valor original; escuro = invertido). $white permanece literal
+// porque também é usado como texto sobre fundos coloridos (não deve inverter).
 $white: #fff;
-$dark-gray: #555050;
-$alternate-dark-dark-gray: #666;
-$alternate-dark-gray: #7f7878;
-$alternate-gray: #dee2e6;
-$medium-gray: #ced4da;
-$light-gray: #f3f3f3;
-$alternate-light-gray: #eee;
-$hover-gray: #f2f2f2;
-$border-gray: #ccc;
-$background-gray: #f8f9fa;
+$black: var(--c-black);
+$dark-gray: var(--c-dark-gray);
+$alternate-dark-dark-gray: var(--c-alternate-dark-dark-gray);
+$alternate-dark-gray: var(--c-alternate-dark-gray);
+$alternate-gray: var(--c-alternate-gray);
+$medium-gray: var(--c-medium-gray);
+$light-gray: var(--c-light-gray);
+$alternate-light-gray: var(--c-alternate-light-gray);
+$hover-gray: var(--c-hover-gray);
+$border-gray: var(--c-border-gray);
+$background-gray: var(--c-background-gray);
 
 // Screen size
 $xs: 0;

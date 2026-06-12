@@ -9,6 +9,7 @@ import '../Style/Header.scss';
 import '../Style/Cart.scss';
 import Icons from './Icons';
 import FormStepper from './FormStepper';
+import ThemeToggle from './ThemeToggle';
 
 const HEADER_STEPS = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
@@ -70,6 +71,8 @@ const Header = ({ showNavMenu = false }) => {
         </div>
 
         <div className="form__header__right">
+          <ThemeToggle />
+
           {showCartButton && (
             <Button
               className="cart-btn"

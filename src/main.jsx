@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { CartProvider } from 'react-use-cart';
 import AuthProvider from './hooks/useAuth/AuthProvider.jsx';
+import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,10 +23,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       pauseOnHover
       theme="colored"
     />
-    <AuthProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </BrowserRouter>,
 );
