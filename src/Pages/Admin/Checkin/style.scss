@@ -8,7 +8,6 @@
   margin-bottom: 1.25rem;
 }
 
-// --- User card -------------------------------------------------------------
 .checkin-user {
   &__head {
     align-items: flex-start;
@@ -80,7 +79,6 @@
   }
 }
 
-// --- Wristband chips -------------------------------------------------------
 .checkin-wristbands {
   display: flex;
   flex-wrap: wrap;
@@ -131,7 +129,6 @@
   }
 }
 
-// --- Info grid -------------------------------------------------------------
 .checkin-info {
   display: grid;
   gap: 1rem 1.5rem;
