@@ -50,8 +50,8 @@
   }
 
   .login-admin-card {
-    background: $white;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
     border-radius: 1.25rem;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
     color: $black;
@@ -111,7 +111,7 @@
     }
 
     &::placeholder {
-      color: $border-gray;
+      color: $alternate-dark-gray;
       font-weight: normal;
     }
   }

@@ -62,7 +62,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
             value={details.percentage}
             sx={{
               '.MuiLinearProgress-bar': { backgroundColor: color },
-              backgroundColor: '#e0e0e0',
+              backgroundColor: 'var(--c-alternate-gray)',
               height: 10,
               borderRadius: 5,
             }}
@@ -83,7 +83,7 @@ const CheckinBalance = ({ fillingVacancies = [], usedPackages = {} }) => {
             value={totalPercentage}
             sx={{
               '.MuiLinearProgress-bar': { backgroundColor: '#d32f2f' },
-              backgroundColor: '#e0e0e0',
+              backgroundColor: 'var(--c-alternate-gray)',
               height: 10,
               borderRadius: 5,
             }}

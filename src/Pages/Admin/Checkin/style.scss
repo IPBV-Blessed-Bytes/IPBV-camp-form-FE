@@ -167,7 +167,7 @@
 }
 
 .cpf-suggestions {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $alternate-light-gray;
   border-radius: 10px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);

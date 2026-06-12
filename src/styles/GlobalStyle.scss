@@ -1,8 +1,10 @@
 @use './Variables.scss' as *;
+@use './Theme.scss';
 
 // Body
 body {
-  background: $light-gray;
+  background: var(--surface-bg);
+  color: var(--text-body);
 }
 
 @font-face {
@@ -237,7 +239,7 @@ body {
 }
 
 .custom-table {
-  --bs-border-color: #000;
+  --bs-border-color: var(--c-medium-gray);
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) > * {
@@ -353,7 +355,7 @@ body {
 
 .form-select-lg-custom {
   border: 0.125rem solid $black;
-  background: #f3f3f3;
+  background: var(--c-light-gray);
   font-size: 1.1875rem !important;
   padding: 0.375rem 2.25rem 0.375rem 0.5rem !important;
 }
@@ -532,7 +534,8 @@ body {
 input,
 textarea,
 select {
-  background-color: $light-gray;
+  background-color: var(--c-light-gray);
+  color: var(--text-body);
   border-radius: 0.5rem;
   padding: 0.5rem;
   width: 100%;
@@ -719,4 +722,37 @@ button.btn.btn-outline-primary:hover svg {
 
 .text-teal-blue {
   color: $teal-blue;
+}
+
+// ---------------------------------------------------------------------------
+// Ajustes específicos do tema escuro
+// ---------------------------------------------------------------------------
+[data-theme='dark'] {
+  // Utilitárias do Bootstrap com cor fixa (não seguem data-bs-theme).
+  .bg-white,
+  .bg-light {
+    background-color: var(--surface-1) !important;
+    --bs-bg-opacity: 1;
+  }
+
+  // Cabeçalhos pastel dos modais → versão escura tingida com o acento.
+  .custom-modal__header {
+    &--cancel {
+      background-color: rgba($red, 0.22);
+      border-bottom-color: rgba($red, 0.5);
+      color: #f0a3aa;
+    }
+
+    &--confirm {
+      background-color: rgba($militar-green, 0.24);
+      border-bottom-color: rgba($militar-green, 0.55);
+      color: #8fcf8f;
+    }
+
+    &--inf {
+      background-color: rgba($light-heavy-blue, 0.26);
+      border-bottom-color: rgba($light-heavy-blue, 0.55);
+      color: #a9c1ee;
+    }
+  }
 }

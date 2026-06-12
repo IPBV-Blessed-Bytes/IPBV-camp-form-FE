@@ -1,0 +1,59 @@
+// Tokens de tema — claro/escuro em runtime via CSS custom properties.
+//
+// `data-theme` é definido no <html> pelo script anti-FOUC em index.html e
+// mantido em sincronia pelo ThemeContext. Os componentes do Bootstrap seguem
+// `data-bs-theme` (modo de cores nativo do Bootstrap 5.3).
+//
+// Estratégia: as variáveis SCSS de NEUTROS (cinzas, preto, brancos de fundo)
+// são redefinidas em Variables.scss apontando para estes tokens `--c-*`, de
+// modo que todo o app (componentes + páginas) vira theme-aware sem edição
+// arquivo a arquivo. No tema claro cada token vale exatamente a cor original
+// (zero regressão visual); no escuro é invertido. Cores de MARCA (teal, azul,
+// verde, vermelho, amarelo) NÃO entram aqui — permanecem iguais nos dois temas.
+
+:root,
+[data-theme='light'] {
+  // Superfícies semânticas
+  --surface-bg: #f3f3f3; // fundo da página (body)
+  --surface-1: #ffffff; // cards, painéis, topbar, menus suspensos
+  --text-body: #212529; // texto padrão do corpo
+  --border-soft: rgba(0, 0, 0, 0.1);
+  --header-bg: #007185; // barra teal do topo do formulário
+
+  // Remap dos neutros SCSS (claro = valores originais de Variables.scss)
+  --c-black: #000000;
+  --c-dark-gray: #555050;
+  --c-alternate-dark-gray: #7f7878;
+  --c-alternate-dark-dark-gray: #666666;
+  --c-background-gray: #f8f9fa;
+  --c-hover-gray: #f2f2f2;
+  --c-light-gray: #f3f3f3;
+  --c-alternate-light-gray: #eeeeee;
+  --c-medium-gray: #ced4da;
+  --c-border-gray: #cccccc;
+  --c-alternate-gray: #dee2e6;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-bg: #121417;
+  --surface-1: #1e2125;
+  --text-body: #dee2e6;
+  --border-soft: rgba(255, 255, 255, 0.12);
+  --header-bg: #0b2a30; // teal escurecido (mantém o tom de marca)
+
+  // Neutros invertidos: o que era escuro (texto/bordas) clareia; o que era
+  // claro (fundos/cinzas-claros) escurece.
+  --c-black: #e6e8eb;
+  --c-dark-gray: #d8dbdf;
+  --c-alternate-dark-gray: #a8adb3;
+  --c-alternate-dark-dark-gray: #9aa0a6;
+  --c-background-gray: #15171a;
+  --c-hover-gray: #2a2d31;
+  --c-light-gray: #23272b;
+  --c-alternate-light-gray: #2e3236;
+  --c-medium-gray: #3a3f45;
+  --c-border-gray: #3a3f45;
+  --c-alternate-gray: #30343a;
+}

@@ -1,7 +1,7 @@
 @use '../../styles/Variables.scss' as *;
 
 .form-step {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $alternate-light-gray;
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);

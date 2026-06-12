@@ -1,7 +1,7 @@
 @use '../../styles/Variables.scss' as *;
 
 .admin-card {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $medium-gray !important;
   border-radius: 12px !important;
   height: 100%;

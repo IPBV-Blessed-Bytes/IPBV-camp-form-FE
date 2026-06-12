@@ -8,7 +8,7 @@
   }
 
   &-btn {
-    background-color: $white;
+    background-color: var(--surface-1);
     border: none;
     border-radius: 50%;
     bottom: 1.25rem;
@@ -24,8 +24,8 @@
 
     &:active,
     &:focus-visible {
-      background-color: $white !important;
-      border-color: $white !important;
+      background-color: var(--surface-1) !important;
+      border-color: var(--surface-1) !important;
     }
 
     &-responsive {

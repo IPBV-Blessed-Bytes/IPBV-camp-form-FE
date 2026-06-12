@@ -5,6 +5,25 @@
     <link rel="icon" type="image/svg+xml" href="./public/Images/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Acampamento IPBV</title>
+    <script>
+      // Aplica o tema antes do React montar, evitando flash (FOUC).
+      // Default: preferência do SO; sobrescrito pela escolha salva do usuário.
+      (function () {
+        try {
+          var stored = localStorage.getItem('ipbv-theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.setAttribute('data-bs-theme', theme);
+        } catch (e) {
+          /* localStorage indisponível — segue no tema claro padrão */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

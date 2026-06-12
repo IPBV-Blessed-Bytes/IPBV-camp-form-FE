@@ -28,13 +28,14 @@
 }
 
 .filter-btn {
-  background-color: $alternate-dark-gray;
-  border-color: $alternate-dark-gray;
+  // Botão cinza neutro fixo (texto/ícone claros) — não inverte com o tema.
+  background-color: #7f7878;
+  border-color: #7f7878;
 
   &:hover,
   &:active,
   &:focus-visible {
-    background-color: $dark-gray;
-    border-color: $dark-gray;
+    background-color: #555050;
+    border-color: #555050;
   }
 }

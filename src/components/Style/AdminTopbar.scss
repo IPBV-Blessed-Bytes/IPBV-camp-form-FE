@@ -3,7 +3,7 @@
 
 .admin-topbar {
   align-items: center;
-  background: $white;
+  background: var(--surface-1);
   border-bottom: 1px solid $alternate-light-gray;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   display: flex;
@@ -43,6 +43,9 @@
   }
 
   &__actions {
+    align-items: center;
+    display: flex;
+    gap: 0.85rem;
     position: relative;
   }
 
@@ -101,7 +104,7 @@
   }
 
   &__menu {
-    background: $white;
+    background: var(--surface-1);
     border: 1px solid $alternate-light-gray;
     border-radius: 12px;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
@@ -131,6 +134,12 @@
 
     &:hover {
       background: $hover-gray;
+    }
+
+    // Ícone do item (fill inline) acompanha o tema; sobrepõe o atributo SVG.
+    &:not(.admin-topbar__menu-item--danger) svg,
+    &:not(.admin-topbar__menu-item--danger) svg path {
+      fill: $dark-gray;
     }
 
     &--danger {

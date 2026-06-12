@@ -30,7 +30,7 @@ $admin-accent-checkin: $slime-green;
 }
 
 .session-card {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $medium-gray !important;
   border-radius: 14px !important;
   cursor: pointer;
@@ -131,7 +131,7 @@ $admin-accent-checkin: $slime-green;
 }
 
 .admin-notes {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $alternate-light-gray;
   border-radius: 12px;
   margin-top: 2rem;

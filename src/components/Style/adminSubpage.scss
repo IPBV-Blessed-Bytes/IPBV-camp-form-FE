@@ -112,7 +112,7 @@ $admin-accents: (
 
   &__back {
     align-items: center;
-    background: $white;
+    background: var(--surface-1);
     border: 1px solid $alternate-light-gray;
     border-radius: 999px;
     color: $dark-gray;
@@ -165,7 +165,7 @@ $admin-accents: (
 }
 
 .admin-table-card {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $alternate-light-gray;
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
@@ -174,7 +174,7 @@ $admin-accents: (
 
 // Card for form-centric panels (settings, seat/lot management, etc.).
 .admin-panel {
-  background: $white;
+  background: var(--surface-1);
   border: 1px solid $alternate-light-gray;
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
@@ -201,7 +201,7 @@ $admin-accents: (
 
   .table-cells-header {
     background-color: var(--admin-accent) !important;
-    border-color: color.adjust($black, $alpha: -0.9) !important;
+    border-color: var(--border-soft) !important;
   }
 
   .custom-table > :not(caption) > * > * {
