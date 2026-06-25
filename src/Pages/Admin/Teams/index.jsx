@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
@@ -250,26 +249,39 @@ const AdminTeams = ({ loggedUsername }) => {
     setSelectedTeamToRemove(null);
   };
 
-  const availableCampers = campers
-    .filter((camper) => !camper.teamColor || camper.teamColor === '' || !camper.teamName || camper.teamName === '')
-    .sort((a, b) =>
-      (a.personalInformation?.name || '').localeCompare(b.personalInformation?.name || '', 'pt-BR', {
-        sensitivity: 'base',
-      }),
-    );
+  const availableCampers = useMemo(
+    () =>
+      campers
+        .filter(
+          (camper) => !camper.teamColor || camper.teamColor === '' || !camper.teamName || camper.teamName === '',
+        )
+        .sort((a, b) =>
+          (a.personalInformation?.name || '').localeCompare(b.personalInformation?.name || '', 'pt-BR', {
+            sensitivity: 'base',
+          }),
+        ),
+    [campers],
+  );
 
-  const wristbandColorMap = teamWristbands.reduce((acc, wristband) => {
-    acc[wristband.label] = wristband.color;
-    return acc;
-  }, {});
+  const wristbandColorMap = useMemo(
+    () =>
+      teamWristbands.reduce((acc, wristband) => {
+        acc[wristband.label] = wristband.color;
+        return acc;
+      }, {}),
+    [teamWristbands],
+  );
 
-  const getTeamColor = (team) => {
-    if (team.wristbandColor?.startsWith('#')) {
-      return team.wristbandColor;
-    }
+  const getTeamColor = useCallback(
+    (team) => {
+      if (team.wristbandColor?.startsWith('#')) {
+        return team.wristbandColor;
+      }
 
-    return wristbandColorMap[team.wristbandColor] || '#ccc';
-  };
+      return wristbandColorMap[team.wristbandColor] || '#ccc';
+    },
+    [wristbandColorMap],
+  );
 
   const generateExcel = () => {
     const sheets = teams.map((team) => {

@@ -299,6 +299,14 @@ const AdminRooms = ({ loggedUsername }) => {
     );
   }, [rooms, roomSortOrder]);
 
+  const sortedDropdownCampers = useMemo(
+    () =>
+      [...dropdownCampers].sort((a, b) =>
+        a.personalInformation.name.localeCompare(b.personalInformation.name),
+      ),
+    [dropdownCampers],
+  );
+
   const tableInstance = useTable({ columns, data: dropdownCampers }, useSortBy);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
@@ -463,9 +471,8 @@ const AdminRooms = ({ loggedUsername }) => {
                   onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
                 >
                   <option value="">Selecione um acampante</option>
-                  {dropdownCampers
+                  {sortedDropdownCampers
                     .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
-                    .sort((a, b) => a.personalInformation.name.localeCompare(b.personalInformation.name))
                     .map((camper) => (
                       <option key={camper.id} value={camper.id}>
                         {camper.personalInformation.name}
