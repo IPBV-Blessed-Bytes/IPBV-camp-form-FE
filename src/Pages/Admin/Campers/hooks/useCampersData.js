@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
@@ -7,6 +8,8 @@ import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 
 import { sanitizeFields } from '../utils/sanitizeFields';
+
+export const CAMPERS_QUERY_KEY = ['campers'];
 
 const buildEditPayload = (formData) => {
   const sanitized = sanitizeFields(formData);
@@ -48,38 +51,47 @@ const buildAddPayload = (formData, currentDate) => {
 };
 
 const useCampersData = ({ loggedUsername }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const fetchData = async () => {
-    try {
+  const {
+    data = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: CAMPERS_QUERY_KEY,
+    queryFn: async () => {
       const response = await listCampers({ size: MAX_SIZE_CAMPERS });
-      if (Array.isArray(response.content)) {
-        setData(response.content);
-      } else {
+      if (!Array.isArray(response.content)) {
         console.error('Data received is not an array:', response);
+        return [];
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return response.content;
+    },
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const setCampersCache = (updater) => queryClient.setQueryData(CAMPERS_QUERY_KEY, (prev = []) => updater(prev));
+
+  const updateMutation = useMutation({ mutationFn: ({ id, payload }) => updateCamper(id, payload) });
+  const createMutation = useMutation({ mutationFn: (payload) => createCamper(payload) });
+  const deleteOneMutation = useMutation({ mutationFn: (id) => deleteCamper(id) });
+  const deleteManyMutation = useMutation({ mutationFn: (ids) => deleteCampers(ids) });
+
+  const loading =
+    isLoading ||
+    updateMutation.isPending ||
+    createMutation.isPending ||
+    deleteOneMutation.isPending ||
+    deleteManyMutation.isPending;
 
   const saveEdit = async ({ editFormData, editRowIndex }) => {
-    setLoading(true);
     const payload = buildEditPayload(editFormData);
 
     try {
-      await updateCamper(editFormData.id, payload);
+      await updateMutation.mutateAsync({ id: editFormData.id, payload });
       toast.success('Inscrição alterada com sucesso');
       setFormSubmitted(true);
-      setData((prev) => prev.map((item, index) => (index === editRowIndex ? { ...editFormData } : item)));
+      setCampersCache((prev) => prev.map((item, index) => (index === editRowIndex ? { ...editFormData } : item)));
       registerLog(`Editou a inscrição de ${payload.personalInformation.name}`, loggedUsername);
       return true;
     } catch (error) {
@@ -95,20 +107,17 @@ const useCampersData = ({ loggedUsername }) => {
         toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
       }
       return false;
-    } finally {
-      setLoading(false);
     }
   };
 
   const addCamper = async ({ addFormData, currentDate }) => {
-    setLoading(true);
     const payload = buildAddPayload(addFormData, currentDate);
 
     try {
-      await createCamper(payload);
+      await createMutation.mutateAsync(payload);
       toast.success('Inscrição criada com sucesso');
       setFormSubmitted(true);
-      fetchData();
+      queryClient.invalidateQueries({ queryKey: CAMPERS_QUERY_KEY });
       registerLog(`Adicionou manualmente inscrição de ${payload.personalInformation.name}`, loggedUsername);
       return true;
     } catch (error) {
@@ -122,50 +131,40 @@ const useCampersData = ({ loggedUsername }) => {
         toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
       }
       return false;
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteSelected = async ({ selectedRows }) => {
-    setLoading(true);
     try {
       const idsToDelete = selectedRows.map((row) => data[row.index].id);
       const namesToDelete = selectedRows.map((row) => row.name);
-      await deleteCampers(idsToDelete);
-      setData((prev) => prev.filter((_, index) => !selectedRows.some((row) => row.index === index)));
+      await deleteManyMutation.mutateAsync(idsToDelete);
+      setCampersCache((prev) => prev.filter((_, index) => !selectedRows.some((row) => row.index === index)));
       registerLog(`Deletou inscrições de {${namesToDelete.join(', ')}}`, loggedUsername);
       toast.success('Inscrições deletadas com sucesso');
     } catch (error) {
       console.error('Error deleting selected data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const deleteOne = async ({ editRowIndex }) => {
-    setLoading(true);
     try {
       const itemToDelete = data[editRowIndex];
-      await deleteCamper(itemToDelete.id);
-      setData((prev) => prev.filter((_, index) => index !== editRowIndex));
+      await deleteOneMutation.mutateAsync(itemToDelete.id);
+      setCampersCache((prev) => prev.filter((_, index) => index !== editRowIndex));
       registerLog(`Deletou inscrição de ${itemToDelete.personalInformation.name}`, loggedUsername);
       toast.success('Inscrição deletada com sucesso');
     } catch (error) {
       console.error('Error deleting specific data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   return {
     data,
-    setData,
     loading,
-    setLoading,
     formSubmitted,
     setFormSubmitted,
-    fetchData,
+    fetchData: refetch,
     saveEdit,
     addCamper,
     deleteSelected,
