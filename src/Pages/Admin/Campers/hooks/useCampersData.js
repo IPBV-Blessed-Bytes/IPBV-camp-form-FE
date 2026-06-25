@@ -11,6 +11,10 @@ import { sanitizeFields } from '../utils/sanitizeFields';
 
 export const CAMPERS_QUERY_KEY = ['campers'];
 
+// Referência estável para o estado de carregamento: um novo `[]` a cada render
+// faz o react-table disparar seus auto-resets em loop (Maximum update depth).
+const EMPTY_CAMPERS = [];
+
 const buildEditPayload = (formData) => {
   const sanitized = sanitizeFields(formData);
   return {
@@ -55,7 +59,7 @@ const useCampersData = ({ loggedUsername }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const {
-    data = [],
+    data: queryData,
     isLoading,
     refetch,
   } = useQuery({
@@ -69,6 +73,8 @@ const useCampersData = ({ loggedUsername }) => {
       return response.content;
     },
   });
+
+  const data = queryData ?? EMPTY_CAMPERS;
 
   const setCampersCache = (updater) => queryClient.setQueryData(CAMPERS_QUERY_KEY, (prev = []) => updater(prev));
 

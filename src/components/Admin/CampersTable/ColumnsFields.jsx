@@ -58,7 +58,7 @@ const ColumnFields = ({
           <Form.Select
             name={name}
             size="lg"
-            value={value}
+            value={value ?? ''}
             onChange={onChange}
             disabled={disabled}
             className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
@@ -96,7 +96,7 @@ const ColumnFields = ({
             <Form.Control
               type={type}
               name={name}
-              value={value}
+              value={value ?? ''}
               onChange={onChange}
               className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
                 showError && 'msg-error'
