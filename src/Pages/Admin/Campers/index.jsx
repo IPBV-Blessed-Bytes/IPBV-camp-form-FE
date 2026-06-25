@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Row } from 'react-bootstrap';
-import { useTable, useFilters, useSortBy } from 'react-table';
+import { useTable, useFilters, useSortBy, usePagination } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -10,6 +10,7 @@ import Loading from '@/components/Global/Loading';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
+import TablePagination from '@/components/Admin/CampersTable/TablePagination';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 
 import useCampersData from './hooks/useCampersData';
@@ -20,6 +21,8 @@ import { handleCamperFormChange } from './utils/handleFormChange';
 import './style.scss';
 
 const SORT_BY_KEY = 'sortBy';
+const PAGE_SIZE_OPTIONS = [25, 50, 100, 200];
+const DEFAULT_PAGE_SIZE = 50;
 
 const formatCurrentDate = () => {
   const now = new Date();
@@ -142,8 +145,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     getTableBodyProps,
     headerGroups,
     rows,
+    page,
     prepareRow,
-    state: { sortBy },
+    canPreviousPage,
+    canNextPage,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { sortBy, pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -152,11 +163,15 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         Filter: DefaultFilter,
         filter: 'text',
       },
-      initialState: { sortBy: JSON.parse(sessionStorage.getItem(SORT_BY_KEY)) || [] },
+      initialState: {
+        sortBy: JSON.parse(sessionStorage.getItem(SORT_BY_KEY)) || [],
+        pageSize: DEFAULT_PAGE_SIZE,
+      },
       filterTypes,
     },
     useFilters,
     useSortBy,
+    usePagination,
   );
 
   rowsRef.current = rows;
@@ -247,10 +262,23 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           getTableProps={getTableProps}
           getTableBodyProps={getTableBodyProps}
           headerGroups={headerGroups}
-          rows={rows}
+          rows={page}
           prepareRow={prepareRow}
           showFilters={showFilters}
           selectedRows={selectedRows}
+        />
+        <TablePagination
+          pageIndex={pageIndex}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          totalRows={rows.length}
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          setPageSize={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
         />
       </Row>
 
