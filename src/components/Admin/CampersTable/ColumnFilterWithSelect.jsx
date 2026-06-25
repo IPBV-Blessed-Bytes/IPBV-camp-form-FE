@@ -1,16 +1,11 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
 import '../../Style/ColumnFilter.scss';
 
-const ColumnFilterWithSelect = ({ column, options, onFilterChange }) => {
+const ColumnFilterWithSelect = ({ column, options }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
-
-  useEffect(() => {
-    onFilterChange();
-  }, [filterValue]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -48,7 +43,6 @@ ColumnFilterWithSelect.propTypes = {
       label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
   ).isRequired,
-  onFilterChange: PropTypes.func,
 };
 
 export default ColumnFilterWithSelect;

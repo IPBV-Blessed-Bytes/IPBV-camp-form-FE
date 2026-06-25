@@ -12,18 +12,12 @@ import { alphabeticalSort, ageFilterFn } from './tableFilters';
 
 const ORDER_URL_PREFIX = 'https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/';
 
-const filterWith = (setFilteredRows, FilterComponent, extraProps = {}) =>
+const filterWith = (FilterComponent, extraProps = {}) =>
   function ColumnFilterWrapper({ column }) {
-    return (
-      <FilterComponent
-        column={column}
-        {...extraProps}
-        onFilterChange={() => setFilteredRows(column.filteredRows)}
-      />
-    );
+    return <FilterComponent column={column} {...extraProps} />;
   };
 
-export const makeDefaultFilter = (setFilteredRows) => filterWith(setFilteredRows, ColumnFilter);
+export const makeDefaultFilter = () => filterWith(ColumnFilter);
 
 const renderOrDash = ({ value }) => value || '-';
 const renderPipedList = ({ value }) => value.replace(/\|/g, ', ') || '-';
@@ -31,18 +25,16 @@ const renderYesNo = ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-');
 
 export const buildCampersColumns = ({
   selectedRows,
-  filteredRows,
   rowsRef,
   handleSelectAll,
   handleCheckboxChange,
   handleEditClick,
   handleDeleteClick,
-  setFilteredRows,
   adminTableEditDeletePermissions,
 }) => {
-  const textFilter = filterWith(setFilteredRows, ColumnFilter);
-  const selectFilter = (options) => filterWith(setFilteredRows, ColumnFilterWithSelect, { options });
-  const twoValuesFilter = filterWith(setFilteredRows, ColumnFilterWithTwoValues, {
+  const textFilter = filterWith(ColumnFilter);
+  const selectFilter = (options) => filterWith(ColumnFilterWithSelect, { options });
+  const twoValuesFilter = filterWith(ColumnFilterWithTwoValues, {
     options: [
       { value: 'sim', label: 'Sim' },
       { value: 'não', label: 'Não' },
@@ -78,9 +70,7 @@ export const buildCampersColumns = ({
               type="checkbox"
               onChange={handleSelectAll}
               checked={
-                filteredRows.length > 0
-                  ? selectedRows.length === filteredRows.length
-                  : selectedRows.length === (rowsRef?.current?.length || 0)
+                selectedRows.length > 0 && selectedRows.length === (rowsRef?.current?.length || 0)
               }
             />
             &nbsp;
@@ -247,6 +237,7 @@ export const buildCampersColumns = ({
         { value: 'Alimentacao Completa', label: 'Alimentação Completa' },
         { value: 'Sem Alimentacao', label: 'Sem Alimentação' },
       ]),
+      filter: 'food',
       sortType: 'alphanumeric',
       Cell: renderPipedList,
     },

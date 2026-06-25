@@ -1,16 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import Icons from '@/components/Global/Icons';
 import '../../Style/ColumnFilter.scss';
 
-const ColumnFilter = ({ column, onFilterChange }) => {
+const ColumnFilter = ({ column }) => {
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
-
-  useEffect(() => {
-    onFilterChange();
-  }, [filterValue]);
 
   const handleFilterChange = (e) => {
     const value = e.target.value || undefined;
@@ -37,7 +32,6 @@ ColumnFilter.propTypes = {
     filterValue: PropTypes.string,
     setFilter: PropTypes.func,
   }),
-  onFilterChange: PropTypes.func,
 };
 
 export default ColumnFilter;

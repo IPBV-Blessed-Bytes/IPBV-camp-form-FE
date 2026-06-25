@@ -1,16 +1,12 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Icons from '@/components/Global/Icons';
 import '../../Style/ColumnFilter.scss';
 
-const ColumnFilterWithTwoValues = ({ column, options, onFilterChange }) => {
+const ColumnFilterWithTwoValues = ({ column, options }) => {
   const [localFilterValue, setLocalFilterValue] = useState(column?.filterValue || '');
   const setFilter = column?.setFilter || (() => {});
-
-  useEffect(() => {
-    onFilterChange();
-  }, [localFilterValue]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -55,7 +51,6 @@ ColumnFilterWithTwoValues.propTypes = {
       label: PropTypes.string,
     }),
   ).isRequired,
-  onFilterChange: PropTypes.func,
 };
 
 export default ColumnFilterWithTwoValues;

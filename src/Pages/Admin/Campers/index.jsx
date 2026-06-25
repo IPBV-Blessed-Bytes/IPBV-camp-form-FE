@@ -57,15 +57,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [addFormData, setAddFormData] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAllRows, setSelectAllRows] = useState(false);
-  const [filteredRows, setFilteredRows] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
-
-  const filteredRowsRef = useRef([]);
-  useEffect(() => {
-    filteredRowsRef.current = filteredRows;
-  }, [filteredRows]);
 
   const currentDate = formatCurrentDate();
 
@@ -126,23 +120,21 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   };
 
   const rowsRef = useRef([]);
-  const DefaultFilter = useMemo(() => makeDefaultFilter(setFilteredRows), []);
+  const DefaultFilter = useMemo(() => makeDefaultFilter(), []);
 
   const columns = useMemo(
     () =>
       buildCampersColumns({
         selectedRows,
-        filteredRows,
         rowsRef,
         handleSelectAll: () => handleSelectAll(),
         handleCheckboxChange,
         handleEditClick,
         handleDeleteClick,
-        setFilteredRows,
         adminTableEditDeletePermissions,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, selectedRows, filteredRows],
+    [data, selectedRows],
   );
 
   const {
@@ -158,6 +150,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       data,
       defaultColumn: {
         Filter: DefaultFilter,
+        filter: 'text',
       },
       initialState: { sortBy: JSON.parse(sessionStorage.getItem(SORT_BY_KEY)) || [] },
       filterTypes,
@@ -169,14 +162,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   rowsRef.current = rows;
 
   const handleSelectAll = () => {
-    const isFilterApplied = filteredRowsRef.current.length > 0;
-
     if (selectAllRows) {
       setSelectedRows([]);
     } else {
-      const rowsToSelect = isFilterApplied ? filteredRowsRef.current : rowsRef.current;
       setSelectedRows(
-        rowsToSelect.map((row) => ({
+        rowsRef.current.map((row) => ({
           index: row.index,
           name: row.original.personalInformation.name,
         })),
@@ -194,7 +184,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     return () => window.removeEventListener('beforeunload', storeSortByInSession);
   }, [storeSortByInSession]);
 
-  const handleGenerateExcel = () => exportCampersToExcel({ data, filteredRows: filteredRowsRef.current });
+  const handleGenerateExcel = () => exportCampersToExcel({ data, filteredRows: rowsRef.current });
 
   const toolsButtons = [
     {
