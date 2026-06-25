@@ -25,6 +25,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [loadingContent, setLoadingContent] = useState(false);
   const [showNewBottomForm, setShowNewBottomForm] = useState(false);
+  const [openItems, setOpenItems] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
   const [itemToDeleteIndex, setItemToDeleteIndex] = useState(null);
@@ -444,7 +445,12 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
               </div>
             )}
 
-            <Accordion className="homeinfo-custom-accordion" alwaysOpen>
+            <Accordion
+              className="homeinfo-custom-accordion"
+              alwaysOpen
+              activeKey={openItems}
+              onSelect={(keys) => setOpenItems(keys || [])}
+            >
               {formData.bottom.map((item, index) => (
                 <Accordion.Item eventKey={String(index)} key={item.id}>
                   <Accordion.Header>
@@ -499,10 +505,12 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                       <Form.Label>
                         <b>Descrição:</b>
                       </Form.Label>
-                      <CustomEditor
-                        value={item.description}
-                        onChange={(value) => handleBottomChange(index, 'description', value)}
-                      />
+                      {openItems.includes(String(index)) && (
+                        <CustomEditor
+                          value={item.description}
+                          onChange={(value) => handleBottomChange(index, 'description', value)}
+                        />
+                      )}
                     </Form.Group>
 
                     <div className="d-flex justify-content-end gap-2 mt-3">
