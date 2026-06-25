@@ -1,13 +1,17 @@
 import axios from 'axios';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 
+let cachedClientIp;
+
 const getClientIp = async () => {
+  if (cachedClientIp !== undefined) return cachedClientIp;
   try {
     const { data } = await axios.get('https://api.ipify.org?format=json');
-    return data.ip;
+    cachedClientIp = data.ip;
   } catch {
-    return null;
+    cachedClientIp = null;
   }
+  return cachedClientIp;
 };
 
 export const listLogs = async () => {

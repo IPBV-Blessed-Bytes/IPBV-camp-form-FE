@@ -19,6 +19,8 @@ import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
+const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
+
 const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [loadingContent, setLoadingContent] = useState(false);
@@ -312,8 +314,6 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       placeholder: 'Ex: 01 de Fevereiro',
     },
   };
-
-  const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
 
   return (
     <div className="admin-subpage admin-subpage--settings">

@@ -22,6 +22,8 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import Icons from '@/components/Global/Icons';
 
+registerLocale('ptBR', ptBR);
+
 const defaultPrice = {
   seminary: '',
   school: '',
@@ -184,8 +186,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   const [showBaseDateModal, setShowBaseDateModal] = useState(false);
 
   scrollUp();
-
-  registerLocale('ptBR', ptBR);
 
   const fetchLots = async () => {
     try {
