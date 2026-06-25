@@ -18,6 +18,7 @@ import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts'
 import { products } from '@/Pages/Packages/utils/products';
 
 const SKIP_PERSIST_SECTIONS = ['personalInformation', 'contact', 'package', 'extraMeals'];
+const EMPTY_FORM_VALUES = {};
 
 const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -139,7 +140,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
     setHasDiscount(userDiscount !== 0);
   }, [currentFormIndex]);
 
-  const currentFormValues = formValues[currentFormIndex] || {};
+  const currentFormValues = formValues[currentFormIndex] || EMPTY_FORM_VALUES;
 
   const updatedAge = getTempData();
   const birthday = updatedAge.personalInformation?.birthday;

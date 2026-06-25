@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE, FORM_CONTEXT_KEY } from '@/config';
@@ -101,21 +101,20 @@ const AuthProvider = ({ children }) => {
     toast.success('Logout realizado com sucesso!');
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        user,
-        loading,
-        formContext,
-        setFormContext,
-        login,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      isLoggedIn,
+      user,
+      loading,
+      formContext,
+      setFormContext,
+      login,
+      logout,
+    }),
+    [isLoggedIn, user, loading, formContext, setFormContext, login, logout],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
