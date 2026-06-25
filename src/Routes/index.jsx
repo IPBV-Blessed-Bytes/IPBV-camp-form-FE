@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
 import { enumSteps } from '@/utils/constants';
@@ -7,6 +7,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
+import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
@@ -24,28 +25,30 @@ import CpfReview from '../Pages/CpfReview';
 import CpfData from '../Pages/CpfReview/CpfData';
 
 import Login from '../Pages/Admin/Login';
-import AdminCampers from '../Pages/Admin/Campers';
-import AdminRide from '../Pages/Admin/Ride';
-import AdminDiscount from '../Pages/Admin/Discount';
-import AdminRooms from '../Pages/Admin/Rooms';
-import AdminTeams from '@/Pages/Admin/Teams';
-import AdminExtraMeals from '../Pages/Admin/ExtraMeals';
-import AdminCheckin from '../Pages/Admin/Checkin';
-import AdminUserLogs from '../Pages/Admin/UserLogs';
-import AdminSeatManagement from '../Pages/Admin/SeatManagement';
-import AdminUsersManagement from '../Pages/Admin/UsersManagement';
-import AdminFeedback from '../Pages/Admin/Feedback';
-import AdminDataPanel from '../Pages/Admin/DataPanel';
-import AdminFormContext from '@/Pages/Admin/FormContext';
-import AdminLotManagement from '@/Pages/Admin/LotManagement';
-import AdminWristbandsManagement from '@/Pages/Admin/WristbandsManagement';
 import Maintenance from '@/Pages/Maintenance';
 
-import FAQ from '../Pages/FAQ';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
-import AdminHomepageInfoManagement from '@/Pages/Admin/HomeInfo';
+
+// Páginas pesadas e pouco acessadas pelo público — carregadas sob demanda (code-splitting).
+const AdminCampers = lazy(() => import('../Pages/Admin/Campers'));
+const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
+const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
+const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
+const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
+const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
+const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
+const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
+const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
+const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
+const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
+const AdminDataPanel = lazy(() => import('../Pages/Admin/DataPanel'));
+const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
+const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
+const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
+const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
+const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
   const [showInfoButton, setShowInfoButton] = useState(false);
@@ -146,6 +149,7 @@ const FormRoutes = () => {
       )}
 
       <div className="routes">
+        <Suspense fallback={<Loading loading />}>
         <Routes>
           <Route
             path={adminPath('')}
@@ -331,6 +335,7 @@ const FormRoutes = () => {
             </>
           )}
         </Routes>
+        </Suspense>
       </div>
     </div>
   );
