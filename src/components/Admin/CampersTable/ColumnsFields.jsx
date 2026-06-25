@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Col } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
@@ -138,4 +138,4 @@ ColumnFields.propTypes = {
   required: PropTypes.bool,
 };
 
-export default ColumnFields;
+export default memo(ColumnFields);

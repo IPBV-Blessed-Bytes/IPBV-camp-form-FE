@@ -17,7 +17,6 @@ import useCampersData from './hooks/useCampersData';
 import { buildCampersColumns, makeDefaultFilter } from './utils/buildColumns';
 import { filterTypes } from './utils/tableFilters';
 import { exportCampersToExcel } from './utils/exportExcel';
-import { handleCamperFormChange } from './utils/handleFormChange';
 import './style.scss';
 
 const SORT_BY_KEY = 'sortBy';
@@ -38,7 +37,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const {
     data,
     loading,
-    formSubmitted,
     setFormSubmitted,
     saveEdit,
     addCamper,
@@ -55,9 +53,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [name, setName] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState(null);
-  const [editFormData, setEditFormData] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
-  const [addFormData, setAddFormData] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAllRows, setSelectAllRows] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -68,7 +64,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
   const handleEditClick = (index) => {
     setEditRowIndex(index);
-    setEditFormData(data[index]);
     setShowEditModal(true);
   };
 
@@ -91,22 +86,14 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     setModalType('delete-all');
   };
 
-  const handleFormChange = (event, formType) => {
-    const setter = formType === 'edit' ? setEditFormData : setAddFormData;
-    handleCamperFormChange(event, setter);
-  };
-
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (editFormData) => {
     const saveOrEditSuccess = await saveEdit({ editFormData, editRowIndex });
     if (saveOrEditSuccess) setShowEditModal(false);
   };
 
-  const handleAddSubmit = async () => {
+  const handleAddSubmit = async (addFormData) => {
     const addCamperSuccess = await addCamper({ addFormData, currentDate });
-    if (addCamperSuccess) {
-      setShowAddModal(false);
-      setAddFormData({});
-    }
+    if (addCamperSuccess) setShowAddModal(false);
   };
 
   const handleConfirmDeleteAll = async () => {
@@ -290,13 +277,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         setShowAddModal={setShowAddModal}
         showDeleteModal={showDeleteModal}
         modalType={modalType}
-        formSubmitted={formSubmitted}
-        editFormData={editFormData}
+        editInitialData={editRowIndex != null ? data[editRowIndex] : {}}
+        editRowIndex={editRowIndex}
         currentDate={currentDate}
-        handleSaveEdit={handleSaveEdit}
-        addFormData={addFormData}
-        handleFormChange={handleFormChange}
-        handleAddSubmit={handleAddSubmit}
+        onSaveEdit={handleSaveEdit}
+        onAddSubmit={handleAddSubmit}
         handleCloseDeleteModal={() => setShowDeleteModal(false)}
         handleConfirmDeleteAll={handleConfirmDeleteAll}
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}

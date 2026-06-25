@@ -1,8 +1,8 @@
-import { Button, Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
-import Columns from './Columns';
+import CamperFormModal from './CamperFormModal';
 
 const EditAndAddCamperModal = ({
   name,
@@ -12,78 +12,41 @@ const EditAndAddCamperModal = ({
   setShowAddModal,
   showDeleteModal,
   modalType,
-  formSubmitted,
-  editFormData,
+  editInitialData,
+  editRowIndex,
   currentDate,
-  handleSaveEdit,
-  addFormData,
-  handleFormChange,
-  handleAddSubmit,
+  onSaveEdit,
+  onAddSubmit,
   handleCloseDeleteModal,
   handleConfirmDeleteAll,
   handleConfirmDeleteSpecific,
 }) => (
   <>
-    <CustomModal
+    <CamperFormModal
+      key={`edit-${editRowIndex}-${showEditModal}`}
       show={showEditModal}
-      size="xl"
       onHide={() => setShowEditModal(false)}
-      variant="confirm"
+      title="Editar Inscrição"
       icon="edit"
       iconFill=""
-      title="Editar Inscrição"
-      centered={false}
-      footer={
-        <>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleSaveEdit}>
-            Salvar
-          </Button>
-        </>
-      }
-    >
-      <Form>
-        <Columns
-          editFormData={editFormData}
-          handleFormChange={(e) => handleFormChange(e, 'edit')}
-          formSubmitted={formSubmitted}
-          currentDate={currentDate}
-          editForm
-        />
-      </Form>
-    </CustomModal>
+      submitLabel="Salvar"
+      initialData={editInitialData}
+      currentDate={currentDate}
+      isEdit
+      onSubmit={onSaveEdit}
+    />
 
-    <CustomModal
+    <CamperFormModal
+      key={`add-${showAddModal}`}
       show={showAddModal}
-      size="xl"
       onHide={() => setShowAddModal(false)}
-      variant="confirm"
-      icon="plus"
       title="Nova Inscrição"
-      centered={false}
-      footer={
-        <>
-          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleAddSubmit}>
-            Adicionar
-          </Button>
-        </>
-      }
-    >
-      <Form>
-        <Columns
-          addFormData={addFormData}
-          handleFormChange={(e) => handleFormChange(e, 'add')}
-          formSubmitted={formSubmitted}
-          currentDate={currentDate}
-          addForm
-        />
-      </Form>
-    </CustomModal>
+      icon="plus"
+      submitLabel="Adicionar"
+      initialData={{}}
+      currentDate={currentDate}
+      onSubmit={onAddSubmit}
+    />
 
     <CustomModal
       show={showDeleteModal}
@@ -121,13 +84,11 @@ EditAndAddCamperModal.propTypes = {
   setShowAddModal: PropTypes.func,
   showDeleteModal: PropTypes.bool,
   modalType: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  formSubmitted: PropTypes.bool,
-  editFormData: PropTypes.object,
+  editInitialData: PropTypes.object,
+  editRowIndex: PropTypes.number,
   currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-  handleSaveEdit: PropTypes.func,
-  addFormData: PropTypes.object,
-  handleFormChange: PropTypes.func,
-  handleAddSubmit: PropTypes.func,
+  onSaveEdit: PropTypes.func,
+  onAddSubmit: PropTypes.func,
   handleCloseDeleteModal: PropTypes.func,
   handleConfirmDeleteAll: PropTypes.func,
   handleConfirmDeleteSpecific: PropTypes.func,
