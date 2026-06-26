@@ -3,7 +3,6 @@ import { Button, Form, Table, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
 import {
   listTeams,
   createTeam,
@@ -13,7 +12,7 @@ import {
   removeCamperFromTeam,
 } from '@/services/teams';
 import { listWristbands } from '@/services/wristbands';
-import { listCampers } from '@/services/campers';
+import { useCampersList } from '@/hooks/useCampersList';
 import { registerLog } from '@/services/logs';
 import Icons from '@/components/Global/Icons';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -26,7 +25,6 @@ const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
-  const [loadingCampers, setLoadingCampers] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
   const [teamWristbands, setTeamWristbands] = useState([]);
@@ -36,7 +34,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const [selectedCampersIds, setSelectedCampersIds] = useState([]);
   const [selectedCamperId, setSelectedCamperId] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [campers, setCampers] = useState([]);
+  const { campers, isLoading: loadingCampers, refetch: refetchCampers } = useCampersList();
   const [selectedTeamToRemove, setSelectedTeamToRemove] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -72,28 +70,9 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
-  const fetchCampers = async () => {
-    try {
-      setLoadingCampers(true);
-
-      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
-
-      const campersList = Array.isArray(data?.content) ? data.content : [];
-
-      setCampers(campersList);
-    } catch (error) {
-      toast.error('Erro ao carregar acampantes');
-      console.error(error);
-      setCampers([]);
-    } finally {
-      setLoadingCampers(false);
-    }
-  };
-
   useEffect(() => {
     fetchTeams();
     fetchTeamWristbands();
-    fetchCampers();
   }, []);
 
   const handleOpenModal = (team = null) => {
@@ -173,7 +152,7 @@ const AdminTeams = ({ loggedUsername }) => {
       setShowAddCamperModal(false);
 
       fetchTeams();
-      fetchCampers();
+      refetchCampers();
     } catch (error) {
       toast.error('Erro ao adicionar acampantes ao time');
       console.error(error);
@@ -191,7 +170,7 @@ const AdminTeams = ({ loggedUsername }) => {
       await removeCamperFromTeam(selectedCamperId);
 
       fetchTeams();
-      fetchCampers();
+      refetchCampers();
 
       toast.success('Acampante removido do time');
       registerLog(`Removeu o acampante ${selectedCamperId} de um time`, loggedUsername);
@@ -232,7 +211,7 @@ const AdminTeams = ({ loggedUsername }) => {
       registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);
 
       fetchTeams();
-      fetchCampers();
+      refetchCampers();
 
       setShowRemoveTeamModal(false);
       setSelectedTeamToRemove(null);

@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import { listCampers } from '@/services/campers';
+import { useCampersList } from '@/hooks/useCampersList';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -12,31 +11,15 @@ import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminExtraMeals = () => {
-  const [usersWithExtraMeals, setUsersWithExtraMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   scrollUp();
 
-  useEffect(() => {
-    fetchUsersWithExtraMeals();
-  }, []);
+  const { campers, isLoading: loading, isError } = useCampersList();
 
-  const fetchUsersWithExtraMeals = async () => {
-    try {
-      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
-      if (Array.isArray(data.content)) {
-        const filteredUsers = data.content.filter((user) => user.extraMeals.someFood);
-        setUsersWithExtraMeals(filteredUsers);
-      } else {
-        console.error('Erro: Dados não estão no formato esperado.');
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados:', error);
-      toast.error('Erro ao buscar usuários com refeições extras');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const usersWithExtraMeals = useMemo(() => campers.filter((user) => user.extraMeals?.someFood), [campers]);
+
+  useEffect(() => {
+    if (isError) toast.error('Erro ao buscar usuários com refeições extras');
+  }, [isError]);
 
   const generateExcel = () => {
     const rows = usersWithExtraMeals.map((user) => ({

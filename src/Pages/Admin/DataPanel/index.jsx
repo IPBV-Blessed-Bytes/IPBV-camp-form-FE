@@ -3,9 +3,8 @@ import { Accordion, Row, Col, Card } from 'react-bootstrap';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { permissionsSections } from '@/fetchers/permissions';
 import PropTypes from 'prop-types';
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import { listCampers } from '@/services/campers';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
+import { useCampersList } from '@/hooks/useCampersList';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -38,36 +37,17 @@ const AdminDataPanel = ({ totalPackages, usedPackages, userRole }) => {
 
   scrollUp();
 
+  const { campers } = useCampersList();
+
   useEffect(() => {
-    const extractCheckinAndAccommodation = (data) => {
-      if (!Array.isArray(data)) {
-        console.error('Data received is not an array:', data);
-        return [];
-      }
-
-      return data
-        .filter((camper) => camper.checkin === true)
-        .map((camper) => ({
-          checkin: camper.checkin,
-          accomodationName: camper.package?.accomodationName || 'Desconhecido',
-        }));
-    };
-
-    const fetchCampers = async () => {
-      try {
-        const data = await listCampers({ size: MAX_SIZE_CAMPERS });
-
-        if (Array.isArray(data.content)) {
-          const checkinData = extractCheckinAndAccommodation(data.content);
-          setFillingVacancies(checkinData);
-        }
-      } catch (error) {
-        console.error('Error fetching campers:', error);
-      }
-    };
-
-    fetchCampers();
-  }, []);
+    const checkinData = campers
+      .filter((camper) => camper.checkin === true)
+      .map((camper) => ({
+        checkin: camper.checkin,
+        accomodationName: camper.package?.accomodationName || 'Desconhecido',
+      }));
+    setFillingVacancies(checkinData);
+  }, [campers]);
 
   useEffect(() => {
     const fetchPieData = async () => {

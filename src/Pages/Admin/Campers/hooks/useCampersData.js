@@ -1,19 +1,13 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import { listCampers, createCamper, updateCamper, deleteCamper, deleteCampers } from '@/services/campers';
+import { createCamper, updateCamper, deleteCamper, deleteCampers } from '@/services/campers';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
+import { useCampersList, CAMPERS_QUERY_KEY } from '@/hooks/useCampersList';
 
 import { sanitizeFields } from '../utils/sanitizeFields';
-
-export const CAMPERS_QUERY_KEY = ['campers'];
-
-// Referência estável para o estado de carregamento: um novo `[]` a cada render
-// faz o react-table disparar seus auto-resets em loop (Maximum update depth).
-const EMPTY_CAMPERS = [];
 
 const buildEditPayload = (formData) => {
   const sanitized = sanitizeFields(formData);
@@ -58,23 +52,7 @@ const useCampersData = ({ loggedUsername }) => {
   const queryClient = useQueryClient();
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const {
-    data: queryData,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: CAMPERS_QUERY_KEY,
-    queryFn: async () => {
-      const response = await listCampers({ size: MAX_SIZE_CAMPERS });
-      if (!Array.isArray(response.content)) {
-        console.error('Data received is not an array:', response);
-        return [];
-      }
-      return response.content;
-    },
-  });
-
-  const data = queryData ?? EMPTY_CAMPERS;
+  const { campers: data, isLoading, refetch } = useCampersList();
 
   const setCampersCache = (updater) => queryClient.setQueryData(CAMPERS_QUERY_KEY, (prev = []) => updater(prev));
 
