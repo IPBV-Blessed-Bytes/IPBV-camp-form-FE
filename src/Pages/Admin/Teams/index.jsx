@@ -11,7 +11,7 @@ import {
   assignCamperToTeam,
   removeCamperFromTeam,
 } from '@/services/teams';
-import { listWristbands } from '@/services/wristbands';
+import { useWristbandsList } from '@/hooks/useWristbandsList';
 import { useCampersList } from '@/hooks/useCampersList';
 import { registerLog } from '@/services/logs';
 import Icons from '@/components/Global/Icons';
@@ -27,7 +27,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
-  const [teamWristbands, setTeamWristbands] = useState([]);
+  const { wristbands } = useWristbandsList();
   const [showRemoveCamperModal, setShowRemoveCamperModal] = useState(false);
   const [showAddCamperModal, setShowAddCamperModal] = useState(false);
   const [showRemoveTeamModal, setShowRemoveTeamModal] = useState(false);
@@ -54,25 +54,13 @@ const AdminTeams = ({ loggedUsername }) => {
     }
   };
 
-  const fetchTeamWristbands = async () => {
-    try {
-      setLoading(true);
-      const data = await listWristbands();
-
-      const onlyTeamWristbands = (data || []).filter((wristband) => wristband.type === 'TEAM' && wristband.active);
-
-      setTeamWristbands(onlyTeamWristbands);
-    } catch (error) {
-      toast.error('Erro ao carregar pulseiras dos times');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const teamWristbands = useMemo(
+    () => wristbands.filter((wristband) => wristband.type === 'TEAM' && wristband.active),
+    [wristbands],
+  );
 
   useEffect(() => {
     fetchTeams();
-    fetchTeamWristbands();
   }, []);
 
   const handleOpenModal = (team = null) => {

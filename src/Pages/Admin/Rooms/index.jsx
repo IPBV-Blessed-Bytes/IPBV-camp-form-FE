@@ -11,7 +11,6 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import {
   listAggregates,
-  listRooms,
   createRoom as createRoomRequest,
   updateRoom,
   renameRoom as renameRoomRequest,
@@ -19,13 +18,14 @@ import {
   removeCamperFromRoom,
 } from '@/services/rooms';
 import { registerLog } from '@/services/logs';
+import { useRoomsList } from '@/hooks/useRoomsList';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
-  const [rooms, setRooms] = useState([]);
+  const { rooms, refetch: refetchRooms } = useRoomsList();
   const [roomSortOrder, setRoomSortOrder] = useState('asc');
   const [selectedCamper, setSelectedCamper] = useState({});
   const [loading, setLoading] = useState(false);
@@ -54,18 +54,7 @@ const AdminRooms = ({ loggedUsername }) => {
     }
   };
 
-  const fetchRooms = async () => {
-    try {
-      const data = await listRooms();
-      setRooms(data);
-    } catch (error) {
-      toast.error('Erro ao carregar quartos');
-      console.error('Erro ao buscar quartos:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchRooms();
     fetchUsers();
   }, []);
 
@@ -88,8 +77,7 @@ const AdminRooms = ({ loggedUsername }) => {
       const data = await createRoomRequest(newRoom);
 
       if (data === 'Quarto criado com sucesso.') {
-        fetchRooms();
-        setRooms([...rooms, { ...newRoom }]);
+        refetchRooms();
         toast.success('Quarto criado com sucesso');
         registerLog(`Criou o quarto com nome ${newRoomName}`, loggedUsername);
         handleCloseModal();
@@ -149,9 +137,8 @@ const AdminRooms = ({ loggedUsername }) => {
         const data = await deleteRoom(roomToDelete.id, roomData);
 
         if (data === 'Quarto removido com sucesso.') {
-          fetchRooms();
+          refetchRooms();
           fetchUsers();
-          setRooms(rooms.filter((room) => room.id !== roomToDelete.id));
           toast.success('Quarto excluido com sucesso');
           registerLog(`Excluiu o quarto com nome ${roomToDelete.name}`, loggedUsername);
           handleCloseDeleteModal();
@@ -182,7 +169,7 @@ const AdminRooms = ({ loggedUsername }) => {
         const data = await renameRoomRequest(roomToRename.id, roomData);
 
         if (data === 'Nome do quarto atualizado com sucesso.') {
-          fetchRooms();
+          refetchRooms();
           toast.success('Quarto renomeado com sucesso');
           registerLog(`Renomeou o quarto com nome ${roomToRename.name}`, loggedUsername);
           handleCloseEditModal();
@@ -219,7 +206,7 @@ const AdminRooms = ({ loggedUsername }) => {
         const data = await updateRoom(roomId, updatedRoom);
 
         if (data === 'Quarto atualizado com sucesso.') {
-          fetchRooms();
+          refetchRooms();
           fetchUsers();
           toast.success('Acampante adicionado ao quarto');
           registerLog(`Adicionou usuário ${camper.personalInformation.name} ao quarto ${roomName}`, loggedUsername);
@@ -267,7 +254,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
       if (data === 'Acampante removido do quarto com sucesso.') {
         toast.success('Acampante removido do quarto com sucesso');
-        fetchRooms();
+        refetchRooms();
         fetchUsers();
         handleCloseDeleteCamperFromRoomModal();
       }

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import {
-  listWristbands,
   createWristband,
   updateWristband,
   deleteWristband,
 } from '@/services/wristbands';
 import { registerLog } from '@/services/logs';
+import { useWristbandsList } from '@/hooks/useWristbandsList';
 import scrollUp from '@/hooks/useScrollUp';
 import { FOOD_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
@@ -21,7 +21,7 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 
 const AdminWristbandsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
-  const [wristbands, setWristbands] = useState([]);
+  const { wristbands, isLoading: loadingWristbands, refetch: refetchWristbands } = useWristbandsList();
   const [formData, setFormData] = useState({
     type: '',
     label: '',
@@ -34,20 +34,6 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   const [wristbandToDelete, setWristbandToDelete] = useState(null);
 
   scrollUp();
-
-  const fetchWristbands = async () => {
-    setLoading(true);
-    try {
-      const data = await listWristbands();
-
-      setWristbands(data || []);
-    } catch (error) {
-      console.error('[AdminWristbandsManagement] erro ao buscar pulseiras', error);
-      toast.error('Erro ao buscar pulseiras');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const validateForm = () => {
     const { type, label, color } = formData;
@@ -92,7 +78,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       setFormData({ type: '', label: '', color: '#000000', active: true });
       setEditingWristband(null);
       setShowModal(false);
-      fetchWristbands();
+      refetchWristbands();
     } catch (error) {
       toast.error('Erro ao salvar pulseira');
     } finally {
@@ -106,7 +92,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       await deleteWristband(wristbandToDelete.id);
       toast.success('Pulseira removida com sucesso');
       registerLog(`Removeu pulseira ${wristbandToDelete.label}`, loggedUsername);
-      fetchWristbands();
+      refetchWristbands();
       setShowDeleteModal(false);
     } catch (error) {
       toast.error('Erro ao remover pulseira');
@@ -131,10 +117,6 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     setWristbandToDelete(wristband);
     setShowDeleteModal(true);
   };
-
-  useEffect(() => {
-    fetchWristbands();
-  }, []);
 
   const toolsButtons = [
     {
@@ -315,7 +297,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
       </CustomModal>
 
-        <Loading loading={loading} />
+        <Loading loading={loading || loadingWristbands} />
       </div>
     </div>
   );

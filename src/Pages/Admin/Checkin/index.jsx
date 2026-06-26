@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { MAX_SIZE_CAMPERS } from '@/utils/constants';
-import { listRooms } from '@/services/rooms';
 import { listCampers, checkinCamper } from '@/services/campers';
 import { listWristbands } from '@/services/wristbands';
 import { registerLog } from '@/services/logs';
+import { useRoomsList } from '@/hooks/useRoomsList';
 import { permissionsSections } from '@/fetchers/permissions';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
@@ -23,7 +23,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
   const [cpfLoading, setCpfLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [rooms, setRooms] = useState([]);
+  const { rooms } = useRoomsList();
   const [loading, setLoading] = useState(false);
   const [checkinStatus, setCheckinStatus] = useState(false);
   const [userWristbands, setUserWristbands] = useState([]);
@@ -35,20 +35,6 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const abortControllerRef = useRef(null);
 
   scrollUp();
-
-  useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        const data = await listRooms();
-        setRooms(data);
-      } catch (error) {
-        toast.error('Erro ao carregar quartos');
-        console.error('Erro ao buscar quartos:', error);
-      }
-    };
-
-    fetchRooms();
-  }, []);
 
   const searchUsersByCpfPrefix = async (cpfPrefix) => {
     if (abortControllerRef.current) {
