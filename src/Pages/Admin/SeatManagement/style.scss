@@ -1,1 +1,75 @@
 @use '../../../styles/Variables.scss' as *;
+
+.seat-summary {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 1.5rem;
+
+  @media (max-width: $lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $sm) {
+    grid-template-columns: 1fr;
+  }
+
+  &__card {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-left: 4px solid var(--admin-accent, #{$primary});
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.25rem;
+
+    &--warn {
+      border-left-color: $medium-red;
+
+      .seat-summary__value {
+        color: $medium-red;
+      }
+    }
+  }
+
+  &__label {
+    color: $alternate-dark-gray;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    color: $dark-gray;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+}
+
+.seat-total-field {
+  padding: 1rem 0;
+}
+
+@media (min-width: $sm) {
+  .seat-total-field {
+    background: $background-gray;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+  }
+}
+
+.seat-packages-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (max-width: $sm) {
+    grid-template-columns: 1fr;
+  }
+}
