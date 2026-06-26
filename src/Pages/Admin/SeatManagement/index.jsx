@@ -84,6 +84,9 @@ const AdminSeatManagement = ({
     });
   };
 
+  const sumPackages = packageOrder.reduce((acc, key) => acc + (Number(totalPackages[key]) || 0), 0);
+  const undistributedSeats = Number(totalSeats || 0) - sumPackages;
+
   return (
     <div className="admin-subpage admin-subpage--seats">
       <AdminSubpageHeader
@@ -94,66 +97,88 @@ const AdminSeatManagement = ({
       />
 
       <div className="admin-subpage__content">
-        <Row className="justify-content-center">
-        <Col xs={12} md={6} lg={4}>
-          <Form className="admin-panel my-4">
-            <h2 className="admin-panel__title">Vagas e pacotes</h2>
-            <Form.Group controlId="inputSeats">
-              <Form.Label>
-                <b>Vagas Totais Inscritos:</b>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min="1"
-                value={totalSeats}
-                onChange={(e) => handleUpdateTotalSeats(Number(e.target.value))}
-              />
-            </Form.Group>
+        <div className="seat-summary">
+          <div className="seat-summary__card">
+            <span className="seat-summary__label">Vagas totais</span>
+            <span className="seat-summary__value">{Number(totalSeats || 0)}</span>
+          </div>
+          <div className="seat-summary__card">
+            <span className="seat-summary__label">Distribuídas em pacotes</span>
+            <span className="seat-summary__value">{sumPackages}</span>
+          </div>
+          <div className={`seat-summary__card ${undistributedSeats < 0 ? 'seat-summary__card--warn' : ''}`}>
+            <span className="seat-summary__label">Não distribuídas</span>
+            <span className="seat-summary__value">{undistributedSeats}</span>
+          </div>
+          <div className="seat-summary__card">
+            <span className="seat-summary__label">Vagas no ônibus</span>
+            <span className="seat-summary__value">{Number(totalBusVacancies || 0)}</span>
+          </div>
+        </div>
 
-            {packageOrder.map((packageType) => (
-              <Form.Group className="mt-2" controlId={`input-${packageType}`} key={packageType}>
+        <Row className="g-4">
+          <Col xs={12} lg={7}>
+            <Form className="admin-panel">
+              <h2 className="admin-panel__title">Vagas e pacotes</h2>
+
+              <Form.Group controlId="inputSeats" className="seat-total-field">
                 <Form.Label>
-                  <b>{packageLabels[packageType]}:</b>
+                  <b>Vagas Totais Inscritos:</b>
                 </Form.Label>
                 <Form.Control
                   type="number"
-                  min="0"
-                  value={totalPackages[packageType] || 0}
-                  onChange={(e) => handlePackageChange(packageType, Number(e.target.value))}
+                  min="1"
+                  value={totalSeats}
+                  onChange={(e) => handleUpdateTotalSeats(Number(e.target.value))}
                 />
               </Form.Group>
-            ))}
 
-            <div className="d-flex mt-3 justify-content-end">
-              <Button variant="teal-blue" onClick={updateSeats}>
-                Ajustar Vagas Pacotes
-              </Button>
-            </div>
-          </Form>
-        </Col>
+              <div className="seat-packages-grid">
+                {packageOrder.map((packageType) => (
+                  <Form.Group controlId={`input-${packageType}`} key={packageType}>
+                    <Form.Label>
+                      <b>{packageLabels[packageType]}:</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      value={totalPackages[packageType] || 0}
+                      onChange={(e) => handlePackageChange(packageType, Number(e.target.value))}
+                    />
+                  </Form.Group>
+                ))}
+              </div>
 
-        <Col xs={12} md={6} lg={4}>
-          <Form className="admin-panel my-4">
-            <h2 className="admin-panel__title">Vagas de ônibus</h2>
-            <Form.Group controlId="inputSeats">
-              <Form.Label>
-                <b>Vagas Totais no Ônibus:</b>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min="1"
-                value={totalBusVacancies}
-                onChange={(e) => handleUpdateTotalBusVacancies(Number(e.target.value))}
-              />
-            </Form.Group>
+              <div className="d-flex mt-3 justify-content-end">
+                <Button variant="teal-blue" onClick={updateSeats}>
+                  Ajustar Vagas Pacotes
+                </Button>
+              </div>
+            </Form>
+          </Col>
 
-            <div className="d-flex mt-3 justify-content-end">
-              <Button variant="teal-blue" onClick={updateBusVacancies}>
-                Ajustar Vagas Ônibus
-              </Button>
-            </div>
-          </Form>
-        </Col>
+          <Col xs={12} lg={5}>
+            <Form className="admin-panel">
+              <h2 className="admin-panel__title">Vagas de ônibus</h2>
+              <Form.Group controlId="inputBus">
+                <Form.Label>
+                  <b>Vagas Totais no Ônibus:</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min="1"
+                  value={totalBusVacancies}
+                  onChange={(e) => handleUpdateTotalBusVacancies(Number(e.target.value))}
+                />
+              </Form.Group>
+
+              <div className="d-flex mt-3 justify-content-end">
+                <Button variant="teal-blue" onClick={updateBusVacancies}>
+                  Ajustar Vagas Ônibus
+                </Button>
+              </div>
+            </Form>
+          </Col>
         </Row>
         <Loading loading={loading || loadingContent} />
       </div>
