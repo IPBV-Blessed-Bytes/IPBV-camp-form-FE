@@ -2,8 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 
 import { listWristbands } from '@/services/wristbands';
 
-// Query key compartilhada pelas telas que leem a lista geral de pulseiras
-// (Teams e WristbandsManagement). Mesma key = mesmo cache entre elas.
 export const WRISTBANDS_QUERY_KEY = ['wristbands'];
 
 const EMPTY_WRISTBANDS = [];

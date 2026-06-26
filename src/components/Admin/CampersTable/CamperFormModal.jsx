@@ -6,11 +6,6 @@ import CustomModal from '@/components/Global/CustomModal';
 import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormChange';
 import Columns from './Columns';
 
-/**
- * Modal de edição/adição de acampante com estado de formulário LOCAL.
- * Digitar aqui não re-renderiza a página da tabela — só este modal.
- * O componente é remontado (via key no pai) a cada abertura, resetando o estado.
- */
 const CamperFormModal = ({
   show,
   onHide,

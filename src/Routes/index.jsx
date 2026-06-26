@@ -31,7 +31,6 @@ import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 
-// Páginas pesadas e pouco acessadas pelo público — carregadas sob demanda (code-splitting).
 const AdminCampers = lazy(() => import('../Pages/Admin/Campers'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
 const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));

@@ -1,6 +1,5 @@
 @use '../../styles/Variables.scss' as *;
 
-// Settings Button
 .settings-btn {
   align-items: center;
   background-color: $dark-gray;
@@ -100,7 +99,6 @@
   }
 }
 
-// Data Panel Button
 .data-panel-btn {
   align-items: center;
   background-color: $primary;

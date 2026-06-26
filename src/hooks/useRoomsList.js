@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 
 import { listRooms } from '@/services/rooms';
 
-// Query key compartilhada pelas telas que leem os quartos (Rooms e Checkin).
 export const ROOMS_QUERY_KEY = ['rooms'];
 
 const EMPTY_ROOMS = [];
