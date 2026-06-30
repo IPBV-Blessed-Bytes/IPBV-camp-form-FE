@@ -17,8 +17,9 @@
 
   &__item {
     display: flex;
-    flex: 1;
+    flex: 1 1 0;
     justify-content: center;
+    min-width: 0;
     position: relative;
 
     &:not(:first-child)::before {
@@ -83,9 +84,11 @@
     color: rgba($white, 0.8);
     font-size: 0.8rem;
     font-weight: 500;
+    max-width: 100%;
+    padding: 0 0.25rem;
     text-align: center;
     transition: color 0.2s ease;
-    white-space: nowrap;
+    white-space: normal;
 
     @media (max-width: $lg) {
       display: none;

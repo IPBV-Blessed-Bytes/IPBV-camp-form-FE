@@ -10,7 +10,7 @@ import '../Style/Cart.scss';
 import Icons from './Icons';
 import FormStepper from './FormStepper';
 
-const HEADER_STEPS = ['Início', 'Informações Pessoais', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
+const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
 const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
