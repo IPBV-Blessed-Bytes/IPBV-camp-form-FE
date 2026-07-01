@@ -5,7 +5,7 @@
   background-color: $dark-gray;
   border: none;
   border-radius: 50%;
-  bottom: 88px;
+  bottom: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   cursor: pointer;
   display: flex;
@@ -32,7 +32,7 @@
 }
 
 .settings-floating-buttons {
-  bottom: 156px;
+  bottom: 88px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -96,36 +96,5 @@
     path {
       fill: $light-yellow;
     }
-  }
-}
-
-.data-panel-btn {
-  align-items: center;
-  background-color: $primary;
-  border: none;
-  border-radius: 50%;
-  bottom: 20px;
-  box-shadow: 0 6px 20px rgba($primary, 0.32);
-  cursor: pointer;
-  display: flex;
-  height: 56px;
-  justify-content: center;
-  padding: 0;
-  position: fixed;
-  right: 20px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  width: 56px;
-  z-index: 9000;
-
-  &:hover {
-    box-shadow: 0 10px 26px rgba($primary, 0.44);
-    transform: translateY(-2px);
-  }
-
-  svg {
-    height: 28px;
-    width: 28px;
   }
 }

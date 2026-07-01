@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
@@ -42,7 +42,6 @@ const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
-const AdminDataPanel = lazy(() => import('../Pages/Admin/DataPanel'));
 const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
@@ -70,8 +69,6 @@ const FormRoutes = () => {
     totalPackages,
     totalRegistrations,
     totalSeats,
-    usedPackages,
-    usedValidPackages,
     userRole,
   } = useFormState();
 
@@ -149,191 +146,174 @@ const FormRoutes = () => {
 
       <div className="routes">
         <Suspense fallback={<Loading loading />}>
-        <Routes>
-          <Route
-            path={adminPath('')}
-            element={
-              <Login
-                availablePackages={availablePackages}
-                formContext={formContext}
-                spinnerLoading={loading}
-                totalBusVacancies={totalBusVacancies}
-                totalRegistrations={totalRegistrations}
-                totalSeats={totalSeats}
-                totalValidWithBus={totalRegistrations.totalValidWithBus}
-                userRole={userRole}
-              />
-            }
-          />
-          <Route
-            path={adminPath('/acampantes')}
-            element={
-              <ProtectedRoute
-                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
-                userRole={userRole}
-              >
-                <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/carona')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/descontos')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
-                <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/quartos')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/times')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole}>
-                <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/alimentacao')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminExtraMeals />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/checkin')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
-                <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/painel')}
-            element={
-              <ProtectedRoute
-                allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'checker']}
-                userRole={userRole}
-              >
-                <AdminDataPanel
+          <Routes>
+            <Route
+              path={adminPath('')}
+              element={
+                <Login
+                  availablePackages={availablePackages}
                   formContext={formContext}
-                  totalPackages={totalPackages}
-                  usedPackages={usedPackages}
-                  usedValidPackages={usedValidPackages}
+                  spinnerLoading={loading}
+                  totalBusVacancies={totalBusVacancies}
+                  totalRegistrations={totalRegistrations}
+                  totalSeats={totalSeats}
+                  totalValidWithBus={totalRegistrations.totalValidWithBus}
                   userRole={userRole}
                 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/logs')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/vagas')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminSeatManagement
-                  formContext={formContext}
-                  loading={loading}
-                  loggedUsername={loggedUsername}
-                  handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
-                  handleUpdateTotalPackages={handleUpdateTotalPackages}
-                  handleUpdateTotalSeats={handleUpdateTotalSeats}
-                  totalBusVacancies={totalBusVacancies}
-                  totalPackages={totalPackages}
-                  totalSeats={totalSeats}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/lotes')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminLotManagement
-                  formContext={formContext}
-                  loading={loading}
-                  loggedUsername={loggedUsername}
-                  packageCount={packageCount}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/contexto')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/usuarios')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/pulseiras')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/info')}
-            element={
-              <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={adminPath('/opiniao')}
-            element={
-              <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
-                <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/unauthorized"
-            element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
-          />
+              }
+            />
+            <Route
+              path={adminPath('/acampantes')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
+                  userRole={userRole}
+                >
+                  <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/carona')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                  <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/descontos')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
+                  <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/quartos')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                  <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/times')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole}>
+                  <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/alimentacao')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                  <AdminExtraMeals />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/checkin')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
+                  <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/logs')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/vagas')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminSeatManagement
+                    formContext={formContext}
+                    loading={loading}
+                    loggedUsername={loggedUsername}
+                    handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
+                    handleUpdateTotalPackages={handleUpdateTotalPackages}
+                    handleUpdateTotalSeats={handleUpdateTotalSeats}
+                    totalBusVacancies={totalBusVacancies}
+                    totalPackages={totalPackages}
+                    totalSeats={totalSeats}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/lotes')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminLotManagement
+                    formContext={formContext}
+                    loading={loading}
+                    loggedUsername={loggedUsername}
+                    packageCount={packageCount}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/contexto')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/usuarios')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/pulseiras')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/info')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                  <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/opiniao')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                  <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/unauthorized"
+              element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
+            />
 
-          {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
-            <>
-              <Route path="/opiniao" element={<FormFeedback />} />
-              <Route path="/verificacao" element={<CpfReview />} />
-              <Route path="/verificacao/dados" element={<CpfData />} />
-              <Route path="/perguntas" element={<FAQ />} />
-            </>
-          )}
-        </Routes>
+            {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
+              <>
+                <Route path="/opiniao" element={<FormFeedback />} />
+                <Route path="/verificacao" element={<CpfReview />} />
+                <Route path="/verificacao/dados" element={<CpfData />} />
+                <Route path="/perguntas" element={<FAQ />} />
+              </>
+            )}
+          </Routes>
         </Suspense>
       </div>
     </div>

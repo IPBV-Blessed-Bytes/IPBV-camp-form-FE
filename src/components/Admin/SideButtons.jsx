@@ -6,7 +6,7 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Icons from '@/components/Global/Icons';
 import '../Style/SideButtons.scss';
 
-const SideButtons = ({ primaryPermission, secondaryPermission }) => {
+const SideButtons = ({ secondaryPermission }) => {
   const [showSettingsButtons, setShowSettingsButtons] = useState(false);
   const settingsButtonsRef = useRef(null);
   const { formContext } = useContext(AuthContext);
@@ -37,16 +37,6 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
           title="Ferramentas de Administrador"
         >
           <Icons typeIcon="settings" iconSize={45} fill={'#fff'} />
-        </button>
-      )}
-
-      {primaryPermission && (
-        <button
-          className="data-panel-btn"
-          onClick={formContext === 'maintenance' ? () => navigate('/dev/painel') : () => navigate('/admin/painel')}
-          title="Painel de Dados"
-        >
-          <Icons typeIcon="chart" iconSize={45} fill={'#fff'} />
         </button>
       )}
 
@@ -117,7 +107,6 @@ const SideButtons = ({ primaryPermission, secondaryPermission }) => {
 
 SideButtons.propTypes = {
   formContext: PropTypes.string,
-  primaryPermission: PropTypes.bool,
   secondaryPermission: PropTypes.bool,
 };
 

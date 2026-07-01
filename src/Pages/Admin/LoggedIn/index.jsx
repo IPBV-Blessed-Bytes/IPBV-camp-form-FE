@@ -16,6 +16,7 @@ import SessionCard from '@/components/Admin/SessionCard';
 import SideButtons from '@/components/Admin/SideButtons';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import AdminCharts from '@/components/Admin/AdminCharts';
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -47,10 +48,19 @@ const AdminLoggedIn = ({
     feedbackButtonHomePermissions,
     settingsButtonPermissions,
     packagesAndTotalCardsPermissions,
-    dataPanelButtonPermissions,
     utilitiesLinksPermissions,
     checkinPermissions,
+    vacanciesProgressionPermissions,
+    checkinBalancePermissions,
+    filledVacanciesChartPermissions,
+    allInfoChartPermissions,
   } = permissionsSections(userRole);
+
+  const hasChartsPermission =
+    vacanciesProgressionPermissions ||
+    checkinBalancePermissions ||
+    filledVacanciesChartPermissions ||
+    allInfoChartPermissions;
 
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
   const [crewBusUsers, setCrewBusUsers] = useState(0);
@@ -69,10 +79,7 @@ const AdminLoggedIn = ({
       setLoading(true);
 
       try {
-        const [nonPayingChildren, crewBus] = await Promise.all([
-          getNonPayingChildren(),
-          getCrewBus(),
-        ]);
+        const [nonPayingChildren, crewBus] = await Promise.all([getNonPayingChildren(), getCrewBus()]);
 
         setFilteredCountNonPayingChildren(nonPayingChildren?.quantity || 0);
         setCrewBusUsers(crewBus?.quantity || 0);
@@ -287,16 +294,31 @@ const AdminLoggedIn = ({
             <div className="admin-notes">
               <h5 className="admin-notes__title">Notas</h5>
               <ul className="admin-notes__list">
-                <li><strong>Total de Inscritos Geral:</strong> contagem de adultos e crianças</li>
-                <li><strong>Total de Adultos:</strong> contagem de adultos</li>
-                <li><strong>Total de Crianças:</strong> contagem de crianças</li>
-                <li><strong>Total de Inscritos Com Ônibus:</strong> contagem de pessoas válidas que irão de ônibus</li>
+                <li>
+                  <strong>Total de Inscritos Geral:</strong> contagem de adultos e crianças
+                </li>
+                <li>
+                  <strong>Total de Adultos:</strong> contagem de adultos
+                </li>
+                <li>
+                  <strong>Total de Crianças:</strong> contagem de crianças
+                </li>
+                <li>
+                  <strong>Total de Inscritos Com Ônibus:</strong> contagem de pessoas válidas que irão de ônibus
+                </li>
               </ul>
             </div>
           </>
         )}
 
-      <SideButtons primaryPermission={dataPanelButtonPermissions} secondaryPermission={settingsButtonPermissions} />
+        {hasChartsPermission && !spinnerLoading && !loading && (
+          <>
+            <SectionHeader title="Visão geral" />
+            <AdminCharts availablePackages={availablePackages} userRole={userRole} />
+          </>
+        )}
+
+        <SideButtons secondaryPermission={settingsButtonPermissions} />
 
         <Loading loading={spinnerLoading || loading} />
 
