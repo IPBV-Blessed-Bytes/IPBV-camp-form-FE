@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
