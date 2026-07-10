@@ -7,7 +7,6 @@ import { registerLog } from '@/services/logs';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
-import 'react-datepicker/dist/react-datepicker.css';
 import {
   getLotsAuthenticated,
   createLot,
