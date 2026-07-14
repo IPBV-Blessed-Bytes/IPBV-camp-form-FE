@@ -363,7 +363,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
           };
         };
 
-        const formsToSend = formValues.map(buildFormPayload);
+        const formsToSend = formValues.filter(isUserValid).map(buildFormPayload);
         const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
 
         const response = await createCheckout({
