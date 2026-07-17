@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify';
 
 import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE, FORM_CONTEXT_KEY } from '@/config';
-import { isTokenValid } from '@/fetchers/helpers';
+import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
 import { login as loginRequest } from '@/services/auth';
 import { getFormContext } from '@/services/formContext';
 
@@ -83,7 +83,24 @@ const AuthProvider = ({ children }) => {
       toast.success('Usuário logado com sucesso');
     } catch (error) {
       console.error(error.message);
-      toast.error('Erro ao fazer login. Tente novamente.');
+
+      const status = error?.response?.status;
+      const apiMessage = getApiErrorMessage(error);
+      const minutesLeft = error?.response?.data?.minutesLeft;
+
+      let message;
+      if (status === 423) {
+        const base = apiMessage || 'Conta temporariamente bloqueada.';
+        message = minutesLeft
+          ? `${base} Tente novamente em ${minutesLeft} ${minutesLeft === 1 ? 'minuto' : 'minutos'}.`
+          : base;
+      } else if (apiMessage) {
+        message = `${apiMessage} Tente novamente.`;
+      } else {
+        message = 'Erro ao fazer login. Tente novamente.';
+      }
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
