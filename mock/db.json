@@ -1,0 +1,572 @@
+{
+  "products": [
+    {
+      "id": "host-college-collective",
+      "slug": "host-college-collective",
+      "name": "Colégio Quarto Coletivo",
+      "description": "Quartos coletivos, separados por idadeeeeeee",
+      "category": "HOSPEDAGEM",
+      "active": false,
+      "sortOrder": 1
+    },
+    {
+      "id": "host-college-family",
+      "slug": "host-college-family",
+      "name": "Colégio Quarto Família",
+      "description": "Quartos separados para cada família",
+      "category": "HOSPEDAGEM",
+      "active": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "host-college-camping",
+      "slug": "host-college-camping",
+      "name": "Colégio Camping",
+      "description": "Área destinada para quem vai acampar de barraca",
+      "category": "HOSPEDAGEM",
+      "active": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "host-seminario",
+      "slug": "host-seminario",
+      "name": "Seminário",
+      "description": "Quarto do seminário São José",
+      "category": "HOSPEDAGEM",
+      "active": true,
+      "sortOrder": 4
+    },
+    {
+      "id": "host-external",
+      "slug": "host-external",
+      "name": "Externo",
+      "description": "Qualquer hospedagem que não seja colégio ou seminário",
+      "category": "HOSPEDAGEM",
+      "active": true,
+      "sortOrder": 5
+    },
+    {
+      "id": "bus-yes",
+      "slug": "bus-yes",
+      "name": "Com Ônibus",
+      "description": "Ônibus disponibilizado pela igreja",
+      "category": "TRANSPORTE",
+      "active": true,
+      "sortOrder": 6
+    },
+    {
+      "id": "bus-no",
+      "slug": "bus-no",
+      "name": "Sem Ônibus",
+      "description": "Qualquer transporte que não seja no ônibus da igreja",
+      "category": "TRANSPORTE",
+      "active": true,
+      "sortOrder": 7
+    },
+    {
+      "id": "food-complete",
+      "slug": "food-complete",
+      "name": "Alimentação Completa",
+      "description": "Café da manhã, almoço e jantar inclusos",
+      "category": "ALIMENTACAO",
+      "active": true,
+      "sortOrder": 8
+    },
+    {
+      "id": "no-food",
+      "slug": "no-food",
+      "name": "Sem Alimentação",
+      "description": "Sem refeições",
+      "category": "ALIMENTACAO",
+      "active": true,
+      "sortOrder": 9
+    }
+  ],
+  "lotProductPrices": [
+    {
+      "id": 1,
+      "lotId": 1,
+      "productId": "host-seminario",
+      "price": 350,
+      "vacancies": 50
+    },
+    {
+      "id": 2,
+      "lotId": 1,
+      "productId": "host-college-collective",
+      "price": 300,
+      "vacancies": 40
+    },
+    {
+      "id": 3,
+      "lotId": 1,
+      "productId": "host-college-family",
+      "price": 300,
+      "vacancies": 30
+    },
+    {
+      "id": 4,
+      "lotId": 1,
+      "productId": "host-college-camping",
+      "price": 300,
+      "vacancies": 20
+    },
+    {
+      "id": 5,
+      "lotId": 1,
+      "productId": "host-external",
+      "price": 200,
+      "vacancies": 100
+    },
+    {
+      "id": 6,
+      "lotId": 1,
+      "productId": "bus-yes",
+      "price": 150,
+      "vacancies": 45
+    },
+    {
+      "id": 7,
+      "lotId": 1,
+      "productId": "bus-no",
+      "price": 0,
+      "vacancies": null
+    },
+    {
+      "id": 8,
+      "lotId": 1,
+      "productId": "food-complete",
+      "price": 250,
+      "vacancies": null
+    },
+    {
+      "id": 9,
+      "lotId": 1,
+      "productId": "no-food",
+      "price": 0,
+      "vacancies": null
+    },
+    {
+      "id": 10,
+      "lotId": 2,
+      "productId": "host-seminario",
+      "price": 400,
+      "vacancies": 50
+    },
+    {
+      "id": 11,
+      "lotId": 2,
+      "productId": "host-college-collective",
+      "price": 350,
+      "vacancies": 40
+    },
+    {
+      "id": 12,
+      "lotId": 2,
+      "productId": "host-college-family",
+      "price": 350,
+      "vacancies": 30
+    },
+    {
+      "id": 13,
+      "lotId": 2,
+      "productId": "host-college-camping",
+      "price": 350,
+      "vacancies": 20
+    },
+    {
+      "id": 14,
+      "lotId": 2,
+      "productId": "host-external",
+      "price": 250,
+      "vacancies": 100
+    },
+    {
+      "id": 15,
+      "lotId": 2,
+      "productId": "bus-yes",
+      "price": 180,
+      "vacancies": 45
+    },
+    {
+      "id": 16,
+      "lotId": 2,
+      "productId": "bus-no",
+      "price": 0,
+      "vacancies": null
+    },
+    {
+      "id": 17,
+      "lotId": 2,
+      "productId": "food-complete",
+      "price": 300,
+      "vacancies": null
+    },
+    {
+      "id": 18,
+      "lotId": 2,
+      "productId": "no-food",
+      "price": 0,
+      "vacancies": null
+    }
+  ],
+  "lots": [
+    {
+      "id": 1,
+      "name": "1º Lote",
+      "startDate": "01/01/2026",
+      "endDate": "30/06/2026",
+      "price": {
+        "seminary": "350",
+        "school": "300",
+        "otherAccomodation": "200",
+        "registrationFee": "100",
+        "food": "250",
+        "bus": "150"
+      },
+      "vacancies": {
+        "seminary": "50",
+        "schoolIndividual": "40",
+        "schoolCollective": "30",
+        "schoolCamping": "20",
+        "otherAccomodation": "100",
+        "bus": "45"
+      }
+    },
+    {
+      "id": 2,
+      "name": "2º Lote",
+      "startDate": "01/07/2026",
+      "endDate": "31/12/2027",
+      "price": {
+        "seminary": "400",
+        "school": "350",
+        "otherAccomodation": "250",
+        "registrationFee": "120",
+        "food": "300",
+        "bus": "180"
+      },
+      "vacancies": {
+        "seminary": "50",
+        "schoolIndividual": "40",
+        "schoolCollective": "30",
+        "schoolCamping": "20",
+        "otherAccomodation": "100",
+        "bus": "45"
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "u-admin",
+      "userName": "admin@ipbv",
+      "email": "admin@ipbv.com.br",
+      "role": "admin",
+      "enabled": true
+    },
+    {
+      "id": "u-collab",
+      "userName": "colaborador@ipbv",
+      "email": "colab@ipbv.com.br",
+      "role": "collaborator",
+      "enabled": true
+    },
+    {
+      "id": "u-checker",
+      "userName": "checker@ipbv",
+      "email": "checker@ipbv.com.br",
+      "role": "checker",
+      "enabled": true
+    }
+  ],
+  "credentials": [
+    {
+      "id": "u-admin",
+      "login": "admin@ipbv",
+      "password": "admin123"
+    },
+    {
+      "id": "u-collab",
+      "login": "colaborador@ipbv",
+      "password": "colab123"
+    },
+    {
+      "id": "u-checker",
+      "login": "checker@ipbv",
+      "password": "checker123"
+    }
+  ],
+  "roles": [
+    {
+      "id": "admin",
+      "name": "admin",
+      "label": "Administrador",
+      "system": true,
+      "permissions": [
+        "PRODUCTS_READ",
+        "PRODUCTS_WRITE",
+        "USERS_READ",
+        "USERS_WRITE",
+        "ROLES_READ",
+        "ROLES_WRITE",
+        "CHECKIN",
+        "RIDES_MANAGE",
+        "TEAMS_MANAGE",
+        "COUPONS_MANAGE",
+        "REGISTRATIONS_WRITE",
+        "REGISTRATIONS_DELETE",
+        "CHARTS_VIEW",
+        "SETTINGS"
+      ]
+    },
+    {
+      "id": "collaborator",
+      "name": "collaborator",
+      "label": "Colaborador",
+      "system": true,
+      "permissions": [
+        "PRODUCTS_READ",
+        "REGISTRATIONS_WRITE",
+        "REGISTRATIONS_DELETE",
+        "RIDES_MANAGE",
+        "TEAMS_MANAGE",
+        "COUPONS_MANAGE",
+        "CHARTS_VIEW"
+      ]
+    },
+    {
+      "id": "checker",
+      "name": "checker",
+      "label": "Conferente",
+      "system": true,
+      "permissions": [
+        "CHECKIN",
+        "CHARTS_VIEW"
+      ]
+    },
+    {
+      "id": "collaborator-viewer",
+      "name": "collaborator-viewer",
+      "label": "Colaborador (somente leitura)",
+      "system": true,
+      "permissions": [
+        "PRODUCTS_READ",
+        "COUPONS_MANAGE",
+        "CHARTS_VIEW"
+      ]
+    },
+    {
+      "id": "ride-manager",
+      "name": "ride-manager",
+      "label": "Gestor de Caronas",
+      "system": true,
+      "permissions": [
+        "RIDES_MANAGE",
+        "CHARTS_VIEW"
+      ]
+    },
+    {
+      "id": "team-creator",
+      "name": "team-creator",
+      "label": "Criador de Equipes",
+      "system": true,
+      "permissions": [
+        "TEAMS_MANAGE"
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "id": "PRODUCTS_READ",
+      "name": "PRODUCTS_READ",
+      "label": "Ver produtos",
+      "description": "Visualizar catálogo de produtos"
+    },
+    {
+      "id": "PRODUCTS_WRITE",
+      "name": "PRODUCTS_WRITE",
+      "label": "Gerenciar produtos",
+      "description": "Criar, editar e excluir produtos"
+    },
+    {
+      "id": "USERS_READ",
+      "name": "USERS_READ",
+      "label": "Ver usuários",
+      "description": "Listar usuários"
+    },
+    {
+      "id": "USERS_WRITE",
+      "name": "USERS_WRITE",
+      "label": "Gerenciar usuários",
+      "description": "Criar, editar e excluir usuários"
+    },
+    {
+      "id": "ROLES_READ",
+      "name": "ROLES_READ",
+      "label": "Ver papéis",
+      "description": "Listar papéis e permissões"
+    },
+    {
+      "id": "ROLES_WRITE",
+      "name": "ROLES_WRITE",
+      "label": "Gerenciar papéis",
+      "description": "Criar, editar e excluir papéis e permissões"
+    },
+    {
+      "id": "CHECKIN",
+      "name": "CHECKIN",
+      "label": "Check-in",
+      "description": "Realizar check-in de campistas"
+    },
+    {
+      "id": "RIDES_MANAGE",
+      "name": "RIDES_MANAGE",
+      "label": "Caronas",
+      "description": "Gerenciar caronas"
+    },
+    {
+      "id": "TEAMS_MANAGE",
+      "name": "TEAMS_MANAGE",
+      "label": "Equipes",
+      "description": "Gerenciar equipes"
+    },
+    {
+      "id": "COUPONS_MANAGE",
+      "name": "COUPONS_MANAGE",
+      "label": "Cupons/Descontos",
+      "description": "Gerenciar cupons"
+    },
+    {
+      "id": "REGISTRATIONS_WRITE",
+      "name": "REGISTRATIONS_WRITE",
+      "label": "Editar inscrições",
+      "description": "Criar e editar inscrições"
+    },
+    {
+      "id": "REGISTRATIONS_DELETE",
+      "name": "REGISTRATIONS_DELETE",
+      "label": "Excluir inscrições",
+      "description": "Excluir inscrições em massa"
+    },
+    {
+      "id": "CHARTS_VIEW",
+      "name": "CHARTS_VIEW",
+      "label": "Ver gráficos",
+      "description": "Visualizar painéis e gráficos"
+    },
+    {
+      "id": "SETTINGS",
+      "name": "SETTINGS",
+      "label": "Configurações",
+      "description": "Acessar configurações do sistema"
+    }
+  ],
+  "securityTokens": [],
+  "loginAttempts": [
+    {
+      "login": "colaborador@ipbv",
+      "failed": 0,
+      "lockCount": 0,
+      "lockedUntil": null
+    },
+    {
+      "login": "admin@ipbv",
+      "failed": 0,
+      "lockCount": 0,
+      "lockedUntil": null
+    }
+  ],
+  "logs": [
+    {
+      "id": 1,
+      "user": "colaborador@ipbv",
+      "action": "Usuário logou",
+      "timestamp": "2026-07-17T04:09:01.397Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:09:01.464Z"
+    },
+    {
+      "id": 2,
+      "user": "admin@ipbv",
+      "action": "Usuário logou",
+      "timestamp": "2026-07-17T04:29:41.381Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:29:41.951Z"
+    },
+    {
+      "id": 3,
+      "user": "admin",
+      "action": "Criou a data do evento: 17/07/2027",
+      "timestamp": "2026-07-17T04:30:19.519Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:30:19.537Z"
+    },
+    {
+      "id": 4,
+      "user": "colaborador",
+      "action": "Editou produto Colégio Quarto Coletivo",
+      "timestamp": "2026-07-17T04:32:03.586Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:32:03.788Z"
+    },
+    {
+      "id": 5,
+      "user": "admin",
+      "action": "Ajustou a quantidade de vagas totais e por pacote",
+      "timestamp": "2026-07-17T04:34:54.728Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:34:55.067Z"
+    },
+    {
+      "id": 6,
+      "user": "admin",
+      "action": "Ajustou a quantidade de vagas totais do ônibus para 500",
+      "timestamp": "2026-07-17T04:34:59.648Z",
+      "ip": "152.241.61.167",
+      "at": "2026-07-17T04:34:59.653Z"
+    }
+  ],
+  "formContext": {
+    "formContext": "form-on"
+  },
+  "baseDate": {},
+  "homepageInfo": {
+    "top": [],
+    "bottom": []
+  },
+  "packageCount": [],
+  "totalRegistrations": {
+    "total": 0,
+    "totalValidWithBus": 0
+  },
+  "campersPreviousYear": [
+    {
+      "personalInformation": {
+        "name": "Maria Oliveira (ano anterior)",
+        "birthday": "15/05/1990",
+        "cpf": "529.982.247-25",
+        "rg": "1234567",
+        "rgShipper": "SSP",
+        "rgShipperState": "PE",
+        "gender": "Feminino",
+        "legalGuardianCellPhone": "",
+        "legalGuardianCpf": "",
+        "legalGuardianName": ""
+      },
+      "contact": {
+        "cellPhone": "(81) 99999-0000",
+        "email": "maria@exemplo.com",
+        "isWhatsApp": true,
+        "church": "IPBV",
+        "car": false,
+        "numberVacancies": "",
+        "needRide": false,
+        "rideObservation": "",
+        "hasAllergy": false,
+        "allergy": "",
+        "hasAggregate": false,
+        "aggregate": ""
+      }
+    }
+  ]
+}
