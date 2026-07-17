@@ -41,6 +41,7 @@ const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
+const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
 const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
@@ -273,6 +274,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
                   <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/produtos')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                  <AdminProductsManagement formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

@@ -1,0 +1,18 @@
+.admin-subpage--products {
+  .lot-price-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 12px;
+
+    &__name {
+      font-weight: 600;
+      padding-bottom: 6px;
+    }
+  }
+
+  .text-secondary.small {
+    font-size: 0.8rem;
+  }
+}

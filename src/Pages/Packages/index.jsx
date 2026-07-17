@@ -52,22 +52,8 @@ const Packages = () => {
 
           setIndividualBase(registrationFee);
 
-          const updatedWithLotPrices = updatedProducts.map((prod) => {
-            if (prod.category === 'Hospedagem') {
-              if (prod.id === 'host-seminario') return { ...prod, price: foundLot.price.seminary };
-              if (prod.id.startsWith('host-college')) return { ...prod, price: foundLot.price.school };
-              if (prod.id === 'host-external') return { ...prod, price: foundLot.price.otherAccomodation };
-            }
-            if (prod.category === 'Transporte' && prod.id === 'bus-yes') {
-              return { ...prod, price: foundLot.price.bus };
-            }
-            if (prod.category === 'Alimentação' && prod.id.startsWith('food')) {
-              return { ...prod, price: foundLot.price.food };
-            }
-            return prod;
-          });
-
-          setProductsState(updatedWithLotPrices);
+          // Preços já vêm do BE (GET /products, resolvidos pelo lote ativo).
+          setProductsState(updatedProducts);
           setVacancies(foundLot.vacancies);
         }
       } catch (error) {
