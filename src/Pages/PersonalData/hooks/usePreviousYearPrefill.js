@@ -24,9 +24,12 @@ const usePreviousYearPrefill = (formik, { updateForm }) => {
       });
 
       const filtered = {
-        personalInformation: fullUserData.personalInformation,
-        contact: fullUserData.contact,
+        personalInformation: fullUserData?.personalInformation,
+        contact: fullUserData?.contact,
       };
+
+      // Sem dados de pessoa não há o que pré-preencher: não abre o modal.
+      if (!filtered.personalInformation) return null;
 
       setPreviousUserData(filtered);
       return filtered;
