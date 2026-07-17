@@ -67,6 +67,14 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          onClick={formContext === 'maintenance' ? () => navigate('/dev/produtos') : () => navigate('/admin/produtos')}
+        >
+          Controle de Produtos&nbsp;
+          <Icons className="settings-icons" typeIcon="cart" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/usuarios') : () => navigate('/admin/usuarios')}
         >
           Controle de Usuários&nbsp;
