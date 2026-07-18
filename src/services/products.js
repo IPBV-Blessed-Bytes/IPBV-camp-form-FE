@@ -1,13 +1,11 @@
 import fetcher from '@/fetchers';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 
-// Consumo público: produtos ativos já com preço/vaga do lote ativo.
 export const getProducts = async () => {
   const { data } = await fetcher.get('/products');
   return data;
 };
 
-// Admin: catálogo completo (inclui inativos) com preços por lote.
 export const getAllProducts = async () => {
   const { data } = await authFetcher.get('/products/all');
   return data;
@@ -28,7 +26,6 @@ export const deleteProduct = async (id) => {
   return data;
 };
 
-// Define preço + vaga de um produto em um lote específico.
 export const setLotProductPrice = async (lotId, productId, payload) => {
   const { data } = await authFetcher.put(`/lots/${lotId}/products/${productId}`, payload);
   return data;

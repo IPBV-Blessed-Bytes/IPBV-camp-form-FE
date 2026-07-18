@@ -4,13 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
-import {
-  getAllProducts,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  setLotProductPrice,
-} from '@/services/products';
+import { getAllProducts, createProduct, updateProduct, deleteProduct, setLotProductPrice } from '@/services/products';
 import { getLotsAuthenticated } from '@/services/lots';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -126,7 +120,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
         const created = await createProduct(formData);
-        // define preços/vagas por lote no produto recém-criado
+
         if (created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
         }
@@ -212,13 +206,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     {product.description && <div className="text-secondary small">{product.description}</div>}
                   </td>
                   <td>{categoryLabel(product.category)}</td>
-                  <td>
-                    {product.active ? (
-                      <Badge bg="success">Ativo</Badge>
-                    ) : (
-                      <Badge bg="secondary">Inativo</Badge>
-                    )}
-                  </td>
+                  <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
                   <td>
                     {lots.map((lot) => {
                       const row = priceForLot(product, lot.id);

@@ -1,6 +1,5 @@
 import { getProducts } from '@/services/products';
 
-// Mapeia a categoria (enum do BE) para o rótulo usado na UI/carrinho.
 const CATEGORY_LABEL = {
   HOSPEDAGEM: 'Hospedagem',
   TRANSPORTE: 'Transporte',
@@ -9,9 +8,6 @@ const CATEGORY_LABEL = {
 
 export const toCategoryLabel = (category) => CATEGORY_LABEL[category] || category;
 
-// Catálogo carregado do BE. Mantido como variável de módulo por compatibilidade
-// com os consumidores atuais (getDiscountedProducts, FormStateContext) que
-// importam `products` diretamente. É populado por loadProducts().
 export let products = [];
 
 export const loadProducts = async () => {

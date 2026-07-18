@@ -52,7 +52,6 @@ const Packages = () => {
 
           setIndividualBase(registrationFee);
 
-          // Preços já vêm do BE (GET /products, resolvidos pelo lote ativo).
           setProductsState(updatedProducts);
           setVacancies(foundLot.vacancies);
         }
