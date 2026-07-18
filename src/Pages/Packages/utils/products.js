@@ -16,8 +16,9 @@ export const loadProducts = async () => {
     const list = Array.isArray(data?.products) ? data.products : Array.isArray(data) ? data : [];
 
     products = list.map((product) => ({
-      id: product.id,
-      slug: product.slug || product.id,
+      id: product.slug || String(product.id),
+      slug: product.slug || String(product.id),
+      productId: product.id,
       name: product.name,
       price: Number(product.price ?? 0),
       description: product.description,
