@@ -43,6 +43,9 @@ const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
 const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'));
+const ForgotPassword = lazy(() => import('@/Pages/Auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/Pages/Auth/ResetPassword'));
+const Unlock = lazy(() => import('@/Pages/Auth/Unlock'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
 const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
@@ -327,6 +330,10 @@ const FormRoutes = () => {
               path="/unauthorized"
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
+
+            <Route path="/esqueci-senha" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/unlock" element={<Unlock />} />
 
             {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
               <>

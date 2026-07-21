@@ -96,9 +96,9 @@ server.post('/auth/login', (req, res) => {
   const user = db.users.find((u) => u.userName === login);
   const cred = db.credentials.find((c) => c.login === login);
 
-  // bloqueio duro (só libera por e-mail)
+  // bloqueio duro / conta desabilitada (só libera por e-mail) — igual ao BE real: 403
   if (user && user.enabled === false) {
-    return res.status(423).json({ message: 'Conta bloqueada. Use o link enviado ao seu e-mail para desbloquear.', hardLocked: true });
+    return res.status(403).json({ message: 'Account disabled. Please request an unlock link.' });
   }
 
   const ok = cred && cred.password === password;

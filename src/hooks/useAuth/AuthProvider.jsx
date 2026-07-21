@@ -116,10 +116,15 @@ const AuthProvider = ({ children }) => {
 
       let message;
       if (status === 423) {
-        const base = apiMessage || 'Conta temporariamente bloqueada.';
+        const base = 'Conta temporariamente bloqueada.';
         message = minutesLeft
           ? `${base} Tente novamente em ${minutesLeft} ${minutesLeft === 1 ? 'minuto' : 'minutos'}.`
-          : base;
+          : `${base} Tente novamente mais tarde.`;
+      } else if (status === 403) {
+        // Conta desabilitada (bloqueio reincidente): só volta via link por e-mail.
+        message = 'Sua conta foi bloqueada. Solicite o link de desbloqueio pelo seu e-mail cadastrado.';
+      } else if (status === 401) {
+        message = 'Credenciais inválidas. Tente novamente.';
       } else if (apiMessage) {
         message = `${apiMessage} Tente novamente.`;
       } else {

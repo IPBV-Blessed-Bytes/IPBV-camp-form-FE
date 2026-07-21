@@ -16,7 +16,7 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [formData, setFormData] = useState({ userName: '', password: '', role: '' });
+  const [formData, setFormData] = useState({ userName: '', password: '', role: '', email: '' });
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -71,7 +71,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         toast.success('Usuário criado com sucesso');
         registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
       }
-      setFormData({ userName: '', password: '', role: '' });
+      setFormData({ userName: '', password: '', role: '', email: '' });
       setEditingUser(null);
       fetchUsers();
       setShowModal(false);
@@ -98,13 +98,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const handleCreateClick = () => {
-    setFormData({ userName: '', password: '', role: '' });
+    setFormData({ userName: '', password: '', role: '', email: '' });
     setEditingUser(false);
     setShowModal(true);
   };
 
   const handleEditClick = (user) => {
-    setFormData({ userName: user.userName, password: user.password, role: user.role });
+    setFormData({ userName: user.userName, password: user.password, role: user.role, email: user.email || '' });
     setEditingUser(user);
     setShowModal(true);
   };
@@ -168,6 +168,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <thead>
               <tr>
                 <th className="table-cells-header">Usuário:</th>
+                <th className="table-cells-header">E-mail:</th>
                 <th className="table-cells-header">Função:</th>
                 <th className="table-cells-header">Ações:</th>
               </tr>
@@ -178,6 +179,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                   <td>
                     <em>{user.userName}</em>
                   </td>
+                  <td>{user.email || <span className="text-secondary small">—</span>}</td>
                   <td>{translateRole(user.role)}</td>
                   <td>
                     <Button
@@ -237,6 +239,18 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 placeholder="Digite o nome de usuário"
                 value={formData.userName}
                 onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                size="lg"
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail" className="mt-3">
+              <Form.Label>
+                <b>E-mail:</b> <span className="text-secondary small">(usado para recuperar senha)</span>
+              </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="email@exemplo.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 size="lg"
               />
             </Form.Group>

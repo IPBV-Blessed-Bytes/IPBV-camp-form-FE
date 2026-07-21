@@ -13,3 +13,24 @@ export const getMyPermissions = async () => {
   if (Array.isArray(data)) return data;
   return Array.isArray(data?.permissions) ? data.permissions : [];
 };
+
+// Fluxos de segurança do login (endpoints públicos).
+export const forgotPassword = async (email) => {
+  const { data } = await fetcher.post('/auth/forgot-password', { email });
+  return data;
+};
+
+export const resetPassword = async ({ token, newPassword }) => {
+  const { data } = await fetcher.post('/auth/reset-password', { token, newPassword });
+  return data;
+};
+
+export const requestUnlock = async (email) => {
+  const { data } = await fetcher.post('/auth/unlock-request', { email });
+  return data;
+};
+
+export const unlockAccount = async (token) => {
+  const { data } = await fetcher.post('/auth/unlock', { token });
+  return data;
+};
