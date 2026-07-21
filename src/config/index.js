@@ -14,4 +14,6 @@ export const USER_STORAGE_KEY = 'user-data';
 
 export const USER_STORAGE_ROLE = 'user-role';
 
+export const USER_PERMISSIONS_KEY = 'user-permissions';
+
 export const FORM_CONTEXT_KEY = 'formContext';

@@ -42,6 +42,7 @@ const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
+const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
 const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
@@ -169,6 +170,7 @@ const FormRoutes = () => {
                 <ProtectedRoute
                   allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
                   userRole={userRole}
+                  requiredPermission="REGISTRATIONS_READ"
                 >
                   <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
@@ -177,7 +179,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/carona')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="RIDES_MANAGE">
                   <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -185,7 +187,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/descontos')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole} requiredPermission="COUPONS_MANAGE">
                   <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -193,7 +195,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/quartos')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="ROOMS_MANAGE">
                   <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -201,7 +203,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/times')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole} requiredPermission="TEAMS_MANAGE">
                   <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -209,7 +211,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/alimentacao')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="EXTRAMEALS_VIEW">
                   <AdminExtraMeals />
                 </ProtectedRoute>
               }
@@ -217,7 +219,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/checkin')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
                   <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
               }
@@ -225,7 +227,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/logs')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -233,7 +235,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/vagas')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminSeatManagement
                     formContext={formContext}
                     loading={loading}
@@ -251,7 +253,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/lotes')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminLotManagement
                     formContext={formContext}
                     loading={loading}
@@ -264,7 +266,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/contexto')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -272,7 +274,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/usuarios')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="USERS_READ">
                   <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -280,15 +282,27 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/produtos')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="PRODUCTS_WRITE"
+                >
                   <AdminProductsManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/papeis')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="ROLES_READ">
+                  <AdminRolesManagement formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
             <Route
               path={adminPath('/pulseiras')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -296,7 +310,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/info')}
               element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -304,7 +318,7 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/opiniao')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole}>
+                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="FEEDBACK_VIEW">
                   <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }

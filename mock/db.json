@@ -309,13 +309,18 @@
         "USERS_WRITE",
         "ROLES_READ",
         "ROLES_WRITE",
-        "CHECKIN",
-        "RIDES_MANAGE",
-        "TEAMS_MANAGE",
-        "COUPONS_MANAGE",
+        "REGISTRATIONS_READ",
         "REGISTRATIONS_WRITE",
         "REGISTRATIONS_DELETE",
+        "CHECKIN",
+        "RIDES_MANAGE",
+        "ROOMS_MANAGE",
+        "TEAMS_MANAGE",
+        "COUPONS_MANAGE",
+        "FEEDBACK_VIEW",
+        "EXTRAMEALS_VIEW",
         "CHARTS_VIEW",
+        "PANEL_VIEW",
         "SETTINGS"
       ]
     },
@@ -325,13 +330,19 @@
       "label": "Colaborador",
       "system": true,
       "permissions": [
-        "PRODUCTS_READ",
+        "PANEL_VIEW",
+        "CHARTS_VIEW",
+        "REGISTRATIONS_READ",
         "REGISTRATIONS_WRITE",
         "REGISTRATIONS_DELETE",
         "RIDES_MANAGE",
+        "ROOMS_MANAGE",
         "TEAMS_MANAGE",
         "COUPONS_MANAGE",
-        "CHARTS_VIEW"
+        "FEEDBACK_VIEW",
+        "EXTRAMEALS_VIEW",
+        "PRODUCTS_READ",
+        "PRODUCTS_WRITE"
       ]
     },
     {
@@ -340,8 +351,9 @@
       "label": "Conferente",
       "system": true,
       "permissions": [
-        "CHECKIN",
-        "CHARTS_VIEW"
+        "PANEL_VIEW",
+        "CHARTS_VIEW",
+        "CHECKIN"
       ]
     },
     {
@@ -350,9 +362,11 @@
       "label": "Colaborador (somente leitura)",
       "system": true,
       "permissions": [
-        "PRODUCTS_READ",
+        "PANEL_VIEW",
+        "CHARTS_VIEW",
+        "REGISTRATIONS_READ",
         "COUPONS_MANAGE",
-        "CHARTS_VIEW"
+        "PRODUCTS_READ"
       ]
     },
     {
@@ -361,8 +375,10 @@
       "label": "Gestor de Caronas",
       "system": true,
       "permissions": [
-        "RIDES_MANAGE",
-        "CHARTS_VIEW"
+        "PANEL_VIEW",
+        "REGISTRATIONS_READ",
+        "REGISTRATIONS_WRITE",
+        "CHECKIN"
       ]
     },
     {
@@ -371,6 +387,7 @@
       "label": "Criador de Equipes",
       "system": true,
       "permissions": [
+        "REGISTRATIONS_READ",
         "TEAMS_MANAGE"
       ]
     }
@@ -380,152 +397,120 @@
       "id": "PRODUCTS_READ",
       "name": "PRODUCTS_READ",
       "label": "Ver produtos",
-      "description": "Visualizar catálogo de produtos"
+      "description": "Ver produtos"
     },
     {
       "id": "PRODUCTS_WRITE",
       "name": "PRODUCTS_WRITE",
       "label": "Gerenciar produtos",
-      "description": "Criar, editar e excluir produtos"
+      "description": "Gerenciar produtos"
     },
     {
       "id": "USERS_READ",
       "name": "USERS_READ",
       "label": "Ver usuários",
-      "description": "Listar usuários"
+      "description": "Ver usuários"
     },
     {
       "id": "USERS_WRITE",
       "name": "USERS_WRITE",
       "label": "Gerenciar usuários",
-      "description": "Criar, editar e excluir usuários"
+      "description": "Gerenciar usuários"
     },
     {
       "id": "ROLES_READ",
       "name": "ROLES_READ",
       "label": "Ver papéis",
-      "description": "Listar papéis e permissões"
+      "description": "Ver papéis"
     },
     {
       "id": "ROLES_WRITE",
       "name": "ROLES_WRITE",
       "label": "Gerenciar papéis",
-      "description": "Criar, editar e excluir papéis e permissões"
+      "description": "Gerenciar papéis"
     },
     {
-      "id": "CHECKIN",
-      "name": "CHECKIN",
-      "label": "Check-in",
-      "description": "Realizar check-in de campistas"
-    },
-    {
-      "id": "RIDES_MANAGE",
-      "name": "RIDES_MANAGE",
-      "label": "Caronas",
-      "description": "Gerenciar caronas"
-    },
-    {
-      "id": "TEAMS_MANAGE",
-      "name": "TEAMS_MANAGE",
-      "label": "Equipes",
-      "description": "Gerenciar equipes"
-    },
-    {
-      "id": "COUPONS_MANAGE",
-      "name": "COUPONS_MANAGE",
-      "label": "Cupons/Descontos",
-      "description": "Gerenciar cupons"
+      "id": "REGISTRATIONS_READ",
+      "name": "REGISTRATIONS_READ",
+      "label": "Ver inscrições",
+      "description": "Ver inscrições"
     },
     {
       "id": "REGISTRATIONS_WRITE",
       "name": "REGISTRATIONS_WRITE",
       "label": "Editar inscrições",
-      "description": "Criar e editar inscrições"
+      "description": "Editar inscrições"
     },
     {
       "id": "REGISTRATIONS_DELETE",
       "name": "REGISTRATIONS_DELETE",
       "label": "Excluir inscrições",
-      "description": "Excluir inscrições em massa"
+      "description": "Excluir inscrições"
+    },
+    {
+      "id": "CHECKIN",
+      "name": "CHECKIN",
+      "label": "Check-in",
+      "description": "Check-in"
+    },
+    {
+      "id": "RIDES_MANAGE",
+      "name": "RIDES_MANAGE",
+      "label": "Caronas",
+      "description": "Caronas"
+    },
+    {
+      "id": "ROOMS_MANAGE",
+      "name": "ROOMS_MANAGE",
+      "label": "Quartos",
+      "description": "Quartos"
+    },
+    {
+      "id": "TEAMS_MANAGE",
+      "name": "TEAMS_MANAGE",
+      "label": "Equipes",
+      "description": "Equipes"
+    },
+    {
+      "id": "COUPONS_MANAGE",
+      "name": "COUPONS_MANAGE",
+      "label": "Cupons/Descontos",
+      "description": "Cupons/Descontos"
+    },
+    {
+      "id": "FEEDBACK_VIEW",
+      "name": "FEEDBACK_VIEW",
+      "label": "Feedbacks",
+      "description": "Feedbacks"
+    },
+    {
+      "id": "EXTRAMEALS_VIEW",
+      "name": "EXTRAMEALS_VIEW",
+      "label": "Refeições extras",
+      "description": "Refeições extras"
     },
     {
       "id": "CHARTS_VIEW",
       "name": "CHARTS_VIEW",
-      "label": "Ver gráficos",
-      "description": "Visualizar painéis e gráficos"
+      "label": "Gráficos",
+      "description": "Gráficos"
+    },
+    {
+      "id": "PANEL_VIEW",
+      "name": "PANEL_VIEW",
+      "label": "Painel de dados",
+      "description": "Painel de dados"
     },
     {
       "id": "SETTINGS",
       "name": "SETTINGS",
       "label": "Configurações",
-      "description": "Acessar configurações do sistema"
+      "description": "Configurações"
     }
   ],
   "securityTokens": [],
-  "loginAttempts": [
-    {
-      "login": "colaborador@ipbv",
-      "failed": 0,
-      "lockCount": 0,
-      "lockedUntil": null
-    },
-    {
-      "login": "admin@ipbv",
-      "failed": 0,
-      "lockCount": 0,
-      "lockedUntil": null
-    }
-  ],
-  "logs": [
-    {
-      "id": 1,
-      "user": "colaborador@ipbv",
-      "action": "Usuário logou",
-      "timestamp": "2026-07-17T04:09:01.397Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:09:01.464Z"
-    },
-    {
-      "id": 2,
-      "user": "admin@ipbv",
-      "action": "Usuário logou",
-      "timestamp": "2026-07-17T04:29:41.381Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:29:41.951Z"
-    },
-    {
-      "id": 3,
-      "user": "admin",
-      "action": "Criou a data do evento: 17/07/2027",
-      "timestamp": "2026-07-17T04:30:19.519Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:30:19.537Z"
-    },
-    {
-      "id": 4,
-      "user": "colaborador",
-      "action": "Editou produto Colégio Quarto Coletivo",
-      "timestamp": "2026-07-17T04:32:03.586Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:32:03.788Z"
-    },
-    {
-      "id": 5,
-      "user": "admin",
-      "action": "Ajustou a quantidade de vagas totais e por pacote",
-      "timestamp": "2026-07-17T04:34:54.728Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:34:55.067Z"
-    },
-    {
-      "id": 6,
-      "user": "admin",
-      "action": "Ajustou a quantidade de vagas totais do ônibus para 500",
-      "timestamp": "2026-07-17T04:34:59.648Z",
-      "ip": "152.241.61.167",
-      "at": "2026-07-17T04:34:59.653Z"
-    }
-  ],
+  "loginAttempts": [],
+  "logs": [],
   "formContext": {
     "formContext": "form-on"
   },

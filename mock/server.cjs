@@ -187,30 +187,38 @@ server.post('/auth/unlock', (req, res) => {
 // =========================================================
 // PERMISSÕES (RBAC dinâmico)
 // =========================================================
+// Igual ao BE real: array puro de strings de permissão.
 server.get('/auth/me/permissions', (req, res) => {
   const payload = decodeToken(req);
   if (!payload) return res.status(401).json({ message: 'Não autenticado.' });
   const role = db.roles.find((r) => r.name === payload.role);
-  return res.json({ role: payload.role, permissions: role ? role.permissions : [] });
+  return res.json(role ? role.permissions : []);
 });
 
-server.get('/roles', (_req, res) => res.json(db.roles));
+// Internamente guardamos permissions como nomes (strings); na saída resolvemos
+// para objetos, igual ao BE real. Na escrita aceitamos objetos OU strings.
+const permNames = (arr) => (Array.isArray(arr) ? arr.map((p) => (typeof p === 'string' ? p : p.name || p.id)) : []);
+const permObjects = (names) =>
+  (names || []).map((n) => db.permissions.find((p) => p.name === n) || { id: n, name: n, label: n, description: '' });
+const roleOut = (role) => ({ ...role, permissions: permObjects(role.permissions) });
+
+server.get('/roles', (_req, res) => res.json(db.roles.map(roleOut)));
 server.post('/roles', (req, res) => {
   const { name, label, permissions = [] } = req.body || {};
   const id = genId(name);
   if (db.roles.some((r) => r.id === id)) return res.status(400).json({ message: 'Papel já existe.' });
-  const role = { id, name: name || id, label: label || name, system: false, permissions };
+  const role = { id, name: name || id, label: label || name, system: false, permissions: permNames(permissions) };
   db.roles.push(role); save();
-  return res.json(role);
+  return res.json(roleOut(role));
 });
 server.patch('/roles/:id', (req, res) => {
   const role = db.roles.find((r) => r.id === req.params.id);
   if (!role) return res.status(404).json({ message: 'Papel não encontrado.' });
   const { label, permissions } = req.body || {};
   if (label !== undefined) role.label = label;
-  if (permissions !== undefined) role.permissions = permissions;
+  if (permissions !== undefined) role.permissions = permNames(permissions);
   save();
-  return res.json(role);
+  return res.json(roleOut(role));
 });
 server.delete('/roles/:id', (req, res) => {
   const role = db.roles.find((r) => r.id === req.params.id);

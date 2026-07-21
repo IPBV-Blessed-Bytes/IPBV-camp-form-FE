@@ -83,6 +83,14 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          onClick={formContext === 'maintenance' ? () => navigate('/dev/papeis') : () => navigate('/admin/papeis')}
+        >
+          Papéis e Permissões&nbsp;
+          <Icons className="settings-icons" typeIcon="roles" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={
             formContext === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
           }

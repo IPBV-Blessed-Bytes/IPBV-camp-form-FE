@@ -1,10 +1,27 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { JWT_LOCAL_STORAGE_KEY, USER_STORAGE_KEY, USER_STORAGE_ROLE, FORM_CONTEXT_KEY } from '@/config';
+import {
+  JWT_LOCAL_STORAGE_KEY,
+  USER_STORAGE_KEY,
+  USER_STORAGE_ROLE,
+  USER_PERMISSIONS_KEY,
+  FORM_CONTEXT_KEY,
+} from '@/config';
 import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
-import { login as loginRequest } from '@/services/auth';
+import { login as loginRequest, getMyPermissions } from '@/services/auth';
 import { getFormContext } from '@/services/formContext';
+
+// Busca as permissões do usuário logado no BE e guarda no localStorage,
+// de onde o gating de UI (fetchers/permissions.js) lê de forma síncrona.
+const loadPermissions = async () => {
+  try {
+    const permissions = await getMyPermissions();
+    localStorage.setItem(USER_PERMISSIONS_KEY, JSON.stringify(permissions));
+  } catch (error) {
+    console.error('[AuthProvider] erro ao buscar permissões', error);
+  }
+};
 
 export const AuthContext = createContext({
   user: {},
@@ -68,6 +85,13 @@ const AuthProvider = ({ children }) => {
     fetchFormContext();
   }, []);
 
+  // Ao recarregar já logado, revalida as permissões vindas do BE.
+  useEffect(() => {
+    if (isLoggedIn) {
+      loadPermissions();
+    }
+  }, [isLoggedIn]);
+
   const login = useCallback(async (userName, passWord) => {
     setLoading(true);
     try {
@@ -79,6 +103,8 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem(JWT_LOCAL_STORAGE_KEY, data.token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
       localStorage.setItem(USER_STORAGE_ROLE, data.role);
+
+      await loadPermissions();
 
       toast.success('Usuário logado com sucesso');
     } catch (error) {
@@ -110,6 +136,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_ROLE);
+    localStorage.removeItem(USER_PERMISSIONS_KEY);
     sessionStorage.removeItem(FORM_CONTEXT_KEY);
 
     setIsLoggedIn(false);
