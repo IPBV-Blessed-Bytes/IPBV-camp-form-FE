@@ -6,7 +6,7 @@ import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts'
 import Icons from '@/components/Global/Icons';
 import '../Style/ProductList.scss';
 
-const ProductList = forwardRef(({ age, cartKey, category, products, packageCount, vacancies }, ref) => {
+const ProductList = forwardRef(({ age, cartKey, category, products, packageCount }, ref) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [productsState, setProductsState] = useState(products || []);
   const hasRestoredCart = useRef(false);
@@ -40,59 +40,15 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     }
   }, [items]);
 
-  const getAvailability = (product, vacancies, usedValidPackages) => {
+  // Disponibilidade dirigida pelo BE: `product.vacancies` é o total do lote ativo
+  // (null = ilimitado) e o consumo vem do packageCount por slug do produto
+  // (mesma chave usada no painel admin). Sem `id` hardcoded.
+  const getAvailability = (product, usedValidPackages) => {
     if (age < 9) return true;
+    if (product.vacancies === null || product.vacancies === undefined) return true;
 
-    const getUsedCount = (matcher) => {
-      return Object.entries(usedValidPackages || {}).reduce((acc, [key, value]) => {
-        if (key.toLowerCase().includes(matcher.toLowerCase())) {
-          return acc + Number(value || 0);
-        }
-        return acc;
-      }, 0);
-    };
-
-    if (product.id === 'bus-yes') {
-      const totalBus = Number(vacancies?.bus || 0);
-      const usedBus = getUsedCount('withBus');
-      return totalBus > usedBus;
-    }
-
-    if (product.id === 'host-seminario') {
-      const total = Number(vacancies?.seminary || 0);
-      const used = getUsedCount('seminary');
-      return total > used;
-    }
-
-    if (product.id === 'host-college-collective') {
-      const total = Number(vacancies?.schoolIndividual || 0);
-      const used = getUsedCount('school');
-      return total > used;
-    }
-
-    if (product.id === 'host-college-family') {
-      const total = Number(vacancies?.schoolCollective || 0);
-      const used = getUsedCount('school');
-      return total > used;
-    }
-
-    if (product.id === 'host-college-camping') {
-      const total = Number(vacancies?.schoolCamping || 0);
-      const used = getUsedCount('school');
-      return total > used;
-    }
-
-    if (product.id === 'host-external') {
-      const total = Number(vacancies?.otherAccomodation || 0);
-      const used = getUsedCount('other');
-      return total > used;
-    }
-
-    if (product.category === 'Alimentação') {
-      return true;
-    }
-
-    return true;
+    const used = Number(usedValidPackages?.[product.id] || 0);
+    return Number(product.vacancies) > used;
   };
 
   const checkRequiredPackages = () => {
@@ -139,7 +95,7 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
         <div className="product-grid">
           {filtered.map((product) => {
             const alreadySelected = !!getItem(product.id);
-            const isAvailable = getAvailability(product, vacancies, packageCount?.usedValidPackages);
+            const isAvailable = getAvailability(product, packageCount?.usedValidPackages);
 
             return (
               <div
@@ -184,7 +140,6 @@ ProductList.propTypes = {
   category: PropTypes.string.isRequired,
   packageCount: PropTypes.object,
   products: PropTypes.array.isRequired,
-  vacancies: PropTypes.object,
 };
 
 export default ProductList;

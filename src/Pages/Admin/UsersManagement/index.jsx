@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
 import { listUsers, createUser, updateUser, deleteUser } from '@/services/users';
+import { getRoles } from '@/services/roles';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -21,6 +22,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [roles, setRoles] = useState([]);
 
   scrollUp();
 
@@ -114,27 +116,21 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setShowDeleteModal(true);
   };
 
-  const translateRole = (role) => {
-    switch (role) {
-      case 'admin':
-        return 'Admin';
-      case 'collaborator':
-        return 'Colaborador';
-      case 'collaborator-viewer':
-        return 'Colaborador Visualizador';
-      case 'checker':
-        return 'Checker';
-      case 'ride-manager':
-        return 'Gerenciador Coringa';
-      case 'team-creator':
-        return 'Criador de Times';
-      default:
-        return role;
+  // Rótulo do papel a partir dos papéis vindos do BE (fallback: o próprio nome).
+  const translateRole = (role) => roles.find((r) => r.name === role)?.label || role;
+
+  const fetchRoles = async () => {
+    try {
+      const data = await getRoles();
+      setRoles(Array.isArray(data) ? data : []);
+    } catch (error) {
+      // silencioso: sem papéis o select fica vazio, mas a tela ainda abre
     }
   };
 
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
 
   const toolsButtons = [
@@ -284,12 +280,11 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                <option value="admin">Admin</option>
-                <option value="collaborator">Colaborador</option>
-                <option value="collaborator-viewer">Colaborador Visualizador</option>
-                <option value="checker">Checker</option>
-                <option value="ride-manager">Gerenciador Coringa</option>
-                <option value="team-creator">Criador de Times</option>
+                {roles.map((role) => (
+                  <option key={role.id || role.name} value={role.name}>
+                    {role.label || role.name}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
           </Form>

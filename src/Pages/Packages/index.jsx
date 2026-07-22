@@ -34,7 +34,6 @@ const Packages = () => {
   const [individualBase, setIndividualBase] = useState(0);
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
-  const [vacancies, setVacancies] = useState({});
   const [activeLot, setActiveLot] = useState(null);
 
   useEffect(() => {
@@ -53,7 +52,6 @@ const Packages = () => {
           setIndividualBase(registrationFee);
 
           setProductsState(updatedProducts);
-          setVacancies(foundLot.vacancies);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
@@ -200,9 +198,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                     category="Hospedagem"
                     products={productsState}
                     ref={productListRef}
-                    packageCount={packageCount}
-                    vacancies={vacancies}
-                  />
+                    packageCount={packageCount}                  />
                 </Card.Body>
               </Card>
 
@@ -222,9 +218,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                     category="Transporte"
                     products={productsState}
                     ref={productListRef}
-                    packageCount={packageCount}
-                    vacancies={vacancies}
-                  />
+                    packageCount={packageCount}                  />
                 </Card.Body>
               </Card>
 
@@ -245,9 +239,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                     category="Alimentação"
                     products={productsState}
                     ref={productListRef}
-                    packageCount={packageCount}
-                    vacancies={vacancies}
-                  />
+                    packageCount={packageCount}                  />
                 </Card.Body>
               </Card>
             </>
