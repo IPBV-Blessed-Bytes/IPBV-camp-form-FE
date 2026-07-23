@@ -7,9 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "mock": "node mock/server.cjs",
-    "dev:mock": "concurrently -n MOCK,FE -c magenta,cyan \"npm:mock\" \"vite --mode mock\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
@@ -52,7 +50,6 @@
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "concurrently": "^9.1.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -63,7 +60,6 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-vitest": "^0.5.4",
     "jsdom": "^25.0.0",
-    "json-server": "^0.17.4",
     "prettier": "^3.0.1",
     "vite": "^5.4.6",
     "vite-plugin-eslint": "^1.8.1"
