@@ -29,7 +29,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [products, setProducts] = useState([]);
   const [lots, setLots] = useState([]);
   const [formData, setFormData] = useState(emptyForm);
-  const [lotPrices, setLotPrices] = useState({}); // { [lotId]: { price, vacancies } }
+  const [lotPrices, setLotPrices] = useState({});
   const [editingProduct, setEditingProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

@@ -116,7 +116,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setShowDeleteModal(true);
   };
 
-  // Rótulo do papel a partir dos papéis vindos do BE (fallback: o próprio nome).
   const translateRole = (role) => roles.find((r) => r.name === role)?.label || role;
 
   const fetchRoles = async () => {
@@ -124,7 +123,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       const data = await getRoles();
       setRoles(Array.isArray(data) ? data : []);
     } catch (error) {
-      // silencioso: sem papéis o select fica vazio, mas a tela ainda abre
     }
   };
 

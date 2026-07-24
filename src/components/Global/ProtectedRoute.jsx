@@ -13,10 +13,6 @@ const getStoredPermissions = () => {
   }
 };
 
-// Gating de rota por permissão do BE. Quando `requiredPermission` é informado,
-// a decisão vem das permissões do usuário (GET /auth/me/permissions). Enquanto
-// a lista não carrega, cai no fallback por papel (`allowedRoles`) para não
-// bloquear indevidamente um usuário válido (ex.: primeiro render/refresh).
 const ProtectedRoute = ({ userRole, allowedRoles, requiredPermission, children }) => {
   const storedPermissions = getStoredPermissions();
 

@@ -40,9 +40,6 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     }
   }, [items]);
 
-  // Disponibilidade dirigida pelo BE: `product.vacancies` é o total do lote ativo
-  // (null = ilimitado) e o consumo vem do packageCount por slug do produto
-  // (mesma chave usada no painel admin). Sem `id` hardcoded.
   const getAvailability = (product, usedValidPackages) => {
     if (age < 9) return true;
     if (product.vacancies === null || product.vacancies === undefined) return true;

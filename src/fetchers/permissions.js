@@ -1,7 +1,5 @@
 import { USER_PERMISSIONS_KEY } from '@/config';
 
-// Papéis (mantidos apenas para o fallback legado quando a lista de permissões
-// do BE ainda não estiver disponível — ex.: primeiro render antes do fetch).
 const ADMIN = 'admin';
 const COLLABORATOR = 'collaborator';
 const COLLABORATOR_VIEWER = 'collaborator-viewer';
@@ -9,7 +7,6 @@ const CHECKER = 'checker';
 const JOKER_MANAGER = 'ride-manager';
 const TEAM_CREATOR = 'team-creator';
 
-// Cada "contexto" de UI passa a exigir uma permissão do BE.
 const CONTEXT_PERMISSION = {
   'settings-button-home': 'SETTINGS',
   'data-panel-button-home': 'PANEL_VIEW',
@@ -43,8 +40,6 @@ const getStoredPermissions = () => {
   }
 };
 
-// Fallback legado (mapa papel→contexto), usado só quando a lista de permissões
-// do BE ainda não foi carregada. Some assim que /auth/me/permissions responde.
 const legacyPermission = (userRole, context) => {
   const map = {
     'settings-button-home': userRole === ADMIN,
@@ -84,13 +79,11 @@ const legacyPermission = (userRole, context) => {
 export const permissions = (userRole, context) => {
   const stored = getStoredPermissions();
 
-  // Fonte de verdade: permissões vindas do BE (GET /auth/me/permissions).
   if (stored) {
     const required = CONTEXT_PERMISSION[context];
     return required ? stored.includes(required) : false;
   }
 
-  // Enquanto a lista não chega, cai no comportamento legado por papel.
   return legacyPermission(userRole, context);
 };
 

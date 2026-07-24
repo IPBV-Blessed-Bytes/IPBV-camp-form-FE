@@ -1,6 +1,5 @@
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 
-// Papéis (com suas permissões) e catálogo de permissões — RBAC dinâmico do BE.
 export const getRoles = async () => {
   const { data } = await authFetcher.get('/roles');
   return data;

@@ -12,7 +12,7 @@ const Unlock = () => {
   const token = searchParams.get('token');
 
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null); // 'ok' | 'error'
+  const [status, setStatus] = useState(null);
 
   const handleUnlock = async () => {
     if (!token) {

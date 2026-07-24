@@ -21,7 +21,6 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       await forgotPassword(email);
-      // Resposta neutra: não revela se o e-mail existe.
       setSent(true);
       toast.success('Se o e-mail estiver cadastrado, enviaremos um link de redefinição.');
     } catch (error) {

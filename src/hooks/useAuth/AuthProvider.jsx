@@ -12,8 +12,6 @@ import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
 import { login as loginRequest, getMyPermissions } from '@/services/auth';
 import { getFormContext } from '@/services/formContext';
 
-// Busca as permissões do usuário logado no BE e guarda no localStorage,
-// de onde o gating de UI (fetchers/permissions.js) lê de forma síncrona.
 const loadPermissions = async () => {
   try {
     const permissions = await getMyPermissions();
@@ -85,7 +83,6 @@ const AuthProvider = ({ children }) => {
     fetchFormContext();
   }, []);
 
-  // Ao recarregar já logado, revalida as permissões vindas do BE.
   useEffect(() => {
     if (isLoggedIn) {
       loadPermissions();
@@ -121,7 +118,6 @@ const AuthProvider = ({ children }) => {
           ? `${base} Tente novamente em ${minutesLeft} ${minutesLeft === 1 ? 'minuto' : 'minutos'}.`
           : `${base} Tente novamente mais tarde.`;
       } else if (status === 403) {
-        // Conta desabilitada (bloqueio reincidente): só volta via link por e-mail.
         message = 'Sua conta foi bloqueada. Solicite o link de desbloqueio pelo seu e-mail cadastrado.';
       } else if (status === 401) {
         message = 'Credenciais inválidas. Tente novamente.';
