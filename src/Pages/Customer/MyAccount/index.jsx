@@ -1,56 +1,113 @@
 import { useEffect, useState } from 'react';
-import { Container, Card, Button, Table, Badge, Spinner } from 'react-bootstrap';
+import { Container, Card, Button, Table, Badge, Spinner, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useAuth from '@/hooks/useAuth';
-import { getMyRegistrations } from '@/services/me';
+import {
+  getMyRegistrations,
+  getMyRegistration,
+  createChangeRequest,
+  getMyChangeRequests,
+} from '@/services/me';
 
-const STATUS = {
+const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
   PENDING_PAYMENT: { label: 'Aguardando pagamento', bg: 'warning' },
+};
+
+const REQ_STATUS = {
+  PENDING: { label: 'Pendente', bg: 'warning' },
+  APPROVED: { label: 'Aprovada', bg: 'success' },
+  REJECTED: { label: 'Rejeitada', bg: 'danger' },
 };
 
 const MyAccount = () => {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
   const [registrations, setRegistrations] = useState([]);
+  const [changeRequests, setChangeRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [showEdit, setShowEdit] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [regs, reqs] = await Promise.all([getMyRegistrations(), getMyChangeRequests()]);
+      setRegistrations(regs);
+      setChangeRequests(reqs);
+    } catch (error) {
+      toast.error('Não foi possível carregar seus dados.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('/entrar');
       return;
     }
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        setRegistrations(await getMyRegistrations());
-      } catch (error) {
-        toast.error('Não foi possível carregar suas inscrições.');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [isLoggedIn, navigate]);
 
+  const handleEditClick = async (registrationId) => {
+    try {
+      const data = await getMyRegistration(registrationId);
+      setEditData(data);
+      setShowEdit(true);
+    } catch (error) {
+      toast.error('Não foi possível carregar os dados da inscrição.');
+    }
+  };
+
+  const setPersonal = (field, value) =>
+    setEditData((d) => ({ ...d, personalInformation: { ...d.personalInformation, [field]: value } }));
+
+  const setContact = (field, value) =>
+    setEditData((d) => ({ ...d, contact: { ...d.contact, [field]: value } }));
+
+  const handleSubmitChange = async () => {
+    setSaving(true);
+    try {
+      await createChangeRequest(editData.id, editData);
+      toast.success('Solicitação de alteração enviada para aprovação.');
+      setShowEdit(false);
+      setEditData(null);
+      fetchData();
+    } catch (error) {
+      toast.error('Não foi possível enviar a solicitação.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const personal = editData?.personalInformation || {};
+  const contact = editData?.contact || {};
+
   return (
-    <Container style={{ maxWidth: 900 }} className="py-4">
+    <Container style={{ maxWidth: 960 }} className="py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h4 className="mb-0">Minha conta</h4>
           <span className="text-secondary small">{user}</span>
         </div>
-        <Button variant="outline-secondary" onClick={logout}>
-          Sair
-        </Button>
+        <div className="d-flex gap-2">
+          <Button variant="primary" onClick={() => navigate('/')}>
+            Nova inscrição
+          </Button>
+          <Button variant="outline-secondary" onClick={logout}>
+            Sair
+          </Button>
+        </div>
       </div>
 
-      <Card className="shadow-sm">
+      <Card className="shadow-sm mb-4">
         <Card.Body>
           <Card.Title className="mb-3">Minhas inscrições</Card.Title>
-
           {loading ? (
             <div className="d-flex align-items-center gap-2 text-secondary">
               <Spinner animation="border" size="sm" /> Carregando...
@@ -73,11 +130,12 @@ const MyAccount = () => {
                   <th>Alimentação</th>
                   <th>Valor</th>
                   <th>Status</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {registrations.map((r) => {
-                  const status = STATUS[r.status] || { label: r.status, bg: 'secondary' };
+                  const status = REG_STATUS[r.status] || { label: r.status, bg: 'secondary' };
                   return (
                     <tr key={`${r.status}-${r.id}`}>
                       <td>{r.name || <span className="text-secondary">—</span>}</td>
@@ -89,6 +147,15 @@ const MyAccount = () => {
                       <td>
                         <Badge bg={status.bg}>{status.label}</Badge>
                       </td>
+                      <td>
+                        {r.status === 'CONFIRMED' ? (
+                          <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
+                            Solicitar alteração
+                          </Button>
+                        ) : (
+                          <span className="text-secondary small">—</span>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}
@@ -97,6 +164,88 @@ const MyAccount = () => {
           )}
         </Card.Body>
       </Card>
+
+      <Card className="shadow-sm">
+        <Card.Body>
+          <Card.Title className="mb-3">Minhas solicitações de alteração</Card.Title>
+          {changeRequests.length === 0 ? (
+            <p className="text-secondary mb-0">Nenhuma solicitação enviada.</p>
+          ) : (
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Campista</th>
+                  <th>Enviada em</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {changeRequests.map((cr) => {
+                  const status = REQ_STATUS[cr.status] || { label: cr.status, bg: 'secondary' };
+                  return (
+                    <tr key={cr.id}>
+                      <td>{cr.camperName || `#${cr.camperId}`}</td>
+                      <td>{cr.createdAt ? new Date(cr.createdAt).toLocaleString('pt-BR') : '—'}</td>
+                      <td>
+                        <Badge bg={status.bg}>{status.label}</Badge>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          )}
+        </Card.Body>
+      </Card>
+
+      <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Solicitar alteração</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-secondary small">
+            As alterações passam por aprovação de um administrador antes de serem aplicadas.
+          </p>
+          <Form>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">Nome</Form.Label>
+              <Form.Control value={personal.name || ''} onChange={(e) => setPersonal('name', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">RG</Form.Label>
+              <Form.Control value={personal.rg || ''} onChange={(e) => setPersonal('rg', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">Gênero</Form.Label>
+              <Form.Control value={personal.gender || ''} onChange={(e) => setPersonal('gender', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">Celular</Form.Label>
+              <Form.Control value={contact.cellPhone || ''} onChange={(e) => setContact('cellPhone', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">E-mail</Form.Label>
+              <Form.Control value={contact.email || ''} onChange={(e) => setContact('email', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">Igreja</Form.Label>
+              <Form.Control value={contact.church || ''} onChange={(e) => setContact('church', e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label className="small fw-bold">Alergia</Form.Label>
+              <Form.Control value={contact.allergy || ''} onChange={(e) => setContact('allergy', e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEdit(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleSubmitChange} disabled={saving}>
+            {saving ? 'Enviando...' : 'Enviar solicitação'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -43,6 +43,7 @@ const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
 const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'));
+const AdminChangeRequests = lazy(() => import('@/Pages/Admin/ChangeRequests'));
 const ForgotPassword = lazy(() => import('@/Pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/Pages/Auth/ResetPassword'));
 const Unlock = lazy(() => import('@/Pages/Auth/Unlock'));
@@ -303,6 +304,18 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="ROLES_READ">
                   <AdminRolesManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/solicitacoes')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="REGISTRATIONS_WRITE"
+                >
+                  <AdminChangeRequests formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

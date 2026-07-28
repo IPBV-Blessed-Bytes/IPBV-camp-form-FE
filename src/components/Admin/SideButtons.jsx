@@ -92,6 +92,16 @@ const SideButtons = ({ secondaryPermission }) => {
         <button
           className="settings-message-button"
           onClick={
+            formContext === 'maintenance' ? () => navigate('/dev/solicitacoes') : () => navigate('/admin/solicitacoes')
+          }
+        >
+          Solicitações de Alteração&nbsp;
+          <Icons className="settings-icons" typeIcon="edit" iconSize={22} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
+          onClick={
             formContext === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
           }
         >
