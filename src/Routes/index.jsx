@@ -46,6 +46,10 @@ const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'))
 const ForgotPassword = lazy(() => import('@/Pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/Pages/Auth/ResetPassword'));
 const Unlock = lazy(() => import('@/Pages/Auth/Unlock'));
+const CustomerSignUp = lazy(() => import('@/Pages/Customer/SignUp'));
+const CustomerLogin = lazy(() => import('@/Pages/Customer/Login'));
+const CustomerConfirmEmail = lazy(() => import('@/Pages/Customer/ConfirmEmail'));
+const CustomerMyAccount = lazy(() => import('@/Pages/Customer/MyAccount'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
 const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
@@ -334,6 +338,11 @@ const FormRoutes = () => {
             <Route path="/esqueci-senha" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/unlock" element={<Unlock />} />
+
+            <Route path="/criar-conta" element={<CustomerSignUp />} />
+            <Route path="/entrar" element={<CustomerLogin />} />
+            <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
+            <Route path="/minha-conta" element={<CustomerMyAccount />} />
 
             {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
               <>

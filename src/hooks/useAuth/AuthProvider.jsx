@@ -117,6 +117,8 @@ const AuthProvider = ({ children }) => {
         message = minutesLeft
           ? `${base} Tente novamente em ${minutesLeft} ${minutesLeft === 1 ? 'minuto' : 'minutos'}.`
           : `${base} Tente novamente mais tarde.`;
+      } else if (status === 403 && error?.response?.data?.emailNotVerified) {
+        message = apiMessage || 'Confirme seu e-mail para acessar sua conta.';
       } else if (status === 403) {
         message = 'Sua conta foi bloqueada. Solicite o link de desbloqueio pelo seu e-mail cadastrado.';
       } else if (status === 401) {

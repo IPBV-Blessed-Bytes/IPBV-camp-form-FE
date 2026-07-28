@@ -31,3 +31,18 @@ export const unlockAccount = async (token) => {
   const { data } = await fetcher.post('/auth/unlock', { token });
   return data;
 };
+
+export const registerGuest = async ({ email, password }) => {
+  const { data } = await fetcher.post('/auth/register', { email, password });
+  return data;
+};
+
+export const confirmEmail = async (token) => {
+  const { data } = await fetcher.post('/auth/confirm-email', { token });
+  return data;
+};
+
+export const resendConfirmation = async (email) => {
+  const { data } = await fetcher.post('/auth/resend-confirmation', { email });
+  return data;
+};

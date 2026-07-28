@@ -9,7 +9,11 @@ const shouldRenderForm = (pathname) => {
     pathname !== '/perguntas' &&
     pathname !== '/esqueci-senha' &&
     pathname !== '/reset-password' &&
-    pathname !== '/unlock'
+    pathname !== '/unlock' &&
+    pathname !== '/criar-conta' &&
+    pathname !== '/entrar' &&
+    pathname !== '/confirmar-email' &&
+    pathname !== '/minha-conta'
   );
 };
 
