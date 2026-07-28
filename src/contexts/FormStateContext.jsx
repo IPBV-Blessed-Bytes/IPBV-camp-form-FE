@@ -303,6 +303,11 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
 
   const sendForm = useCallback(
     async (formikValues) => {
+      if (!isLoggedIn) {
+        toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
+        navigate('/entrar');
+        return;
+      }
       setLoading(true);
       try {
         setStatus('loading');
@@ -382,7 +387,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
         setLoading(false);
       }
     },
-    [basePriceTotal, formValues, handleCheckoutResponse],
+    [basePriceTotal, formValues, handleCheckoutResponse, isLoggedIn, navigate],
   );
 
   const value = useMemo(

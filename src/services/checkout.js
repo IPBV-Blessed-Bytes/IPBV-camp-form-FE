@@ -1,3 +1,3 @@
-import fetcher from '@/fetchers';
+import authFetcher from '@/fetchers/fetcherWithCredentials';
 
-export const createCheckout = (payload) => fetcher.post('/checkout/create', payload);
+export const createCheckout = (payload) => authFetcher.post('/checkout/create', payload);
