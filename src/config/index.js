@@ -4,7 +4,7 @@ export const PROD_URL = 'https://www.blessedbytes-campform.camp';
 
 export const TEST_URL = 'http://3.134.99.201:8080';
 
-export const BASE_URL = import.meta.env?.VITE_API_URL || 'http://3.134.99.201:8080';
+export const BASE_URL = import.meta.env?.VITE_API_URL || PROD_URL;
 
 export const LOGIN_ROUTE = '/admin';
 
