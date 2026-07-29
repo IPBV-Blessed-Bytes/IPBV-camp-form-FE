@@ -82,7 +82,10 @@ const usePreviousYearPrefill = (formik, { updateForm }) => {
     }
 
     try {
-      await deleteUserPreviousYear(previousUserData.personalInformation.cpf);
+      await deleteUserPreviousYear(
+        previousUserData.personalInformation.cpf,
+        previousUserData.personalInformation.birthday,
+      );
 
       toast.success('Usuário removido da base de dados com sucesso.');
       setPreviousUserData(null);

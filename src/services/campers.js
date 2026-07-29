@@ -50,7 +50,9 @@ export const getUserPreviousYear = async ({ cpf, birthday }) => {
   return data;
 };
 
-export const deleteUserPreviousYear = async (cpf) => {
-  const { data } = await fetcher.delete(`/camper/user-previous-year/${cpf}`);
+export const deleteUserPreviousYear = async (cpf, birthday) => {
+  const { data } = await fetcher.delete(`/camper/user-previous-year/${cpf}`, {
+    params: { birthday },
+  });
   return data;
 };
