@@ -12,6 +12,11 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 
+const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
+
+const iconColorProps = (icon) =>
+  STROKE_ICONS.includes(icon) ? { stroke: '#007185', fill: 'none' } : { fill: '#007185' };
+
 const FormHome = ({ onLgpdClose }) => {
   const location = useLocation();
   const { nextStep } = useFormState();
@@ -120,7 +125,7 @@ const FormHome = ({ onLgpdClose }) => {
                   {homepageInfo?.bottom?.map((item) => (
                     <li key={item.id} className="mb-3">
                       <h6 className="d-flex gap-3 align-items-center">
-                        <Icons className="flex-shrink-0" typeIcon={item.icon} iconSize={32} fill="#007185" />
+                        <Icons className="flex-shrink-0" typeIcon={item.icon} iconSize={32} {...iconColorProps(item.icon)} />
                         <span className="info-home-itens d-flex gap-2">
                           <b className="info-home-enphasis">{item.title}:</b>{' '}
                           <span

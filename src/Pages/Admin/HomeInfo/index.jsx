@@ -21,6 +21,11 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
 const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
 
+const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
+
+const iconColorProps = (icon) =>
+  STROKE_ICONS.includes(icon) ? { stroke: '#007185', fill: 'none' } : { fill: '#007185' };
+
 const AdminHomeInfoManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [loadingContent, setLoadingContent] = useState(false);
@@ -455,7 +460,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 <Accordion.Item eventKey={String(index)} key={item.id}>
                   <Accordion.Header>
                     <div className="d-flex align-items-center gap-2">
-                      {item.icon && <Icons typeIcon={item.icon} iconSize={18} />}
+                      {item.icon && <Icons typeIcon={item.icon} iconSize={18} {...iconColorProps(item.icon)} />}
                       <span>{item.title || `Item ${index + 1}`}</span>
                     </div>
                   </Accordion.Header>
@@ -518,7 +523,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                         Remover
                       </Button>
 
-                      <Button variant="outline-teal-blue" size="sm" onClick={() => handleUpdateBottomItem(index)}>
+                      <Button variant="teal-blue" size="sm" onClick={() => handleUpdateBottomItem(index)}>
                         Salvar
                       </Button>
                     </div>
