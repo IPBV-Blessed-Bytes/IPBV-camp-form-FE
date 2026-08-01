@@ -58,6 +58,9 @@ const CustomerLogin = () => {
             <button type="button" className="btn btn-link w-100" onClick={() => navigate('/esqueci-senha')}>
               Esqueci minha senha
             </button>
+            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+              ← Voltar ao formulário
+            </button>
           </Form>
         </Card.Body>
         <Loading loading={loading} />
