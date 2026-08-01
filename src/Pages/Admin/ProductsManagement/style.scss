@@ -1,18 +1,75 @@
 .admin-subpage--products {
-  .lot-price-row {
-    display: grid;
-    grid-template-columns: 1fr 120px 120px;
-    gap: 12px;
-    align-items: end;
-    margin-bottom: 12px;
-
-    &__name {
-      font-weight: 600;
-      padding-bottom: 6px;
-    }
-  }
-
   .text-secondary.small {
     font-size: 0.8rem;
+  }
+
+  .lot-prices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .lot-price-chip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 96px;
+    padding: 6px 10px;
+    border: 1px solid #d9e2e6;
+    border-left: 3px solid #007185;
+    border-radius: 8px;
+    background: #f6fafb;
+    line-height: 1.2;
+
+    &__name {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #6c757d;
+    }
+
+    &__value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #007185;
+    }
+
+    &__vacancies {
+      font-size: 0.72rem;
+      color: #6c757d;
+    }
+  }
+}
+
+.custom-modal {
+  .lot-prices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding: 2px;
+
+    .lot-price-card {
+      border: 1px solid #d9e2e6;
+      border-left: 3px solid #007185;
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #f6fafb;
+
+      &__name {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #33484f;
+      }
+
+      &__fields {
+        display: grid;
+        grid-template-columns: 1fr 84px;
+        gap: 8px;
+        align-items: end;
+      }
+    }
   }
 }

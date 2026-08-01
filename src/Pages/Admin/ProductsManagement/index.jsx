@@ -208,15 +208,20 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   <td>{categoryLabel(product.category)}</td>
                   <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
                   <td>
-                    {lots.map((lot) => {
-                      const row = priceForLot(product, lot.id);
-                      return (
-                        <div key={lot.id} className="small">
-                          {lot.name}: <strong>R$ {row?.price ?? 0}</strong>
-                          {row?.vacancies != null && <span> · {row.vacancies} vagas</span>}
-                        </div>
-                      );
-                    })}
+                    <div className="lot-prices">
+                      {lots.map((lot) => {
+                        const row = priceForLot(product, lot.id);
+                        return (
+                          <div key={lot.id} className="lot-price-chip">
+                            <span className="lot-price-chip__name">{lot.name}</span>
+                            <span className="lot-price-chip__value">R$ {row?.price ?? 0}</span>
+                            {row?.vacancies != null && (
+                              <span className="lot-price-chip__vacancies">{row.vacancies} vagas</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </td>
                   <td>
                     <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(product)}>
@@ -235,6 +240,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         <CustomModal
           show={showModal}
           onHide={() => setShowModal(false)}
+          size="lg"
           variant="confirm"
           icon={editingProduct ? 'edit' : 'plus'}
           iconFill={editingProduct ? '' : '#057c05'}
@@ -312,30 +318,34 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               <b>Preço e vagas por lote</b>
             </h6>
             <p className="text-secondary small">Deixe as vagas em branco para "ilimitado".</p>
-            {lots.map((lot) => (
-              <div key={lot.id} className="lot-price-row">
-                <div className="lot-price-row__name">{lot.name}</div>
-                <Form.Group>
-                  <Form.Label className="small mb-0">Preço (R$)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    value={lotPrices[lot.id]?.price ?? 0}
-                    onChange={(e) => setLotField(lot.id, 'price', e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="small mb-0">Vagas</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    placeholder="ilimitado"
-                    value={lotPrices[lot.id]?.vacancies ?? ''}
-                    onChange={(e) => setLotField(lot.id, 'vacancies', e.target.value)}
-                  />
-                </Form.Group>
-              </div>
-            ))}
+            <div className="lot-prices-grid">
+              {lots.map((lot) => (
+                <div key={lot.id} className="lot-price-card">
+                  <div className="lot-price-card__name">{lot.name}</div>
+                  <div className="lot-price-card__fields">
+                    <Form.Group>
+                      <Form.Label className="small mb-0">Preço (R$)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        value={lotPrices[lot.id]?.price ?? 0}
+                        onChange={(e) => setLotField(lot.id, 'price', e.target.value)}
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label className="small mb-0">Vagas</Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        placeholder="ilimitado"
+                        value={lotPrices[lot.id]?.vacancies ?? ''}
+                        onChange={(e) => setLotField(lot.id, 'vacancies', e.target.value)}
+                      />
+                    </Form.Group>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Form>
         </CustomModal>
 
