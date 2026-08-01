@@ -80,7 +80,7 @@ const AdminChangeRequests = ({ loggedUsername }) => {
         username={loggedUsername}
         title="Solicitações de Alteração"
         subtitle="Aprove ou rejeite alterações solicitadas pelos usuários"
-        typeIcon="edit"
+        typeIcon="refresh"
       />
 
       <div className="admin-subpage__content">
