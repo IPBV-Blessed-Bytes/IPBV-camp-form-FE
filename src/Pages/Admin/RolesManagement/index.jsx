@@ -133,7 +133,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       name: 'Criar Novo Papel',
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
-      typeIcon: 'roles',
+      typeIcon: 'feedback',
     },
   ];
 
@@ -143,7 +143,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
         username={loggedUsername}
         title="Papéis e Permissões"
         subtitle="Crie papéis e defina o que cada um pode acessar"
-        typeIcon="roles"
+        typeIcon="feedback"
       />
 
       <div className="admin-subpage__content">
