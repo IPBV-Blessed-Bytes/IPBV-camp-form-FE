@@ -86,7 +86,7 @@ const SideButtons = ({ secondaryPermission }) => {
           onClick={formContext === 'maintenance' ? () => navigate('/dev/papeis') : () => navigate('/admin/papeis')}
         >
           Papéis e Permissões&nbsp;
-          <Icons className="settings-icons" typeIcon="roles" iconSize={25} fill={'#fff'} />
+          <Icons className="settings-icons" typeIcon="feedback" iconSize={25} fill={'#fff'} />
         </button>
 
         <button
@@ -96,7 +96,7 @@ const SideButtons = ({ secondaryPermission }) => {
           }
         >
           Solicitações de Alteração&nbsp;
-          <Icons className="settings-icons" typeIcon="edit" iconSize={22} fill={'#fff'} />
+          <Icons className="settings-icons" typeIcon="refresh" iconSize={22} fill={'#fff'} />
         </button>
 
         <button
@@ -124,7 +124,7 @@ const SideButtons = ({ secondaryPermission }) => {
           onClick={formContext === 'maintenance' ? () => navigate('/dev/contexto') : () => navigate('/admin/contexto')}
         >
           Contexto do Formulário&nbsp;
-          <Icons className="settings-icons" typeIcon="form-context" iconSize={25} fill={'#fff'} />
+          <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />
         </button>
       </div>
     </>
