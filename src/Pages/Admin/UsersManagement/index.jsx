@@ -40,9 +40,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const validateForm = () => {
-    const { userName, password, role } = formData;
-    if (!userName || !password || !role) {
+    const { userName, password, role, email } = formData;
+    if (!userName || !password || !role || !email) {
       toast.error('Todos os campos são obrigatórios');
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error('Informe um e-mail válido');
       return false;
     }
     return true;
