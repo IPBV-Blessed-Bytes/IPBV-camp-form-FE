@@ -1,0 +1,171 @@
+@use '../../../styles/Variables.scss' as *;
+@use 'sass:color';
+
+.my-account {
+  background: $background-gray;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+
+  &__hero {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin: 0 auto 1.5rem;
+    max-width: 1080px;
+    padding: 1.5rem 2rem 0;
+
+    @media (max-width: $sm) {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    @media (max-width: $md) {
+      padding: 1rem 1rem 0;
+    }
+  }
+
+  &__hero-main {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  &__hero-icon {
+    align-items: center;
+    background: $primary;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-shrink: 0;
+    height: 60px;
+    justify-content: center;
+    width: 60px;
+  }
+
+  &__hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0;
+
+    @media (max-width: $sm) {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__subtitle {
+    color: $alternate-dark-gray;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.5rem;
+
+    @media (max-width: $sm) {
+      width: 100%;
+
+      .btn {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  &__content {
+    margin: 0 auto;
+    max-width: 1080px;
+    padding: 0 2rem;
+
+    @media (max-width: $md) {
+      padding: 0 1rem;
+    }
+  }
+
+  .account-btn-primary {
+    align-items: center;
+    background: $primary;
+    border: none;
+    border-radius: 10px;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 0.5rem;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: color.adjust($primary, $lightness: -6%);
+    }
+  }
+
+  .account-section-header {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+
+    &__title {
+      color: $dark-gray;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    &__count {
+      background: $alternate-light-gray;
+      border-radius: 999px;
+      color: $alternate-dark-gray;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.6rem;
+    }
+
+    &__line {
+      background: $alternate-light-gray;
+      flex: 1;
+      height: 1px;
+    }
+  }
+
+  .account-card {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 1.5rem;
+  }
+
+  .account-table {
+    margin-bottom: 0;
+
+    thead th {
+      background: $primary;
+      border-color: rgba(0, 0, 0, 0.1);
+      color: $white;
+      font-weight: 600;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  .account-empty {
+    color: $alternate-dark-gray;
+    text-align: center;
+    padding: 1rem 0;
+  }
+}

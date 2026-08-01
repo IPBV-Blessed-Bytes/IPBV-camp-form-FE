@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Container, Card, Button, Table, Badge, Spinner, Modal, Form } from 'react-bootstrap';
+import { Button, Table, Badge, Spinner, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import useAuth from '@/hooks/useAuth';
+import Icons from '@/components/Global/Icons';
 import {
   getMyRegistrations,
   getMyRegistration,
@@ -89,14 +91,19 @@ const MyAccount = () => {
   const contact = editData?.contact || {};
 
   return (
-    <Container style={{ maxWidth: 960 }} className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h4 className="mb-0">Minha conta</h4>
-          <span className="text-secondary small">{user}</span>
+    <div className="my-account">
+      <div className="my-account__hero">
+        <div className="my-account__hero-main">
+          <span className="my-account__hero-icon">
+            <Icons typeIcon="person" iconSize={32} fill="#fff" />
+          </span>
+          <div className="my-account__hero-text">
+            <h1 className="my-account__title">Minha conta</h1>
+            <p className="my-account__subtitle">{user}</p>
+          </div>
         </div>
-        <div className="d-flex gap-2">
-          <Button variant="primary" onClick={() => navigate('/')}>
+        <div className="my-account__actions">
+          <Button className="account-btn-primary" onClick={() => navigate('/')}>
             Nova inscrição
           </Button>
           <Button variant="outline-secondary" onClick={logout}>
@@ -105,22 +112,27 @@ const MyAccount = () => {
         </div>
       </div>
 
-      <Card className="shadow-sm mb-4">
-        <Card.Body>
-          <Card.Title className="mb-3">Minhas inscrições</Card.Title>
+      <div className="my-account__content">
+        <div className="account-section-header">
+          <h4 className="account-section-header__title">Minhas inscrições</h4>
+          {!loading && <span className="account-section-header__count">{registrations.length} itens</span>}
+          <div className="account-section-header__line" />
+        </div>
+
+        <div className="account-card">
           {loading ? (
-            <div className="d-flex align-items-center gap-2 text-secondary">
+            <div className="d-flex align-items-center justify-content-center gap-2 text-secondary account-empty">
               <Spinner animation="border" size="sm" /> Carregando...
             </div>
           ) : registrations.length === 0 ? (
-            <div>
-              <p className="text-secondary">Você ainda não tem inscrições.</p>
-              <Button variant="primary" onClick={() => navigate('/')}>
+            <div className="account-empty">
+              <p className="mb-3">Você ainda não tem inscrições.</p>
+              <Button className="account-btn-primary" onClick={() => navigate('/')}>
                 Fazer inscrição
               </Button>
             </div>
           ) : (
-            <Table striped bordered hover responsive>
+            <Table hover responsive className="account-table">
               <thead>
                 <tr>
                   <th>Campista</th>
@@ -162,16 +174,19 @@ const MyAccount = () => {
               </tbody>
             </Table>
           )}
-        </Card.Body>
-      </Card>
+        </div>
 
-      <Card className="shadow-sm">
-        <Card.Body>
-          <Card.Title className="mb-3">Minhas solicitações de alteração</Card.Title>
+        <div className="account-section-header">
+          <h4 className="account-section-header__title">Solicitações de alteração</h4>
+          <span className="account-section-header__count">{changeRequests.length} itens</span>
+          <div className="account-section-header__line" />
+        </div>
+
+        <div className="account-card">
           {changeRequests.length === 0 ? (
-            <p className="text-secondary mb-0">Nenhuma solicitação enviada.</p>
+            <p className="account-empty mb-0">Nenhuma solicitação enviada.</p>
           ) : (
-            <Table striped bordered hover responsive>
+            <Table hover responsive className="account-table">
               <thead>
                 <tr>
                   <th>Campista</th>
@@ -195,8 +210,8 @@ const MyAccount = () => {
               </tbody>
             </Table>
           )}
-        </Card.Body>
-      </Card>
+        </div>
+      </div>
 
       <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
         <Modal.Header closeButton>
@@ -241,12 +256,12 @@ const MyAccount = () => {
           <Button variant="secondary" onClick={() => setShowEdit(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleSubmitChange} disabled={saving}>
+          <Button className="account-btn-primary" onClick={handleSubmitChange} disabled={saving}>
             {saving ? 'Enviando...' : 'Enviar solicitação'}
           </Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </div>
   );
 };
 

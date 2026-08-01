@@ -3,15 +3,18 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import { registerGuest, resendConfirmation } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Loading from '@/components/Global/Loading';
+import Icons from '@/components/Global/Icons';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
 
@@ -57,8 +60,8 @@ const SignUp = () => {
             <div>
               <h4 className="mb-3">Confirme seu e-mail</h4>
               <p>
-                Enviamos um link de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta e
-                poder concluir sua inscrição.
+                Enviamos um link de confirmação para <strong><em>{email}</em></strong>. Clique no link para ativar sua conta e
+                poder concluir sua inscrição. Esse e-mail pode aparecer na caixa de spam.
               </p>
               <Button variant="link" className="px-0" onClick={handleResend}>
                 Reenviar e-mail de confirmação
@@ -66,6 +69,9 @@ const SignUp = () => {
               <Button variant="primary" className="w-100 mt-3" onClick={() => navigate('/entrar')}>
                 Ir para o login
               </Button>
+              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/')}>
+                ← Voltar ao formulário
+              </button>
             </div>
           ) : (
             <>
@@ -84,29 +90,54 @@ const SignUp = () => {
                 </Form.Group>
                 <Form.Group controlId="signupPassword" className="mt-3">
                   <Form.Label className="fw-bold small">Senha</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Mínimo 6 caracteres"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    size="lg"
-                  />
+                  <div className="signup-password-wrapper">
+                    <Form.Control
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Mínimo 6 caracteres"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      size="lg"
+                      className="signup-password-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      className="signup-password-toggle"
+                    >
+                      <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                    </button>
+                  </div>
                 </Form.Group>
                 <Form.Group controlId="signupConfirm" className="mt-3">
                   <Form.Label className="fw-bold small">Confirmar senha</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Repita a senha"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    size="lg"
-                  />
+                  <div className="signup-password-wrapper">
+                    <Form.Control
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Repita a senha"
+                      value={confirm}
+                      onChange={(e) => setConfirm(e.target.value)}
+                      size="lg"
+                      className="signup-password-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      className="signup-password-toggle"
+                    >
+                      <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                    </button>
+                  </div>
                 </Form.Group>
                 <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
                   Criar conta
                 </Button>
                 <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/entrar')}>
                   Já tem conta? Entrar
+                </button>
+                <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+                  ← Voltar ao formulário
                 </button>
               </Form>
             </>
