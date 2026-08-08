@@ -135,6 +135,7 @@ const MyAccount = () => {
             <Table hover responsive className="account-table">
               <thead>
                 <tr>
+                  <th>Nº Pedido</th>
                   <th>Campista</th>
                   <th>CPF</th>
                   <th>Hospedagem</th>
@@ -150,6 +151,7 @@ const MyAccount = () => {
                   const status = REG_STATUS[r.status] || { label: r.status, bg: 'secondary' };
                   return (
                     <tr key={`${r.status}-${r.id}`}>
+                      <td>{r.orderNumber || <span className="text-secondary">—</span>}</td>
                       <td>{r.name || <span className="text-secondary">—</span>}</td>
                       <td>{r.cpf}</td>
                       <td>{r.accomodation}</td>
@@ -163,6 +165,16 @@ const MyAccount = () => {
                         {r.status === 'CONFIRMED' ? (
                           <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
                             Solicitar alteração
+                          </Button>
+                        ) : r.paymentUrl ? (
+                          <Button
+                            size="sm"
+                            className="account-btn-primary"
+                            href={r.paymentUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Pagar
                           </Button>
                         ) : (
                           <span className="text-secondary small">—</span>

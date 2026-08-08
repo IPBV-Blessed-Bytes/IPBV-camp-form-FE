@@ -513,6 +513,13 @@ export const buildCampersColumns = ({
       Cell: renderPipedList,
     },
     {
+      Header: 'Nº do Pedido:',
+      accessor: 'orderNumber',
+      Filter: textFilter,
+      sortType: 'alphanumeric',
+      Cell: renderOrDash,
+    },
+    {
       Header: 'Chave do Pedido:',
       accessor: 'orderId',
       Filter: textFilter,
