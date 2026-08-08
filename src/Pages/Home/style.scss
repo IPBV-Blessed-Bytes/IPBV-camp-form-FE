@@ -1,5 +1,4 @@
 @use '../../styles/Variables.scss' as *;
-@use 'sass:color';
 
 .info-home {
   &-text {
@@ -22,31 +21,5 @@
     p {
       margin: 0;
     }
-  }
-}
-
-.account-access-link {
-  color: $alternate-dark-gray;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-  text-align: right;
-
-  button {
-    background: none;
-    border: none;
-    color: $primary;
-    cursor: pointer;
-    font-weight: 600;
-    padding: 0;
-    text-decoration: underline;
-
-    &:hover,
-    &:focus {
-      color: color.adjust($primary, $lightness: -8%);
-    }
-  }
-
-  @media (max-width: $sm) {
-    text-align: center;
   }
 }

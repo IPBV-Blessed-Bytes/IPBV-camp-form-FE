@@ -70,6 +70,9 @@ const Header = ({ showNavMenu = false }) => {
         </div>
 
         <div className="form__header__right">
+          <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
+            Já tem cadastro? <span>Faça seu login</span>
+          </button>
           {showCartButton && (
             <Button
               className="cart-btn"

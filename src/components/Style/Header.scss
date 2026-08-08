@@ -22,6 +22,31 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .header-login-link {
+    background: none;
+    border: none;
+    color: $white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    padding: 0;
+    text-align: right;
+    white-space: nowrap;
+
+    span {
+      display: block;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    &:hover span {
+      color: $secondary;
+    }
   }
 
   ol {
@@ -85,7 +110,7 @@
   }
 }
 
-@media (max-width: $md) {
+@media (max-width: $xl) {
   .form__header {
     .container {
       flex-direction: column;

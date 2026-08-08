@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
@@ -19,7 +19,6 @@ const iconColorProps = (icon) =>
 
 const FormHome = ({ onLgpdClose }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { nextStep } = useFormState();
   const [showLgpdModal, setShowLgpdModal] = useState(false);
   const [homepageInfo, setHomepageInfo] = useState(null);
@@ -86,12 +85,6 @@ const FormHome = ({ onLgpdClose }) => {
     <>
       <FormStepLayout onNext={nextStep}>
         <Container>
-            <div className="account-access-link">
-              Já tem cadastro?{' '}
-              <button type="button" onClick={() => navigate('/entrar')}>
-                Faça seu login aqui
-              </button>
-            </div>
             <Row className="text-center">
               <Col>
                 <h4 className="mb-3">
