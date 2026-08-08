@@ -89,10 +89,15 @@ const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn]);
 
-  const login = useCallback(async (userName, passWord) => {
+  const login = useCallback(async (userName, passWord, options = {}) => {
     setLoading(true);
     try {
       const data = await loginRequest({ login: userName, password: passWord });
+
+      if (options.area === 'admin' && data.role === 'guest') {
+        toast.error('Esta conta é de cliente. Faça login na área de acompanhamento de inscrições.');
+        return;
+      }
 
       setIsLoggedIn(true);
       setUser(userName);

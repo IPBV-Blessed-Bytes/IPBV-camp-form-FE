@@ -29,7 +29,7 @@ const Login = ({
   scrollUp();
 
   const handleLogin = () => {
-    login(loginData.login, loginData.password);
+    login(loginData.login, loginData.password, { area: 'admin' });
     setLoginData((prevLoginData) => ({ ...prevLoginData, password: '' }));
     setSendLoggedMessage(true);
   };
