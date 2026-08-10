@@ -1,14 +1,14 @@
 @use '../../../styles/Variables.scss' as *;
 
-.signup-password-wrapper {
+.login-password-wrapper {
   position: relative;
 }
 
-.signup-password-input {
+.login-password-input {
   padding-right: 2.75rem;
 }
 
-.signup-password-toggle {
+.login-password-toggle {
   position: absolute;
   right: 10px;
   top: 50%;
