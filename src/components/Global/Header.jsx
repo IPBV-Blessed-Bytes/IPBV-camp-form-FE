@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Button } from 'react-bootstrap';
 
 import { enumSteps } from '@/utils/constants';
+import useAuth from '@/hooks/useAuth';
 import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
 import '../Style/Header.scss';
@@ -16,6 +17,8 @@ const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLoggedIn, user } = useAuth();
+  const displayName = typeof user === 'string' ? user.split('@')[0] : '';
   const formState = useFormState({ optional: true });
   const {
     backStepFlag,
@@ -70,9 +73,15 @@ const Header = ({ showNavMenu = false }) => {
         </div>
 
         <div className="form__header__right">
-          <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
-            Já tem cadastro? <span>Faça seu login</span>
-          </button>
+          {isLoggedIn ? (
+            <button type="button" className="header-login-link" onClick={() => navigate('/minha-conta')}>
+              Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
+            </button>
+          ) : (
+            <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
+              Já tem cadastro? <span>Faça seu login</span>
+            </button>
+          )}
           {showCartButton && (
             <Button
               className="cart-btn"
