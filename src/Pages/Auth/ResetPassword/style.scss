@@ -1,0 +1,21 @@
+@use '../../../styles/Variables.scss' as *;
+
+.reset-password-wrapper {
+  position: relative;
+}
+
+.reset-password-input {
+  padding-right: 2.75rem;
+}
+
+.reset-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+}

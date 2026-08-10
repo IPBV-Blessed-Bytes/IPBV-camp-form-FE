@@ -3,8 +3,10 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import { resetPassword } from '@/services/auth';
 import Loading from '@/components/Global/Loading';
+import Icons from '@/components/Global/Icons';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ const ResetPassword = () => {
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -58,23 +61,45 @@ const ResetPassword = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="newPassword">
                 <Form.Label className="fw-bold small">Nova senha</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Mínimo 6 caracteres"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  size="lg"
-                />
+                <div className="reset-password-wrapper">
+                  <Form.Control
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Mínimo 6 caracteres"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    size="lg"
+                    className="reset-password-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    className="reset-password-toggle"
+                  >
+                    <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                  </button>
+                </div>
               </Form.Group>
               <Form.Group controlId="confirmPassword" className="mt-3">
                 <Form.Label className="fw-bold small">Confirmar nova senha</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Repita a senha"
-                  value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
-                  size="lg"
-                />
+                <div className="reset-password-wrapper">
+                  <Form.Control
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Repita a senha"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    size="lg"
+                    className="reset-password-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    className="reset-password-toggle"
+                  >
+                    <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                  </button>
+                </div>
               </Form.Group>
               <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
                 Redefinir senha
