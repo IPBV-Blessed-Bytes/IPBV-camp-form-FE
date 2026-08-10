@@ -10,6 +10,9 @@ const Unlock = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const isCustomer = searchParams.get('origin') === 'customer';
+  const loginPath = isCustomer ? '/entrar' : '/admin';
+  const forgotPath = isCustomer ? '/esqueci-senha?origin=customer' : '/esqueci-senha';
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
@@ -41,14 +44,14 @@ const Unlock = () => {
           {status === 'ok' ? (
             <div>
               <p className="text-success">Sua conta foi desbloqueada. Você já pode fazer login normalmente.</p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/admin')}>
+              <Button variant="primary" className="w-100" onClick={() => navigate(loginPath)}>
                 Ir para o login
               </Button>
             </div>
           ) : status === 'error' ? (
             <div>
               <p className="text-danger">Link inválido ou expirado.</p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/esqueci-senha')}>
+              <Button variant="primary" className="w-100" onClick={() => navigate(forgotPath)}>
                 Solicitar novo link
               </Button>
             </div>

@@ -12,6 +12,9 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const isCustomer = searchParams.get('origin') === 'customer';
+  const loginPath = isCustomer ? '/entrar' : '/admin';
+  const forgotPath = isCustomer ? '/esqueci-senha?origin=customer' : '/esqueci-senha';
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -36,7 +39,7 @@ const ResetPassword = () => {
     try {
       await resetPassword({ token, newPassword: password });
       toast.success('Senha redefinida com sucesso. Faça login com a nova senha.');
-      navigate('/admin');
+      navigate(loginPath);
     } catch (error) {
       toast.error('Link inválido ou expirado. Solicite um novo em "Esqueci minha senha".');
     } finally {
@@ -53,7 +56,7 @@ const ResetPassword = () => {
           {!token ? (
             <div>
               <p className="text-danger">Link inválido: token ausente.</p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/esqueci-senha')}>
+              <Button variant="primary" className="w-100" onClick={() => navigate(forgotPath)}>
                 Solicitar novo link
               </Button>
             </div>
