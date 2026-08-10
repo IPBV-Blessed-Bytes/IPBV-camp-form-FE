@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { forgotPassword } from '@/services/auth';
@@ -8,6 +8,8 @@ import Loading from '@/components/Global/Loading';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const loginPath = searchParams.get('origin') === 'customer' ? '/entrar' : '/admin';
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -45,7 +47,7 @@ const ForgotPassword = () => {
                 Se o e-mail estiver cadastrado, você receberá um link de redefinição em instantes. Verifique também a
                 caixa de spam.
               </p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/admin')}>
+              <Button variant="primary" className="w-100" onClick={() => navigate(loginPath)}>
                 Voltar ao login
               </Button>
             </div>
@@ -64,7 +66,7 @@ const ForgotPassword = () => {
               <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
                 Enviar link
               </Button>
-              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/admin')}>
+              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate(loginPath)}>
                 ← Voltar ao login
               </button>
             </Form>

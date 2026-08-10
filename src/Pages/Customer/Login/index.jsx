@@ -55,7 +55,7 @@ const CustomerLogin = () => {
             <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/criar-conta')}>
               Não tem conta? Criar conta
             </button>
-            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/esqueci-senha')}>
+            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/esqueci-senha?origin=customer')}>
               Esqueci minha senha
             </button>
             <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
