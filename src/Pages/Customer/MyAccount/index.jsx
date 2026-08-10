@@ -106,6 +106,9 @@ const MyAccount = () => {
           <Button className="account-btn-primary" onClick={() => navigate('/')}>
             Nova inscrição
           </Button>
+          <Button variant="outline-teal-blue" onClick={() => navigate('/')}>
+            Voltar ao formulário
+          </Button>
           <Button variant="outline-secondary" onClick={logout}>
             Sair
           </Button>
