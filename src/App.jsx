@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import { isAdminPath } from './utils/pathname';
+import { isAdminPath, shouldRenderForm } from './utils/pathname';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
 import Skelleton from './components/Global/Skelleton';
+import Loading from './components/Global/Loading';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { initBaseDate } from './Pages/Packages/utils/calculateAge';
 
@@ -25,7 +26,7 @@ function App() {
   const isAppLoading = loading || baseDateLoading;
 
   if (isAppLoading && !adminPathname) {
-    return <Skelleton />;
+    return shouldRenderForm(windowPathname) ? <Skelleton /> : <Loading loading />;
   }
 
   return (
