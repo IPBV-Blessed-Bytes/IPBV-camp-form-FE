@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { listRideOffers } from '@/services/rides';
 import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
 import Header from '@/components/Global/Header';
@@ -28,43 +27,10 @@ const CpfData = () => {
   const paymentMethodLabel = paymentMethodMapping[personData?.formPayment] || 'Não Pagante';
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rideOffers = await listRideOffers();
-
-        const rideOfferVacancies = rideOffers.find((offer) => offer.name === personData?.name);
-
-        if (rideOfferVacancies) {
-          setRideOffer(rideOfferVacancies);
-
-          const relatedNeedRides = rideOfferVacancies.relationship.filter((rider) => rider.type === 'needRide');
-
-          if (relatedNeedRides.length > 0) {
-            setRideNeed(relatedNeedRides.map(({ name, cellPhone }) => ({ name, cellPhone })));
-          } else {
-            setRideNeed([]);
-          }
-        } else {
-          const rideNeedVacancies = rideOffers.find((offer) =>
-            offer.relationship.some((rider) => rider.name === personData?.name && rider.type === 'needRide'),
-          );
-
-          if (rideNeedVacancies) {
-            setRideOffer({ name: rideNeedVacancies.name, cellPhone: rideNeedVacancies.cellPhone });
-            setRideNeed([]);
-          } else {
-            setRideOffer(null);
-            setRideNeed([]);
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao buscar os dados:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    const ride = personData?.ride;
+    setRideNeed(ride?.passengers || []);
+    setRideOffer(ride?.driverName ? { name: ride.driverName, cellPhone: ride.driverCellPhone } : null);
+    setLoading(false);
   }, [personData]);
 
   if (!personData) {
