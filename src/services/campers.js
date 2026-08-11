@@ -35,11 +35,6 @@ export const getPersonData = async (payload) => {
   return data;
 };
 
-export const saveConfirmationUserData = async ({ cpf, authorization }) => {
-  const { data } = await fetcher.post('/camper/confirmationUserData', { cpf, authorization });
-  return data;
-};
-
 export const saveFinalObservation = async ({ cpf, text }) => {
   const { data } = await fetcher.post('/camper/finalObservation', { cpf, text });
   return data;

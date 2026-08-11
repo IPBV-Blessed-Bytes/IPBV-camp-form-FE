@@ -9,7 +9,7 @@ import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import useActiveLot from '@/hooks/useActiveLot';
-import { saveConfirmationUserData, saveFinalObservation } from '@/services/campers';
+import { saveFinalObservation } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getTempData } from '@/utils/formStorage';
 import './style.scss';
@@ -46,18 +46,6 @@ const FinalReview = () => {
 
   const handleAuthorizationChange = (e) => {
     setIsDataAuthorized(e.target.checked);
-    handleAuthorizationSave(e.target.checked);
-  };
-
-  const handleAuthorizationSave = async (authorizationValue) => {
-    try {
-      await saveConfirmationUserData({
-        cpf: formValues.personalInformation.cpf,
-        authorization: authorizationValue,
-      });
-    } catch (error) {
-      console.error('Erro ao salvar confirmação do uso dos dados do usuário:', error);
-    }
   };
 
   const handleSaveUser = async () => {

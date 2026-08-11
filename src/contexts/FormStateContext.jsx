@@ -365,6 +365,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
             totalPrice,
             manualRegistration: false,
             appliedDiscount,
+            authorization: true,
           };
         };
 
