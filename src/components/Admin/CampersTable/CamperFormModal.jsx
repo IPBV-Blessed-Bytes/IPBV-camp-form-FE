@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
 import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormChange';
+import { useProductCatalog } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
 import Columns from './Columns';
 
 const CamperFormModal = ({
@@ -20,8 +21,9 @@ const CamperFormModal = ({
 }) => {
   const [formData, setFormData] = useState(initialData || {});
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const catalog = useProductCatalog();
 
-  const handleChange = useCallback((event) => handleCamperFormChange(event, setFormData), []);
+  const handleChange = useCallback((event) => handleCamperFormChange(event, setFormData, catalog), [catalog]);
 
   const handleSubmit = async () => {
     setFormSubmitted(true);
@@ -58,6 +60,7 @@ const CamperFormModal = ({
           currentDate={currentDate}
           editForm={isEdit}
           addForm={!isEdit}
+          catalog={catalog}
         />
       </Form>
     </CustomModal>

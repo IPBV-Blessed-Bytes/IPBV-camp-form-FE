@@ -13,6 +13,12 @@ const normalizedFoodOptions = food.map((item) => ({
 
 const getNestedValue = (data, path) => path.split('.').reduce((obj, key) => obj?.[key], data);
 
+const CATEGORY_BY_FIELD = {
+  'package.accomodationName': 'HOSPEDAGEM',
+  'package.transportationName': 'TRANSPORTE',
+  'package.foodName': 'ALIMENTACAO',
+};
+
 const FIELDS = [
   {
     label: 'Nome',
@@ -227,7 +233,7 @@ const FIELDS = [
   },
 ];
 
-const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate }) => {
+const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editForm, formSubmitted, currentDate, catalog }) => {
   const source = editForm ? editFormData : addFormData;
 
   return (
@@ -244,6 +250,10 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
           ? getNestedValue(source, field.name)
           : source?.[field.name];
 
+        const category = CATEGORY_BY_FIELD[field.name];
+        const catalogOptions = category ? catalog?.options?.[category] : null;
+        const options = catalogOptions && catalogOptions.length > 0 ? catalogOptions : field.options || [];
+
         return (
           <ColumnsFields
             key={index}
@@ -255,7 +265,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
             placeholder={addForm ? field.placeholder : ''}
             addForm={addForm}
             disabled={field.disabled || false}
-            options={field.options || []}
+            options={options}
             required={field.required}
             errorMessage={field.errorMessage}
             oddOrEven={field.oddOrEven}
@@ -275,6 +285,7 @@ Columns.propTypes = {
   currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   addForm: PropTypes.bool,
   editForm: PropTypes.bool,
+  catalog: PropTypes.object,
 };
 
 export default Columns;

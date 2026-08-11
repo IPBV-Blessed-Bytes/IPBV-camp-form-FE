@@ -14,6 +14,7 @@ import TablePagination from '@/components/Admin/CampersTable/TablePagination';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 
 import useCampersData from './hooks/useCampersData';
+import { useProductCatalog } from './hooks/useProductCatalog';
 import { buildCampersColumns, makeDefaultFilter } from './utils/buildColumns';
 import { filterTypes } from './utils/tableFilters';
 import { exportCampersToExcel } from './utils/exportExcel';
@@ -43,6 +44,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     deleteSelected,
     deleteOne,
   } = useCampersData({ loggedUsername });
+
+  const catalog = useProductCatalog();
 
   const {
     adminTableEditDeletePermissions,
@@ -122,9 +125,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleEditClick,
         handleDeleteClick,
         adminTableEditDeletePermissions,
+        catalog,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, selectedRows],
+    [data, selectedRows, catalog],
   );
 
   const {

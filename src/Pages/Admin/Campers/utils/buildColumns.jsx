@@ -31,9 +31,12 @@ export const buildCampersColumns = ({
   handleEditClick,
   handleDeleteClick,
   adminTableEditDeletePermissions,
+  catalog,
 }) => {
   const textFilter = filterWith(ColumnFilter);
   const selectFilter = (options) => filterWith(ColumnFilterWithSelect, { options });
+  const catalogOptions = (category, fallback) =>
+    catalog?.options?.[category]?.length ? catalog.options[category] : fallback;
   const twoValuesFilter = filterWith(ColumnFilterWithTwoValues, {
     options: [
       { value: 'sim', label: 'Sim' },
@@ -197,14 +200,16 @@ export const buildCampersColumns = ({
           ? 'Seminário'
           : row.package.accomodationName === 'Externo'
           ? 'Externo'
-          : '',
-      Filter: selectFilter([
-        { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
-        { value: 'Colégio Quarto Família', label: 'Colégio Quarto Família' },
-        { value: 'Colégio Camping', label: 'Colégio Camping' },
-        { value: 'Seminário', label: 'Seminário São José' },
-        { value: 'Externo', label: 'Outra Hospedagem Externa' },
-      ]),
+          : row.package.accomodationName || '',
+      Filter: selectFilter(
+        catalogOptions('HOSPEDAGEM', [
+          { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
+          { value: 'Colégio Quarto Família', label: 'Colégio Quarto Família' },
+          { value: 'Colégio Camping', label: 'Colégio Camping' },
+          { value: 'Seminário', label: 'Seminário São José' },
+          { value: 'Externo', label: 'Outra Hospedagem Externa' },
+        ]),
+      ),
       sortType: 'alphanumeric',
     },
     {
@@ -216,12 +221,14 @@ export const buildCampersColumns = ({
           ? 'Sem Ônibus'
           : row.package.transportationName === 'Ônibus Equipe' || row.package.transportationName === 'Onibus Equipe'
           ? 'Ônibus Equipe'
-          : '',
-      Filter: selectFilter([
-        { value: 'Com Ônibus', label: 'Com Ônibus' },
-        { value: 'Sem Ônibus', label: 'Sem Ônibus' },
-        { value: 'Ônibus Equipe', label: 'Ônibus Equipe' },
-      ]),
+          : row.package.transportationName || '',
+      Filter: selectFilter(
+        catalogOptions('TRANSPORTE', [
+          { value: 'Com Ônibus', label: 'Com Ônibus' },
+          { value: 'Sem Ônibus', label: 'Sem Ônibus' },
+          { value: 'Ônibus Equipe', label: 'Ônibus Equipe' },
+        ]),
+      ),
       sortType: 'alphanumeric',
       Cell: renderOrDash,
       filter: (tableRows, id, filterValue) =>
