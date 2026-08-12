@@ -126,6 +126,14 @@ const SideButtons = ({ secondaryPermission }) => {
           Contexto do Formulário&nbsp;
           <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />
         </button>
+
+        <button
+          className="settings-message-button"
+          onClick={formContext === 'maintenance' ? () => navigate('/dev/eventos') : () => navigate('/admin/eventos')}
+        >
+          Gestão de Eventos&nbsp;
+          <Icons className="settings-icons" typeIcon="calendar" iconSize={22} fill={'#fff'} />
+        </button>
       </div>
     </>
   );

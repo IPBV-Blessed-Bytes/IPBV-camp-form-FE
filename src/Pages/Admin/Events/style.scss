@@ -1,0 +1,50 @@
+.admin-events {
+  &__content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.25rem;
+  }
+
+  &__empty {
+    text-align: center;
+    color: #6c757d;
+    padding: 2rem 0;
+  }
+
+  &__table {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+
+    code {
+      color: #007185;
+    }
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  &__color-row {
+    display: flex;
+    gap: 0.75rem;
+
+    input[type='color'] {
+      width: 56px;
+      flex: 0 0 auto;
+      padding: 2px;
+    }
+  }
+}

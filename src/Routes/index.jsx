@@ -57,6 +57,7 @@ const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
+const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -325,6 +326,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/eventos')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminEvents formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
