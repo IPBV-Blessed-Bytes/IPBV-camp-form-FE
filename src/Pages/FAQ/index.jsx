@@ -6,6 +6,7 @@ import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
+import { eventPath } from '@/config/eventScope';
 
 const FAQ = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const FAQ = () => {
     <div className="components-container">
       <Header />
       <div className="form__container faq">
-        <FormStepLayout onBack={() => navigate('/')}>
+        <FormStepLayout onBack={() => navigate(eventPath('/'))}>
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda

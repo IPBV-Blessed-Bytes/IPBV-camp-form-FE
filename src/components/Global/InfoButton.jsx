@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
 import '../Style/InfoButton.scss';
+import { eventPath } from '@/config/eventScope';
 
 const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
@@ -65,11 +66,11 @@ const InfoButton = ({ timeout, time }) => {
           Compartilhar&nbsp;
           <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />
         </button>
-        <button className="verify-registration-button" onClick={() => navigate('/verificacao')}>
+        <button className="verify-registration-button" onClick={() => navigate(eventPath('/verificacao'))}>
           Verificar Inscrição&nbsp;
           <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#000'} />
         </button>
-        <button className="verify-registration-button" onClick={() => navigate('/perguntas')}>
+        <button className="verify-registration-button" onClick={() => navigate(eventPath('/perguntas'))}>
           Perguntas Frequentes&nbsp;
           <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#000'} />
         </button>

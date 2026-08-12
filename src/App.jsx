@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { isAdminPath, shouldRenderForm } from './utils/pathname';
+import { getEventSlugFromPath, setSelectedEvent } from './config/eventScope';
 import CloseForm from './Pages/CloseForm';
 import RoutesValidations from './Routes/RoutesValidations';
 import Skelleton from './components/Global/Skelleton';
@@ -13,6 +14,11 @@ function App() {
 
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
+
+  useEffect(() => {
+    const slug = getEventSlugFromPath();
+    if (slug) setSelectedEvent(slug);
+  }, []);
 
   useEffect(() => {
     const loadBaseDate = async () => {

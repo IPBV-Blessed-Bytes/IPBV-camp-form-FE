@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { eventPath } from '@/config/eventScope';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
@@ -72,7 +73,7 @@ const CustomerLogin = () => {
             <button type="button" className="btn btn-link w-100" onClick={() => navigate('/esqueci-senha?origin=customer')}>
               Esqueci minha senha
             </button>
-            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+            <button type="button" className="btn btn-link w-100" onClick={() => navigate(eventPath('/'))}>
               ← Voltar ao formulário
             </button>
           </Form>

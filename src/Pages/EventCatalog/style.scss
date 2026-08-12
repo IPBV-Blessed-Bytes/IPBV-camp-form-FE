@@ -1,0 +1,39 @@
+.event-catalog {
+  padding: 3rem 1rem;
+
+  &__header {
+    margin-bottom: 2.5rem;
+
+    h1 {
+      color: #007185;
+      font-weight: 700;
+    }
+
+    p {
+      color: #6c757d;
+    }
+  }
+
+  &__empty {
+    color: #6c757d;
+    margin: 2rem 0;
+  }
+
+  &__card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  &__card-title {
+    color: #212529;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+}

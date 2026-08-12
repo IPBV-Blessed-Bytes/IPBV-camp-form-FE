@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { eventPath } from '@/config/eventScope';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -69,7 +70,7 @@ const SignUp = () => {
               <Button variant="primary" className="w-100 mt-3" onClick={() => navigate('/entrar')}>
                 Ir para o login
               </Button>
-              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/')}>
+              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate(eventPath('/'))}>
                 ← Voltar ao formulário
               </button>
             </div>
@@ -136,7 +137,7 @@ const SignUp = () => {
                 <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/entrar')}>
                   Já tem conta? Entrar
                 </button>
-                <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+                <button type="button" className="btn btn-link w-100" onClick={() => navigate(eventPath('/'))}>
                   ← Voltar ao formulário
                 </button>
               </Form>

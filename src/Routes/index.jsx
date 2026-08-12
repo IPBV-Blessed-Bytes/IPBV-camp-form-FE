@@ -26,6 +26,7 @@ import CpfData from '../Pages/CpfReview/CpfData';
 
 import Login from '../Pages/Admin/Login';
 import Maintenance from '@/Pages/Maintenance';
+import EventCatalog from '@/Pages/EventCatalog';
 
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
@@ -115,7 +116,7 @@ const FormRoutes = () => {
                       {steps === enumSteps.formPayment && isNotSuccessPathname && <ChooseFormPayment />}
 
                       <Routes>
-                        <Route path="/sucesso" element={<FormSuccess />} />
+                        <Route path="/e/:slug/sucesso" element={<FormSuccess />} />
                       </Routes>
                     </Col>
                   </Row>
@@ -348,6 +349,8 @@ const FormRoutes = () => {
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
 
+            <Route path="/" element={<EventCatalog />} />
+
             <Route path="/esqueci-senha" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/unlock" element={<Unlock />} />
@@ -359,10 +362,10 @@ const FormRoutes = () => {
 
             {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
               <>
-                <Route path="/opiniao" element={<FormFeedback />} />
-                <Route path="/verificacao" element={<CpfReview />} />
-                <Route path="/verificacao/dados" element={<CpfData />} />
-                <Route path="/perguntas" element={<FAQ />} />
+                <Route path="/e/:slug/opiniao" element={<FormFeedback />} />
+                <Route path="/e/:slug/verificacao" element={<CpfReview />} />
+                <Route path="/e/:slug/verificacao/dados" element={<CpfData />} />
+                <Route path="/e/:slug/perguntas" element={<FAQ />} />
               </>
             )}
           </Routes>

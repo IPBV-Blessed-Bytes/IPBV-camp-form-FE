@@ -8,6 +8,7 @@ import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
+import { eventPath } from '@/config/eventScope';
 
 const CpfData = () => {
   const [rideOffer, setRideOffer] = useState(null);
@@ -38,7 +39,7 @@ const CpfData = () => {
       <div className="components-container">
         <Header />
         <div className="form__container">
-          <FormStepLayout onBack={() => navigate('/verificacao')} backLabel="Voltar para Início">
+          <FormStepLayout onBack={() => navigate(eventPath('/verificacao'))} backLabel="Voltar para Início">
               <Container>
                 <p className="text-center">
                   <em>
@@ -61,7 +62,7 @@ const CpfData = () => {
       <div className="form__container container">
         <Row className="justify-content-center">
           <div className="px-0 col-lg-10">
-            <FormStepLayout onBack={() => navigate('/verificacao')}>
+            <FormStepLayout onBack={() => navigate(eventPath('/verificacao'))}>
                 <Container>
                   <div className="form-review">
                     <Card.Title>Consulta de Dados</Card.Title>

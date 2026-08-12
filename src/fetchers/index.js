@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { BASE_URL } from '@/config';
+import { withEventScope } from '@/config/eventScope';
 
 const fetcher = axios.create({
   baseURL: BASE_URL,
@@ -9,6 +10,11 @@ const fetcher = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+fetcher.interceptors.request.use((config) => {
+  config.url = withEventScope(config.url);
+  return config;
 });
 
 export default fetcher;

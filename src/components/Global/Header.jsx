@@ -6,6 +6,7 @@ import { enumSteps } from '@/utils/constants';
 import useAuth from '@/hooks/useAuth';
 import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
+import { eventPath, stripEventPrefix } from '@/config/eventScope';
 import '../Style/Header.scss';
 import '../Style/Cart.scss';
 import Icons from './Icons';
@@ -32,8 +33,8 @@ const Header = ({ showNavMenu = false }) => {
   } = formState ?? {};
 
   const handleStepChange = (newStep) => {
-    if (location.pathname === '/sucesso') {
-      navigate('/');
+    if (stripEventPrefix(location.pathname) === '/sucesso') {
+      navigate(eventPath('/'));
       return;
     }
 
@@ -49,7 +50,7 @@ const Header = ({ showNavMenu = false }) => {
   const hasAnyUserName =
     Array.isArray(formValues) && formValues.some((user) => user?.personalInformation?.name?.trim());
 
-  const showCartButton = location.pathname !== '/sucesso' && hasAnyUserName;
+  const showCartButton = stripEventPrefix(location.pathname) !== '/sucesso' && hasAnyUserName;
 
   return (
     <header className="form__header">

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
+import { eventPath, stripEventPrefix } from '@/config/eventScope';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { FORM_STORAGE_KEYS, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
@@ -71,7 +72,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   const windowPathname = window.location.pathname;
   const adminPathname = isAdminPath(windowPathname);
   const formPath = shouldRenderForm(windowPathname);
-  const isNotSuccessPathname = windowPathname !== '/sucesso';
+  const isNotSuccessPathname = stripEventPrefix(windowPathname) !== '/sucesso';
   const effectiveFormContext = formContextCloseForm === 'form-on' ? formContextCloseForm : formContext;
 
   const userRole = localStorage.getItem(USER_STORAGE_ROLE);
@@ -257,7 +258,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   );
 
   const goToSuccessPage = useCallback(() => {
-    navigate('/sucesso');
+    navigate(eventPath('/sucesso'));
     setSteps(enumSteps.success);
     scrollTop();
   }, [navigate]);

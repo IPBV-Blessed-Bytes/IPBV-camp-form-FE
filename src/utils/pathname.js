@@ -1,20 +1,13 @@
+import { getEventSlugFromPath, stripEventPrefix } from '@/config/eventScope';
+
 const isAdminPath = (pathname) =>
   pathname.startsWith('/admin') || pathname.startsWith('/dev') || pathname === '/unauthorized';
 
+const FORM_SUBROUTES_WITHOUT_SKELETON = ['/opiniao', '/verificacao', '/verificacao/dados', '/perguntas'];
+
 const shouldRenderForm = (pathname) => {
-  return (
-    pathname !== '/opiniao' &&
-    pathname !== '/verificacao' &&
-    pathname !== '/verificacao/dados' &&
-    pathname !== '/perguntas' &&
-    pathname !== '/esqueci-senha' &&
-    pathname !== '/reset-password' &&
-    pathname !== '/unlock' &&
-    pathname !== '/criar-conta' &&
-    pathname !== '/entrar' &&
-    pathname !== '/confirmar-email' &&
-    pathname !== '/minha-conta'
-  );
+  if (!getEventSlugFromPath(pathname)) return false;
+  return !FORM_SUBROUTES_WITHOUT_SKELETON.includes(stripEventPrefix(pathname));
 };
 
 export { isAdminPath, shouldRenderForm };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
+import { eventPath } from '@/config/eventScope';
 
 const getInitials = (name) => {
   if (!name) return '?';
@@ -53,7 +54,7 @@ const AdminTopbar = ({ username, logout }) => {
               className="admin-topbar__menu-item"
               onClick={() => {
                 setOpen(false);
-                navigate('/');
+                navigate(eventPath('/'));
               }}
             >
               <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />

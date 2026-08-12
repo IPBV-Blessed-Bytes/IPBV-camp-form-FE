@@ -13,6 +13,7 @@ import { loadProducts } from '../Packages/utils/products';
 import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
+import { eventPath } from '@/config/eventScope';
 
 const BeforePayment = () => {
   const {
@@ -49,7 +50,7 @@ const BeforePayment = () => {
 
   useEffect(() => {
     if (status === 'loaded') {
-      navigateTo('/sucesso');
+      navigateTo(eventPath('/sucesso'));
     }
   }, [status, navigateTo]);
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Table, Badge, Spinner, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { eventPath } from '@/config/eventScope';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -103,10 +104,10 @@ const MyAccount = () => {
           </div>
         </div>
         <div className="my-account__actions">
-          <Button className="account-btn-primary" onClick={() => navigate('/')}>
+          <Button className="account-btn-primary" onClick={() => navigate(eventPath('/'))}>
             Nova inscrição
           </Button>
-          <Button variant="outline-teal-blue" onClick={() => navigate('/')}>
+          <Button variant="outline-teal-blue" onClick={() => navigate(eventPath('/'))}>
             Voltar ao formulário
           </Button>
           <Button variant="outline-secondary" onClick={logout}>
@@ -130,7 +131,7 @@ const MyAccount = () => {
           ) : registrations.length === 0 ? (
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
-              <Button className="account-btn-primary" onClick={() => navigate('/')}>
+              <Button className="account-btn-primary" onClick={() => navigate(eventPath('/'))}>
                 Fazer inscrição
               </Button>
             </div>

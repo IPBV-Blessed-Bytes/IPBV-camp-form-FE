@@ -7,6 +7,7 @@ import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { getPersonData } from '@/services/campers';
+import { eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { useFormState } from '@/contexts/FormStateContext';
 import scrollUp from '@/hooks/useScrollUp';
@@ -49,7 +50,7 @@ const CpfReview = () => {
         const data = await getPersonData(payload);
 
         handlePersonData(data);
-        navigate('/verificacao/dados');
+        navigate(eventPath('/verificacao/dados'));
         toast.success('Usuário encontrado com sucesso');
       } catch (error) {
         const status = error?.response?.status;
@@ -142,7 +143,7 @@ const CpfReview = () => {
                           className="w-100 mb-3 mb-sm-3 mb-md-0"
                           variant="outline-teal-blue"
                           size="lg"
-                          onClick={() => navigate('/')}
+                          onClick={() => navigate(eventPath('/'))}
                         >
                           Voltar
                         </Button>

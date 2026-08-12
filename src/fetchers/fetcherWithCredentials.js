@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { JWT_LOCAL_STORAGE_KEY, BASE_URL, LOGIN_ROUTE } from '@/config';
+import { withEventScope } from '@/config/eventScope';
 import { isTokenValid } from './helpers';
 
 const fetcherWithCredentials = axios.create({
@@ -15,6 +16,8 @@ const fetcherWithCredentials = axios.create({
 
 fetcherWithCredentials.interceptors.request.use(
   (config) => {
+    config.url = withEventScope(config.url);
+
     if (!config.headers['Authorization']) {
       const token = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
 

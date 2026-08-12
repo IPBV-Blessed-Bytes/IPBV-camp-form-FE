@@ -12,6 +12,7 @@ import useActiveLot from '@/hooks/useActiveLot';
 import { saveFinalObservation } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getTempData } from '@/utils/formStorage';
+import { stripEventPrefix } from '@/config/eventScope';
 import './style.scss';
 
 const FinalReview = () => {
@@ -78,7 +79,7 @@ const FinalReview = () => {
     nextStep();
   };
 
-  const isSuccessPathname = location.pathname === '/sucesso';
+  const isSuccessPathname = stripEventPrefix(location.pathname) === '/sucesso';
 
   const getProductPrice = (productId) => discountedProducts.find((p) => p.id === productId)?.price || 0;
 

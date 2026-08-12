@@ -6,6 +6,7 @@ import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import Icons from '@/components/Global/Icons';
 import useBaseYear from '@/hooks/useBaseYear';
+import { eventPath } from '@/config/eventScope';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const WaitingForCamp = () => {
                       outros.
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <Button variant="outline-teal-blue" onClick={() => navigate('/verificacao')}>
+                      <Button variant="outline-teal-blue" onClick={() => navigate(eventPath('/verificacao'))}>
                         Verificar Inscrição&nbsp;
                         <Icons className="info-icons" typeIcon="refresh" iconSize={25} fill={'#007185'} />
                       </Button>
@@ -48,7 +49,7 @@ const WaitingForCamp = () => {
                       a sua também!
                     </Card.Text>
                     <div className="waiting-for-camp-buttons__verify-button">
-                      <Button variant="teal-blue" onClick={() => navigate('/perguntas')}>
+                      <Button variant="teal-blue" onClick={() => navigate(eventPath('/perguntas'))}>
                         Perguntas Frequentes&nbsp;
                         <Icons className="info-icons" typeIcon="question" iconSize={25} fill={'#fff'} />
                       </Button>
