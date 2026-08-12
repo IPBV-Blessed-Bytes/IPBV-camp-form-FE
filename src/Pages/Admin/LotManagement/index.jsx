@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, ListGroup, Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
+import { Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -24,21 +24,7 @@ import Icons from '@/components/Global/Icons';
 registerLocale('ptBR', ptBR);
 
 const defaultPrice = {
-  seminary: '',
-  school: '',
-  otherAccomodation: '',
   registrationFee: '',
-  food: '',
-  bus: '',
-};
-
-const defaultVacancies = {
-  seminary: '',
-  schoolIndividual: '',
-  schoolCollective: '',
-  schoolCamping: '',
-  otherAccomodation: '',
-  bus: '',
 };
 
 const parseDate = (dateString) => {
@@ -52,122 +38,7 @@ const formatDate = (date) => {
   return date.toLocaleDateString('pt-BR');
 };
 
-const LotsSummary = ({ lots, packageCount }) => {
-  const getTotalVacancies = (lots) => {
-    if (!lots || lots.length === 0) return { seminary: 0, school: 0, otherAccomodation: 0, bus: 0 };
-
-    const today = new Date();
-
-    const currentLot = lots.find((lot) => {
-      const start = parseDate(lot.startDate);
-      const end = parseDate(lot.endDate);
-      return start && end && today >= start && today <= end;
-    });
-
-    if (currentLot) {
-      return {
-        seminary: Number(currentLot.vacancies?.seminary || 0),
-        schoolIndividual: Number(currentLot.vacancies?.schoolIndividual || 0),
-        schoolCollective: Number(currentLot.vacancies?.schoolCollective || 0),
-        schoolCamping: Number(currentLot.vacancies?.schoolCamping || 0),
-        otherAccomodation: Number(currentLot.vacancies?.otherAccomodation || 0),
-        bus: Number(currentLot.vacancies?.bus || 0),
-      };
-    }
-
-    const latestLot = [...lots].sort((a, b) => {
-      const endA = parseDate(a.endDate) || new Date(0);
-      const endB = parseDate(b.endDate) || new Date(0);
-      return endB - endA;
-    })[0];
-
-    return {
-      seminary: Number(latestLot?.vacancies?.seminary || 0),
-      schoolIndividual: Number(latestLot?.vacancies?.schoolIndividual || 0),
-      schoolCollective: Number(latestLot?.vacancies?.schoolCollective || 0),
-      schoolCamping: Number(latestLot?.vacancies?.schoolCamping || 0),
-      otherAccomodation: Number(latestLot?.vacancies?.otherAccomodation || 0),
-      bus: Number(latestLot?.vacancies?.bus || 0),
-    };
-  };
-
-  const totals = getTotalVacancies(lots);
-
-  const macro = {
-    seminary: packageCount?.totalPackages?.seminary || 0,
-    school:
-      (packageCount?.totalPackages?.schoolIndividual || 0) +
-      (packageCount?.totalPackages?.schoolFamily || 0) +
-      (packageCount?.totalPackages?.schoolCamping || 0),
-    otherAccomodation: packageCount?.totalPackages?.other || 0,
-    bus: packageCount?.totalBusVacancies || 0,
-  };
-
-  const totalSeatsMacro = packageCount?.totalSeats || 0;
-  const totalSeatsMicro =
-    totals.seminary +
-    totals.schoolIndividual +
-    totals.schoolCollective +
-    totals.schoolCamping +
-    totals.otherAccomodation;
-
-  const renderStat = (label, used, max) => (
-    <ListGroup.Item className="d-flex justify-content-between align-items-center">
-      {label}
-      <Badge bg={used > max ? 'danger' : 'primary'}>
-        {used}/{max}
-      </Badge>
-    </ListGroup.Item>
-  );
-
-  return (
-    <Card className="mb-3 shadow">
-      <Card.Header as="h5">
-        <b>Resumo das Vagas:</b>
-      </Card.Header>
-      <ListGroup variant="flush">
-        {renderStat('Seminário', totals.seminary, macro.seminary)}
-        {renderStat('Escola Individual', totals.schoolIndividual, macro.school)}
-        {renderStat('Escola Família', totals.schoolCollective, macro.school)}
-        {renderStat('Escola Camping', totals.schoolCamping, macro.school)}
-        {renderStat('Externo', totals.otherAccomodation, macro.otherAccomodation)}
-        {renderStat('Ônibus', totals.bus, macro.bus)}
-        <ListGroup.Item className="d-flex justify-content-between align-items-center">
-          <strong>Total Geral:</strong>
-          <Badge bg={totalSeatsMicro > totalSeatsMacro ? 'danger' : 'success'}>
-            {totalSeatsMicro}/{totalSeatsMacro}
-          </Badge>
-        </ListGroup.Item>
-      </ListGroup>
-    </Card>
-  );
-};
-
-LotsSummary.propTypes = {
-  lots: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      name: PropTypes.string,
-      startDate: PropTypes.string,
-      endDate: PropTypes.string,
-      price: PropTypes.object,
-      vacancies: PropTypes.object,
-    }),
-  ),
-  packageCount: PropTypes.shape({
-    totalPackages: PropTypes.shape({
-      seminary: PropTypes.number,
-      schoolIndividual: PropTypes.number,
-      schoolFamily: PropTypes.number,
-      schoolCamping: PropTypes.number,
-      other: PropTypes.number,
-    }),
-    totalBusVacancies: PropTypes.number,
-    totalSeats: PropTypes.number,
-  }),
-};
-
-const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
+const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [loadingContent, setLoadingContent] = useState(false);
   const [lots, setLots] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -176,7 +47,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
   const [newLot, setNewLot] = useState({
     name: '',
     price: { ...defaultPrice },
-    vacancies: { ...defaultVacancies },
     startDate: '',
     endDate: '',
   });
@@ -226,7 +96,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       prevLots.map((lot) => {
         if (lot.id !== id) return lot;
 
-        if ((field === 'price' || field === 'vacancies') && nestedField) {
+        if (field === 'price' && nestedField) {
           return {
             ...lot,
             [field]: { ...lot[field], [nestedField]: value },
@@ -244,20 +114,13 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       return;
     }
 
-    const overflow = hasVacancyOverflow(lots, packageCount, lot);
-    if (overflow) {
-      toast.error(`As vagas de ${overflow} excedem o limite disponível`);
-      return;
-    }
-
     try {
       setLoadingContent(true);
       await updateLotRequest(lot.id, {
         name: lot.name,
         startDate: lot.startDate,
         endDate: lot.endDate,
-        price: { ...lot.price },
-        vacancies: { ...lot.vacancies },
+        price: { registrationFee: lot.price?.registrationFee || '' },
       });
       toast.success(`${lot.name} atualizado com sucesso`);
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
@@ -311,20 +174,13 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       return;
     }
 
-    const overflow = hasVacancyOverflow([...lots, newLot], packageCount);
-    if (overflow) {
-      toast.error(`As vagas de ${overflow} excedem o limite disponível`);
-      return;
-    }
-
     try {
       setLoadingContent(true);
       await createLot({
         name: newLot.name,
         startDate: newLot.startDate,
         endDate: newLot.endDate,
-        price: { ...newLot.price },
-        vacancies: { ...newLot.vacancies },
+        price: { registrationFee: newLot.price.registrationFee || '' },
       });
       toast.success(`${newLot.name} adicionado com sucesso`);
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
@@ -332,7 +188,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       setNewLot({
         name: '',
         price: { ...defaultPrice },
-        vacancies: { ...defaultVacancies },
         startDate: '',
         endDate: '',
       });
@@ -372,81 +227,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
     }
   };
 
-  const hasVacancyOverflow = (lots, packageCount, lotToCheck = null) => {
-    const today = new Date();
-
-    const effectiveLots = lotToCheck ? lots.map((l) => (l.id === lotToCheck.id ? lotToCheck : l)) : lots;
-
-    const currentLot = effectiveLots.find((lot) => {
-      const start = parseDate(lot.startDate);
-      const end = parseDate(lot.endDate);
-      return start && end && today >= start && today <= end;
-    });
-
-    const relevantLot =
-      currentLot ||
-      [...effectiveLots].sort((a, b) => {
-        const endA = parseDate(a.endDate) || new Date(0);
-        const endB = parseDate(b.endDate) || new Date(0);
-        return endB - endA;
-      })[0];
-
-    if (!relevantLot) return null;
-
-    const totalVacancies = {
-      seminary: Number(relevantLot.vacancies?.seminary || 0),
-      schoolIndividual: Number(relevantLot.vacancies?.schoolIndividual || 0),
-      schoolCollective: Number(relevantLot.vacancies?.schoolCollective || 0),
-      schoolCamping: Number(relevantLot.vacancies?.schoolCamping || 0),
-      otherAccomodation: Number(relevantLot.vacancies?.otherAccomodation || 0),
-      bus: Number(relevantLot.vacancies?.bus || 0),
-    };
-
-    const macro = {
-      seminary: packageCount?.totalPackages?.seminary || 0,
-      school:
-        (packageCount?.totalPackages?.schoolIndividual || 0) +
-        (packageCount?.totalPackages?.schoolFamily || 0) +
-        (packageCount?.totalPackages?.schoolCamping || 0),
-      otherAccomodation: packageCount?.totalPackages?.other || 0,
-      bus: packageCount?.totalBusVacancies || 0,
-    };
-
-    const totalSeatsMacro = packageCount?.totalSeats || 0;
-    const totalSeatsMicro =
-      totalVacancies.seminary +
-      totalVacancies.schoolIndividual +
-      totalVacancies.schoolCollective +
-      totalVacancies.schoolCamping +
-      totalVacancies.otherAccomodation;
-
-    if (totalVacancies.seminary > macro.seminary) return 'Seminário';
-    if (totalVacancies.school > macro.school) return 'Escola';
-    if (totalVacancies.otherAccomodation > macro.otherAccomodation) return 'Externo';
-    if (totalVacancies.bus > macro.bus) return 'Ônibus';
-    if (totalSeatsMicro > totalSeatsMacro) return 'Total de Vagas';
-
-    return null;
-  };
-
-  const priceLabels = {
-    seminary: 'Preço Seminário',
-    school: 'Preço Escola',
-    otherAccomodation: 'Preço Externo',
-    registrationFee: 'Preço Taxa Inscrição',
-    food: 'Preço Alimentação',
-    bus: 'Preço Ônibus',
-  };
-
-  const vacanciesLabels = {
-    seminary: 'Vagas Seminário',
-    schoolIndividual: 'Vagas Colégio Individual',
-    schoolCollective: 'Vagas Colégio Família',
-    schoolCamping: 'Vagas Colégio Camping',
-    otherAccomodation: 'Vagas Externo',
-    bus: 'Vagas Ônibus',
-  };
-
   const toolsButtons = [
     {
       fill: '#007185',
@@ -482,8 +262,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
-
-        <LotsSummary lots={lots} packageCount={packageCount} />
 
       <Row className="justify-content-center">
         <Col>
@@ -527,7 +305,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                       </Form.Group>
 
                       <Row>
-                        <Col xs={12} md={6} className="mb-3">
+                        <Col xs={12} md={4} className="mb-3">
                           <Form.Group>
                             <Form.Label>
                               <strong>Data Início:</strong>
@@ -546,7 +324,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                           </Form.Group>
                         </Col>
 
-                        <Col xs={12} md={6} className="mb-3">
+                        <Col xs={12} md={4} className="mb-3">
                           <Form.Group>
                             <Form.Label>
                               <strong>Data Fim:</strong>
@@ -565,36 +343,18 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                           </Form.Group>
                         </Col>
 
-                        {Object.keys(defaultPrice).map((field) => (
-                          <Col xs={12} md={4} key={field} className="mb-3">
-                            <Form.Group>
-                              <Form.Label>
-                                <strong>{priceLabels[field]}:</strong>
-                              </Form.Label>
-                              <Form.Control
-                                type="text"
-                                value={lot.price?.[field] || ''}
-                                onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, field)}
-                              />
-                            </Form.Group>
-                          </Col>
-                        ))}
-
-                        {Object.keys(defaultVacancies).map((field) => (
-                          <Col xs={12} md={4} key={field} className="mb-3">
-                            <Form.Group>
-                              <Form.Label>
-                                <strong>{vacanciesLabels[field]}:</strong>
-                              </Form.Label>
-                              <Form.Control
-                                type="number"
-                                min="0"
-                                value={lot.vacancies?.[field] ?? 0}
-                                onChange={(e) => handleLotChange(lot.id, 'vacancies', e.target.value, field)}
-                              />
-                            </Form.Group>
-                          </Col>
-                        ))}
+                        <Col xs={12} md={4} className="mb-3">
+                          <Form.Group>
+                            <Form.Label>
+                              <strong>Preço Taxa Inscrição:</strong>
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              value={lot.price?.registrationFee || ''}
+                              onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, 'registrationFee')}
+                            />
+                          </Form.Group>
+                        </Col>
                       </Row>
 
                       <div className="d-flex mt-3 justify-content-end gap-2">
@@ -663,7 +423,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
       >
         <Form>
             <Row>
-              <Col md={12} lg={4} className="mb-3">
+              <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
                     <strong>Nome:</strong>
@@ -678,7 +438,28 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                 </Form.Group>
               </Col>
 
-              <Col md={12} lg={4} className="mb-3">
+              <Col md={12} lg={6} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Preço Taxa Inscrição:</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    value={newLot.price.registrationFee}
+                    onChange={(e) =>
+                      setNewLot({
+                        ...newLot,
+                        price: { ...newLot.price, registrationFee: e.target.value },
+                      })
+                    }
+                    className="form-control-lg form-control-bg admin-field--odd"
+                    placeholder="Preço"
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
                     <strong>Data Início:</strong>
@@ -697,7 +478,7 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                 </Form.Group>
               </Col>
 
-              <Col md={12} lg={4} className="mb-3">
+              <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
                     <strong>Data Fim:</strong>
@@ -715,52 +496,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
                   />
                 </Form.Group>
               </Col>
-
-              {Object.keys(defaultPrice).map((field) => (
-                <Col key={field} md={12} lg={4} className="mb-3">
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      <strong>{priceLabels[field]}:</strong>
-                    </Form.Label>
-                    <Form.Control
-                      type="number"
-                      min="0"
-                      value={newLot.price[field]}
-                      onChange={(e) =>
-                        setNewLot({
-                          ...newLot,
-                          price: { ...newLot.price, [field]: e.target.value },
-                        })
-                      }
-                      className="form-control-lg form-control-bg admin-field--odd"
-                      placeholder="Preços"
-                    />
-                  </Form.Group>
-                </Col>
-              ))}
-
-              {Object.keys(defaultVacancies).map((field) => (
-                <Col key={field} md={12} lg={4} className="mb-3">
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      <strong>{vacanciesLabels[field]}:</strong>
-                    </Form.Label>
-                    <Form.Control
-                      type="number"
-                      min="0"
-                      value={newLot.vacancies[field]}
-                      onChange={(e) =>
-                        setNewLot({
-                          ...newLot,
-                          vacancies: { ...newLot.vacancies, [field]: e.target.value },
-                        })
-                      }
-                      className="form-control-lg form-control-bg admin-field--even"
-                      placeholder="Vagas"
-                    />
-                  </Form.Group>
-                </Col>
-              ))}
             </Row>
           </Form>
       </CustomModal>
@@ -813,17 +548,6 @@ const AdminLotManagement = ({ loading, loggedUsername, packageCount }) => {
 AdminLotManagement.propTypes = {
   loggedUsername: PropTypes.string,
   loading: PropTypes.bool,
-  packageCount: PropTypes.shape({
-    totalPackages: PropTypes.shape({
-      seminary: PropTypes.number,
-      schoolIndividual: PropTypes.number,
-      schoolFamily: PropTypes.number,
-      schoolCamping: PropTypes.number,
-      other: PropTypes.number,
-    }),
-    totalBusVacancies: PropTypes.number,
-    totalSeats: PropTypes.number,
-  }),
 };
 
 export default AdminLotManagement;
