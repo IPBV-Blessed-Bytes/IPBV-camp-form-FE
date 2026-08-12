@@ -6,6 +6,7 @@ import { enumSteps } from '@/utils/constants';
 import useAuth from '@/hooks/useAuth';
 import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { eventPath, stripEventPrefix } from '@/config/eventScope';
 import '../Style/Header.scss';
 import '../Style/Cart.scss';
@@ -16,6 +17,9 @@ const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carr
 
 const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
+  const { name: eventName, logoUrl, year: eventYear } = useEventBranding();
+  const headerTitle = eventName || 'ACAMPAMENTO IPBV';
+  const headerYear = eventYear || baseYear;
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, user } = useAuth();
@@ -56,9 +60,10 @@ const Header = ({ showNavMenu = false }) => {
     <header className="form__header">
       <Container>
         <div className="form__header__left">
-          <h2>
-            <a className="header-title" href="/">
-              ACAMPAMENTO IPBV {baseYear}
+          <h2 className="header-title-wrapper">
+            {logoUrl && <img className="header-logo" src={logoUrl} alt={headerTitle} />}
+            <a className="header-title" href={eventPath('/')}>
+              {headerTitle} {headerYear}
             </a>
           </h2>
 

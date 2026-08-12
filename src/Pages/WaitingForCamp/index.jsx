@@ -7,10 +7,13 @@ import FormStepLayout from '@/components/Global/FormStepLayout';
 import Icons from '@/components/Global/Icons';
 import useBaseYear from '@/hooks/useBaseYear';
 import { eventPath } from '@/config/eventScope';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
   const baseYear = useBaseYear();
+  const { contact } = useEventBranding();
+  const phone = contact || '(81) 99999-7767';
 
   return (
     <>
@@ -59,7 +62,7 @@ const WaitingForCamp = () => {
                 <p className="form__success__contact">
                   <b>
                     Qualquer dúvida nos contate no telefone da organização do evento para mais informações. <br />
-                    (81) 99999-7767 (Whatsapp) ou (81) 99839-0194.
+                    {phone} (Whatsapp) ou (81) 99839-0194.
                   </b>
                 </p>
                 <small className="mt-5">

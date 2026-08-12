@@ -1,7 +1,21 @@
 @use '../../styles/Variables.scss' as *;
 
+.header-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.header-logo {
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
+}
+
 .form__header {
-  background-color: $primary;
+  background-color: var(--event-color, #{$primary});
   color: $white;
   padding: 1.25rem 1.875rem 3rem;
   text-align: center;

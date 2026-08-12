@@ -1,5 +1,9 @@
 @use './Variables.scss' as *;
 
+:root {
+  --event-color: #{$teal-blue};
+}
+
 // Body
 body {
   background: $light-gray;
@@ -361,30 +365,30 @@ body {
 // Custom Buttons
 .btn-teal-blue {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #007185;
-  --bs-btn-border-color: #007185;
-  --bs-btn-hover-bg: #007185;
-  --bs-btn-hover-border-color: #007185;
-  --bs-btn-active-bg: #007185;
-  --bs-btn-active-border-color: #007185;
-  --bs-btn-disabled-bg: #007185;
-  --bs-btn-disabled-border-color: #007185;
+  --bs-btn-bg: var(--event-color);
+  --bs-btn-border-color: var(--event-color);
+  --bs-btn-hover-bg: var(--event-color);
+  --bs-btn-hover-border-color: var(--event-color);
+  --bs-btn-active-bg: var(--event-color);
+  --bs-btn-active-border-color: var(--event-color);
+  --bs-btn-disabled-bg: var(--event-color);
+  --bs-btn-disabled-border-color: var(--event-color);
 }
 
 .btn-outline-teal-blue {
-  --bs-btn-color: #007185;
-  --bs-btn-border-color: #007185;
+  --bs-btn-color: var(--event-color);
+  --bs-btn-border-color: var(--event-color);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #007185;
-  --bs-btn-hover-border-color: #007185;
+  --bs-btn-hover-bg: var(--event-color);
+  --bs-btn-hover-border-color: var(--event-color);
   --bs-btn-focus-shadow-rgb: 13, 202, 240;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #007185;
-  --bs-btn-active-border-color: #007185;
+  --bs-btn-active-bg: var(--event-color);
+  --bs-btn-active-border-color: var(--event-color);
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #007185;
+  --bs-btn-disabled-color: var(--event-color);
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #007185;
+  --bs-btn-disabled-border-color: var(--event-color);
   --bs-gradient: none;
 }
 
