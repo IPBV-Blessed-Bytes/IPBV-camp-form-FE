@@ -7,12 +7,7 @@ import { registerLog } from '@/services/logs';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
-import {
-  getLotsAuthenticated,
-  createLot,
-  updateLot as updateLotRequest,
-  deleteLot,
-} from '@/services/lots';
+import { getLotsAuthenticated, createLot, updateLot as updateLotRequest, deleteLot } from '@/services/lots';
 import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
@@ -263,165 +258,166 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-      <Row className="justify-content-center">
-        <Col>
+        <Row className="justify-content-center">
+          <Col>
+            <Form>
+              <Accordion alwaysOpen>
+                {lots.map((lot, index) => {
+                  const today = new Date();
+                  const start = parseDate(lot.startDate);
+                  const end = parseDate(lot.endDate);
+                  const isCurrentLot = start && end && today >= start && today <= end;
+
+                  return (
+                    <Accordion.Item eventKey={String(index)} key={lot.id}>
+                      <Accordion.Header>
+                        <div className="d-flex justify-content-between align-items-center w-100">
+                          <span>
+                            <strong>{lot.name || `Lote ${index + 1}`}</strong>
+                            {isCurrentLot && (
+                              <Badge bg="success" className="ms-2">
+                                Atual
+                              </Badge>
+                            )}
+                          </span>
+                          <small className="lot-range-date">
+                            {lot.startDate} - {lot.endDate}
+                          </small>
+                        </div>
+                      </Accordion.Header>
+                      <Accordion.Body className={isCurrentLot ? 'accordion-body--highlight' : ''}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>
+                            <strong>Nome do Lote:</strong>
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={lot.name}
+                            onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
+                            className="form-control-lg"
+                            placeholder="Nome do Lote"
+                          />
+                        </Form.Group>
+
+                        <Row>
+                          <Col xs={12} md={4} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>
+                                <strong>Data Início:</strong>
+                              </Form.Label>
+                              <DatePicker
+                                selected={parseDate(lot.startDate)}
+                                onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
+                                className="form-control form-control-lg"
+                                placeholderText="dd/mm/aaaa"
+                                dateFormat="dd/MM/yyyy"
+                                locale="ptBR"
+                                dropdownMode="select"
+                                showMonthDropdown
+                                showYearDropdown
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col xs={12} md={4} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>
+                                <strong>Data Fim:</strong>
+                              </Form.Label>
+                              <DatePicker
+                                selected={parseDate(lot.endDate)}
+                                onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
+                                className="form-control form-control-lg"
+                                placeholderText="dd/mm/aaaa"
+                                dateFormat="dd/MM/yyyy"
+                                locale="ptBR"
+                                dropdownMode="select"
+                                showMonthDropdown
+                                showYearDropdown
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col xs={12} md={4} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>
+                                <strong>Preço Taxa Inscrição:</strong>
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={lot.price?.registrationFee || ''}
+                                onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, 'registrationFee')}
+                                className="form-control-lg"
+                              />
+                            </Form.Group>
+                          </Col>
+                        </Row>
+
+                        <div className="d-flex mt-3 justify-content-end gap-2">
+                          <Button
+                            variant="outline-danger"
+                            onClick={() => {
+                              setSelectedLot(lot);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
+                            &nbsp; Deletar
+                          </Button>
+                          <Button variant="teal-blue" onClick={() => updateLot(lot)}>
+                            <Icons typeIcon="checked" iconSize={20} fill="#fff" />
+                            &nbsp; Salvar
+                          </Button>
+                        </div>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  );
+                })}
+              </Accordion>
+            </Form>
+          </Col>
+        </Row>
+
+        <CustomModal
+          show={showDeleteModal}
+          onHide={() => setShowDeleteModal(false)}
+          variant="cancel"
+          title="Confirmar Exclusão"
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                Cancelar
+              </Button>
+              <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
+                Deletar
+              </Button>
+            </>
+          }
+        >
+          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
+        </CustomModal>
+
+        <CustomModal
+          show={showAddModal}
+          size="xl"
+          onHide={() => setShowAddModal(false)}
+          variant="confirm"
+          icon="plus"
+          title="Adicionar Novo Lote"
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+                Cancelar
+              </Button>
+              <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
+                Adicionar
+              </Button>
+            </>
+          }
+        >
           <Form>
-            <Accordion alwaysOpen>
-              {lots.map((lot, index) => {
-                const today = new Date();
-                const start = parseDate(lot.startDate);
-                const end = parseDate(lot.endDate);
-                const isCurrentLot = start && end && today >= start && today <= end;
-
-                return (
-                  <Accordion.Item eventKey={String(index)} key={lot.id}>
-                    <Accordion.Header>
-                      <div className="d-flex justify-content-between align-items-center w-100">
-                        <span>
-                          <strong>{lot.name || `Lote ${index + 1}`}</strong>
-                          {isCurrentLot && (
-                            <Badge bg="success" className="ms-2">
-                              Atual
-                            </Badge>
-                          )}
-                        </span>
-                        <small className="lot-range-date">
-                          {lot.startDate} - {lot.endDate}
-                        </small>
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body className={isCurrentLot ? 'accordion-body--highlight' : ''}>
-                      <Form.Group className="mb-3">
-                        <Form.Label>
-                          <strong>Nome do Lote:</strong>
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          value={lot.name}
-                          onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
-                          className="form-control-lg"
-                          placeholder="Nome do Lote"
-                        />
-                      </Form.Group>
-
-                      <Row>
-                        <Col xs={12} md={4} className="mb-3">
-                          <Form.Group>
-                            <Form.Label>
-                              <strong>Data Início:</strong>
-                            </Form.Label>
-                            <DatePicker
-                              selected={parseDate(lot.startDate)}
-                              onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
-                              className="form-control form-control-lg"
-                              placeholderText="dd/mm/aaaa"
-                              dateFormat="dd/MM/yyyy"
-                              locale="ptBR"
-                              dropdownMode="select"
-                              showMonthDropdown
-                              showYearDropdown
-                            />
-                          </Form.Group>
-                        </Col>
-
-                        <Col xs={12} md={4} className="mb-3">
-                          <Form.Group>
-                            <Form.Label>
-                              <strong>Data Fim:</strong>
-                            </Form.Label>
-                            <DatePicker
-                              selected={parseDate(lot.endDate)}
-                              onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
-                              className="form-control form-control-lg"
-                              placeholderText="dd/mm/aaaa"
-                              dateFormat="dd/MM/yyyy"
-                              locale="ptBR"
-                              dropdownMode="select"
-                              showMonthDropdown
-                              showYearDropdown
-                            />
-                          </Form.Group>
-                        </Col>
-
-                        <Col xs={12} md={4} className="mb-3">
-                          <Form.Group>
-                            <Form.Label>
-                              <strong>Preço Taxa Inscrição:</strong>
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              value={lot.price?.registrationFee || ''}
-                              onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, 'registrationFee')}
-                            />
-                          </Form.Group>
-                        </Col>
-                      </Row>
-
-                      <div className="d-flex mt-3 justify-content-end gap-2">
-                        <Button
-                          variant="outline-danger"
-                          onClick={() => {
-                            setSelectedLot(lot);
-                            setShowDeleteModal(true);
-                          }}
-                        >
-                          <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
-                          &nbsp; Deletar
-                        </Button>
-                        <Button variant="teal-blue" onClick={() => updateLot(lot)}>
-                          <Icons typeIcon="checked" iconSize={20} fill="#fff" />
-                          &nbsp; Salvar
-                        </Button>
-                      </div>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                );
-              })}
-            </Accordion>
-          </Form>
-        </Col>
-      </Row>
-
-      <CustomModal
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-        variant="cancel"
-        title="Confirmar Exclusão"
-        centered={false}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
-            </Button>
-            <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
-              Deletar
-            </Button>
-          </>
-        }
-      >
-        Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
-      </CustomModal>
-
-      <CustomModal
-        show={showAddModal}
-        size="xl"
-        onHide={() => setShowAddModal(false)}
-        variant="confirm"
-        icon="plus"
-        title="Adicionar Novo Lote"
-        centered={false}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-              Cancelar
-            </Button>
-            <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
-              Adicionar
-            </Button>
-          </>
-        }
-      >
-        <Form>
             <Row>
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
@@ -498,46 +494,46 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               </Col>
             </Row>
           </Form>
-      </CustomModal>
+        </CustomModal>
 
-      <CustomModal
-        show={showBaseDateModal}
-        onHide={() => setShowBaseDateModal(false)}
-        variant="confirm"
-        icon="plus"
-        title="Alterar Data do Evento"
-        centered={false}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
-              Cancelar
-            </Button>
-            <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
-              Salvar
-            </Button>
-          </>
-        }
-      >
-        <Form.Group>
-          <Form.Label>
-            <b>Selecione a data do evento:</b>
-          </Form.Label>
-          <DatePicker
-            selected={parseDate(baseDate)}
-            onChange={(date) => setBaseDate(formatDate(date))}
-            className="form-control form-control-lg mb-2"
-            placeholderText="dd/mm/aaaa"
-            dateFormat="dd/MM/yyyy"
-            locale="ptBR"
-            dropdownMode="select"
-            showMonthDropdown
-            showYearDropdown
-          />
-          <Form.Text>
-            Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
-          </Form.Text>
-        </Form.Group>
-      </CustomModal>
+        <CustomModal
+          show={showBaseDateModal}
+          onHide={() => setShowBaseDateModal(false)}
+          variant="confirm"
+          icon="plus"
+          title="Alterar Data do Evento"
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
+                Cancelar
+              </Button>
+              <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
+                Salvar
+              </Button>
+            </>
+          }
+        >
+          <Form.Group>
+            <Form.Label>
+              <b>Selecione a data do evento:</b>
+            </Form.Label>
+            <DatePicker
+              selected={parseDate(baseDate)}
+              onChange={(date) => setBaseDate(formatDate(date))}
+              className="form-control form-control-lg mb-2"
+              placeholderText="dd/mm/aaaa"
+              dateFormat="dd/MM/yyyy"
+              locale="ptBR"
+              dropdownMode="select"
+              showMonthDropdown
+              showYearDropdown
+            />
+            <Form.Text>
+              Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
+            </Form.Text>
+          </Form.Group>
+        </CustomModal>
 
         <Loading loading={loading || loadingContent} />
       </div>
