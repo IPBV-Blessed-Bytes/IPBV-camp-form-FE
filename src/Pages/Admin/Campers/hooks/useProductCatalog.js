@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { getAllProducts } from '@/services/products';
@@ -47,5 +48,5 @@ export const useProductCatalog = () => {
     },
   });
 
-  return { ...buildCatalog(data || []), loading: isLoading };
+  return useMemo(() => ({ ...buildCatalog(data || []), loading: isLoading }), [data, isLoading]);
 };
