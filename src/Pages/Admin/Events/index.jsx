@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Badge, Button, Form, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services/events';
+import { setSelectedEvent } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import CustomModal from '@/components/Global/CustomModal';
@@ -19,6 +21,7 @@ const EMPTY_EVENT = {
   contact: '',
   year: '',
   active: true,
+  paymentEnabled: true,
 };
 
 const slugify = (value) =>
@@ -30,6 +33,7 @@ const slugify = (value) =>
     .replace(/(^-|-$)/g, '');
 
 const AdminEvents = ({ loggedUsername }) => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -68,11 +72,17 @@ const AdminEvents = ({ loggedUsername }) => {
       contact: event.contact || '',
       year: event.year || '',
       active: event.active ?? true,
+      paymentEnabled: event.paymentEnabled ?? true,
     });
     setShowFormModal(true);
   };
 
   const handleChange = (field) => (value) => setDraft((prev) => ({ ...prev, [field]: value }));
+
+  const openFormBuilder = (event) => {
+    setSelectedEvent(event.slug);
+    navigate('/admin/formulario');
+  };
 
   const handleSave = async () => {
     if (!draft.name.trim() || !draft.slug.trim()) {
@@ -89,6 +99,7 @@ const AdminEvents = ({ loggedUsername }) => {
       contact: draft.contact.trim() || null,
       year: draft.year ? Number(draft.year) : null,
       active: draft.active,
+      paymentEnabled: draft.paymentEnabled,
     };
 
     try {
@@ -172,6 +183,9 @@ const AdminEvents = ({ loggedUsername }) => {
                     <Badge bg={event.active ? 'success' : 'secondary'}>{event.active ? 'Ativo' : 'Inativo'}</Badge>
                   </td>
                   <td className="text-end">
+                    <Button size="sm" variant="teal-blue" className="me-2" onClick={() => openFormBuilder(event)}>
+                      Campos
+                    </Button>
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
                       Editar
                     </Button>
@@ -289,6 +303,16 @@ const AdminEvents = ({ loggedUsername }) => {
             checked={draft.active}
             onChange={(e) => handleChange('active')(e.target.checked)}
           />
+
+          <Form.Check
+            type="switch"
+            id="event-payment-switch"
+            className="mt-2"
+            label="Habilitar pagamento (carrinho + PagarMe)"
+            checked={draft.paymentEnabled}
+            onChange={(e) => handleChange('paymentEnabled')(e.target.checked)}
+          />
+          <Form.Text className="text-muted">Se desativado, o formulário é enviado sem carrinho nem cobrança.</Form.Text>
         </Form>
       </CustomModal>
 

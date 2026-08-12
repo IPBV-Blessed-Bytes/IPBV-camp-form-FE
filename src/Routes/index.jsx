@@ -58,6 +58,7 @@ const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
+const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -334,6 +335,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminEvents formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/formulario')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminFormBuilder formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
