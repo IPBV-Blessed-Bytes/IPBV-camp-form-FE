@@ -84,6 +84,11 @@ const AdminEvents = ({ loggedUsername }) => {
     navigate('/admin/formulario');
   };
 
+  const openSubmissions = (event) => {
+    setSelectedEvent(event.slug);
+    navigate('/admin/inscricoes');
+  };
+
   const handleSave = async () => {
     if (!draft.name.trim() || !draft.slug.trim()) {
       toast.error('Nome e identificador (slug) são obrigatórios.');
@@ -185,6 +190,9 @@ const AdminEvents = ({ loggedUsername }) => {
                   <td className="text-end">
                     <Button size="sm" variant="teal-blue" className="me-2" onClick={() => openFormBuilder(event)}>
                       Campos
+                    </Button>
+                    <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openSubmissions(event)}>
+                      Inscrições
                     </Button>
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
                       Editar

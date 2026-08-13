@@ -61,6 +61,7 @@ const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsMan
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
 const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
+const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -351,6 +352,18 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminFormBuilder formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/inscricoes')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                  userRole={userRole}
+                  requiredPermission="REGISTRATIONS_READ"
+                >
+                  <AdminSubmissions formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
