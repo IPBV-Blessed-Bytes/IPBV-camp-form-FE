@@ -12,6 +12,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'feedback',
   'form-context',
   'form-fields',
+  'submissions',
   'homepage-info',
   'lots',
   'products',

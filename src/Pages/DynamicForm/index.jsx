@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -6,6 +6,10 @@ import { toast } from 'react-toastify';
 import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
 import DynamicField from '@/form/dynamic/DynamicField';
+import { createSubmission } from '@/services/submissions';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
+import { eventPath } from '@/config/eventScope';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
@@ -36,10 +40,13 @@ const displayValue = (field, value) => {
 const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections, loading } = useEventSchema();
+  const { isLoggedIn } = useContext(AuthContext);
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
   const [stepIndex, setStepIndex] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
@@ -77,11 +84,55 @@ const DynamicForm = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubmit = () => {
-    toast.info('Envio das respostas será habilitado na próxima etapa.');
+  const handleSubmit = async () => {
+    if (!isLoggedIn) {
+      toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
+      navigate('/entrar');
+      return;
+    }
+
+    try {
+      buildValidationSchema(fields).validateSync(currentAnswers, { abortEarly: false });
+    } catch (validationError) {
+      setErrors(collectErrors(validationError));
+      setStepIndex(0);
+      toast.error('Preencha os campos obrigatórios antes de enviar.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await createSubmission({ answers: currentAnswers });
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao enviar a inscrição.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) return <Loading loading />;
+
+  if (submitted) {
+    return (
+      <div className="components-container">
+        <Header />
+        <div className="form__container container">
+          <Row className="justify-content-center">
+            <Col lg={8} className="text-center my-5">
+              <h2>Inscrição enviada! 🎉</h2>
+              <p className="mt-3">Recebemos suas respostas com sucesso.</p>
+              <button className="btn btn-teal-blue mt-3" onClick={() => navigate(eventPath('/'))}>
+                Voltar ao início
+              </button>
+            </Col>
+          </Row>
+        </div>
+        <Footer handleAdminClick={() => navigate('/admin')} />
+      </div>
+    );
+  }
 
   if (!sections.length) {
     return (
@@ -107,7 +158,8 @@ const DynamicForm = () => {
                 description="Confira suas respostas antes de enviar."
                 onBack={goBack}
                 onNext={handleSubmit}
-                nextLabel="Enviar"
+                nextLabel={submitting ? 'Enviando...' : 'Enviar'}
+                nextDisabled={submitting}
               >
                 <div className="dynamic-form__review">
                   {sections.map((sec) => (
