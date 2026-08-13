@@ -12,6 +12,8 @@ import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
 
+import useEventSchema from '@/hooks/useEventSchema';
+import DynamicForm from '../Pages/DynamicForm';
 import FormHome from '../Pages/Home';
 import FormPersonalData from '../Pages/PersonalData';
 import FormContact from '../Pages/Contact';
@@ -87,6 +89,8 @@ const FormRoutes = () => {
 
   const adminPath = (segment) => `${effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
+  const { hasSchema, loading: schemaLoading } = useEventSchema();
+
   return (
     <div className="form">
       {!adminPathname && formPath && (
@@ -95,7 +99,11 @@ const FormRoutes = () => {
           {effectiveFormContext === 'form-off' && <Offline />}
           {effectiveFormContext === 'maintenance' && <Maintenance />}
 
-          {effectiveFormContext === 'form-on' && (
+          {effectiveFormContext === 'form-on' && schemaLoading && <Loading loading />}
+
+          {effectiveFormContext === 'form-on' && !schemaLoading && hasSchema && <DynamicForm />}
+
+          {effectiveFormContext === 'form-on' && !schemaLoading && !hasSchema && (
             <>
               <Header showNavMenu />
 
