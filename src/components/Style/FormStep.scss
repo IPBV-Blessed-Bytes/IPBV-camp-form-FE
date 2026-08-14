@@ -47,7 +47,7 @@
 
   &__nav {
     align-items: center;
-    background: $primary;
+    background: var(--event-color, #{$primary});
     display: flex;
     gap: 1rem;
     justify-content: space-between;
@@ -64,5 +64,31 @@
     @media (min-width: $md) {
       width: 12.5rem;
     }
+  }
+
+  &__nav .btn-warning {
+    --bs-btn-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-border-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-border-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-active-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-active-border-color: var(--event-secondary-color, #{$secondary});
+  }
+
+  &__nav .btn-outline-warning {
+    --bs-btn-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-border-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-border-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-active-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-active-border-color: var(--event-secondary-color, #{$secondary});
+  }
+
+  &__nav .btn-light {
+    --bs-btn-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-border-color: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--event-secondary-color, #{$secondary});
+    --bs-btn-hover-border-color: var(--event-secondary-color, #{$secondary});
   }
 }

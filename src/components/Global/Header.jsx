@@ -17,7 +17,7 @@ const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carr
 
 const Header = ({ showNavMenu = false }) => {
   const baseYear = useBaseYear();
-  const { name: eventName, logoUrl, year: eventYear } = useEventBranding();
+  const { name: eventName, year: eventYear } = useEventBranding();
   const headerTitle = eventName || 'ACAMPAMENTO IPBV';
   const headerYear = eventYear || baseYear;
   const navigate = useNavigate();
@@ -61,7 +61,6 @@ const Header = ({ showNavMenu = false }) => {
       <Container>
         <div className="form__header__left">
           <h2 className="header-title-wrapper">
-            {logoUrl && <img className="header-logo" src={logoUrl} alt={headerTitle} />}
             <a className="header-title" href={eventPath('/')}>
               {headerTitle} {headerYear}
             </a>

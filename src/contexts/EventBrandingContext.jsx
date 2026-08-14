@@ -7,6 +7,7 @@ import { getEvent } from '@/services/events';
 import { getEventSlug } from '@/config/eventScope';
 
 const DEFAULT_COLOR = '#007185';
+const DEFAULT_SECONDARY_COLOR = '#ffc107';
 
 const EventBrandingContext = createContext(null);
 
@@ -14,7 +15,7 @@ export const EventBrandingProvider = ({ children }) => {
   const location = useLocation();
   const slug = getEventSlug();
 
-  const { data: event } = useQuery({
+  const { data: event, isLoading } = useQuery({
     queryKey: ['event-branding', slug],
     queryFn: () => getEvent(slug),
     enabled: Boolean(slug),
@@ -22,20 +23,24 @@ export const EventBrandingProvider = ({ children }) => {
   });
 
   const color = event?.color || DEFAULT_COLOR;
+  const secondaryColor = event?.secondaryColor || DEFAULT_SECONDARY_COLOR;
 
   useEffect(() => {
     document.documentElement.style.setProperty('--event-color', color);
-  }, [color, location.pathname]);
+    document.documentElement.style.setProperty('--event-secondary-color', secondaryColor);
+  }, [color, secondaryColor, location.pathname]);
 
   const value = useMemo(
     () => ({
       name: event?.name || '',
-      logoUrl: event?.logoUrl || '',
       contact: event?.contact || '',
       year: event?.year || null,
       color,
+      secondaryColor,
+      legacyForm: Boolean(event?.legacyForm),
+      loading: isLoading,
     }),
-    [event, color],
+    [event, color, secondaryColor, isLoading],
   );
 
   return <EventBrandingContext.Provider value={value}>{children}</EventBrandingContext.Provider>;

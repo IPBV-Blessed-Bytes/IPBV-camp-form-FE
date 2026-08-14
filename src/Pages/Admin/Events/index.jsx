@@ -17,7 +17,7 @@ const EMPTY_EVENT = {
   name: '',
   slug: '',
   color: '#007185',
-  logoUrl: '',
+  secondaryColor: '#ffc107',
   contact: '',
   year: '',
   active: true,
@@ -68,7 +68,7 @@ const AdminEvents = ({ loggedUsername }) => {
       name: event.name || '',
       slug: event.slug || '',
       color: event.color || '#007185',
-      logoUrl: event.logoUrl || '',
+      secondaryColor: event.secondaryColor || '#ffc107',
       contact: event.contact || '',
       year: event.year || '',
       active: event.active ?? true,
@@ -89,6 +89,11 @@ const AdminEvents = ({ loggedUsername }) => {
     navigate('/admin/inscricoes');
   };
 
+  const openInfoHome = (event) => {
+    setSelectedEvent(event.slug);
+    navigate('/admin/info');
+  };
+
   const handleSave = async () => {
     if (!draft.name.trim() || !draft.slug.trim()) {
       toast.error('Nome e identificador (slug) são obrigatórios.');
@@ -100,7 +105,7 @@ const AdminEvents = ({ loggedUsername }) => {
       name: draft.name.trim(),
       slug: draft.slug.trim(),
       color: draft.color || null,
-      logoUrl: draft.logoUrl.trim() || null,
+      secondaryColor: draft.secondaryColor || null,
       contact: draft.contact.trim() || null,
       year: draft.year ? Number(draft.year) : null,
       active: draft.active,
@@ -194,6 +199,9 @@ const AdminEvents = ({ loggedUsername }) => {
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openSubmissions(event)}>
                       Inscrições
                     </Button>
+                    <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openInfoHome(event)}>
+                      Info Home
+                    </Button>
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
                       Editar
                     </Button>
@@ -277,12 +285,20 @@ const AdminEvents = ({ loggedUsername }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>URL do logo</Form.Label>
-            <Form.Control
-              value={draft.logoUrl}
-              onChange={(e) => handleChange('logoUrl')(e.target.value)}
-              placeholder="https://..."
-            />
+            <Form.Label>Cor secundária (botões)</Form.Label>
+            <div className="admin-events__color-row">
+              <Form.Control
+                type="color"
+                value={draft.secondaryColor || '#ffc107'}
+                onChange={(e) => handleChange('secondaryColor')(e.target.value)}
+                title="Cor secundária do evento"
+              />
+              <Form.Control
+                value={draft.secondaryColor || ''}
+                onChange={(e) => handleChange('secondaryColor')(e.target.value)}
+                placeholder="#ffc107"
+              />
+            </div>
           </Form.Group>
 
           <Form.Group className="mb-3">

@@ -12,7 +12,7 @@ import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
 
-import useEventSchema from '@/hooks/useEventSchema';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 import DynamicForm from '../Pages/DynamicForm';
 import FormHome from '../Pages/Home';
 import FormPersonalData from '../Pages/PersonalData';
@@ -90,7 +90,7 @@ const FormRoutes = () => {
 
   const adminPath = (segment) => `${effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
-  const { hasSchema, loading: schemaLoading } = useEventSchema();
+  const { legacyForm, loading: brandingLoading } = useEventBranding();
 
   return (
     <div className="form">
@@ -100,11 +100,11 @@ const FormRoutes = () => {
           {effectiveFormContext === 'form-off' && <Offline />}
           {effectiveFormContext === 'maintenance' && <Maintenance />}
 
-          {effectiveFormContext === 'form-on' && schemaLoading && <Loading loading />}
+          {effectiveFormContext === 'form-on' && brandingLoading && <Loading loading />}
 
-          {effectiveFormContext === 'form-on' && !schemaLoading && hasSchema && <DynamicForm />}
+          {effectiveFormContext === 'form-on' && !brandingLoading && !legacyForm && <DynamicForm />}
 
-          {effectiveFormContext === 'form-on' && !schemaLoading && !hasSchema && (
+          {effectiveFormContext === 'form-on' && !brandingLoading && legacyForm && (
             <>
               <Header showNavMenu />
 

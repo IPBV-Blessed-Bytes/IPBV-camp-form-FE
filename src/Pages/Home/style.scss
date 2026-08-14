@@ -8,7 +8,7 @@
   }
 
   &-enphasis {
-    color: $primary;
+    color: var(--event-color, #{$primary});
     font-weight: bold;
   }
 

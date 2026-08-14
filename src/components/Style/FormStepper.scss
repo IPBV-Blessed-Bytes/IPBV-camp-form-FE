@@ -35,7 +35,7 @@
 
     &--completed:not(:first-child)::before,
     &--active:not(:first-child)::before {
-      background: $secondary;
+      background: var(--event-secondary-color, #{$secondary});
     }
   }
 
@@ -67,7 +67,7 @@
 
   &__bullet {
     align-items: center;
-    background: $primary;
+    background: var(--event-color, #{$primary});
     border: 2px solid rgba($white, 0.55);
     border-radius: 50%;
     color: $white;
@@ -100,7 +100,7 @@
       background: $white;
       border-color: $white;
       box-shadow: 0 0 0 4px rgba($white, 0.25);
-      color: $primary;
+      color: var(--event-color, #{$primary});
     }
 
     .form-stepper__label {
@@ -111,8 +111,8 @@
 
   &__item--completed {
     .form-stepper__bullet {
-      background: $secondary;
-      border-color: $secondary;
+      background: var(--event-secondary-color, #{$secondary});
+      border-color: var(--event-secondary-color, #{$secondary});
       color: $white;
     }
 
