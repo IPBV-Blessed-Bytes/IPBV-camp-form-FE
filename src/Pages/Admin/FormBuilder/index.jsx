@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import { listFormFields, createFormField, updateFormField, deleteFormField } from '@/services/formFields';
+import { listFormSections, createFormSection, updateFormSection, deleteFormSection } from '@/services/formSections';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -37,170 +38,107 @@ const slugifyKey = (value) =>
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/(^_|_$)/g, '');
 
-const EMPTY_FIELD = {
+const emptyField = (sectionId) => ({
   id: null,
+  sectionId: sectionId || null,
   key: '',
   keyTouched: false,
   label: '',
   type: 'text',
   required: false,
   sensitive: false,
-  section: '',
   placeholder: '',
   helpText: '',
   options: [],
   consentText: '',
   consentLink: '',
-};
+});
 
 const AdminFormBuilder = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
+  const [sections, setSections] = useState([]);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [draft, setDraft] = useState(EMPTY_FIELD);
 
-  const loadFields = async () => {
+  const [showSectionModal, setShowSectionModal] = useState(false);
+  const [sectionDraft, setSectionDraft] = useState({ id: null, name: '' });
+
+  const [showFieldModal, setShowFieldModal] = useState(false);
+  const [fieldDraft, setFieldDraft] = useState(emptyField());
+
+  const [toDelete, setToDelete] = useState(null); // { kind: 'section' | 'field', item }
+
+  const load = async () => {
     setLoading(true);
     try {
-      setFields(await listFormFields());
+      const [sectionsData, fieldsData] = await Promise.all([listFormSections(), listFormFields()]);
+      setSections(sectionsData);
+      setFields(fieldsData);
     } catch {
-      toast.error('Erro ao carregar os campos.');
+      toast.error('Erro ao carregar o formulário.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadFields();
+    load();
   }, []);
 
-  const openCreate = () => {
-    setDraft(EMPTY_FIELD);
-    setShowModal(true);
+  const sectionsWithFields = useMemo(
+    () =>
+      sections.map((section) => ({
+        ...section,
+        fields: fields.filter((field) => field.sectionId === section.id),
+      })),
+    [sections, fields],
+  );
+
+  // ---- sections ----
+  const openCreateSection = () => {
+    setSectionDraft({ id: null, name: '' });
+    setShowSectionModal(true);
   };
 
-  const openEdit = (field) => {
-    setDraft({
-      id: field.id,
-      key: field.key || '',
-      keyTouched: true,
-      label: field.label || '',
-      type: field.type || 'text',
-      required: field.required ?? false,
-      sensitive: field.sensitive ?? false,
-      section: field.section || '',
-      placeholder: field.placeholder || '',
-      helpText: field.helpText || '',
-      options: Array.isArray(field.options) ? field.options : [],
-      consentText: field.config?.text || '',
-      consentLink: field.config?.link || '',
-    });
-    setShowModal(true);
+  const openEditSection = (section) => {
+    setSectionDraft({ id: section.id, name: section.name });
+    setShowSectionModal(true);
   };
 
-  const patchDraft = (patch) => setDraft((prev) => ({ ...prev, ...patch }));
-
-  const setLabel = (label) =>
-    patchDraft({ label, key: draft.keyTouched ? draft.key : slugifyKey(label) });
-
-  const addOption = () => patchDraft({ options: [...draft.options, { label: '', value: '' }] });
-
-  const updateOption = (index, patch) =>
-    patchDraft({
-      options: draft.options.map((opt, i) => (i === index ? { ...opt, ...patch } : opt)),
-    });
-
-  const removeOption = (index) =>
-    patchDraft({ options: draft.options.filter((_, i) => i !== index) });
-
-  const buildPayload = (order) => ({
-    key: draft.key,
-    label: draft.label.trim(),
-    type: draft.type,
-    required: draft.required,
-    sensitive: draft.sensitive,
-    section: draft.section.trim() || null,
-    placeholder: OPTION_TYPES.includes(draft.type) || draft.type === 'consent' ? null : draft.placeholder.trim() || null,
-    helpText: draft.helpText.trim() || null,
-    order,
-    options: OPTION_TYPES.includes(draft.type)
-      ? draft.options
-          .filter((opt) => opt.label.trim())
-          .map((opt) => ({ label: opt.label.trim(), value: (opt.value || opt.label).trim() }))
-      : null,
-    config: draft.type === 'consent' ? { text: draft.consentText.trim(), link: draft.consentLink.trim() || null } : null,
-  });
-
-  const validateDraft = () => {
-    if (!draft.label.trim()) return 'O rótulo do campo é obrigatório.';
-    if (!draft.key.trim()) return 'O identificador do campo é obrigatório.';
-    if (OPTION_TYPES.includes(draft.type) && !draft.options.some((opt) => opt.label.trim())) {
-      return 'Adicione ao menos uma opção.';
-    }
-    if (draft.type === 'consent' && !draft.consentText.trim()) return 'Informe o texto do consentimento.';
-    return null;
-  };
-
-  const handleSave = async () => {
-    const error = validateDraft();
-    if (error) {
-      toast.error(error);
+  const saveSection = async () => {
+    if (!sectionDraft.name.trim()) {
+      toast.error('Informe o nome da seção.');
       return;
     }
-
     setSaving(true);
     try {
-      if (draft.id) {
-        const existing = fields.find((f) => f.id === draft.id);
-        await updateFormField(draft.id, buildPayload(existing?.order ?? fields.length));
-        toast.success('Campo atualizado com sucesso.');
+      if (sectionDraft.id) {
+        await updateFormSection(sectionDraft.id, { name: sectionDraft.name.trim() });
       } else {
-        await createFormField(buildPayload(fields.length));
-        toast.success('Campo criado com sucesso.');
+        await createFormSection({ name: sectionDraft.name.trim(), order: sections.length });
       }
-      setShowModal(false);
-      await loadFields();
+      setShowSectionModal(false);
+      await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar o campo.');
+      toast.error(getApiErrorMessage(err) || 'Erro ao salvar a seção.');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (!selected) return;
-    setSaving(true);
-    try {
-      await deleteFormField(selected.id);
-      toast.success('Campo excluído com sucesso.');
-      setShowDelete(false);
-      setSelected(null);
-      await loadFields();
-    } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao excluir o campo.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const move = async (index, direction) => {
+  const moveSection = async (index, direction) => {
     const target = index + direction;
-    if (target < 0 || target >= fields.length) return;
-
-    const current = fields[index];
-    const neighbor = fields[target];
-
+    if (target < 0 || target >= sections.length) return;
+    const current = sections[index];
+    const neighbor = sections[target];
     setSaving(true);
     try {
       await Promise.all([
-        updateFormField(current.id, fieldToPayload(current, neighbor.order)),
-        updateFormField(neighbor.id, fieldToPayload(neighbor, current.order)),
+        updateFormSection(current.id, { name: current.name, order: neighbor.order }),
+        updateFormSection(neighbor.id, { name: neighbor.name, order: current.order }),
       ]);
-      await loadFields();
+      await load();
     } catch (err) {
       toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
     } finally {
@@ -208,8 +146,127 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     }
   };
 
-  const isOptionType = OPTION_TYPES.includes(draft.type);
-  const isConsent = draft.type === 'consent';
+  // ---- fields ----
+  const openCreateField = (sectionId) => {
+    setFieldDraft(emptyField(sectionId));
+    setShowFieldModal(true);
+  };
+
+  const openEditField = (field) => {
+    setFieldDraft({
+      id: field.id,
+      sectionId: field.sectionId,
+      key: field.key || '',
+      keyTouched: true,
+      label: field.label || '',
+      type: field.type || 'text',
+      required: field.required ?? false,
+      sensitive: field.sensitive ?? false,
+      placeholder: field.placeholder || '',
+      helpText: field.helpText || '',
+      options: Array.isArray(field.options) ? field.options : [],
+      consentText: field.config?.text || '',
+      consentLink: field.config?.link || '',
+    });
+    setShowFieldModal(true);
+  };
+
+  const patchField = (patch) => setFieldDraft((prev) => ({ ...prev, ...patch }));
+
+  const setFieldLabel = (label) =>
+    patchField({ label, key: fieldDraft.keyTouched ? fieldDraft.key : slugifyKey(label) });
+
+  const addOption = () => patchField({ options: [...fieldDraft.options, { label: '', value: '' }] });
+  const updateOption = (index, patch) =>
+    patchField({ options: fieldDraft.options.map((opt, i) => (i === index ? { ...opt, ...patch } : opt)) });
+  const removeOption = (index) => patchField({ options: fieldDraft.options.filter((_, i) => i !== index) });
+
+  const isOptionType = OPTION_TYPES.includes(fieldDraft.type);
+  const isConsent = fieldDraft.type === 'consent';
+
+  const fieldPayload = (order) => ({
+    sectionId: fieldDraft.sectionId,
+    key: fieldDraft.key,
+    label: fieldDraft.label.trim(),
+    type: fieldDraft.type,
+    required: fieldDraft.required,
+    sensitive: fieldDraft.sensitive,
+    placeholder: isOptionType || isConsent ? null : fieldDraft.placeholder.trim() || null,
+    helpText: fieldDraft.helpText.trim() || null,
+    order,
+    options: isOptionType
+      ? fieldDraft.options
+          .filter((opt) => opt.label.trim())
+          .map((opt) => ({ label: opt.label.trim(), value: (opt.value || opt.label).trim() }))
+      : null,
+    config: isConsent ? { text: fieldDraft.consentText.trim(), link: fieldDraft.consentLink.trim() || null } : null,
+  });
+
+  const validateField = () => {
+    if (!fieldDraft.sectionId) return 'Selecione uma seção.';
+    if (!fieldDraft.label.trim()) return 'O rótulo do campo é obrigatório.';
+    if (!fieldDraft.key.trim()) return 'O identificador do campo é obrigatório.';
+    if (isOptionType && !fieldDraft.options.some((opt) => opt.label.trim())) return 'Adicione ao menos uma opção.';
+    if (isConsent && !fieldDraft.consentText.trim()) return 'Informe o texto do consentimento.';
+    return null;
+  };
+
+  const saveField = async () => {
+    const error = validateField();
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    setSaving(true);
+    try {
+      if (fieldDraft.id) {
+        const existing = fields.find((f) => f.id === fieldDraft.id);
+        await updateFormField(fieldDraft.id, fieldPayload(existing?.order ?? fields.length));
+      } else {
+        await createFormField(fieldPayload(fields.length));
+      }
+      setShowFieldModal(false);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao salvar o campo.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const moveField = async (sectionFields, index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= sectionFields.length) return;
+    const current = sectionFields[index];
+    const neighbor = sectionFields[target];
+    setSaving(true);
+    try {
+      await Promise.all([
+        updateFormField(current.id, rawFieldPayload(current, neighbor.order)),
+        updateFormField(neighbor.id, rawFieldPayload(neighbor, current.order)),
+      ]);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!toDelete) return;
+    setSaving(true);
+    try {
+      if (toDelete.kind === 'section') await deleteFormSection(toDelete.item.id);
+      else await deleteFormField(toDelete.item.id);
+      setToDelete(null);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao excluir.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="form-builder">
@@ -222,92 +279,153 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
       <div className="form-builder__content">
         <div className="form-builder__toolbar">
-          <Button variant="teal-blue" onClick={openCreate}>
-            + Adicionar campo
+          <Button variant="teal-blue" onClick={openCreateSection}>
+            + Nova seção
           </Button>
         </div>
 
         {loading ? (
           <Loading loading />
-        ) : fields.length === 0 ? (
-          <p className="form-builder__empty">Nenhum campo cadastrado. Comece adicionando o primeiro.</p>
+        ) : sections.length === 0 ? (
+          <p className="form-builder__empty">Crie uma seção para começar a adicionar campos.</p>
         ) : (
-          <ul className="form-builder__list">
-            {fields.map((field, index) => (
-              <li key={field.id} className="form-builder__item">
+          sectionsWithFields.map((section, sectionIndex) => (
+            <div key={section.id} className="form-builder__section">
+              <div className="form-builder__section-head">
                 <div className="form-builder__item-order">
                   <button
                     type="button"
                     className="form-builder__move form-builder__move--up"
-                    disabled={index === 0 || saving}
-                    onClick={() => move(index, -1)}
-                    aria-label="Mover para cima"
+                    disabled={sectionIndex === 0 || saving}
+                    onClick={() => moveSection(sectionIndex, -1)}
+                    aria-label="Mover seção para cima"
                   >
                     <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                   </button>
                   <button
                     type="button"
                     className="form-builder__move form-builder__move--down"
-                    disabled={index === fields.length - 1 || saving}
-                    onClick={() => move(index, 1)}
-                    aria-label="Mover para baixo"
+                    disabled={sectionIndex === sections.length - 1 || saving}
+                    onClick={() => moveSection(sectionIndex, 1)}
+                    aria-label="Mover seção para baixo"
                   >
                     <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                   </button>
                 </div>
-
-                <div className="form-builder__item-main">
-                  <div className="form-builder__item-title">
-                    {field.label}
-                    {field.required && <span className="form-builder__req">*</span>}
-                  </div>
-                  <div className="form-builder__item-meta">
-                    <Badge bg="light" text="dark">
-                      {typeLabel(field.type)}
-                    </Badge>
-                    <code>{field.key}</code>
-                    {field.section && <span className="form-builder__section">{field.section}</span>}
-                    {field.sensitive && (
-                      <Badge bg="warning" text="dark">
-                        sensível
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-
-                <div className="form-builder__item-actions">
-                  <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(field)}>
-                    Editar
+                <h5 className="form-builder__section-title">{section.name}</h5>
+                <div className="form-builder__section-actions">
+                  <Button size="sm" variant="outline-teal-blue" onClick={() => openEditSection(section)}>
+                    Renomear
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline-danger"
-                    onClick={() => {
-                      setSelected(field);
-                      setShowDelete(true);
-                    }}
-                  >
+                  <Button size="sm" variant="outline-danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
                     Excluir
                   </Button>
                 </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+
+              {section.fields.length === 0 ? (
+                <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
+              ) : (
+                <ul className="form-builder__list">
+                  {section.fields.map((field, index) => (
+                    <li key={field.id} className="form-builder__item">
+                      <div className="form-builder__item-order">
+                        <button
+                          type="button"
+                          className="form-builder__move form-builder__move--up"
+                          disabled={index === 0 || saving}
+                          onClick={() => moveField(section.fields, index, -1)}
+                          aria-label="Mover para cima"
+                        >
+                          <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                        </button>
+                        <button
+                          type="button"
+                          className="form-builder__move form-builder__move--down"
+                          disabled={index === section.fields.length - 1 || saving}
+                          onClick={() => moveField(section.fields, index, 1)}
+                          aria-label="Mover para baixo"
+                        >
+                          <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                        </button>
+                      </div>
+                      <div className="form-builder__item-main">
+                        <div className="form-builder__item-title">
+                          {field.label}
+                          {field.required && <span className="form-builder__req">*</span>}
+                        </div>
+                        <div className="form-builder__item-meta">
+                          <Badge bg="light" text="dark">
+                            {typeLabel(field.type)}
+                          </Badge>
+                          <code>{field.key}</code>
+                          {field.sensitive && (
+                            <Badge bg="warning" text="dark">
+                              sensível
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="form-builder__item-actions">
+                        <Button size="sm" variant="outline-teal-blue" onClick={() => openEditField(field)}>
+                          Editar
+                        </Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => setToDelete({ kind: 'field', item: field })}>
+                          Excluir
+                        </Button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
+                + Adicionar campo
+              </Button>
+            </div>
+          ))
         )}
       </div>
 
       <CustomModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
+        show={showSectionModal}
+        onHide={() => setShowSectionModal(false)}
         variant="info"
-        title={draft.id ? 'Editar campo' : 'Novo campo'}
+        title={sectionDraft.id ? 'Renomear seção' : 'Nova seção'}
         icon="form-context"
         footer={
           <>
-            <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
+            <Button variant="outline-secondary" onClick={() => setShowSectionModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
+            <Button variant="teal-blue" onClick={saveSection} disabled={saving}>
+              {saving ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </>
+        }
+      >
+        <Form.Group>
+          <Form.Label>Nome da seção</Form.Label>
+          <Form.Control
+            value={sectionDraft.name}
+            onChange={(e) => setSectionDraft((prev) => ({ ...prev, name: e.target.value }))}
+            placeholder="Ex.: Dados pessoais"
+          />
+        </Form.Group>
+      </CustomModal>
+
+      <CustomModal
+        show={showFieldModal}
+        onHide={() => setShowFieldModal(false)}
+        variant="info"
+        title={fieldDraft.id ? 'Editar campo' : 'Novo campo'}
+        icon="form-context"
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setShowFieldModal(false)} disabled={saving}>
+              Cancelar
+            </Button>
+            <Button variant="teal-blue" onClick={saveField} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar'}
             </Button>
           </>
@@ -315,8 +433,23 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       >
         <Form className="form-builder__form">
           <Form.Group className="mb-3">
+            <Form.Label>Seção</Form.Label>
+            <Form.Select
+              value={fieldDraft.sectionId || ''}
+              onChange={(e) => patchField({ sectionId: Number(e.target.value) })}
+            >
+              <option value="">Selecione...</option>
+              {sections.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
             <Form.Label>Tipo</Form.Label>
-            <Form.Select value={draft.type} onChange={(e) => patchDraft({ type: e.target.value })}>
+            <Form.Select value={fieldDraft.type} onChange={(e) => patchField({ type: e.target.value })}>
               {FIELD_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
                   {t.label}
@@ -327,14 +460,18 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
           <Form.Group className="mb-3">
             <Form.Label>Rótulo</Form.Label>
-            <Form.Control value={draft.label} onChange={(e) => setLabel(e.target.value)} placeholder="Ex.: Tamanho da camiseta" />
+            <Form.Control
+              value={fieldDraft.label}
+              onChange={(e) => setFieldLabel(e.target.value)}
+              placeholder="Ex.: Tamanho da camiseta"
+            />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Identificador</Form.Label>
             <Form.Control
-              value={draft.key}
-              onChange={(e) => patchDraft({ key: slugifyKey(e.target.value), keyTouched: true })}
+              value={fieldDraft.key}
+              onChange={(e) => patchField({ key: slugifyKey(e.target.value), keyTouched: true })}
               placeholder="tamanho_camiseta"
             />
             <Form.Text className="text-muted">Usado como chave da resposta. Único por evento.</Form.Text>
@@ -344,8 +481,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             <Form.Group className="mb-3">
               <Form.Label>Placeholder</Form.Label>
               <Form.Control
-                value={draft.placeholder}
-                onChange={(e) => patchDraft({ placeholder: e.target.value })}
+                value={fieldDraft.placeholder}
+                onChange={(e) => patchField({ placeholder: e.target.value })}
                 placeholder="Texto de exemplo dentro do campo"
               />
             </Form.Group>
@@ -354,7 +491,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           {isOptionType && (
             <Form.Group className="mb-3">
               <Form.Label>Opções</Form.Label>
-              {draft.options.map((opt, index) => (
+              {fieldDraft.options.map((opt, index) => (
                 <div key={index} className="form-builder__option-row">
                   <Form.Control
                     value={opt.label}
@@ -389,16 +526,16 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 <Form.Control
                   as="textarea"
                   rows={3}
-                  value={draft.consentText}
-                  onChange={(e) => patchDraft({ consentText: e.target.value })}
+                  value={fieldDraft.consentText}
+                  onChange={(e) => patchField({ consentText: e.target.value })}
                   placeholder="Declaro que li e concordo com..."
                 />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Link (opcional)</Form.Label>
                 <Form.Control
-                  value={draft.consentLink}
-                  onChange={(e) => patchDraft({ consentLink: e.target.value })}
+                  value={fieldDraft.consentLink}
+                  onChange={(e) => patchField({ consentLink: e.target.value })}
                   placeholder="https://..."
                 />
               </Form.Group>
@@ -406,19 +543,10 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           )}
 
           <Form.Group className="mb-3">
-            <Form.Label>Seção (opcional)</Form.Label>
-            <Form.Control
-              value={draft.section}
-              onChange={(e) => patchDraft({ section: e.target.value })}
-              placeholder="Ex.: Dados pessoais"
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
             <Form.Label>Texto de ajuda (opcional)</Form.Label>
             <Form.Control
-              value={draft.helpText}
-              onChange={(e) => patchDraft({ helpText: e.target.value })}
+              value={fieldDraft.helpText}
+              onChange={(e) => patchField({ helpText: e.target.value })}
               placeholder="Instrução exibida abaixo do campo"
             />
           </Form.Group>
@@ -427,51 +555,52 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             type="switch"
             id="field-required-switch"
             label="Campo obrigatório"
-            checked={draft.required}
-            onChange={(e) => patchDraft({ required: e.target.checked })}
+            checked={fieldDraft.required}
+            onChange={(e) => patchField({ required: e.target.checked })}
           />
           <Form.Check
             type="switch"
             id="field-sensitive-switch"
             className="mt-2"
             label="Dado sensível (LGPD)"
-            checked={draft.sensitive}
-            onChange={(e) => patchDraft({ sensitive: e.target.checked })}
+            checked={fieldDraft.sensitive}
+            onChange={(e) => patchField({ sensitive: e.target.checked })}
           />
         </Form>
       </CustomModal>
 
       <CustomModal
-        show={showDelete}
-        onHide={() => setShowDelete(false)}
+        show={Boolean(toDelete)}
+        onHide={() => setToDelete(null)}
         variant="cancel"
-        title="Excluir campo"
+        title={toDelete?.kind === 'section' ? 'Excluir seção' : 'Excluir campo'}
         footer={
           <>
-            <Button variant="outline-secondary" onClick={() => setShowDelete(false)} disabled={saving}>
+            <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete} disabled={saving}>
+            <Button variant="danger" onClick={confirmDelete} disabled={saving}>
               {saving ? 'Excluindo...' : 'Excluir'}
             </Button>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir o campo <b>{selected?.label}</b>?
+          Tem certeza que deseja excluir <b>{toDelete?.item?.name || toDelete?.item?.label}</b>?
+          {toDelete?.kind === 'section' && ' A seção precisa estar sem campos.'}
         </p>
       </CustomModal>
     </div>
   );
 };
 
-const fieldToPayload = (field, order) => ({
+const rawFieldPayload = (field, order) => ({
+  sectionId: field.sectionId,
   key: field.key,
   label: field.label,
   type: field.type,
   required: field.required,
   sensitive: field.sensitive,
-  section: field.section,
   placeholder: field.placeholder,
   helpText: field.helpText,
   order,

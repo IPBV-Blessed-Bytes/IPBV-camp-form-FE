@@ -17,6 +17,40 @@
     padding: 2rem 0;
   }
 
+  &__section {
+    background: #f8f9fa;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__section-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__section-title {
+    flex: 1;
+    margin: 0;
+    font-weight: 700;
+    color: #212529;
+  }
+
+  &__section-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  &__section-empty {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
+
   &__list {
     list-style: none;
     padding: 0;

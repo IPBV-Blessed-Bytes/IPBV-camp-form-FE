@@ -39,21 +39,25 @@ const displayValue = (field, value) => {
 
 const DynamicForm = () => {
   const navigate = useNavigate();
-  const { fields, sections, loading } = useEventSchema();
+  const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
   const [stepIndex, setStepIndex] = useState(0);
+  const [maxStepReached, setMaxStepReached] = useState(0);
   const [people, setPeople] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const sections = useMemo(() => allSections.filter((section) => section.fields.length > 0), [allSections]);
 
   const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
 
   const isReview = stepIndex >= sections.length;
   const section = sections[stepIndex];
+  const stepperSteps = useMemo(() => [...sections.map((s) => s.name), 'Revisão'], [sections]);
 
   const setValue = (key, value) => {
     setAnswers((prev) => ({ ...(Object.keys(prev).length ? prev : initializedAnswers), [key]: value }));
@@ -75,13 +79,23 @@ const DynamicForm = () => {
       toast.error('Preencha os campos obrigatórios.');
       return;
     }
-    setStepIndex((i) => i + 1);
+    setStepIndex((i) => {
+      const next = i + 1;
+      setMaxStepReached((max) => Math.max(max, next));
+      return next;
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const goBack = () => {
     if (stepIndex === 0) return;
     setStepIndex((i) => i - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToStep = (index) => {
+    if (index > maxStepReached) return;
+    setStepIndex(index);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -166,7 +180,12 @@ const DynamicForm = () => {
 
   return (
     <div className="components-container">
-      <Header />
+      <Header
+        stepperSteps={stepperSteps}
+        stepperCurrent={stepIndex}
+        stepperMax={maxStepReached}
+        onStepperSelect={goToStep}
+      />
       <div className="form__container container">
         <Row className="justify-content-center">
           <Col lg={10} className="px-0">

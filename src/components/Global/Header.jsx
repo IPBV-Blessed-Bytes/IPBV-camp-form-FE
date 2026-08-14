@@ -15,7 +15,7 @@ import FormStepper from './FormStepper';
 
 const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
-const Header = ({ showNavMenu = false }) => {
+const Header = ({ showNavMenu = false, stepperSteps, stepperCurrent = 0, stepperMax = 0, onStepperSelect }) => {
   const baseYear = useBaseYear();
   const { name: eventName, year: eventYear } = useEventBranding();
   const headerTitle = eventName || 'ACAMPAMENTO IPBV';
@@ -66,13 +66,13 @@ const Header = ({ showNavMenu = false }) => {
             </a>
           </h2>
 
-          {showNavMenu && (
+          {(showNavMenu || stepperSteps) && (
             <FormStepper
-              steps={HEADER_STEPS}
-              current={steps}
-              maxReached={highestStepReached}
-              lockedIndexes={hasFood ? [4] : []}
-              onSelect={handleStepChange}
+              steps={stepperSteps || HEADER_STEPS}
+              current={stepperSteps ? stepperCurrent : steps}
+              maxReached={stepperSteps ? stepperMax : highestStepReached}
+              lockedIndexes={stepperSteps ? [] : hasFood ? [4] : []}
+              onSelect={stepperSteps ? onStepperSelect : handleStepChange}
             />
           )}
         </div>
@@ -106,6 +106,10 @@ const Header = ({ showNavMenu = false }) => {
 
 Header.propTypes = {
   showNavMenu: PropTypes.bool,
+  stepperSteps: PropTypes.arrayOf(PropTypes.string),
+  stepperCurrent: PropTypes.number,
+  stepperMax: PropTypes.number,
+  onStepperSelect: PropTypes.func,
 };
 
 export default Header;

@@ -1,42 +1,36 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { listFormFields } from '@/services/formFields';
+import { listFormSections } from '@/services/formSections';
 import { getEventSlug } from '@/config/eventScope';
-
-const DEFAULT_SECTION = 'Informações';
-
-export const groupFieldsBySection = (fields = []) => {
-  const sections = [];
-  const byName = new Map();
-
-  fields.forEach((field) => {
-    const name = field.section?.trim() || DEFAULT_SECTION;
-    if (!byName.has(name)) {
-      const section = { name, fields: [] };
-      byName.set(name, section);
-      sections.push(section);
-    }
-    byName.get(name).fields.push(field);
-  });
-
-  return sections;
-};
 
 const useEventSchema = () => {
   const slug = getEventSlug();
 
-  const { data: fields = [], isLoading } = useQuery({
+  const { data: sections = [], isLoading: loadingSections } = useQuery({
+    queryKey: ['event-sections', slug],
+    queryFn: listFormSections,
+    enabled: Boolean(slug),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const { data: fields = [], isLoading: loadingFields } = useQuery({
     queryKey: ['event-schema', slug],
     queryFn: listFormFields,
     enabled: Boolean(slug),
     staleTime: 5 * 60 * 1000,
   });
 
+  const groupedSections = sections.map((section) => ({
+    ...section,
+    fields: fields.filter((field) => field.sectionId === section.id),
+  }));
+
   return {
+    sections: groupedSections,
     fields,
-    sections: groupFieldsBySection(fields),
     hasSchema: fields.length > 0,
-    loading: isLoading,
+    loading: loadingSections || loadingFields,
   };
 };
 
