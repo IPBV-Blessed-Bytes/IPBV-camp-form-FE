@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 
 import { getEvent } from '@/services/events';
-import { getEventSlug } from '@/config/eventScope';
+import { getEventSlug, getEventSlugFromPath } from '@/config/eventScope';
 
 const DEFAULT_COLOR = '#007185';
 const DEFAULT_SECONDARY_COLOR = '#ffc107';
@@ -26,8 +26,16 @@ export const EventBrandingProvider = ({ children }) => {
   const secondaryColor = event?.secondaryColor || DEFAULT_SECONDARY_COLOR;
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--event-color', color);
-    document.documentElement.style.setProperty('--event-secondary-color', secondaryColor);
+    const root = document.documentElement;
+    const onEventPage = Boolean(getEventSlugFromPath(location.pathname));
+
+    if (onEventPage) {
+      root.style.setProperty('--event-color', color);
+      root.style.setProperty('--event-secondary-color', secondaryColor);
+    } else {
+      root.style.removeProperty('--event-color');
+      root.style.removeProperty('--event-secondary-color');
+    }
   }, [color, secondaryColor, location.pathname]);
 
   const value = useMemo(
