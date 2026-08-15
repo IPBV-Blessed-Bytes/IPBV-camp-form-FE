@@ -94,6 +94,11 @@ const AdminEvents = ({ loggedUsername }) => {
     navigate('/admin/info');
   };
 
+  const openPackage = (event) => {
+    setSelectedEvent(event.slug);
+    navigate('/admin/pacote');
+  };
+
   const handleSave = async () => {
     if (!draft.name.trim() || !draft.slug.trim()) {
       toast.error('Nome e identificador (slug) são obrigatórios.');
@@ -202,6 +207,11 @@ const AdminEvents = ({ loggedUsername }) => {
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openInfoHome(event)}>
                       Info Home
                     </Button>
+                    {event.paymentEnabled && (
+                      <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openPackage(event)}>
+                        Pacote
+                      </Button>
+                    )}
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
                       Editar
                     </Button>

@@ -62,6 +62,7 @@ const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'))
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
 const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
 const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
+const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -364,6 +365,14 @@ const FormRoutes = () => {
                   requiredPermission="REGISTRATIONS_READ"
                 >
                   <AdminSubmissions formContext={formContext} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/pacote')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminPackageBuilder formContext={formContext} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
