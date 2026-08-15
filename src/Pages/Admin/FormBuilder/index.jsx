@@ -130,14 +130,11 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   const moveSection = async (index, direction) => {
     const target = index + direction;
     if (target < 0 || target >= sections.length) return;
-    const current = sections[index];
-    const neighbor = sections[target];
+    const reordered = [...sections];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
     setSaving(true);
     try {
-      await Promise.all([
-        updateFormSection(current.id, { name: current.name, order: neighbor.order }),
-        updateFormSection(neighbor.id, { name: neighbor.name, order: current.order }),
-      ]);
+      await Promise.all(reordered.map((section, i) => updateFormSection(section.id, { name: section.name, order: i })));
       await load();
     } catch (err) {
       toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');

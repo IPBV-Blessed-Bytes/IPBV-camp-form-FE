@@ -92,24 +92,20 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
   const move = async (index, direction) => {
     const target = index + direction;
     if (target < 0 || target >= categories.length) return;
-    const current = categories[index];
-    const neighbor = categories[target];
+    const reordered = [...categories];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
     setSaving(true);
     try {
-      await Promise.all([
-        updatePackageCategory(current.id, {
-          name: current.name,
-          selectionRule: current.selectionRule,
-          required: current.required,
-          order: neighbor.order,
-        }),
-        updatePackageCategory(neighbor.id, {
-          name: neighbor.name,
-          selectionRule: neighbor.selectionRule,
-          required: neighbor.required,
-          order: current.order,
-        }),
-      ]);
+      await Promise.all(
+        reordered.map((category, i) =>
+          updatePackageCategory(category.id, {
+            name: category.name,
+            selectionRule: category.selectionRule,
+            required: category.required,
+            order: i,
+          }),
+        ),
+      );
       await load();
     } catch (err) {
       toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
