@@ -7,8 +7,7 @@ import '../Style/adminSubpage.scss'
 
 const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32 }) => {
   const navigate = useNavigate();
-  const { formContext, logout, user } = useAuth();
-  const homePath = formContext === 'maintenance' ? '/dev' : '/admin';
+  const { logout, user } = useAuth();
   const displayName = (username || user || 'Usuário').split('@')[0];
 
   return (
@@ -28,7 +27,7 @@ const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32
           </div>
         </div>
 
-        <button type="button" className="admin-subpage__back" onClick={() => navigate(homePath)}>
+        <button type="button" className="admin-subpage__back" onClick={() => navigate(-1)}>
           <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
           <span>Voltar</span>
         </button>

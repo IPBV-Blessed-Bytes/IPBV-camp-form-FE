@@ -71,10 +71,11 @@
     font-family: 'Norwester', sans-serif;
     font-size: 50px;
     font-weight: normal;
+    color: $white;
     transition: color 0.3s ease;
 
     &:hover {
-      color: $secondary;
+      color: var(--event-secondary-color, #{$secondary});
     }
   }
 

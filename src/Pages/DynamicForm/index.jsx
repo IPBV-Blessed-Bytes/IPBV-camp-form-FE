@@ -8,8 +8,6 @@ import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValid
 import DynamicField from '@/form/dynamic/DynamicField';
 import { createSubmission } from '@/services/submissions';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
-import { useEventBranding } from '@/contexts/EventBrandingContext';
-import { IDENTITY_FIELDS, buildIdentitySection } from '@/form/dynamic/identityFields';
 import { eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
@@ -43,7 +41,6 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { paymentEnabled } = useEventBranding();
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
@@ -53,17 +50,9 @@ const DynamicForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const adminSections = useMemo(() => allSections.filter((section) => section.fields.length > 0), [allSections]);
-  const sections = useMemo(
-    () => (paymentEnabled ? [buildIdentitySection(), ...adminSections] : adminSections),
-    [paymentEnabled, adminSections],
-  );
-  const allFields = useMemo(
-    () => (paymentEnabled ? [...IDENTITY_FIELDS, ...fields] : fields),
-    [paymentEnabled, fields],
-  );
+  const sections = useMemo(() => allSections.filter((section) => section.fields.length > 0), [allSections]);
 
-  const initializedAnswers = useMemo(() => initialAnswers(allFields), [allFields]);
+  const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
 
   const isReview = stepIndex >= sections.length;
@@ -112,7 +101,7 @@ const DynamicForm = () => {
 
   const validateCurrentPerson = () => {
     try {
-      buildValidationSchema(allFields).validateSync(currentAnswers, { abortEarly: false });
+      buildValidationSchema(fields).validateSync(currentAnswers, { abortEarly: false });
       return true;
     } catch (validationError) {
       setErrors(collectErrors(validationError));

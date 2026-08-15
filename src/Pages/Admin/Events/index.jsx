@@ -207,11 +207,16 @@ const AdminEvents = ({ loggedUsername }) => {
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openInfoHome(event)}>
                       Info Home
                     </Button>
-                    {event.paymentEnabled && (
-                      <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openPackage(event)}>
-                        Pacote
-                      </Button>
-                    )}
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="me-2"
+                      disabled={!event.paymentEnabled}
+                      title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
+                      onClick={() => openPackage(event)}
+                    >
+                      Pacote
+                    </Button>
                     <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
                       Editar
                     </Button>
