@@ -1,7 +1,13 @@
 import authFetcher from '@/fetchers/fetcherWithCredentials';
+import fetcher from '@/fetchers';
 
 export const getHomeInfo = async () => {
   const { data } = await authFetcher.get('/homepage-info');
+  return data;
+};
+
+export const getPublicHomeInfo = async () => {
+  const { data } = await fetcher.get('/homepage-info');
   return data;
 };
 

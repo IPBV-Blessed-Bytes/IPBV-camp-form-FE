@@ -1,20 +1,23 @@
 import { useContext, useMemo, useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
 import DynamicField from '@/form/dynamic/DynamicField';
 import { createSubmission } from '@/services/submissions';
+import { getPublicHomeInfo } from '@/services/homeInfo';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
-import { eventPath } from '@/config/eventScope';
+import { eventPath, getEventSlug } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
 import InfoButton from '@/components/Global/InfoButton';
+import Icons from '@/components/Global/Icons';
 
 const collectErrors = (validationError) => {
   const errors = {};
@@ -49,6 +52,19 @@ const DynamicForm = () => {
   const [people, setPeople] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
+
+  const { data: homeInfo } = useQuery({
+    queryKey: ['home-info', getEventSlug()],
+    queryFn: getPublicHomeInfo,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const hasHomeInfo = useMemo(() => {
+    const top = homeInfo?.top || {};
+    const topFilled = Object.values(top).some((value) => value && String(value).trim());
+    return topFilled || (homeInfo?.bottom?.length || 0) > 0;
+  }, [homeInfo]);
 
   const sections = useMemo(() => allSections.filter((section) => section.fields.length > 0), [allSections]);
 
@@ -172,6 +188,64 @@ const DynamicForm = () => {
         <Header />
         <div className="form__container container">
           <p className="text-center my-5">Este evento ainda não possui um formulário configurado.</p>
+        </div>
+        <Footer handleAdminClick={() => navigate('/admin')} />
+      </div>
+    );
+  }
+
+  if (hasHomeInfo && !introDone) {
+    const top = homeInfo?.top || {};
+    return (
+      <div className="components-container">
+        <Header />
+        <div className="form__container container">
+          <Row className="justify-content-center">
+            <Col lg={10} className="px-0">
+              <FormStepLayout onNext={() => setIntroDone(true)} nextLabel="Começar inscrição">
+                <div className="text-center">
+                  {top.title && <h3 className="fw-bold mb-2">{top.title}</h3>}
+                  {top.subtitle && <h5 className="mb-3">{top.subtitle}</h5>}
+                  {top.locationAndDate && (
+                    <p className="d-flex gap-2 justify-content-center align-items-center mb-2">
+                      <Icons typeIcon="calendar" iconSize={24} fill="var(--event-color, #007185)" />
+                      {top.locationAndDate}
+                    </p>
+                  )}
+                  {(top.place || top.speaker) && (
+                    <p className="d-flex gap-2 justify-content-center align-items-center mb-2">
+                      <Icons typeIcon="location-pin" iconSize={24} fill="var(--event-color, #007185)" />
+                      {top.place}
+                      {top.speaker ? ` • Preletor: ${top.speaker}` : ''}
+                    </p>
+                  )}
+                  {top.registrationsDeadline && (
+                    <p className="mb-4">
+                      Inscrições até <b>{top.registrationsDeadline}</b>
+                    </p>
+                  )}
+                </div>
+
+                {(homeInfo?.bottom?.length || 0) > 0 && (
+                  <>
+                    <hr />
+                    <h5 className="fw-bold mb-3">Informações importantes</h5>
+                    <ul className="list-unstyled">
+                      {homeInfo.bottom.map((item) => (
+                        <li key={item.id} className="d-flex gap-2 mb-3">
+                          <Icons typeIcon={item.icon} iconSize={26} fill="var(--event-color, #007185)" />
+                          <span>
+                            <b>{item.title}:</b> {item.description}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </FormStepLayout>
+            </Col>
+          </Row>
+          <InfoButton />
         </div>
         <Footer handleAdminClick={() => navigate('/admin')} />
       </div>
