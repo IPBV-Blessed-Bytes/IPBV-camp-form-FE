@@ -1,8 +1,9 @@
 import { useContext, useMemo, useState } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import DOMPurify from 'dompurify';
 
 import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
@@ -10,6 +11,7 @@ import DynamicField from '@/form/dynamic/DynamicField';
 import { createSubmission } from '@/services/submissions';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { eventPath, getEventSlug } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
@@ -18,6 +20,11 @@ import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
 import InfoButton from '@/components/Global/InfoButton';
 import Icons from '@/components/Global/Icons';
+import '@/Pages/Home/style.scss';
+
+const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
+const iconColorProps = (icon, color) =>
+  STROKE_ICONS.includes(icon) ? { stroke: color, fill: 'none' } : { fill: color };
 
 const collectErrors = (validationError) => {
   const errors = {};
@@ -44,6 +51,8 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
+  const { color: eventColor } = useEventBranding();
+  const iconColor = eventColor || '#007185';
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
@@ -202,46 +211,77 @@ const DynamicForm = () => {
         <div className="form__container container">
           <Row className="justify-content-center">
             <Col lg={10} className="px-0">
-              <FormStepLayout onNext={() => setIntroDone(true)} nextLabel="Começar inscrição">
-                <div className="text-center">
-                  {top.title && <h3 className="fw-bold mb-2">{top.title}</h3>}
-                  {top.subtitle && <h5 className="mb-3">{top.subtitle}</h5>}
-                  {top.locationAndDate && (
-                    <p className="d-flex gap-2 justify-content-center align-items-center mb-2">
-                      <Icons typeIcon="calendar" iconSize={24} fill="var(--event-color, #007185)" />
-                      {top.locationAndDate}
-                    </p>
-                  )}
-                  {(top.place || top.speaker) && (
-                    <p className="d-flex gap-2 justify-content-center align-items-center mb-2">
-                      <Icons typeIcon="location-pin" iconSize={24} fill="var(--event-color, #007185)" />
-                      {top.place}
-                      {top.speaker ? ` • Preletor: ${top.speaker}` : ''}
-                    </p>
-                  )}
-                  {top.registrationsDeadline && (
-                    <p className="mb-4">
-                      Inscrições até <b>{top.registrationsDeadline}</b>
-                    </p>
-                  )}
-                </div>
-
-                {(homeInfo?.bottom?.length || 0) > 0 && (
-                  <>
-                    <hr />
-                    <h5 className="fw-bold mb-3">Informações importantes</h5>
-                    <ul className="list-unstyled">
-                      {homeInfo.bottom.map((item) => (
-                        <li key={item.id} className="d-flex gap-2 mb-3">
-                          <Icons typeIcon={item.icon} iconSize={26} fill="var(--event-color, #007185)" />
-                          <span>
-                            <b>{item.title}:</b> {item.description}
+              <FormStepLayout onNext={() => setIntroDone(true)}>
+                <Container>
+                  <Row className="text-center">
+                    <Col>
+                      <h4 className="mb-3">
+                        <b>{top.title}</b>
+                      </h4>
+                      <h5>
+                        <b className="home-page-subtitle">{top.subtitle}</b>
+                      </h5>
+                      <h5 className="info-home-text mb-2">
+                        <span className="info-home-enphasis">
+                          {top.locationAndDate && (
+                            <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
+                              <Icons className="flex-shrink-0" typeIcon="calendar" iconSize={30} fill={iconColor} />
+                              {top.locationAndDate}
+                            </span>
+                          )}
+                          {(top.place || top.speaker) && (
+                            <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
+                              <Icons className="flex-shrink-0" typeIcon="location-pin" iconSize={30} fill={iconColor} />
+                              {top.place}
+                              {top.speaker ? ` • Preletor: ${top.speaker}` : ''}
+                            </span>
+                          )}
+                        </span>
+                        {top.registrationsDeadline && (
+                          <span className="d-flex gap-3 align-items-center justify-content-center">
+                            <Icons className="flex-shrink-0" typeIcon="simple-info" iconSize={35} fill={iconColor} />
+                            <span>
+                              Inscrições até{' '}
+                              <em>
+                                <b>{top.registrationsDeadline}</b>
+                              </em>{' '}
+                              ou até o esgotamento das vagas!
+                            </span>
                           </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                        )}
+                      </h5>
+                    </Col>
+                    <hr className="horizontal-line" />
+                  </Row>
+
+                  {(homeInfo?.bottom?.length || 0) > 0 && (
+                    <Row className="justify-content-center">
+                      <Col xl={9}>
+                        <h4 className="mb-4 fw-bold">Informações Importantes</h4>
+                        <ul className="info-home-list">
+                          {homeInfo.bottom.map((item) => (
+                            <li key={item.id} className="mb-3">
+                              <h6 className="d-flex gap-3 align-items-center">
+                                <Icons
+                                  className="flex-shrink-0"
+                                  typeIcon={item.icon}
+                                  iconSize={32}
+                                  {...iconColorProps(item.icon, iconColor)}
+                                />
+                                <span className="info-home-itens d-flex gap-2">
+                                  <b className="info-home-enphasis">{item.title}:</b>{' '}
+                                  <span
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.description) }}
+                                  />
+                                </span>
+                              </h6>
+                            </li>
+                          ))}
+                        </ul>
+                      </Col>
+                    </Row>
+                  )}
+                </Container>
               </FormStepLayout>
             </Col>
           </Row>
