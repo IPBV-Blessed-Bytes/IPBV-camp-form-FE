@@ -30,3 +30,8 @@ export const setLotProductPrice = async (lotId, productId, payload) => {
   const { data } = await authFetcher.put(`/lots/${lotId}/products/${productId}`, payload);
   return data;
 };
+
+export const assignProductPackageCategory = async (productId, packageCategoryId) => {
+  const { data } = await authFetcher.patch(`/products/${productId}/package-category`, { packageCategoryId });
+  return data;
+};

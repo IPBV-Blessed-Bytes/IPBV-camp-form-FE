@@ -9,6 +9,7 @@ import {
   updatePackageCategory,
   deletePackageCategory,
 } from '@/services/packageCategories';
+import { getAllProducts, assignProductPackageCategory } from '@/services/products';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -29,20 +30,62 @@ const EMPTY_CATEGORY = { id: null, name: '', selectionRule: 'single', required: 
 const AdminPackageBuilder = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [draft, setDraft] = useState(EMPTY_CATEGORY);
   const [toDelete, setToDelete] = useState(null);
+  const [assignFor, setAssignFor] = useState(null); // category being assigned a product
+  const [assignProductId, setAssignProductId] = useState('');
 
   const load = async () => {
     setLoading(true);
     try {
-      setCategories(await listPackageCategories());
+      const [cats, prodsData] = await Promise.all([listPackageCategories(), getAllProducts()]);
+      setCategories(cats);
+      setProducts(prodsData?.products || []);
     } catch {
-      toast.error('Erro ao carregar as categorias.');
+      toast.error('Erro ao carregar o pacote.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const unassignedProducts = useMemo(() => products.filter((p) => !p.packageCategoryId), [products]);
+
+  const priceLabel = (product) => {
+    if (!product.prices || product.prices.length === 0) return 'sem preço (defina em Produtos)';
+    const values = product.prices.map((pr) => Number(pr.price));
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return min === max ? `R$ ${min}` : `R$ ${min}–${max}`;
+  };
+
+  const assignProduct = async () => {
+    if (!assignProductId) return;
+    setSaving(true);
+    try {
+      await assignProductPackageCategory(Number(assignProductId), assignFor.id);
+      setAssignFor(null);
+      setAssignProductId('');
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao associar produto.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const unassignProduct = async (productId) => {
+    setSaving(true);
+    try {
+      await assignProductPackageCategory(productId, null);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao remover produto.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -150,49 +193,114 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
           <p className="package-builder__empty">Crie categorias para montar o pacote (ex.: Hospedagem, Transporte).</p>
         ) : (
           <ul className="package-builder__list">
-            {categories.map((category, index) => (
-              <li key={category.id} className="package-builder__item">
-                <div className="package-builder__item-order">
-                  <button
-                    type="button"
-                    className="package-builder__move package-builder__move--up"
-                    disabled={index === 0 || saving}
-                    onClick={() => move(index, -1)}
-                    aria-label="Mover para cima"
-                  >
-                    <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                  </button>
-                  <button
-                    type="button"
-                    className="package-builder__move package-builder__move--down"
-                    disabled={index === categories.length - 1 || saving}
-                    onClick={() => move(index, 1)}
-                    aria-label="Mover para baixo"
-                  >
-                    <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                  </button>
-                </div>
-                <div className="package-builder__item-main">
-                  <div className="package-builder__item-title">{category.name}</div>
-                  <div className="package-builder__item-meta">
-                    <Badge bg="light" text="dark">
-                      {ruleLabel(category.selectionRule)}
-                    </Badge>
-                    <Badge bg={category.required ? 'success' : 'secondary'}>
-                      {category.required ? 'Obrigatória' : 'Opcional'}
-                    </Badge>
+            {categories.map((category, index) => {
+              const catProducts = products.filter((p) => p.packageCategoryId === category.id);
+              return (
+                <li key={category.id} className="package-builder__cat">
+                  <div className="package-builder__item">
+                    <div className="package-builder__item-order">
+                      <button
+                        type="button"
+                        className="package-builder__move package-builder__move--up"
+                        disabled={index === 0 || saving}
+                        onClick={() => move(index, -1)}
+                        aria-label="Mover para cima"
+                      >
+                        <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                      </button>
+                      <button
+                        type="button"
+                        className="package-builder__move package-builder__move--down"
+                        disabled={index === categories.length - 1 || saving}
+                        onClick={() => move(index, 1)}
+                        aria-label="Mover para baixo"
+                      >
+                        <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                      </button>
+                    </div>
+                    <div className="package-builder__item-main">
+                      <div className="package-builder__item-title">{category.name}</div>
+                      <div className="package-builder__item-meta">
+                        <Badge bg="light" text="dark">
+                          {ruleLabel(category.selectionRule)}
+                        </Badge>
+                        <Badge bg={category.required ? 'success' : 'secondary'}>
+                          {category.required ? 'Obrigatória' : 'Opcional'}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="package-builder__item-actions">
+                      <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(category)}>
+                        Editar
+                      </Button>
+                      <Button size="sm" variant="outline-danger" onClick={() => setToDelete(category)}>
+                        Excluir
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div className="package-builder__item-actions">
-                  <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(category)}>
-                    Editar
-                  </Button>
-                  <Button size="sm" variant="outline-danger" onClick={() => setToDelete(category)}>
-                    Excluir
-                  </Button>
-                </div>
-              </li>
-            ))}
+
+                  <div className="package-builder__products">
+                    {catProducts.length === 0 ? (
+                      <p className="package-builder__section-empty">Nenhum produto nesta categoria.</p>
+                    ) : (
+                      <ul className="package-builder__prod-list">
+                        {catProducts.map((product) => (
+                          <li key={product.id} className="package-builder__prod">
+                            <span>
+                              {product.name} <small className="text-muted">· {priceLabel(product)}</small>
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline-danger"
+                              disabled={saving}
+                              onClick={() => unassignProduct(product.id)}
+                            >
+                              Remover
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {assignFor?.id === category.id ? (
+                      <div className="package-builder__assign">
+                        <Form.Select
+                          value={assignProductId}
+                          onChange={(e) => setAssignProductId(e.target.value)}
+                        >
+                          <option value="">Selecione um produto...</option>
+                          {unassignedProducts.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {p.name} · {priceLabel(p)}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        <Button size="sm" variant="teal-blue" onClick={assignProduct} disabled={saving || !assignProductId}>
+                          Associar
+                        </Button>
+                        <Button size="sm" variant="outline-secondary" onClick={() => setAssignFor(null)}>
+                          Cancelar
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="teal-blue"
+                        className="mt-1"
+                        disabled={unassignedProducts.length === 0}
+                        title={unassignedProducts.length === 0 ? 'Crie produtos na tela de Produtos' : ''}
+                        onClick={() => {
+                          setAssignFor(category);
+                          setAssignProductId('');
+                        }}
+                      >
+                        + Associar produto
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
