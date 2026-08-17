@@ -23,6 +23,7 @@ const FIELD_TYPES = [
   { value: 'checkbox', label: 'Múltipla escolha' },
   { value: 'email', label: 'E-mail' },
   { value: 'phone', label: 'Telefone' },
+  { value: 'cpf', label: 'CPF (inscrição única)' },
   { value: 'consent', label: 'Consentimento (LGPD)' },
 ];
 

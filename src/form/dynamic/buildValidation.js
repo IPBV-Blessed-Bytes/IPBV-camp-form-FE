@@ -24,6 +24,13 @@ const ruleForField = (field) => {
         ? yup.string().required(REQUIRED_MESSAGE).email('Informe um e-mail válido')
         : yup.string().nullable().email('Informe um e-mail válido');
 
+    case 'cpf': {
+      const isValidCpf = (value) => !value || String(value).replace(/\D/g, '').length === 11;
+      return required
+        ? yup.string().required(REQUIRED_MESSAGE).test('cpf', 'Informe um CPF válido (11 dígitos)', isValidCpf)
+        : yup.string().nullable().test('cpf', 'Informe um CPF válido (11 dígitos)', isValidCpf);
+    }
+
     default:
       return required ? yup.string().required(REQUIRED_MESSAGE) : yup.string().nullable();
   }

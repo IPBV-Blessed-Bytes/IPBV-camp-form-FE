@@ -12,7 +12,7 @@ import { createSubmission } from '@/services/submissions';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
-import { eventPath, getEventSlug } from '@/config/eventScope';
+import { getEventSlug } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
@@ -169,6 +169,17 @@ const DynamicForm = () => {
     }
   };
 
+  const restart = () => {
+    setSubmitted(false);
+    setAnswers({});
+    setErrors({});
+    setStepIndex(0);
+    setMaxStepReached(0);
+    setPeople([]);
+    setIntroDone(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) return <Loading loading />;
 
   if (submitted) {
@@ -180,7 +191,7 @@ const DynamicForm = () => {
             <Col lg={8} className="text-center my-5">
               <h2>Inscrição enviada! 🎉</h2>
               <p className="mt-3">Recebemos suas respostas com sucesso.</p>
-              <button className="btn btn-teal-blue mt-3" onClick={() => navigate(eventPath('/'))}>
+              <button className="btn btn-teal-blue mt-3" onClick={restart}>
                 Voltar ao início
               </button>
             </Col>

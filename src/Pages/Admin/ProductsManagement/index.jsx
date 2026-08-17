@@ -6,6 +6,7 @@ import './style.scss';
 import { registerLog } from '@/services/logs';
 import { getAllProducts, createProduct, updateProduct, deleteProduct, setLotProductPrice } from '@/services/products';
 import { getLotsAuthenticated } from '@/services/lots';
+import { listPackageCategories } from '@/services/packageCategories';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -14,20 +15,13 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 
-const CATEGORIES = [
-  { value: 'HOSPEDAGEM', label: 'Hospedagem' },
-  { value: 'TRANSPORTE', label: 'Transporte' },
-  { value: 'ALIMENTACAO', label: 'Alimentação' },
-];
-
-const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
-
-const emptyForm = { name: '', description: '', category: '', active: true };
+const emptyForm = { name: '', description: '', packageCategoryId: '', active: true };
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [lots, setLots] = useState([]);
+  const [packageCategories, setPackageCategories] = useState([]);
   const [formData, setFormData] = useState(emptyForm);
   const [lotPrices, setLotPrices] = useState({});
   const [editingProduct, setEditingProduct] = useState(null);
@@ -40,10 +34,15 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const [productsData, lotsData] = await Promise.all([getAllProducts(), getLotsAuthenticated()]);
+      const [productsData, lotsData, categoriesData] = await Promise.all([
+        getAllProducts(),
+        getLotsAuthenticated(),
+        listPackageCategories(),
+      ]);
       const list = Array.isArray(productsData?.products) ? productsData.products : [];
       setProducts(list.sort((a, b) => a.sortOrder - b.sortOrder));
       setLots(Array.isArray(lotsData?.lots) ? lotsData.lots : []);
+      setPackageCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos');
     } finally {
@@ -68,7 +67,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setFormData({
       name: product.name,
       description: product.description || '',
-      category: product.category,
+      packageCategoryId: product.packageCategoryId ?? '',
       active: product.active,
     });
     const initial = {};
@@ -89,13 +88,22 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setShowDeleteModal(true);
   };
 
+  const categoryName = (id) => packageCategories.find((c) => c.id === id)?.name || '—';
+
   const validateForm = () => {
-    if (!formData.name || !formData.category) {
+    if (!formData.name || !formData.packageCategoryId) {
       toast.error('Nome e categoria são obrigatórios');
       return false;
     }
     return true;
   };
+
+  const buildPayload = () => ({
+    name: formData.name,
+    description: formData.description,
+    packageCategoryId: Number(formData.packageCategoryId),
+    active: formData.active,
+  });
 
   const saveLotPrices = async (productId) => {
     const entries = Object.entries(lotPrices);
@@ -114,12 +122,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       if (editingProduct) {
-        await updateProduct(editingProduct.id, formData);
+        await updateProduct(editingProduct.id, buildPayload());
         await saveLotPrices(editingProduct.id);
         toast.success('Produto atualizado com sucesso');
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
-        const created = await createProduct(formData);
+        const created = await createProduct(buildPayload());
 
         if (created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
@@ -205,7 +213,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     <em>{product.name}</em>
                     {product.description && <div className="text-secondary small">{product.description}</div>}
                   </td>
-                  <td>{categoryLabel(product.category)}</td>
+                  <td>{categoryName(product.packageCategoryId)}</td>
                   <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
                   <td>
                     <div className="lot-prices">
@@ -289,19 +297,24 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 <b>Categoria:</b>
               </Form.Label>
               <Form.Select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                value={formData.packageCategoryId}
+                onChange={(e) => setFormData({ ...formData, packageCategoryId: e.target.value })}
                 size="lg"
               >
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
+                {packageCategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
                   </option>
                 ))}
               </Form.Select>
+              {packageCategories.length === 0 && (
+                <Form.Text className="text-muted">
+                  Nenhuma categoria criada. Crie categorias na tela de Pacote do evento.
+                </Form.Text>
+              )}
             </Form.Group>
 
             <Form.Group controlId="formActive" className="mt-3">
