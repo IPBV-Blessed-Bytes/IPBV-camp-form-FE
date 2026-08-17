@@ -18,9 +18,8 @@
 
   &__row {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   &__content {
