@@ -1,10 +1,14 @@
 import { Form } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import ptBR from 'date-fns/locale/pt';
+import { parse, format, isValid } from 'date-fns';
 import PropTypes from 'prop-types';
+
+import MaskedDateInput from '@/components/Global/MaskedDateInput';
 
 const SCALAR_INPUT_TYPES = {
   text: 'text',
   number: 'number',
-  date: 'date',
   email: 'email',
   phone: 'tel',
 };
@@ -78,6 +82,28 @@ const DynamicField = ({ field, value, onChange, error }) => {
             />
           ))}
         </div>
+      );
+    }
+
+    if (type === 'date') {
+      const parsed = value ? parse(value, 'dd/MM/yyyy', new Date()) : null;
+      const selected = parsed && isValid(parsed) ? parsed : null;
+      return (
+        <Form.Control
+          as={DatePicker}
+          selected={selected}
+          onChange={(date) => onChange(date ? format(date, 'dd/MM/yyyy') : '')}
+          locale={ptBR}
+          dateFormat="dd/MM/yyyy"
+          dropdownMode="select"
+          maxDate={new Date()}
+          showMonthDropdown
+          showYearDropdown
+          autoComplete="off"
+          placeholderText="dd/mm/aaaa"
+          isInvalid={Boolean(error)}
+          customInput={<MaskedDateInput />}
+        />
       );
     }
 
