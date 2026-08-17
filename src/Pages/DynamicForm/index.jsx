@@ -11,6 +11,7 @@ import DynamicField from '@/form/dynamic/DynamicField';
 import PackageStep from '@/form/dynamic/PackageStep';
 import { computeAge, packageTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
+import { createGenericCheckout } from '@/services/checkout';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { getProducts } from '@/services/products';
 import { getLots } from '@/services/lots';
@@ -117,15 +118,30 @@ const DynamicForm = () => {
     const steps = sections.map((s) => ({ kind: 'section', section: s }));
     if (paymentEnabled) steps.push({ kind: 'package' });
     steps.push({ kind: 'review' });
+    if (paymentEnabled) {
+      steps.push({ kind: 'cart' });
+      steps.push({ kind: 'payment' });
+    }
     return steps;
   }, [sections, paymentEnabled]);
 
   const currentStep = wizardSteps[stepIndex];
   const isReview = currentStep?.kind === 'review';
-  const stepperSteps = useMemo(
+  const stepLabel = (st) =>
+    ({ section: st.section?.name, package: 'Pacote', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
+      st.kind
+    ];
+  const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
+
+  const allPeople = useMemo(() => [...people, currentAnswers], [people, currentAnswers]);
+  const grandTotal = useMemo(
     () =>
-      wizardSteps.map((st) => (st.kind === 'section' ? st.section.name : st.kind === 'package' ? 'Pacote' : 'Revisão')),
-    [wizardSteps],
+      allPeople.reduce(
+        (sum, person) =>
+          sum + packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento)),
+        0,
+      ),
+    [allPeople, packageProducts, ageRules],
   );
 
   const setValue = (key, value) => {
@@ -218,6 +234,32 @@ const DynamicForm = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao enviar a inscrição.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!isLoggedIn) {
+      toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
+      navigate('/entrar');
+      return;
+    }
+
+    if (!validateCurrentPerson()) return;
+
+    const registrations = allPeople.map((personAnswers) => ({ answers: personAnswers }));
+
+    setSubmitting(true);
+    try {
+      const { payment_url: paymentUrl } = await createGenericCheckout({ registrations });
+      if (!paymentUrl) {
+        toast.error('Não foi possível gerar o pagamento. Tente novamente.');
+        return;
+      }
+      window.location.href = paymentUrl;
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao gerar o pagamento.');
     } finally {
       setSubmitting(false);
     }
@@ -381,8 +423,13 @@ const DynamicForm = () => {
                       <Button variant="outline-warning" size="lg" onClick={addPerson} disabled={submitting}>
                         Adicionar pessoa
                       </Button>
-                      <Button variant="warning" size="lg" onClick={handleSubmit} disabled={submitting}>
-                        {submitting ? 'Enviando...' : `Enviar (${people.length + 1})`}
+                      <Button
+                        variant="warning"
+                        size="lg"
+                        onClick={paymentEnabled ? goNext : handleSubmit}
+                        disabled={submitting}
+                      >
+                        {paymentEnabled ? 'Continuar' : submitting ? 'Enviando...' : `Enviar (${people.length + 1})`}
                       </Button>
                     </div>
                   </>
@@ -428,6 +475,80 @@ const DynamicForm = () => {
                       </div>
                     </div>
                   )}
+                </div>
+              </FormStepLayout>
+            ) : currentStep.kind === 'cart' ? (
+              <FormStepLayout
+                title="Carrinho"
+                description="Confira todos os itens antes de pagar."
+                footer={
+                  <>
+                    <Button variant="light" size="lg" onClick={goBack}>
+                      Voltar
+                    </Button>
+                    <Button variant="warning" size="lg" onClick={goNext}>
+                      Ir para pagamento
+                    </Button>
+                  </>
+                }
+              >
+                <div className="dynamic-form__cart">
+                  {allPeople.map((person, personIndex) => {
+                    const personAge = computeAge(person.nascimento);
+                    const selection = person.__package || {};
+                    return (
+                      <div key={personIndex} className="mb-4">
+                        <h5>{person.nome || `Pessoa ${personIndex + 1}`}</h5>
+                        {packageCategories.map((cat) => {
+                          const sel = selection[cat.id] || [];
+                          return packageProducts
+                            .filter((p) => sel.includes(p.id))
+                            .map((p) => (
+                              <div key={p.id} className="d-flex justify-content-between border-bottom py-2">
+                                <span>
+                                  {cat.name}: {p.name}
+                                </span>
+                                <span>{formatPrice(productPrice(p, ageRules, personAge))}</span>
+                              </div>
+                            ));
+                        })}
+                        <div className="d-flex justify-content-between py-2">
+                          <span className="fw-bold">Subtotal</span>
+                          <b>{formatPrice(packageTotal(selection, packageProducts, ageRules, personAge))}</b>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div className="d-flex justify-content-between py-2 border-top pt-3">
+                    <h5 className="mb-0">Total</h5>
+                    <h5 className="mb-0">{formatPrice(grandTotal)}</h5>
+                  </div>
+                </div>
+              </FormStepLayout>
+            ) : currentStep.kind === 'payment' ? (
+              <FormStepLayout
+                title="Pagamento"
+                description="Você será redirecionado para o ambiente seguro do Pagar.me para concluir o pagamento."
+                footer={
+                  <>
+                    <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
+                      Voltar
+                    </Button>
+                    <Button variant="warning" size="lg" onClick={handlePayment} disabled={submitting}>
+                      {submitting ? 'Gerando pagamento...' : `Pagar ${formatPrice(grandTotal)}`}
+                    </Button>
+                  </>
+                }
+              >
+                <div className="dynamic-form__payment">
+                  <p>
+                    {allPeople.length} inscrição(ões) · Total{' '}
+                    <b>{formatPrice(grandTotal)}</b>
+                  </p>
+                  <p className="text-muted">
+                    Ao clicar em pagar, geramos seu pedido e abrimos a página de pagamento do Pagar.me. Sua inscrição é
+                    confirmada assim que o pagamento é aprovado.
+                  </p>
                 </div>
               </FormStepLayout>
             ) : currentStep.kind === 'package' ? (
