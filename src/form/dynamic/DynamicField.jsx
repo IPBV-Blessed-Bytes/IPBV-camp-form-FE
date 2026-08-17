@@ -21,6 +21,7 @@ const DynamicField = ({ field, value, onChange, error }) => {
     if (type === 'textarea') {
       return (
         <Form.Control
+          id={controlId}
           as="textarea"
           rows={3}
           value={value || ''}
@@ -33,7 +34,7 @@ const DynamicField = ({ field, value, onChange, error }) => {
 
     if (type === 'select') {
       return (
-        <Form.Select value={value || ''} isInvalid={Boolean(error)} onChange={(e) => onChange(e.target.value)}>
+        <Form.Select id={controlId} value={value || ''} isInvalid={Boolean(error)} onChange={(e) => onChange(e.target.value)}>
           <option value="">Selecione...</option>
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -131,6 +132,7 @@ const DynamicField = ({ field, value, onChange, error }) => {
 
     return (
       <Form.Control
+        id={controlId}
         type={SCALAR_INPUT_TYPES[type] || 'text'}
         value={value || ''}
         placeholder={placeholder || ''}
@@ -141,9 +143,9 @@ const DynamicField = ({ field, value, onChange, error }) => {
   };
 
   return (
-    <Form.Group className="mb-3" controlId={controlId}>
+    <Form.Group className="mb-3">
       {type !== 'consent' && (
-        <Form.Label>
+        <Form.Label htmlFor={controlId}>
           {label}
           {required && <span className="text-danger"> *</span>}
         </Form.Label>
