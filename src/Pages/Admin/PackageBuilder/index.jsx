@@ -27,7 +27,7 @@ const SELECTION_RULES = [
 
 const ruleLabel = (rule) => SELECTION_RULES.find((r) => r.value === rule)?.label || rule;
 
-const EMPTY_CATEGORY = { id: null, name: '', selectionRule: 'single', required: true };
+const EMPTY_CATEGORY = { id: null, name: '', description: '', selectionRule: 'single', required: true };
 
 const AdminPackageBuilder = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
@@ -151,6 +151,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
     setDraft({
       id: category.id,
       name: category.name,
+      description: category.description || '',
       selectionRule: category.selectionRule || 'single',
       required: category.required ?? true,
     });
@@ -165,6 +166,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
     setSaving(true);
     const payload = {
       name: draft.name.trim(),
+      description: draft.description.trim() || null,
       selectionRule: draft.selectionRule,
       required: draft.required,
       order: draft.id ? undefined : categories.length,
@@ -420,6 +422,16 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
               value={draft.name}
               onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
               placeholder="Ex.: Hospedagem"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Descrição (opcional)</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={2}
+              value={draft.description}
+              onChange={(e) => setDraft((prev) => ({ ...prev, description: e.target.value }))}
+              placeholder="Texto exibido acima das opções desta categoria"
             />
           </Form.Group>
           <Form.Group className="mb-3">

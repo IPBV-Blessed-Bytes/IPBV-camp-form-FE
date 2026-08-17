@@ -423,7 +423,7 @@ const DynamicForm = () => {
                 </div>
               </FormStepLayout>
             ) : currentStep.kind === 'package' ? (
-              <FormStepLayout title="Pacote" onBack={goBack} onNext={goNext} nextLabel="Revisar">
+              <div className="dynamic-package">
                 <PackageStep
                   categories={packageCategories}
                   products={packageProducts}
@@ -432,7 +432,15 @@ const DynamicForm = () => {
                   value={currentAnswers.__package}
                   onChange={(sel) => setValue('__package', sel)}
                 />
-              </FormStepLayout>
+                <div className="form-step__nav dynamic-package__nav">
+                  <Button variant="light" size="lg" onClick={goBack}>
+                    Voltar
+                  </Button>
+                  <Button variant="warning" size="lg" onClick={goNext}>
+                    Revisar
+                  </Button>
+                </div>
+              </div>
             ) : (
               <FormStepLayout
                 title={currentStep.section.name}

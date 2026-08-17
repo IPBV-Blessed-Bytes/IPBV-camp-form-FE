@@ -1,20 +1,31 @@
-.package-step {
-  &__cat-title {
+.dynamic-package__nav {
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.package-summary {
+  &__label {
+    color: var(--event-color, #007185);
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.35rem;
   }
 
-  &__category {
-    margin-bottom: 2rem;
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &__line {
+    margin: 0.75rem 0;
   }
 
   &__total {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 2px solid var(--event-color, #007185);
-    padding-top: 0.75rem;
-    margin-top: 1.5rem;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
   }
 }

@@ -1,3 +1,4 @@
+import { Row, Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Icons from '@/components/Global/Icons';
@@ -25,66 +26,98 @@ const PackageStep = ({ categories, products, rules, age, value, onChange }) => {
   const total = packageTotal(selection, products, rules, age);
 
   return (
-    <div className="package-step">
-      {categories.map((category) => {
-        const catProducts = products.filter((p) => p.packageCategoryId === category.id);
-        const selected = selection[category.id] || [];
+    <Row className="package-step">
+      <Col xs={12} xl={8} className="mb-3 mb-xl-0">
+        {categories.map((category) => {
+          const catProducts = products.filter((p) => p.packageCategoryId === category.id);
+          const selected = selection[category.id] || [];
 
-        return (
-          <div key={category.id} className="package-step__category mb-4">
-            <h4 className="package-step__cat-title">
-              {category.name}
-              {category.required && <span className="text-danger"> *</span>}
-            </h4>
+          return (
+            <Card key={category.id} className="mb-3">
+              <Card.Body>
+                <Card.Title>
+                  {category.name}
+                  {category.required && <span className="text-danger"> *</span>}
+                </Card.Title>
+                {category.description && <Card.Text>{category.description}</Card.Text>}
 
-            {catProducts.length === 0 ? (
-              <p className="text-muted">Nenhum produto disponível nesta categoria.</p>
-            ) : (
-              <div className="product-grid">
-                {catProducts.map((product) => {
-                  const price = productPrice(product, rules, age);
-                  const discount = discountForCategory(rules, product.packageCategoryId, age);
-                  const alreadySelected = selected.includes(product.id);
+                {catProducts.length === 0 ? (
+                  <p className="text-muted mb-0">Nenhum produto disponível nesta categoria.</p>
+                ) : (
+                  <div className="product-grid">
+                    {catProducts.map((product) => {
+                      const price = productPrice(product, rules, age);
+                      const discount = discountForCategory(rules, product.packageCategoryId, age);
+                      const alreadySelected = selected.includes(product.id);
 
-                  return (
-                    <div
-                      key={product.id}
-                      className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}
-                    >
-                      <div className="align-items-center mb-4">
-                        <h3 className="product-title">{product.name}</h3>
+                      return (
+                        <div
+                          key={product.id}
+                          className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}
+                        >
+                          <div className="align-items-center mb-4">
+                            <h3 className="product-title">{product.name}</h3>
+                          </div>
+                          <p className="product-price mb-2">{formatPrice(price)}</p>
+                          {discount > 0 && (
+                            <p className="discount-description small mb-2">
+                              De <s>{formatPrice(Number(product.price || 0))}</s> · -{discount}% por idade
+                            </p>
+                          )}
+                          {product.description && (
+                            <p className="discount-description small mb-4">{product.description}</p>
+                          )}
+                          <button
+                            type="button"
+                            className={`product-button ${alreadySelected ? 'selected' : ''}`}
+                            onClick={() => toggle(category, product.id)}
+                          >
+                            {alreadySelected && <Icons typeIcon="checked" iconSize={18} fill="#fff" />}
+                            {alreadySelected ? 'Selecionado' : 'Selecionar'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          );
+        })}
+      </Col>
+
+      <Col xs={12} xl={4} className="ps-xl-3">
+        <Card className="package-summary">
+          <Card.Body>
+            <Card.Title>Resumo do Pacote</Card.Title>
+            {categories.map((category) => {
+              const sel = selection[category.id] || [];
+              const selProducts = products.filter((p) => sel.includes(p.id));
+              return (
+                <div key={category.id} className="package-summary__cat">
+                  <div className="package-summary__label">{category.name}:</div>
+                  {selProducts.length === 0 ? (
+                    <small className="text-secondary fst-italic">Não selecionado</small>
+                  ) : (
+                    selProducts.map((p) => (
+                      <div key={p.id} className="package-summary__row">
+                        <span>{p.name}</span>
+                        <span>{formatPrice(productPrice(p, rules, age))}</span>
                       </div>
-                      <p className="product-price mb-2">{formatPrice(price)}</p>
-                      {discount > 0 && (
-                        <p className="discount-description small mb-2">
-                          De <s>{formatPrice(Number(product.price || 0))}</s> · desconto de {discount}% por idade
-                        </p>
-                      )}
-                      {product.description && (
-                        <p className="discount-description small mb-4">{product.description}</p>
-                      )}
-                      <button
-                        type="button"
-                        className={`product-button ${alreadySelected ? 'selected' : ''}`}
-                        onClick={() => toggle(category, product.id)}
-                      >
-                        {alreadySelected && <Icons typeIcon="checked" iconSize={18} fill="#fff" />}
-                        {alreadySelected ? 'Selecionado' : 'Selecionar'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })}
-
-      <div className="package-step__total">
-        <span>Subtotal</span>
-        <b>{formatPrice(total)}</b>
-      </div>
-    </div>
+                    ))
+                  )}
+                  <hr className="package-summary__line" />
+                </div>
+              );
+            })}
+            <div className="package-summary__total">
+              <b>Total:</b>
+              <b>{formatPrice(total)}</b>
+            </div>
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
