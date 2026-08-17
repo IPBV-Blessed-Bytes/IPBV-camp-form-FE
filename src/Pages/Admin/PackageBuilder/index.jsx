@@ -10,6 +10,8 @@ import {
   deletePackageCategory,
 } from '@/services/packageCategories';
 import { getAllProducts, assignProductPackageCategory } from '@/services/products';
+import { listAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
+import { getEvent } from '@/services/events';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -31,6 +33,9 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [rules, setRules] = useState([]);
+  const [agePricingEnabled, setAgePricingEnabled] = useState(false);
+  const [bracketDrafts, setBracketDrafts] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -42,13 +47,57 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
   const load = async () => {
     setLoading(true);
     try {
-      const [cats, prodsData] = await Promise.all([listPackageCategories(), getAllProducts()]);
+      const [cats, prodsData, event, ruleList] = await Promise.all([
+        listPackageCategories(),
+        getAllProducts(),
+        getEvent(slug),
+        listAgePriceRules(),
+      ]);
       setCategories(cats);
       setProducts(prodsData?.products || []);
+      setAgePricingEnabled(Boolean(event?.agePricingEnabled));
+      setRules(ruleList);
     } catch {
       toast.error('Erro ao carregar o pacote.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const patchBracket = (categoryId, patch) =>
+    setBracketDrafts((prev) => ({
+      ...prev,
+      [categoryId]: { minAge: '', maxAge: '', discount: '', ...prev[categoryId], ...patch },
+    }));
+
+  const addBracket = async (categoryId) => {
+    const draftBracket = bracketDrafts[categoryId] || {};
+    setSaving(true);
+    try {
+      await createAgePriceRule({
+        packageCategoryId: categoryId,
+        minAge: Number(draftBracket.minAge || 0),
+        maxAge: Number(draftBracket.maxAge || 0),
+        discountPercent: Number(draftBracket.discount || 0),
+      });
+      setBracketDrafts((prev) => ({ ...prev, [categoryId]: { minAge: '', maxAge: '', discount: '' } }));
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao adicionar faixa.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const removeBracket = async (id) => {
+    setSaving(true);
+    try {
+      await deleteAgePriceRule(id);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao remover faixa.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -298,6 +347,48 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                       </Button>
                     )}
                   </div>
+
+                  {agePricingEnabled && (
+                    <div className="package-builder__brackets">
+                      <div className="package-builder__brackets-title">Faixas de idade (desconto)</div>
+                      {rules
+                        .filter((r) => r.packageCategoryId === category.id)
+                        .map((rule) => (
+                          <div key={rule.id} className="package-builder__bracket">
+                            <span>
+                              {rule.minAge}–{rule.maxAge} anos → <b>{rule.discountPercent}% off</b>
+                              {rule.discountPercent === 100 ? ' (grátis)' : ''}
+                            </span>
+                            <Button size="sm" variant="outline-danger" disabled={saving} onClick={() => removeBracket(rule.id)}>
+                              ×
+                            </Button>
+                          </div>
+                        ))}
+                      <div className="package-builder__bracket-add">
+                        <Form.Control
+                          type="number"
+                          placeholder="de"
+                          value={bracketDrafts[category.id]?.minAge ?? ''}
+                          onChange={(e) => patchBracket(category.id, { minAge: e.target.value })}
+                        />
+                        <Form.Control
+                          type="number"
+                          placeholder="até"
+                          value={bracketDrafts[category.id]?.maxAge ?? ''}
+                          onChange={(e) => patchBracket(category.id, { maxAge: e.target.value })}
+                        />
+                        <Form.Control
+                          type="number"
+                          placeholder="% off"
+                          value={bracketDrafts[category.id]?.discount ?? ''}
+                          onChange={(e) => patchBracket(category.id, { discount: e.target.value })}
+                        />
+                        <Button size="sm" variant="teal-blue" disabled={saving} onClick={() => addBracket(category.id)}>
+                          Adicionar
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </li>
               );
             })}

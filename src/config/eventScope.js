@@ -14,6 +14,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'form-fields',
   'sections',
   'package-categories',
+  'age-price-rules',
   'submissions',
   'homepage-info',
   'lots',

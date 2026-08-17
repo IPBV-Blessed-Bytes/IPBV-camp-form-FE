@@ -22,6 +22,7 @@ const EMPTY_EVENT = {
   year: '',
   active: true,
   paymentEnabled: true,
+  agePricingEnabled: false,
 };
 
 const slugify = (value) =>
@@ -73,6 +74,7 @@ const AdminEvents = ({ loggedUsername }) => {
       year: event.year || '',
       active: event.active ?? true,
       paymentEnabled: event.paymentEnabled ?? true,
+      agePricingEnabled: event.agePricingEnabled ?? false,
     });
     setShowFormModal(true);
   };
@@ -115,6 +117,7 @@ const AdminEvents = ({ loggedUsername }) => {
       year: draft.year ? Number(draft.year) : null,
       active: draft.active,
       paymentEnabled: draft.paymentEnabled,
+      agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
     };
 
     try {
@@ -352,6 +355,20 @@ const AdminEvents = ({ loggedUsername }) => {
             onChange={(e) => handleChange('paymentEnabled')(e.target.checked)}
           />
           <Form.Text className="text-muted">Se desativado, o formulário é enviado sem carrinho nem cobrança.</Form.Text>
+
+          {draft.paymentEnabled && (
+            <>
+              <Form.Check
+                type="switch"
+                id="event-age-pricing-switch"
+                className="mt-2"
+                label="Preço por idade (faixas configuráveis no Pacote)"
+                checked={draft.agePricingEnabled}
+                onChange={(e) => handleChange('agePricingEnabled')(e.target.checked)}
+              />
+              <Form.Text className="text-muted">Adiciona um campo de nascimento e faixas de desconto por idade.</Form.Text>
+            </>
+          )}
         </Form>
       </CustomModal>
 

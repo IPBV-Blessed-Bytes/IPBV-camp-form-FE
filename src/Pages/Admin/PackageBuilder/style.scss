@@ -139,4 +139,38 @@
       max-width: 320px;
     }
   }
+
+  &__brackets {
+    margin: 0.5rem 0 0 2.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #fff;
+    border: 1px dashed #d9d9d9;
+    border-radius: 8px;
+  }
+
+  &__brackets-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+
+  &__bracket {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    padding: 0.2rem 0;
+  }
+
+  &__bracket-add {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.4rem;
+
+    input {
+      max-width: 90px;
+    }
+  }
 }
