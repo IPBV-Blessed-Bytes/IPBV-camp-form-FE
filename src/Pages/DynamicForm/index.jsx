@@ -13,8 +13,10 @@ import { computeAge, packageTotal, formatPrice, productPrice } from '@/form/dyna
 import { createSubmission } from '@/services/submissions';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { getProducts } from '@/services/products';
+import { getLots } from '@/services/lots';
 import { listPackageCategories } from '@/services/packageCategories';
 import { listAgePriceRules } from '@/services/agePriceRules';
+import { findActiveLot } from '@/utils/activeLot';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getEventSlug } from '@/config/eventScope';
@@ -76,6 +78,12 @@ const DynamicForm = () => {
     enabled: Boolean(paymentEnabled),
   });
   const packageProducts = useMemo(() => packageProductsData?.products || [], [packageProductsData]);
+  const { data: lotsData } = useQuery({
+    queryKey: ['pkg-lots', slug],
+    queryFn: getLots,
+    enabled: Boolean(paymentEnabled),
+  });
+  const activeLotName = useMemo(() => findActiveLot(lotsData?.lots || [])?.name || '', [lotsData]);
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
@@ -429,6 +437,7 @@ const DynamicForm = () => {
                   products={packageProducts}
                   rules={ageRules}
                   age={age}
+                  lotName={activeLotName}
                   value={currentAnswers.__package}
                   onChange={(sel) => setValue('__package', sel)}
                 />

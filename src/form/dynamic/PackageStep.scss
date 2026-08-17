@@ -3,6 +3,12 @@
   margin-top: 1rem;
 }
 
+.package-step__lot-title {
+  color: var(--event-color, #007185);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
 .package-summary {
   &__label {
     color: var(--event-color, #007185);
@@ -15,6 +21,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+  }
+
+  &__content {
+    &.is-selected {
+      border-left: 3px solid var(--event-color, #007185);
+      padding-left: 0.6rem;
+    }
   }
 
   &__line {

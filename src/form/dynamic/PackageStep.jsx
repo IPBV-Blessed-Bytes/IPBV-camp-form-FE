@@ -6,7 +6,7 @@ import { productPrice, packageTotal, formatPrice, discountForCategory } from './
 import '@/components/Style/ProductList.scss';
 import './PackageStep.scss';
 
-const PackageStep = ({ categories, products, rules, age, value, onChange }) => {
+const PackageStep = ({ categories, products, rules, age, lotName, value, onChange }) => {
   const selection = value || {};
 
   const toggle = (category, productId) => {
@@ -28,6 +28,7 @@ const PackageStep = ({ categories, products, rules, age, value, onChange }) => {
   return (
     <Row className="package-step">
       <Col xs={12} xl={8} className="mb-3 mb-xl-0">
+        {lotName && <h2 className="package-step__lot-title">{lotName}</h2>}
         {categories.map((category) => {
           const catProducts = products.filter((p) => p.packageCategoryId === category.id);
           const selected = selection[category.id] || [];
@@ -96,16 +97,18 @@ const PackageStep = ({ categories, products, rules, age, value, onChange }) => {
               return (
                 <div key={category.id} className="package-summary__cat">
                   <div className="package-summary__label">{category.name}:</div>
-                  {selProducts.length === 0 ? (
-                    <small className="text-secondary fst-italic">Não selecionado</small>
-                  ) : (
-                    selProducts.map((p) => (
-                      <div key={p.id} className="package-summary__row">
-                        <span>{p.name}</span>
-                        <span>{formatPrice(productPrice(p, rules, age))}</span>
-                      </div>
-                    ))
-                  )}
+                  <div className={`package-summary__content ${selProducts.length ? 'is-selected' : ''}`}>
+                    {selProducts.length === 0 ? (
+                      <small className="text-secondary fst-italic">Não selecionado</small>
+                    ) : (
+                      selProducts.map((p) => (
+                        <div key={p.id} className="package-summary__row">
+                          <span>{p.name}</span>
+                          <span>{formatPrice(productPrice(p, rules, age))}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
                   <hr className="package-summary__line" />
                 </div>
               );
@@ -126,6 +129,7 @@ PackageStep.propTypes = {
   products: PropTypes.array.isRequired,
   rules: PropTypes.array,
   age: PropTypes.number,
+  lotName: PropTypes.string,
   value: PropTypes.object,
   onChange: PropTypes.func.isRequired,
 };
