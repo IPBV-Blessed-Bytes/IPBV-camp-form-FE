@@ -1,0 +1,37 @@
+.package-step {
+  &__cat-title {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  &__product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  &__price {
+    white-space: nowrap;
+  }
+
+  &__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 2px solid var(--event-color, #007185);
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+    font-size: 1.15rem;
+  }
+
+  .form-check {
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .form-check-label {
+    width: 100%;
+  }
+}

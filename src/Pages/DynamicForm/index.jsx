@@ -8,8 +8,13 @@ import DOMPurify from 'dompurify';
 import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
 import DynamicField from '@/form/dynamic/DynamicField';
+import PackageStep from '@/form/dynamic/PackageStep';
+import { computeAge, packageTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
 import { getPublicHomeInfo } from '@/services/homeInfo';
+import { getProducts } from '@/services/products';
+import { listPackageCategories } from '@/services/packageCategories';
+import { listAgePriceRules } from '@/services/agePriceRules';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getEventSlug } from '@/config/eventScope';
@@ -51,8 +56,26 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor } = useEventBranding();
+  const { color: eventColor, paymentEnabled } = useEventBranding();
   const iconColor = eventColor || '#007185';
+
+  const slug = getEventSlug();
+  const { data: packageCategories = [] } = useQuery({
+    queryKey: ['pkg-categories', slug],
+    queryFn: listPackageCategories,
+    enabled: Boolean(paymentEnabled),
+  });
+  const { data: packageProductsData } = useQuery({
+    queryKey: ['pkg-products', slug],
+    queryFn: getProducts,
+    enabled: Boolean(paymentEnabled),
+  });
+  const { data: ageRules = [] } = useQuery({
+    queryKey: ['pkg-age-rules', slug],
+    queryFn: listAgePriceRules,
+    enabled: Boolean(paymentEnabled),
+  });
+  const packageProducts = useMemo(() => packageProductsData?.products || [], [packageProductsData]);
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
@@ -80,30 +103,53 @@ const DynamicForm = () => {
   const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
 
-  const isReview = stepIndex >= sections.length;
-  const section = sections[stepIndex];
-  const stepperSteps = useMemo(() => [...sections.map((s) => s.name), 'Revisão'], [sections]);
+  const age = useMemo(() => computeAge(currentAnswers.nascimento), [currentAnswers.nascimento]);
+
+  const wizardSteps = useMemo(() => {
+    const steps = sections.map((s) => ({ kind: 'section', section: s }));
+    if (paymentEnabled) steps.push({ kind: 'package' });
+    steps.push({ kind: 'review' });
+    return steps;
+  }, [sections, paymentEnabled]);
+
+  const currentStep = wizardSteps[stepIndex];
+  const isReview = currentStep?.kind === 'review';
+  const stepperSteps = useMemo(
+    () =>
+      wizardSteps.map((st) => (st.kind === 'section' ? st.section.name : st.kind === 'package' ? 'Pacote' : 'Revisão')),
+    [wizardSteps],
+  );
 
   const setValue = (key, value) => {
     setAnswers((prev) => ({ ...(Object.keys(prev).length ? prev : initializedAnswers), [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
-  const validateSection = () => {
-    try {
-      buildValidationSchema(section.fields).validateSync(currentAnswers, { abortEarly: false });
-      return true;
-    } catch (validationError) {
-      setErrors((prev) => ({ ...prev, ...collectErrors(validationError) }));
-      return false;
+  const validateStep = () => {
+    if (currentStep.kind === 'section') {
+      try {
+        buildValidationSchema(currentStep.section.fields).validateSync(currentAnswers, { abortEarly: false });
+        return true;
+      } catch (validationError) {
+        setErrors((prev) => ({ ...prev, ...collectErrors(validationError) }));
+        toast.error('Preencha os campos obrigatórios.');
+        return false;
+      }
     }
+    if (currentStep.kind === 'package') {
+      const selection = currentAnswers.__package || {};
+      const missing = packageCategories.filter((c) => c.required && !(selection[c.id]?.length));
+      if (missing.length) {
+        toast.error(`Escolha uma opção em: ${missing.map((m) => m.name).join(', ')}`);
+        return false;
+      }
+      return true;
+    }
+    return true;
   };
 
   const goNext = () => {
-    if (!isReview && !validateSection()) {
-      toast.error('Preencha os campos obrigatórios.');
-      return;
-    }
+    if (!isReview && !validateStep()) return;
     setStepIndex((i) => {
       const next = i + 1;
       setMaxStepReached((max) => Math.max(max, next));
@@ -351,16 +397,50 @@ const DynamicForm = () => {
                       ))}
                     </div>
                   ))}
+
+                  {paymentEnabled && (
+                    <div className="mb-4">
+                      <h5>Pacote</h5>
+                      {packageCategories.map((cat) => {
+                        const sel = (currentAnswers.__package || {})[cat.id] || [];
+                        return packageProducts
+                          .filter((p) => sel.includes(p.id))
+                          .map((p) => (
+                            <div key={p.id} className="d-flex justify-content-between border-bottom py-2">
+                              <span className="fw-bold">
+                                {cat.name}: {p.name}
+                              </span>
+                              <span>{formatPrice(productPrice(p, ageRules, age))}</span>
+                            </div>
+                          ));
+                      })}
+                      <div className="d-flex justify-content-between py-2">
+                        <span className="fw-bold">Total</span>
+                        <b>{formatPrice(packageTotal(currentAnswers.__package, packageProducts, ageRules, age))}</b>
+                      </div>
+                    </div>
+                  )}
                 </div>
+              </FormStepLayout>
+            ) : currentStep.kind === 'package' ? (
+              <FormStepLayout title="Pacote" onBack={goBack} onNext={goNext} nextLabel="Revisar">
+                <PackageStep
+                  categories={packageCategories}
+                  products={packageProducts}
+                  rules={ageRules}
+                  age={age}
+                  value={currentAnswers.__package}
+                  onChange={(sel) => setValue('__package', sel)}
+                />
               </FormStepLayout>
             ) : (
               <FormStepLayout
-                title={section.name}
+                title={currentStep.section.name}
                 onBack={stepIndex === 0 ? undefined : goBack}
                 onNext={goNext}
-                nextLabel={stepIndex === sections.length - 1 ? 'Revisar' : 'Avançar'}
+                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
               >
-                {section.fields.map((field) => (
+                {currentStep.section.fields.map((field) => (
                   <DynamicField
                     key={field.key}
                     field={field}
