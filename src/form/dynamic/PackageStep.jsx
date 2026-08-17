@@ -28,14 +28,14 @@ const PackageStep = ({ categories, products, rules, age, lotName, value, onChang
   return (
     <Row className="package-step">
       <Col xs={12} xl={8} className="mb-3 mb-xl-0">
-        {lotName && <h2 className="package-step__lot-title">{lotName}</h2>}
-        {categories.map((category) => {
+        {categories.map((category, index) => {
           const catProducts = products.filter((p) => p.packageCategoryId === category.id);
           const selected = selection[category.id] || [];
 
           return (
             <Card key={category.id} className="mb-3">
               <Card.Body>
+                {index === 0 && lotName && <h2 className="package-step__lot-title">{lotName}</h2>}
                 <Card.Title>
                   {category.name}
                   {category.required && <span className="text-danger"> *</span>}
