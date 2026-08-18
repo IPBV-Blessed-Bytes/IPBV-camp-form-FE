@@ -8,77 +8,13 @@
   &__toolbar {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   &__empty {
     text-align: center;
-    color: #6c757d;
-    padding: 2rem 0;
-  }
-
-  &__table {
-    background: #fff;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
-    margin-bottom: 0;
-    vertical-align: middle;
-
-    thead th {
-      background: #f6f8fa;
-      color: #64748b;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      border-bottom: 1px solid #e6eaee;
-      padding: 0.85rem 1rem;
-      white-space: nowrap;
-    }
-
-    tbody td {
-      padding: 0.85rem 1rem;
-      vertical-align: middle;
-    }
-
-    code {
-      color: #007185;
-      background: rgba(0, 113, 133, 0.08);
-      padding: 0.15rem 0.45rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-    }
-  }
-
-  &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  &__config {
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-  }
-
-  &__actions-divider {
-    width: 1px;
-    align-self: stretch;
-    min-height: 1.6rem;
-    background: #e6eaee;
-    margin: 0 0.15rem;
-  }
-
-  &__swatch {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    margin-right: 8px;
-    vertical-align: middle;
+    color: #64748b;
+    padding: 3rem 0;
   }
 
   &__color-row {
@@ -90,6 +26,138 @@
       flex: 0 0 auto;
       padding: 2px;
     }
+  }
+}
+
+.event-admin-card {
+  --card-accent: #007185;
+
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.4rem 1.25rem 1.25rem;
+  background: #fff;
+  border: 1px solid #e6eaee;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--card-accent);
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+    border-color: color-mix(in srgb, var(--card-accent) 35%, #e6eaee);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--card-accent);
+    background: color-mix(in srgb, var(--card-accent) 12%, #fff);
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__initial {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--card-accent);
+    line-height: 1;
+  }
+
+  &__heading {
+    min-width: 0;
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__year {
+    flex: 0 0 auto;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--card-accent);
+  }
+
+  &__slug {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    color: #64748b;
+    background: #f1f5f7;
+    padding: 0.12rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  &__tag {
+    border: 1px solid #e6eaee;
+    font-weight: 600;
+  }
+
+  &__config {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #eef2f4;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  &__footer {
+    margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+    border-top: 1px solid #eef2f4;
   }
 }
 

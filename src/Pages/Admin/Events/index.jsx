@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Badge, Button, ButtonGroup, Col, Form, Row, Table } from 'react-bootstrap';
+import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
+
+const ICON_KEYS = new Set(EVENT_ICONS.map((icon) => icon.key));
+
+const STAGE_BADGE = (event) => {
+  if (!event.active) return { bg: 'secondary', text: undefined, label: 'Inativo' };
+  if (event.registrationsOpen === false) return { bg: 'warning', text: 'dark', label: 'Aguardando evento' };
+  return { bg: 'success', text: undefined, label: 'Inscrições abertas' };
+};
 
 import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services/events';
 import { setSelectedEvent } from '@/config/eventScope';
@@ -185,65 +193,65 @@ const AdminEvents = ({ loggedUsername }) => {
         ) : events.length === 0 ? (
           <p className="admin-events__empty">Nenhum evento cadastrado.</p>
         ) : (
-          <Table hover responsive className="admin-events__table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Slug</th>
-                <th>Cor</th>
-                <th>Ano</th>
-                <th>Status</th>
-                <th className="text-end">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event) => (
-                <tr key={event.id}>
-                  <td>{event.name}</td>
-                  <td>
-                    <code>{event.slug}</code>
-                  </td>
-                  <td>
-                    <span className="admin-events__swatch" style={{ backgroundColor: event.color || '#007185' }} />
-                    {event.color || '—'}
-                  </td>
-                  <td>{event.year || '—'}</td>
-                  <td>
-                    {!event.active ? (
-                      <Badge bg="secondary">Inativo</Badge>
-                    ) : event.registrationsOpen === false ? (
-                      <Badge bg="warning" text="dark">
-                        Aguardando evento
+          <Row className="g-4">
+            {events.map((event) => {
+              const badge = STAGE_BADGE(event);
+              return (
+                <Col key={event.id} xs={12} md={6} xl={4}>
+                  <div className="event-admin-card" style={{ '--card-accent': event.color || '#007185' }}>
+                    <div className="event-admin-card__head">
+                      <span className="event-admin-card__icon">
+                        {ICON_KEYS.has(event.iconKey) ? (
+                          <EventIcons typeIcon={event.iconKey} iconSize={26} />
+                        ) : (
+                          <span className="event-admin-card__initial">
+                            {(event.name || '?').charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </span>
+                      <div className="event-admin-card__heading">
+                        <div className="event-admin-card__name-row">
+                          <h3 className="event-admin-card__name">{event.name}</h3>
+                          {event.year && <span className="event-admin-card__year">{event.year}</span>}
+                        </div>
+                        <code className="event-admin-card__slug">/e/{event.slug}</code>
+                      </div>
+                    </div>
+
+                    <div className="event-admin-card__meta">
+                      <Badge bg={badge.bg} text={badge.text}>
+                        {badge.label}
                       </Badge>
-                    ) : (
-                      <Badge bg="success">Inscrições abertas</Badge>
-                    )}
-                  </td>
-                  <td>
-                    <div className="admin-events__actions">
-                      <ButtonGroup size="sm" className="admin-events__config">
-                        <Button variant="teal-blue" onClick={() => openFormBuilder(event)}>
-                          Campos
-                        </Button>
-                        <Button variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
-                          Inscrições
-                        </Button>
-                        <Button variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
-                          Info Home
-                        </Button>
-                        <Button
-                          variant="outline-teal-blue"
-                          disabled={!event.paymentEnabled}
-                          title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
-                          onClick={() => openPackage(event)}
-                        >
-                          Pacote
-                        </Button>
-                      </ButtonGroup>
+                      {event.paymentEnabled && (
+                        <Badge bg="light" text="dark" className="event-admin-card__tag">
+                          Pagamento
+                        </Badge>
+                      )}
+                    </div>
 
-                      <div className="admin-events__actions-divider" aria-hidden="true" />
+                    <div className="event-admin-card__config">
+                      <Button size="sm" variant="outline-teal-blue" onClick={() => openFormBuilder(event)}>
+                        Campos
+                      </Button>
+                      <Button size="sm" variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
+                        Inscrições
+                      </Button>
+                      <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
+                        Info Home
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-teal-blue"
+                        disabled={!event.paymentEnabled}
+                        title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
+                        onClick={() => openPackage(event)}
+                      >
+                        Pacote
+                      </Button>
+                    </div>
 
-                      <Button size="sm" variant="outline-secondary" onClick={() => openEdit(event)}>
+                    <div className="event-admin-card__footer">
+                      <Button size="sm" variant="teal-blue" onClick={() => openEdit(event)}>
                         Editar
                       </Button>
                       <Button
@@ -257,11 +265,11 @@ const AdminEvents = ({ loggedUsername }) => {
                         Excluir
                       </Button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+                  </div>
+                </Col>
+              );
+            })}
+          </Row>
         )}
       </div>
 
