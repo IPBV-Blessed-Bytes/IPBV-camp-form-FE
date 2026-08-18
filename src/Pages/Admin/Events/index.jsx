@@ -23,6 +23,7 @@ const EMPTY_EVENT = {
   active: true,
   paymentEnabled: true,
   agePricingEnabled: false,
+  registrationFeeEnabled: false,
 };
 
 const slugify = (value) =>
@@ -75,6 +76,7 @@ const AdminEvents = ({ loggedUsername }) => {
       active: event.active ?? true,
       paymentEnabled: event.paymentEnabled ?? true,
       agePricingEnabled: event.agePricingEnabled ?? false,
+      registrationFeeEnabled: event.registrationFeeEnabled ?? false,
     });
     setShowFormModal(true);
   };
@@ -118,6 +120,7 @@ const AdminEvents = ({ loggedUsername }) => {
       active: draft.active,
       paymentEnabled: draft.paymentEnabled,
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
+      registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
     };
 
     try {
@@ -367,6 +370,18 @@ const AdminEvents = ({ loggedUsername }) => {
                 onChange={(e) => handleChange('agePricingEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted">Adiciona um campo de nascimento e faixas de desconto por idade.</Form.Text>
+
+              <Form.Check
+                type="switch"
+                id="event-registration-fee-switch"
+                className="mt-2"
+                label="Taxa de inscrição (somada a cada acampante)"
+                checked={draft.registrationFeeEnabled}
+                onChange={(e) => handleChange('registrationFeeEnabled')(e.target.checked)}
+              />
+              <Form.Text className="text-muted">
+                Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada acampante.
+              </Form.Text>
             </>
           )}
         </Form>

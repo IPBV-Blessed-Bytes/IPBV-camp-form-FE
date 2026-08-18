@@ -15,7 +15,15 @@ import FormStepper from './FormStepper';
 
 const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
-const Header = ({ showNavMenu = false, stepperSteps, stepperCurrent = 0, stepperMax = 0, onStepperSelect }) => {
+const Header = ({
+  showNavMenu = false,
+  stepperSteps,
+  stepperCurrent = 0,
+  stepperMax = 0,
+  onStepperSelect,
+  cartCount = 0,
+  onCartClick,
+}) => {
   const baseYear = useBaseYear();
   const { name: eventName, year: eventYear } = useEventBranding();
   const headerTitle = eventName || 'ACAMPAMENTO IPBV';
@@ -87,17 +95,23 @@ const Header = ({ showNavMenu = false, stepperSteps, stepperCurrent = 0, stepper
               Já tem cadastro? <span>Faça seu login</span>
             </button>
           )}
-          {showCartButton && (
-            <Button
-              className="cart-btn"
-              onClick={() => {
-                goToStep(enumSteps.beforePayment);
-                sessionStorage.setItem('enteredFromFinalReview', 'false');
-              }}
-            >
-              <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
-            </Button>
-          )}
+          {stepperSteps
+            ? cartCount > 0 && (
+                <Button className="cart-btn" onClick={onCartClick}>
+                  <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+                </Button>
+              )
+            : showCartButton && (
+                <Button
+                  className="cart-btn"
+                  onClick={() => {
+                    goToStep(enumSteps.beforePayment);
+                    sessionStorage.setItem('enteredFromFinalReview', 'false');
+                  }}
+                >
+                  <Icons typeIcon="cart" iconSize={30} fill={'#0066cc'} />
+                </Button>
+              )}
         </div>
       </Container>
     </header>
@@ -110,6 +124,8 @@ Header.propTypes = {
   stepperCurrent: PropTypes.number,
   stepperMax: PropTypes.number,
   onStepperSelect: PropTypes.func,
+  cartCount: PropTypes.number,
+  onCartClick: PropTypes.func,
 };
 
 export default Header;

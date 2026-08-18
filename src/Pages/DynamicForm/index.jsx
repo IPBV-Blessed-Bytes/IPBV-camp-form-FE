@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import { Container, Row, Col, Button, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
@@ -28,7 +28,10 @@ import FormStepLayout from '@/components/Global/FormStepLayout';
 import Loading from '@/components/Global/Loading';
 import InfoButton from '@/components/Global/InfoButton';
 import Icons from '@/components/Global/Icons';
+import Tips from '@/components/Global/Tips';
 import '@/Pages/Home/style.scss';
+import '@/components/Style/Cart.scss';
+import '@/Pages/BeforePayment/style.scss';
 
 const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
 const iconColorProps = (icon, color) =>
@@ -59,7 +62,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -84,7 +87,12 @@ const DynamicForm = () => {
     queryFn: getLots,
     enabled: Boolean(paymentEnabled),
   });
-  const activeLotName = useMemo(() => findActiveLot(lotsData?.lots || [])?.name || '', [lotsData]);
+  const activeLot = useMemo(() => findActiveLot(lotsData?.lots || []), [lotsData]);
+  const activeLotName = activeLot?.name || '';
+  const registrationFee = useMemo(
+    () => (registrationFeeEnabled ? Number(activeLot?.price?.registrationFee || 0) : 0),
+    [registrationFeeEnabled, activeLot],
+  );
 
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
@@ -94,6 +102,7 @@ const DynamicForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [introDone, setIntroDone] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('');
 
   const { data: homeInfo } = useQuery({
     queryKey: ['home-info', getEventSlug()],
@@ -133,15 +142,21 @@ const DynamicForm = () => {
     ];
   const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
 
-  const allPeople = useMemo(() => [...people, currentAnswers], [people, currentAnswers]);
+  const personPackageTotal = useCallback(
+    (person) => packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento)),
+    [packageProducts, ageRules],
+  );
+  const personTotal = useCallback(
+    (person) => personPackageTotal(person) + registrationFee,
+    [personPackageTotal, registrationFee],
+  );
+  const packagesTotal = useMemo(
+    () => people.reduce((sum, person) => sum + personPackageTotal(person), 0),
+    [people, personPackageTotal],
+  );
   const grandTotal = useMemo(
-    () =>
-      allPeople.reduce(
-        (sum, person) =>
-          sum + packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento)),
-        0,
-      ),
-    [allPeople, packageProducts, ageRules],
+    () => people.reduce((sum, person) => sum + personTotal(person), 0),
+    [people, personTotal],
   );
 
   const setValue = (key, value) => {
@@ -216,6 +231,44 @@ const DynamicForm = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const cartStepIndex = useMemo(() => wizardSteps.findIndex((s) => s.kind === 'cart'), [wizardSteps]);
+
+  const commitAndGoToCart = () => {
+    if (!validateCurrentPerson()) return;
+    setPeople((prev) => [...prev, currentAnswers]);
+    setAnswers({});
+    setErrors({});
+    setStepIndex(cartStepIndex);
+    setMaxStepReached((max) => Math.max(max, cartStepIndex));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const addCamper = () => {
+    setAnswers({});
+    setErrors({});
+    setStepIndex(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToPayment = () => {
+    const paymentIndex = cartStepIndex + 1;
+    setStepIndex(paymentIndex);
+    setMaxStepReached((max) => Math.max(max, paymentIndex));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const editCamper = (index) => {
+    setAnswers(people[index]);
+    setPeople((prev) => prev.filter((_, i) => i !== index));
+    setErrors({});
+    setStepIndex(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const deleteCamper = (index) => {
+    setPeople((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     if (!isLoggedIn) {
       toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
@@ -246,13 +299,20 @@ const DynamicForm = () => {
       return;
     }
 
-    if (!validateCurrentPerson()) return;
+    if (!people.length) {
+      toast.error('Adicione ao menos um acampante ao carrinho.');
+      return;
+    }
+    if (!paymentMethod) {
+      toast.error('Escolha uma forma de pagamento.');
+      return;
+    }
 
-    const registrations = allPeople.map((personAnswers) => ({ answers: personAnswers }));
+    const registrations = people.map((personAnswers) => ({ answers: personAnswers }));
 
     setSubmitting(true);
     try {
-      const { payment_url: paymentUrl } = await createGenericCheckout({ registrations });
+      const { payment_url: paymentUrl } = await createGenericCheckout({ registrations, paymentMethod });
       if (!paymentUrl) {
         toast.error('Não foi possível gerar o pagamento. Tente novamente.');
         return;
@@ -273,6 +333,7 @@ const DynamicForm = () => {
     setMaxStepReached(0);
     setPeople([]);
     setIntroDone(false);
+    setPaymentMethod('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -406,6 +467,8 @@ const DynamicForm = () => {
         stepperCurrent={stepIndex}
         stepperMax={maxStepReached}
         onStepperSelect={goToStep}
+        cartCount={paymentEnabled ? people.length : 0}
+        onCartClick={() => goToStep(cartStepIndex)}
       />
       <div className="form__container container">
         <Row className="justify-content-center">
@@ -413,25 +476,30 @@ const DynamicForm = () => {
             {isReview ? (
               <FormStepLayout
                 title={people.length ? `Revisão — pessoa ${people.length + 1}` : 'Revisão'}
-                description="Confira as respostas. Você pode adicionar outra pessoa ou enviar tudo."
+                description={
+                  paymentEnabled
+                    ? 'Confira as respostas antes de continuar para o carrinho.'
+                    : 'Confira as respostas. Você pode adicionar outra pessoa ou enviar tudo.'
+                }
                 footer={
                   <>
                     <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
                       Voltar
                     </Button>
-                    <div className="d-flex gap-2">
-                      <Button variant="outline-warning" size="lg" onClick={addPerson} disabled={submitting}>
-                        Adicionar pessoa
+                    {paymentEnabled ? (
+                      <Button variant="warning" size="lg" onClick={commitAndGoToCart} disabled={submitting}>
+                        Continuar
                       </Button>
-                      <Button
-                        variant="warning"
-                        size="lg"
-                        onClick={paymentEnabled ? goNext : handleSubmit}
-                        disabled={submitting}
-                      >
-                        {paymentEnabled ? 'Continuar' : submitting ? 'Enviando...' : `Enviar (${people.length + 1})`}
-                      </Button>
-                    </div>
+                    ) : (
+                      <div className="d-flex gap-2">
+                        <Button variant="outline-warning" size="lg" onClick={addPerson} disabled={submitting}>
+                          Adicionar pessoa
+                        </Button>
+                        <Button variant="warning" size="lg" onClick={handleSubmit} disabled={submitting}>
+                          {submitting ? 'Enviando...' : `Enviar (${people.length + 1})`}
+                        </Button>
+                      </div>
+                    )}
                   </>
                 }
               >
@@ -469,85 +537,172 @@ const DynamicForm = () => {
                             </div>
                           ));
                       })}
+                      {registrationFee > 0 && (
+                        <div className="d-flex justify-content-between border-bottom py-2">
+                          <span className="fw-bold">Taxa de Inscrição</span>
+                          <span>{formatPrice(registrationFee)}</span>
+                        </div>
+                      )}
                       <div className="d-flex justify-content-between py-2">
                         <span className="fw-bold">Total</span>
-                        <b>{formatPrice(packageTotal(currentAnswers.__package, packageProducts, ageRules, age))}</b>
+                        <b>{formatPrice(personTotal(currentAnswers))}</b>
                       </div>
                     </div>
                   )}
                 </div>
               </FormStepLayout>
             ) : currentStep.kind === 'cart' ? (
-              <FormStepLayout
-                title="Carrinho"
-                description="Confira todos os itens antes de pagar."
-                footer={
-                  <>
-                    <Button variant="light" size="lg" onClick={goBack}>
-                      Voltar
-                    </Button>
-                    <Button variant="warning" size="lg" onClick={goNext}>
-                      Ir para pagamento
-                    </Button>
-                  </>
-                }
-              >
-                <div className="dynamic-form__cart">
-                  {allPeople.map((person, personIndex) => {
-                    const personAge = computeAge(person.nascimento);
-                    const selection = person.__package || {};
-                    return (
-                      <div key={personIndex} className="mb-4">
-                        <h5>{person.nome || `Pessoa ${personIndex + 1}`}</h5>
-                        {packageCategories.map((cat) => {
-                          const sel = selection[cat.id] || [];
-                          return packageProducts
-                            .filter((p) => sel.includes(p.id))
-                            .map((p) => (
-                              <div key={p.id} className="d-flex justify-content-between border-bottom py-2">
-                                <span>
-                                  {cat.name}: {p.name}
-                                </span>
-                                <span>{formatPrice(productPrice(p, ageRules, personAge))}</span>
-                              </div>
-                            ));
-                        })}
-                        <div className="d-flex justify-content-between py-2">
-                          <span className="fw-bold">Subtotal</span>
-                          <b>{formatPrice(packageTotal(selection, packageProducts, ageRules, personAge))}</b>
+              <div className="dynamic-cart">
+                <Row>
+                  <Col xs={12} xl={8} className="mb-2 px-0 px-lg-2">
+                    <Card className="h-100">
+                      <Card.Body>
+                        <Card.Title>Carrinho</Card.Title>
+                        {people.length === 0 ? (
+                          <div className="empty-cart">
+                            <Icons typeIcon="cart" iconSize={48} fill="#ced4da" />
+                            <p>Nenhum acampante adicionado ao carrinho</p>
+                          </div>
+                        ) : (
+                          people.map((person, personIndex) => {
+                            const personAge = computeAge(person.nascimento);
+                            const selection = person.__package || {};
+                            return (
+                              <Card key={personIndex} className="cart-user-card mb-4">
+                                <Card.Body>
+                                  <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 className="cart-user-title mb-0">
+                                      <b>{person.nome || `Pessoa ${personIndex + 1}`}</b>
+                                    </h4>
+                                    <div className="d-flex gap-2">
+                                      <Button
+                                        variant="outline-secondary"
+                                        size="sm"
+                                        onClick={() => editCamper(personIndex)}
+                                      >
+                                        <Icons typeIcon="edit" iconSize={22} />
+                                      </Button>
+                                      <Button
+                                        variant="outline-danger"
+                                        size="sm"
+                                        onClick={() => deleteCamper(personIndex)}
+                                      >
+                                        <Icons typeIcon="delete" iconSize={22} fill="#dc3545" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  <div className="packages-horizontal-line-cart"></div>
+                                  {packageCategories.map((cat) => {
+                                    const sel = selection[cat.id] || [];
+                                    return packageProducts
+                                      .filter((p) => sel.includes(p.id))
+                                      .map((p) => (
+                                        <div key={p.id} className="cart-item">
+                                          <div className="item-info mb-3">
+                                            <div className="d-flex justify-content-between">
+                                              <h5>{cat.name}:</h5>
+                                              <h5>{formatPrice(productPrice(p, ageRules, personAge))}</h5>
+                                            </div>
+                                            <p>{p.name}</p>
+                                          </div>
+                                        </div>
+                                      ));
+                                  })}
+                                  <div className="packages-horizontal-line-cart"></div>
+                                  <h5 className="cart-user-total fw-bold d-flex justify-content-between">
+                                    Total Acampante: <span>{formatPrice(personTotal(person))}</span>
+                                  </h5>
+                                </Card.Body>
+                              </Card>
+                            );
+                          })
+                        )}
+                        <div className="text-center">
+                          <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={addCamper}>
+                            <Icons typeIcon="plus" iconSize={25} fill="#6c757d" /> &nbsp;Adicionar Acampante
+                          </Button>
                         </div>
-                      </div>
-                    );
-                  })}
-                  <div className="d-flex justify-content-between py-2 border-top pt-3">
-                    <h5 className="mb-0">Total</h5>
-                    <h5 className="mb-0">{formatPrice(grandTotal)}</h5>
-                  </div>
-                </div>
-              </FormStepLayout>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+
+                  <Col xs={12} xl={4} className="px-0 px-lg-2">
+                    <Card className="mb-4">
+                      <Card.Body>
+                        <Card.Title>Resumo</Card.Title>
+                        <div className="packages-horizontal-line-cart"></div>
+                        <div className="summary">
+                          {registrationFee > 0 && (
+                            <div className="summary-individual-base">
+                              <div className="d-flex align-items-center gap-1">
+                                <h5 className="summary-individual-base-label mb-0">Taxa de Inscrição:</h5>
+                                <Tips
+                                  classNameWrapper="mt-0"
+                                  placement="top"
+                                  typeIcon="info"
+                                  size={15}
+                                  color="#7f7878"
+                                  text="Taxa de inscrição do evento, somada ao valor do pacote de cada acampante."
+                                />
+                              </div>
+                              <h5 className="mb-0">{formatPrice(registrationFee)}</h5>
+                            </div>
+                          )}
+                          <div className="summary-total-package">
+                            <h5 className="summary-total-package-label mb-0">Total do Pacote:</h5>
+                            <h5 className="mb-0">{formatPrice(packagesTotal)}</h5>
+                          </div>
+                          <div className="packages-horizontal-line-cart"></div>
+                          <div className="summary-total-geral mb-3">
+                            <h5 className="fw-bold mb-0">Total:</h5>
+                            <h5 className="fw-bold mb-0">{formatPrice(grandTotal)}</h5>
+                          </div>
+                          <div className="summary-buttons d-grid gap-3">
+                            {people.length > 0 && (
+                              <Button variant="teal-blue" size="lg" onClick={goToPayment}>
+                                Pagamento
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              </div>
             ) : currentStep.kind === 'payment' ? (
               <FormStepLayout
                 title="Pagamento"
-                description="Você será redirecionado para o ambiente seguro do Pagar.me para concluir o pagamento."
                 footer={
                   <>
                     <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
                       Voltar
                     </Button>
                     <Button variant="warning" size="lg" onClick={handlePayment} disabled={submitting}>
-                      {submitting ? 'Gerando pagamento...' : `Pagar ${formatPrice(grandTotal)}`}
+                      {submitting ? 'Gerando pagamento...' : 'Avançar'}
                     </Button>
                   </>
                 }
               >
                 <div className="dynamic-form__payment">
                   <p>
-                    {allPeople.length} inscrição(ões) · Total{' '}
-                    <b>{formatPrice(grandTotal)}</b>
+                    Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você
+                    será redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção.
+                    Certifique-se de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
+                    <i>não é necessário enviar comprovante de pagamento!</i> Todo o processo é digital e registrado
+                    automaticamente em nossa base de dados.
                   </p>
-                  <p className="text-muted">
-                    Ao clicar em pagar, geramos seu pedido e abrimos a página de pagamento do Pagar.me. Sua inscrição é
-                    confirmada assim que o pagamento é aprovado.
+                  <Form.Group className="mt-4" controlId="payment-method">
+                    <Form.Label className="fw-bold">Escolha sua forma de pagamento:</Form.Label>
+                    <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                      <option value="">Selecione uma opção</option>
+                      <option value="creditCard">Cartão de Crédito (Até 12x)</option>
+                      <option value="pix">PIX</option>
+                      <option value="ticket">Boleto</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <p className="text-muted mt-4">
+                    {people.length} inscrição(ões) · Total <b>{formatPrice(grandTotal)}</b>
                   </p>
                 </div>
               </FormStepLayout>
@@ -559,6 +714,7 @@ const DynamicForm = () => {
                   rules={ageRules}
                   age={age}
                   lotName={activeLotName}
+                  registrationFee={registrationFee}
                   value={currentAnswers.__package}
                   onChange={(sel) => setValue('__package', sel)}
                 />

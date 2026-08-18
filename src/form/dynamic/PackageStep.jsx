@@ -2,11 +2,12 @@ import { Row, Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Icons from '@/components/Global/Icons';
+import Tips from '@/components/Global/Tips';
 import { productPrice, packageTotal, formatPrice, discountForCategory } from './packagePricing';
 import '@/components/Style/ProductList.scss';
 import './PackageStep.scss';
 
-const PackageStep = ({ categories, products, rules, age, lotName, value, onChange }) => {
+const PackageStep = ({ categories, products, rules, age, lotName, registrationFee = 0, value, onChange }) => {
   const selection = value || {};
 
   const toggle = (category, productId) => {
@@ -23,7 +24,7 @@ const PackageStep = ({ categories, products, rules, age, lotName, value, onChang
     });
   };
 
-  const total = packageTotal(selection, products, rules, age);
+  const total = packageTotal(selection, products, rules, age) + Number(registrationFee || 0);
 
   return (
     <Row className="package-step">
@@ -113,6 +114,22 @@ const PackageStep = ({ categories, products, rules, age, lotName, value, onChang
                 </div>
               );
             })}
+            {registrationFee > 0 && (
+              <div className="package-summary__fee d-flex justify-content-between align-items-center">
+                <span className="d-flex align-items-center gap-1">
+                  Taxa de Inscrição:
+                  <Tips
+                    classNameWrapper="mt-0"
+                    placement="top"
+                    typeIcon="info"
+                    size={15}
+                    color="#7f7878"
+                    text="Taxa de inscrição do evento, somada ao valor do pacote."
+                  />
+                </span>
+                <span>{formatPrice(registrationFee)}</span>
+              </div>
+            )}
             <div className="package-summary__total">
               <b>Total:</b>
               <b>{formatPrice(total)}</b>
@@ -130,6 +147,7 @@ PackageStep.propTypes = {
   rules: PropTypes.array,
   age: PropTypes.number,
   lotName: PropTypes.string,
+  registrationFee: PropTypes.number,
   value: PropTypes.object,
   onChange: PropTypes.func.isRequired,
 };

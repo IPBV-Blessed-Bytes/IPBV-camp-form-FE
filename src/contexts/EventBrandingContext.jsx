@@ -47,6 +47,7 @@ export const EventBrandingProvider = ({ children }) => {
       secondaryColor,
       legacyForm: Boolean(event?.legacyForm),
       paymentEnabled: Boolean(event?.paymentEnabled),
+      registrationFeeEnabled: Boolean(event?.registrationFeeEnabled),
       loading: isLoading,
     }),
     [event, color, secondaryColor, isLoading],
