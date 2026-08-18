@@ -68,7 +68,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const isLoading = loading || schemaLoading;
 
   return (
-    <div className="admin-submissions">
+    <div className="admin-subpage admin-submissions">
       <AdminSubpageHeader
         username={loggedUsername}
         title="Inscrições"

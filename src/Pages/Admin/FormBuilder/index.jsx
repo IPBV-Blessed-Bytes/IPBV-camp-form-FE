@@ -267,7 +267,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   };
 
   return (
-    <div className="form-builder">
+    <div className="admin-subpage form-builder ">
       <AdminSubpageHeader
         username={loggedUsername}
         title="Construtor de Formulário"

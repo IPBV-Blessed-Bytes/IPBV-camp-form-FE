@@ -223,7 +223,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
   };
 
   return (
-    <div className="package-builder">
+    <div className="admin-subpage package-builder">
       <AdminSubpageHeader
         username={loggedUsername}
         title="Pacote"

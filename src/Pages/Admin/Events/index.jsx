@@ -157,7 +157,7 @@ const AdminEvents = ({ loggedUsername }) => {
   };
 
   return (
-    <div className="admin-events">
+    <div className="admin-subpage admin-events">
       <AdminSubpageHeader
         username={loggedUsername}
         title="Gestão de Eventos"
