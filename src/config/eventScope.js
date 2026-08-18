@@ -8,7 +8,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'base-date',
   'ride',
   'checkout',
-  'coupon',
+  'discount',
   'feedback',
   'form-context',
   'form-fields',
