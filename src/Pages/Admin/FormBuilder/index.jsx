@@ -299,9 +299,11 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         ) : sections.length === 0 ? (
           <p className="form-builder__empty">Crie uma seção para começar a adicionar campos.</p>
         ) : (
-          sectionsWithFields.map((section, sectionIndex) => (
+          <div className="form-builder__sections">
+            {sectionsWithFields.map((section, sectionIndex) => (
             <div key={section.id} className="form-builder__section">
               <div className="form-builder__section-head">
+                <span className="form-builder__section-num">{sectionIndex + 1}</span>
                 <div className="form-builder__item-order">
                   <button
                     type="button"
@@ -352,6 +354,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 <ul className="form-builder__list">
                   {section.fields.map((field, index) => (
                     <li key={field.id} className="form-builder__item">
+                      <span className="form-builder__ordinal">{index + 1}</span>
                       <div className="form-builder__item-order">
                         <button
                           type="button"
@@ -406,7 +409,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 + Adicionar campo
               </Button>
             </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
