@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Badge, Button, Form, Table } from 'react-bootstrap';
+import { Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -264,6 +264,7 @@ const AdminEvents = ({ loggedUsername }) => {
         show={showFormModal}
         onHide={() => setShowFormModal(false)}
         variant="info"
+        size="lg"
         title={draft.id ? 'Editar evento' : 'Novo evento'}
         icon="calendar"
         footer={
@@ -278,134 +279,154 @@ const AdminEvents = ({ loggedUsername }) => {
         }
       >
         <Form className="admin-events__form">
-          <Form.Group className="mb-3">
-            <Form.Label>Nome</Form.Label>
-            <Form.Control
-              value={draft.name}
-              onChange={(e) => {
-                const name = e.target.value;
-                setDraft((prev) => ({
-                  ...prev,
-                  name,
-                  slug: prev.id ? prev.slug : slugify(name),
-                }));
-              }}
-              placeholder="Ex.: Acampamento IPBV"
-            />
-          </Form.Group>
+          <Row className="g-3">
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Nome</Form.Label>
+                <Form.Control
+                  value={draft.name}
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    setDraft((prev) => ({
+                      ...prev,
+                      name,
+                      slug: prev.id ? prev.slug : slugify(name),
+                    }));
+                  }}
+                  placeholder="Ex.: Acampamento IPBV"
+                />
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Identificador (slug)</Form.Label>
-            <Form.Control
-              value={draft.slug}
-              onChange={(e) => handleChange('slug')(slugify(e.target.value))}
-              placeholder="acampamento-ipbv"
-            />
-            <Form.Text className="text-muted">Usado na URL: /e/{draft.slug || 'slug'}</Form.Text>
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Identificador (slug)</Form.Label>
+                <Form.Control
+                  value={draft.slug}
+                  onChange={(e) => handleChange('slug')(slugify(e.target.value))}
+                  placeholder="acampamento-ipbv"
+                />
+                <Form.Text className="text-muted">Usado na URL: /e/{draft.slug || 'slug'}</Form.Text>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Cor principal</Form.Label>
-            <div className="admin-events__color-row">
-              <Form.Control
-                type="color"
-                value={draft.color || '#007185'}
-                onChange={(e) => handleChange('color')(e.target.value)}
-                title="Cor do evento"
-              />
-              <Form.Control
-                value={draft.color || ''}
-                onChange={(e) => handleChange('color')(e.target.value)}
-                placeholder="#007185"
-              />
-            </div>
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Cor principal</Form.Label>
+                <div className="admin-events__color-row">
+                  <Form.Control
+                    type="color"
+                    value={draft.color || '#007185'}
+                    onChange={(e) => handleChange('color')(e.target.value)}
+                    title="Cor do evento"
+                  />
+                  <Form.Control
+                    value={draft.color || ''}
+                    onChange={(e) => handleChange('color')(e.target.value)}
+                    placeholder="#007185"
+                  />
+                </div>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Cor secundária (botões)</Form.Label>
-            <div className="admin-events__color-row">
-              <Form.Control
-                type="color"
-                value={draft.secondaryColor || '#ffc107'}
-                onChange={(e) => handleChange('secondaryColor')(e.target.value)}
-                title="Cor secundária do evento"
-              />
-              <Form.Control
-                value={draft.secondaryColor || ''}
-                onChange={(e) => handleChange('secondaryColor')(e.target.value)}
-                placeholder="#ffc107"
-              />
-            </div>
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Cor secundária (botões)</Form.Label>
+                <div className="admin-events__color-row">
+                  <Form.Control
+                    type="color"
+                    value={draft.secondaryColor || '#ffc107'}
+                    onChange={(e) => handleChange('secondaryColor')(e.target.value)}
+                    title="Cor secundária do evento"
+                  />
+                  <Form.Control
+                    value={draft.secondaryColor || ''}
+                    onChange={(e) => handleChange('secondaryColor')(e.target.value)}
+                    placeholder="#ffc107"
+                  />
+                </div>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Contato (WhatsApp)</Form.Label>
-            <Form.Control
-              value={draft.contact}
-              onChange={(e) => handleChange('contact')(e.target.value)}
-              placeholder="(81) 99999-7767"
-            />
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Contato (WhatsApp)</Form.Label>
+                <Form.Control
+                  value={draft.contact}
+                  onChange={(e) => handleChange('contact')(e.target.value)}
+                  placeholder="(81) 99999-7767"
+                />
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Ano</Form.Label>
-            <Form.Control
-              type="number"
-              value={draft.year}
-              onChange={(e) => handleChange('year')(e.target.value)}
-              placeholder="2027"
-            />
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Ano</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={draft.year}
+                  onChange={(e) => handleChange('year')(e.target.value)}
+                  placeholder="2027"
+                />
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Ícone do card</Form.Label>
-            <div className="event-icon-field">
-              <Form.Select value={draft.iconKey} onChange={(e) => handleChange('iconKey')(e.target.value)}>
-                <option value="">Sem ícone</option>
-                {EVENT_ICONS.map((icon) => (
-                  <option key={icon.key} value={icon.key}>
-                    {icon.label}
-                  </option>
-                ))}
-              </Form.Select>
-              <div
-                className="event-icon-field__preview"
-                style={{ color: draft.color || '#007185' }}
-                aria-label="Pré-visualização do ícone"
-              >
-                {draft.iconKey ? (
-                  <EventIcons typeIcon={draft.iconKey} iconSize={40} />
-                ) : (
-                  <span className="event-icon-field__placeholder">sem ícone</span>
-                )}
-              </div>
-            </div>
-            <Form.Text className="text-muted">
-              Escolha um ícone para aparecer no card do evento na página inicial. Ele assume a cor principal.
-            </Form.Text>
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Ícone do card</Form.Label>
+                <div className="event-icon-field">
+                  <Form.Select value={draft.iconKey} onChange={(e) => handleChange('iconKey')(e.target.value)}>
+                    <option value="">Sem ícone</option>
+                    {EVENT_ICONS.map((icon) => (
+                      <option key={icon.key} value={icon.key}>
+                        {icon.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <div
+                    className="event-icon-field__preview"
+                    style={{ color: draft.color || '#007185' }}
+                    aria-label="Pré-visualização do ícone"
+                  >
+                    {draft.iconKey ? (
+                      <EventIcons typeIcon={draft.iconKey} iconSize={40} />
+                    ) : (
+                      <span className="event-icon-field__placeholder">sem ícone</span>
+                    )}
+                  </div>
+                </div>
+                <Form.Text className="text-muted">
+                  Escolha um ícone para aparecer no card do evento na página inicial. Ele assume a cor principal.
+                </Form.Text>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Estágio do evento</Form.Label>
-            <Form.Select
-              value={draft.active ? (draft.registrationsOpen ? 'open' : 'waiting') : 'inactive'}
-              onChange={(e) => {
-                const stage = e.target.value;
-                setDraft((prev) => ({
-                  ...prev,
-                  active: stage !== 'inactive',
-                  registrationsOpen: stage === 'open',
-                }));
-              }}
-            >
-              <option value="open">Inscrições abertas</option>
-              <option value="waiting">Aguardando evento (só login/pós-venda)</option>
-              <option value="inactive">Inativo (oculto no catálogo)</option>
-            </Form.Select>
-            <Form.Text className="text-muted">
-              &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta — não se inscreve mais.
-            </Form.Text>
-          </Form.Group>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>Estágio do evento</Form.Label>
+                <Form.Select
+                  value={draft.active ? (draft.registrationsOpen ? 'open' : 'waiting') : 'inactive'}
+                  onChange={(e) => {
+                    const stage = e.target.value;
+                    setDraft((prev) => ({
+                      ...prev,
+                      active: stage !== 'inactive',
+                      registrationsOpen: stage === 'open',
+                    }));
+                  }}
+                >
+                  <option value="open">Inscrições abertas</option>
+                  <option value="waiting">Aguardando evento (só login/pós-venda)</option>
+                  <option value="inactive">Inativo (oculto no catálogo)</option>
+                </Form.Select>
+                <Form.Text className="text-muted">
+                  &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta — não se inscreve mais.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <hr className="my-4" />
 
           <Form.Check
             type="switch"
