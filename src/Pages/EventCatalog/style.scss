@@ -95,14 +95,8 @@
     margin-bottom: 0.9rem;
     color: var(--card-accent);
     background: color-mix(in srgb, var(--card-accent) 12%, #fff);
-  }
-
-  &__svg {
-    display: inline-flex;
 
     svg {
-      width: 34px;
-      height: 34px;
       display: block;
     }
   }

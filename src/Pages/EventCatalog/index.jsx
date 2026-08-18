@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import DOMPurify from 'dompurify';
 
 import { listEvents } from '@/services/events';
 import { eventPath } from '@/config/eventScope';
 import Loading from '@/components/Global/Loading';
+import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
 import './style.scss';
+
+const ICON_KEYS = new Set(EVENT_ICONS.map((icon) => icon.key));
 
 const DEFAULT_COLOR = '#007185';
 
@@ -60,11 +62,8 @@ const EventCatalog = () => {
                   onClick={() => navigate(eventPath('/', event.slug))}
                 >
                   <span className="event-card__icon">
-                    {event.iconSvg ? (
-                      <span
-                        className="event-card__svg"
-                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.iconSvg) }}
-                      />
+                    {ICON_KEYS.has(event.iconKey) ? (
+                      <EventIcons typeIcon={event.iconKey} iconSize={34} />
                     ) : (
                       <span className="event-card__initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
                     )}
