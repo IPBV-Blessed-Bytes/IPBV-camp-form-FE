@@ -47,7 +47,6 @@ const emptyField = (sectionId) => ({
   label: '',
   type: 'text',
   required: false,
-  sensitive: false,
   placeholder: '',
   helpText: '',
   options: [],
@@ -171,7 +170,6 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       label: field.label || '',
       type: field.type || 'text',
       required: field.required ?? false,
-      sensitive: field.sensitive ?? false,
       placeholder: field.placeholder || '',
       helpText: field.helpText || '',
       options: Array.isArray(field.options) ? field.options : [],
@@ -200,7 +198,6 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     label: fieldDraft.label.trim(),
     type: fieldDraft.type,
     required: fieldDraft.required,
-    sensitive: fieldDraft.sensitive,
     placeholder: isOptionType || isConsent ? null : fieldDraft.placeholder.trim() || null,
     helpText: fieldDraft.helpText.trim() || null,
     order,
@@ -385,11 +382,6 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                             {typeLabel(field.type)}
                           </Badge>
                           <code>{field.key}</code>
-                          {field.sensitive && (
-                            <Badge bg="warning" text="dark">
-                              sensível
-                            </Badge>
-                          )}
                         </div>
                       </div>
                       <div className="form-builder__item-actions">
@@ -585,14 +577,6 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             checked={fieldDraft.required}
             onChange={(e) => patchField({ required: e.target.checked })}
           />
-          <Form.Check
-            type="switch"
-            id="field-sensitive-switch"
-            className="mt-2"
-            label="Dado sensível (LGPD)"
-            checked={fieldDraft.sensitive}
-            onChange={(e) => patchField({ sensitive: e.target.checked })}
-          />
         </Form>
       </CustomModal>
 
@@ -627,7 +611,6 @@ const rawFieldPayload = (field, order) => ({
   label: field.label,
   type: field.type,
   required: field.required,
-  sensitive: field.sensitive,
   placeholder: field.placeholder,
   helpText: field.helpText,
   order,
