@@ -1,8 +1,8 @@
 .admin-events {
   &__content {
-    max-width: 1180px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
+    padding: 1.5rem 1.5rem 3rem;
   }
 
   &__toolbar {
@@ -27,6 +27,12 @@
       padding: 2px;
     }
   }
+}
+
+.event-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
 }
 
 .event-admin-card {
@@ -102,13 +108,12 @@
   }
 
   &__name {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: #0f172a;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
   }
 
   &__year {

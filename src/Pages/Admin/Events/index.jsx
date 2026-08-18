@@ -193,12 +193,15 @@ const AdminEvents = ({ loggedUsername }) => {
         ) : events.length === 0 ? (
           <p className="admin-events__empty">Nenhum evento cadastrado.</p>
         ) : (
-          <Row className="g-4">
+          <div className="event-admin-grid">
             {events.map((event) => {
               const badge = STAGE_BADGE(event);
               return (
-                <Col key={event.id} xs={12} md={6} xl={4}>
-                  <div className="event-admin-card" style={{ '--card-accent': event.color || '#007185' }}>
+                <div
+                  key={event.id}
+                  className="event-admin-card"
+                  style={{ '--card-accent': event.color || '#007185' }}
+                >
                     <div className="event-admin-card__head">
                       <span className="event-admin-card__icon">
                         {ICON_KEYS.has(event.iconKey) ? (
@@ -266,10 +269,9 @@ const AdminEvents = ({ loggedUsername }) => {
                       </Button>
                     </div>
                   </div>
-                </Col>
               );
             })}
-          </Row>
+          </div>
         )}
       </div>
 
