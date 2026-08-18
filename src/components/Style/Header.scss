@@ -41,6 +41,45 @@
     gap: 1rem;
   }
 
+  &__back {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+  }
+
+  .header-back-link {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    color: $white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.5rem 0.9rem;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover {
+      background: $white;
+      color: var(--event-color, #{$primary});
+      border-color: $white;
+    }
+
+    svg {
+      flex: 0 0 auto;
+    }
+  }
+
   .header-login-link {
     background: none;
     border: none;
@@ -134,6 +173,13 @@
     &__right {
       position: static;
       transform: none;
+      margin-bottom: 0.75rem;
+    }
+
+    &__back {
+      position: static;
+      transform: none;
+      order: -1;
       margin-bottom: 0.75rem;
     }
   }

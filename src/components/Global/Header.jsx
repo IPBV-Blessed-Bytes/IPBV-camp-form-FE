@@ -67,6 +67,22 @@ const Header = ({
   return (
     <header className="form__header">
       <Container>
+        <div className="form__header__back">
+          <button type="button" className="header-back-link" onClick={() => navigate('/')}>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path
+                d="M15 6l-6 6 6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>Todos os eventos</span>
+          </button>
+        </div>
+
         <div className="form__header__left">
           <h2 className="header-title-wrapper">
             <a className="header-title" href={eventPath('/')}>

@@ -6,7 +6,7 @@
   border-radius: 50%;
   bottom: 90px;
   cursor: pointer;
-  left: 20px;
+  right: 20px;
   padding: 10px;
   opacity: 0.8;
   position: fixed;
@@ -21,7 +21,8 @@
   bottom: 66px;
   display: flex;
   flex-direction: column;
-  left: 20px;
+  align-items: flex-end;
+  right: 20px;
   opacity: 0;
   position: fixed;
   transition:
