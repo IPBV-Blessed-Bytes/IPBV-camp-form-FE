@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 
 import { listEvents } from '@/services/events';
 import { eventPath } from '@/config/eventScope';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
+
+const DEFAULT_COLOR = '#007185';
 
 const EventCatalog = () => {
   const navigate = useNavigate();
@@ -31,39 +34,65 @@ const EventCatalog = () => {
   if (loading) return <Loading loading />;
 
   return (
-    <Container className="event-catalog">
-      <Row className="justify-content-center">
-        <Col lg={9} className="text-center event-catalog__header">
-          <h1>Eventos</h1>
-          <p>Escolha um evento para iniciar sua inscrição.</p>
-        </Col>
-      </Row>
+    <div className="event-catalog">
+      <Container>
+        <div className="event-catalog__hero">
+          <span className="event-catalog__eyebrow">Inscrições abertas</span>
+          <h1 className="event-catalog__title">Escolha seu evento</h1>
+          <p className="event-catalog__subtitle">Selecione um evento abaixo para iniciar sua inscrição.</p>
+        </div>
 
-      {error && <p className="text-center event-catalog__empty">Não foi possível carregar os eventos.</p>}
+        {error && <p className="text-center event-catalog__empty">Não foi possível carregar os eventos.</p>}
 
-      {!error && events.length === 0 && (
-        <p className="text-center event-catalog__empty">Nenhum evento disponível no momento.</p>
-      )}
+        {!error && events.length === 0 && (
+          <p className="text-center event-catalog__empty">Nenhum evento disponível no momento.</p>
+        )}
 
-      <Row className="justify-content-center">
-        {events.map((event) => (
-          <Col key={event.slug} md={6} lg={4} className="mb-4">
-            <Card className="event-catalog__card h-100">
-              <Card.Body className="d-flex flex-column">
-                <Card.Title className="event-catalog__card-title">{event.name}</Card.Title>
-                <Button
-                  variant="teal-blue"
-                  className="mt-auto"
+        <Row className="g-4 justify-content-center">
+          {events.map((event) => {
+            const color = event.color || DEFAULT_COLOR;
+            return (
+              <Col key={event.slug} xs={12} sm={6} lg={4}>
+                <button
+                  type="button"
+                  className="event-card"
+                  style={{ '--card-accent': color }}
                   onClick={() => navigate(eventPath('/', event.slug))}
                 >
-                  Fazer inscrição
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+                  <span className="event-card__icon">
+                    {event.iconSvg ? (
+                      <span
+                        className="event-card__svg"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.iconSvg) }}
+                      />
+                    ) : (
+                      <span className="event-card__initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
+                    )}
+                  </span>
+
+                  {event.year && <span className="event-card__year">{event.year}</span>}
+                  <span className="event-card__name">{event.name}</span>
+
+                  <span className="event-card__cta">
+                    Fazer inscrição
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                      <path
+                        d="M5 12h14M13 6l6 6-6 6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </Col>
+            );
+          })}
+        </Row>
+      </Container>
+    </div>
   );
 };
 

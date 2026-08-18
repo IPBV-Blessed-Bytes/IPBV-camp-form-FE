@@ -48,3 +48,37 @@
     }
   }
 }
+
+.event-icon-field {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+
+  textarea {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8rem;
+    flex: 1 1 auto;
+  }
+
+  &__preview {
+    flex: 0 0 72px;
+    width: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    background: #f8f9fa;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__placeholder {
+    font-size: 0.7rem;
+    color: #adb5bd;
+    text-align: center;
+  }
+}

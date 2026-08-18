@@ -1,39 +1,150 @@
 .event-catalog {
-  padding: 3rem 1rem;
+  min-height: 100vh;
+  padding: 4rem 1rem 5rem;
+  background:
+    radial-gradient(1200px 480px at 50% -10%, rgba(0, 113, 133, 0.10), transparent 70%),
+    linear-gradient(180deg, #f7fafb 0%, #eef2f4 100%);
 
-  &__header {
-    margin-bottom: 2.5rem;
+  &__hero {
+    text-align: center;
+    max-width: 620px;
+    margin: 0 auto 3rem;
+  }
 
-    h1 {
-      color: #007185;
-      font-weight: 700;
-    }
+  &__eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #007185;
+    background: rgba(0, 113, 133, 0.10);
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    margin-bottom: 1.1rem;
+  }
 
-    p {
-      color: #6c757d;
-    }
+  &__title {
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: #0f172a;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+
+  &__subtitle {
+    color: #64748b;
+    font-size: 1.05rem;
+    margin: 0;
   }
 
   &__empty {
-    color: #6c757d;
+    color: #64748b;
     margin: 2rem 0;
   }
+}
 
-  &__card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+.event-card {
+  --card-accent: #007185;
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.35rem;
+  padding: 1.75rem 1.5rem 1.4rem;
+  background: #fff;
+  border: 1px solid #e6eaee;
+  border-radius: 20px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 5px;
+    background: var(--card-accent);
+    opacity: 0.9;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+    border-color: color-mix(in srgb, var(--card-accent) 40%, #e6eaee);
+    outline: none;
+  }
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin-bottom: 0.9rem;
+    color: var(--card-accent);
+    background: color-mix(in srgb, var(--card-accent) 12%, #fff);
+  }
+
+  &__svg {
+    display: inline-flex;
+
+    svg {
+      width: 34px;
+      height: 34px;
+      display: block;
     }
   }
 
-  &__card-title {
-    color: #212529;
+  &__initial {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--card-accent);
+    line-height: 1;
+  }
+
+  &__year {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--card-accent);
+    text-transform: uppercase;
+  }
+
+  &__name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+  }
+
+  &__cta {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    color: var(--card-accent);
+
+    svg {
+      transition: transform 0.18s ease;
+    }
+  }
+
+  &:hover &__cta svg,
+  &:focus-visible &__cta svg {
+    transform: translateX(4px);
   }
 }

@@ -3,6 +3,7 @@ import { Badge, Button, Form, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services/events';
 import { setSelectedEvent } from '@/config/eventScope';
@@ -24,6 +25,7 @@ const EMPTY_EVENT = {
   paymentEnabled: true,
   agePricingEnabled: false,
   registrationFeeEnabled: false,
+  iconSvg: '',
 };
 
 const slugify = (value) =>
@@ -77,6 +79,7 @@ const AdminEvents = ({ loggedUsername }) => {
       paymentEnabled: event.paymentEnabled ?? true,
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
+      iconSvg: event.iconSvg || '',
     });
     setShowFormModal(true);
   };
@@ -121,6 +124,7 @@ const AdminEvents = ({ loggedUsername }) => {
       paymentEnabled: draft.paymentEnabled,
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
+      iconSvg: draft.iconSvg?.trim() || null,
     };
 
     try {
@@ -339,6 +343,34 @@ const AdminEvents = ({ loggedUsername }) => {
               onChange={(e) => handleChange('year')(e.target.value)}
               placeholder="2027"
             />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Ícone (SVG)</Form.Label>
+            <div className="event-icon-field">
+              <Form.Control
+                as="textarea"
+                rows={4}
+                value={draft.iconSvg}
+                onChange={(e) => handleChange('iconSvg')(e.target.value)}
+                placeholder="Cole aqui o código <svg>...</svg> do ícone"
+                spellCheck={false}
+              />
+              <div
+                className="event-icon-field__preview"
+                style={{ color: draft.color || '#007185' }}
+                aria-label="Pré-visualização do ícone"
+              >
+                {draft.iconSvg?.trim() ? (
+                  <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(draft.iconSvg) }} />
+                ) : (
+                  <span className="event-icon-field__placeholder">sem ícone</span>
+                )}
+              </div>
+            </div>
+            <Form.Text className="text-muted">
+              Cole o markup SVG do ícone. Ele aparece no card do evento na página inicial e assume a cor principal.
+            </Form.Text>
           </Form.Group>
 
           <Form.Check
