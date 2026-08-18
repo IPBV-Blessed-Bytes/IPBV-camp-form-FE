@@ -144,6 +144,18 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const changeSectionColumns = async (section, columns) => {
+    setSaving(true);
+    try {
+      await updateFormSection(section.id, { name: section.name, order: section.order, columns });
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao atualizar as colunas.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // ---- fields ----
   const openCreateField = (sectionId) => {
     setFieldDraft(emptyField(sectionId));
@@ -312,6 +324,19 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 </div>
                 <h5 className="form-builder__section-title">{section.name}</h5>
                 <div className="form-builder__section-actions">
+                  <Form.Select
+                    size="sm"
+                    className="form-builder__columns"
+                    value={section.columns || 1}
+                    onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
+                    disabled={saving}
+                    aria-label="Colunas por linha da seção"
+                    title="Quantos campos por linha nesta seção"
+                  >
+                    <option value={1}>1 coluna</option>
+                    <option value={2}>2 colunas</option>
+                    <option value={3}>3 colunas</option>
+                  </Form.Select>
                   <Button size="sm" variant="outline-teal-blue" onClick={() => openEditSection(section)}>
                     Renomear
                   </Button>

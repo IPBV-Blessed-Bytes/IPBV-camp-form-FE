@@ -32,6 +32,7 @@ import Tips from '@/components/Global/Tips';
 import '@/Pages/Home/style.scss';
 import '@/components/Style/Cart.scss';
 import '@/Pages/BeforePayment/style.scss';
+import '@/form/dynamic/dynamicFields.scss';
 
 const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
 const iconColorProps = (icon, color) =>
@@ -760,15 +761,18 @@ const DynamicForm = () => {
                 onNext={goNext}
                 nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
               >
-                {currentStep.section.fields.map((field) => (
-                  <DynamicField
-                    key={field.key}
-                    field={field}
-                    value={currentAnswers[field.key]}
-                    onChange={(value) => setValue(field.key, value)}
-                    error={errors[field.key]}
-                  />
-                ))}
+                <div className="dynamic-fields" data-columns={currentStep.section.columns || 1}>
+                  {currentStep.section.fields.map((field) => (
+                    <div key={field.key} className="dynamic-fields__cell">
+                      <DynamicField
+                        field={field}
+                        value={currentAnswers[field.key]}
+                        onChange={(value) => setValue(field.key, value)}
+                        error={errors[field.key]}
+                      />
+                    </div>
+                  ))}
+                </div>
               </FormStepLayout>
             )}
           </Col>

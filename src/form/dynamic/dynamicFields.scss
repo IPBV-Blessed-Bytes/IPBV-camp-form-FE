@@ -1,0 +1,17 @@
+.dynamic-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 1.25rem;
+
+  &[data-columns='2'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &[data-columns='3'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr !important;
+  }
+}
