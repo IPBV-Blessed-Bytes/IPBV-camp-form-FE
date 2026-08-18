@@ -1,6 +1,6 @@
 .admin-events {
   &__content {
-    max-width: 1000px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 1.5rem 1rem 3rem;
   }
@@ -19,12 +19,56 @@
 
   &__table {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    margin-bottom: 0;
+    vertical-align: middle;
+
+    thead th {
+      background: #f6f8fa;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e6eaee;
+      padding: 0.85rem 1rem;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 0.85rem 1rem;
+      vertical-align: middle;
+    }
 
     code {
       color: #007185;
+      background: rgba(0, 113, 133, 0.08);
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
     }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  &__config {
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
+  &__actions-divider {
+    width: 1px;
+    align-self: stretch;
+    min-height: 1.6rem;
+    background: #e6eaee;
+    margin: 0 0.15rem;
   }
 
   &__swatch {
@@ -54,10 +98,9 @@
   gap: 0.75rem;
   align-items: stretch;
 
-  textarea {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.8rem;
+  select {
     flex: 1 1 auto;
+    align-self: center;
   }
 
   &__preview {

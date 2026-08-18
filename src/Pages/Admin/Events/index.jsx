@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
+import { Badge, Button, ButtonGroup, Col, Form, Row, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -219,39 +219,44 @@ const AdminEvents = ({ loggedUsername }) => {
                       <Badge bg="success">Inscrições abertas</Badge>
                     )}
                   </td>
-                  <td className="text-end">
-                    <Button size="sm" variant="teal-blue" className="me-2" onClick={() => openFormBuilder(event)}>
-                      Campos
-                    </Button>
-                    <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openSubmissions(event)}>
-                      Inscrições
-                    </Button>
-                    <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openInfoHome(event)}>
-                      Info Home
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-teal-blue"
-                      className="me-2"
-                      disabled={!event.paymentEnabled}
-                      title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
-                      onClick={() => openPackage(event)}
-                    >
-                      Pacote
-                    </Button>
-                    <Button size="sm" variant="outline-teal-blue" className="me-2" onClick={() => openEdit(event)}>
-                      Editar
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-danger"
-                      onClick={() => {
-                        setSelected(event);
-                        setShowDeleteModal(true);
-                      }}
-                    >
-                      Excluir
-                    </Button>
+                  <td>
+                    <div className="admin-events__actions">
+                      <ButtonGroup size="sm" className="admin-events__config">
+                        <Button variant="teal-blue" onClick={() => openFormBuilder(event)}>
+                          Campos
+                        </Button>
+                        <Button variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
+                          Inscrições
+                        </Button>
+                        <Button variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
+                          Info Home
+                        </Button>
+                        <Button
+                          variant="outline-teal-blue"
+                          disabled={!event.paymentEnabled}
+                          title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
+                          onClick={() => openPackage(event)}
+                        >
+                          Pacote
+                        </Button>
+                      </ButtonGroup>
+
+                      <div className="admin-events__actions-divider" aria-hidden="true" />
+
+                      <Button size="sm" variant="outline-secondary" onClick={() => openEdit(event)}>
+                        Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={() => {
+                          setSelected(event);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        Excluir
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
