@@ -336,10 +336,10 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                     <option value={2}>2 colunas</option>
                     <option value={3}>3 colunas</option>
                   </Form.Select>
-                  <Button size="sm" variant="outline-teal-blue" onClick={() => openEditSection(section)}>
+                  <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
                     Renomear
                   </Button>
-                  <Button size="sm" variant="outline-danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
+                  <Button size="sm" variant="danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
                     Excluir
                   </Button>
                 </div>

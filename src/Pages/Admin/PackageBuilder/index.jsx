@@ -243,12 +243,13 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         ) : categories.length === 0 ? (
           <p className="package-builder__empty">Crie categorias para montar o pacote (ex.: Hospedagem, Transporte).</p>
         ) : (
-          <ul className="package-builder__list">
+          <div className="package-builder__grid">
             {categories.map((category, index) => {
               const catProducts = products.filter((p) => p.packageCategoryId === category.id);
               return (
-                <li key={category.id} className="package-builder__cat">
+                <div key={category.id} className="package-builder__cat">
                   <div className="package-builder__item">
+                    <span className="package-builder__num">{index + 1}</span>
                     <div className="package-builder__item-order">
                       <button
                         type="button"
@@ -281,10 +282,10 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                       </div>
                     </div>
                     <div className="package-builder__item-actions">
-                      <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(category)}>
+                      <Button size="sm" variant="teal-blue" onClick={() => openEdit(category)}>
                         Editar
                       </Button>
-                      <Button size="sm" variant="outline-danger" onClick={() => setToDelete(category)}>
+                      <Button size="sm" variant="danger" onClick={() => setToDelete(category)}>
                         Excluir
                       </Button>
                     </div>
@@ -391,10 +392,10 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                       </div>
                     </div>
                   )}
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
         )}
       </div>
 
