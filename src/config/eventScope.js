@@ -4,7 +4,7 @@ export const SELECTED_EVENT_KEY = 'selected-event';
 
 export const EVENT_SCOPED_PREFIXES = new Set([
   'camper',
-  'aggregate',
+  'rooms',
   'base-date',
   'ride',
   'checkout',
