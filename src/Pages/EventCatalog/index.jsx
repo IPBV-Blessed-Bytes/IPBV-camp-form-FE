@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import { listEvents } from '@/services/events';
-import { eventPath } from '@/config/eventScope';
+import { eventPath, setSelectedEvent } from '@/config/eventScope';
 import Loading from '@/components/Global/Loading';
 import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
 import './style.scss';
@@ -53,13 +53,24 @@ const EventCatalog = () => {
         <Row className="g-4 justify-content-center">
           {events.map((event) => {
             const color = event.color || DEFAULT_COLOR;
+            const registrationsOpen = event.registrationsOpen !== false;
+
+            const handleClick = () => {
+              if (registrationsOpen) {
+                navigate(eventPath('/', event.slug));
+              } else {
+                setSelectedEvent(event.slug);
+                navigate('/entrar');
+              }
+            };
+
             return (
               <Col key={event.slug} xs={12} sm={6} lg={4}>
                 <button
                   type="button"
                   className="event-card"
                   style={{ '--card-accent': color }}
-                  onClick={() => navigate(eventPath('/', event.slug))}
+                  onClick={handleClick}
                 >
                   <span className="event-card__icon">
                     {ICON_KEYS.has(event.iconKey) ? (
@@ -72,8 +83,10 @@ const EventCatalog = () => {
                   {event.year && <span className="event-card__year">{event.year}</span>}
                   <span className="event-card__name">{event.name}</span>
 
+                  {!registrationsOpen && <span className="event-card__badge">Inscrições encerradas</span>}
+
                   <span className="event-card__cta">
-                    Fazer inscrição
+                    {registrationsOpen ? 'Fazer inscrição' : 'Entrar na minha conta'}
                     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                       <path
                         d="M5 12h14M13 6l6 6-6 6"

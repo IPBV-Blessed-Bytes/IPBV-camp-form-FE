@@ -23,6 +23,7 @@ const EMPTY_EVENT = {
   contact: '',
   year: '',
   active: true,
+  registrationsOpen: true,
   paymentEnabled: true,
   agePricingEnabled: false,
   registrationFeeEnabled: false,
@@ -77,6 +78,7 @@ const AdminEvents = ({ loggedUsername }) => {
       contact: event.contact || '',
       year: event.year || '',
       active: event.active ?? true,
+      registrationsOpen: event.registrationsOpen !== false,
       paymentEnabled: event.paymentEnabled ?? true,
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
@@ -122,6 +124,7 @@ const AdminEvents = ({ loggedUsername }) => {
       contact: draft.contact.trim() || null,
       year: draft.year ? Number(draft.year) : null,
       active: draft.active,
+      registrationsOpen: draft.registrationsOpen,
       paymentEnabled: draft.paymentEnabled,
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
@@ -206,7 +209,15 @@ const AdminEvents = ({ loggedUsername }) => {
                   </td>
                   <td>{event.year || '—'}</td>
                   <td>
-                    <Badge bg={event.active ? 'success' : 'secondary'}>{event.active ? 'Ativo' : 'Inativo'}</Badge>
+                    {!event.active ? (
+                      <Badge bg="secondary">Inativo</Badge>
+                    ) : event.registrationsOpen === false ? (
+                      <Badge bg="warning" text="dark">
+                        Aguardando evento
+                      </Badge>
+                    ) : (
+                      <Badge bg="success">Inscrições abertas</Badge>
+                    )}
                   </td>
                   <td className="text-end">
                     <Button size="sm" variant="teal-blue" className="me-2" onClick={() => openFormBuilder(event)}>
@@ -374,13 +385,27 @@ const AdminEvents = ({ loggedUsername }) => {
             </Form.Text>
           </Form.Group>
 
-          <Form.Check
-            type="switch"
-            id="event-active-switch"
-            label="Evento ativo (visível no catálogo)"
-            checked={draft.active}
-            onChange={(e) => handleChange('active')(e.target.checked)}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Estágio do evento</Form.Label>
+            <Form.Select
+              value={draft.active ? (draft.registrationsOpen ? 'open' : 'waiting') : 'inactive'}
+              onChange={(e) => {
+                const stage = e.target.value;
+                setDraft((prev) => ({
+                  ...prev,
+                  active: stage !== 'inactive',
+                  registrationsOpen: stage === 'open',
+                }));
+              }}
+            >
+              <option value="open">Inscrições abertas</option>
+              <option value="waiting">Aguardando evento (só login/pós-venda)</option>
+              <option value="inactive">Inativo (oculto no catálogo)</option>
+            </Form.Select>
+            <Form.Text className="text-muted">
+              &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta — não se inscreve mais.
+            </Form.Text>
+          </Form.Group>
 
           <Form.Check
             type="switch"

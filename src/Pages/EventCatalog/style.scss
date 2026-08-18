@@ -125,6 +125,18 @@
     margin-bottom: 0.4rem;
   }
 
+  &__badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+    background: #eef2f4;
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    margin-bottom: 0.2rem;
+  }
+
   &__cta {
     margin-top: auto;
     display: inline-flex;

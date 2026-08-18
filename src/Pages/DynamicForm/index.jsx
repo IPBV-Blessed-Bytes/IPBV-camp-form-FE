@@ -62,7 +62,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -338,6 +338,32 @@ const DynamicForm = () => {
   };
 
   if (loading) return <Loading loading />;
+
+  if (registrationsOpen === false) {
+    return (
+      <div className="components-container">
+        <Header />
+        <div className="form__container container">
+          <Row className="justify-content-center">
+            <Col lg={8} className="text-center my-5">
+              <h2>Inscrições encerradas</h2>
+              <p className="mt-3">
+                As inscrições para este evento foram encerradas. Você ainda pode entrar na sua conta para acompanhar sua
+                inscrição.
+              </p>
+              <button
+                className="btn btn-teal-blue mt-3"
+                onClick={() => navigate(isLoggedIn ? '/minha-conta' : '/entrar')}
+              >
+                {isLoggedIn ? 'Ir para minha conta' : 'Entrar na minha conta'}
+              </button>
+            </Col>
+          </Row>
+        </div>
+        <Footer handleAdminClick={() => navigate('/admin')} />
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
