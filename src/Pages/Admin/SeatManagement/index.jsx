@@ -91,7 +91,7 @@ const AdminSeatManagement = ({
     <div className="admin-subpage admin-subpage--seats">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Vagas"
+        title="Vagas"
         subtitle="Vagas totais, por pacote e de ônibus"
         typeIcon="camp"
       />

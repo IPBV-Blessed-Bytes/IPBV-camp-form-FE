@@ -68,7 +68,7 @@ const AdminFormStage = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Contexto do Formulário"
+        title="Estágio do Formulário"
         subtitle="Estado atual do formulário de inscrição"
         typeIcon="form-context"
       />

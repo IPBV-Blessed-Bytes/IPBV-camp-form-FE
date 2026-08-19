@@ -325,7 +325,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento da Info Home"
+        title="Informações Iniciais Formulário"
         subtitle="Conteúdo exibido na página inicial do formulário"
         typeIcon="simple-info"
       />

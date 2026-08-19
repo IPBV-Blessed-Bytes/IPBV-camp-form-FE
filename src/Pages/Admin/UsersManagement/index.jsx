@@ -154,7 +154,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--users">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Usuários"
+        title="Usuários"
         subtitle="Contas de acesso ao painel e suas permissões"
         typeIcon="add-person"
       />
