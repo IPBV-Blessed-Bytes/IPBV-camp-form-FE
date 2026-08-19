@@ -10,7 +10,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'checkout',
   'discount',
   'feedback',
-  'form-context',
+  'form-stage',
   'form-fields',
   'sections',
   'package-categories',

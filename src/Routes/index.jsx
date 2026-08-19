@@ -55,7 +55,7 @@ const CustomerLogin = lazy(() => import('@/Pages/Customer/Login'));
 const CustomerConfirmEmail = lazy(() => import('@/Pages/Customer/ConfirmEmail'));
 const CustomerMyAccount = lazy(() => import('@/Pages/Customer/MyAccount'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
-const AdminFormContext = lazy(() => import('@/Pages/Admin/FormContext'));
+const AdminFormStage = lazy(() => import('@/Pages/Admin/FormStage'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
@@ -285,10 +285,10 @@ const FormRoutes = () => {
               }
             />
             <Route
-              path={adminPath('/contexto')}
+              path={adminPath('/estagio')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminFormContext formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminFormStage loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

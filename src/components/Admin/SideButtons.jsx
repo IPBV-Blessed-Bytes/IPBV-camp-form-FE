@@ -119,7 +119,7 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
-          onClick={formContext === 'maintenance' ? () => navigate('/dev/contexto') : () => navigate('/admin/contexto')}
+          onClick={formContext === 'maintenance' ? () => navigate('/dev/estagio') : () => navigate('/admin/estagio')}
         >
           Estágio do Formulário&nbsp;
           <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />

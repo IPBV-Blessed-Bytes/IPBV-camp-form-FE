@@ -10,7 +10,7 @@ import {
 } from '@/config';
 import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
 import { login as loginRequest, getMyPermissions } from '@/services/auth';
-import { getFormContext } from '@/services/formContext';
+import { getFormStage } from '@/services/formStage';
 
 const loadPermissions = async () => {
   try {
@@ -68,8 +68,8 @@ const AuthProvider = ({ children }) => {
     const fetchFormContext = async () => {
       setLoading(true);
       try {
-        const data = await getFormContext();
-        const context = data?.formContext || '';
+        const data = await getFormStage();
+        const context = data?.formStage || '';
 
         setFormContextState(context);
         sessionStorage.setItem(FORM_CONTEXT_KEY, context);
