@@ -43,18 +43,26 @@ const SideButtons = ({ secondaryPermission }) => {
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
         <button
           className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/logs') : () => navigate('/admin/logs')}
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/estagio') : () => navigate('/admin/estagio')}
         >
-          Logs de Usuários&nbsp;
-          <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
+          Estágio do Formulário&nbsp;
+          <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />
         </button>
 
         <button
           className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/vagas') : () => navigate('/admin/vagas')}
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')}
         >
-          Vagas&nbsp;
-          <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
+          Informações Iniciais Form&nbsp;
+          <Icons className="settings-icons" typeIcon="info" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/logs') : () => navigate('/admin/logs')}
+        >
+          Logs de Usuários&nbsp;
+          <Icons className="settings-icons" typeIcon="logs" iconSize={25} fill={'#fff'} />
         </button>
 
         <button
@@ -67,6 +75,14 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/papeis') : () => navigate('/admin/papeis')}
+        >
+          Papéis e Permissões&nbsp;
+          <Icons className="settings-icons" typeIcon="feedback" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/produtos') : () => navigate('/admin/produtos')}
         >
           Produtos&nbsp;
@@ -75,18 +91,12 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/usuarios') : () => navigate('/admin/usuarios')}
+          onClick={
+            formStage === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
+          }
         >
-          Usuários&nbsp;
-          <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
-        </button>
-
-        <button
-          className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/papeis') : () => navigate('/admin/papeis')}
-        >
-          Papéis e Permissões&nbsp;
-          <Icons className="settings-icons" typeIcon="feedback" iconSize={25} fill={'#fff'} />
+          Pulseiras&nbsp;
+          <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
         </button>
 
         <button
@@ -101,30 +111,18 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
-          onClick={
-            formStage === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
-          }
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/usuarios') : () => navigate('/admin/usuarios')}
         >
-          Pulseiras&nbsp;
-          <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
-        </button>
-
-         <button
-          className="settings-message-button"
-          onClick={
-            formStage === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')
-          }
-        >
-          Informações Iniciais Form&nbsp;
-          <Icons className="settings-icons" typeIcon="info" iconSize={25} fill={'#fff'} />
+          Usuários&nbsp;
+          <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
         </button>
 
         <button
           className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/estagio') : () => navigate('/admin/estagio')}
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/vagas') : () => navigate('/admin/vagas')}
         >
-          Estágio do Formulário&nbsp;
-          <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />
+          Vagas&nbsp;
+          <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
         </button>
       </div>
     </>
