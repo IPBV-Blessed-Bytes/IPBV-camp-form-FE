@@ -25,6 +25,8 @@ export const EventBrandingProvider = ({ children }) => {
   const color = event?.color || DEFAULT_COLOR;
   const secondaryColor = event?.secondaryColor || DEFAULT_SECONDARY_COLOR;
 
+  const faviconUrl = event?.faviconUrl || null;
+
   useEffect(() => {
     const root = document.documentElement;
     const onEventPage = Boolean(getEventSlugFromPath(location.pathname));
@@ -38,6 +40,22 @@ export const EventBrandingProvider = ({ children }) => {
     }
   }, [color, secondaryColor, location.pathname]);
 
+  useEffect(() => {
+    const link = document.querySelector('link[rel="icon"]');
+    if (!link) return;
+
+    if (!link.dataset.defaultHref) {
+      link.dataset.defaultHref = link.getAttribute('href') || '';
+    }
+    const onEventPage = Boolean(getEventSlugFromPath(location.pathname));
+
+    if (onEventPage && faviconUrl) {
+      link.setAttribute('href', faviconUrl);
+    } else {
+      link.setAttribute('href', link.dataset.defaultHref);
+    }
+  }, [faviconUrl, location.pathname]);
+
   const value = useMemo(
     () => ({
       name: event?.name || '',
@@ -49,9 +67,13 @@ export const EventBrandingProvider = ({ children }) => {
       paymentEnabled: Boolean(event?.paymentEnabled),
       registrationFeeEnabled: Boolean(event?.registrationFeeEnabled),
       registrationsOpen: event?.registrationsOpen !== false,
+      contactMessage: event?.contactMessage || '',
+      shareMessage: event?.shareMessage || '',
+      oldSpreadsheetUrl: event?.oldSpreadsheetUrl || '',
+      faviconUrl,
       loading: isLoading,
     }),
-    [event, color, secondaryColor, isLoading],
+    [event, color, secondaryColor, faviconUrl, isLoading],
   );
 
   return <EventBrandingContext.Provider value={value}>{children}</EventBrandingContext.Provider>;

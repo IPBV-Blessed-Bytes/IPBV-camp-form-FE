@@ -1,18 +1,27 @@
 import { Accordion, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
-import { eventPath } from '@/config/eventScope';
+import { eventPath, getEventSlug } from '@/config/eventScope';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
+import { listFaqs } from '@/services/faqs';
 
 const FAQ = () => {
   const navigate = useNavigate();
-  const { contact } = useEventBranding();
+  const { contact, legacyForm } = useEventBranding();
   const phone = contact || '(81) 99999-7767';
+
+  const { data: faqs = [] } = useQuery({
+    queryKey: ['event-faqs', getEventSlug()],
+    queryFn: listFaqs,
+    staleTime: 5 * 60 * 1000,
+  });
+  const showDynamic = faqs.length > 0;
 
   scrollUp();
 
@@ -26,6 +35,20 @@ const FAQ = () => {
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda
               restem dúvidas, entre em contato com a organização do evento pelo contato {phone} (WhatsApp).
             </Card.Text>
+            {showDynamic ? (
+              <Accordion>
+                {faqs.map((faq, index) => (
+                  <Accordion.Item eventKey={String(index)} key={faq.id}>
+                    <Accordion.Header>{faq.question}</Accordion.Header>
+                    <Accordion.Body>
+                      <div className="faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            ) : !legacyForm ? (
+              <Card.Text className="text-secondary">Nenhuma pergunta cadastrada ainda.</Card.Text>
+            ) : (
             <Accordion>
               <Accordion.Item eventKey="0">
                 <Accordion.Header>1. Quando e onde será o acampamento?</Accordion.Header>
@@ -295,6 +318,7 @@ const FAQ = () => {
                 <Accordion.Body>Animais de estimação não são permitidos.</Accordion.Body>
               </Accordion.Item>
             </Accordion>
+            )}
         </FormStepLayout>
         <InfoButton />
       </div>

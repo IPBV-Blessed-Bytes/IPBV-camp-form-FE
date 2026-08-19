@@ -11,8 +11,14 @@ const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const whatsappButtonRef = useRef(null);
   const navigate = useNavigate();
-  const { contact } = useEventBranding();
+  const { contact, secondaryColor, contactMessage, shareMessage } = useEventBranding();
   const whatsappNumber = `55${(contact || '81999997767').replace(/\D/g, '')}`;
+  const iconFill = secondaryColor || '#ffc107';
+  const defaultShareMessage = 'Faça sua inscrição no acampamento da IPBV : https://inscricaoipbv.com.br/';
+  const contactUrl = contactMessage
+    ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(contactMessage)}`
+    : `https://wa.me/${whatsappNumber}`;
+  const shareUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage || defaultShareMessage)}`;
 
   useEffect(() => {
     if (timeout) {
@@ -45,27 +51,16 @@ const InfoButton = ({ timeout, time }) => {
     <>
       {showWhatsAppIcon && (
         <button ref={whatsappButtonRef} className="info-btn" onClick={toggleWhatsAppButtons}>
-          <Icons typeIcon="info" iconSize={25} fill={'#ffc107'} />
+          <Icons typeIcon="info" iconSize={25} fill={iconFill} />
         </button>
       )}
 
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-        <button
-          className="whatsapp-message-button"
-          onClick={() => window.open(`https://wa.me/${whatsappNumber}`, '_blank')}
-        >
+        <button className="whatsapp-message-button" onClick={() => window.open(contactUrl, '_blank')}>
           Fale Conosco&nbsp;
           <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
         </button>
-        <button
-          className="whatsapp-share-button"
-          onClick={() =>
-            window.open(
-              'https://wa.me/?text=Faça%20sua%20inscrição%20no%20acampamento%20da%20IPBV%20%3A%20https://inscricaoipbv.com.br/',
-              '_blank',
-            )
-          }
-        >
+        <button className="whatsapp-share-button" onClick={() => window.open(shareUrl, '_blank')}>
           Compartilhar&nbsp;
           <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />
         </button>

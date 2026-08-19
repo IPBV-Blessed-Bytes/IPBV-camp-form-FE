@@ -37,6 +37,10 @@ const EMPTY_EVENT = {
   agePricingEnabled: false,
   registrationFeeEnabled: false,
   iconKey: '',
+  contactMessage: '',
+  shareMessage: '',
+  oldSpreadsheetUrl: '',
+  faviconUrl: '',
 };
 
 const slugify = (value) =>
@@ -92,6 +96,10 @@ const AdminEvents = ({ loggedUsername }) => {
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
       iconKey: event.iconKey || '',
+      contactMessage: event.contactMessage || '',
+      shareMessage: event.shareMessage || '',
+      oldSpreadsheetUrl: event.oldSpreadsheetUrl || '',
+      faviconUrl: event.faviconUrl || '',
     });
     setShowFormModal(true);
   };
@@ -111,6 +119,11 @@ const AdminEvents = ({ loggedUsername }) => {
   const openInfoHome = (event) => {
     setSelectedEvent(event.slug);
     navigate('/admin/info');
+  };
+
+  const openFaq = (event) => {
+    setSelectedEvent(event.slug);
+    navigate('/admin/faq');
   };
 
   const openPackage = (event) => {
@@ -138,6 +151,10 @@ const AdminEvents = ({ loggedUsername }) => {
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
       iconKey: draft.iconKey || null,
+      contactMessage: draft.contactMessage.trim() || null,
+      shareMessage: draft.shareMessage.trim() || null,
+      oldSpreadsheetUrl: draft.oldSpreadsheetUrl.trim() || null,
+      faviconUrl: draft.faviconUrl.trim() || null,
     };
 
     try {
@@ -237,6 +254,9 @@ const AdminEvents = ({ loggedUsername }) => {
                     </Button>
                     <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
                       Info Home
+                    </Button>
+                    <Button size="sm" variant="outline-teal-blue" onClick={() => openFaq(event)}>
+                      FAQ
                     </Button>
                     <Button
                       size="sm"
@@ -453,6 +473,68 @@ const AdminEvents = ({ loggedUsername }) => {
                 <Form.Text className="text-muted-italic">
                   &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta, não se inscreve
                   mais.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Mensagem &quot;Fale Conosco&quot; (WhatsApp):</b>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={2}
+                  value={draft.contactMessage}
+                  onChange={(e) => handleChange('contactMessage')(e.target.value)}
+                  placeholder="Mensagem pré-preenchida ao abrir a conversa (opcional)"
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Mensagem &quot;Compartilhar&quot; (WhatsApp):</b>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={2}
+                  value={draft.shareMessage}
+                  onChange={(e) => handleChange('shareMessage')(e.target.value)}
+                  placeholder="Texto enviado ao compartilhar o evento (opcional)"
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Link da Planilha Antiga:</b>
+                </Form.Label>
+                <Form.Control
+                  value={draft.oldSpreadsheetUrl}
+                  onChange={(e) => handleChange('oldSpreadsheetUrl')(e.target.value)}
+                  placeholder="https://drive.google.com/..."
+                />
+                <Form.Text className="text-muted-italic">
+                  Botão &quot;Planilha Antiga&quot; na home do admin. Deixe em branco para ocultar.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Favicon (URL):</b>
+                </Form.Label>
+                <Form.Control
+                  value={draft.faviconUrl}
+                  onChange={(e) => handleChange('faviconUrl')(e.target.value)}
+                  placeholder="https://.../favicon.png"
+                />
+                <Form.Text className="text-muted-italic">
+                  Ícone da aba do navegador nas páginas do evento. Deixe em branco para usar o padrão.
                 </Form.Text>
               </Form.Group>
             </Col>

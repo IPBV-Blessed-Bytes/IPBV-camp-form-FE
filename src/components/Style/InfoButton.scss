@@ -1,7 +1,7 @@
 @use '../../styles/Variables.scss' as *;
 
 .info-btn {
-  background-color: $primary;
+  background-color: var(--event-color, #{$primary});
   border: none;
   border-radius: 50%;
   bottom: 75px;
@@ -31,7 +31,7 @@
   z-index: 9999;
 
   button {
-    background-color: $light-yellow;
+    background-color: var(--event-secondary-color, #{$light-yellow});
     border: none;
     border-radius: 5px;
     color: $black;
@@ -57,11 +57,11 @@
 .whatsapp-share-button:hover,
 .verify-registration-button:hover {
   .info-icons {
-    fill: $primary;
+    fill: var(--event-color, #{$primary});
   }
 }
 
 .verify-registration-button:hover {
-  background-color: $light-yellow;
+  background-color: var(--event-secondary-color, #{$light-yellow});
   color: $black;
 }

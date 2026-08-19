@@ -1,11 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import '../Style/ExternalLinkRow.scss';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 
-const OLD_SPREADSHEET_URL = 'https://drive.google.com/file/d/1y1mUKZzotMVwnjn16_JkDu-fJCzSEnKW/view?usp=drive_link';
 const PAGARME = 'https://id.pagar.me/signin';
 
 const ExternalLinkRow = () => {
+  const { oldSpreadsheetUrl } = useEventBranding();
+
   return (
     <Row className="mt-4 p-0">
       <Col xs={12} className="text-center ps-5-custom">
@@ -17,9 +19,11 @@ const ExternalLinkRow = () => {
               <Button className='pagarme-btn' variant="outline-teal-blue" href={PAGARME} target="_blank" rel="noopener noreferrer">
                 <strong>PAGAR.ME</strong>
               </Button>
-              <Button variant="teal-blue" href={OLD_SPREADSHEET_URL} target="_blank" rel="noopener noreferrer">
-                <strong>PLANILHA ANTIGA</strong>
-              </Button>
+              {oldSpreadsheetUrl && (
+                <Button variant="teal-blue" href={oldSpreadsheetUrl} target="_blank" rel="noopener noreferrer">
+                  <strong>PLANILHA ANTIGA</strong>
+                </Button>
+              )}
             </div>
           </Card.Body>
         </Card>
