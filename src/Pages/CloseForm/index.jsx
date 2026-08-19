@@ -83,7 +83,7 @@ const CloseForm = () => {
           </Row>
         </div>
       ) : (
-        <RoutesValidations formContextCloseForm="form-on" />
+        <RoutesValidations formStageCloseForm="form-on" />
       )}
     </>
   );

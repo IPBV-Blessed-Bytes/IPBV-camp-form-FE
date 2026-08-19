@@ -8,7 +8,7 @@ import '../Style/Skelleton.scss';
 
 const Skelleton = () => {
   const navigate = useNavigate();
-  const { formContext } = useContext(AuthContext);
+  const { formStage } = useContext(AuthContext);
 
   return (
     <div className="form">
@@ -21,7 +21,7 @@ const Skelleton = () => {
         </div>
 
         <Footer
-          handleAdminClick={formContext === 'maintenance' ? () => navigate('/dev') : () => navigate('/admin')}
+          handleAdminClick={formStage === 'maintenance' ? () => navigate('/dev') : () => navigate('/admin')}
         />
       </div>
     </div>

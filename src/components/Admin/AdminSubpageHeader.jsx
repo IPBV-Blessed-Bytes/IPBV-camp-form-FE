@@ -7,8 +7,8 @@ import '../Style/adminSubpage.scss'
 
 const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32 }) => {
   const navigate = useNavigate();
-  const { formContext, logout, user } = useAuth();
-  const homePath = formContext === 'maintenance' ? '/dev' : '/admin';
+  const { formStage, logout, user } = useAuth();
+  const homePath = formStage === 'maintenance' ? '/dev' : '/admin';
   const displayName = (username || user || 'Usuário').split('@')[0];
 
   return (

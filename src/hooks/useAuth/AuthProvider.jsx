@@ -6,11 +6,11 @@ import {
   USER_STORAGE_KEY,
   USER_STORAGE_ROLE,
   USER_PERMISSIONS_KEY,
-  FORM_CONTEXT_KEY,
+  FORM_STAGE_KEY,
 } from '@/config';
 import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
 import { login as loginRequest, getMyPermissions } from '@/services/auth';
-import { getFormContext } from '@/services/formContext';
+import { getFormStage } from '@/services/formStage';
 
 const loadPermissions = async () => {
   try {
@@ -25,8 +25,8 @@ export const AuthContext = createContext({
   user: {},
   isLoggedIn: false,
   loading: false,
-  formContext: '',
-  setFormContext: () => {},
+  formStage: '',
+  setFormStage: () => {},
   login: () => {},
   logout: () => {},
 });
@@ -55,32 +55,32 @@ const AuthProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const [formContext, setFormContextState] = useState(() => {
-    return sessionStorage.getItem(FORM_CONTEXT_KEY) || '';
+  const [formStage, setFormStageState] = useState(() => {
+    return sessionStorage.getItem(FORM_STAGE_KEY) || '';
   });
 
-  const setFormContext = useCallback((context) => {
-    setFormContextState(context);
-    sessionStorage.setItem(FORM_CONTEXT_KEY, context);
+  const setFormStage = useCallback((context) => {
+    setFormStageState(context);
+    sessionStorage.setItem(FORM_STAGE_KEY, context);
   }, []);
 
   useEffect(() => {
-    const fetchFormContext = async () => {
+    const fetchFormStage = async () => {
       setLoading(true);
       try {
-        const data = await getFormContext();
-        const context = data?.formContext || '';
+        const data = await getFormStage();
+        const context = data?.formStage || '';
 
-        setFormContextState(context);
-        sessionStorage.setItem(FORM_CONTEXT_KEY, context);
+        setFormStageState(context);
+        sessionStorage.setItem(FORM_STAGE_KEY, context);
       } catch (error) {
-        console.error('[AuthProvider] erro ao buscar formContext', error);
+        console.error('[AuthProvider] erro ao buscar formStage', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFormContext();
+    fetchFormStage();
   }, []);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_ROLE);
     localStorage.removeItem(USER_PERMISSIONS_KEY);
-    sessionStorage.removeItem(FORM_CONTEXT_KEY);
+    sessionStorage.removeItem(FORM_STAGE_KEY);
 
     setIsLoggedIn(false);
     setUser(undefined);
@@ -158,12 +158,12 @@ const AuthProvider = ({ children }) => {
       isLoggedIn,
       user,
       loading,
-      formContext,
-      setFormContext,
+      formStage,
+      setFormStage,
       login,
       logout,
     }),
-    [isLoggedIn, user, loading, formContext, setFormContext, login, logout],
+    [isLoggedIn, user, loading, formStage, setFormStage, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
