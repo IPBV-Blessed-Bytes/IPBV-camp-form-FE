@@ -41,8 +41,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   const validateForm = () => {
     const { userName, password, role, email } = formData;
-    if (!userName || !password || !role || !email) {
-      toast.error('Todos os campos são obrigatórios');
+    if (!userName || !role || !email || (!editingUser && !password)) {
+      toast.error(
+        editingUser ? 'Preencha nome, papel e e-mail' : 'Todos os campos são obrigatórios',
+      );
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -110,7 +112,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const handleEditClick = (user) => {
-    setFormData({ userName: user.userName, password: user.password, role: user.role, email: user.email || '' });
+    setFormData({ userName: user.userName, password: '', role: user.role, email: user.email || '' });
     setEditingUser(user);
     setShowModal(true);
   };
@@ -126,7 +128,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     try {
       const data = await getRoles();
       setRoles(Array.isArray(data) ? data : []);
-    } catch (error) {
+    } catch {
+      setRoles([]);
     }
   };
 
@@ -264,7 +267,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite a senha"
+                placeholder={editingUser ? 'Deixe em branco para manter a senha atual' : 'Digite a senha'}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 size="lg"
