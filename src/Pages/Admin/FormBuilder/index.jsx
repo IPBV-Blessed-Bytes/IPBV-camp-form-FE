@@ -264,8 +264,15 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     if (!toDelete) return;
     setSaving(true);
     try {
-      if (toDelete.kind === 'section') await deleteFormSection(toDelete.item.id);
-      else await deleteFormField(toDelete.item.id);
+      if (toDelete.kind === 'section-all') {
+        const sectionFields = fields.filter((field) => field.sectionId === toDelete.item.id);
+        await Promise.all(sectionFields.map((field) => deleteFormField(field.id)));
+        await deleteFormSection(toDelete.item.id);
+      } else if (toDelete.kind === 'section') {
+        await deleteFormSection(toDelete.item.id);
+      } else {
+        await deleteFormField(toDelete.item.id);
+      }
       setToDelete(null);
       await load();
     } catch (err) {
@@ -340,9 +347,23 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                     <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
                       Renomear
                     </Button>
-                    <Button size="sm" variant="danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
-                      Excluir
-                    </Button>
+                    {section.fields.length > 0 ? (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => setToDelete({ kind: 'section-all', item: section })}
+                      >
+                        Excluir tudo
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => setToDelete({ kind: 'section', item: section })}
+                      >
+                        Excluir
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -591,7 +612,13 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title={toDelete?.kind === 'section' ? 'Excluir Seção' : 'Excluir Campo'}
+        title={
+          toDelete?.kind === 'section-all'
+            ? 'Excluir Seção e Campos'
+            : toDelete?.kind === 'section'
+              ? 'Excluir Seção'
+              : 'Excluir Campo'
+        }
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
@@ -606,6 +633,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         <p>
           Tem certeza que deseja excluir <b>{toDelete?.item?.name || toDelete?.item?.label}</b>?
           {toDelete?.kind === 'section' && ' A seção precisa estar sem campos.'}
+          {toDelete?.kind === 'section-all' &&
+            ` Isso vai excluir a seção e todos os ${fields.filter((f) => f.sectionId === toDelete.item.id).length} campo(s) dentro dela. Esta ação não pode ser desfeita.`}
         </p>
       </CustomModal>
     </div>
