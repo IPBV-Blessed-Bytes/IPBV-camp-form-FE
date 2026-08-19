@@ -725,3 +725,9 @@ button.btn.btn-outline-primary:hover svg {
 .text-teal-blue {
   color: $teal-blue;
 }
+
+.text-muted-italic {
+  --bs-text-opacity: 1;
+  color: var(--bs-secondary-color) !important;
+  font-style: italic;
+}
