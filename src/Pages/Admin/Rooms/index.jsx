@@ -342,7 +342,7 @@ const AdminRooms = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--rooms rooms">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Quartos"
+        title="Quartos"
         subtitle="Distribuição de acampantes por quarto"
         typeIcon="rooms"
       />

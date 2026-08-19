@@ -171,7 +171,7 @@ const AdminDiscount = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--discount discounts">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Descontos"
+        title="Descontos"
         subtitle="Cupons e descontos atrelados a CPFs"
         typeIcon="discount"
       />

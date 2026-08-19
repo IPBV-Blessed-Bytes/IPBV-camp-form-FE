@@ -199,7 +199,7 @@ const AdminLoggedIn = ({
       permission: registeredButtonHomePermissions,
       path: 'acampantes',
       cardType: 'registered-card',
-      title: 'Inscritos',
+      title: 'Inscrições',
       typeIcon: 'person',
       iconSize: 40,
     },

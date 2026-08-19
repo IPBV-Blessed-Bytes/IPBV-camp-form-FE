@@ -297,7 +297,7 @@ const AdminTeams = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--teams">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Times"
+        title="Times"
         subtitle="Times e seus acampantes"
         typeIcon="team"
       />
