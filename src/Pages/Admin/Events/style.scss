@@ -158,6 +158,12 @@
     .btn {
       width: 100%;
     }
+
+    .btn:disabled,
+    .btn.disabled {
+      cursor: not-allowed;
+      pointer-events: auto;
+    }
   }
 
   &__footer {
