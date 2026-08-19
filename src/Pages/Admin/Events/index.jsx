@@ -11,7 +11,7 @@ const ICON_KEYS = new Set(EVENT_ICONS.map((icon) => icon.key));
 const STAGE_BADGE = (event) => {
   if (!event.active) return { bg: 'secondary', text: undefined, label: 'Inativo' };
   if (event.registrationsOpen === false) return { bg: 'warning', text: 'dark', label: 'Aguardando evento' };
-  return { bg: 'success', text: undefined, label: 'Inscrições abertas' };
+  return { bg: 'success', text: undefined, label: 'Inscrições Abertas' };
 };
 
 import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services/events';
@@ -21,6 +21,7 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
+import Icons from '@/components/Global/Icons';
 
 const EMPTY_EVENT = {
   id: null,
@@ -183,8 +184,9 @@ const AdminEvents = ({ loggedUsername }) => {
 
       <div className="admin-events__content">
         <div className="admin-events__toolbar">
-          <Button variant="teal-blue" onClick={openCreate}>
-            + Novo evento
+          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
+            Novo Evento&nbsp;&nbsp;
+            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
 
@@ -197,78 +199,72 @@ const AdminEvents = ({ loggedUsername }) => {
             {events.map((event) => {
               const badge = STAGE_BADGE(event);
               return (
-                <div
-                  key={event.id}
-                  className="event-admin-card"
-                  style={{ '--card-accent': event.color || '#007185' }}
-                >
-                    <div className="event-admin-card__head">
-                      <span className="event-admin-card__icon">
-                        {ICON_KEYS.has(event.iconKey) ? (
-                          <EventIcons typeIcon={event.iconKey} iconSize={26} />
-                        ) : (
-                          <span className="event-admin-card__initial">
-                            {(event.name || '?').charAt(0).toUpperCase()}
-                          </span>
-                        )}
-                      </span>
-                      <div className="event-admin-card__heading">
-                        <div className="event-admin-card__name-row">
-                          <h3 className="event-admin-card__name">{event.name}</h3>
-                          {event.year && <span className="event-admin-card__year">{event.year}</span>}
-                        </div>
-                        <code className="event-admin-card__slug">/e/{event.slug}</code>
-                      </div>
-                    </div>
-
-                    <div className="event-admin-card__meta">
-                      <Badge bg={badge.bg} text={badge.text}>
-                        {badge.label}
-                      </Badge>
-                      {event.paymentEnabled && (
-                        <Badge bg="light" text="dark" className="event-admin-card__tag">
-                          Pagamento
-                        </Badge>
+                <div key={event.id} className="event-admin-card" style={{ '--card-accent': event.color || '#007185' }}>
+                  <div className="event-admin-card__head">
+                    <span className="event-admin-card__icon">
+                      {ICON_KEYS.has(event.iconKey) ? (
+                        <EventIcons typeIcon={event.iconKey} iconSize={26} />
+                      ) : (
+                        <span className="event-admin-card__initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
                       )}
-                    </div>
-
-                    <div className="event-admin-card__config">
-                      <Button size="sm" variant="outline-teal-blue" onClick={() => openFormBuilder(event)}>
-                        Campos
-                      </Button>
-                      <Button size="sm" variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
-                        Inscrições
-                      </Button>
-                      <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
-                        Info Home
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline-teal-blue"
-                        disabled={!event.paymentEnabled}
-                        title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
-                        onClick={() => openPackage(event)}
-                      >
-                        Pacote
-                      </Button>
-                    </div>
-
-                    <div className="event-admin-card__footer">
-                      <Button size="sm" variant="teal-blue" onClick={() => openEdit(event)}>
-                        Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline-danger"
-                        onClick={() => {
-                          setSelected(event);
-                          setShowDeleteModal(true);
-                        }}
-                      >
-                        Excluir
-                      </Button>
+                    </span>
+                    <div className="event-admin-card__heading">
+                      <div className="event-admin-card__name-row">
+                        <h3 className="event-admin-card__name">{event.name}</h3>
+                        {event.year && <span className="event-admin-card__year">{event.year}</span>}
+                      </div>
+                      <code className="event-admin-card__slug">/e/{event.slug}</code>
                     </div>
                   </div>
+
+                  <div className="event-admin-card__meta">
+                    <Badge bg={badge.bg} text={badge.text}>
+                      {badge.label}
+                    </Badge>
+                    {event.paymentEnabled && (
+                      <Badge bg="light" text="dark" className="event-admin-card__tag">
+                        Pagamento
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="event-admin-card__config">
+                    <Button size="sm" variant="outline-teal-blue" onClick={() => openFormBuilder(event)}>
+                      Campos
+                    </Button>
+                    <Button size="sm" variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
+                      Inscrições
+                    </Button>
+                    <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
+                      Info Home
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      disabled={!event.paymentEnabled}
+                      title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
+                      onClick={() => openPackage(event)}
+                    >
+                      Pacote
+                    </Button>
+                  </div>
+
+                  <div className="event-admin-card__footer">
+                    <Button size="sm" variant="teal-blue" onClick={() => openEdit(event)}>
+                      Editar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-danger"
+                      onClick={() => {
+                        setSelected(event);
+                        setShowDeleteModal(true);
+                      }}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -280,8 +276,8 @@ const AdminEvents = ({ loggedUsername }) => {
         onHide={() => setShowFormModal(false)}
         variant="info"
         size="lg"
-        title={draft.id ? 'Editar evento' : 'Novo evento'}
-        icon="calendar"
+        title={draft.id ? 'Editar Evento' : 'Novo Evento'}
+        icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowFormModal(false)} disabled={saving}>
@@ -297,7 +293,9 @@ const AdminEvents = ({ loggedUsername }) => {
           <Row className="g-3">
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Nome</Form.Label>
+                <Form.Label>
+                  <b>Nome:</b>
+                </Form.Label>
                 <Form.Control
                   value={draft.name}
                   onChange={(e) => {
@@ -315,19 +313,23 @@ const AdminEvents = ({ loggedUsername }) => {
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Identificador (slug)</Form.Label>
+                <Form.Label>
+                  <b>Identificador (slug):</b>
+                </Form.Label>
                 <Form.Control
                   value={draft.slug}
                   onChange={(e) => handleChange('slug')(slugify(e.target.value))}
                   placeholder="acampamento-ipbv"
                 />
-                <Form.Text className="text-muted">Usado na URL: /e/{draft.slug || 'slug'}</Form.Text>
+                <Form.Text className="text-muted-italic">Usado na URL: /e/{draft.slug || 'slug'}</Form.Text>
               </Form.Group>
             </Col>
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Cor principal</Form.Label>
+                <Form.Label>
+                  <b>Cor Principal:</b>
+                </Form.Label>
                 <div className="admin-events__color-row">
                   <Form.Control
                     type="color"
@@ -346,7 +348,9 @@ const AdminEvents = ({ loggedUsername }) => {
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Cor secundária (botões)</Form.Label>
+                <Form.Label>
+                  <b>Cor Secundária (botões):</b>
+                </Form.Label>
                 <div className="admin-events__color-row">
                   <Form.Control
                     type="color"
@@ -365,18 +369,22 @@ const AdminEvents = ({ loggedUsername }) => {
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Contato (WhatsApp)</Form.Label>
+                <Form.Label>
+                  <b>Contato (WhatsApp):</b>
+                </Form.Label>
                 <Form.Control
                   value={draft.contact}
                   onChange={(e) => handleChange('contact')(e.target.value)}
-                  placeholder="(81) 99999-7767"
+                  placeholder="(81) 99999-9999"
                 />
               </Form.Group>
             </Col>
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Ano</Form.Label>
+                <Form.Label>
+                  <b>Ano:</b>
+                </Form.Label>
                 <Form.Control
                   type="number"
                   value={draft.year}
@@ -388,10 +396,14 @@ const AdminEvents = ({ loggedUsername }) => {
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Ícone do card</Form.Label>
+                <Form.Label>
+                  <b>Ícone do Card:</b>
+                </Form.Label>
                 <div className="event-icon-field">
                   <Form.Select value={draft.iconKey} onChange={(e) => handleChange('iconKey')(e.target.value)}>
-                    <option value="">Sem ícone</option>
+                    <option value="" disabled selected>
+                      Sem Ícone
+                    </option>
                     {EVENT_ICONS.map((icon) => (
                       <option key={icon.key} value={icon.key}>
                         {icon.label}
@@ -410,7 +422,7 @@ const AdminEvents = ({ loggedUsername }) => {
                     )}
                   </div>
                 </div>
-                <Form.Text className="text-muted">
+                <Form.Text className="text-muted-italic">
                   Escolha um ícone para aparecer no card do evento na página inicial. Ele assume a cor principal.
                 </Form.Text>
               </Form.Group>
@@ -418,7 +430,9 @@ const AdminEvents = ({ loggedUsername }) => {
 
             <Col xs={12} md={6}>
               <Form.Group>
-                <Form.Label>Estágio do evento</Form.Label>
+                <Form.Label>
+                  <b>Estágio do Evento:</b>
+                </Form.Label>
                 <Form.Select
                   value={draft.active ? (draft.registrationsOpen ? 'open' : 'waiting') : 'inactive'}
                   onChange={(e) => {
@@ -430,12 +444,15 @@ const AdminEvents = ({ loggedUsername }) => {
                     }));
                   }}
                 >
-                  <option value="open">Inscrições abertas</option>
+                  <option value="open" selected disabled>
+                    Inscrições Abertas
+                  </option>
                   <option value="waiting">Aguardando evento (só login/pós-venda)</option>
                   <option value="inactive">Inativo (oculto no catálogo)</option>
                 </Form.Select>
-                <Form.Text className="text-muted">
-                  &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta — não se inscreve mais.
+                <Form.Text className="text-muted-italic">
+                  &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta, não se inscreve
+                  mais.
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -451,7 +468,9 @@ const AdminEvents = ({ loggedUsername }) => {
             checked={draft.paymentEnabled}
             onChange={(e) => handleChange('paymentEnabled')(e.target.checked)}
           />
-          <Form.Text className="text-muted">Se desativado, o formulário é enviado sem carrinho nem cobrança.</Form.Text>
+          <Form.Text className="text-muted-italic">
+            Se desativado, o formulário é enviado sem carrinho nem cobrança.
+          </Form.Text>
 
           {draft.paymentEnabled && (
             <>
@@ -463,7 +482,9 @@ const AdminEvents = ({ loggedUsername }) => {
                 checked={draft.agePricingEnabled}
                 onChange={(e) => handleChange('agePricingEnabled')(e.target.checked)}
               />
-              <Form.Text className="text-muted">Adiciona um campo de nascimento e faixas de desconto por idade.</Form.Text>
+              <Form.Text className="text-muted-italic">
+                Adiciona um campo de nascimento e faixas de desconto por idade.
+              </Form.Text>
 
               <Form.Check
                 type="switch"
@@ -473,7 +494,7 @@ const AdminEvents = ({ loggedUsername }) => {
                 checked={draft.registrationFeeEnabled}
                 onChange={(e) => handleChange('registrationFeeEnabled')(e.target.checked)}
               />
-              <Form.Text className="text-muted">
+              <Form.Text className="text-muted-italic">
                 Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada acampante.
               </Form.Text>
             </>
@@ -499,7 +520,7 @@ const AdminEvents = ({ loggedUsername }) => {
       >
         <p>
           Tem certeza que deseja excluir <b>{selected?.name}</b>? Eventos com inscrições vinculadas não podem ser
-          excluídos — desative-o.
+          excluídos, desative-o.
         </p>
       </CustomModal>
     </div>

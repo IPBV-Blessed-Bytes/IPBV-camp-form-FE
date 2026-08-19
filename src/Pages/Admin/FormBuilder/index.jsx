@@ -286,8 +286,9 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
       <div className="form-builder__content">
         <div className="form-builder__toolbar">
-          <Button variant="teal-blue" onClick={openCreateSection}>
-            + Nova seção
+          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreateSection}>
+            Nova Seção&nbsp;&nbsp;
+            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
 
@@ -298,109 +299,113 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         ) : (
           <div className="form-builder__sections">
             {sectionsWithFields.map((section, sectionIndex) => (
-            <div key={section.id} className="form-builder__section">
-              <div className="form-builder__section-head">
-                <span className="form-builder__section-num">{sectionIndex + 1}</span>
-                <div className="form-builder__item-order">
-                  <button
-                    type="button"
-                    className="form-builder__move form-builder__move--up"
-                    disabled={sectionIndex === 0 || saving}
-                    onClick={() => moveSection(sectionIndex, -1)}
-                    aria-label="Mover seção para cima"
-                  >
-                    <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                  </button>
-                  <button
-                    type="button"
-                    className="form-builder__move form-builder__move--down"
-                    disabled={sectionIndex === sections.length - 1 || saving}
-                    onClick={() => moveSection(sectionIndex, 1)}
-                    aria-label="Mover seção para baixo"
-                  >
-                    <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                  </button>
+              <div key={section.id} className="form-builder__section">
+                <div className="form-builder__section-head">
+                  <span className="form-builder__section-num">{sectionIndex + 1}</span>
+                  <div className="form-builder__item-order">
+                    <button
+                      type="button"
+                      className="form-builder__move form-builder__move--up"
+                      disabled={sectionIndex === 0 || saving}
+                      onClick={() => moveSection(sectionIndex, -1)}
+                      aria-label="Mover seção para cima"
+                    >
+                      <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                    </button>
+                    <button
+                      type="button"
+                      className="form-builder__move form-builder__move--down"
+                      disabled={sectionIndex === sections.length - 1 || saving}
+                      onClick={() => moveSection(sectionIndex, 1)}
+                      aria-label="Mover seção para baixo"
+                    >
+                      <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                    </button>
+                  </div>
+                  <h5 className="form-builder__section-title">{section.name}</h5>
+                  <div className="form-builder__section-actions">
+                    <Form.Select
+                      size="sm"
+                      className="form-builder__columns"
+                      value={section.columns || 1}
+                      onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
+                      disabled={saving}
+                      aria-label="Colunas por linha da seção"
+                      title="Quantos campos por linha nesta seção"
+                    >
+                      <option value={1}>1 coluna</option>
+                      <option value={2}>2 colunas</option>
+                      <option value={3}>3 colunas</option>
+                    </Form.Select>
+                    <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
+                      Renomear
+                    </Button>
+                    <Button size="sm" variant="danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
+                      Excluir
+                    </Button>
+                  </div>
                 </div>
-                <h5 className="form-builder__section-title">{section.name}</h5>
-                <div className="form-builder__section-actions">
-                  <Form.Select
-                    size="sm"
-                    className="form-builder__columns"
-                    value={section.columns || 1}
-                    onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
-                    disabled={saving}
-                    aria-label="Colunas por linha da seção"
-                    title="Quantos campos por linha nesta seção"
-                  >
-                    <option value={1}>1 coluna</option>
-                    <option value={2}>2 colunas</option>
-                    <option value={3}>3 colunas</option>
-                  </Form.Select>
-                  <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
-                    Renomear
-                  </Button>
-                  <Button size="sm" variant="danger" onClick={() => setToDelete({ kind: 'section', item: section })}>
-                    Excluir
-                  </Button>
-                </div>
+
+                {section.fields.length === 0 ? (
+                  <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
+                ) : (
+                  <ul className="form-builder__list">
+                    {section.fields.map((field, index) => (
+                      <li key={field.id} className="form-builder__item">
+                        <span className="form-builder__ordinal">{index + 1}</span>
+                        <div className="form-builder__item-order">
+                          <button
+                            type="button"
+                            className="form-builder__move form-builder__move--up"
+                            disabled={index === 0 || saving}
+                            onClick={() => moveField(section.fields, index, -1)}
+                            aria-label="Mover para cima"
+                          >
+                            <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                          </button>
+                          <button
+                            type="button"
+                            className="form-builder__move form-builder__move--down"
+                            disabled={index === section.fields.length - 1 || saving}
+                            onClick={() => moveField(section.fields, index, 1)}
+                            aria-label="Mover para baixo"
+                          >
+                            <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
+                          </button>
+                        </div>
+                        <div className="form-builder__item-main">
+                          <div className="form-builder__item-title">
+                            {field.label}
+                            {field.required && <span className="form-builder__req">*</span>}
+                          </div>
+                          <div className="form-builder__item-meta">
+                            <Badge bg="light" text="dark">
+                              {typeLabel(field.type)}
+                            </Badge>
+                            <code>{field.key}</code>
+                          </div>
+                        </div>
+                        <div className="form-builder__item-actions">
+                          <Button size="sm" variant="outline-teal-blue" onClick={() => openEditField(field)}>
+                            Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline-danger"
+                            onClick={() => setToDelete({ kind: 'field', item: field })}
+                          >
+                            Excluir
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
+                  + Adicionar campo
+                </Button>
               </div>
-
-              {section.fields.length === 0 ? (
-                <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
-              ) : (
-                <ul className="form-builder__list">
-                  {section.fields.map((field, index) => (
-                    <li key={field.id} className="form-builder__item">
-                      <span className="form-builder__ordinal">{index + 1}</span>
-                      <div className="form-builder__item-order">
-                        <button
-                          type="button"
-                          className="form-builder__move form-builder__move--up"
-                          disabled={index === 0 || saving}
-                          onClick={() => moveField(section.fields, index, -1)}
-                          aria-label="Mover para cima"
-                        >
-                          <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                        </button>
-                        <button
-                          type="button"
-                          className="form-builder__move form-builder__move--down"
-                          disabled={index === section.fields.length - 1 || saving}
-                          onClick={() => moveField(section.fields, index, 1)}
-                          aria-label="Mover para baixo"
-                        >
-                          <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
-                        </button>
-                      </div>
-                      <div className="form-builder__item-main">
-                        <div className="form-builder__item-title">
-                          {field.label}
-                          {field.required && <span className="form-builder__req">*</span>}
-                        </div>
-                        <div className="form-builder__item-meta">
-                          <Badge bg="light" text="dark">
-                            {typeLabel(field.type)}
-                          </Badge>
-                          <code>{field.key}</code>
-                        </div>
-                      </div>
-                      <div className="form-builder__item-actions">
-                        <Button size="sm" variant="outline-teal-blue" onClick={() => openEditField(field)}>
-                          Editar
-                        </Button>
-                        <Button size="sm" variant="outline-danger" onClick={() => setToDelete({ kind: 'field', item: field })}>
-                          Excluir
-                        </Button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
-                + Adicionar campo
-              </Button>
-            </div>
             ))}
           </div>
         )}
@@ -410,8 +415,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={showSectionModal}
         onHide={() => setShowSectionModal(false)}
         variant="info"
-        title={sectionDraft.id ? 'Renomear seção' : 'Nova seção'}
-        icon="form-context"
+        title={sectionDraft.id ? 'Renomear Seção' : 'Nova Seção'}
+        icon={sectionDraft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowSectionModal(false)} disabled={saving}>
@@ -424,7 +429,9 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         }
       >
         <Form.Group>
-          <Form.Label>Nome da seção</Form.Label>
+          <Form.Label>
+            <b>Nome da Seção:</b>
+          </Form.Label>
           <Form.Control
             value={sectionDraft.name}
             onChange={(e) => setSectionDraft((prev) => ({ ...prev, name: e.target.value }))}
@@ -437,8 +444,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={showFieldModal}
         onHide={() => setShowFieldModal(false)}
         variant="info"
-        title={fieldDraft.id ? 'Editar campo' : 'Novo campo'}
-        icon="form-context"
+        title={fieldDraft.id ? 'Editar Campo' : 'Novo Campo'}
+        icon={fieldDraft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowFieldModal(false)} disabled={saving}>
@@ -584,7 +591,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title={toDelete?.kind === 'section' ? 'Excluir seção' : 'Excluir campo'}
+        title={toDelete?.kind === 'section' ? 'Excluir Seção' : 'Excluir Campo'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>

@@ -234,7 +234,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       <div className="package-builder__content">
         <div className="package-builder__toolbar">
           <Button variant="teal-blue" onClick={openCreate}>
-            + Nova categoria
+            + Nova Categoria
           </Button>
         </div>
 
@@ -410,8 +410,8 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         show={showModal}
         onHide={() => setShowModal(false)}
         variant="info"
-        title={draft.id ? 'Editar categoria' : 'Nova categoria'}
-        icon="cart"
+        title={draft.id ? 'Editar Categoria' : 'Nova Categoria'}
+        icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
@@ -425,7 +425,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       >
         <Form>
           <Form.Group className="mb-3">
-            <Form.Label>Nome da categoria</Form.Label>
+            <Form.Label><b>Nome da Categoria:</b></Form.Label>
             <Form.Control
               value={draft.name}
               onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
@@ -433,7 +433,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Descrição (opcional)</Form.Label>
+            <Form.Label><b>Descrição (opcional):</b></Form.Label>
             <Form.Control
               as="textarea"
               rows={2}
@@ -443,7 +443,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Regra de escolha</Form.Label>
+            <Form.Label><b>Regra de escolha:</b></Form.Label>
             <Form.Select
               value={draft.selectionRule}
               onChange={(e) => setDraft((prev) => ({ ...prev, selectionRule: e.target.value }))}
@@ -469,7 +469,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title="Excluir categoria"
+        title="Excluir Categoria"
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
