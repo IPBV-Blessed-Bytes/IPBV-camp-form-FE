@@ -362,8 +362,15 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                               {rule.minAge}–{rule.maxAge} anos → <b>{rule.discountPercent}% off</b>
                               {rule.discountPercent === 100 ? ' (grátis)' : ''}
                             </span>
-                            <Button size="sm" variant="outline-danger" disabled={saving} onClick={() => removeBracket(rule.id)}>
-                              ×
+                            <Button
+                              size="sm"
+                              variant="outline-danger"
+                              className="package-builder__bracket-del"
+                              disabled={saving}
+                              onClick={() => removeBracket(rule.id)}
+                              aria-label="Remover faixa"
+                            >
+                              <Icons typeIcon="delete" iconSize={16} fill="#dc3545" />
                             </Button>
                           </div>
                         ))}
