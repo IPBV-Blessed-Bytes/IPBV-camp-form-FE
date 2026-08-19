@@ -193,7 +193,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               <tr>
                 <th className="table-cells-header">Nome:</th>
                 <th className="table-cells-header">Categoria:</th>
-                <th className="table-cells-header">Ativo:</th>
+                <th className="table-cells-header">Status:</th>
                 <th className="table-cells-header">Preços por lote:</th>
                 <th className="table-cells-header">Ações:</th>
               </tr>
