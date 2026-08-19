@@ -14,4 +14,4 @@ export const USER_STORAGE_ROLE = 'user-role';
 
 export const USER_PERMISSIONS_KEY = 'user-permissions';
 
-export const FORM_CONTEXT_KEY = 'formContext';
+export const FORM_STAGE_KEY = 'formStage';

@@ -9,7 +9,7 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { initBaseDate } from './Pages/Packages/utils/calculateAge';
 
 function App() {
-  const { formContext, loading } = useContext(AuthContext);
+  const { formStage, loading } = useContext(AuthContext);
   const [baseDateLoading, setBaseDateLoading] = useState(true);
 
   const windowPathname = window.location.pathname;
@@ -37,14 +37,14 @@ function App() {
 
   return (
     <>
-      {(formContext === 'form-on' ||
-        formContext === 'form-off' ||
-        formContext === 'form-waiting' ||
-        formContext === 'maintenance') && <RoutesValidations formContext={formContext} />}
+      {(formStage === 'form-on' ||
+        formStage === 'form-off' ||
+        formStage === 'form-waiting' ||
+        formStage === 'maintenance') && <RoutesValidations formStage={formStage} />}
 
-      {formContext === 'form-closed' && <CloseForm />}
+      {formStage === 'form-closed' && <CloseForm />}
 
-      {formContext === 'google-forms' && (
+      {formStage === 'google-forms' && (
         <div className="google-forms-frame">
           <iframe></iframe>
         </div>

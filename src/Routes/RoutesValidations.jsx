@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { FormStateProvider } from '@/contexts/FormStateContext';
 import FormRoutes from '.';
 
-const RoutesValidations = ({ formContextCloseForm }) => (
-  <FormStateProvider formContextCloseForm={formContextCloseForm}>
+const RoutesValidations = ({ formStageCloseForm }) => (
+  <FormStateProvider formStageCloseForm={formStageCloseForm}>
     <FormRoutes />
   </FormStateProvider>
 );
 
 RoutesValidations.propTypes = {
-  formContextCloseForm: PropTypes.string,
+  formStageCloseForm: PropTypes.string,
 };
 
 export default RoutesValidations;

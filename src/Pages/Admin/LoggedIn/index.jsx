@@ -68,9 +68,9 @@ const AdminLoggedIn = ({
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
-  const { formContext } = useContext(AuthContext);
+  const { formStage } = useContext(AuthContext);
   const navigate = useNavigate();
-  const routePrefix = formContext === 'maintenance' ? '/dev' : '/admin';
+  const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
 
   scrollUp();
 

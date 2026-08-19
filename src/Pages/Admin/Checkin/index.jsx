@@ -29,7 +29,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [userWristbands, setUserWristbands] = useState([]);
   const [cpfMatches, setCpfMatches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const { formContext } = useContext(AuthContext);
+  const { formStage } = useContext(AuthContext);
   const { campersTableButtonPermissions } = permissionsSections(userRole);
   const navigate = useNavigate();
   const abortControllerRef = useRef(null);
@@ -192,7 +192,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
   const goToCampersTable = () => {
-    formContext === 'maintenance' ? navigate('/dev/acampantes') : navigate('/admin/acampantes');
+    formStage === 'maintenance' ? navigate('/dev/acampantes') : navigate('/admin/acampantes');
   };
 
   const toolsButtons = [

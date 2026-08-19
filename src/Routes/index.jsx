@@ -70,8 +70,8 @@ const FormRoutes = () => {
   const {
     adminPathname,
     availablePackages,
-    effectiveFormContext,
-    formContext,
+    effectiveFormStage,
+    formStage,
     formPath,
     handleAdminClick,
     handleUpdateTotalBusVacancies,
@@ -89,7 +89,7 @@ const FormRoutes = () => {
     userRole,
   } = useFormState();
 
-  const adminPath = (segment) => `${effectiveFormContext === 'maintenance' ? '/dev' : '/admin'}${segment}`;
+  const adminPath = (segment) => `${effectiveFormStage === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
   const { legacyForm, loading: brandingLoading } = useEventBranding();
 
@@ -97,15 +97,15 @@ const FormRoutes = () => {
     <div className="form">
       {!adminPathname && formPath && (
         <div className="components-container">
-          {effectiveFormContext === 'form-waiting' && <WaitingForCamp />}
-          {effectiveFormContext === 'form-off' && <Offline />}
-          {effectiveFormContext === 'maintenance' && <Maintenance />}
+          {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}
+          {effectiveFormStage === 'form-off' && <Offline />}
+          {effectiveFormStage === 'maintenance' && <Maintenance />}
 
-          {effectiveFormContext === 'form-on' && brandingLoading && <Loading loading />}
+          {effectiveFormStage === 'form-on' && brandingLoading && <Loading loading />}
 
-          {effectiveFormContext === 'form-on' && !brandingLoading && !legacyForm && <DynamicForm />}
+          {effectiveFormStage === 'form-on' && !brandingLoading && !legacyForm && <DynamicForm />}
 
-          {effectiveFormContext === 'form-on' && !brandingLoading && legacyForm && (
+          {effectiveFormStage === 'form-on' && !brandingLoading && legacyForm && (
             <>
               <Header showNavMenu />
 
@@ -175,7 +175,7 @@ const FormRoutes = () => {
               element={
                 <Login
                   availablePackages={availablePackages}
-                  formContext={formContext}
+                  formStage={formStage}
                   spinnerLoading={loading}
                   totalBusVacancies={totalBusVacancies}
                   totalRegistrations={totalRegistrations}
@@ -193,7 +193,7 @@ const FormRoutes = () => {
                   userRole={userRole}
                   requiredPermission="REGISTRATIONS_READ"
                 >
-                  <AdminCampers formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
+                  <AdminCampers formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
               }
             />
@@ -201,7 +201,7 @@ const FormRoutes = () => {
               path={adminPath('/carona')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="RIDES_MANAGE">
-                  <AdminRide formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminRide formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -209,7 +209,7 @@ const FormRoutes = () => {
               path={adminPath('/descontos')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole} requiredPermission="COUPONS_MANAGE">
-                  <AdminDiscount formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminDiscount formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -217,7 +217,7 @@ const FormRoutes = () => {
               path={adminPath('/quartos')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="ROOMS_MANAGE">
-                  <AdminRooms formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminRooms formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -225,7 +225,7 @@ const FormRoutes = () => {
               path={adminPath('/times')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole} requiredPermission="TEAMS_MANAGE">
-                  <AdminTeams formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminTeams formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -241,7 +241,7 @@ const FormRoutes = () => {
               path={adminPath('/checkin')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
-                  <AdminCheckin formContext={formContext} loggedUsername={loggedUsername} userRole={userRole} />
+                  <AdminCheckin formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
               }
             />
@@ -249,7 +249,7 @@ const FormRoutes = () => {
               path={adminPath('/logs')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminUserLogs formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminUserLogs formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -258,7 +258,7 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminSeatManagement
-                    formContext={formContext}
+                    formStage={formStage}
                     loading={loading}
                     loggedUsername={loggedUsername}
                     handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
@@ -276,7 +276,7 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminLotManagement
-                    formContext={formContext}
+                    formStage={formStage}
                     loading={loading}
                     loggedUsername={loggedUsername}
                     packageCount={packageCount}
@@ -296,7 +296,7 @@ const FormRoutes = () => {
               path={adminPath('/usuarios')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="USERS_READ">
-                  <AdminUsersManagement formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminUsersManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -308,7 +308,7 @@ const FormRoutes = () => {
                   userRole={userRole}
                   requiredPermission="PRODUCTS_WRITE"
                 >
-                  <AdminProductsManagement formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminProductsManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -316,7 +316,7 @@ const FormRoutes = () => {
               path={adminPath('/papeis')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="ROLES_READ">
-                  <AdminRolesManagement formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminRolesManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -328,7 +328,7 @@ const FormRoutes = () => {
                   userRole={userRole}
                   requiredPermission="REGISTRATIONS_WRITE"
                 >
-                  <AdminChangeRequests formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminChangeRequests formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -336,7 +336,7 @@ const FormRoutes = () => {
               path={adminPath('/pulseiras')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminWristbandsManagement formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminWristbandsManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -344,7 +344,7 @@ const FormRoutes = () => {
               path={adminPath('/eventos')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminEvents formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminEvents formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -352,7 +352,7 @@ const FormRoutes = () => {
               path={adminPath('/formulario')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminFormBuilder formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminFormBuilder formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -364,7 +364,7 @@ const FormRoutes = () => {
                   userRole={userRole}
                   requiredPermission="REGISTRATIONS_READ"
                 >
-                  <AdminSubmissions formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminSubmissions formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -372,7 +372,7 @@ const FormRoutes = () => {
               path={adminPath('/pacote')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminPackageBuilder formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminPackageBuilder formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -380,7 +380,7 @@ const FormRoutes = () => {
               path={adminPath('/info')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminHomepageInfoManagement formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminHomepageInfoManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -388,7 +388,7 @@ const FormRoutes = () => {
               path={adminPath('/opiniao')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="FEEDBACK_VIEW">
-                  <AdminFeedback formContext={formContext} loggedUsername={loggedUsername} />
+                  <AdminFeedback formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -408,7 +408,7 @@ const FormRoutes = () => {
             <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
             <Route path="/minha-conta" element={<CustomerMyAccount />} />
 
-            {(effectiveFormContext === 'form-on' || effectiveFormContext === 'form-waiting') && (
+            {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
               <>
                 <Route path="/e/:slug/opiniao" element={<FormFeedback />} />
                 <Route path="/e/:slug/verificacao" element={<CpfReview />} />
