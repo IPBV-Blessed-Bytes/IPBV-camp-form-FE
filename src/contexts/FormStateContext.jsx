@@ -34,10 +34,10 @@ const isUserValid = (user) =>
 
 export const FormStateContext = createContext(null);
 
-export const FormStateProvider = ({ children, formContextCloseForm }) => {
+export const FormStateProvider = ({ children, formStageCloseForm }) => {
   const navigate = useNavigate();
   const { items } = useCart();
-  const { formContext, isLoggedIn } = useContext(AuthContext);
+  const { formStage, isLoggedIn } = useContext(AuthContext);
 
   const [steps, setSteps] = useState(enumSteps.home);
   const [formValues, setFormValues] = useState(() => {
@@ -72,7 +72,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
   const adminPathname = isAdminPath(windowPathname);
   const formPath = shouldRenderForm(windowPathname);
   const isNotSuccessPathname = windowPathname !== '/sucesso';
-  const effectiveFormContext = formContextCloseForm === 'form-on' ? formContextCloseForm : formContext;
+  const effectiveFormStage = formStageCloseForm === 'form-on' ? formStageCloseForm : formStage;
 
   const userRole = localStorage.getItem(USER_STORAGE_ROLE);
   const savedLoggedUsername = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
@@ -117,9 +117,9 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
 
   useEffect(() => {
     if (!isLoggedIn && adminPathname) {
-      navigate(effectiveFormContext === 'maintenance' ? '/dev' : '/admin');
+      navigate(effectiveFormStage === 'maintenance' ? '/dev' : '/admin');
     }
-  }, [isLoggedIn, adminPathname, effectiveFormContext, navigate]);
+  }, [isLoggedIn, adminPathname, effectiveFormStage, navigate]);
 
   useEffect(() => {
     sessionStorage.setItem(FORM_STORAGE_KEYS.savedUsers, JSON.stringify(formValues));
@@ -402,9 +402,9 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       currentFormIndex,
       currentFormValues,
       discount,
-      effectiveFormContext,
-      formContext,
-      formContextCloseForm,
+      effectiveFormStage,
+      formStage,
+      formStageCloseForm,
       formPath,
       formSubmitted,
       formValues,
@@ -459,9 +459,9 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
       currentFormIndex,
       currentFormValues,
       discount,
-      effectiveFormContext,
-      formContext,
-      formContextCloseForm,
+      effectiveFormStage,
+      formStage,
+      formStageCloseForm,
       formPath,
       formSubmitted,
       formValues,
@@ -510,7 +510,7 @@ export const FormStateProvider = ({ children, formContextCloseForm }) => {
 
 FormStateProvider.propTypes = {
   children: PropTypes.node,
-  formContextCloseForm: PropTypes.string,
+  formStageCloseForm: PropTypes.string,
 };
 
 export const useFormState = ({ optional = false } = {}) => {
