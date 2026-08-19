@@ -35,7 +35,7 @@ const AdminFormContext = ({ loggedUsername }) => {
         setFormContext(data.formContext);
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
-        toast.error('Erro ao carregar contexto do formulário');
+        toast.error('Erro ao carregar estágio do formulário');
       } finally {
         setLoading(false);
       }
@@ -54,11 +54,11 @@ const AdminFormContext = ({ loggedUsername }) => {
     setLoading(true);
     try {
       await updateFormContext(selectedContext);
-      toast.success('Contexto do formulário atualizado com sucesso');
-      registerLog(`Alterou o contexto do formulário para ${contextLabels[selectedContext]}`, loggedUsername);
+      toast.success('Estágio do formulário atualizado com sucesso');
+      registerLog(`Alterou o estágio do formulário para ${contextLabels[selectedContext]}`, loggedUsername);
     } catch (error) {
-      console.error('Erro ao atualizar contexto:', error);
-      toast.error('Erro ao atualizar contexto do formulário');
+      console.error('Erro ao atualizar estágio:', error);
+      toast.error('Erro ao atualizar estágio do formulário');
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ const AdminFormContext = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Contexto do Formulário"
+        title="Estágio do Formulário"
         subtitle="Estado atual do formulário de inscrição"
         typeIcon="form-context"
       />
@@ -77,7 +77,7 @@ const AdminFormContext = ({ loggedUsername }) => {
         <Form className="admin-panel">
         <Form.Group controlId="formContextSelect">
           <Form.Label>
-            <strong>Selecione o contexto do formulário:</strong>
+            <strong>Selecione o Estágio do Formulário:</strong>
           </Form.Label>
           <Form.Select value={formContext} onChange={handleChange} disabled={loading}>
             <option value="form-on">Aberto</option>
@@ -107,7 +107,7 @@ const AdminFormContext = ({ loggedUsername }) => {
           </>
         }
       >
-        Tem certeza de que deseja alterar o contexto do formulário para <b>{contextLabels[selectedContext]}</b>?
+        Tem certeza de que deseja alterar o estágio do formulário para <b>{contextLabels[selectedContext]}</b>?
       </CustomModal>
 
         <Loading loading={loading} />

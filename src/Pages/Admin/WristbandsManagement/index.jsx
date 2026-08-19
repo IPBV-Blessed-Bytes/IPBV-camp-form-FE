@@ -134,7 +134,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--wristbands">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Pulseiras"
+        title="Pulseiras"
         subtitle="Pulseiras de times e de alimentação"
         typeIcon="wristband"
       />

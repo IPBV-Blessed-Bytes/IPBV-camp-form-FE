@@ -115,7 +115,7 @@ const AdminFeedback = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--feedback">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Feedbacks"
+        title="Feedbacks"
         subtitle="Opiniões enviadas pelos participantes"
         typeIcon="feedback"
       />

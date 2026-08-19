@@ -177,7 +177,7 @@ const AdminEvents = ({ loggedUsername }) => {
     <div className="admin-subpage admin-events">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gestão de Eventos"
+        title="Eventos"
         subtitle="Crie e configure os eventos disponíveis para inscrição."
         typeIcon="calendar"
       />

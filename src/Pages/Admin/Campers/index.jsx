@@ -240,7 +240,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     <div className="admin-subpage admin-subpage--registered">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Inscritos"
+        title="Inscrições"
         subtitle="Todos os acampantes inscritos"
         typeIcon="person"
       />

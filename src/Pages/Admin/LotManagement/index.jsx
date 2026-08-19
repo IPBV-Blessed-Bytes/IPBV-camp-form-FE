@@ -250,7 +250,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     <div className="admin-subpage admin-subpage--lots">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Lotes"
+        title="Lotes e Data"
         subtitle="Lotes de preço e data do evento"
         typeIcon="calendar"
       />

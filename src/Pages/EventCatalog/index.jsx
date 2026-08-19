@@ -40,8 +40,8 @@ const EventCatalog = () => {
       <Container>
         <div className="event-catalog__hero">
           <span className="event-catalog__eyebrow">Inscrições abertas</span>
-          <h1 className="event-catalog__title">Escolha seu evento</h1>
-          <p className="event-catalog__subtitle">Selecione um evento abaixo para iniciar sua inscrição.</p>
+          <h1 className="event-catalog__title">Escolha seu Evento</h1>
+          <p className="event-catalog__subtitle">Selecione um evento abaixo para iniciar sua inscrição</p>
         </div>
 
         {error && <p className="text-center event-catalog__empty">Não foi possível carregar os eventos.</p>}

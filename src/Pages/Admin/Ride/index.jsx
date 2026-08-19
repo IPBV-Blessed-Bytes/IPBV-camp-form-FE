@@ -357,7 +357,7 @@ const AdminRide = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--ride">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Caronas"
+        title="Caronas"
         subtitle="Ofertas e pedidos de carona dos inscritos"
         typeIcon="ride"
       />

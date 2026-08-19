@@ -185,7 +185,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--products">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Gerenciamento de Produtos"
+        title="Produtos"
         subtitle="Hospedagem, transporte e alimentação — com preço e vagas por lote"
         typeIcon="cart"
       />

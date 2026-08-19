@@ -53,7 +53,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/vagas') : () => navigate('/admin/vagas')}
         >
-          Controle de Vagas&nbsp;
+          Vagas&nbsp;
           <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
         </button>
 
@@ -61,7 +61,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/lotes') : () => navigate('/admin/lotes')}
         >
-          Lotes e Data Base&nbsp;
+          Lotes e Data&nbsp;
           <Icons className="settings-icons" typeIcon="calendar" iconSize={22} fill={'#fff'} />
         </button>
 
@@ -69,7 +69,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/produtos') : () => navigate('/admin/produtos')}
         >
-          Controle de Produtos&nbsp;
+          Produtos&nbsp;
           <Icons className="settings-icons" typeIcon="cart" iconSize={25} fill={'#fff'} />
         </button>
 
@@ -77,7 +77,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/usuarios') : () => navigate('/admin/usuarios')}
         >
-          Controle de Usuários&nbsp;
+          Usuários&nbsp;
           <Icons className="settings-icons" typeIcon="add-person" iconSize={25} fill={'#fff'} />
         </button>
 
@@ -105,17 +105,15 @@ const SideButtons = ({ secondaryPermission }) => {
             formContext === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
           }
         >
-          Controle de Pulseiras&nbsp;
+          Pulseiras&nbsp;
           <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
         </button>
 
-         <button
+        <button
           className="settings-message-button"
-          onClick={
-            formContext === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')
-          }
+          onClick={formContext === 'maintenance' ? () => navigate('/dev/info') : () => navigate('/admin/info')}
         >
-          Controle de Info Home&nbsp;
+          Informações Iniciais Form&nbsp;
           <Icons className="settings-icons" typeIcon="info" iconSize={25} fill={'#fff'} />
         </button>
 
@@ -123,7 +121,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/contexto') : () => navigate('/admin/contexto')}
         >
-          Contexto do Formulário&nbsp;
+          Estágio do Formulário&nbsp;
           <Icons className="settings-icons" typeIcon="form-context" iconSize={22} fill={'#fff'} />
         </button>
 
@@ -131,7 +129,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formContext === 'maintenance' ? () => navigate('/dev/eventos') : () => navigate('/admin/eventos')}
         >
-          Gestão de Eventos&nbsp;
+          Eventos&nbsp;
           <Icons className="settings-icons" typeIcon="calendar" iconSize={22} fill={'#fff'} />
         </button>
       </div>
