@@ -233,8 +233,9 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
 
       <div className="package-builder__content">
         <div className="package-builder__toolbar">
-          <Button variant="teal-blue" onClick={openCreate}>
-            + Nova Categoria
+          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
+            Nova Categoria&nbsp;&nbsp;
+            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
 
@@ -338,7 +339,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                       <Button
                         size="sm"
                         variant="teal-blue"
-                        className="mt-1"
+                        className="mt-1 d-inline-flex align-items-center"
                         disabled={unassignedProducts.length === 0}
                         title={unassignedProducts.length === 0 ? 'Crie produtos na tela de Produtos' : ''}
                         onClick={() => {
@@ -346,7 +347,8 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                           setAssignProductId('');
                         }}
                       >
-                        + Associar produto
+                        Associar produto&nbsp;&nbsp;
+                        <Icons typeIcon="plus" iconSize={14} fill="#fff" />
                       </Button>
                     )}
                   </div>
