@@ -412,7 +412,7 @@ body {
 
 .btn.btn-intense-green:hover,
 .btn-outline-intense-green:hover,
-.btn-outline-teal-blue:hover,
+.btn-outline-teal-blue:hover:not(.btn:disabled),
 .btn.btn-teal-blue:hover {
   color: $white;
   opacity: 0.9;
