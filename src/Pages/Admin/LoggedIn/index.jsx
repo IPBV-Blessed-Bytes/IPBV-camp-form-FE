@@ -324,7 +324,7 @@ const AdminLoggedIn = ({
 
         {utilitiesLinksPermissions && (
           <Row>
-            <ExternalLinkRow />
+            <ExternalLinkRow canEdit={settingsButtonPermissions} />
           </Row>
         )}
       </div>
