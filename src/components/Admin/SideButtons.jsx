@@ -59,14 +59,6 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/faq') : () => navigate('/admin/faq')}
-        >
-          Perguntas Frequentes&nbsp;
-          <Icons className="settings-icons" typeIcon="question" iconSize={25} fill={'#fff'} />
-        </button>
-
-        <button
-          className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/logs') : () => navigate('/admin/logs')}
         >
           Logs de Usuários&nbsp;
@@ -87,6 +79,14 @@ const SideButtons = ({ secondaryPermission }) => {
         >
           Papéis e Permissões&nbsp;
           <Icons className="settings-icons" typeIcon="feedback" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/faq') : () => navigate('/admin/faq')}
+        >
+          Perguntas Frequentes&nbsp;
+          <Icons className="settings-icons" typeIcon="question" iconSize={25} fill={'#fff'} />
         </button>
 
         <button
