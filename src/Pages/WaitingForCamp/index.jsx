@@ -6,10 +6,12 @@ import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import Icons from '@/components/Global/Icons';
 import useBaseYear from '@/hooks/useBaseYear';
+import useContactPhone from '@/hooks/useContactPhone';
 
 const WaitingForCamp = () => {
   const navigate = useNavigate();
   const baseYear = useBaseYear();
+  const contact = useContactPhone();
 
   return (
     <>
@@ -57,8 +59,13 @@ const WaitingForCamp = () => {
                 </div>
                 <p className="form__success__contact">
                   <b>
-                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações. <br />
-                    (81) 99999-7767 (Whatsapp) ou (81) 99839-0194.
+                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações.
+                    {contact && (
+                      <>
+                        <br />
+                        {contact} (WhatsApp).
+                      </>
+                    )}
                   </b>
                 </p>
                 <small className="mt-5">

@@ -12,6 +12,7 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
+import ContactSettingRow from '@/components/Admin/ContactSettingRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SideButtons from '@/components/Admin/SideButtons';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
@@ -325,6 +326,12 @@ const AdminLoggedIn = ({
         {utilitiesLinksPermissions && (
           <Row>
             <ExternalLinkRow canEdit={settingsButtonPermissions} />
+          </Row>
+        )}
+
+        {settingsButtonPermissions && (
+          <Row>
+            <ContactSettingRow />
           </Row>
         )}
       </div>

@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import PropTypes from 'prop-types';
 import '../Style/InfoButton.scss';
+import useContactPhone from '@/hooks/useContactPhone';
 
 const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const whatsappButtonRef = useRef(null);
   const navigate = useNavigate();
+  const contact = useContactPhone();
+  const contactDigits = contact.replace(/\D/g, '');
+  const hasContact = Boolean(contactDigits);
 
   useEffect(() => {
     if (timeout) {
@@ -46,13 +50,15 @@ const InfoButton = ({ timeout, time }) => {
       )}
 
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-        <button
-          className="whatsapp-message-button"
-          onClick={() => window.open('https://wa.me/5581999997767', '_blank')}
-        >
-          Fale Conosco&nbsp;
-          <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
-        </button>
+        {hasContact && (
+          <button
+            className="whatsapp-message-button"
+            onClick={() => window.open(`https://wa.me/55${contactDigits}`, '_blank')}
+          >
+            Fale Conosco&nbsp;
+            <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
+          </button>
+        )}
         <button
           className="whatsapp-share-button"
           onClick={() =>

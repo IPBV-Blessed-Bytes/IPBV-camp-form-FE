@@ -5,10 +5,12 @@ import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import useBaseYear from '@/hooks/useBaseYear';
+import useContactPhone from '@/hooks/useContactPhone';
 
 const Offline = () => {
   const navigate = useNavigate();
   const baseYear = useBaseYear() || new Date().getFullYear() + 1;
+  const contact = useContactPhone();
 
   return (
     <>
@@ -25,8 +27,13 @@ const Offline = () => {
                 <p className="form__success__message"></p>
                 <p className="form__success__contact">
                   <b>
-                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações. <br />
-                    (81) 99999-7767 (Whatsapp) ou (81) 99839-0194.
+                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações.
+                    {contact && (
+                      <>
+                        <br />
+                        {contact} (WhatsApp).
+                      </>
+                    )}
                   </b>
                 </p>
                 <small className="mt-5">

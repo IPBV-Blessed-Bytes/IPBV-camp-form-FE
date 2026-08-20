@@ -8,9 +8,11 @@ import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import { listFaqs } from '@/services/faqs';
+import useContactPhone from '@/hooks/useContactPhone';
 
 const FAQ = () => {
   const navigate = useNavigate();
+  const contact = useContactPhone();
 
   const { data: faqs = [] } = useQuery({
     queryKey: ['faqs'],
@@ -29,7 +31,8 @@ const FAQ = () => {
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda
-              restem dúvidas, entre em contato com a organização do evento pelo contato (81) 99999-7767 (WhatsApp).
+              restem dúvidas, entre em contato com a organização do evento
+              {contact ? ` pelo contato ${contact} (WhatsApp).` : '.'}
             </Card.Text>
             {showDynamic ? (
               <Accordion>
