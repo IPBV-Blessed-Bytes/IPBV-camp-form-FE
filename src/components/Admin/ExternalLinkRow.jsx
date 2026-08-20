@@ -5,8 +5,15 @@ import { useEventBranding } from '@/contexts/EventBrandingContext';
 
 const PAGARME = 'https://id.pagar.me/signin';
 
+const toAbsoluteUrl = (url) => {
+  const trimmed = (url || '').trim();
+  if (!trimmed) return '';
+  return /^(https?:)?\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+};
+
 const ExternalLinkRow = () => {
   const { oldSpreadsheetUrl } = useEventBranding();
+  const spreadsheetHref = toAbsoluteUrl(oldSpreadsheetUrl);
 
   return (
     <Row className="mt-4 p-0">
@@ -19,8 +26,8 @@ const ExternalLinkRow = () => {
               <Button className='pagarme-btn' variant="outline-teal-blue" href={PAGARME} target="_blank" rel="noopener noreferrer">
                 <strong>PAGAR.ME</strong>
               </Button>
-              {oldSpreadsheetUrl && (
-                <Button variant="teal-blue" href={oldSpreadsheetUrl} target="_blank" rel="noopener noreferrer">
+              {spreadsheetHref && (
+                <Button variant="teal-blue" href={spreadsheetHref} target="_blank" rel="noopener noreferrer">
                   <strong>PLANILHA ANTIGA</strong>
                 </Button>
               )}
