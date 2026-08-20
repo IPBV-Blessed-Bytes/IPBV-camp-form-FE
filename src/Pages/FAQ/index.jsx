@@ -14,7 +14,7 @@ import { listFaqs } from '@/services/faqs';
 const FAQ = () => {
   const navigate = useNavigate();
   const { contact, legacyForm } = useEventBranding();
-  const phone = contact || '(81) 99999-7767';
+  const phone = contact;
 
   const { data: faqs = [] } = useQuery({
     queryKey: ['event-faqs', getEventSlug()],
@@ -33,7 +33,8 @@ const FAQ = () => {
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda
-              restem dúvidas, entre em contato com a organização do evento pelo contato {phone} (WhatsApp).
+              restem dúvidas, entre em contato com a organização do evento
+              {phone ? ` pelo contato ${phone} (WhatsApp).` : '.'}
             </Card.Text>
             {showDynamic ? (
               <Accordion>

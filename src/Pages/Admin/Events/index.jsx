@@ -390,13 +390,16 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Contato (WhatsApp):</b>
+                  <b>Telefone de Contato (WhatsApp):</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.contact}
                   onChange={(e) => handleChange('contact')(e.target.value)}
                   placeholder="(81) 99999-9999"
                 />
+                <Form.Text className="text-muted-italic">
+                  Usado em todos os lugares que divulgam o contato do responsável pelo evento.
+                </Form.Text>
               </Form.Group>
             </Col>
 

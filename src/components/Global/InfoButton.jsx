@@ -12,7 +12,9 @@ const InfoButton = ({ timeout, time }) => {
   const whatsappButtonRef = useRef(null);
   const navigate = useNavigate();
   const { contact, secondaryColor, contactMessage, shareMessage } = useEventBranding();
-  const whatsappNumber = `55${(contact || '81999997767').replace(/\D/g, '')}`;
+  const contactDigits = (contact || '').replace(/\D/g, '');
+  const hasContact = Boolean(contactDigits);
+  const whatsappNumber = `55${contactDigits}`;
   const iconFill = secondaryColor || '#ffc107';
   const defaultShareMessage = 'Faça sua inscrição no acampamento da IPBV : https://inscricaoipbv.com.br/';
   const contactUrl = contactMessage
@@ -56,10 +58,12 @@ const InfoButton = ({ timeout, time }) => {
       )}
 
       <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
-        <button className="whatsapp-message-button" onClick={() => window.open(contactUrl, '_blank')}>
-          Fale Conosco&nbsp;
-          <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
-        </button>
+        {hasContact && (
+          <button className="whatsapp-message-button" onClick={() => window.open(contactUrl, '_blank')}>
+            Fale Conosco&nbsp;
+            <Icons className="info-icons" typeIcon="whatsapp" iconSize={25} fill={'#000'} />
+          </button>
+        )}
         <button className="whatsapp-share-button" onClick={() => window.open(shareUrl, '_blank')}>
           Compartilhar&nbsp;
           <Icons className="info-icons" typeIcon="share" iconSize={25} fill={'#000'} />

@@ -13,7 +13,7 @@ const WaitingForCamp = () => {
   const navigate = useNavigate();
   const baseYear = useBaseYear();
   const { contact } = useEventBranding();
-  const phone = contact || '(81) 99999-7767';
+  const phone = contact;
 
   return (
     <>
@@ -61,8 +61,13 @@ const WaitingForCamp = () => {
                 </div>
                 <p className="form__success__contact">
                   <b>
-                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações. <br />
-                    {phone} (Whatsapp) ou (81) 99839-0194.
+                    Qualquer dúvida nos contate no telefone da organização do evento para mais informações.
+                    {phone && (
+                      <>
+                        <br />
+                        {phone} (WhatsApp).
+                      </>
+                    )}
                   </b>
                 </p>
                 <small className="mt-5">
