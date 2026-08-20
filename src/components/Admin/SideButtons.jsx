@@ -59,6 +59,16 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          onClick={
+            formStage === 'maintenance' ? () => navigate('/dev/utilitarios') : () => navigate('/admin/utilitarios')
+          }
+        >
+          Informações Utilitárias&nbsp;
+          <Icons className="settings-icons" typeIcon="settings" iconSize={22} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/logs') : () => navigate('/admin/logs')}
         >
           Logs de Usuários&nbsp;

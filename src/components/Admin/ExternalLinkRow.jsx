@@ -1,10 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Form } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import { Row, Col, Card, Button } from 'react-bootstrap';
 import '../Style/ExternalLinkRow.scss';
-import { getSetting, updateSetting } from '@/services/settings';
+import { getSetting } from '@/services/settings';
 
 const PAGARME = 'https://id.pagar.me/signin';
 const SPREADSHEET_KEY = 'old_spreadsheet_url';
@@ -15,36 +13,14 @@ const toAbsoluteUrl = (url) => {
   return /^(https?:)?\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 };
 
-const ExternalLinkRow = ({ canEdit }) => {
+const ExternalLinkRow = () => {
   const [spreadsheetUrl, setSpreadsheetUrl] = useState('');
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState('');
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     getSetting(SPREADSHEET_KEY)
       .then(setSpreadsheetUrl)
       .catch(() => {});
   }, []);
-
-  const startEdit = () => {
-    setDraft(spreadsheetUrl);
-    setEditing(true);
-  };
-
-  const save = async () => {
-    setSaving(true);
-    try {
-      const value = await updateSetting(SPREADSHEET_KEY, draft.trim());
-      setSpreadsheetUrl(value || '');
-      setEditing(false);
-      toast.success('Link da planilha atualizado.');
-    } catch {
-      toast.error('Erro ao salvar o link.');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const spreadsheetHref = toAbsoluteUrl(spreadsheetUrl);
 
@@ -65,41 +41,11 @@ const ExternalLinkRow = ({ canEdit }) => {
                 </Button>
               )}
             </div>
-
-            {canEdit && !editing && (
-              <div className="mt-3">
-                <Button size="sm" variant="link" onClick={startEdit}>
-                  Editar link da planilha
-                </Button>
-              </div>
-            )}
-
-            {canEdit && editing && (
-              <div className="mt-3 external-link-edit">
-                <Form.Control
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  placeholder="https://drive.google.com/..."
-                />
-                <div className="mt-2 d-flex gap-2 justify-content-center">
-                  <Button size="sm" variant="outline-secondary" onClick={() => setEditing(false)} disabled={saving}>
-                    Cancelar
-                  </Button>
-                  <Button size="sm" variant="teal-blue" onClick={save} disabled={saving}>
-                    {saving ? 'Salvando...' : 'Salvar'}
-                  </Button>
-                </div>
-              </div>
-            )}
           </Card.Body>
         </Card>
       </Col>
     </Row>
   );
-};
-
-ExternalLinkRow.propTypes = {
-  canEdit: PropTypes.bool,
 };
 
 export default ExternalLinkRow;
