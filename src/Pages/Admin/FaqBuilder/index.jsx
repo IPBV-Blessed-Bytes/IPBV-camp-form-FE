@@ -155,7 +155,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
                     Editar
                   </Button>
                   <Button size="sm" variant="outline-danger" onClick={() => setToDelete(faq)}>
-                    <Icons typeIcon="delete" iconSize={16} fill="#dc3545" />
+                    <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
                   </Button>
                 </div>
               </li>
@@ -185,7 +185,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>Pergunta (título do accordion):</b>
+              <b>Pergunta:</b>
             </Form.Label>
             <Form.Control
               value={draft.question}
