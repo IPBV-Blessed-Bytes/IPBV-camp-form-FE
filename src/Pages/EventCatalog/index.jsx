@@ -74,7 +74,7 @@ const EventCatalog = () => {
                 >
                   <span className="event-card__icon">
                     {ICON_KEYS.has(event.iconKey) ? (
-                      <EventIcons typeIcon={event.iconKey} iconSize={34} />
+                      <EventIcons typeIcon={event.iconKey} iconSize={50} />
                     ) : (
                       <span className="event-card__initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
                     )}
