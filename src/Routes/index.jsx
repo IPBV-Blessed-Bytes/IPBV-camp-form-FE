@@ -56,6 +56,7 @@ const AdminFormStage = lazy(() => import('@/Pages/Admin/FormStage'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
+const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -276,6 +277,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminFormStage formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/faq')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminFaqBuilder formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
