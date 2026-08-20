@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
 
 export const EVENT_ICONS = [
-  { key: 'cross', label: 'Cruz' },
-  { key: 'calendar', label: 'Calendário' },
-  { key: 'backpack', label: 'Mochila' },
+  { key: 'dart', label: 'Alvo' },
   { key: 'tent', label: 'Barraca / Acampamento' },
   { key: 'bible', label: 'Bíblia' },
-  { key: 'megaphone', label: 'Megafone' },
-  { key: 'couple', label: 'Casal' },
-  { key: 'family', label: 'Família' },
-  { key: 'man', label: 'Homem' },
-  { key: 'woman', label: 'Mulher' },
-  { key: 'reunion', label: 'Reunião' },
-  { key: 'music', label: 'Música' },
-  { key: 'world', label: 'Mundo / Missões' },
   { key: 'notebook', label: 'Caderno' },
-  { key: 'dart', label: 'Alvo' },
+  { key: 'calendar', label: 'Calendário' },
+  { key: 'couple', label: 'Casal' },
+  { key: 'cross', label: 'Cruz' },
+  { key: 'family', label: 'Família' },
   { key: 'profits', label: 'Finanças' },
+  { key: 'man', label: 'Homem' },
+  { key: 'megaphone', label: 'Megafone' },
+  { key: 'backpack', label: 'Mochila' },
+  { key: 'woman', label: 'Mulher' },
+  { key: 'world', label: 'Mundo / Missões' },
+  { key: 'music', label: 'Música' },
+  { key: 'reunion', label: 'Reunião' },
 ];
 
 const EventIcons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
