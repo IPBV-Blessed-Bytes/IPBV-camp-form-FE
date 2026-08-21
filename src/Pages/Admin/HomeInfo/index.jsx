@@ -18,6 +18,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 
 const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
 
@@ -294,6 +295,14 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
     }
   };
 
+  const filledTop = Object.values(formData.top).filter((v) => (v || '').trim()).length;
+  const totalTop = Object.keys(formData.top).length;
+  const statItems = [
+    { label: 'Campos base preenchidos', value: `${filledTop}/${totalTop}`, tone: filledTop === totalTop ? 'free' : 'used' },
+    { label: 'Informações importantes', value: formData.bottom.length, tone: 'info' },
+    { label: 'Status', value: editing ? 'Publicada' : 'Não criada', tone: editing ? 'free' : 'danger' },
+  ];
+
   const topFieldsConfig = {
     title: {
       label: 'Título:',
@@ -331,6 +340,8 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       />
 
       <div className="admin-subpage__content">
+        <StatCards items={statItems} />
+
         <Row className="g-4">
         <Col xs={12} lg={5} xl={4}>
           <Form className="admin-panel">
