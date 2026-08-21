@@ -136,7 +136,7 @@ const MyAccount = () => {
           ) : registrations.length === 0 ? (
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
-              <Button className="account-btn-primary" onClick={() => navigate('/')}>
+              <Button variant="teal-blue" onClick={() => navigate('/')}>
                 Fazer Inscrição
               </Button>
             </div>
@@ -178,7 +178,7 @@ const MyAccount = () => {
                         ) : r.paymentUrl ? (
                           <Button
                             size="sm"
-                            className="account-btn-primary"
+                            variant="teal-blue"
                             href={r.paymentUrl}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -277,7 +277,7 @@ const MyAccount = () => {
           <Button variant="secondary" onClick={() => setShowEdit(false)}>
             Cancelar
           </Button>
-          <Button className="account-btn-primary" onClick={handleSubmitChange} disabled={saving}>
+          <Button variant="teal-blue" onClick={handleSubmitChange} disabled={saving}>
             {saving ? 'Enviando...' : 'Enviar solicitação'}
           </Button>
         </Modal.Footer>

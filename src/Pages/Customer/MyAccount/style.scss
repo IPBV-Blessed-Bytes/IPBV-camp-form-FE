@@ -1,5 +1,4 @@
 @use '../../../styles/Variables.scss' as *;
-@use 'sass:color';
 
 .my-account {
   background: $background-gray;
@@ -101,23 +100,6 @@
 
     @media (max-width: $md) {
       padding: 0 1rem;
-    }
-  }
-
-  .account-btn-primary {
-    align-items: center;
-    background: $primary;
-    border: none;
-    border-radius: 10px;
-    display: inline-flex;
-    font-weight: 600;
-    gap: 0.5rem;
-    justify-content: center;
-
-    &:hover,
-    &:focus,
-    &:active {
-      background: color.adjust($primary, $lightness: -6%);
     }
   }
 
