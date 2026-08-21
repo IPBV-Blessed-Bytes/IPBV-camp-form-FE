@@ -60,16 +60,16 @@ const CustomerLogin = () => {
                 </button>
               </div>
             </Form.Group>
-            <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
+            <Button type="submit" variant="teal-blue" className="w-100 mt-4 fw-bold">
               Entrar
             </Button>
-            <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/criar-conta')}>
+            <button type="button" className="w-100 mt-2 btn-alter-link" onClick={() => navigate('/criar-conta')}>
               Não tem conta? Criar conta
             </button>
-            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/esqueci-senha?origin=customer')}>
+            <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/esqueci-senha?origin=customer')}>
               Esqueci minha senha
             </button>
-            <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+            <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/')}>
               ← Voltar ao formulário
             </button>
       </Form>

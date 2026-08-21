@@ -63,10 +63,10 @@ const ForgotPassword = () => {
                   size="lg"
                 />
               </Form.Group>
-              <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
+              <Button type="submit" variant="teal-blue" className="w-100 mt-4 fw-bold">
                 Enviar link
               </Button>
-              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate(loginPath)}>
+              <button type="button" className="btn btn-link w-100 mt-2 btn-alter-link" onClick={() => navigate(loginPath)}>
                 ← Voltar ao login
               </button>
             </Form>

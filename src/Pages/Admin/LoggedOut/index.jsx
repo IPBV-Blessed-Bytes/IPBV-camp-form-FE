@@ -66,11 +66,11 @@ const AdminLoggedOut = ({
             Acessar Painel
           </Button>
 
-          <button type="button" className="btn-back-link" onClick={() => navigateTo('/esqueci-senha')}>
+          <button type="button" className="btn-alter-link" onClick={() => navigateTo('/esqueci-senha')}>
             Esqueci minha senha
           </button>
 
-          <button type="button" className="btn-back-link" onClick={() => navigateTo('/')}>
+          <button type="button" className="btn-alter-link" onClick={() => navigateTo('/')}>
             ← Voltar ao site público
           </button>
         </Form>

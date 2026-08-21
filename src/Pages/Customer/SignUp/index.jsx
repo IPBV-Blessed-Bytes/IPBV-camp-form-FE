@@ -129,15 +129,15 @@ const SignUp = () => {
                     </button>
                   </div>
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
+                <Button type="submit" variant="teal-blue" className="w-100 mt-4 fw-bold">
                   Criar conta
                 </Button>
-                <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/entrar')}>
+                <Button type="button" className="w-100 mt-2 btn-alter-link" onClick={() => navigate('/entrar')}>
                   Já tem conta? Entrar
-                </button>
-                <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
+                </Button>
+                <Button type="Button" className="w-100 btn-alter-link" onClick={() => navigate('/')}>
                   ← Voltar ao formulário
-                </button>
+                </Button>
               </Form>
         </>
       )}

@@ -173,19 +173,4 @@
       transform: translateY(0);
     }
   }
-
-  .btn-back-link {
-    background: transparent;
-    border: none;
-    color: $alternate-dark-gray;
-    display: block;
-    font-size: 0.85rem;
-    margin: 1.25rem auto 0;
-    padding: 0.25rem 0.5rem;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: $primary;
-    }
-  }
 }
