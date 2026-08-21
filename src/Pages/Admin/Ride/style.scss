@@ -306,3 +306,47 @@
     max-width: 240px;
   }
 }
+
+.ride-filters {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ride-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ride-filter-chip {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 999px;
+  color: $alternate-dark-gray;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.85rem;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    border-color: $primary;
+  }
+
+  &.is-active {
+    background: $primary;
+    border-color: $primary;
+    color: $white;
+  }
+}
+
+.ride-sort {
+  max-width: 220px;
+}

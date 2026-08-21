@@ -72,6 +72,8 @@ const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [carFilter, setCarFilter] = useState('all');
+  const [carSort, setCarSort] = useState('free');
   const [showDeleteRelationshipModal, setShowDeleteRelationshipModal] = useState(false);
   const [camperToDelete, setCamperToDelete] = useState(false);
 
@@ -196,13 +198,26 @@ const AdminRide = ({ loggedUsername }) => {
   const term = normalize(search);
 
   const filteredOffers = useMemo(() => {
-    if (!term) return rideData.offerRide;
-    return rideData.offerRide.filter(
-      (offer) =>
-        normalize(offer.name).includes(term) ||
-        (offer.relationship || []).some((p) => normalize(p.name).includes(term)),
+    let list = rideData.offerRide.map((offer) => ({
+      ...offer,
+      free: (Number(offer.seatsInTheCar) || 0) - (offer.relationship?.length || 0),
+    }));
+
+    if (term) {
+      list = list.filter(
+        (offer) =>
+          normalize(offer.name).includes(term) ||
+          (offer.relationship || []).some((p) => normalize(p.name).includes(term)),
+      );
+    }
+
+    if (carFilter === 'free') list = list.filter((offer) => offer.free >= 1);
+    else if (carFilter === 'full') list = list.filter((offer) => offer.free <= 0);
+
+    return [...list].sort((a, b) =>
+      carSort === 'name' ? a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }) : b.free - a.free,
     );
-  }, [rideData.offerRide, term]);
+  }, [rideData.offerRide, term, carFilter, carSort]);
 
   const filteredNeeds = useMemo(() => {
     if (!term) return rideData.needRide;
@@ -268,6 +283,36 @@ const AdminRide = ({ loggedUsername }) => {
           <h4>Carros</h4>
           <span className="ride-section-title__count">{filteredOffers.length}</span>
           <div className="ride-section-title__line" />
+        </div>
+
+        <div className="ride-filters">
+          <div className="ride-chips">
+            <button
+              type="button"
+              className={`ride-filter-chip ${carFilter === 'all' ? 'is-active' : ''}`}
+              onClick={() => setCarFilter('all')}
+            >
+              Todos
+            </button>
+            <button
+              type="button"
+              className={`ride-filter-chip ${carFilter === 'free' ? 'is-active' : ''}`}
+              onClick={() => setCarFilter('free')}
+            >
+              Com vaga
+            </button>
+            <button
+              type="button"
+              className={`ride-filter-chip ${carFilter === 'full' ? 'is-active' : ''}`}
+              onClick={() => setCarFilter('full')}
+            >
+              Lotados
+            </button>
+          </div>
+          <Form.Select size="sm" className="ride-sort" value={carSort} onChange={(e) => setCarSort(e.target.value)}>
+            <option value="free">Ordenar por: vagas livres</option>
+            <option value="name">Ordenar por: nome (A→Z)</option>
+          </Form.Select>
         </div>
 
         {filteredOffers.length === 0 ? (
