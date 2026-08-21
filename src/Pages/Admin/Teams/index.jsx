@@ -3,6 +3,7 @@ import { Button, Form, Table, Accordion, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
+import './style.scss';
 import {
   listTeams,
   createTeam,

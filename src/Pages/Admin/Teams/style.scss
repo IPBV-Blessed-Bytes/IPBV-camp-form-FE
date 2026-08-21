@@ -20,10 +20,11 @@
   padding: 0.15rem 0.7rem 0.15rem 0.5rem;
 
   &__dot {
-    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
     flex-shrink: 0;
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
   }
 }
 
