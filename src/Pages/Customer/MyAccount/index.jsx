@@ -103,17 +103,18 @@ const MyAccount = () => {
           </div>
         </div>
         <Button
-          className="account-btn-primary my-account__btn my-account__btn--new"
+          variant="teal-blue"
+          className="my-account__btn my-account__btn--new"
           onClick={() => navigate('/')}
         >
-          Nova inscrição
+          Nova Inscrição
         </Button>
         <Button
           variant="outline-teal-blue"
           className="my-account__btn my-account__btn--back"
           onClick={() => navigate('/')}
         >
-          Voltar ao formulário
+          Voltar ao Formulário
         </Button>
         <Button variant="outline-secondary" className="my-account__btn my-account__btn--logout" onClick={logout}>
           Sair
