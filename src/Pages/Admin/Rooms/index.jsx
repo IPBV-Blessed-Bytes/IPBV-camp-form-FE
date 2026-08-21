@@ -23,6 +23,7 @@ import { useRoomsList } from '@/hooks/useRoomsList';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
+import StatCards from '@/components/Admin/StatCards';
 
 const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
@@ -341,6 +342,20 @@ const AdminRooms = ({ loggedUsername }) => {
     downloadSingleSheet({ filename: 'quartos.xlsx', sheetName: 'Quartos', rows });
   };
 
+  const roomStats = useMemo(() => {
+    const totalRooms = rooms.length;
+    const totalCampers = rooms.reduce((sum, room) => sum + (room.campers?.length || 0), 0);
+    const emptyRooms = rooms.filter((room) => !room.campers || room.campers.length === 0).length;
+    const average = totalRooms > 0 ? (totalCampers / totalRooms).toFixed(1) : '0';
+
+    return [
+      { label: 'Quartos', value: totalRooms },
+      { label: 'Acampantes alocados', value: totalCampers, tone: 'accent' },
+      { label: 'Quartos vazios', value: emptyRooms, tone: emptyRooms > 0 ? 'danger' : 'free' },
+      { label: 'Média por quarto', value: average, tone: 'info' },
+    ];
+  }, [rooms]);
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -373,6 +388,8 @@ const AdminRooms = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
+
+        <StatCards items={roomStats} />
 
         <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
