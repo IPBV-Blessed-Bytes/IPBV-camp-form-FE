@@ -13,6 +13,9 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
 
 const CATEGORIES = [
   { value: 'HOSPEDAGEM', label: 'Hospedagem' },
@@ -34,6 +37,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   scrollUp();
 
@@ -161,6 +166,37 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     }));
   };
 
+  const activeCount = products.filter((p) => p.active).length;
+  const byCategory = products.reduce((acc, p) => {
+    acc[p.category] = (acc[p.category] || 0) + 1;
+    return acc;
+  }, {});
+  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info', ALIMENTACAO: 'used' };
+  const statItems = [
+    { label: 'Produtos', value: products.length },
+    { label: 'Ativos', value: activeCount, tone: 'free' },
+    { label: 'Inativos', value: products.length - activeCount, tone: 'used' },
+    ...CATEGORIES.filter((c) => byCategory[c.value]).map((c) => ({
+      label: c.label,
+      value: byCategory[c.value],
+      tone: CATEGORY_TONES[c.value] || 'default',
+    })),
+  ];
+  const categoryChips = [
+    { value: 'all', label: 'Todas', count: products.length },
+    ...CATEGORIES.filter((c) => byCategory[c.value]).map((c) => ({
+      value: c.value,
+      label: c.label,
+      count: byCategory[c.value],
+    })),
+  ];
+  const term = search.trim().toLowerCase();
+  const filteredProducts = products.filter(
+    (p) =>
+      (categoryFilter === 'all' || p.category === categoryFilter) &&
+      (!term || (p.name || '').toLowerCase().includes(term)),
+  );
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -185,7 +221,14 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Produtos" count={products.length} />
+        <StatCards items={statItems} />
+
+        <div className="products-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <FilterChips options={categoryChips} value={categoryFilter} onChange={setCategoryFilter} />
+        </div>
+
+        <SectionHeader title="Produtos" count={filteredProducts.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -199,7 +242,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td>
                     <em>{product.name}</em>
@@ -317,7 +360,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
             <h6 className="mt-3">
               <b>Preço e vagas por lote</b>
             </h6>
-            <p className="text-secondary small">Deixe as vagas em branco para "ilimitado".</p>
+            <p className="text-secondary small">Deixe as vagas em branco para &quot;ilimitado&quot;.</p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (
                 <div key={lot.id} className="lot-price-card">
