@@ -12,6 +12,9 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
 
 const emptyForm = { name: '', label: '' };
 
@@ -25,6 +28,8 @@ const AdminRolesManagement = ({ loggedUsername }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState(null);
+  const [search, setSearch] = useState('');
+  const [kindFilter, setKindFilter] = useState('all');
 
   scrollUp();
 
@@ -125,6 +130,28 @@ const AdminRolesManagement = ({ loggedUsername }) => {
     }
   };
 
+  const systemCount = roles.filter((r) => r.system).length;
+  const customCount = roles.length - systemCount;
+  const statItems = [
+    { label: 'Total de papéis', value: roles.length },
+    { label: 'Permissões', value: permissions.length, tone: 'info' },
+    { label: 'De sistema', value: systemCount, tone: 'accent' },
+    { label: 'Personalizados', value: customCount, tone: 'free' },
+  ];
+  const kindChips = [
+    { value: 'all', label: 'Todos', count: roles.length },
+    { value: 'system', label: 'Sistema', count: systemCount },
+    { value: 'custom', label: 'Personalizados', count: customCount },
+  ];
+  const term = search.trim().toLowerCase();
+  const filteredRoles = roles.filter(
+    (r) =>
+      (kindFilter === 'all' || (kindFilter === 'system' ? r.system : !r.system)) &&
+      (!term ||
+        (r.label || '').toLowerCase().includes(term) ||
+        (r.name || '').toLowerCase().includes(term)),
+  );
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -149,7 +176,14 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Papéis" count={roles.length} />
+        <StatCards items={statItems} />
+
+        <div className="roles-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por papel ou identificador..." />
+          <FilterChips options={kindChips} value={kindFilter} onChange={setKindFilter} />
+        </div>
+
+        <SectionHeader title="Papéis" count={filteredRoles.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -162,7 +196,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {roles.map((role) => (
+              {filteredRoles.map((role) => (
                 <tr key={role.id}>
                   <td>
                     <em>{role.label || role.name}</em>
@@ -175,7 +209,11 @@ const AdminRolesManagement = ({ loggedUsername }) => {
                   <td>
                     <code>{role.name}</code>
                   </td>
-                  <td className="small">{(role.permissions || []).length} permissões</td>
+                  <td>
+                    <Badge bg={(role.permissions || []).length ? 'info' : 'secondary'} text="dark">
+                      {(role.permissions || []).length} permissões
+                    </Badge>
+                  </td>
                   <td>
                     <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(role)}>
                       <Icons typeIcon="edit" iconSize={24} />
