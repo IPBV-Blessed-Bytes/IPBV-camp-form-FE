@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Form, Table, Accordion } from 'react-bootstrap';
+import { Button, Form, Table, Accordion, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
@@ -20,6 +20,8 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 
 const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
@@ -40,6 +42,8 @@ const AdminTeams = ({ loggedUsername }) => {
     name: '',
     wristbandId: '',
   });
+  const [search, setSearch] = useState('');
+  const [camperSearch, setCamperSearch] = useState('');
 
   const fetchTeams = async () => {
     try {
@@ -272,6 +276,29 @@ const AdminTeams = ({ loggedUsername }) => {
     downloadMultiSheet({ filename: 'times.xlsx', sheets });
   };
 
+  const term = search.trim().toLowerCase();
+  const filteredTeams = term
+    ? teams.filter(
+        (t) =>
+          (t.name || '').toLowerCase().includes(term) ||
+          (t.campers || []).some((c) => (c.name || '').toLowerCase().includes(term)),
+      )
+    : teams;
+
+  const totalAllocated = teams.reduce((s, t) => s + Number(t.campersCount ?? t.campers?.length ?? 0), 0);
+  const biggestTeam = teams.reduce((m, t) => Math.max(m, Number(t.campersCount ?? 0)), 0);
+  const statItems = [
+    { label: 'Times', value: teams.length },
+    { label: 'Acampantes alocados', value: totalAllocated, tone: 'free' },
+    { label: 'Sem time', value: availableCampers.length, tone: 'used' },
+    { label: 'Maior time', value: biggestTeam, tone: 'accent' },
+  ];
+
+  const camperTerm = camperSearch.trim().toLowerCase();
+  const filteredAvailableCampers = camperTerm
+    ? availableCampers.filter((c) => (c.personalInformation?.name || '').toLowerCase().includes(camperTerm))
+    : availableCampers;
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -305,7 +332,13 @@ const AdminTeams = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Times" count={teams.length} />
+        <StatCards items={statItems} />
+
+        <div className="teams-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por time ou acampante..." />
+        </div>
+
+        <SectionHeader title="Times" count={filteredTeams.length} />
 
         <div className="admin-table-card">
           <div className="table-responsive">
@@ -321,17 +354,19 @@ const AdminTeams = ({ loggedUsername }) => {
           </thead>
 
           <tbody>
-            {teams.map((team) => (
+            {filteredTeams.map((team) => (
               <tr key={team.id}>
                 <td>{team.name}</td>
 
                 <td>
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="color-swatch" style={{ backgroundColor: getTeamColor(team) }} />
+                  <span className="team-wristband-chip">
+                    <span className="team-wristband-chip__dot" style={{ backgroundColor: getTeamColor(team) }} />
                     {team.wristbandColor}
-                  </div>
+                  </span>
                 </td>
-                <td>{team.campersCount}</td>
+                <td>
+                  <Badge bg="teal-blue">{team.campersCount ?? team.campers?.length ?? 0}</Badge>
+                </td>
                 <td>
                   <Accordion>
                     <Accordion.Item eventKey="0">
@@ -483,37 +518,41 @@ const AdminTeams = ({ loggedUsername }) => {
       >
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Acampante:</b>
+            <b>Acampantes:</b>
           </Form.Label>
 
-          <Form.Select
-            disabled={loadingCampers}
-            multiple
-            onChange={(e) => {
-              const values = Array.from(e.target.selectedOptions, (opt) => opt.value);
-              setSelectedCampersIds(values);
-            }}
-            size="lg"
-            value={selectedCampersIds}
-          >
+          <SearchBox value={camperSearch} onChange={setCamperSearch} placeholder="Buscar acampante..." />
+
+          <div className="camper-checklist">
             {loadingCampers ? (
-              <option disabled>Buscando lista de acampantes...</option>
-            ) : availableCampers.length ? (
-              availableCampers.map((camper) => (
-                <option key={camper.id} value={camper.id}>
-                  {camper.personalInformation?.name || 'Sem nome'}
-                </option>
-              ))
+              <small className="text-muted">Buscando lista de acampantes...</small>
+            ) : filteredAvailableCampers.length ? (
+              filteredAvailableCampers.map((camper) => {
+                const id = String(camper.id);
+                const checked = selectedCampersIds.includes(id);
+                return (
+                  <label key={camper.id} className={`camper-check ${checked ? 'is-checked' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) =>
+                        setSelectedCampersIds((prev) =>
+                          e.target.checked ? [...prev, id] : prev.filter((x) => x !== id),
+                        )
+                      }
+                    />
+                    <span>{camper.personalInformation?.name || 'Sem nome'}</span>
+                  </label>
+                );
+              })
             ) : (
-              <option disabled>Nenhum acampante disponível</option>
+              <small className="text-muted">Nenhum acampante disponível</small>
             )}
-          </Form.Select>
+          </div>
 
           {selectedCampersIds.length > 0 && (
             <small className="text-success">{selectedCampersIds.length} selecionado(s)</small>
           )}
-          <br />
-          <small className="text-muted">Segure CTRL (ou CMD no Mac) para selecionar vários</small>
         </Form.Group>
       </CustomModal>
 
