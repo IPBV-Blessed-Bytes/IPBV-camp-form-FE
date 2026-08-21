@@ -8,6 +8,8 @@ import { listSubmissions } from '@/services/submissions';
 import { getEventSlug } from '@/config/eventScope';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
@@ -37,6 +39,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -65,6 +68,34 @@ const AdminSubmissions = ({ loggedUsername }) => {
     downloadSingleSheet({ filename: `inscricoes-${slug}.xlsx`, sheetName: 'Inscrições', rows, headers });
   };
 
+  const statItems = useMemo(() => {
+    const identified = submissions.filter((submission) => submission.userEmail).length;
+    const today = new Date().toDateString();
+    const todayCount = submissions.filter((submission) => {
+      const date = new Date(submission.createdAt);
+      return !Number.isNaN(date.getTime()) && date.toDateString() === today;
+    }).length;
+    return [
+      { label: 'Total de inscrições', value: submissions.length },
+      { label: 'Identificadas (e-mail)', value: identified, tone: 'info' },
+      { label: 'Recebidas hoje', value: todayCount, tone: 'accent' },
+    ];
+  }, [submissions]);
+
+  const filteredSubmissions = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return submissions;
+    return submissions.filter((submission) => {
+      const haystack = [
+        submission.userEmail || '',
+        ...fields.map((field) => formatValue(field, submission.answers?.[field.key])),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(term);
+    });
+  }, [submissions, fields, search]);
+
   const isLoading = loading || schemaLoading;
 
   return (
@@ -77,8 +108,10 @@ const AdminSubmissions = ({ loggedUsername }) => {
       />
 
       <div className="admin-submissions__content">
+        <StatCards items={statItems} />
+
         <div className="admin-submissions__toolbar">
-          <span className="admin-submissions__count">{submissions.length} inscrições</span>
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar inscrições..." />
           <Button variant="teal-blue" onClick={handleExport} disabled={!submissions.length}>
             Exportar Excel
           </Button>
@@ -88,6 +121,8 @@ const AdminSubmissions = ({ loggedUsername }) => {
           <Loading loading />
         ) : submissions.length === 0 ? (
           <p className="admin-submissions__empty">Nenhuma inscrição recebida ainda.</p>
+        ) : filteredSubmissions.length === 0 ? (
+          <p className="admin-submissions__empty">Nenhuma inscrição encontrada.</p>
         ) : (
           <div className="admin-submissions__table-wrap">
             <Table hover responsive className="admin-submissions__table">
@@ -102,7 +137,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
                 </tr>
               </thead>
               <tbody>
-                {submissions.map((submission) => (
+                {filteredSubmissions.map((submission) => (
                   <tr key={submission.id}>
                     <td>{formatDate(submission.createdAt)}</td>
                     <td>{submission.userEmail || '—'}</td>
