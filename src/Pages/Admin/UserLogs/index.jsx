@@ -10,12 +10,15 @@ import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 import CustomModal from '@/components/Global/CustomModal';
 
 const AdminUserLogs = ({ loggedUsername }) => {
-  const [groupedLogs, setGroupedLogs] = useState({});
+  const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [search, setSearch] = useState('');
 
   scrollUp();
 
@@ -23,9 +26,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const logs = await listLogs();
-      const grouped = groupByUser(logs);
-      setGroupedLogs(grouped);
+      const data = await listLogs();
+      setLogs(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Erro ao buscar logs:', error);
     } finally {
@@ -57,7 +59,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
       toast.success('Todos os logs foram deletados com sucesso');
       registerLog(`Deletou todos os logs`, loggedUsername);
       setShowDeleteModal(false);
-      setGroupedLogs({});
+      setLogs([]);
     } catch (error) {
       console.error('Error adding data:', error);
       toast.error('Erro ao deletar logs');
@@ -67,14 +69,15 @@ const AdminUserLogs = ({ loggedUsername }) => {
   };
 
   const generateExcel = () => {
-    if (!groupedLogs || Object.keys(groupedLogs).length === 0) {
+    const allGrouped = groupByUser(logs);
+    if (Object.keys(allGrouped).length === 0) {
       toast.error('Nenhum log disponível para exportar');
       return;
     }
 
-    const sheets = Object.entries(groupedLogs).map(([username, logs]) => ({
+    const sheets = Object.entries(allGrouped).map(([username, userLogs]) => ({
       name: username,
-      rows: logs.map((log, index) => ({
+      rows: userLogs.map((log, index) => ({
         Nº: index + 1,
         Usuário: username,
         Ação: log.action,
@@ -91,6 +94,20 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
     downloadMultiSheet({ filename: 'logs.xlsx', sheets });
   };
+
+  const term = search.trim().toLowerCase();
+  const filteredLogs = logs.filter(
+    (log) =>
+      !term ||
+      (log.user || '').toLowerCase().includes(term) ||
+      (log.action || '').toLowerCase().includes(term),
+  );
+  const groupedLogs = groupByUser(filteredLogs);
+  const statItems = [
+    { label: 'Total de logs', value: logs.length },
+    { label: 'Usuários', value: Object.keys(groupByUser(logs)).length, tone: 'accent' },
+    { label: 'Resultados', value: filteredLogs.length, tone: 'info' },
+  ];
 
   const toolsButtons = [
     {
@@ -124,6 +141,12 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
+
+        <StatCards items={statItems} />
+
+        <div className="logs-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por usuário ou ação..." />
+        </div>
 
         <SectionHeader title="Logs por usuário" count={Object.keys(groupedLogs).length} />
 
