@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Form } from 'react-bootstrap';
+import { Table, Button, Form, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -13,6 +13,29 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
+
+const toNumber = (v) => {
+  if (v == null || v === '') return 0;
+  const n = Number(String(v).replace(/[^\d.,-]/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.'));
+  return isNaN(n) ? 0 : n;
+};
+
+const formatBRL = (v) => {
+  if (v == null || v === '' || v === '-') return '—';
+  return toNumber(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
+
+const formatCpf = (v) => {
+  const d = String(v ?? '').replace(/\D/g, '').slice(0, 11);
+  if (!d) return '';
+  return d
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+};
 
 const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
@@ -22,6 +45,8 @@ const AdminDiscount = ({ loggedUsername }) => {
   const [editingDiscount, setEditingDiscount] = useState(null);
   const [discountToDelete, setDiscountToDelete] = useState(null);
   const [newDiscount, setNewDiscount] = useState({ cpf: '', discount: '', user: '', discountReason: '' });
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   scrollUp();
 
@@ -146,6 +171,29 @@ const AdminDiscount = ({ loggedUsername }) => {
     downloadSingleSheet({ filename: 'descontos.xlsx', sheetName: 'Descontos', rows });
   };
 
+  const usedCount = discount.filter((d) => d.user).length;
+  const totalGranted = discount.reduce((s, d) => s + toNumber(d.discount), 0);
+  const totalPaid = discount.reduce((s, d) => s + toNumber(d.totalPrice), 0);
+  const statItems = [
+    { label: 'Descontos', value: discount.length },
+    { label: 'Utilizados', value: usedCount, tone: 'free' },
+    { label: 'Não utilizados', value: discount.length - usedCount, tone: 'used' },
+    { label: 'Valor concedido', value: formatBRL(totalGranted), tone: 'accent' },
+    { label: 'Valor pago', value: formatBRL(totalPaid), tone: 'info' },
+  ];
+  const statusChips = [
+    { value: 'all', label: 'Todos', count: discount.length },
+    { value: 'used', label: 'Utilizados', count: usedCount },
+    { value: 'unused', label: 'Não utilizados', count: discount.length - usedCount },
+  ];
+  const term = search.trim().toLowerCase();
+  const filtered = discount.filter((d) => {
+    if (statusFilter === 'used' && !d.user) return false;
+    if (statusFilter === 'unused' && d.user) return false;
+    if (!term) return true;
+    return [d.cpf, d.user, d.discountReason].some((f) => String(f || '').toLowerCase().includes(term));
+  });
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -179,7 +227,14 @@ const AdminDiscount = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Descontos cadastrados" count={discount.length} />
+        <StatCards items={statItems} />
+
+        <div className="discounts-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por CPF, usuário ou motivo..." />
+          <FilterChips options={statusChips} value={statusFilter} onChange={setStatusFilter} />
+        </div>
+
+        <SectionHeader title="Descontos cadastrados" count={filtered.length} />
 
         <div className="admin-table-card">
           <div className="table-responsive">
@@ -195,27 +250,25 @@ const AdminDiscount = ({ loggedUsername }) => {
             </tr>
           </thead>
           <tbody>
-            {discount.map((discount) => {
+            {filtered.map((item) => {
               return (
-                <tr key={discount.id}>
-                  <td>{discount.cpf}</td>
-                  <td>{discount.discount}</td>
+                <tr key={item.id}>
+                  <td>{formatCpf(item.cpf)}</td>
+                  <td>{formatBRL(item.discount)}</td>
                   <td>
-                    {discount.user ? (
-                      discount.user
+                    {item.user ? (
+                      <Badge bg="success">{item.user}</Badge>
                     ) : (
-                      <b>
-                        <em>NÃO UTILIZADO</em>
-                      </b>
+                      <Badge bg="secondary">Não utilizado</Badge>
                     )}
                   </td>
-                  <td>{discount.discountReason || '-'}</td>
-                  <td>{discount.totalPrice ? discount.totalPrice : '-'}</td>
+                  <td>{item.discountReason || <span className="text-secondary">—</span>}</td>
+                  <td>{item.totalPrice ? formatBRL(item.totalPrice) : <span className="text-secondary">—</span>}</td>
                   <td>
-                    <Button variant="outline-success" onClick={() => openModal(discount)}>
+                    <Button variant="outline-success" onClick={() => openModal(item)}>
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>{' '}
-                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(discount)}>
+                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(item)}>
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
                   </td>
@@ -252,15 +305,19 @@ const AdminDiscount = ({ loggedUsername }) => {
                 <b>CPF atrelado:</b>
               </Form.Label>
               <Form.Control
-                type="number"
-                value={editingDiscount ? editingDiscount.cpf : newDiscount.cpf}
+                type="text"
+                inputMode="numeric"
+                value={formatCpf(editingDiscount ? editingDiscount.cpf : newDiscount.cpf)}
                 size="lg"
-                onChange={(e) =>
-                  editingDiscount
-                    ? setEditingDiscount({ ...editingDiscount, cpf: e.target.value })
-                    : setNewDiscount({ ...newDiscount, cpf: e.target.value })
-                }
-                placeholder="00000000000"
+                onChange={(e) => {
+                  const cpf = e.target.value.replace(/\D/g, '').slice(0, 11);
+                  if (editingDiscount) {
+                    setEditingDiscount({ ...editingDiscount, cpf });
+                  } else {
+                    setNewDiscount({ ...newDiscount, cpf });
+                  }
+                }}
+                placeholder="000.000.000-00"
               />
             </Form.Group>
 
