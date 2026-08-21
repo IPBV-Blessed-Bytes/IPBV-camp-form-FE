@@ -1,1 +1,176 @@
 @use '../../../styles/Variables.scss' as *;
+
+$stage-success: #28a745;
+$stage-secondary: #6c757d;
+$stage-warning: #f0ad4e;
+$stage-danger: #dc3545;
+$stage-info: #0dcaf0;
+
+.stage-current {
+  align-items: center;
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-left: 5px solid $primary;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding: 1.25rem 1.5rem;
+
+  &__icon {
+    align-items: center;
+    background: $primary;
+    border-radius: 14px;
+    display: flex;
+    flex-shrink: 0;
+    height: 56px;
+    justify-content: center;
+    width: 56px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0.25rem 0 0;
+  }
+
+  &__desc {
+    color: $alternate-dark-gray;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  &--success {
+    border-left-color: $stage-success;
+    .stage-current__icon {
+      background: $stage-success;
+    }
+  }
+  &--secondary {
+    border-left-color: $stage-secondary;
+    .stage-current__icon {
+      background: $stage-secondary;
+    }
+  }
+  &--warning {
+    border-left-color: $stage-warning;
+    .stage-current__icon {
+      background: $stage-warning;
+    }
+  }
+  &--danger {
+    border-left-color: $stage-danger;
+    .stage-current__icon {
+      background: $stage-danger;
+    }
+  }
+  &--info {
+    border-left-color: $stage-info;
+    .stage-current__icon {
+      background: $stage-info;
+    }
+  }
+}
+
+.stage-heading {
+  color: $dark-gray;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.stage-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.stage-card {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem;
+  position: relative;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover:not(:disabled) {
+    border-color: $primary;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  &__icon {
+    align-items: center;
+    background: rgba($primary, 0.1);
+    border-radius: 10px;
+    display: flex;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  &__desc {
+    color: $alternate-dark-gray;
+    font-size: 0.83rem;
+    line-height: 1.4;
+  }
+
+  &__badge {
+    background: $white;
+    border-radius: 999px;
+    color: $primary;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 0.1rem 0.5rem;
+    position: absolute;
+    right: 0.8rem;
+    text-transform: uppercase;
+    top: 0.8rem;
+  }
+
+  &.is-active {
+    background: $primary;
+    border-color: $primary;
+
+    .stage-card__icon {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .stage-card__title {
+      color: $white;
+    }
+    .stage-card__desc {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -11,13 +11,54 @@ import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
 import CustomModal from '@/components/Global/CustomModal';
 import { TABLE_HEADERS } from '@/utils/constants';
+
+const RATING_HEADERS = new Set([
+  'Organização',
+  'Experiência nas Inscrições',
+  'Alimentação',
+  'Programação',
+  'Estrutura Física',
+  'Acolhimento',
+  'Probabilidade de Volta',
+]);
+
+const RATING_TONE = {
+  Excelente: 'success',
+  'Muito fácil': 'success',
+  'Sim, completamente': 'success',
+  'Muito provável': 'success',
+  Boa: 'primary',
+  Fácil: 'primary',
+  'Sim, em parte': 'primary',
+  Provável: 'primary',
+  Regular: 'warning',
+  'Um pouco difícil': 'warning',
+  'Poderia ter mais variedade': 'warning',
+  'Pouco provável': 'warning',
+  'Não muito': 'warning',
+  'Precisa melhorar': 'danger',
+  Difícil: 'danger',
+  'Não gostei das atividades': 'danger',
+  'Não, poderiam melhorar': 'danger',
+  'Não, fiquei insatisfeito(a)': 'danger',
+  'Não, me senti deslocado(a)': 'danger',
+  Improvável: 'danger',
+  'Não quero opinar': 'secondary',
+};
+
+const HIGH_RECOMMENDATION = new Set(['Muito provável', 'Provável']);
 
 const AdminFeedback = ({ loggedUsername }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [identityFilter, setIdentityFilter] = useState('all');
 
   scrollUp();
 
@@ -90,6 +131,32 @@ const AdminFeedback = ({ loggedUsername }) => {
     });
   };
 
+  const namedCount = feedbacks.filter((f) => (f.name || '').trim()).length;
+  const anonCount = feedbacks.length - namedCount;
+  const highRecommendation = feedbacks.filter((f) => HIGH_RECOMMENDATION.has(f.probability)).length;
+
+  const statItems = [
+    { label: 'Total de respostas', value: feedbacks.length },
+    { label: 'Identificadas', value: namedCount, tone: 'accent' },
+    { label: 'Anônimas', value: anonCount, tone: 'used' },
+    { label: 'Recomendação alta', value: highRecommendation, tone: 'free' },
+  ];
+
+  const identityChips = [
+    { value: 'all', label: 'Todas', count: feedbacks.length },
+    { value: 'named', label: 'Identificadas', count: namedCount },
+    { value: 'anon', label: 'Anônimas', count: anonCount },
+  ];
+
+  const term = search.trim().toLowerCase();
+  const filteredFeedbacks = feedbacks.filter((f) => {
+    const hasName = !!(f.name || '').trim();
+    if (identityFilter === 'named' && !hasName) return false;
+    if (identityFilter === 'anon' && hasName) return false;
+    if (term && !(f.name || '').toLowerCase().includes(term)) return false;
+    return true;
+  });
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -123,28 +190,49 @@ const AdminFeedback = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Feedbacks" count={feedbacks.length} />
+        <StatCards items={statItems} />
+
+        <div className="feedback-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <FilterChips options={identityChips} value={identityFilter} onChange={setIdentityFilter} />
+        </div>
+
+        <SectionHeader title="Feedbacks" count={filteredFeedbacks.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
-        <thead>
-          <tr>
-            {TABLE_HEADERS.map((header, index) => (
-              <th key={index} className="table-cells-header">
-                {header}:
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {feedbacks.map((feedback, index) => (
-            <tr key={index}>
-              {Object.values(feedback).map((value, index) => (
-                <td key={index}>{value}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+            <thead>
+              <tr>
+                {TABLE_HEADERS.map((header, index) => (
+                  <th key={index} className="table-cells-header">
+                    {header}:
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFeedbacks.map((feedback, rowIndex) => {
+                const values = Object.values(feedback);
+                return (
+                  <tr key={rowIndex}>
+                    {TABLE_HEADERS.map((header, colIndex) => {
+                      const value = values[colIndex];
+                      if (RATING_HEADERS.has(header) && value) {
+                        const tone = RATING_TONE[value] || 'secondary';
+                        return (
+                          <td key={colIndex}>
+                            <Badge bg={tone} text={tone === 'warning' ? 'dark' : undefined}>
+                              {value}
+                            </Badge>
+                          </td>
+                        );
+                      }
+                      return <td key={colIndex}>{value || <span className="text-secondary small">—</span>}</td>;
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
           </Table>
         </div>
 
