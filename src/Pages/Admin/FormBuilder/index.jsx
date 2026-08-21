@@ -8,6 +8,7 @@ import { listFormSections, createFormSection, updateFormSection, deleteFormSecti
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -282,6 +283,13 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const requiredCount = fields.filter((field) => field.required).length;
+  const statItems = [
+    { label: 'Seções', value: sections.length },
+    { label: 'Campos', value: fields.length, tone: 'accent' },
+    { label: 'Obrigatórios', value: requiredCount, tone: 'info' },
+  ];
+
   return (
     <div className="admin-subpage form-builder ">
       <AdminSubpageHeader
@@ -292,6 +300,8 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       />
 
       <div className="form-builder__content">
+        {!loading && sections.length > 0 && <StatCards items={statItems} />}
+
         <div className="form-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreateSection}>
             Nova Seção&nbsp;&nbsp;

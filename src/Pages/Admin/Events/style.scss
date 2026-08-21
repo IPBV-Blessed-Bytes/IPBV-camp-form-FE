@@ -7,8 +7,16 @@
 
   &__toolbar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
     margin-bottom: 1.5rem;
+
+    .search-box {
+      flex: 1 1 240px;
+      max-width: 360px;
+    }
   }
 
   &__empty {

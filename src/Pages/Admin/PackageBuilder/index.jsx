@@ -15,6 +15,7 @@ import { getEvent } from '@/services/events';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -222,6 +223,13 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const assignedCount = products.length - unassignedProducts.length;
+  const statItems = [
+    { label: 'Categorias', value: categories.length },
+    { label: 'Produtos associados', value: assignedCount, tone: 'accent' },
+    { label: 'Sem categoria', value: unassignedProducts.length, tone: 'used' },
+  ];
+
   return (
     <div className="admin-subpage package-builder">
       <AdminSubpageHeader
@@ -232,6 +240,8 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       />
 
       <div className="package-builder__content">
+        {!loading && categories.length > 0 && <StatCards items={statItems} />}
+
         <div className="package-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
             Nova Categoria&nbsp;&nbsp;

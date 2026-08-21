@@ -18,6 +18,8 @@ import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services
 import { setSelectedEvent } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
@@ -60,6 +62,7 @@ const AdminEvents = ({ loggedUsername }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState(EMPTY_EVENT);
+  const [search, setSearch] = useState('');
 
   const loadEvents = async () => {
     setLoading(true);
@@ -190,6 +193,21 @@ const AdminEvents = ({ loggedUsername }) => {
     }
   };
 
+  const openCount = events.filter((event) => event.active && event.registrationsOpen !== false).length;
+  const waitingCount = events.filter((event) => event.active && event.registrationsOpen === false).length;
+  const inactiveCount = events.filter((event) => !event.active).length;
+  const statItems = [
+    { label: 'Eventos', value: events.length },
+    { label: 'Inscrições abertas', value: openCount, tone: 'free' },
+    { label: 'Aguardando', value: waitingCount, tone: 'info' },
+    { label: 'Inativos', value: inactiveCount, tone: 'used' },
+  ];
+
+  const term = search.trim().toLowerCase();
+  const filteredEvents = term
+    ? events.filter((event) => `${event.name || ''} ${event.slug || ''}`.toLowerCase().includes(term))
+    : events;
+
   return (
     <div className="admin-subpage admin-events">
       <AdminSubpageHeader
@@ -200,7 +218,12 @@ const AdminEvents = ({ loggedUsername }) => {
       />
 
       <div className="admin-events__content">
+        {!loading && events.length > 0 && <StatCards items={statItems} />}
+
         <div className="admin-events__toolbar">
+          {events.length > 0 && (
+            <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou slug..." />
+          )}
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
             Novo Evento&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
@@ -211,9 +234,11 @@ const AdminEvents = ({ loggedUsername }) => {
           <Loading loading />
         ) : events.length === 0 ? (
           <p className="admin-events__empty">Nenhum evento cadastrado.</p>
+        ) : filteredEvents.length === 0 ? (
+          <p className="admin-events__empty">Nenhum evento encontrado.</p>
         ) : (
           <div className="event-admin-grid">
-            {events.map((event) => {
+            {filteredEvents.map((event) => {
               const badge = STAGE_BADGE(event);
               return (
                 <div key={event.id} className="event-admin-card" style={{ '--card-accent': event.color || '#007185' }}>
