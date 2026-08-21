@@ -1,1 +1,370 @@
 @use '../../../styles/Variables.scss' as *;
+
+.ride-stats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: $md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: $sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ride-stat {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-left: 4px solid $primary;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+
+  &__value {
+    color: $dark-gray;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__label {
+    color: $alternate-dark-gray;
+    font-size: 0.78rem;
+  }
+
+  &--used {
+    border-left-color: #f0ad4e;
+  }
+
+  &--free {
+    border-left-color: #28a745;
+  }
+
+  &--waiting {
+    border-left-color: #dc3545;
+  }
+
+  &--pct {
+    border-left-color: #6f42c1;
+  }
+}
+
+.ride-seats {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  &__pills {
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  &__pill {
+    background: transparent;
+    border: 1.5px solid $primary;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+
+    &.is-used {
+      background: $primary;
+    }
+  }
+}
+
+.ride-contact {
+  align-items: center;
+  color: $dark-gray;
+  display: inline-flex;
+  gap: 0.35rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.ride-seats__count {
+  color: $alternate-dark-gray;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ride-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ride-search {
+  align-items: center;
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 10px;
+  display: flex;
+  gap: 0.5rem;
+  min-width: 240px;
+  padding: 0.4rem 0.75rem;
+
+  input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+  }
+}
+
+.ride-section-title {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.75rem 0 1rem;
+
+  h4 {
+    color: $dark-gray;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  &__count {
+    background: $alternate-light-gray;
+    border-radius: 999px;
+    color: $alternate-dark-gray;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.1rem 0.55rem;
+  }
+
+  &__line {
+    background: $alternate-light-gray;
+    flex: 1;
+    height: 1px;
+  }
+}
+
+.ride-empty {
+  color: $alternate-dark-gray;
+  padding: 0.5rem 0;
+}
+
+.ride-cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.ride-car {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem;
+
+  &.is-checked {
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.25);
+  }
+
+  &__head {
+    align-items: center;
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  &__icon {
+    align-items: center;
+    background: rgba($primary, 0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-shrink: 0;
+    height: 46px;
+    justify-content: center;
+    width: 46px;
+  }
+
+  &__driver {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__name {
+    color: $dark-gray;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  &__mark {
+    margin: 0 0 0 auto;
+  }
+
+  &__obs {
+    background: $background-gray;
+    border-radius: 8px;
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+  }
+
+  &__passengers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    min-height: 1.5rem;
+  }
+
+  &__empty {
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  &__assign {
+    margin-top: auto;
+  }
+}
+
+.ride-chip {
+  align-items: center;
+  background: rgba($primary, 0.1);
+  border-radius: 999px;
+  color: $primary;
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 0.3rem;
+  padding: 0.2rem 0.35rem 0.2rem 0.7rem;
+
+  &__remove {
+    align-items: center;
+    background: rgba($primary, 0.2);
+    border: none;
+    border-radius: 50%;
+    color: $primary;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    width: 18px;
+
+    &:hover {
+      background: #dc3545;
+      color: #fff;
+    }
+  }
+}
+
+.ride-pool {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ride-need {
+  align-items: center;
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.7rem 1rem;
+
+  &.is-checked {
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba($primary, 0.25);
+  }
+
+  &__info {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    min-width: 0;
+  }
+
+  &__mark {
+    margin: 0;
+  }
+
+  &__name {
+    color: $dark-gray;
+    font-weight: 600;
+  }
+
+  &__obs {
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  &__assign {
+    max-width: 240px;
+  }
+}
+
+.ride-filters {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ride-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ride-filter-chip {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 999px;
+  color: $alternate-dark-gray;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.85rem;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    border-color: $primary;
+  }
+
+  &.is-active {
+    background: $primary;
+    border-color: $primary;
+    color: $white;
+  }
+}
+
+.ride-sort {
+  max-width: 220px;
+}

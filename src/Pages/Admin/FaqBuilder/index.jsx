@@ -7,6 +7,7 @@ import { listFaqs, createFaq, updateFaq, deleteFaq } from '@/services/faqs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
 import CustomEditor from '@/components/Global/CustomEditor';
 import Loading from '@/components/Global/Loading';
@@ -14,6 +15,14 @@ import Icons from '@/components/Global/Icons';
 import './style.scss';
 
 const EMPTY_FAQ = { id: null, question: '', answer: '' };
+
+const hasAnswer = (answer) =>
+  Boolean(
+    (answer || '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .trim(),
+  );
 
 const AdminFaqBuilder = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
@@ -91,6 +100,13 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const answered = useMemo(() => faqs.filter((faq) => hasAnswer(faq.answer)).length, [faqs]);
+  const statItems = [
+    { label: 'Perguntas', value: faqs.length },
+    { label: 'Com resposta', value: answered, tone: 'free' },
+    { label: 'Sem resposta', value: faqs.length - answered, tone: faqs.length - answered > 0 ? 'danger' : 'default' },
+  ];
+
   const confirmDelete = async () => {
     if (!toDelete) return;
     setSaving(true);
@@ -115,6 +131,8 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       />
 
       <div className="faq-builder__content">
+        <StatCards items={statItems} />
+
         <div className="faq-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
             Nova Pergunta&nbsp;&nbsp;
