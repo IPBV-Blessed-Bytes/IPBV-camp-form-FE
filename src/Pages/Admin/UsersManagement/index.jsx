@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -13,6 +13,28 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
+
+const ROLE_BADGE = {
+  admin: 'danger',
+  checker: 'info',
+  collaborator: 'primary',
+  'collaborator-viewer': 'secondary',
+  'ride-manager': 'warning',
+  'team-creator': 'success',
+  guest: 'light',
+};
+
+const initialsOf = (name = '') =>
+  name
+    .replace(/@.*/, '')
+    .split(/[\s._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join('') || '?';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +45,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [roles, setRoles] = useState([]);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [showPassword, setShowPassword] = useState(false);
 
   scrollUp();
 
@@ -138,6 +163,26 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     fetchRoles();
   }, []);
 
+  const byRole = users.reduce((acc, u) => {
+    acc[u.role] = (acc[u.role] || 0) + 1;
+    return acc;
+  }, {});
+  const rolesPresent = [...new Set(users.map((u) => u.role))];
+  const statItems = [
+    { label: 'Total de usuários', value: users.length },
+    ...rolesPresent.map((r) => ({ label: translateRole(r), value: byRole[r], tone: r === 'admin' ? 'danger' : 'default' })),
+  ];
+  const roleChips = [
+    { value: 'all', label: 'Todos', count: users.length },
+    ...rolesPresent.map((r) => ({ value: r, label: translateRole(r), count: byRole[r] })),
+  ];
+  const term = search.trim().toLowerCase();
+  const filteredUsers = users.filter(
+    (u) =>
+      (roleFilter === 'all' || u.role === roleFilter) &&
+      (!term || (u.userName || '').toLowerCase().includes(term) || (u.email || '').toLowerCase().includes(term)),
+  );
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -162,7 +207,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Usuários" count={users.length} />
+        <StatCards items={statItems} />
+
+        <div className="users-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou e-mail..." />
+          <FilterChips options={roleChips} value={roleFilter} onChange={setRoleFilter} />
+        </div>
+
+        <SectionHeader title="Usuários" count={filteredUsers.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -175,13 +227,23 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.id}>
                   <td>
-                    <em>{user.userName}</em>
+                    <div className="user-cell">
+                      <span className="user-cell__avatar">{initialsOf(user.userName)}</span>
+                      <em>{user.userName}</em>
+                    </div>
                   </td>
                   <td>{user.email || <span className="text-secondary small">—</span>}</td>
-                  <td>{translateRole(user.role)}</td>
+                  <td>
+                    <Badge
+                      bg={ROLE_BADGE[user.role] || 'secondary'}
+                      text={ROLE_BADGE[user.role] === 'light' ? 'dark' : undefined}
+                    >
+                      {translateRole(user.role)}
+                    </Badge>
+                  </td>
                   <td>
                     <Button
                       variant="outline-success"
@@ -265,13 +327,24 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                   <b>Senha:</b>
                 )}
               </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder={editingUser ? 'Deixe em branco para manter a senha atual' : 'Digite a senha'}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                size="lg"
-              />
+              <div className="password-wrapper">
+                <Form.Control
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={editingUser ? 'Deixe em branco para manter a senha atual' : 'Digite a senha'}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  size="lg"
+                  className="password-input"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                </button>
+              </div>
             </Form.Group>
             <Form.Group controlId="formRole" className="mt-3">
               <Form.Label>
