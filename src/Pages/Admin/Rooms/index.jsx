@@ -521,11 +521,11 @@ const AdminRooms = ({ loggedUsername }) => {
 
                 <div className="text-end mt-3">
                   <Button
-                    variant="outline-teal-blue"
+                    variant="teal-blue"
                     size="sm"
                     onClick={() => handleAddCamperToRoom(room.id, room.name)}
                   >
-                    <Icons typeIcon="add-person" iconSize={18} fill="#007185" />
+                    <Icons typeIcon="add-person" iconSize={18} fill="#fff" />
                     &nbsp;Adicionar ao Quarto
                   </Button>
                 </div>
