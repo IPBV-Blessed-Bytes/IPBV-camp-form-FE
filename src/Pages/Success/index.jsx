@@ -6,7 +6,6 @@ import './style.scss';
 
 const Success = () => {
   const { initialStep, resetFormValues, resetFormSubmitted } = useFormState();
-  const pathnamePagarme = window.location.search;
 
   const handleNewRegistration = () => {
     resetFormValues();
@@ -26,22 +25,28 @@ const Success = () => {
       }
     >
       <Container>
-          <div className="form__success text-center">
-            <div className="form__success__title">
-              <b>Formulário enviado com sucesso!</b>
-            </div>
-            <p className="form__success__message">Obrigado por enviar suas informações.</p>
-            <p className="form__success__contact">
-              <b>Qualquer dúvida entraremos em contato.</b>
-              <br />
-              <b>Nos vemos em Garanhuns!!!</b>
-            </p>
-            <small className={`${pathnamePagarme ? 'mt-5' : ''}`}>
-              <em>Igreja Presbiteriana de Boa Viagem</em>
-            </small>
-            <img src={campLogo} className="form__success__logo" alt="logo" />
+        <div className="success">
+          <div className="success__badge">
+            <svg className="success__check" viewBox="0 0 52 52" aria-hidden="true">
+              <circle className="success__check-circle" cx="26" cy="26" r="24" fill="none" />
+              <path className="success__check-mark" fill="none" d="M15 27 l7 7 l15 -16" />
+            </svg>
           </div>
-        </Container>
+
+          <h2 className="success__title">Formulário enviado com sucesso!</h2>
+          <p className="success__message">Obrigado por enviar suas informações.</p>
+
+          <p className="success__contact">
+            Qualquer dúvida entraremos em contato.
+            <br />
+            <strong>Nos vemos em Garanhuns!</strong>
+          </p>
+
+          <span className="success__church">Igreja Presbiteriana de Boa Viagem</span>
+
+          <img src={campLogo} className="success__logo" alt="Logo do acampamento" />
+        </div>
+      </Container>
     </FormStepLayout>
   );
 };

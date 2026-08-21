@@ -5,3 +5,114 @@
     width: 10.9375rem !important;
   }
 }
+
+.success {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem 0.5rem;
+  text-align: center;
+
+  &__badge {
+    align-items: center;
+    background: rgba($primary, 0.1);
+    border-radius: 50%;
+    display: flex;
+    height: 112px;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 112px;
+    animation: success-pop 0.4s ease both;
+  }
+
+  &__check {
+    height: 72px;
+    width: 72px;
+  }
+
+  &__check-circle {
+    stroke: $primary;
+    stroke-width: 2.5;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 151;
+    animation: success-draw 0.6s ease forwards;
+  }
+
+  &__check-mark {
+    stroke: $primary;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: success-draw 0.35s 0.5s ease forwards;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+
+    @media (max-width: $sm) {
+      font-size: 1.35rem;
+    }
+  }
+
+  &__message {
+    color: $alternate-dark-gray;
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+  }
+
+  &__contact {
+    color: $dark-gray;
+    line-height: 1.6;
+    margin: 1.25rem 0 0;
+  }
+
+  &__church {
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 0.75rem;
+  }
+
+  &__logo {
+    margin-top: 1.5rem;
+    max-width: 140px;
+    opacity: 0.9;
+    width: 45%;
+  }
+}
+
+@keyframes success-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success__badge,
+  .success__check-circle,
+  .success__check-mark {
+    animation: none;
+  }
+
+  .success__check-circle,
+  .success__check-mark {
+    stroke-dashoffset: 0;
+  }
+}
