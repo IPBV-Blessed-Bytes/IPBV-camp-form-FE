@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -18,10 +18,15 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
 
 const AdminWristbandsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const { wristbands, isLoading: loadingWristbands, refetch: refetchWristbands } = useWristbandsList();
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [formData, setFormData] = useState({
     type: '',
     label: '',
@@ -118,6 +123,26 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     setShowDeleteModal(true);
   };
 
+  const activeCount = wristbands.filter((b) => b.active).length;
+  const teamCount = wristbands.filter((b) => b.type === 'TEAM').length;
+  const foodCount = wristbands.filter((b) => b.type === 'FOOD').length;
+  const statItems = [
+    { label: 'Pulseiras', value: wristbands.length },
+    { label: 'Ativas', value: activeCount, tone: 'free' },
+    { label: 'Inativas', value: wristbands.length - activeCount, tone: 'used' },
+    { label: 'Times', value: teamCount, tone: 'accent' },
+    { label: 'Alimentação', value: foodCount, tone: 'info' },
+  ];
+  const typeChips = [
+    { value: 'all', label: 'Todas', count: wristbands.length },
+    { value: 'TEAM', label: 'Time', count: teamCount },
+    { value: 'FOOD', label: 'Alimentação', count: foodCount },
+  ];
+  const term = search.trim().toLowerCase();
+  const filtered = wristbands.filter(
+    (b) => (typeFilter === 'all' || b.type === typeFilter) && (!term || (b.label || '').toLowerCase().includes(term)),
+  );
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -142,7 +167,14 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Pulseiras" count={wristbands.length} />
+        <StatCards items={statItems} />
+
+        <div className="wristbands-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <FilterChips options={typeChips} value={typeFilter} onChange={setTypeFilter} />
+        </div>
+
+        <SectionHeader title="Pulseiras" count={filtered.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -156,14 +188,23 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {wristbands.map((band) => (
+              {filtered.map((band) => (
                 <tr key={band.id}>
-                  <td>{band.type === 'FOOD' ? 'Alimentação' : 'Time'}</td>
+                  <td>
+                    <Badge bg={band.type === 'FOOD' ? 'warning' : 'primary'} text={band.type === 'FOOD' ? 'dark' : undefined}>
+                      {band.type === 'FOOD' ? 'Alimentação' : 'Time'}
+                    </Badge>
+                  </td>
                   <td>{band.label}</td>
                   <td>
-                    <div className="color-swatch" style={{ background: band.color }} />
+                    <span className="wristband-color-chip">
+                      <span className="wristband-color-chip__dot" style={{ background: band.color }} />
+                      {band.color}
+                    </span>
                   </td>
-                  <td>{band.active ? 'Ativa' : 'Inativa'}</td>
+                  <td>
+                    <Badge bg={band.active ? 'success' : 'secondary'}>{band.active ? 'Ativa' : 'Inativa'}</Badge>
+                  </td>
                   <td>
                     <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(band)}>
                       <Icons typeIcon="edit" iconSize={24} />
