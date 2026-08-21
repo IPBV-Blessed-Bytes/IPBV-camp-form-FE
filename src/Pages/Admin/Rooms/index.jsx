@@ -16,6 +16,7 @@ import {
   renameRoom as renameRoomRequest,
   deleteRoom,
   removeCamperFromRoom,
+  reorderRooms,
 } from '@/services/rooms';
 import { registerLog } from '@/services/logs';
 import { useRoomsList } from '@/hooks/useRoomsList';
@@ -278,13 +279,36 @@ const AdminRooms = ({ loggedUsername }) => {
     [],
   );
 
-  const sortedRooms = useMemo(() => {
-    return [...rooms].sort((a, b) =>
-      roomSortOrder === 'asc'
-        ? a.name.localeCompare(b.name, 'pt-BR', { numeric: true, sensitivity: 'base' })
-        : b.name.localeCompare(a.name, 'pt-BR', { numeric: true, sensitivity: 'base' }),
-    );
-  }, [rooms, roomSortOrder]);
+  const moveRoom = async (index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= rooms.length) return;
+    const reordered = [...rooms];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    try {
+      await reorderRooms(reordered.map((room) => room.id));
+      refetchRooms();
+    } catch (error) {
+      toast.error('Erro ao reordenar os quartos');
+    }
+  };
+
+  const persistAlphabeticalOrder = async () => {
+    const nextOrder = roomSortOrder === 'asc' ? 'desc' : 'asc';
+    const orderedIds = [...rooms]
+      .sort((a, b) =>
+        nextOrder === 'asc'
+          ? a.name.localeCompare(b.name, 'pt-BR', { numeric: true, sensitivity: 'base' })
+          : b.name.localeCompare(a.name, 'pt-BR', { numeric: true, sensitivity: 'base' }),
+      )
+      .map((room) => room.id);
+    setRoomSortOrder(nextOrder);
+    try {
+      await reorderRooms(orderedIds);
+      refetchRooms();
+    } catch (error) {
+      toast.error('Erro ao ordenar os quartos');
+    }
+  };
 
   const sortedDropdownCampers = useMemo(
     () =>
@@ -418,19 +442,44 @@ const AdminRooms = ({ loggedUsername }) => {
       </div>
 
       <div className="d-flex justify-content-end mb-3">
-        <Button
-          variant="outline-teal-blue"
-          onClick={() => setRoomSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-        >
+        <Button variant="outline-teal-blue" onClick={persistAlphabeticalOrder}>
           <Icons typeIcon="sort" iconSize={18} fill="#007185" />
           &nbsp; Ordenar quartos ({roomSortOrder === 'asc' ? 'A ⭢ Z' : 'Z ⭢ A'})
         </Button>
       </div>
 
       <Accordion className="mb-4" defaultActiveKey="1">
-        {sortedRooms.map((room) => (
+        {rooms.map((room, index) => (
           <Accordion.Item eventKey={room.id} key={room.id}>
-            <Accordion.Header>{room.name}</Accordion.Header>
+            <Accordion.Header>
+              <span className="rooms-reorder" onClick={(e) => e.stopPropagation()}>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className={`rooms-reorder__btn ${index === 0 ? 'is-disabled' : ''}`}
+                  title="Mover para cima"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    moveRoom(index, -1);
+                  }}
+                >
+                  <Icons typeIcon="arrow-top" iconSize={16} fill="#007185" />
+                </span>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className={`rooms-reorder__btn rooms-reorder__btn--down ${index === rooms.length - 1 ? 'is-disabled' : ''}`}
+                  title="Mover para baixo"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    moveRoom(index, 1);
+                  }}
+                >
+                  <Icons typeIcon="arrow-top" iconSize={16} fill="#007185" />
+                </span>
+              </span>
+              <span className="rooms-reorder-name">{room.name}</span>
+            </Accordion.Header>
             <Accordion.Body>
               <div className="p-3 rounded shadow-sm bg-light mb-3">
                 <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">

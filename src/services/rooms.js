@@ -25,6 +25,11 @@ export const renameRoom = async (roomId, payload) => {
   return data;
 };
 
+export const reorderRooms = async (orderedIds) => {
+  const { data } = await authFetcher.put('/rooms/reorder', { orderedIds });
+  return data;
+};
+
 export const deleteRoom = async (roomId, payload) => {
   const { data } = await authFetcher.delete(`/rooms/${roomId}`, { data: payload });
   return data;

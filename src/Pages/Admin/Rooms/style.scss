@@ -1,2 +1,37 @@
 @use '../../../styles/Variables.scss' as *;
 
+.rooms {
+  .rooms-reorder {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-right: 0.6rem;
+  }
+
+  .rooms-reorder__btn {
+    align-items: center;
+    border: 1px solid rgba($primary, 0.35);
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0.1rem 0.3rem;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba($primary, 0.1);
+    }
+
+    &--down svg {
+      transform: rotate(180deg);
+    }
+
+    &.is-disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
+  .rooms-reorder-name {
+    font-weight: 500;
+  }
+}
