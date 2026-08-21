@@ -14,6 +14,8 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 import Icons from '@/components/Global/Icons';
 
 registerLocale('ptBR', ptBR);
@@ -48,6 +50,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [baseDate, setBaseDate] = useState('');
   const [baseDateExists, setBaseDateExists] = useState(false);
   const [showBaseDateModal, setShowBaseDateModal] = useState(false);
+  const [search, setSearch] = useState('');
 
   scrollUp();
 
@@ -222,6 +225,29 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
+  const now = new Date();
+  const currentLot = lots.find((lot) => {
+    const start = parseDate(lot.startDate);
+    const end = parseDate(lot.endDate);
+    return start && end && now >= start && now <= end;
+  });
+  const upcomingCount = lots.filter((lot) => {
+    const start = parseDate(lot.startDate);
+    return start && now < start;
+  }).length;
+  const endedCount = lots.filter((lot) => {
+    const end = parseDate(lot.endDate);
+    return end && now > end;
+  }).length;
+  const statItems = [
+    { label: 'Total de lotes', value: lots.length },
+    { label: 'Lote atual', value: currentLot?.name || '—', tone: 'free' },
+    { label: 'A iniciar', value: upcomingCount, tone: 'info' },
+    { label: 'Encerrados', value: endedCount, tone: 'used' },
+  ];
+  const term = search.trim().toLowerCase();
+  const filteredLots = lots.filter((lot) => !term || (lot.name || '').toLowerCase().includes(term));
+
   const toolsButtons = [
     {
       fill: '#007185',
@@ -258,11 +284,17 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
+        <StatCards items={statItems} />
+
+        <div className="lots-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+        </div>
+
         <Row className="justify-content-center">
           <Col>
             <Form>
               <Accordion alwaysOpen>
-                {lots.map((lot, index) => {
+                {filteredLots.map((lot, index) => {
                   const today = new Date();
                   const start = parseDate(lot.startDate);
                   const end = parseDate(lot.endDate);
