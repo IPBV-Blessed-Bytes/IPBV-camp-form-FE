@@ -20,7 +20,7 @@ const filterWith = (FilterComponent, extraProps = {}) =>
 export const makeDefaultFilter = () => filterWith(ColumnFilter);
 
 const renderOrDash = ({ value }) => value || '-';
-const renderPipedList = ({ value }) => value.replace(/\|/g, ', ') || '-';
+const renderPipedList = ({ value }) => (value ? value.replace(/\|/g, ', ') : '-');
 const renderYesNo = ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-');
 
 export const buildCampersColumns = ({
