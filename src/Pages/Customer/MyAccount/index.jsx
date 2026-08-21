@@ -111,7 +111,7 @@ const MyAccount = () => {
         </Button>
         <Button
           variant="outline-teal-blue"
-          className="my-account__btn my-account__btn--back"
+          className="my-account__btn my-account__btn--back outline-border-width-thin"
           onClick={() => navigate('/')}
         >
           Voltar ao Formulário
@@ -137,7 +137,7 @@ const MyAccount = () => {
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
               <Button className="account-btn-primary" onClick={() => navigate('/')}>
-                Fazer inscrição
+                Fazer Inscrição
               </Button>
             </div>
           ) : (
@@ -173,7 +173,7 @@ const MyAccount = () => {
                       <td>
                         {r.status === 'CONFIRMED' ? (
                           <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
-                            Solicitar alteração
+                            Solicitar Alteração
                           </Button>
                         ) : r.paymentUrl ? (
                           <Button
