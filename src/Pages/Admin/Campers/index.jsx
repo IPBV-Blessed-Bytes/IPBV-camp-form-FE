@@ -9,6 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
 import TablePagination from '@/components/Admin/CampersTable/TablePagination';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
@@ -64,6 +65,20 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   const currentDate = formatCurrentDate();
+
+  const statItems = useMemo(() => {
+    const campers = data || [];
+    const isNonPaying = (camper) => camper.totalPrice === '0' || !camper.formPayment?.formPayment;
+    const paidCount = campers.filter((camper) => !isNonPaying(camper)).length;
+    const checkedInCount = campers.filter((camper) => camper.checkin).length;
+    return [
+      { label: 'Total de inscritos', value: campers.length },
+      { label: 'Pagantes', value: paidCount, tone: 'info' },
+      { label: 'Não pagantes', value: campers.length - paidCount, tone: 'used' },
+      { label: 'Check-in feito', value: checkedInCount, tone: 'free' },
+      { label: 'Aguardando check-in', value: campers.length - checkedInCount, tone: 'accent' },
+    ];
+  }, [data]);
 
   const handleEditClick = (index) => {
     setEditRowIndex(index);
@@ -247,6 +262,8 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
+
+        <StatCards items={statItems} />
 
         <Row>
         <CoreTable
