@@ -463,7 +463,7 @@ const AdminRooms = ({ loggedUsername }) => {
                     moveRoom(index, -1);
                   }}
                 >
-                  <Icons typeIcon="arrow-top" iconSize={16} fill="#007185" />
+                  <Icons typeIcon="arrow-top" iconSize={24} fill="#007185" />
                 </span>
                 <span
                   role="button"
@@ -475,7 +475,7 @@ const AdminRooms = ({ loggedUsername }) => {
                     moveRoom(index, 1);
                   }}
                 >
-                  <Icons typeIcon="arrow-top" iconSize={16} fill="#007185" />
+                  <Icons typeIcon="arrow-top" iconSize={24} fill="#007185" />
                 </span>
               </span>
               <span className="rooms-reorder-name">{room.name}</span>
