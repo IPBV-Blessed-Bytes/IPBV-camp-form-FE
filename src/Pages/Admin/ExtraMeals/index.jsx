@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react';
-import { Table } from 'react-bootstrap';
+import { useEffect, useMemo, useState } from 'react';
+import { Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -9,11 +9,14 @@ import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
+import StatCards from '@/components/Admin/StatCards';
+import SearchBox from '@/components/Admin/SearchBox';
 
 const AdminExtraMeals = () => {
   scrollUp();
 
   const { campers, isLoading: loading, isError } = useCampersList();
+  const [search, setSearch] = useState('');
 
   const usersWithExtraMeals = useMemo(() => campers.filter((user) => user.extraMeals?.someFood), [campers]);
 
@@ -29,6 +32,19 @@ const AdminExtraMeals = () => {
 
     downloadSingleSheet({ filename: 'alimentacao.xlsx', sheetName: 'Alimentação', rows });
   };
+
+  const totalDays = usersWithExtraMeals.reduce(
+    (acc, user) => acc + (user.extraMeals?.extraMeals?.length || 0),
+    0,
+  );
+  const statItems = [
+    { label: 'Acampantes', value: usersWithExtraMeals.length },
+    { label: 'Total de dias', value: totalDays, tone: 'info' },
+  ];
+  const term = search.trim().toLowerCase();
+  const filteredUsers = usersWithExtraMeals.filter(
+    (user) => !term || (user.personalInformation?.name || '').toLowerCase().includes(term),
+  );
 
   const toolsButtons = [
     {
@@ -53,7 +69,13 @@ const AdminExtraMeals = () => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <SectionHeader title="Refeições extras" count={usersWithExtraMeals.length} />
+        <StatCards items={statItems} />
+
+        <div className="meals-toolbar">
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por acampante..." />
+        </div>
+
+        <SectionHeader title="Refeições extras" count={filteredUsers.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -64,10 +86,22 @@ const AdminExtraMeals = () => {
           </tr>
         </thead>
         <tbody>
-          {usersWithExtraMeals.map((user) => (
+          {filteredUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.personalInformation.name}</td>
-              <td>{user.extraMeals.extraMeals.length > 0 ? user.extraMeals.extraMeals : 'Nenhum dia'}</td>
+              <td>
+                {user.extraMeals.extraMeals.length > 0 ? (
+                  <span className="meal-days">
+                    {user.extraMeals.extraMeals.map((day, dayIndex) => (
+                      <Badge key={`${user.id}-${dayIndex}`} bg="info" text="dark">
+                        {day}
+                      </Badge>
+                    ))}
+                  </span>
+                ) : (
+                  <span className="text-secondary small">Nenhum dia</span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
