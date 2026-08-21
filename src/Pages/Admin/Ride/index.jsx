@@ -252,7 +252,6 @@ const AdminRide = ({ loggedUsername }) => {
         </div>
 
         <div className="ride-toolbar">
-          <AdminToolbar buttons={toolsButtons} />
           <div className="ride-search">
             <Icons typeIcon="m-glass" iconSize={18} fill="#8a8a8a" />
             <input
@@ -262,6 +261,7 @@ const AdminRide = ({ loggedUsername }) => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <AdminToolbar buttons={toolsButtons} />
         </div>
 
         <div className="ride-section-title">
