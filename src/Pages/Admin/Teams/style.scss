@@ -1,2 +1,59 @@
 @use '../../../styles/Variables.scss' as *;
 
+
+.teams-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.team-wristband-chip {
+  align-items: center;
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.85rem;
+  gap: 0.4rem;
+  padding: 0.15rem 0.7rem 0.15rem 0.5rem;
+
+  &__dot {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    flex-shrink: 0;
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.camper-checklist {
+  border: 1px solid $alternate-light-gray;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+
+.camper-check {
+  align-items: center;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+
+  &:hover {
+    background: rgba($primary, 0.06);
+  }
+
+  &.is-checked {
+    background: rgba($primary, 0.1);
+  }
+
+  input {
+    accent-color: $primary;
+  }
+}

@@ -8,6 +8,7 @@ import { updatePackageCount, updateTotalBusVacancies } from '@/services/packages
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 
 const AdminSeatManagement = ({
   loading,
@@ -87,6 +88,17 @@ const AdminSeatManagement = ({
   const sumPackages = packageOrder.reduce((acc, key) => acc + (Number(totalPackages[key]) || 0), 0);
   const undistributedSeats = Number(totalSeats || 0) - sumPackages;
 
+  const seatStats = [
+    { label: 'Vagas totais', value: Number(totalSeats || 0) },
+    { label: 'Distribuídas em pacotes', value: sumPackages, tone: 'info' },
+    {
+      label: 'Não distribuídas',
+      value: undistributedSeats,
+      tone: undistributedSeats < 0 ? 'danger' : 'free',
+    },
+    { label: 'Vagas no ônibus', value: Number(totalBusVacancies || 0), tone: 'accent' },
+  ];
+
   return (
     <div className="admin-subpage admin-subpage--seats">
       <AdminSubpageHeader
@@ -97,24 +109,7 @@ const AdminSeatManagement = ({
       />
 
       <div className="admin-subpage__content">
-        <div className="seat-summary">
-          <div className="seat-summary__card">
-            <span className="seat-summary__label">Vagas totais</span>
-            <span className="seat-summary__value">{Number(totalSeats || 0)}</span>
-          </div>
-          <div className="seat-summary__card">
-            <span className="seat-summary__label">Distribuídas em pacotes</span>
-            <span className="seat-summary__value">{sumPackages}</span>
-          </div>
-          <div className={`seat-summary__card ${undistributedSeats < 0 ? 'seat-summary__card--warn' : ''}`}>
-            <span className="seat-summary__label">Não distribuídas</span>
-            <span className="seat-summary__value">{undistributedSeats}</span>
-          </div>
-          <div className="seat-summary__card">
-            <span className="seat-summary__label">Vagas no ônibus</span>
-            <span className="seat-summary__value">{Number(totalBusVacancies || 0)}</span>
-          </div>
-        </div>
+        <StatCards items={seatStats} />
 
         <Row className="g-4">
           <Col xs={12} lg={7}>
