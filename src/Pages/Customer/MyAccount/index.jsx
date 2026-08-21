@@ -102,17 +102,22 @@ const MyAccount = () => {
             <p className="my-account__subtitle">{user}</p>
           </div>
         </div>
-        <div className="my-account__actions">
-          <Button className="account-btn-primary" onClick={() => navigate('/')}>
-            Nova inscrição
-          </Button>
-          <Button variant="outline-teal-blue" onClick={() => navigate('/')}>
-            Voltar ao formulário
-          </Button>
-          <Button variant="outline-secondary" onClick={logout}>
-            Sair
-          </Button>
-        </div>
+        <Button
+          className="account-btn-primary my-account__btn my-account__btn--new"
+          onClick={() => navigate('/')}
+        >
+          Nova inscrição
+        </Button>
+        <Button
+          variant="outline-teal-blue"
+          className="my-account__btn my-account__btn--back"
+          onClick={() => navigate('/')}
+        >
+          Voltar ao formulário
+        </Button>
+        <Button variant="outline-secondary" className="my-account__btn my-account__btn--logout" onClick={logout}>
+          Sair
+        </Button>
       </div>
 
       <div className="my-account__content">

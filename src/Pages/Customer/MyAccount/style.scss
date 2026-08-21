@@ -9,16 +9,11 @@
   &__hero {
     align-items: center;
     display: flex;
-    gap: 1rem;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin: 0 auto 1.5rem;
     max-width: 1080px;
     padding: 1.5rem 2rem 0;
-
-    @media (max-width: $sm) {
-      align-items: flex-start;
-      flex-direction: column;
-    }
 
     @media (max-width: $md) {
       padding: 1rem 1rem 0;
@@ -29,7 +24,14 @@
     align-items: center;
     display: flex;
     gap: 1rem;
+    margin-right: auto;
     min-width: 0;
+
+    @media (max-width: $sm) {
+      flex: 1 1 55%;
+      margin-right: 0;
+      order: 1;
+    }
   }
 
   &__hero-icon {
@@ -66,18 +68,28 @@
     color: $alternate-dark-gray;
     font-size: 0.9rem;
     margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  &__actions {
-    display: flex;
+  &__btn {
     flex-shrink: 0;
-    gap: 0.5rem;
 
     @media (max-width: $sm) {
-      width: 100%;
+      &--logout {
+        flex: 0 0 auto;
+        order: 2;
+      }
 
-      .btn {
-        flex: 1 1 auto;
+      &--new {
+        flex: 1 1 45%;
+        order: 3;
+      }
+
+      &--back {
+        flex: 1 1 45%;
+        order: 4;
       }
     }
   }
