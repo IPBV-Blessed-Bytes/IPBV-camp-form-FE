@@ -18,6 +18,7 @@ import Loading from '@/components/Global/Loading';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
+import StatCards from '@/components/Admin/StatCards';
 
 const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
@@ -29,12 +30,30 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [userWristbands, setUserWristbands] = useState([]);
   const [cpfMatches, setCpfMatches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [checkinStats, setCheckinStats] = useState({ total: 0, checked: 0 });
   const { formStage } = useContext(AuthContext);
   const { campersTableButtonPermissions } = permissionsSections(userRole);
   const navigate = useNavigate();
   const abortControllerRef = useRef(null);
 
   scrollUp();
+
+  const fetchCheckinStats = async () => {
+    try {
+      const data = await listCampers({ size: MAX_SIZE_CAMPERS });
+      const campers = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+      setCheckinStats({
+        total: campers.length,
+        checked: campers.filter((camper) => camper.checkin).length,
+      });
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas de check-in:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCheckinStats();
+  }, []);
 
   const searchUsersByCpfPrefix = async (cpfPrefix) => {
     if (abortControllerRef.current) {
@@ -175,6 +194,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
           loggedUsername,
         );
       }
+
+      fetchCheckinStats();
     } catch (error) {
       console.error('Erro ao fazer check-in:', error);
       const status = error?.response?.status;
@@ -194,6 +215,17 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const goToCampersTable = () => {
     formStage === 'maintenance' ? navigate('/dev/acampantes') : navigate('/admin/acampantes');
   };
+
+  const pendingCheckins = Math.max(checkinStats.total - checkinStats.checked, 0);
+  const checkinPercent = checkinStats.total
+    ? Math.round((checkinStats.checked / checkinStats.total) * 100)
+    : 0;
+  const checkinStatItems = [
+    { label: 'Total de acampantes', value: checkinStats.total },
+    { label: 'Com check-in', value: checkinStats.checked, tone: 'free' },
+    { label: 'Pendentes', value: pendingCheckins, tone: 'used' },
+    { label: '% concluído', value: `${checkinPercent}%`, tone: 'info' },
+  ];
 
   const toolsButtons = [
     {
@@ -218,6 +250,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
       <div className="admin-subpage__content">
         {campersTableButtonPermissions && <AdminToolbar buttons={toolsButtons} />}
+
+        <StatCards items={checkinStatItems} />
 
       <div className="admin-panel checkin-search">
         <Form.Group controlId="cpf">
