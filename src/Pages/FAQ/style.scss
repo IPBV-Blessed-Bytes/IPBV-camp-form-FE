@@ -1,1 +1,69 @@
 @use '../../styles/Variables.scss' as *;
+
+.faq {
+  .card-title {
+    color: $dark-gray;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-text {
+    color: $alternate-dark-gray;
+    margin-bottom: 1.5rem;
+  }
+
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .accordion-item {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+  }
+
+  .accordion-button {
+    background: $white;
+    border-radius: 12px;
+    color: $dark-gray;
+    font-weight: 600;
+    padding: 1rem 1.15rem;
+
+    &:not(.collapsed) {
+      background: rgba($primary, 0.07);
+      box-shadow: none;
+      color: $primary;
+    }
+
+    &:not(.collapsed)::after {
+      filter: saturate(1.4);
+    }
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  .accordion-body {
+    color: $dark-gray;
+    line-height: 1.65;
+    padding: 0.35rem 1.15rem 1.15rem;
+  }
+
+  .faq-answer {
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .faq-link {
+    color: $primary;
+    font-weight: 600;
+  }
+}
