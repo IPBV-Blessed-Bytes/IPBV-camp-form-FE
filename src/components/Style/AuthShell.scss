@@ -1,0 +1,51 @@
+@use '../../styles/Variables.scss' as *;
+
+.auth-shell {
+  align-items: center;
+  background: $background-gray;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+
+  &__card {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    max-width: 440px;
+    padding: 2.25rem 2rem;
+    width: 100%;
+  }
+
+  &__brand {
+    align-items: center;
+    background: $primary;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba($primary, 0.35);
+    display: flex;
+    height: 58px;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    width: 58px;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+  }
+
+  &__subtitle {
+    color: $alternate-dark-gray;
+    font-size: 0.92rem;
+    margin: 0.35rem 0 0;
+    text-align: center;
+  }
+
+  &__body {
+    margin-top: 1.5rem;
+  }
+}

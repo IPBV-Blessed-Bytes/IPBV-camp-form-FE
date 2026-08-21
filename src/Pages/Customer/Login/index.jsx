@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import AuthShell from '@/components/Global/AuthShell';
 
 const CustomerLogin = () => {
   const navigate = useNavigate();
@@ -26,12 +27,8 @@ const CustomerLogin = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <Card style={{ maxWidth: 440, width: '100%' }} className="p-3 shadow-sm">
-        <Card.Body>
-          <h4 className="mb-1">Entrar</h4>
-          <p className="text-secondary small mb-4">Acesse sua conta para acompanhar sua inscrição.</p>
-          <Form onSubmit={handleSubmit}>
+    <AuthShell title="Entrar" subtitle="Acesse sua conta para acompanhar sua inscrição.">
+      <Form onSubmit={handleSubmit}>
             <Form.Group controlId="customerEmail">
               <Form.Label className="fw-bold small">E-mail</Form.Label>
               <Form.Control
@@ -75,11 +72,9 @@ const CustomerLogin = () => {
             <button type="button" className="btn btn-link w-100" onClick={() => navigate('/')}>
               ← Voltar ao formulário
             </button>
-          </Form>
-        </Card.Body>
-        <Loading loading={loading} />
-      </Card>
-    </Container>
+      </Form>
+      <Loading loading={loading} />
+    </AuthShell>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,6 +8,7 @@ import { registerGuest, resendConfirmation } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import AuthShell from '@/components/Global/AuthShell';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -53,13 +54,13 @@ const SignUp = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <Card style={{ maxWidth: 440, width: '100%' }} className="p-3 shadow-sm">
-        <Card.Body>
-          {registered ? (
-            <div>
-              <h4 className="mb-3">Confirme seu e-mail</h4>
-              <p>
+    <AuthShell
+      title={registered ? 'Confirme seu e-mail' : 'Criar conta'}
+      subtitle={registered ? null : 'Crie sua conta para fazer sua inscrição no acampamento.'}
+    >
+      {registered ? (
+        <div>
+          <p>
                 Enviamos um link de confirmação para <strong><em>{email}</em></strong>. Clique no link para ativar sua conta e
                 poder concluir sua inscrição. Esse e-mail pode aparecer na caixa de spam.
               </p>
@@ -73,11 +74,9 @@ const SignUp = () => {
                 ← Voltar ao formulário
               </button>
             </div>
-          ) : (
-            <>
-              <h4 className="mb-1">Criar conta</h4>
-              <p className="text-secondary small mb-4">Crie sua conta para fazer sua inscrição no acampamento.</p>
-              <Form onSubmit={handleSubmit}>
+      ) : (
+        <>
+          <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="signupEmail">
                   <Form.Label className="fw-bold small">E-mail</Form.Label>
                   <Form.Control
@@ -140,12 +139,10 @@ const SignUp = () => {
                   ← Voltar ao formulário
                 </button>
               </Form>
-            </>
-          )}
-        </Card.Body>
-        <Loading loading={loading} />
-      </Card>
-    </Container>
+        </>
+      )}
+      <Loading loading={loading} />
+    </AuthShell>
   );
 };
 

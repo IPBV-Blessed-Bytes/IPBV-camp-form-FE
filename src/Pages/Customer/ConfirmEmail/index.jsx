@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Button, Spinner } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { confirmEmail } from '@/services/auth';
+import AuthShell from '@/components/Global/AuthShell';
 
 const ConfirmEmail = () => {
   const navigate = useNavigate();
@@ -21,37 +22,31 @@ const ConfirmEmail = () => {
   }, [token]);
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <Card style={{ maxWidth: 440, width: '100%' }} className="p-3 shadow-sm">
-        <Card.Body>
-          <h4 className="mb-4">Confirmação de e-mail</h4>
+    <AuthShell title="Confirmação de e-mail" icon="checked">
+      {status === 'loading' && (
+        <div className="d-flex align-items-center justify-content-center gap-2 text-secondary">
+          <Spinner animation="border" size="sm" /> Confirmando seu e-mail...
+        </div>
+      )}
 
-          {status === 'loading' && (
-            <div className="d-flex align-items-center gap-2">
-              <Spinner animation="border" size="sm" /> Confirmando seu e-mail...
-            </div>
-          )}
+      {status === 'ok' && (
+        <div className="text-center">
+          <p className="text-success">Seu e-mail foi confirmado com sucesso! Sua conta está ativa.</p>
+          <Button variant="primary" className="w-100 mt-2" onClick={() => navigate('/entrar')}>
+            Entrar na minha conta
+          </Button>
+        </div>
+      )}
 
-          {status === 'ok' && (
-            <div>
-              <p className="text-success">Seu e-mail foi confirmado com sucesso! Sua conta está ativa.</p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/entrar')}>
-                Entrar na minha conta
-              </Button>
-            </div>
-          )}
-
-          {status === 'error' && (
-            <div>
-              <p className="text-danger">Link inválido ou expirado.</p>
-              <Button variant="primary" className="w-100" onClick={() => navigate('/criar-conta')}>
-                Voltar ao cadastro
-              </Button>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </Container>
+      {status === 'error' && (
+        <div className="text-center">
+          <p className="text-danger">Link inválido ou expirado.</p>
+          <Button variant="primary" className="w-100 mt-2" onClick={() => navigate('/criar-conta')}>
+            Voltar ao cadastro
+          </Button>
+        </div>
+      )}
+    </AuthShell>
   );
 };
 
