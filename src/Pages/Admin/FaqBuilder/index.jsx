@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { listFaqs, createFaq, updateFaq, deleteFaq } from '@/services/faqs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
 import CustomEditor from '@/components/Global/CustomEditor';
 import Loading from '@/components/Global/Loading';
@@ -103,6 +104,13 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const answeredCount = faqs.filter((faq) => (faq.answer || '').replace(/<[^>]*>/g, '').trim().length > 0).length;
+  const statItems = [
+    { label: 'Perguntas', value: faqs.length },
+    { label: 'Com resposta', value: answeredCount, tone: 'free' },
+    { label: 'Sem resposta', value: faqs.length - answeredCount, tone: faqs.length - answeredCount > 0 ? 'used' : 'default' },
+  ];
+
   return (
     <div className="admin-subpage faq-builder">
       <AdminSubpageHeader
@@ -113,6 +121,8 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       />
 
       <div className="faq-builder__content">
+        <StatCards items={statItems} />
+
         <div className="faq-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
             Nova Pergunta&nbsp;&nbsp;
