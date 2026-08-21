@@ -15,6 +15,28 @@
   &-list {
     list-style-type: none;
     padding-left: 0;
+
+    li {
+      background: $white;
+      border: 1px solid $alternate-light-gray;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 1rem 1.15rem;
+      transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+      }
+
+      h6 {
+        align-items: flex-start;
+        line-height: 1.55;
+        margin: 0;
+      }
+    }
   }
 
   &-itens {
