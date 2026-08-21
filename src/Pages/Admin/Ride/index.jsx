@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { Form, Accordion, Table, Button } from 'react-bootstrap';
+import { Form, Accordion, Table, Button, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +20,51 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
+
+const digitsOnly = (v) => (v || '').replace(/\D/g, '');
+
+const WhatsAppLink = ({ phone }) => {
+  const digits = digitsOnly(phone);
+  if (!digits) return <span className="text-secondary">—</span>;
+  const wa = digits.length > 11 ? digits : `55${digits}`;
+  return (
+    <a className="ride-contact" href={`https://wa.me/${wa}`} target="_blank" rel="noopener noreferrer">
+      <Icons typeIcon="whatsapp" iconSize={16} fill="#25D366" />
+      <span>{phone}</span>
+    </a>
+  );
+};
+WhatsAppLink.propTypes = { phone: PropTypes.string };
+
+const SeatIndicator = ({ total, used }) => {
+  const seatCount = Number(total) || 0;
+  const free = Math.max(seatCount - (used || 0), 0);
+  return (
+    <div className="ride-seats">
+      <span className="ride-seats__pills">
+        {Array.from({ length: seatCount }).map((_, i) => (
+          <span key={i} className={`ride-seats__pill ${i < (used || 0) ? 'is-used' : ''}`} />
+        ))}
+      </span>
+      {free > 0 ? (
+        <Badge bg="teal-blue">
+          {free} livre{free === 1 ? '' : 's'}
+        </Badge>
+      ) : (
+        <Badge bg="danger">Lotado</Badge>
+      )}
+    </div>
+  );
+};
+SeatIndicator.propTypes = { total: PropTypes.number, used: PropTypes.number };
+
+const RideStat = ({ label, value, tone }) => (
+  <div className={`ride-stat ride-stat--${tone || 'default'}`}>
+    <span className="ride-stat__value">{value}</span>
+    <span className="ride-stat__label">{label}</span>
+  </div>
+);
+RideStat.propTypes = { label: PropTypes.string, value: PropTypes.node, tone: PropTypes.string };
 
 const AdminRide = ({ loggedUsername }) => {
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
@@ -155,11 +200,23 @@ const AdminRide = ({ loggedUsername }) => {
     }
   };
 
+  const stats = useMemo(() => {
+    const cars = rideData.offerRide.length;
+    const totalSeats = rideData.offerRide.reduce((s, o) => s + (Number(o.seatsInTheCar) || 0), 0);
+    const usedSeats = rideData.offerRide.reduce((s, o) => s + (o.relationship?.length || 0), 0);
+    const freeSeats = Math.max(totalSeats - usedSeats, 0);
+    const waiting = rideData.needRide.length;
+    const totalPeople = usedSeats + waiting;
+    const matchedPct = totalPeople > 0 ? Math.round((usedSeats / totalPeople) * 100) : 0;
+    return { cars, totalSeats, usedSeats, freeSeats, waiting, matchedPct };
+  }, [rideData]);
+
   const offerRideColumns = useMemo(
     () => [
       {
         Header: 'Marcador:',
         accessor: 'select',
+        disableSortBy: true,
         Cell: ({ row }) => (
           <Form.Check
             type="checkbox"
@@ -179,14 +236,15 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Status:',
         accessor: 'status',
-        Cell: ({ row }) => {
-          const availableSeats = row.original.seatsInTheCar - (row.original.relationship?.length || 0);
-          return availableSeats > 0 ? `${availableSeats} vagas disponíveis` : <b>CARRO LOTADO</b>;
-        },
+        disableSortBy: true,
+        Cell: ({ row }) => (
+          <SeatIndicator total={row.original.seatsInTheCar} used={row.original.relationship?.length || 0} />
+        ),
       },
       {
         Header: 'Contato:',
         accessor: 'cellPhone',
+        Cell: ({ value }) => <WhatsAppLink phone={value} />,
       },
       {
         Header: 'Observação:',
@@ -195,6 +253,7 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Caronas Relacionadas:',
         accessor: 'relationship',
+        disableSortBy: true,
         Cell: ({ row }) => {
           return (
             <Accordion>
@@ -238,6 +297,7 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Marcador:',
         accessor: 'select',
+        disableSortBy: true,
         Cell: ({ row }) => (
           <Form.Check
             type="checkbox"
@@ -253,6 +313,7 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Contato:',
         accessor: 'cellPhone',
+        Cell: ({ value }) => <WhatsAppLink phone={value} />,
       },
       {
         Header: 'Observação:',
@@ -261,6 +322,7 @@ const AdminRide = ({ loggedUsername }) => {
       {
         Header: 'Caronas Disponíveis:',
         accessor: 'offerSelect',
+        disableSortBy: true,
         Cell: ({ row }) => {
           return (
             <Form.Select onChange={(e) => handleCreateRelationship(e.target.value, row.original.id)} defaultValue="">
@@ -268,13 +330,14 @@ const AdminRide = ({ loggedUsername }) => {
                 Selecione uma carona...
               </option>
               {rideData.offerRide
-                .filter((offer) => {
-                  const availableSeats = offer.seatsInTheCar - offer.relationship.length;
-                  return availableSeats >= 1;
-                })
+                .map((offer) => ({
+                  ...offer,
+                  availableSeats: (offer.seatsInTheCar || 0) - (offer.relationship?.length || 0),
+                }))
+                .filter((offer) => offer.availableSeats >= 1)
                 .map((offer) => (
                   <option key={offer.id} value={offer.id}>
-                    {offer.name}
+                    {offer.name} — {offer.availableSeats} vaga{offer.availableSeats === 1 ? '' : 's'}
                   </option>
                 ))}
             </Form.Select>
@@ -307,9 +370,11 @@ const AdminRide = ({ loggedUsername }) => {
                       <th className="table-cells-header" key={columnKey} {...restColumnProps}>
                         <div className="d-flex justify-content-between align-items-center">
                           {column.render('Header')}
-                          <span className="sort-icon-wrapper">
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
-                          </span>
+                          {column.canSort && (
+                            <span className="sort-icon-wrapper">
+                              <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill="#fff" />
+                            </span>
+                          )}
                         </div>
                       </th>
                     );
@@ -363,6 +428,15 @@ const AdminRide = ({ loggedUsername }) => {
       />
 
       <div className="admin-subpage__content">
+        <div className="ride-stats">
+          <RideStat label="Carros" value={stats.cars} />
+          <RideStat label="Vagas totais" value={stats.totalSeats} />
+          <RideStat label="Ocupadas" value={stats.usedSeats} tone="used" />
+          <RideStat label="Livres" value={stats.freeSeats} tone="free" />
+          <RideStat label="Aguardando carona" value={stats.waiting} tone="waiting" />
+          <RideStat label="Alocados" value={`${stats.matchedPct}%`} tone="pct" />
+        </div>
+
         <AdminToolbar buttons={toolsButtons} />
 
         <Accordion className="mb-3">
@@ -407,6 +481,7 @@ const AdminRide = ({ loggedUsername }) => {
 
 AdminRide.propTypes = {
   loggedUsername: PropTypes.string,
+  value: PropTypes.string,
   rideData: PropTypes.shape({
     offerRide: PropTypes.arrayOf(
       PropTypes.shape({

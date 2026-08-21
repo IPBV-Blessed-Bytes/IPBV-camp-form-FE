@@ -1,1 +1,92 @@
 @use '../../../styles/Variables.scss' as *;
+
+.ride-stats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: $md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: $sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ride-stat {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-left: 4px solid $primary;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+
+  &__value {
+    color: $dark-gray;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__label {
+    color: $alternate-dark-gray;
+    font-size: 0.78rem;
+  }
+
+  &--used {
+    border-left-color: #f0ad4e;
+  }
+
+  &--free {
+    border-left-color: #28a745;
+  }
+
+  &--waiting {
+    border-left-color: #dc3545;
+  }
+
+  &--pct {
+    border-left-color: #6f42c1;
+  }
+}
+
+.ride-seats {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  &__pills {
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  &__pill {
+    background: transparent;
+    border: 1.5px solid $primary;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+
+    &.is-used {
+      background: $primary;
+    }
+  }
+}
+
+.ride-contact {
+  align-items: center;
+  color: $dark-gray;
+  display: inline-flex;
+  gap: 0.35rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
