@@ -11,6 +11,11 @@ export const createCamper = async (payload) => {
   return data;
 };
 
+export const bulkImportCampers = async (payload) => {
+  const { data } = await authFetcher.post('/camper/bulk-import', payload);
+  return data;
+};
+
 export const updateCamper = async (id, payload) => {
   const { data } = await authFetcher.put(`/camper/${id}`, payload);
   return data;
