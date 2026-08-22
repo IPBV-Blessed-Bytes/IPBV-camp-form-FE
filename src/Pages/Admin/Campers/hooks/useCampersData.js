@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import { createCamper, updateCamper, deleteCamper, deleteCampers } from '@/services/campers';
+import { createCamper, updateCamper, deleteCamper, deleteCampers, bulkImportCampers } from '@/services/campers';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { useCampersList, CAMPERS_QUERY_KEY } from '@/hooks/useCampersList';
@@ -60,13 +60,15 @@ const useCampersData = ({ loggedUsername }) => {
   const createMutation = useMutation({ mutationFn: (payload) => createCamper(payload) });
   const deleteOneMutation = useMutation({ mutationFn: (id) => deleteCamper(id) });
   const deleteManyMutation = useMutation({ mutationFn: (ids) => deleteCampers(ids) });
+  const importMutation = useMutation({ mutationFn: (payload) => bulkImportCampers(payload) });
 
   const loading =
     isLoading ||
     updateMutation.isPending ||
     createMutation.isPending ||
     deleteOneMutation.isPending ||
-    deleteManyMutation.isPending;
+    deleteManyMutation.isPending ||
+    importMutation.isPending;
 
   const saveEdit = async ({ editFormData, editRowIndex }) => {
     const payload = buildEditPayload(editFormData);
@@ -118,6 +120,23 @@ const useCampersData = ({ loggedUsername }) => {
     }
   };
 
+  const importCampers = async ({ rows, updateExisting }) => {
+    try {
+      const result = await importMutation.mutateAsync({ rows, updateExisting });
+      setFormSubmitted(true);
+      queryClient.invalidateQueries({ queryKey: CAMPERS_QUERY_KEY });
+      registerLog(
+        `Importou planilha de inscrições (${result?.created || 0} criadas, ${result?.updated || 0} atualizadas)`,
+        loggedUsername,
+      );
+      return result;
+    } catch (error) {
+      console.error('Error importing campers:', error);
+      toast.error(getApiErrorMessage(error) || 'Ocorreu um erro ao importar a planilha. Tente novamente.');
+      return null;
+    }
+  };
+
   const deleteSelected = async ({ selectedRows }) => {
     try {
       const idsToDelete = selectedRows.map((row) => data[row.index].id);
@@ -151,6 +170,7 @@ const useCampersData = ({ loggedUsername }) => {
     fetchData: refetch,
     saveEdit,
     addCamper,
+    importCampers,
     deleteSelected,
     deleteOne,
   };
