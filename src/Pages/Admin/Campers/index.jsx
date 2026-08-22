@@ -13,6 +13,7 @@ import StatCards from '@/components/Admin/StatCards';
 import CoreTable from '@/components/Admin/CampersTable/CoreTable';
 import TablePagination from '@/components/Admin/CampersTable/TablePagination';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
+import ImportCampersModal from '@/components/Admin/CampersTable/ImportCampersModal';
 
 import useCampersData from './hooks/useCampersData';
 import { useProductCatalog } from './hooks/useProductCatalog';
@@ -42,6 +43,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     setFormSubmitted,
     saveEdit,
     addCamper,
+    importCampers,
     deleteSelected,
     deleteOne,
   } = useCampersData({ loggedUsername });
@@ -58,6 +60,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectAllRows, setSelectAllRows] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -237,6 +240,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRowsPermissions,
     },
     {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'import-campers',
+      name: 'Importar Planilha',
+      onClick: () => setShowImportModal(true),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+      condition: adminTableCreateRegistrationPermissions,
+    },
+    {
       fill: '#fff',
       iconSize: 22,
       id: 'add-camper',
@@ -306,6 +319,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleCloseDeleteModal={() => setShowDeleteModal(false)}
         handleConfirmDeleteAll={handleConfirmDeleteAll}
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
+      />
+
+      <ImportCampersModal
+        show={showImportModal}
+        onHide={() => setShowImportModal(false)}
+        onImport={importCampers}
+        loading={loading}
       />
 
         <Loading loading={loading} />
