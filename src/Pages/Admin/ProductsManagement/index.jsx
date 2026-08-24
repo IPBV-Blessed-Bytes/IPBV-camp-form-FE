@@ -360,7 +360,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
             <h6 className="mt-3">
               <b>Preço e vagas por lote</b>
             </h6>
-            <p className="text-secondary small">Deixe as vagas em branco para &quot;ilimitado&quot;.</p>
+            <p className="text-secondary small">Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas.</p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (
                 <div key={lot.id} className="lot-price-card">
@@ -380,7 +380,6 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                       <Form.Control
                         type="number"
                         min="0"
-                        placeholder="ilimitado"
                         value={lotPrices[lot.id]?.vacancies ?? ''}
                         onChange={(e) => setLotField(lot.id, 'vacancies', e.target.value)}
                       />
