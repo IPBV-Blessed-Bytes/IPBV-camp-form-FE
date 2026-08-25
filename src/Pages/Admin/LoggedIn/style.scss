@@ -3,6 +3,7 @@
 
 $admin-accent-registered: $primary;
 $admin-accent-ride: $orange;
+$admin-accent-bus: $purple;
 $admin-accent-discount: $intense-green;
 $admin-accent-rooms: $secondary;
 $admin-accent-teams: $baby-blue;
@@ -114,7 +115,7 @@ $admin-accent-checkin: $slime-green;
     --session-accent: #{$admin-accent-ride};
   }
   &--bus-card {
-    --session-accent: #ef8c3b;
+    --session-accent: #{$admin-accent-bus};
   }
   &--discount-card {
     --session-accent: #{$admin-accent-discount};
