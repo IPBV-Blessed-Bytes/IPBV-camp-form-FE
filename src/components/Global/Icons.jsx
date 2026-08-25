@@ -542,19 +542,6 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
         </svg>
       )}
 
-      {typeIcon === 'bus' && (
-        <svg
-          className={className}
-          onClick={onClick}
-          height={iconSize ? iconSize + 'px' : '30px'}
-          width={iconSize ? iconSize + 'px' : '30px'}
-          fill={fill || 'currentColor'}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <path d="M4 16c0 .88.39 1.67 1 2.22V20a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4S4 2.5 4 6v10zm3.5 1a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm9 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM18 11H6V6h12v5z" />
-        </svg>
-      )}
       {typeIcon === 'ride' && (
         <svg
           className={className}
