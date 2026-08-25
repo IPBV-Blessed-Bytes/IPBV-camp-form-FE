@@ -160,14 +160,15 @@ const AdminBus = ({ loggedUsername, userRole }) => {
           onHide={() => setShowEditModal(false)}
           variant="confirm"
           icon="edit"
-          title="Editar passageiro do ônibus"
+          iconFill='none'
+          title="Editar Passageiro do Ônibus"
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowEditModal(false)} disabled={saving}>
                 Cancelar
               </Button>
-              <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
+              <Button variant="confirm" onClick={handleSave} disabled={saving}>
                 {saving ? 'Salvando…' : 'Salvar alterações'}
               </Button>
             </>
@@ -175,7 +176,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
         >
           <Form>
             {EDIT_FIELDS.map((field) => (
-              <Form.Group key={field.key} className="mt-2">
+              <Form.Group key={field.key} className="mb-3">
                 <Form.Label>
                   <b>{field.label}:</b>
                 </Form.Label>
