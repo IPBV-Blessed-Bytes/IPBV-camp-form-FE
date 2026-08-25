@@ -16,6 +16,7 @@ import {
   renameRoom as renameRoomRequest,
   deleteRoom,
   removeCamperFromRoom,
+  reorderRooms,
 } from '@/services/rooms';
 import { registerLog } from '@/services/logs';
 import { useRoomsList } from '@/hooks/useRoomsList';
@@ -28,6 +29,8 @@ const AdminRooms = ({ loggedUsername }) => {
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const { rooms, refetch: refetchRooms } = useRoomsList();
   const [roomSortOrder, setRoomSortOrder] = useState('asc');
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
   const [selectedCamper, setSelectedCamper] = useState({});
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -279,13 +282,56 @@ const AdminRooms = ({ loggedUsername }) => {
     [],
   );
 
-  const sortedRooms = useMemo(() => {
-    return [...rooms].sort((a, b) =>
-      roomSortOrder === 'asc'
-        ? a.name.localeCompare(b.name, 'pt-BR', { numeric: true, sensitivity: 'base' })
-        : b.name.localeCompare(a.name, 'pt-BR', { numeric: true, sensitivity: 'base' }),
-    );
-  }, [rooms, roomSortOrder]);
+  const handleRoomDragStart = (index) => (e) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleRoomDragOver = (index) => (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (index !== dragOverIndex) setDragOverIndex(index);
+  };
+
+  const handleRoomDragEnd = () => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleRoomDrop = (targetIndex) => async (e) => {
+    e.preventDefault();
+    const sourceIndex = dragIndex;
+    setDragIndex(null);
+    setDragOverIndex(null);
+    if (sourceIndex === null || sourceIndex === targetIndex) return;
+    const reordered = [...rooms];
+    const [moved] = reordered.splice(sourceIndex, 1);
+    reordered.splice(targetIndex, 0, moved);
+    try {
+      await reorderRooms(reordered.map((room) => room.id));
+      refetchRooms();
+    } catch (error) {
+      toast.error('Erro ao reordenar os quartos');
+    }
+  };
+
+  const persistAlphabeticalOrder = async () => {
+    const nextOrder = roomSortOrder === 'asc' ? 'desc' : 'asc';
+    const orderedIds = [...rooms]
+      .sort((a, b) =>
+        nextOrder === 'asc'
+          ? a.name.localeCompare(b.name, 'pt-BR', { numeric: true, sensitivity: 'base' })
+          : b.name.localeCompare(a.name, 'pt-BR', { numeric: true, sensitivity: 'base' }),
+      )
+      .map((room) => room.id);
+    setRoomSortOrder(nextOrder);
+    try {
+      await reorderRooms(orderedIds);
+      refetchRooms();
+    } catch (error) {
+      toast.error('Erro ao ordenar os quartos');
+    }
+  };
 
   const sortedDropdownCampers = useMemo(
     () =>
@@ -435,19 +481,43 @@ const AdminRooms = ({ loggedUsername }) => {
       </div>
 
       <div className="d-flex justify-content-end mb-3">
-        <Button
-          variant="outline-teal-blue"
-          onClick={() => setRoomSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-        >
+        <Button variant="outline-teal-blue" onClick={persistAlphabeticalOrder}>
           <Icons typeIcon="sort" iconSize={18} fill="#007185" />
           &nbsp; Ordenar quartos ({roomSortOrder === 'asc' ? 'A ⭢ Z' : 'Z ⭢ A'})
         </Button>
       </div>
 
       <Accordion className="mb-4" defaultActiveKey="1">
-        {sortedRooms.map((room) => (
-          <Accordion.Item eventKey={room.id} key={room.id}>
-            <Accordion.Header>{room.name}</Accordion.Header>
+        {rooms.map((room, index) => (
+          <Accordion.Item
+            eventKey={room.id}
+            key={room.id}
+            className={[
+              dragIndex === index ? 'is-dragging' : '',
+              dragOverIndex === index && dragIndex !== null && dragIndex !== index ? 'is-drop-target' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            onDragOver={handleRoomDragOver(index)}
+            onDrop={handleRoomDrop(index)}
+            onDragEnd={handleRoomDragEnd}
+          >
+            <Accordion.Header>
+              <span
+                className="rooms-reorder"
+                draggable
+                title="Arraste para reordenar"
+                style={{ cursor: 'grab' }}
+                onClick={(e) => e.stopPropagation()}
+                onDragStart={handleRoomDragStart(index)}
+                onDragEnd={handleRoomDragEnd}
+              >
+                <span className="rooms-reorder__handle" aria-hidden="true">
+                  ⠿
+                </span>
+              </span>
+              <span className="rooms-reorder-name">{room.name}</span>
+            </Accordion.Header>
             <Accordion.Body>
               <div className="p-3 rounded shadow-sm bg-light mb-3">
                 <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">

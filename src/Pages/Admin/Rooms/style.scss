@@ -1,2 +1,42 @@
 @use '../../../styles/Variables.scss' as *;
 
+.rooms-reorder {
+  align-items: center;
+  cursor: grab;
+  display: inline-flex;
+  margin-right: 0.6rem;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.rooms-reorder__handle {
+  align-items: center;
+  border: 1px solid rgba($primary, 0.35);
+  border-radius: 6px;
+  color: $primary;
+  display: inline-flex;
+  font-size: 1.25rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0.5rem 0.5rem 0.1875rem 0.5rem;
+  transition: background 0.15s ease;
+  user-select: none;
+
+  &:hover {
+    background: rgba($primary, 0.1);
+  }
+}
+
+.rooms-reorder-name {
+  font-weight: 500;
+}
+
+.accordion-item.is-dragging {
+  opacity: 0.5;
+}
+
+.accordion-item.is-drop-target {
+  border-top: 2px solid $primary;
+}

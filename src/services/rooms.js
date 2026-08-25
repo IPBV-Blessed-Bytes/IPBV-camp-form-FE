@@ -15,6 +15,11 @@ export const createRoom = async (payload) => {
   return data;
 };
 
+export const reorderRooms = async (orderedIds) => {
+  const { data } = await authFetcher.put('/rooms/reorder', { orderedIds });
+  return data;
+};
+
 export const updateRoom = async (roomId, payload) => {
   const { data } = await authFetcher.put(`/rooms/${roomId}`, payload);
   return data;
