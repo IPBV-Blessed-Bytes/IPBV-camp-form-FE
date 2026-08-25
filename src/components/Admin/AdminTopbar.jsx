@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
-import { eventPath } from '@/config/eventScope';
+import { eventPath, getEventSlug, setSelectedEvent } from '@/config/eventScope';
+import { listAllEvents } from '@/services/events';
 
 const getInitials = (name) => {
   if (!name) return '?';
@@ -17,6 +18,9 @@ const AdminTopbar = ({ username, logout }) => {
   const menuRef = useRef(null);
   const navigate = useNavigate();
 
+  const [events, setEvents] = useState([]);
+  const currentSlug = getEventSlug();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -27,12 +31,43 @@ const AdminTopbar = ({ username, logout }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    listAllEvents()
+      .then((list) => setEvents(Array.isArray(list) ? list : list?.events || []))
+      .catch(() => setEvents([]));
+  }, []);
+
+  const handleEventChange = (slug) => {
+    if (!slug || slug === currentSlug) return;
+    setSelectedEvent(slug);
+    // Re-scope the whole admin to the chosen event (fetchers read the selected slug).
+    window.location.assign('/admin');
+  };
+
   return (
     <header className="admin-topbar">
       <div className="admin-topbar__brand">
         <span className="admin-topbar__brand-dot" />
         <h1 className="admin-topbar__brand-title">Painel Administrativo</h1>
       </div>
+
+      {events.length > 0 && (
+        <div className="admin-topbar__event">
+          <span className="admin-topbar__event-label">Evento:</span>
+          <select
+            className="admin-topbar__event-select"
+            value={currentSlug}
+            onChange={(e) => handleEventChange(e.target.value)}
+            aria-label="Selecionar evento"
+          >
+            {events.map((event) => (
+              <option key={event.slug} value={event.slug}>
+                {event.name || event.slug}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="admin-topbar__actions" ref={menuRef}>
         <button
