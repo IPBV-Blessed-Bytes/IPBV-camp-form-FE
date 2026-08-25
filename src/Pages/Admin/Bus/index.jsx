@@ -37,7 +37,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
 
   const [search, setSearch] = useState('');
   const [busFilter, setBusFilter] = useState('all'); // 'all' | 'normal' | 'equipe'
-  const [sortAsc, setSortAsc] = useState(null); // null = ordem natural, true = A→Z, false = Z→A
+  const [sortAsc, setSortAsc] = useState(true); // true = A→Z, false = Z→A
   const [showEditModal, setShowEditModal] = useState(false);
   const [editing, setEditing] = useState(null); // { camper, originalIndex }
   const [form, setForm] = useState({});
@@ -66,15 +66,13 @@ const AdminBus = ({ loggedUsername, userRole }) => {
       );
     }
 
-    if (sortAsc !== null) {
-      list = [...list].sort((a, b) => {
-        const cmp = (a.camper.personalInformation?.name || '').localeCompare(
-          b.camper.personalInformation?.name || '',
-          'pt-BR',
-        );
-        return sortAsc ? cmp : -cmp;
-      });
-    }
+    list = [...list].sort((a, b) => {
+      const cmp = (a.camper.personalInformation?.name || '').localeCompare(
+        b.camper.personalInformation?.name || '',
+        'pt-BR',
+      );
+      return sortAsc ? cmp : -cmp;
+    });
 
     return list;
   }, [data, search, busFilter, sortAsc]);
@@ -91,8 +89,8 @@ const AdminBus = ({ loggedUsername, userRole }) => {
     { label: 'Ônibus Equipe', value: equipeCount, tone: 'used' },
   ];
 
-  const toggleSort = () => setSortAsc((prev) => (prev === true ? false : true));
-  const sortLabel = sortAsc === null ? 'Ordenar por nome' : sortAsc ? 'Nome (A → Z)' : 'Nome (Z → A)';
+  const toggleSort = () => setSortAsc((prev) => !prev);
+  const sortLabel = sortAsc ? 'Nome (A → Z)' : 'Nome (Z → A)';
 
   const openEdit = ({ camper, originalIndex }) => {
     setEditing({ camper, originalIndex });
@@ -145,13 +143,10 @@ const AdminBus = ({ loggedUsername, userRole }) => {
 
         <div className="bus-toolbar">
           <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou CPF..." />
+          <div className="d-flex"></div>
           <FilterChips options={busChips} value={busFilter} onChange={setBusFilter} />
-          <Button
-            variant={sortAsc === null ? 'outline-teal-blue' : 'teal-blue'}
-            className="bus-toolbar__sort"
-            onClick={toggleSort}
-          >
-            <Icons typeIcon="sort" iconSize={18} fill={sortAsc === null ? '#007185' : '#fff'} />
+          <Button variant="outline-teal-blue" className="bus-toolbar__sort" onClick={toggleSort}>
+            <Icons typeIcon="sort" iconSize={18} fill="#007185" />
             &nbsp;{sortLabel}
           </Button>
         </div>
