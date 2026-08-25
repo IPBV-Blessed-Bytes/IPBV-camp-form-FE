@@ -11,6 +11,7 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
+import FilterChips from '@/components/Admin/FilterChips';
 
 import useCampersData from '../Campers/hooks/useCampersData';
 
@@ -35,6 +36,8 @@ const AdminBus = ({ loggedUsername, userRole }) => {
   const { data, loading, saveEdit } = useCampersData({ loggedUsername });
 
   const [search, setSearch] = useState('');
+  const [busFilter, setBusFilter] = useState('all'); // 'all' | 'normal' | 'equipe'
+  const [sortAsc, setSortAsc] = useState(null); // null = ordem natural, true = A→Z, false = Z→A
   const [showEditModal, setShowEditModal] = useState(false);
   const [editing, setEditing] = useState(null); // { camper, originalIndex }
   const [form, setForm] = useState({});
@@ -42,23 +45,54 @@ const AdminBus = ({ loggedUsername, userRole }) => {
 
   const canEdit = userRole === 'admin' || userRole === 'collaborator';
 
+  const allBus = useMemo(() => (data || []).filter(goesByBus), [data]);
+  const equipeCount = useMemo(() => allBus.filter(isTeamBus).length, [allBus]);
+  const normalCount = allBus.length - equipeCount;
+
   const busCampers = useMemo(() => {
-    const list = (data || [])
+    let list = (data || [])
       .map((camper, originalIndex) => ({ camper, originalIndex }))
       .filter(({ camper }) => goesByBus(camper));
-    const term = search.trim().toLowerCase();
-    if (!term) return list;
-    return list.filter(
-      ({ camper }) =>
-        (camper.personalInformation?.name || '').toLowerCase().includes(term) ||
-        (camper.personalInformation?.cpf || '').toLowerCase().includes(term),
-    );
-  }, [data, search]);
 
-  const statItems = useMemo(() => {
-    const total = (data || []).filter(goesByBus).length;
-    return [{ label: 'Passageiros no ônibus', value: total, tone: 'info' }];
-  }, [data]);
+    if (busFilter === 'equipe') list = list.filter(({ camper }) => isTeamBus(camper));
+    else if (busFilter === 'normal') list = list.filter(({ camper }) => !isTeamBus(camper));
+
+    const term = search.trim().toLowerCase();
+    if (term) {
+      list = list.filter(
+        ({ camper }) =>
+          (camper.personalInformation?.name || '').toLowerCase().includes(term) ||
+          (camper.personalInformation?.cpf || '').toLowerCase().includes(term),
+      );
+    }
+
+    if (sortAsc !== null) {
+      list = [...list].sort((a, b) => {
+        const cmp = (a.camper.personalInformation?.name || '').localeCompare(
+          b.camper.personalInformation?.name || '',
+          'pt-BR',
+        );
+        return sortAsc ? cmp : -cmp;
+      });
+    }
+
+    return list;
+  }, [data, search, busFilter, sortAsc]);
+
+  const busChips = [
+    { value: 'all', label: 'Todos', count: allBus.length },
+    { value: 'normal', label: 'Ônibus normal', count: normalCount },
+    { value: 'equipe', label: 'Ônibus Equipe', count: equipeCount },
+  ];
+
+  const statItems = [
+    { label: 'Passageiros no ônibus', value: allBus.length, tone: 'info' },
+    { label: 'Ônibus normal', value: normalCount, tone: 'accent' },
+    { label: 'Ônibus Equipe', value: equipeCount, tone: 'used' },
+  ];
+
+  const toggleSort = () => setSortAsc((prev) => (prev === true ? false : true));
+  const sortLabel = sortAsc === null ? 'Ordenar por nome' : sortAsc ? 'Nome (A → Z)' : 'Nome (Z → A)';
 
   const openEdit = ({ camper, originalIndex }) => {
     setEditing({ camper, originalIndex });
@@ -111,6 +145,15 @@ const AdminBus = ({ loggedUsername, userRole }) => {
 
         <div className="bus-toolbar">
           <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou CPF..." />
+          <FilterChips options={busChips} value={busFilter} onChange={setBusFilter} />
+          <Button
+            variant={sortAsc === null ? 'outline-teal-blue' : 'teal-blue'}
+            className="bus-toolbar__sort"
+            onClick={toggleSort}
+          >
+            <Icons typeIcon="sort" iconSize={18} fill={sortAsc === null ? '#007185' : '#fff'} />
+            &nbsp;{sortLabel}
+          </Button>
         </div>
 
         <SectionHeader title="Passageiros" count={busCampers.length} />
