@@ -143,12 +143,13 @@ const AdminBus = ({ loggedUsername, userRole }) => {
 
         <div className="bus-toolbar">
           <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou CPF..." />
-          <div className="d-flex"></div>
-          <FilterChips options={busChips} value={busFilter} onChange={setBusFilter} />
-          <Button variant="outline-teal-blue" className="bus-toolbar__sort" onClick={toggleSort}>
-            <Icons typeIcon="sort" iconSize={18} fill="#007185" />
-            &nbsp;{sortLabel}
-          </Button>
+          <div className="d-flex flex-grow-1 align-items-center gap-2 flex-wrap">
+            <FilterChips options={busChips} value={busFilter} onChange={setBusFilter} />
+            <Button variant="outline-teal-blue" className="bus-toolbar__sort ms-auto" onClick={toggleSort}>
+              <Icons typeIcon="sort" iconSize={18} fill="#007185" />
+              &nbsp;{sortLabel}
+            </Button>
+          </div>
         </div>
 
         <SectionHeader title="Passageiros" count={busCampers.length} />
