@@ -212,6 +212,14 @@ const AdminLoggedIn = ({
       iconSize: 50,
     },
     {
+      permission: registeredButtonHomePermissions,
+      path: 'onibus',
+      cardType: 'bus-card',
+      title: 'Ônibus',
+      typeIcon: 'bus',
+      iconSize: 50,
+    },
+    {
       permission: discountButtonHomePermissions,
       path: 'descontos',
       cardType: 'discount-card',

@@ -113,6 +113,9 @@ $admin-accent-checkin: $slime-green;
   &--ride-card {
     --session-accent: #{$admin-accent-ride};
   }
+  &--bus-card {
+    --session-accent: #ef8c3b;
+  }
   &--discount-card {
     --session-accent: #{$admin-accent-discount};
   }

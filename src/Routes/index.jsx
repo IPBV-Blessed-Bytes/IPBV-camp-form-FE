@@ -36,6 +36,7 @@ import BeforePayment from '@/Pages/BeforePayment';
 
 const AdminCampers = lazy(() => import('../Pages/Admin/Campers'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
+const AdminBus = lazy(() => import('../Pages/Admin/Bus'));
 const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
 const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
@@ -203,6 +204,18 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="RIDES_MANAGE">
                   <AdminRide formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/onibus')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
+                  userRole={userRole}
+                  requiredPermission="REGISTRATIONS_READ"
+                >
+                  <AdminBus formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
               }
             />
