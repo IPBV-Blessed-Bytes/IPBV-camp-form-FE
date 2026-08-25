@@ -40,6 +40,8 @@ const AdminRooms = ({ loggedUsername }) => {
   const [roomToRename, setRoomToRename] = useState(null);
   const [showDeleteCamperFromRoomModal, setShowDeleteCamperFromRoomModal] = useState(false);
   const [camperToDelete, setCamperToDelete] = useState(null);
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
 
   scrollUp();
 
@@ -280,11 +282,33 @@ const AdminRooms = ({ loggedUsername }) => {
     [],
   );
 
-  const moveRoom = async (index, direction) => {
-    const target = index + direction;
-    if (target < 0 || target >= rooms.length) return;
+  const handleRoomDragStart = (index) => (e) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleRoomDragOver = (index) => (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (index !== dragOverIndex) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleRoomDragEnd = () => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleRoomDrop = (targetIndex) => async (e) => {
+    e.preventDefault();
+    const sourceIndex = dragIndex;
+    setDragIndex(null);
+    setDragOverIndex(null);
+    if (sourceIndex === null || sourceIndex === targetIndex) return;
     const reordered = [...rooms];
-    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    const [moved] = reordered.splice(sourceIndex, 1);
+    reordered.splice(targetIndex, 0, moved);
     try {
       await reorderRooms(reordered.map((room) => room.id));
       refetchRooms();
@@ -467,32 +491,31 @@ const AdminRooms = ({ loggedUsername }) => {
 
       <Accordion className="mb-4" defaultActiveKey="1">
         {rooms.map((room, index) => (
-          <Accordion.Item eventKey={room.id} key={room.id}>
+          <Accordion.Item
+            eventKey={room.id}
+            key={room.id}
+            className={[
+              dragIndex === index ? 'is-dragging' : '',
+              dragOverIndex === index && dragIndex !== null && dragIndex !== index ? 'is-drop-target' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            onDragOver={handleRoomDragOver(index)}
+            onDrop={handleRoomDrop(index)}
+            onDragEnd={handleRoomDragEnd}
+          >
             <Accordion.Header>
-              <span className="rooms-reorder" onClick={(e) => e.stopPropagation()}>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={`rooms-reorder__btn ${index === 0 ? 'is-disabled' : ''}`}
-                  title="Mover para cima"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    moveRoom(index, -1);
-                  }}
-                >
-                  <Icons typeIcon="arrow-top" iconSize={24} fill="#007185" />
-                </span>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={`rooms-reorder__btn rooms-reorder__btn--down ${index === rooms.length - 1 ? 'is-disabled' : ''}`}
-                  title="Mover para baixo"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    moveRoom(index, 1);
-                  }}
-                >
-                  <Icons typeIcon="arrow-top" iconSize={24} fill="#007185" />
+              <span
+                className="rooms-reorder"
+                draggable
+                title="Arraste para reordenar"
+                style={{ cursor: 'grab' }}
+                onClick={(e) => e.stopPropagation()}
+                onDragStart={handleRoomDragStart(index)}
+                onDragEnd={handleRoomDragEnd}
+              >
+                <span className="rooms-reorder__handle" aria-hidden="true">
+                  ⠿
                 </span>
               </span>
               <span className="rooms-reorder-name">{room.name}</span>
