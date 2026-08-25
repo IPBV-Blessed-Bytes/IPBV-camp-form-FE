@@ -2,7 +2,6 @@ import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import campLogo from '../../../../public/Images/camp_logo.png';
 import Icons from '@/components/Global/Icons';
 import scrollUp from '@/hooks/useScrollUp';
 
@@ -22,7 +21,30 @@ const AdminLoggedOut = ({
       <div className="login-content">
         <Form className="login-admin-card">
           <header className="login-admin-card__header">
-            <img src={campLogo} alt="Logo do acampamento" className="login-admin-card__logo" />
+            <svg
+              className="login-admin-card__logo"
+              viewBox="0 0 100 92"
+              fill="none"
+              role="img"
+              aria-label="Logo"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 46 L50 8 L92 46"
+                stroke="currentColor"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M20 46 V84 H80 V46"
+                stroke="currentColor"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path d="M50 50 V80 M37 62 H63" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
+            </svg>
             <h4 className="login-admin-card__title">Painel Administrativo</h4>
             <p className="login-admin-card__subtitle">Entre com suas credenciais para acessar</p>
           </header>
