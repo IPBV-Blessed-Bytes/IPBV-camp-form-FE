@@ -34,7 +34,6 @@ export const textFilterFn = (rows, ids, filterValue) => {
 export const ageFilterFn = (rows, id, filterValue) => {
   if (!filterValue) return rows;
 
-  // Range syntax "min-max" (e.g. "2-10") filters by inclusive age range.
   const rangeMatch = String(filterValue).match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
   if (rangeMatch) {
     const min = Number(rangeMatch[1]);
