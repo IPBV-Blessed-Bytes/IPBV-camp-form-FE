@@ -38,16 +38,8 @@ const formatCurrentDate = () => {
 const AdminCampers = ({ loggedUsername, userRole }) => {
   scrollUp();
 
-  const {
-    data,
-    loading,
-    setFormSubmitted,
-    saveEdit,
-    addCamper,
-    importCampers,
-    deleteSelected,
-    deleteOne,
-  } = useCampersData({ loggedUsername });
+  const { data, loading, setFormSubmitted, saveEdit, addCamper, importCampers, deleteSelected, deleteOne } =
+    useCampersData({ loggedUsername });
 
   const catalog = useProductCatalog();
 
@@ -224,10 +216,11 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeIcon: 'filter',
     },
     {
-      fill: '#007185',
+      buttonClassName: childrenFilter && 'btn-bw',
+      fill: childrenFilter ? '#fff' : '#007185',
       iconSize: 22,
       id: 'children-filter',
-      name: childrenFilter ? 'Mostrar todos' : 'Crianças (2–10 anos)',
+      name: childrenFilter ? 'Mostrar Todos' : 'Crianças (2–10 anos)',
       onClick: () => {
         const next = !childrenFilter;
         setChildrenFilter(next);
@@ -246,6 +239,16 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeIcon: 'excel',
     },
     {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'import-campers',
+      name: 'Importar Planilha',
+      onClick: () => setShowImportModal(true),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'form',
+      condition: adminTableCreateRegistrationPermissions,
+    },
+    {
       fill: '#dc3545',
       iconSize: 22,
       id: 'room-excel',
@@ -254,16 +257,6 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeButton: 'outline-danger',
       typeIcon: 'delete',
       condition: selectedRows.length > 0 && adminTableDeleteRegistrationsAndSelectRowsPermissions,
-    },
-    {
-      fill: '#007185',
-      iconSize: 22,
-      id: 'import-campers',
-      name: 'Importar Planilha',
-      onClick: () => setShowImportModal(true),
-      typeButton: 'outline-teal-blue',
-      typeIcon: 'excel',
-      condition: adminTableCreateRegistrationPermissions,
     },
     {
       fill: '#fff',
@@ -295,54 +288,54 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         <StatCards items={statItems} />
 
         <Row>
-        <CoreTable
-          getTableProps={getTableProps}
-          getTableBodyProps={getTableBodyProps}
-          headerGroups={headerGroups}
-          rows={page}
-          prepareRow={prepareRow}
-          showFilters={showFilters}
-          selectedRows={selectedRows}
-        />
-        <TablePagination
-          pageIndex={pageIndex}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          totalRows={rows.length}
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          setPageSize={setPageSize}
-          pageSizeOptions={PAGE_SIZE_OPTIONS}
-        />
-      </Row>
+          <CoreTable
+            getTableProps={getTableProps}
+            getTableBodyProps={getTableBodyProps}
+            headerGroups={headerGroups}
+            rows={page}
+            prepareRow={prepareRow}
+            showFilters={showFilters}
+            selectedRows={selectedRows}
+          />
+          <TablePagination
+            pageIndex={pageIndex}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            totalRows={rows.length}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            setPageSize={setPageSize}
+            pageSizeOptions={PAGE_SIZE_OPTIONS}
+          />
+        </Row>
 
-      <EditAndAddCamperModal
-        name={name}
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        showAddModal={showAddModal}
-        setShowAddModal={setShowAddModal}
-        showDeleteModal={showDeleteModal}
-        modalType={modalType}
-        editInitialData={editRowIndex != null ? data[editRowIndex] : {}}
-        editRowIndex={editRowIndex}
-        currentDate={currentDate}
-        onSaveEdit={handleSaveEdit}
-        onAddSubmit={handleAddSubmit}
-        handleCloseDeleteModal={() => setShowDeleteModal(false)}
-        handleConfirmDeleteAll={handleConfirmDeleteAll}
-        handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
-      />
+        <EditAndAddCamperModal
+          name={name}
+          showEditModal={showEditModal}
+          setShowEditModal={setShowEditModal}
+          showAddModal={showAddModal}
+          setShowAddModal={setShowAddModal}
+          showDeleteModal={showDeleteModal}
+          modalType={modalType}
+          editInitialData={editRowIndex != null ? data[editRowIndex] : {}}
+          editRowIndex={editRowIndex}
+          currentDate={currentDate}
+          onSaveEdit={handleSaveEdit}
+          onAddSubmit={handleAddSubmit}
+          handleCloseDeleteModal={() => setShowDeleteModal(false)}
+          handleConfirmDeleteAll={handleConfirmDeleteAll}
+          handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
+        />
 
-      <ImportCampersModal
-        show={showImportModal}
-        onHide={() => setShowImportModal(false)}
-        onImport={importCampers}
-        loading={loading}
-      />
+        <ImportCampersModal
+          show={showImportModal}
+          onHide={() => setShowImportModal(false)}
+          onImport={importCampers}
+          loading={loading}
+        />
 
         <Loading loading={loading} />
       </div>
