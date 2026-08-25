@@ -25,6 +25,7 @@ import './style.scss';
 const SORT_BY_KEY = 'sortBy';
 const PAGE_SIZE_OPTIONS = [25, 50, 100, 200];
 const DEFAULT_PAGE_SIZE = 50;
+const CHILDREN_AGE_RANGE = '2-10';
 
 const formatCurrentDate = () => {
   const now = new Date();
@@ -66,6 +67,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
+  const [childrenFilter, setChildrenFilter] = useState(false);
 
   const currentDate = formatCurrentDate();
 
@@ -163,6 +165,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     nextPage,
     previousPage,
     setPageSize,
+    setFilter,
     state: { sortBy, pageIndex, pageSize },
   } = useTable(
     {
@@ -219,6 +222,19 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       onClick: () => setShowFilters((prev) => !prev),
       typeButton: 'outline-teal-blue',
       typeIcon: 'filter',
+    },
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'children-filter',
+      name: childrenFilter ? 'Mostrar todos' : 'Crianças (2–10 anos)',
+      onClick: () => {
+        const next = !childrenFilter;
+        setChildrenFilter(next);
+        setFilter('age', next ? CHILDREN_AGE_RANGE : undefined);
+      },
+      typeButton: childrenFilter ? 'teal-blue' : 'outline-teal-blue',
+      typeIcon: 'family',
     },
     {
       fill: '#007185',
