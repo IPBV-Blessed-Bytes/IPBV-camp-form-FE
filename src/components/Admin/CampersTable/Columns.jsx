@@ -19,6 +19,8 @@ const CATEGORY_BY_FIELD = {
   'package.foodName': 'ALIMENTACAO',
 };
 
+const TEAM_BUS_OPTION = { label: 'Ônibus Equipe', value: 'Onibus Equipe' };
+
 const FIELDS = [
   {
     label: 'Nome',
@@ -252,7 +254,14 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
 
         const category = CATEGORY_BY_FIELD[field.name];
         const catalogOptions = category ? catalog?.options?.[category] : null;
-        const options = catalogOptions && catalogOptions.length > 0 ? catalogOptions : field.options || [];
+        let options = catalogOptions && catalogOptions.length > 0 ? catalogOptions : field.options || [];
+
+        if (
+          field.name === 'package.transportationName' &&
+          !options.some((option) => option.value === TEAM_BUS_OPTION.value)
+        ) {
+          options = [...options, TEAM_BUS_OPTION];
+        }
 
         return (
           <ColumnsFields
