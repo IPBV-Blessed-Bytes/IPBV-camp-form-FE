@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Badge, Button, Form, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './style.scss';
 
@@ -17,6 +17,8 @@ import useCampersData from '../Campers/hooks/useCampersData';
 const BUS_TRANSPORTATIONS = ['Com Ônibus', 'Com Onibus', 'Ônibus Equipe', 'Onibus Equipe'];
 
 const goesByBus = (camper) => BUS_TRANSPORTATIONS.includes(camper?.package?.transportationName);
+
+const isTeamBus = (camper) => (camper?.package?.transportationName || '').toLowerCase().includes('equipe');
 
 const EDIT_FIELDS = [
   { key: 'name', label: 'Nome', path: 'personalInformation' },
@@ -118,6 +120,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
             <thead>
               <tr>
                 <th className="table-cells-header">Nome:</th>
+                <th className="table-cells-header">Transporte:</th>
                 <th className="table-cells-header">CPF:</th>
                 <th className="table-cells-header">RG:</th>
                 <th className="table-cells-header">Órgão Expedidor:</th>
@@ -130,6 +133,11 @@ const AdminBus = ({ loggedUsername, userRole }) => {
               {busCampers.map(({ camper, originalIndex }) => (
                 <tr key={camper.id ?? originalIndex}>
                   <td>{camper.personalInformation?.name || '-'}</td>
+                  <td>
+                    <Badge bg={isTeamBus(camper) ? 'warning' : 'primary'} text={isTeamBus(camper) ? 'dark' : undefined}>
+                      {isTeamBus(camper) ? 'Ônibus Equipe' : 'Ônibus normal'}
+                    </Badge>
+                  </td>
                   <td>{camper.personalInformation?.cpf || '-'}</td>
                   <td>{camper.personalInformation?.rg || '-'}</td>
                   <td>{camper.personalInformation?.rgShipper || '-'}</td>
@@ -146,7 +154,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
               ))}
               {busCampers.length === 0 && (
                 <tr>
-                  <td colSpan={canEdit ? 7 : 6} className="text-center text-secondary py-4">
+                  <td colSpan={canEdit ? 8 : 7} className="text-center text-secondary py-4">
                     Nenhum passageiro de ônibus encontrado.
                   </td>
                 </tr>
