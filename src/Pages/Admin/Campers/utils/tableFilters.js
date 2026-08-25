@@ -34,6 +34,16 @@ export const textFilterFn = (rows, ids, filterValue) => {
 export const ageFilterFn = (rows, id, filterValue) => {
   if (!filterValue) return rows;
 
+  const rangeMatch = String(filterValue).match(/^\s*(\d+)\s*-\s*(\d+)\s*$/);
+  if (rangeMatch) {
+    const min = Number(rangeMatch[1]);
+    const max = Number(rangeMatch[2]);
+    return rows.filter((row) => {
+      const age = calculateAge(row.values[id]);
+      return age >= min && age <= max;
+    });
+  }
+
   return rows.filter((row) => {
     const birthday = row.values[id];
     const age = calculateAge(birthday);
