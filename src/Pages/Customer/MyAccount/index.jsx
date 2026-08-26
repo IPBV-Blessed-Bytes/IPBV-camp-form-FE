@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Table, Badge, Spinner, Modal, Form } from 'react-bootstrap';
+import { Button, Table, Badge, Spinner, Row, Col, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,6 +7,8 @@ import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
+import CustomModal from '@/components/Global/CustomModal';
+import { rgShipper, issuingState } from '@/utils/constants';
 import {
   getMyRegistrations,
   getMyRegistration,
@@ -175,7 +177,7 @@ const MyAccount = () => {
                       <td>
                         {r.status === 'CONFIRMED' ? (
                           <div className="d-flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
+                            <Button size="sm" variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
                               Solicitar Alteração
                             </Button>
                             <Button
@@ -252,54 +254,183 @@ const MyAccount = () => {
         name={qrTarget?.name}
       />
 
-      <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Solicitar alteração</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="text-secondary small">
-            As alterações passam por aprovação de um administrador antes de serem aplicadas.
-          </p>
-          <Form>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">Nome</Form.Label>
-              <Form.Control value={personal.name || ''} onChange={(e) => setPersonal('name', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">RG</Form.Label>
-              <Form.Control value={personal.rg || ''} onChange={(e) => setPersonal('rg', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">Gênero</Form.Label>
-              <Form.Control value={personal.gender || ''} onChange={(e) => setPersonal('gender', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">Celular</Form.Label>
-              <Form.Control value={contact.cellPhone || ''} onChange={(e) => setContact('cellPhone', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">E-mail</Form.Label>
-              <Form.Control value={contact.email || ''} onChange={(e) => setContact('email', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">Igreja</Form.Label>
-              <Form.Control value={contact.church || ''} onChange={(e) => setContact('church', e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label className="small fw-bold">Alergia</Form.Label>
-              <Form.Control value={contact.allergy || ''} onChange={(e) => setContact('allergy', e.target.value)} />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEdit(false)}>
-            Cancelar
-          </Button>
-          <Button variant="teal-blue" onClick={handleSubmitChange} disabled={saving}>
-            {saving ? 'Enviando...' : 'Enviar solicitação'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showEdit}
+        onHide={() => setShowEdit(false)}
+        variant="info"
+        icon="edit"
+        title="Solicitar alteração"
+        size="lg"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowEdit(false)}>
+              Cancelar
+            </Button>
+            <Button variant="teal-blue" onClick={handleSubmitChange} disabled={saving}>
+              {saving ? 'Enviando...' : 'Enviar solicitação'}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-secondary small">
+          Altere os campos que quiser. As alterações passam por aprovação de um administrador antes de serem
+          aplicadas.
+        </p>
+        <Form>
+          <h6 className="account-edit__section">Dados pessoais</h6>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Nome</Form.Label>
+                <Form.Control value={personal.name || ''} onChange={(e) => setPersonal('name', e.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Data de Nascimento</Form.Label>
+                <Form.Control
+                  placeholder="dd/mm/aaaa"
+                  value={personal.birthday || ''}
+                  onChange={(e) => setPersonal('birthday', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">CPF</Form.Label>
+                <Form.Control value={personal.cpf || ''} onChange={(e) => setPersonal('cpf', e.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">RG</Form.Label>
+                <Form.Control value={personal.rg || ''} onChange={(e) => setPersonal('rg', e.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Órgão Expedidor RG</Form.Label>
+                <Form.Select
+                  value={personal.rgShipper || ''}
+                  onChange={(e) => setPersonal('rgShipper', e.target.value)}
+                >
+                  <option value="">Selecione...</option>
+                  {rgShipper.map((org) => (
+                    <option key={org.value} value={org.value}>
+                      {org.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Estado de emissão</Form.Label>
+                <Form.Select
+                  value={personal.rgShipperState || ''}
+                  onChange={(e) => setPersonal('rgShipperState', e.target.value)}
+                >
+                  <option value="">Selecione...</option>
+                  {issuingState.map((uf) => (
+                    <option key={uf.value} value={uf.value}>
+                      {uf.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Categoria</Form.Label>
+                <Form.Select value={personal.gender || ''} onChange={(e) => setPersonal('gender', e.target.value)}>
+                  <option value="">Selecione...</option>
+                  <option value="Crianca">Criança (até 10 anos)</option>
+                  <option value="Homem">Adulto Masculino</option>
+                  <option value="Mulher">Adulto Feminino</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <h6 className="account-edit__section">Responsável legal</h6>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Nome do responsável</Form.Label>
+                <Form.Control
+                  value={personal.legalGuardianName || ''}
+                  onChange={(e) => setPersonal('legalGuardianName', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">CPF do responsável</Form.Label>
+                <Form.Control
+                  value={personal.legalGuardianCpf || ''}
+                  onChange={(e) => setPersonal('legalGuardianCpf', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Celular do responsável</Form.Label>
+                <Form.Control
+                  value={personal.legalGuardianCellPhone || ''}
+                  onChange={(e) => setPersonal('legalGuardianCellPhone', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <h6 className="account-edit__section">Contato</h6>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Celular</Form.Label>
+                <Form.Control
+                  value={contact.cellPhone || ''}
+                  onChange={(e) => setContact('cellPhone', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">E-mail</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={contact.email || ''}
+                  onChange={(e) => setContact('email', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Igreja</Form.Label>
+                <Form.Control value={contact.church || ''} onChange={(e) => setContact('church', e.target.value)} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Agregado</Form.Label>
+                <Form.Control
+                  value={contact.aggregate || ''}
+                  onChange={(e) => setContact('aggregate', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={12}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Alergia</Form.Label>
+                <Form.Control
+                  value={contact.allergy || ''}
+                  onChange={(e) => setContact('allergy', e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </CustomModal>
     </div>
   );
 };

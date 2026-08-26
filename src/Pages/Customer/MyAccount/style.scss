@@ -187,3 +187,18 @@
     padding: 1rem 0;
   }
 }
+
+.account-edit__section {
+  border-bottom: 1px solid $alternate-light-gray;
+  color: $primary;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 1.25rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  text-transform: uppercase;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}

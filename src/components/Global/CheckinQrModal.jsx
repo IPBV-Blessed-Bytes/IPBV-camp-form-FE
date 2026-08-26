@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Modal, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import QRCode from 'qrcode';
 import PropTypes from 'prop-types';
+import CustomModal from '@/components/Global/CustomModal';
 
 const formatCpf = (value) => {
   const digits = String(value ?? '').replace(/\D/g, '').slice(0, 11);
@@ -28,11 +29,8 @@ const CheckinQrModal = ({ show, onHide, cpf, name }) => {
   }, [show, cpf]);
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>QR de Check-in</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="text-center">
+    <CustomModal show={show} onHide={onHide} variant="info" icon="camera" title="QR de Check-in">
+      <div className="text-center">
         <p className="text-secondary small mb-3">
           Mostre este código na entrada do evento para agilizar seu check-in.
         </p>
@@ -45,8 +43,8 @@ const CheckinQrModal = ({ show, onHide, cpf, name }) => {
         )}
         {name && <p className="fw-bold mt-3 mb-0">{name}</p>}
         <p className="text-secondary mb-0">{formatCpf(cpf)}</p>
-      </Modal.Body>
-    </Modal>
+      </div>
+    </CustomModal>
   );
 };
 
