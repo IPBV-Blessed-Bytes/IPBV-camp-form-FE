@@ -153,8 +153,10 @@
     th,
     td {
       border-right: 1px solid $alternate-light-gray;
+      min-width: 275px;
       padding: 0.85rem 1.1rem;
       vertical-align: middle;
+      white-space: nowrap;
 
       &:last-child {
         border-right: none;
