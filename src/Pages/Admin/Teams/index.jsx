@@ -542,7 +542,14 @@ const AdminTeams = ({ loggedUsername }) => {
                         )
                       }
                     />
-                    <span>{camper.personalInformation?.name || 'Sem nome'}</span>
+                    <span className="camper-check__info">
+                      <span className="camper-check__name">
+                        {camper.personalInformation?.name || 'Sem nome'}
+                      </span>
+                      {camper.personalInformation?.cpf && (
+                        <span className="camper-check__cpf">{camper.personalInformation.cpf}</span>
+                      )}
+                    </span>
                   </label>
                 );
               })

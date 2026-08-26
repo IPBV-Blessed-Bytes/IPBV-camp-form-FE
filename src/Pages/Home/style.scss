@@ -18,7 +18,17 @@
   }
 
   &-itens {
+    display: inline;
+
     p {
+      display: inline;
+      margin: 0;
+    }
+  }
+
+  &-description {
+    p {
+      display: inline;
       margin: 0;
     }
   }
