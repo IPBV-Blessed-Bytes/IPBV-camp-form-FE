@@ -182,15 +182,14 @@ const MyAccount = () => {
                       <td>
                         {r.status === 'CONFIRMED' ? (
                           <div className="d-flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
-                              Solicitar alteração
+                            <Button variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
+                              Solicitar Alteração
                             </Button>
                             <Button
-                              size="sm"
                               variant="teal-blue"
                               onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}
                             >
-                              QR de check-in
+                              QR de Check-in
                             </Button>
                           </div>
                         ) : r.paymentUrl ? (
