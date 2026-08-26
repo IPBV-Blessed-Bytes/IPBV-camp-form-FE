@@ -174,7 +174,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     const draft = bracketDrafts[product.id] || {};
     const minAge = Number(draft.minAge);
     const maxAge = Number(draft.maxAge);
-    const discountPercent = Number(draft.discountPercent);
+    const discountType = draft.discountType === 'VALUE' ? 'VALUE' : 'PERCENT';
+    const discountAmount = Number(draft.discountAmount);
 
     if (draft.minAge === '' || draft.minAge == null || Number.isNaN(minAge)) {
       toast.error('Informe a idade mínima');
@@ -188,17 +189,25 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       toast.error('A idade máxima não pode ser menor que a mínima');
       return;
     }
-    if (Number.isNaN(discountPercent) || discountPercent <= 0 || discountPercent > 100) {
-      toast.error('O desconto deve ser entre 1 e 100%');
+    if (Number.isNaN(discountAmount) || discountAmount <= 0) {
+      toast.error('Informe um desconto maior que zero');
+      return;
+    }
+    if (discountType === 'PERCENT' && discountAmount > 100) {
+      toast.error('O desconto percentual não pode passar de 100%');
       return;
     }
 
     setLoading(true);
     try {
-      await createAgePriceRule({ productId: product.id, minAge, maxAge, discountPercent });
+      await createAgePriceRule({ productId: product.id, minAge, maxAge, discountType, discountAmount });
       toast.success('Faixa de desconto adicionada');
-      registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${discountPercent}%) em ${product.name}`, loggedUsername);
-      setBracketDrafts((prev) => ({ ...prev, [product.id]: { minAge: '', maxAge: '', discountPercent: '' } }));
+      const label = discountType === 'VALUE' ? `R$ ${discountAmount}` : `${discountAmount}%`;
+      registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${label}) em ${product.name}`, loggedUsername);
+      setBracketDrafts((prev) => ({
+        ...prev,
+        [product.id]: { minAge: '', maxAge: '', discountType, discountAmount: '' },
+      }));
       fetchAll();
     } catch (error) {
       toast.error('Erro ao adicionar faixa de desconto');
@@ -369,8 +378,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   productRules.map((rule) => (
                     <div key={rule.id} className="age-rules__row">
                       <span className="age-rules__label">
-                        {rule.minAge}–{rule.maxAge} anos → <b>{rule.discountPercent}% off</b>
-                        {rule.discountPercent >= 100 ? ' (grátis)' : ''}
+                        {rule.minAge}–{rule.maxAge} anos →{' '}
+                        <b>
+                          {rule.discountType === 'VALUE'
+                            ? `R$ ${rule.discountAmount} off`
+                            : `${rule.discountAmount}% off`}
+                        </b>
+                        {rule.discountType === 'PERCENT' && rule.discountAmount >= 100 ? ' (grátis)' : ''}
                       </span>
                       <Button
                         variant="outline-danger"
@@ -399,13 +413,20 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     value={draft.maxAge ?? ''}
                     onChange={(e) => patchBracket(product.id, { maxAge: e.target.value })}
                   />
+                  <Form.Select
+                    aria-label="Tipo de desconto"
+                    value={draft.discountType ?? 'PERCENT'}
+                    onChange={(e) => patchBracket(product.id, { discountType: e.target.value })}
+                  >
+                    <option value="PERCENT">%</option>
+                    <option value="VALUE">R$</option>
+                  </Form.Select>
                   <Form.Control
                     type="number"
-                    min="1"
-                    max="100"
-                    placeholder="% off"
-                    value={draft.discountPercent ?? ''}
-                    onChange={(e) => patchBracket(product.id, { discountPercent: e.target.value })}
+                    min="0"
+                    placeholder={(draft.discountType ?? 'PERCENT') === 'VALUE' ? 'R$ off' : '% off'}
+                    value={draft.discountAmount ?? ''}
+                    onChange={(e) => patchBracket(product.id, { discountAmount: e.target.value })}
                   />
                   <Button variant="outline-teal-blue" size="sm" onClick={() => handleAddBracket(product)}>
                     Adicionar

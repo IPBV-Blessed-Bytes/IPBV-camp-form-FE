@@ -12,7 +12,8 @@ export const loadAgePriceRules = async () => {
       productId: rule.productId,
       minAge: Number(rule.minAge ?? 0),
       maxAge: Number(rule.maxAge ?? 0),
-      discountPercent: Number(rule.discountPercent ?? 0),
+      discountType: rule.discountType === 'VALUE' ? 'VALUE' : 'PERCENT',
+      discountAmount: Number(rule.discountAmount ?? 0),
     }));
 
     return ageRules;
