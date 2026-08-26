@@ -143,7 +143,7 @@ const MyAccount = () => {
               </Button>
             </div>
           ) : (
-            <Table hover responsive className="account-table">
+            <Table striped hover responsive className="account-table">
               <thead>
                 <tr>
                   <th>Nº Pedido</th>
@@ -218,7 +218,7 @@ const MyAccount = () => {
           {changeRequests.length === 0 ? (
             <p className="account-empty mb-0">Nenhuma solicitação enviada.</p>
           ) : (
-            <Table hover responsive className="account-table">
+            <Table striped hover responsive className="account-table">
               <thead>
                 <tr>
                   <th>Campista</th>
