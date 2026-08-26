@@ -275,7 +275,10 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     }
   }, [loggedUsername]);
 
-  const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
+  const normalizedCpf = String(cpf || '').replace(/\D/g, '');
+  const userRoom = rooms.find((room) =>
+    room.campers.some((camper) => String(camper.cpf || '').replace(/\D/g, '') === normalizedCpf),
+  );
 
   const goToCampersTable = () => {
     formStage === 'maintenance' ? navigate('/dev/acampantes') : navigate('/admin/acampantes');
