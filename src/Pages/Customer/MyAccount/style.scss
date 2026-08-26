@@ -134,6 +134,10 @@
     }
   }
 
+  .table-responsive:not(.ride) {
+    height: auto;
+  }
+
   .account-card {
     background: $white;
     border: 1px solid $alternate-light-gray;
