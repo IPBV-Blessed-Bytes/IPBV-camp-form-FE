@@ -349,7 +349,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
             className="d-lg-none w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
             onClick={() => setShowScanner(true)}
           >
-            <Icons typeIcon="checkin" iconSize={20} fill="#007185" />
+            <Icons typeIcon="camera" iconSize={20} fill="#007185" />
             Escanear QR
           </Button>
 
