@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Button, Table, Badge, Spinner, Row, Col, Form } from 'react-bootstrap';
+import { Button, Table, Badge, Spinner, Row, Col, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
+import useContactPhone from '@/hooks/useContactPhone';
 import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
 import { rgShipper, issuingState } from '@/utils/constants';
-import {
-  getMyRegistrations,
-  getMyRegistration,
-  createChangeRequest,
-  getMyChangeRequests,
-} from '@/services/me';
+import { getMyRegistrations, getMyRegistration, createChangeRequest, getMyChangeRequests } from '@/services/me';
 
 const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
@@ -30,6 +26,7 @@ const REQ_STATUS = {
 const MyAccount = () => {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
+  const contactPhone = useContactPhone();
   const [registrations, setRegistrations] = useState([]);
   const [changeRequests, setChangeRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,8 +70,7 @@ const MyAccount = () => {
   const setPersonal = (field, value) =>
     setEditData((d) => ({ ...d, personalInformation: { ...d.personalInformation, [field]: value } }));
 
-  const setContact = (field, value) =>
-    setEditData((d) => ({ ...d, contact: { ...d.contact, [field]: value } }));
+  const setContact = (field, value) => setEditData((d) => ({ ...d, contact: { ...d.contact, [field]: value } }));
 
   const handleSubmitChange = async () => {
     setSaving(true);
@@ -106,11 +102,7 @@ const MyAccount = () => {
             <p className="my-account__subtitle">{user}</p>
           </div>
         </div>
-        <Button
-          variant="teal-blue"
-          className="my-account__btn my-account__btn--new"
-          onClick={() => navigate('/')}
-        >
+        <Button variant="teal-blue" className="my-account__btn my-account__btn--new" onClick={() => navigate('/')}>
           Nova Inscrição
         </Button>
         <Button
@@ -260,6 +252,7 @@ const MyAccount = () => {
         variant="info"
         icon="edit"
         title="Solicitar alteração"
+        iconFill="none"
         size="lg"
         footer={
           <>
@@ -273,9 +266,13 @@ const MyAccount = () => {
         }
       >
         <p className="text-secondary small">
-          Altere os campos que quiser. As alterações passam por aprovação de um administrador antes de serem
-          aplicadas.
+          Altere os campos que quiser. As alterações passam por aprovação de um administrador antes de serem aplicadas.
         </p>
+        <Alert variant="warning" className="py-2 small mb-3">
+          Não é possível alterar o <b>pacote</b> (hospedagem, transporte e alimentação) pelo sistema. Para isso, entre
+          em contato com a secretaria
+          {contactPhone ? ` pelo contato ${contactPhone} (WhatsApp).` : '.'}
+        </Alert>
         <Form>
           <h6 className="account-edit__section">Dados pessoais</h6>
           <Row>
@@ -353,6 +350,7 @@ const MyAccount = () => {
           </Row>
 
           <h6 className="account-edit__section">Responsável legal</h6>
+          <p className="text-secondary small">Aplicavel apenas se acampante for menor de idade.</p>
           <Row>
             <Col md={6}>
               <Form.Group className="mb-2">
@@ -412,7 +410,7 @@ const MyAccount = () => {
             </Col>
             <Col md={6}>
               <Form.Group className="mb-2">
-                <Form.Label className="small fw-bold">Agregado</Form.Label>
+                <Form.Label className="small fw-bold">Agregados</Form.Label>
                 <Form.Control
                   value={contact.aggregate || ''}
                   onChange={(e) => setContact('aggregate', e.target.value)}
@@ -421,13 +419,73 @@ const MyAccount = () => {
             </Col>
             <Col md={12}>
               <Form.Group className="mb-2">
-                <Form.Label className="small fw-bold">Alergia</Form.Label>
-                <Form.Control
-                  value={contact.allergy || ''}
-                  onChange={(e) => setContact('allergy', e.target.value)}
-                />
+                <Form.Label className="small fw-bold">Alergias</Form.Label>
+                <Form.Control value={contact.allergy || ''} onChange={(e) => setContact('allergy', e.target.value)} />
               </Form.Group>
             </Col>
+          </Row>
+
+          <h6 className="account-edit__section">Caronas</h6>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-2">
+                <Form.Label className="small fw-bold">Tem vagas de carona a oferecer?</Form.Label>
+                <Form.Select
+                  value={contact.car ?? ''}
+                  onChange={(e) => setContact('car', e.target.value === 'true')}
+                >
+                  <option value="">Selecione...</option>
+                  <option value={false}>Não</option>
+                  <option value={true}>Sim</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            {contact.car === true && (
+              <Col md={6}>
+                <Form.Group className="mb-2">
+                  <Form.Label className="small fw-bold">Quantas vagas?</Form.Label>
+                  <Form.Select
+                    value={contact.numberVacancies ?? ''}
+                    onChange={(e) => setContact('numberVacancies', e.target.value)}
+                  >
+                    <option value="">Selecione...</option>
+                    {[1, 2, 3, 4, 5, 6].map((n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            )}
+            {contact.car === false && (
+              <Col md={6}>
+                <Form.Group className="mb-2">
+                  <Form.Label className="small fw-bold">Precisa de carona?</Form.Label>
+                  <Form.Select
+                    value={contact.needRide ?? ''}
+                    onChange={(e) => setContact('needRide', e.target.value === 'true')}
+                  >
+                    <option value="">Selecione...</option>
+                    <option value={false}>Não</option>
+                    <option value={true}>Sim</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            )}
+            {(contact.car === true || contact.needRide === true) && (
+              <Col md={12}>
+                <Form.Group className="mb-2">
+                  <Form.Label className="small fw-bold">Observação sobre a carona</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    value={contact.rideObservation || ''}
+                    onChange={(e) => setContact('rideObservation', e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            )}
           </Row>
         </Form>
       </CustomModal>
