@@ -12,7 +12,7 @@
     gap: 1rem;
     justify-content: space-between;
     margin: 0 auto 1.5rem;
-    max-width: 1080px;
+    max-width: 1560px;
     padding: 1.5rem 2rem 0;
 
     @media (max-width: $sm) {
@@ -84,7 +84,7 @@
 
   &__content {
     margin: 0 auto;
-    max-width: 1080px;
+    max-width: 1560px;
     padding: 0 2rem;
 
     @media (max-width: $md) {
@@ -140,27 +140,49 @@
     }
   }
 
+  .table-responsive:not(.ride) {
+    height: auto;
+  }
+
   .account-card {
     background: $white;
     border: 1px solid $alternate-light-gray;
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    padding: 1.5rem;
   }
 
   .account-table {
     margin-bottom: 0;
+    font-size: 0.95rem;
+
+    th,
+    td {
+      border-right: 1px solid $alternate-light-gray;
+      min-width: 275px;
+      padding: 0.85rem 1.1rem;
+      vertical-align: middle;
+      white-space: nowrap;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
 
     thead th {
       background: $primary;
-      border-color: rgba(0, 0, 0, 0.1);
+      border-right-color: rgba(255, 255, 255, 0.2);
+      border-bottom: none;
       color: $white;
       font-weight: 600;
     }
 
-    td {
-      vertical-align: middle;
+    tbody td {
+      border-bottom: 1px solid $alternate-light-gray;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
     }
   }
 
@@ -168,5 +190,20 @@
     color: $alternate-dark-gray;
     text-align: center;
     padding: 1rem 0;
+  }
+}
+
+.account-edit__section {
+  border-bottom: 1px solid $alternate-light-gray;
+  color: $primary;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 1.25rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  text-transform: uppercase;
+
+  &:first-of-type {
+    margin-top: 0;
   }
 }
