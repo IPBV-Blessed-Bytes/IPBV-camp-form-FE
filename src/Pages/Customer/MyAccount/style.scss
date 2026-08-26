@@ -11,7 +11,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     margin: 0 auto 1.5rem;
-    max-width: 1280px;
+    max-width: 1560px;
     padding: 1.5rem 2rem 0;
 
     @media (max-width: $md) {
@@ -95,7 +95,7 @@
 
   &__content {
     margin: 0 auto;
-    max-width: 1280px;
+    max-width: 1560px;
     padding: 0 2rem;
 
     @media (max-width: $md) {
