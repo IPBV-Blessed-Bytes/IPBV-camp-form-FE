@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
-import { productPrice, packageTotal, formatPrice, discountForCategory } from './packagePricing';
+import { productPrice, packageTotal, formatPrice, ruleForProduct, discountLabel } from './packagePricing';
 import '@/components/Style/ProductList.scss';
 import './PackageStep.scss';
 
@@ -49,7 +49,7 @@ const PackageStep = ({ categories, products, rules, age, lotName, registrationFe
                   <div className="product-grid">
                     {catProducts.map((product) => {
                       const price = productPrice(product, rules, age);
-                      const discount = discountForCategory(rules, product.packageCategoryId, age);
+                      const rule = ruleForProduct(rules, product.id, age);
                       const alreadySelected = selected.includes(product.id);
 
                       return (
@@ -61,9 +61,9 @@ const PackageStep = ({ categories, products, rules, age, lotName, registrationFe
                             <h3 className="product-title">{product.name}</h3>
                           </div>
                           <p className="product-price mb-2">{formatPrice(price)}</p>
-                          {discount > 0 && (
+                          {rule && price < Number(product.price || 0) && (
                             <p className="discount-description small mb-2">
-                              De <s>{formatPrice(Number(product.price || 0))}</s> · -{discount}% por idade
+                              De <s>{formatPrice(Number(product.price || 0))}</s> · {discountLabel(rule)} por idade
                             </p>
                           )}
                           {product.description && (

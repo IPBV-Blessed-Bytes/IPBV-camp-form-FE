@@ -1,24 +1,41 @@
 import { parse, isValid, differenceInYears } from 'date-fns';
 
-export const computeAge = (birthday) => {
+export const computeAge = (birthday, referenceDate) => {
   if (!birthday) return null;
   const parsed = parse(birthday, 'dd/MM/yyyy', new Date());
   if (!isValid(parsed)) return null;
-  return differenceInYears(new Date(), parsed);
+  const reference = referenceDate instanceof Date && isValid(referenceDate) ? referenceDate : new Date();
+  return differenceInYears(reference, parsed);
 };
 
-export const discountForCategory = (rules, categoryId, age) => {
-  if (age == null) return 0;
-  const rule = (rules || []).find(
-    (r) => r.packageCategoryId === categoryId && age >= r.minAge && age <= r.maxAge,
+export const ruleForProduct = (rules, productId, age) => {
+  if (age == null) return null;
+  return (
+    (rules || []).find((r) => r.productId === productId && age >= r.minAge && age <= r.maxAge) || null
   );
-  return rule ? rule.discountPercent : 0;
+};
+
+export const applyDiscount = (base, rule) => {
+  if (!rule) return base;
+  const amount = Number(rule.discountAmount || 0);
+  if (rule.discountType === 'VALUE') {
+    return Math.max(0, base - amount);
+  }
+  return Math.max(0, base * (1 - Math.min(amount, 100) / 100));
+};
+
+export const discountLabel = (rule) => {
+  if (!rule) return '';
+  const amount = Number(rule.discountAmount || 0);
+  if (rule.discountType === 'VALUE') {
+    return `-${amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+  }
+  return `-${amount}%`;
 };
 
 export const productPrice = (product, rules, age) => {
   const base = Number(product?.price || 0);
-  const discount = discountForCategory(rules, product?.packageCategoryId, age);
-  return Math.max(0, base * (1 - discount / 100));
+  return applyDiscount(base, ruleForProduct(rules, product?.id, age));
 };
 
 export const packageTotal = (selection, products, rules, age) => {

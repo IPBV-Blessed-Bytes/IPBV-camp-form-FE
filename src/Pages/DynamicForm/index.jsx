@@ -2,6 +2,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { Container, Row, Col, Button, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { parse, isValid } from 'date-fns';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
 
@@ -17,6 +18,7 @@ import { getProducts } from '@/services/products';
 import { getLots } from '@/services/lots';
 import { listPackageCategories } from '@/services/packageCategories';
 import { listAgePriceRules } from '@/services/agePriceRules';
+import { getPublicBaseDate } from '@/services/baseDate';
 import { findActiveLot } from '@/utils/activeLot';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
@@ -82,6 +84,17 @@ const DynamicForm = () => {
     queryFn: listAgePriceRules,
     enabled: Boolean(paymentEnabled),
   });
+  const { data: baseDateData } = useQuery({
+    queryKey: ['pkg-base-date', slug],
+    queryFn: getPublicBaseDate,
+    enabled: Boolean(paymentEnabled),
+  });
+  const baseDate = useMemo(() => {
+    const raw = baseDateData?.baseDate;
+    if (!raw) return null;
+    const parsed = parse(raw, 'dd/MM/yyyy', new Date());
+    return isValid(parsed) ? parsed : null;
+  }, [baseDateData]);
   const packageProducts = useMemo(() => packageProductsData?.products || [], [packageProductsData]);
   const { data: lotsData } = useQuery({
     queryKey: ['pkg-lots', slug],
@@ -122,7 +135,7 @@ const DynamicForm = () => {
   const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
 
-  const age = useMemo(() => computeAge(currentAnswers.nascimento), [currentAnswers.nascimento]);
+  const age = useMemo(() => computeAge(currentAnswers.nascimento, baseDate), [currentAnswers.nascimento, baseDate]);
 
   const wizardSteps = useMemo(() => {
     const steps = sections.map((s) => ({ kind: 'section', section: s }));
@@ -144,8 +157,8 @@ const DynamicForm = () => {
   const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
 
   const personPackageTotal = useCallback(
-    (person) => packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento)),
-    [packageProducts, ageRules],
+    (person) => packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento, baseDate)),
+    [packageProducts, ageRules, baseDate],
   );
   const personTotal = useCallback(
     (person) => personPackageTotal(person) + registrationFee,
@@ -592,7 +605,7 @@ const DynamicForm = () => {
                           </div>
                         ) : (
                           people.map((person, personIndex) => {
-                            const personAge = computeAge(person.nascimento);
+                            const personAge = computeAge(person.nascimento, baseDate);
                             const selection = person.__package || {};
                             return (
                               <Card key={personIndex} className="cart-user-card mb-4">
