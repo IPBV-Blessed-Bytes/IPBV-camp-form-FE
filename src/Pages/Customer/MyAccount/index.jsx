@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import Icons from '@/components/Global/Icons';
+import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import {
   getMyRegistrations,
   getMyRegistration,
@@ -35,6 +36,7 @@ const MyAccount = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [qrTarget, setQrTarget] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -167,9 +169,18 @@ const MyAccount = () => {
                       </td>
                       <td>
                         {r.status === 'CONFIRMED' ? (
-                          <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
-                            Solicitar alteração
-                          </Button>
+                          <div className="d-flex flex-wrap gap-2">
+                            <Button size="sm" variant="outline-success" onClick={() => handleEditClick(r.id)}>
+                              Solicitar alteração
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="teal-blue"
+                              onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}
+                            >
+                              QR de check-in
+                            </Button>
+                          </div>
                         ) : r.paymentUrl ? (
                           <Button
                             size="sm"
@@ -228,6 +239,13 @@ const MyAccount = () => {
           )}
         </div>
       </div>
+
+      <CheckinQrModal
+        show={Boolean(qrTarget)}
+        onHide={() => setQrTarget(null)}
+        cpf={qrTarget?.cpf}
+        name={qrTarget?.name}
+      />
 
       <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
         <Modal.Header closeButton>

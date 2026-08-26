@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -19,6 +19,7 @@ import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
+import QrScannerModal from '@/components/Global/QrScannerModal';
 
 const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
@@ -31,6 +32,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpfMatches, setCpfMatches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [checkinStats, setCheckinStats] = useState({ total: 0, checked: 0 });
+  const [showScanner, setShowScanner] = useState(false);
   const { formStage } = useContext(AuthContext);
   const { campersTableButtonPermissions } = permissionsSections(userRole);
   const navigate = useNavigate();
@@ -210,6 +212,57 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     }
   };
 
+  const selectUser = (user) => {
+    setCpf(user.personalInformation.cpf);
+    setUserInfo(user);
+    setCheckinStatus(user.checkin);
+    setCpfMatches([]);
+    setShowSuggestions(false);
+    fetchUserWristbands(user.id, user.package.foodName, user.teamName);
+
+    toast.success('Usuário selecionado');
+
+    const [day, month, year] = user.personalInformation.birthday.split('/');
+    const birthDate = new Date(`${year}-${month}-${day}`);
+    const age = calculateAge(birthDate);
+
+    if (age <= 8) {
+      toast.warn(
+        `Usuário tem ${age < 2 ? `${age} ano` : `${age} anos`} de idade. Atenção ao revisar os dados!`,
+      );
+    }
+  };
+
+  const selectUserRef = useRef(selectUser);
+  selectUserRef.current = selectUser;
+
+  const handleScan = useCallback(async (text) => {
+    const cpfDigits = String(text || '').replace(/\D/g, '').slice(0, 11);
+    setShowScanner(false);
+
+    if (cpfDigits.length !== 11) {
+      toast.error('QR inválido: não contém um CPF válido');
+      return;
+    }
+
+    setCpf(cpfDigits);
+
+    try {
+      const data = await listCampers({ cpfPrefix: cpfDigits, size: MAX_SIZE_CAMPERS });
+      const users = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+      const match = users.find((u) => u.personalInformation.cpf.replace(/\D/g, '') === cpfDigits);
+
+      if (match) {
+        selectUserRef.current(match);
+      } else {
+        toast.warn('Nenhum acampante encontrado para este CPF');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar usuário do QR:', error);
+      toast.error('Erro ao buscar o usuário do QR');
+    }
+  }, []);
+
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
   const goToCampersTable = () => {
@@ -290,6 +343,16 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
             )}
           </div>
 
+          <Button
+            type="button"
+            variant="outline-teal-blue"
+            className="d-lg-none w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
+            onClick={() => setShowScanner(true)}
+          >
+            <Icons typeIcon="checkin" iconSize={20} fill="#007185" />
+            Escanear QR
+          </Button>
+
           {showSuggestions && !userInfo && (
             <div className="cpf-suggestions">
               {cpfLoading ? (
@@ -303,28 +366,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
                   <div
                     key={user.id}
                     className="cpf-suggestions-item"
-                    onClick={() => {
-                      setCpf(user.personalInformation.cpf);
-                      setUserInfo(user);
-                      setCheckinStatus(user.checkin);
-                      setCpfMatches([]);
-                      setShowSuggestions(false);
-                      fetchUserWristbands(user.id, user.package.foodName, user.teamName);
-
-                      toast.success('Usuário selecionado');
-
-                      const [day, month, year] = user.personalInformation.birthday.split('/');
-                      const birthDate = new Date(`${year}-${month}-${day}`);
-                      const age = calculateAge(birthDate);
-
-                      if (age <= 8) {
-                        toast.warn(
-                          `Usuário tem ${
-                            age < 2 ? `${age} ano` : `${age} anos`
-                          } de idade. Atenção ao revisar os dados!`,
-                        );
-                      }
-                    }}
+                    onClick={() => selectUser(user)}
                   >
                     <strong>{user.personalInformation.name}</strong>
                     <span>{user.personalInformation.cpf}</span>
@@ -446,6 +488,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
         <Loading loading={loading} />
       </div>
+
+      <QrScannerModal show={showScanner} onHide={() => setShowScanner(false)} onScan={handleScan} />
     </div>
   );
 };
