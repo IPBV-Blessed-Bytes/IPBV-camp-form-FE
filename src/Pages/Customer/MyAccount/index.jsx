@@ -177,7 +177,7 @@ const MyAccount = () => {
                       <td>
                         {r.status === 'CONFIRMED' ? (
                           <div className="d-flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
+                            <Button variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
                               Solicitar Alteração
                             </Button>
                             <Button
