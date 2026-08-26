@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Modal, Alert } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { Html5Qrcode } from 'html5-qrcode';
 import PropTypes from 'prop-types';
+import CustomModal from '@/components/Global/CustomModal';
 
 const REGION_ID = 'qr-scanner-region';
 
@@ -39,7 +40,9 @@ const QrScannerModal = ({ show, onHide, onScan }) => {
           () => {},
         )
         .catch(() =>
-          setError('Não foi possível acessar a câmera. Verifique as permissões do navegador.'),
+          setError(
+            'Não foi possível acessar a câmera. Verifique as permissões do navegador e use uma conexão segura (HTTPS).',
+          ),
         );
     }, 0);
 
@@ -51,23 +54,18 @@ const QrScannerModal = ({ show, onHide, onScan }) => {
   }, [show, onScan]);
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Escanear QR de Check-in</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {error ? (
-          <Alert variant="danger" className="mb-0">
-            {error}
-          </Alert>
-        ) : (
-          <>
-            <p className="text-secondary small">Aponte a câmera para o QR do acampante.</p>
-            <div id={REGION_ID} style={{ width: '100%' }} />
-          </>
-        )}
-      </Modal.Body>
-    </Modal>
+    <CustomModal show={show} onHide={onHide} variant="info" icon="camera" title="Escanear QR de Check-in">
+      {error ? (
+        <Alert variant="danger" className="mb-0">
+          {error}
+        </Alert>
+      ) : (
+        <>
+          <p className="text-secondary small">Aponte a câmera para o QR do acampante.</p>
+          <div id={REGION_ID} style={{ width: '100%' }} />
+        </>
+      )}
+    </CustomModal>
   );
 };
 
