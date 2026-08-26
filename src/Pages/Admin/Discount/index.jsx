@@ -218,6 +218,7 @@ const AdminDiscount = ({ loggedUsername }) => {
   return (
     <div className="admin-subpage admin-subpage--discount discounts">
       <AdminSubpageHeader
+        sessionKey="descontos"
         username={loggedUsername}
         title="Descontos"
         subtitle="Cupons e descontos atrelados a CPFs"

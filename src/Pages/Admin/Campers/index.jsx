@@ -284,6 +284,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   return (
     <div className="admin-subpage admin-subpage--registered">
       <AdminSubpageHeader
+        sessionKey="acampantes"
         username={loggedUsername}
         title="Inscrições"
         subtitle="Todos os acampantes inscritos"

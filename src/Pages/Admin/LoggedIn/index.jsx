@@ -13,10 +13,13 @@ import Loading from '@/components/Global/Loading';
 import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
+import SessionEditModal from '@/components/Admin/SessionEditModal';
 import SideButtons from '@/components/Admin/SideButtons';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
+import { useAdminSessions } from '@/hooks/useAdminSessions';
+import { resolveSession } from '@/config/adminSessions';
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -65,6 +68,10 @@ const AdminLoggedIn = ({
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
   const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [editingSession, setEditingSession] = useState(null);
+
+  const { configs: sessionConfigs, refetch: refetchSessions } = useAdminSessions();
+  const canEditSessions = userRole === 'admin';
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
@@ -267,10 +274,34 @@ const AdminLoggedIn = ({
 
       <div className="admin-home__content">
         <Row className="navigation-header gx-3">
-          {navigationSessions.map((session) => (
-            <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
-          ))}
+          {navigationSessions.map((session) => {
+            const resolved = resolveSession(session.path, sessionConfigs[session.path]);
+            return (
+              <SessionCard
+                key={session.path}
+                permission={session.permission}
+                cardType={session.cardType}
+                iconSize={session.iconSize}
+                title={resolved.title}
+                typeIcon={resolved.icon}
+                accentColor={resolved.color}
+                canEdit={canEditSessions}
+                onEdit={() => setEditingSession(session.path)}
+                onClick={() => navigate(`${routePrefix}/${session.path}`)}
+              />
+            );
+          })}
         </Row>
+
+        {editingSession && (
+          <SessionEditModal
+            show={Boolean(editingSession)}
+            onHide={() => setEditingSession(null)}
+            sessionKey={editingSession}
+            config={sessionConfigs[editingSession]}
+            onSaved={refetchSessions}
+          />
+        )}
 
         {packagesAndTotalCardsPermissions && (
           <>

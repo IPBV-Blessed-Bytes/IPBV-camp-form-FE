@@ -181,6 +181,7 @@ const AdminFeedback = ({ loggedUsername }) => {
   return (
     <div className="admin-subpage admin-subpage--feedback">
       <AdminSubpageHeader
+        sessionKey="opiniao"
         username={loggedUsername}
         title="Feedbacks"
         subtitle="Opiniões enviadas pelos participantes"

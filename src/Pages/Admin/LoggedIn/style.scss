@@ -49,6 +49,31 @@ $admin-accent-checkin: $slime-green;
     width: 4px;
   }
 
+  &__edit {
+    align-items: center;
+    background: var(--session-accent, #{$primary});
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    height: 28px;
+    justify-content: center;
+    opacity: 0.85;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    width: 28px;
+    z-index: 2;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+  }
+
   &:hover {
     border-color: var(--session-accent, #{$primary}) !important;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -114,7 +139,7 @@ $admin-accent-checkin: $slime-green;
     --session-accent: #{$admin-accent-ride};
   }
   &--bus-card {
-    --session-accent: #ef8c3b;
+    --session-accent: #d8b4fe;
   }
   &--discount-card {
     --session-accent: #{$admin-accent-discount};

@@ -310,6 +310,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   return (
     <div className="admin-subpage admin-subpage--checkin">
       <AdminSubpageHeader
+        sessionKey="checkin"
         username={loggedUsername}
         title="Check-in de Usuário"
         subtitle="Confirmação de presença dos acampantes"

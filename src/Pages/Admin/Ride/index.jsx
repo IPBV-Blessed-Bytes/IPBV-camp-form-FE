@@ -269,6 +269,7 @@ const AdminRide = ({ loggedUsername }) => {
   return (
     <div className="admin-subpage admin-subpage--ride ride-page">
       <AdminSubpageHeader
+        sessionKey="carona"
         username={loggedUsername}
         title="Caronas"
         subtitle="Ofertas e pedidos de carona dos inscritos"

@@ -402,6 +402,7 @@ const AdminRooms = ({ loggedUsername }) => {
   return (
     <div className="admin-subpage admin-subpage--rooms rooms">
       <AdminSubpageHeader
+        sessionKey="quartos"
         username={loggedUsername}
         title="Quartos"
         subtitle="Distribuição de acampantes por quarto"

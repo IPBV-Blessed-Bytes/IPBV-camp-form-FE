@@ -324,6 +324,7 @@ const AdminTeams = ({ loggedUsername }) => {
   return (
     <div className="admin-subpage admin-subpage--teams">
       <AdminSubpageHeader
+        sessionKey="times"
         username={loggedUsername}
         title="Times"
         subtitle="Times e seus acampantes"

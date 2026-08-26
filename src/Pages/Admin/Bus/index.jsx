@@ -132,6 +132,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
   return (
     <div className="admin-subpage admin-subpage--bus">
       <AdminSubpageHeader
+        sessionKey="onibus"
         username={loggedUsername}
         title="Ônibus"
         subtitle="Passageiros que marcaram ir de ônibus"
