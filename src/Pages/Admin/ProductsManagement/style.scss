@@ -51,6 +51,86 @@
   }
 }
 
+.age-rules__hint {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.age-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 1.5rem;
+
+  &__product {
+    border: 1px solid #d9e2e6;
+    border-left: 3px solid #007185;
+    border-radius: 10px;
+    background: #f6fafb;
+    padding: 12px 14px;
+  }
+
+  &__product-head {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  &__product-name {
+    font-weight: 700;
+    color: #33484f;
+  }
+
+  &__product-cat {
+    border: 1px solid #d9e2e6;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &__empty {
+    color: #99a4a8;
+    font-size: 0.82rem;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  &__row {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dashed #dbe4e7;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  &__label {
+    color: #33484f;
+    font-size: 0.9rem;
+  }
+
+  &__add {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 6px;
+    margin-top: 10px;
+
+    .form-control {
+      font-size: 0.85rem;
+      padding: 4px;
+    }
+  }
+}
+
 .custom-modal {
   .lot-prices-grid {
     display: grid;

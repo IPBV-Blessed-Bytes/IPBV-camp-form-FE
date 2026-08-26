@@ -1,4 +1,12 @@
 import { products } from '@/Pages/Packages/utils/products';
+import { ageRules } from '@/Pages/Packages/utils/ageRules';
+
+const buildDescription = (rule) => {
+  if (rule.discountPercent >= 100) {
+    return `Grátis para ${rule.minAge} a ${rule.maxAge} anos`;
+  }
+  return `${rule.discountPercent}% de desconto para ${rule.minAge} a ${rule.maxAge} anos`;
+};
 
 const getDiscountedProducts = (ageRaw) => {
   const age = Number(ageRaw);
@@ -7,31 +15,13 @@ const getDiscountedProducts = (ageRaw) => {
     let price = product.price;
     let discountDescription = '';
 
-    if (product.category === 'Hospedagem') {
-      if (age <= 8) {
-        price = 0;
-        discountDescription = 'Criança até 8 anos não paga hospedagem';
-      } else if (age >= 9 && age <= 14) {
-        price = price * 0.5;
-        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na hospedagem';
-      }
-    }
+    const rule = ageRules.find(
+      (r) => r.productId === product.productId && age >= r.minAge && age <= r.maxAge,
+    );
 
-    if (product.category === 'Transporte') {
-      if (age <= 5 && product.id === 'bus-yes') {
-        price = 0;
-        discountDescription = 'Criança até 5 anos não paga transporte (no colo dos pais)';
-      }
-    }
-
-    if (product.category === 'Alimentação') {
-      if (age <= 8 && product.id === 'food-complete') {
-        price = 0;
-        discountDescription = 'Criança até 8 anos não paga alimentação';
-      } else if (age >= 9 && age <= 14 && product.id === 'food-complete') {
-        price = price * 0.5;
-        discountDescription = 'Adolescente de 9 a 14 anos paga apenas 50% na alimentação';
-      }
+    if (rule && rule.discountPercent > 0) {
+      price = product.price * (1 - Math.min(rule.discountPercent, 100) / 100);
+      discountDescription = buildDescription(rule);
     }
 
     if (product.price === 0) {

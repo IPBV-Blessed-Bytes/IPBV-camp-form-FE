@@ -10,6 +10,7 @@ import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
 import Loading from '@/components/Global/Loading';
 import { loadProducts } from '../Packages/utils/products';
+import { loadAgePriceRules } from '../Packages/utils/ageRules';
 import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
@@ -113,6 +114,7 @@ const BeforePayment = () => {
     const fetchLotsAndProducts = async () => {
       try {
         await loadProducts();
+        await loadAgePriceRules();
         const data = await getLots();
         const foundLot = findActiveLot(data?.lots);
 

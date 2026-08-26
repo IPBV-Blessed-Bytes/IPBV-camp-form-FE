@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
 import { getAllProducts, createProduct, updateProduct, deleteProduct, setLotProductPrice } from '@/services/products';
+import { getAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -39,16 +40,23 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [productToDelete, setProductToDelete] = useState(null);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [ageRules, setAgeRules] = useState([]);
+  const [bracketDrafts, setBracketDrafts] = useState({});
 
   scrollUp();
 
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const [productsData, lotsData] = await Promise.all([getAllProducts(), getLotsAuthenticated()]);
+      const [productsData, lotsData, rulesData] = await Promise.all([
+        getAllProducts(),
+        getLotsAuthenticated(),
+        getAgePriceRules(),
+      ]);
       const list = Array.isArray(productsData?.products) ? productsData.products : [];
       setProducts(list.sort((a, b) => a.sortOrder - b.sortOrder));
       setLots(Array.isArray(lotsData?.lots) ? lotsData.lots : []);
+      setAgeRules(Array.isArray(rulesData?.rules) ? rulesData.rules : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos');
     } finally {
@@ -154,6 +162,60 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       fetchAll();
     } catch (error) {
       toast.error('Erro ao excluir produto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const patchBracket = (productId, patch) =>
+    setBracketDrafts((prev) => ({ ...prev, [productId]: { ...(prev[productId] || {}), ...patch } }));
+
+  const handleAddBracket = async (product) => {
+    const draft = bracketDrafts[product.id] || {};
+    const minAge = Number(draft.minAge);
+    const maxAge = Number(draft.maxAge);
+    const discountPercent = Number(draft.discountPercent);
+
+    if (draft.minAge === '' || draft.minAge == null || Number.isNaN(minAge)) {
+      toast.error('Informe a idade mínima');
+      return;
+    }
+    if (draft.maxAge === '' || draft.maxAge == null || Number.isNaN(maxAge)) {
+      toast.error('Informe a idade máxima');
+      return;
+    }
+    if (maxAge < minAge) {
+      toast.error('A idade máxima não pode ser menor que a mínima');
+      return;
+    }
+    if (Number.isNaN(discountPercent) || discountPercent <= 0 || discountPercent > 100) {
+      toast.error('O desconto deve ser entre 1 e 100%');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await createAgePriceRule({ productId: product.id, minAge, maxAge, discountPercent });
+      toast.success('Faixa de desconto adicionada');
+      registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${discountPercent}%) em ${product.name}`, loggedUsername);
+      setBracketDrafts((prev) => ({ ...prev, [product.id]: { minAge: '', maxAge: '', discountPercent: '' } }));
+      fetchAll();
+    } catch (error) {
+      toast.error('Erro ao adicionar faixa de desconto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveBracket = async (rule, productName) => {
+    setLoading(true);
+    try {
+      await deleteAgePriceRule(rule.id);
+      toast.success('Faixa de desconto removida');
+      registerLog(`Removeu faixa de desconto ${rule.minAge}-${rule.maxAge} anos em ${productName}`, loggedUsername);
+      fetchAll();
+    } catch (error) {
+      toast.error('Erro ao remover faixa de desconto');
     } finally {
       setLoading(false);
     }
@@ -278,6 +340,80 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               ))}
             </tbody>
           </Table>
+        </div>
+
+        <SectionHeader title="Faixas de idade (desconto)" count={ageRules.length} />
+        <p className="age-rules__hint">
+          As faixas abaixo são aplicadas automaticamente no formulário conforme a idade do inscrito, <b>por produto</b>.
+        </p>
+
+        <div className="age-rules">
+          {products.map((product) => {
+            const productRules = ageRules
+              .filter((rule) => rule.productId === product.id)
+              .sort((a, b) => a.minAge - b.minAge);
+            const draft = bracketDrafts[product.id] || {};
+
+            return (
+              <div key={product.id} className="age-rules__product">
+                <div className="age-rules__product-head">
+                  <span className="age-rules__product-name">{product.name}</span>
+                  <Badge bg="light" text="dark" className="age-rules__product-cat">
+                    {categoryLabel(product.category)}
+                  </Badge>
+                </div>
+
+                {productRules.length === 0 ? (
+                  <div className="age-rules__empty">Sem faixas de desconto.</div>
+                ) : (
+                  productRules.map((rule) => (
+                    <div key={rule.id} className="age-rules__row">
+                      <span className="age-rules__label">
+                        {rule.minAge}–{rule.maxAge} anos → <b>{rule.discountPercent}% off</b>
+                        {rule.discountPercent >= 100 ? ' (grátis)' : ''}
+                      </span>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleRemoveBracket(rule, product.name)}
+                        aria-label="Remover faixa"
+                      >
+                        <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
+                      </Button>
+                    </div>
+                  ))
+                )}
+
+                <div className="age-rules__add">
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    placeholder="de"
+                    value={draft.minAge ?? ''}
+                    onChange={(e) => patchBracket(product.id, { minAge: e.target.value })}
+                  />
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    placeholder="até"
+                    value={draft.maxAge ?? ''}
+                    onChange={(e) => patchBracket(product.id, { maxAge: e.target.value })}
+                  />
+                  <Form.Control
+                    type="number"
+                    min="1"
+                    max="100"
+                    placeholder="% off"
+                    value={draft.discountPercent ?? ''}
+                    onChange={(e) => patchBracket(product.id, { discountPercent: e.target.value })}
+                  />
+                  <Button variant="outline-teal-blue" size="sm" onClick={() => handleAddBracket(product)}>
+                    Adicionar
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <CustomModal

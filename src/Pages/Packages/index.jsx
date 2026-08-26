@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import { loadProducts } from './utils/products';
+import { loadAgePriceRules } from './utils/ageRules';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
@@ -40,6 +41,7 @@ const Packages = () => {
     const fetchLotsAndProducts = async () => {
       try {
         const updatedProducts = await loadProducts();
+        await loadAgePriceRules();
 
         const data = await getLots();
         const foundLot = findActiveLot(data?.lots);
