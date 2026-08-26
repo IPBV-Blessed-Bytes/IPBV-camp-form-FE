@@ -173,7 +173,6 @@ const MyAccount = () => {
                               Solicitar Alteração
                             </Button>
                             <Button
-                              size="sm"
                               variant="teal-blue"
                               onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}
                             >
@@ -251,7 +250,7 @@ const MyAccount = () => {
         onHide={() => setShowEdit(false)}
         variant="info"
         icon="edit"
-        title="Solicitar alteração"
+        title="Solicitar Alteração"
         iconFill="none"
         size="lg"
         footer={
