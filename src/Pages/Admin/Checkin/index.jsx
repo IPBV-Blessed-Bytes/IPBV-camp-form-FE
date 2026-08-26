@@ -252,16 +252,28 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       const users = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
       const match = users.find((u) => u.personalInformation.cpf.replace(/\D/g, '') === cpfDigits);
 
-      if (match) {
-        selectUserRef.current(match);
-      } else {
+      if (!match) {
         toast.warn('Nenhum acampante encontrado para este CPF');
+        return;
       }
+
+      selectUserRef.current(match);
+
+      if (match.checkin) {
+        toast.info('Este acampante já estava com check-in feito.');
+        return;
+      }
+
+      await checkinCamper(match.id, { checkin: true, checkinTime: formatDateTimeBR() });
+      setCheckinStatus(true);
+      registerLog(`Fez check-in (via QR) para o usuário ${match.personalInformation.name}`, loggedUsername);
+      toast.success('Check-in confirmado automaticamente via QR.');
+      fetchCheckinStats();
     } catch (error) {
       console.error('Erro ao buscar usuário do QR:', error);
       toast.error('Erro ao buscar o usuário do QR');
     }
-  }, []);
+  }, [loggedUsername]);
 
   const userRoom = rooms.find((room) => room.campers.some((camper) => camper.cpf === cpf));
 
