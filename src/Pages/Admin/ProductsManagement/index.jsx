@@ -198,6 +198,14 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       return;
     }
 
+    const overlaps = ageRules.some(
+      (rule) => rule.productId === product.id && minAge <= rule.maxAge && rule.minAge <= maxAge,
+    );
+    if (overlaps) {
+      toast.error('Esta faixa de idade se sobrepõe a outra já cadastrada para o produto');
+      return;
+    }
+
     setLoading(true);
     try {
       await createAgePriceRule({ productId: product.id, minAge, maxAge, discountType, discountAmount });
@@ -210,7 +218,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       }));
       fetchAll();
     } catch (error) {
-      toast.error('Erro ao adicionar faixa de desconto');
+      const serverMessage = typeof error?.response?.data === 'string' ? error.response.data : null;
+      toast.error(serverMessage || 'Erro ao adicionar faixa de desconto');
     } finally {
       setLoading(false);
     }
