@@ -147,7 +147,8 @@ const MyAccount = () => {
                   <th>Transporte</th>
                   <th>Alimentação</th>
                   <th>Valor</th>
-                  <th>Status</th>
+                  <th>Status do Pagamento</th>
+                  <th>Status do Check-in</th>
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -165,6 +166,13 @@ const MyAccount = () => {
                       <td>{r.totalPrice ? `R$ ${r.totalPrice}` : '—'}</td>
                       <td>
                         <Badge bg={status.bg}>{status.label}</Badge>
+                      </td>
+                      <td>
+                        {r.checkin ? (
+                          <Badge bg="success">Check-in feito</Badge>
+                        ) : (
+                          <Badge bg="secondary">Sem check-in</Badge>
+                        )}
                       </td>
                       <td>
                         {r.status === 'CONFIRMED' ? (
