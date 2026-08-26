@@ -275,6 +275,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         setShowAddModal(true);
         setFormSubmitted(false);
       },
+      buttonClassName: 'btn-bw',
       typeButton: 'teal-blue',
       typeIcon: 'add-person',
       condition: adminTableCreateRegistrationPermissions,
