@@ -33,7 +33,7 @@ const SessionCard = ({
                 onEdit?.();
               }}
             >
-              <Icons typeIcon="edit" iconSize={16} fill="#fff" />
+              <Icons typeIcon="edit" iconSize={16} fill="none" />
             </button>
           )}
           <Card.Body className="session-card__body">

@@ -52,7 +52,8 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
       onHide={onHide}
       variant="info"
       icon="edit"
-      title="Editar sessão"
+      iconFill="none"
+      title="Editar Sessão"
       footer={
         <>
           <Button variant="secondary" onClick={onHide}>
