@@ -126,9 +126,10 @@ const FormHome = ({ onLgpdClose }) => {
                     <li key={item.id} className="mb-3">
                       <h6 className="d-flex gap-3 align-items-start">
                         <Icons className="flex-shrink-0" typeIcon={item.icon} iconSize={32} {...iconColorProps(item.icon)} />
-                        <span className="info-home-itens d-flex gap-2">
+                        <span className="info-home-itens">
                           <b className="info-home-enphasis">{item.title}:</b>{' '}
                           <span
+                            className="info-home-description"
                             dangerouslySetInnerHTML={{
                               __html: DOMPurify.sanitize(item.description),
                             }}
