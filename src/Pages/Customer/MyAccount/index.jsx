@@ -103,6 +103,7 @@ const MyAccount = () => {
           </div>
         </div>
         <Button variant="teal-blue" className="my-account__btn my-account__btn--new" onClick={() => navigate('/')}>
+          <Icons typeIcon="plus" iconSize={18} fill="#fff" />
           Nova Inscrição
         </Button>
         <Button
@@ -110,10 +111,11 @@ const MyAccount = () => {
           className="my-account__btn my-account__btn--back outline-border-width-thin"
           onClick={() => navigate('/')}
         >
-          Voltar ao Formulário
+          ← Voltar ao Formulário
         </Button>
         <Button variant="outline-secondary" className="my-account__btn my-account__btn--logout" onClick={logout}>
-          Sair
+          <Icons typeIcon="exit" iconSize={22} fill="none" stroke="currentColor" />
+          Desconectar
         </Button>
       </div>
 
@@ -140,16 +142,16 @@ const MyAccount = () => {
             <Table striped hover responsive className="account-table">
               <thead>
                 <tr>
-                  <th>Nº Pedido</th>
-                  <th>Campista</th>
-                  <th>CPF</th>
-                  <th>Hospedagem</th>
-                  <th>Transporte</th>
-                  <th>Alimentação</th>
-                  <th>Valor</th>
-                  <th>Status do Pagamento</th>
-                  <th>Status do Check-in</th>
-                  <th>Ações</th>
+                  <th>Nº Pedido:</th>
+                  <th>Campista:</th>
+                  <th>CPF:</th>
+                  <th>Hospedagem:</th>
+                  <th>Transporte:</th>
+                  <th>Alimentação:</th>
+                  <th>Valor:</th>
+                  <th>Status do Pagamento:</th>
+                  <th>Status do Check-in:</th>
+                  <th>Ações:</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,10 +182,7 @@ const MyAccount = () => {
                             <Button variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
                               Solicitar Alteração
                             </Button>
-                            <Button
-                              variant="teal-blue"
-                              onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}
-                            >
+                            <Button variant="teal-blue" onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}>
                               QR de check-in
                             </Button>
                           </div>
@@ -437,10 +436,7 @@ const MyAccount = () => {
             <Col md={6}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">Tem vagas de carona a oferecer?</Form.Label>
-                <Form.Select
-                  value={contact.car ?? ''}
-                  onChange={(e) => setContact('car', e.target.value === 'true')}
-                >
+                <Form.Select value={contact.car ?? ''} onChange={(e) => setContact('car', e.target.value === 'true')}>
                   <option value="">Selecione...</option>
                   <option value={false}>Não</option>
                   <option value={true}>Sim</option>

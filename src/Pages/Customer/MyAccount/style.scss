@@ -75,6 +75,13 @@
   &__btn {
     flex-shrink: 0;
 
+    &--logout, &--new, &--back {
+      align-items: center;
+      display: flex;
+      font-weight: bold;
+      gap: 0.5rem;
+    }
+
     @media (max-width: $sm) {
       &--logout {
         flex: 0 0 auto;
