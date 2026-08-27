@@ -39,7 +39,13 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   const { items } = useCart();
   const { formStage, isLoggedIn } = useContext(AuthContext);
 
-  const [steps, setSteps] = useState(enumSteps.home);
+  const [steps, setSteps] = useState(() => {
+    const resume = sessionStorage.getItem(FORM_STORAGE_KEYS.resumeCheckout);
+    if (resume !== null) {
+      return Number(resume);
+    }
+    return enumSteps.home;
+  });
   const [formValues, setFormValues] = useState(() => {
     const stored = sessionStorage.getItem(FORM_STORAGE_KEYS.savedUsers);
     return stored ? JSON.parse(stored) : initialValues;

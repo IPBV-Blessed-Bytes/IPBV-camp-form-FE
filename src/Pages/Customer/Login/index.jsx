@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import useAuth from '@/hooks/useAuth';
+import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import AuthShell from '@/components/Global/AuthShell';
@@ -17,7 +18,13 @@ const CustomerLogin = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/minha-conta');
+      const resume = sessionStorage.getItem(FORM_STORAGE_KEYS.resumeCheckout);
+      if (resume !== null) {
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.resumeCheckout);
+        navigate('/');
+      } else {
+        navigate('/minha-conta');
+      }
     }
   }, [isLoggedIn, navigate]);
 

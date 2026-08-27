@@ -5,6 +5,9 @@ import './style.scss';
 import { getLots } from '@/services/lots';
 import { findActiveLot } from '@/utils/activeLot';
 import { useFormState } from '@/contexts/FormStateContext';
+import useAuth from '@/hooks/useAuth';
+import { enumSteps } from '@/utils/constants';
+import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
@@ -33,6 +36,7 @@ const BeforePayment = () => {
   const [rawFee, setRawFee] = useState(0);
   const [loading, setLoading] = useState(true);
   const navigateTo = useNavigate();
+  const { isLoggedIn } = useAuth();
   const cartIsFree = cartTotal === 0;
 
   const isUserValid = (user) => {
@@ -63,6 +67,13 @@ const BeforePayment = () => {
       sessionStorage.removeItem(cartKey);
       nextStep();
     }
+  };
+
+  const goToLogin = () => {
+    if (validFormValues.length === 0) return;
+    sessionStorage.setItem(FORM_STORAGE_KEYS.savedUsers, JSON.stringify(validFormValues));
+    sessionStorage.setItem(FORM_STORAGE_KEYS.resumeCheckout, String(enumSteps.beforePayment));
+    navigateTo('/entrar');
   };
 
   const getSummaryValues = (formValuesToSummarize, rawFee) => {
@@ -247,8 +258,8 @@ acima de 15 anos = ${getFeeByAge(20)} reais
 
                 <div className="summary-buttons d-grid gap-3">
                   {validFormValues.length > 0 && (
-                    <Button variant="teal-blue" size="lg" onClick={handleClick}>
-                      {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
+                    <Button variant="teal-blue" size="lg" onClick={isLoggedIn ? handleClick : goToLogin}>
+                      {isLoggedIn ? (cartIsFree ? 'Finalizar Inscrição' : 'Pagamento') : 'Fazer login para continuar'}
                     </Button>
                   )}
                 </div>
