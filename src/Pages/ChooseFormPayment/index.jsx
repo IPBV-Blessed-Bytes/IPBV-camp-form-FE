@@ -13,7 +13,7 @@ import Icons from '@/components/Global/Icons';
 const PAYMENT_OPTIONS = [
   { key: 'creditCard', label: 'Cartão de Crédito', description: 'Parcele em até 12x', icon: 'credit-card' },
   { key: 'pix', label: 'PIX', description: 'Aprovação na hora', icon: 'cash' },
-  { key: 'ticket', label: 'Boleto', description: 'Vencimento em alguns dias', icon: 'barcode' },
+  { key: 'ticket', label: 'Boleto', description: 'Vencimento em 3 dias', icon: 'barcode' },
 ];
 
 const ChooseFormPayment = () => {
