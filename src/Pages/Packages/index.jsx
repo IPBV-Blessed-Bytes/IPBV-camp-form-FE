@@ -8,7 +8,6 @@ import './style.scss';
 import ProductList from '@/components/Global/ProductList';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
-import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { findActiveLot } from '@/utils/activeLot';
 import { getLots } from '@/services/lots';
 import { useFormState } from '@/contexts/FormStateContext';
@@ -32,7 +31,6 @@ const Packages = () => {
   const updateForm = updateFormValues('package');
   const productListRef = useRef();
   const { items, addItem } = useCart();
-  const [individualBase, setIndividualBase] = useState(0);
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
   const [activeLot, setActiveLot] = useState(null);
@@ -49,15 +47,10 @@ const Packages = () => {
         if (foundLot) {
           setActiveLot(foundLot);
 
-          const registrationFee = calculateRegistrationFee(Number(foundLot.price.registrationFee || 0), age);
-
-          setIndividualBase(registrationFee);
-
           setProductsState(updatedProducts);
         }
       } catch (error) {
         console.error('Erro ao buscar lotes:', error);
-        setIndividualBase(0);
       } finally {
         setLoading(false);
       }
@@ -71,16 +64,13 @@ const Packages = () => {
     const cartIsEmpty = items.length === 0;
 
     if (cartIsEmpty && currentUser?.package) {
-      const { accomodation, transportation, food } = currentUser.package;
+      const { accomodation, transportation } = currentUser.package;
 
       if (accomodation?.id) {
         addItem({ ...accomodation, category: 'Hospedagem' });
       }
       if (transportation?.id) {
         addItem({ ...transportation, category: 'Transporte' });
-      }
-      if (food?.id) {
-        addItem({ ...food, category: 'Alimentação' });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,9 +104,6 @@ const Packages = () => {
       }
       if (item.category === 'Transporte') {
         newPackage.transportation = { id: item.id, name: item.name, price: item.price };
-      }
-      if (item.category === 'Alimentação') {
-        newPackage.food = { id: item.id, name: item.name, price: item.price };
       }
     });
 
@@ -161,22 +148,10 @@ const Packages = () => {
 
   const accomodationPrice = getDiscountedPrice('Hospedagem');
   const transportationPrice = getDiscountedPrice('Transporte');
-  const foodPrice = getDiscountedPrice('Alimentação');
 
-  const totalBeforeDiscount = accomodationPrice + transportationPrice + foodPrice;
+  const totalBeforeDiscount = accomodationPrice + transportationPrice;
   const discountNumeric = Number(discount) || 0;
-  const finalTotal = Math.max(totalBeforeDiscount + individualBase - discountNumeric, 0);
-
-  const rawFee = Number(activeLot?.price?.registrationFee || 0);
-
-  const getFeeByAge = (ageValue) => (rawFee > 0 ? calculateRegistrationFee(rawFee, ageValue) : 0);
-
-  const dynamicFeeTip = `
-Valor da taxa de inscrição conforme a idade:
-até 8 anos = ${getFeeByAge(8)} reais,
-9 a 14 anos = ${getFeeByAge(10)} reais,
-acima de 15 anos = ${getFeeByAge(20)} reais
-`;
+  const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
   return (
     <Container className="packages-page form__container__cart-height">
@@ -218,27 +193,6 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                     age={age}
                     cartKey={cartKey}
                     category="Transporte"
-                    products={productsState}
-                    ref={productListRef}
-                    packageCount={packageCount}                  />
-                </Card.Body>
-              </Card>
-
-              <Card className="mb-3 mb-sm-0">
-                <Card.Body>
-                  <Card.Title>Alimentação</Card.Title>
-                  <Card.Text>
-                    Você pode optar por todas as refeições ou nenhuma refeição.{' '}
-                    <strong>Não teremos vendas de refeições avulsas</strong>. A escolha do alimentação é{' '}
-                    <strong>obrigatória</strong>.
-                    <em className="discount-description text-success small">
-                      {getCategoryDiscountDescription('Alimentação')}
-                    </em>
-                  </Card.Text>
-                  <ProductList
-                    age={age}
-                    cartKey={cartKey}
-                    category="Alimentação"
                     products={productsState}
                     ref={productListRef}
                     packageCount={packageCount}                  />
@@ -295,43 +249,6 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                       {items.find((i) => i.category === 'Transporte') && (
                         <div className="summary__accomodation__value">R$ {transportationPrice},00</div>
                       )}
-                    </div>
-                    <div className="packages-horizontal-line-cart"></div>
-                  </div>
-
-                  <div className="summary__food">
-                    <div className="summary__accomodation__label">Alimentação:</div>
-                    <div
-                      className={`summary__accomodation__content ${
-                        items.find((i) => i.category === 'Alimentação') ? 'with-border' : 'no-border'
-                      }`}
-                    >
-                      {items.find((i) => i.category === 'Alimentação') ? (
-                        <div>{items.find((i) => i.category === 'Alimentação')?.name}</div>
-                      ) : (
-                        <small className="text-secondary">Não selecionado</small>
-                      )}
-                      {items.find((i) => i.category === 'Alimentação') && (
-                        <div className="summary__accomodation__value">R$ {foodPrice},00</div>
-                      )}
-                    </div>
-                    <div className="packages-horizontal-line-cart"></div>
-                  </div>
-
-                  <div className="summary__individual-base">
-                    <div className="d-flex justify-content-between">
-                      <div className="d-flex align-items-center gap-1">
-                        <div className="summary-individual-base-label">Taxa de Inscrição:</div>
-                        <Tips
-                          classNameWrapper="mt-0 mb-2"
-                          placement="top"
-                          typeIcon="info"
-                          size={15}
-                          color={'#7f7878'}
-                          text={dynamicFeeTip}
-                        />
-                      </div>
-                      <div className="summary-individual-base-value"> R$ {individualBase},00 </div>
                     </div>
                     <div className="packages-horizontal-line-cart"></div>
                   </div>

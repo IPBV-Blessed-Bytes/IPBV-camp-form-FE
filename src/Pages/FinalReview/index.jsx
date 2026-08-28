@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import { format, isValid } from 'date-fns';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
-import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
-import useActiveLot from '@/hooks/useActiveLot';
 import { saveFinalObservation } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getTempData } from '@/utils/formStorage';
@@ -20,7 +18,6 @@ const FinalReview = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
   const [observation, setObservation] = useState('');
-  const [rawFee, setRawFee] = useState(0);
   const location = useLocation();
   const { emptyCart } = useCart();
 
@@ -31,14 +28,6 @@ const FinalReview = () => {
 
   const birthday = new Date(formValues.personalInformation?.birthday);
   const age = isValid(birthday) ? calculateAge(birthday) : 0;
-
-  const { activeLot } = useActiveLot();
-
-  useEffect(() => {
-    if (activeLot) {
-      setRawFee(Number(activeLot.price.registrationFee || 0));
-    }
-  }, [activeLot]);
 
   const discountedProducts = getDiscountedProducts(age);
 
@@ -90,9 +79,7 @@ const FinalReview = () => {
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
-  const registrationFee = calculateRegistrationFee(rawFee, age);
-
-  const totalBeforeDiscount = packageOriginalPrice + registrationFee + extraMealsPrice;
+  const totalBeforeDiscount = packageOriginalPrice + extraMealsPrice;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
   return (

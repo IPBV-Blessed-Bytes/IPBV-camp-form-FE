@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
-import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { FORM_STORAGE_KEYS, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import { createCheckout } from '@/services/checkout';
@@ -71,7 +70,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
-  const [basePriceTotal, setBasePriceTotal] = useState(0);
   const [packageCount, setPackageCount] = useState(null);
 
   const windowPathname = window.location.pathname;
@@ -180,7 +178,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   }, []);
   const resetFormSubmitted = useCallback(() => setFormSubmitted(false), []);
   const handlePreFill = useCallback((value) => setPreFill(Boolean(value)), []);
-  const handleBasePriceChange = useCallback((value) => setBasePriceTotal(value), []);
 
   const updateFormValues = useCallback(
     (sectionKey) => (newData, callback) => {
@@ -319,7 +316,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         setStatus('loading');
 
         const discountList = JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.discountList) || '[]');
-        const registrationFeePerUser = basePriceTotal;
 
         const buildFormPayload = (form, index) => {
           const formBirthday = new Date(form?.personalInformation?.birthday);
@@ -332,14 +328,12 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
           const transportationPrice = getProductPrice(form.package?.transportation?.id);
           const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
           const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
-          const registrationFee = calculateRegistrationFee(registrationFeePerUser, formAge);
 
           const subtotal =
             Number(accomodationPrice) +
             Number(transportationPrice) +
             Number(foodPrice) +
-            Number(extraMealsPrice) +
-            Number(registrationFee);
+            Number(extraMealsPrice);
 
           const rawDiscount = Number(discountList[index] || 0);
           const appliedDiscount = Math.min(subtotal, rawDiscount);
@@ -394,7 +388,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         setLoading(false);
       }
     },
-    [basePriceTotal, formValues, handleCheckoutResponse, isLoggedIn, navigate],
+    [formValues, handleCheckoutResponse, isLoggedIn, navigate],
   );
 
   const value = useMemo(
@@ -419,7 +413,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       goToSuccessPage,
       handleAddNewUser,
       handleAdminClick,
-      handleBasePriceChange,
       handleDiscountChange,
       handlePersonData,
       handlePreFill,
@@ -476,7 +469,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       goToSuccessPage,
       handleAddNewUser,
       handleAdminClick,
-      handleBasePriceChange,
       handleDiscountChange,
       handlePersonData,
       handlePreFill,

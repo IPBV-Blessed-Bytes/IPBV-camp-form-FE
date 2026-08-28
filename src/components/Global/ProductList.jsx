@@ -49,7 +49,7 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
   };
 
   const checkRequiredPackages = () => {
-    const requiredCategories = ['Hospedagem', 'Transporte', 'Alimentação'];
+    const requiredCategories = ['Hospedagem', 'Transporte'];
     const missingCategories = requiredCategories.filter(
       (cat) => !productsState.some((p) => p.category === cat && getItem(p.id)),
     );

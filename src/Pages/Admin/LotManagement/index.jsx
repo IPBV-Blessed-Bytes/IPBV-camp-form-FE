@@ -370,19 +370,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                             </Form.Group>
                           </Col>
 
-                          <Col xs={12} md={4} className="mb-3">
-                            <Form.Group>
-                              <Form.Label>
-                                <strong>Preço Taxa Inscrição:</strong>
-                              </Form.Label>
-                              <Form.Control
-                                type="text"
-                                value={lot.price?.registrationFee || ''}
-                                onChange={(e) => handleLotChange(lot.id, 'price', e.target.value, 'registrationFee')}
-                                className="form-control-lg"
-                              />
-                            </Form.Group>
-                          </Col>
                         </Row>
 
                         <div className="d-flex mt-3 justify-content-end gap-2">
@@ -466,26 +453,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                 </Form.Group>
               </Col>
 
-              <Col md={12} lg={6} className="mb-3">
-                <Form.Group className="mb-3">
-                  <Form.Label>
-                    <strong>Preço Taxa Inscrição:</strong>
-                  </Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    value={newLot.price.registrationFee}
-                    onChange={(e) =>
-                      setNewLot({
-                        ...newLot,
-                        price: { ...newLot.price, registrationFee: e.target.value },
-                      })
-                    }
-                    className="form-control-lg form-control-bg admin-field--odd"
-                    placeholder="Preço"
-                  />
-                </Form.Group>
-              </Col>
 
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">

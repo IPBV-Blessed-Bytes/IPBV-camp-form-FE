@@ -3,7 +3,6 @@ import { Button, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
-import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import CustomModal from '@/components/Global/CustomModal';
@@ -87,17 +86,13 @@ const Cart = ({
   cartKey,
   formValues = [],
   goToEditStep,
-  handleBasePriceChange,
   setCartTotal,
   setFormValues,
-  rawFee,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
   const [targetItemId, setTargetItemId] = useState(null);
-
-  const enteredFromFinalReview = sessionStorage.getItem('enteredFromFinalReview') === 'true';
 
   const { removeItem, emptyCart } = useCart();
 
@@ -113,14 +108,12 @@ const Cart = ({
     const { accomodation, transportation, food } = getDiscountedPrices(user, age);
     const extraMeals = Number(user.extraMeals?.totalPrice || 0);
     const discount = Number(user.package?.discount || 0);
-    const registrationFee = calculateRegistrationFee(rawFee, age);
 
     const total = Math.max(
       Number(accomodation) +
         Number(transportation) +
         Number(food) +
-        (user.package?.food?.id ? 0 : Number(extraMeals)) +
-        Number(registrationFee) -
+        (user.package?.food?.id ? 0 : Number(extraMeals)) -
         Number(discount),
       0,
     );
@@ -132,28 +125,6 @@ const Cart = ({
       setCartTotal(finalTotal);
     }
   }, [finalTotal, setCartTotal]);
-
-  useEffect(() => {
-    if (!formValues.length || rawFee === undefined) return;
-
-    const validUsers = formValues.filter((user) => user?.personalInformation?.name?.trim());
-
-    if (!validUsers.length) {
-      handleBasePriceChange(0);
-      return;
-    }
-
-    const firstPayingUser = validUsers.find((user) => {
-      const age = calculateAge(new Date(user.personalInformation.birthday));
-      const registrationFee = calculateRegistrationFee(rawFee, age);
-
-      return registrationFee > 0;
-    });
-
-    const baseTotal = firstPayingUser ? rawFee : 0;
-
-    handleBasePriceChange(baseTotal);
-  }, [enteredFromFinalReview, formValues, rawFee, handleBasePriceChange]);
 
   const clearCart = () => {
     emptyCart();
@@ -192,7 +163,6 @@ const Cart = ({
       {validUsers.map((user, index) => {
         const userName = user.personalInformation.name || `Pessoa ${index + 1}`;
         const age = calculateAge(new Date(user.personalInformation.birthday));
-        const registrationFee = calculateRegistrationFee(rawFee, age);
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
@@ -237,7 +207,7 @@ const Cart = ({
 
               <div className="packages-horizontal-line-cart"></div>
 
-              {renderUserTotalInfo(user, age, registrationFee)}
+              {renderUserTotalInfo(user, age)}
             </Card.Body>
           </Card>
         );
@@ -270,10 +240,8 @@ Cart.propTypes = {
   cartKey: PropTypes.string.isRequired,
   formValues: PropTypes.array.isRequired,
   goToEditStep: PropTypes.func.isRequired,
-  handleBasePriceChange: PropTypes.func,
   setCartTotal: PropTypes.func.isRequired,
   setFormValues: PropTypes.func.isRequired,
-  rawFee: PropTypes.number.isRequired,
 };
 
 export default Cart;
