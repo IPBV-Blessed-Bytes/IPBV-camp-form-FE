@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import { useFormState } from '@/contexts/FormStateContext';
@@ -8,6 +8,13 @@ import './style.scss';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import FormStepLayout from '@/components/Global/FormStepLayout';
+import Icons from '@/components/Global/Icons';
+
+const PAYMENT_OPTIONS = [
+  { key: 'creditCard', label: 'Cartão de Crédito', description: 'Parcele em até 12x', icon: 'credit-card' },
+  { key: 'pix', label: 'PIX', description: 'Aprovação na hora', icon: 'cash' },
+  { key: 'ticket', label: 'Boleto', description: 'Vencimento em alguns dias', icon: 'barcode' },
+];
 
 const ChooseFormPayment = () => {
   const { backStep, currentFormValues, loading, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
@@ -28,7 +35,7 @@ const ChooseFormPayment = () => {
     },
   });
 
-  const { values, errors, handleChange, setValues, handleSubmit } = formik;
+  const { values, errors, setValues, handleSubmit } = formik;
 
   const handleManualSubmit = async () => {
     try {
@@ -64,9 +71,10 @@ const ChooseFormPayment = () => {
     );
   }, []);
 
-  const selectChangeHandler = (e) => {
-    updateForm(e.target.value);
-    handleChange(e);
+  const handleSelectPayment = (key) => {
+    updateForm(key);
+    setValues({ formPayment: key });
+    formik.setErrors({});
   };
 
   useEffect(() => {
@@ -90,28 +98,30 @@ const ChooseFormPayment = () => {
               automaticamente em nossa base de dados.
             </Card.Text>
 
-            <Form>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <b>Escolha sua forma de pagamento:</b>
-                </Form.Label>
-                <Form.Select
-                  id="formPayment"
-                  name="formPayment"
-                  isInvalid={!!errors.formPayment}
-                  value={values.formPayment}
-                  onChange={selectChangeHandler}
-                >
-                  <option value="" disabled>
-                    Selecione uma opção
-                  </option>
-                  <option value="creditCard">Cartão de Crédito (Até 12x)</option>
-                  <option value="pix">PIX</option>
-                  <option value="ticket">Boleto</option>
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
-              </Form.Group>
-            </Form>
+            <p className="payment-heading">
+              <b>Escolha sua forma de pagamento:</b>
+            </p>
+            <div className="payment-grid">
+              {PAYMENT_OPTIONS.map((option) => {
+                const active = values.formPayment === option.key;
+                return (
+                  <button
+                    key={option.key}
+                    type="button"
+                    className={`payment-card ${active ? 'is-active' : ''}`}
+                    onClick={() => handleSelectPayment(option.key)}
+                  >
+                    <span className="payment-card__icon">
+                      <Icons typeIcon={option.icon} iconSize={26} fill={active ? '#fff' : '#007185'} />
+                    </span>
+                    <span className="payment-card__title">{option.label}</span>
+                    <span className="payment-card__desc">{option.description}</span>
+                    {active && <span className="payment-card__badge">Selecionado</span>}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.formPayment && <div className="text-danger small mt-2">{errors.formPayment}</div>}
 
             <Loading loading={loading} />
           </Container>

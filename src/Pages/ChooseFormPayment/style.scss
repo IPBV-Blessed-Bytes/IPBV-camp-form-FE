@@ -5,3 +5,88 @@
     padding: 1.875rem !important;
   }
 }
+
+.payment-heading {
+  margin-bottom: 0.75rem;
+}
+
+.payment-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.payment-card {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem;
+  position: relative;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: $primary;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &__icon {
+    align-items: center;
+    background: rgba($primary, 0.1);
+    border-radius: 10px;
+    display: flex;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+  }
+
+  &__title {
+    color: $dark-gray;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  &__desc {
+    color: $alternate-dark-gray;
+    font-size: 0.83rem;
+    line-height: 1.4;
+  }
+
+  &__badge {
+    background: $white;
+    border-radius: 999px;
+    color: $primary;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 0.1rem 0.5rem;
+    position: absolute;
+    right: 0.8rem;
+    text-transform: uppercase;
+    top: 0.8rem;
+  }
+
+  &.is-active {
+    background: $primary;
+    border-color: $primary;
+
+    .payment-card__icon {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .payment-card__title {
+      color: $white;
+    }
+    .payment-card__desc {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+}
