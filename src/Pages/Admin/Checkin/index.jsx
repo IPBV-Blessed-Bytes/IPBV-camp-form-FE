@@ -20,6 +20,8 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import QrScannerModal from '@/components/Global/QrScannerModal';
+import CheckinReviewModal from '@/components/Global/CheckinReviewModal';
+import { parseCheckoutQr } from '@/utils/checkinQr';
 
 const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
@@ -33,6 +35,8 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [checkinStats, setCheckinStats] = useState({ total: 0, checked: 0 });
   const [showScanner, setShowScanner] = useState(false);
+  const [reviewData, setReviewData] = useState(null);
+  const [reviewApproving, setReviewApproving] = useState(false);
   const { formStage } = useContext(AuthContext);
   const { campersTableButtonPermissions } = permissionsSections(userRole);
   const navigate = useNavigate();
@@ -237,8 +241,26 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
   selectUserRef.current = selectUser;
 
   const handleScan = useCallback(async (text) => {
-    const cpfDigits = String(text || '').replace(/\D/g, '').slice(0, 11);
     setShowScanner(false);
+
+    const checkoutOrderNumber = parseCheckoutQr(text);
+    if (checkoutOrderNumber) {
+      try {
+        const data = await listCampers({ orderNumber: checkoutOrderNumber, size: MAX_SIZE_CAMPERS });
+        const campers = Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : [];
+        if (campers.length === 0) {
+          toast.warn('Nenhum inscrito encontrado para este pedido');
+          return;
+        }
+        setReviewData({ orderNumber: checkoutOrderNumber, campers });
+      } catch (error) {
+        console.error('Erro ao buscar inscritos do pedido:', error);
+        toast.error('Erro ao buscar os inscritos do pedido');
+      }
+      return;
+    }
+
+    const cpfDigits = String(text || '').replace(/\D/g, '').slice(0, 11);
 
     if (cpfDigits.length !== 11) {
       toast.error('QR inválido: não contém um CPF válido');
@@ -274,6 +296,49 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       toast.error('Erro ao buscar o usuário do QR');
     }
   }, [loggedUsername]);
+
+  const applyReviewCheckin = async (camper) => {
+    await checkinCamper(camper.id, { checkin: true, checkinTime: formatDateTimeBR() });
+    registerLog(`Fez check-in (via QR do pedido) para o usuário ${camper.personalInformation.name}`, loggedUsername);
+  };
+
+  const handleReviewApprove = async (camper) => {
+    if (camper.checkin) return;
+    setReviewApproving(true);
+    try {
+      await applyReviewCheckin(camper);
+      setReviewData((prev) =>
+        prev ? { ...prev, campers: prev.campers.map((c) => (c.id === camper.id ? { ...c, checkin: true } : c)) } : prev,
+      );
+      fetchCheckinStats();
+      toast.success('Check-in confirmado.');
+    } catch (error) {
+      console.error('Erro no check-in:', error);
+      toast.error('Erro ao confirmar o check-in');
+    } finally {
+      setReviewApproving(false);
+    }
+  };
+
+  const handleReviewApproveAll = async () => {
+    if (!reviewData) return;
+    const pending = reviewData.campers.filter((camper) => !camper.checkin);
+    if (pending.length === 0) return;
+    setReviewApproving(true);
+    try {
+      for (const camper of pending) {
+        await applyReviewCheckin(camper);
+      }
+      setReviewData((prev) => (prev ? { ...prev, campers: prev.campers.map((c) => ({ ...c, checkin: true })) } : prev));
+      fetchCheckinStats();
+      toast.success('Check-in de todos confirmado.');
+    } catch (error) {
+      console.error('Erro no check-in em lote:', error);
+      toast.error('Erro ao confirmar o check-in de todos');
+    } finally {
+      setReviewApproving(false);
+    }
+  };
 
   const normalizedCpf = String(cpf || '').replace(/\D/g, '');
   const userRoom = rooms.find((room) =>
@@ -360,7 +425,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
 
           <Button
             type="button"
-            variant="outline-teal-blue"
+            variant="teal-blue"
             className="d-lg-none w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
             onClick={() => setShowScanner(true)}
           >
@@ -505,6 +570,16 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       </div>
 
       <QrScannerModal show={showScanner} onHide={() => setShowScanner(false)} onScan={handleScan} />
+
+      <CheckinReviewModal
+        show={Boolean(reviewData)}
+        onHide={() => setReviewData(null)}
+        orderNumber={reviewData?.orderNumber}
+        campers={reviewData?.campers || []}
+        onApprove={handleReviewApprove}
+        onApproveAll={handleReviewApproveAll}
+        approving={reviewApproving}
+      />
     </div>
   );
 };

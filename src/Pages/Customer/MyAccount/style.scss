@@ -75,7 +75,9 @@
   &__btn {
     flex-shrink: 0;
 
-    &--logout, &--new, &--back {
+    &--logout,
+    &--new,
+    &--back {
       align-items: center;
       display: flex;
       font-weight: bold;
@@ -147,10 +149,34 @@
 
   .account-card {
     background: $white;
-    border: 1px solid $alternate-light-gray;
+    border: 1px solid $turquoise;
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+  }
+
+  .account-order-header {
+    align-items: center;
+    background: rgba($primary, 0.08);
+    border-bottom: 1px solid $alternate-light-gray;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+
+    @media (max-width: $sm) {
+      justify-content: center;
+    }
+
+    &__title {
+      align-items: center;
+      color: $primary;
+      display: flex;
+      font-size: 1.05rem;
+      font-weight: 700;
+      gap: 0.5rem;
+    }
   }
 
   .account-table {

@@ -90,6 +90,18 @@ const MyAccount = () => {
   const personal = editData?.personalInformation || {};
   const contact = editData?.contact || {};
 
+  const groupMap = new Map();
+  registrations.forEach((r) => {
+    const key = r.orderNumber || `no-order-${r.id}`;
+    if (!groupMap.has(key)) {
+      groupMap.set(key, { key, orderNumber: r.orderNumber || '', registrations: [], confirmedCount: 0 });
+    }
+    const group = groupMap.get(key);
+    group.registrations.push(r);
+    if (r.status === 'CONFIRMED') group.confirmedCount += 1;
+  });
+  const registrationGroups = Array.from(groupMap.values());
+
   return (
     <div className="my-account">
       <div className="my-account__hero">
@@ -126,87 +138,97 @@ const MyAccount = () => {
           <div className="account-section-header__line" />
         </div>
 
-        <div className="account-card">
-          {loading ? (
+        {loading ? (
+          <div className="account-card">
             <div className="d-flex align-items-center justify-content-center gap-2 text-secondary account-empty">
               <Spinner animation="border" size="sm" /> Carregando...
             </div>
-          ) : registrations.length === 0 ? (
+          </div>
+        ) : registrations.length === 0 ? (
+          <div className="account-card">
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
               <Button variant="teal-blue" onClick={() => navigate('/')}>
                 Fazer Inscrição
               </Button>
             </div>
-          ) : (
-            <Table striped hover responsive className="account-table">
-              <thead>
-                <tr>
-                  <th>Nº Pedido:</th>
-                  <th>Campista:</th>
-                  <th>CPF:</th>
-                  <th>Hospedagem:</th>
-                  <th>Transporte:</th>
-                  <th>Alimentação:</th>
-                  <th>Valor:</th>
-                  <th>Status do Pagamento:</th>
-                  <th>Status do Check-in:</th>
-                  <th>Ações:</th>
-                </tr>
-              </thead>
-              <tbody>
-                {registrations.map((r) => {
-                  const status = REG_STATUS[r.status] || { label: r.status, bg: 'secondary' };
-                  return (
-                    <tr key={`${r.status}-${r.id}`}>
-                      <td>{r.orderNumber || <span className="text-secondary">—</span>}</td>
-                      <td>{r.name || <span className="text-secondary">—</span>}</td>
-                      <td>{r.cpf}</td>
-                      <td>{r.accomodation}</td>
-                      <td>{r.transportation}</td>
-                      <td>{r.food}</td>
-                      <td>{r.totalPrice ? `R$ ${r.totalPrice}` : '—'}</td>
-                      <td>
-                        <Badge bg={status.bg}>{status.label}</Badge>
-                      </td>
-                      <td>
-                        {r.checkin ? (
-                          <Badge bg="success">Check-in feito</Badge>
-                        ) : (
-                          <Badge bg="secondary">Sem check-in</Badge>
-                        )}
-                      </td>
-                      <td>
-                        {r.status === 'CONFIRMED' ? (
-                          <div className="d-flex flex-wrap gap-2">
-                            <Button variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
-                              Solicitar Alteração
+          </div>
+        ) : (
+          registrationGroups.map((group) => (
+            <div className="account-card mb-4" key={group.key}>
+              <div className="account-order-header">
+                <div className="account-order-header__title">
+                  <Icons typeIcon="cart" iconSize={20} fill="#007185" />
+                  <span>{group.orderNumber ? `Pedido nº ${group.orderNumber}` : 'Inscrição avulsa'}</span>
+                </div>
+                {group.confirmedCount > 1 && (
+                  <Button
+                    variant="teal-blue"
+                    onClick={() => setQrTarget({ orderNumber: group.orderNumber, count: group.confirmedCount })}
+                  >
+                    <Icons typeIcon="camera" iconSize={18} fill="#fff" /> &nbsp;QR de check-in da família
+                  </Button>
+                )}
+              </div>
+              <Table striped hover responsive className="account-table">
+                <thead>
+                  <tr>
+                    <th>Campista:</th>
+                    <th>CPF:</th>
+                    <th>Hospedagem:</th>
+                    <th>Transporte:</th>
+                    <th>Valor:</th>
+                    <th>Status do Pagamento:</th>
+                    <th>Status do Check-in:</th>
+                    <th>Ações:</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.registrations.map((r) => {
+                    const status = REG_STATUS[r.status] || { label: r.status, bg: 'secondary' };
+                    return (
+                      <tr key={`${r.status}-${r.id}`}>
+                        <td>{r.name || <span className="text-secondary">—</span>}</td>
+                        <td>{r.cpf}</td>
+                        <td>{r.accomodation}</td>
+                        <td>{r.transportation}</td>
+                        <td>{r.totalPrice ? `R$ ${r.totalPrice}` : '—'}</td>
+                        <td>
+                          <Badge bg={status.bg}>{status.label}</Badge>
+                        </td>
+                        <td>
+                          {r.checkin ? (
+                            <Badge bg="success">Check-in feito</Badge>
+                          ) : (
+                            <Badge bg="secondary">Sem check-in</Badge>
+                          )}
+                        </td>
+                        <td>
+                          {r.status === 'CONFIRMED' ? (
+                            <div className="d-flex flex-wrap gap-2">
+                              <Button variant="outline-teal-blue" onClick={() => handleEditClick(r.id)}>
+                                Solicitar Alteração
+                              </Button>
+                              <Button variant="teal-blue" onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}>
+                                QR de check-in
+                              </Button>
+                            </div>
+                          ) : r.paymentUrl ? (
+                            <Button variant="warning" href={r.paymentUrl} target="_blank" rel="noopener noreferrer">
+                              Pagar
                             </Button>
-                            <Button variant="teal-blue" onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}>
-                              QR de check-in
-                            </Button>
-                          </div>
-                        ) : r.paymentUrl ? (
-                          <Button
-                            size="sm"
-                            variant="teal-blue"
-                            href={r.paymentUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Pagar
-                          </Button>
-                        ) : (
-                          <span className="text-secondary small">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          )}
-        </div>
+                          ) : (
+                            <span className="text-secondary small">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
+          ))
+        )}
 
         <div className="account-section-header">
           <h4 className="account-section-header__title">Solicitações de alteração</h4>
@@ -221,9 +243,9 @@ const MyAccount = () => {
             <Table striped hover responsive className="account-table">
               <thead>
                 <tr>
-                  <th>Campista</th>
-                  <th>Enviada em</th>
-                  <th>Status</th>
+                  <th>Campista:</th>
+                  <th>Enviada em:</th>
+                  <th>Status:</th>
                 </tr>
               </thead>
               <tbody>
@@ -250,6 +272,8 @@ const MyAccount = () => {
         onHide={() => setQrTarget(null)}
         cpf={qrTarget?.cpf}
         name={qrTarget?.name}
+        orderNumber={qrTarget?.orderNumber}
+        count={qrTarget?.count}
       />
 
       <CustomModal
