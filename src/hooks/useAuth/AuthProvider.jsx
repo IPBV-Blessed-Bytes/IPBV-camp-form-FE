@@ -9,7 +9,7 @@ import {
   FORM_STAGE_KEY,
 } from '@/config';
 import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
-import { login as loginRequest, getMyPermissions } from '@/services/auth';
+import { login as loginRequest, googleLogin as googleLoginRequest, getMyPermissions } from '@/services/auth';
 import { getFormStage } from '@/services/formStage';
 
 const loadPermissions = async () => {
@@ -153,6 +153,37 @@ const AuthProvider = ({ children }) => {
     toast.success('Logout realizado com sucesso!');
   }, []);
 
+  const loginWithGoogle = useCallback(async (credential) => {
+    setLoading(true);
+    try {
+      const data = await googleLoginRequest(credential);
+
+      let email = '';
+      try {
+        const payload = credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        email = JSON.parse(atob(payload))?.email || '';
+      } catch {
+        email = '';
+      }
+
+      setIsLoggedIn(true);
+      setUser(email);
+
+      localStorage.setItem(JWT_LOCAL_STORAGE_KEY, data.token);
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(email));
+      localStorage.setItem(USER_STORAGE_ROLE, data.role);
+
+      await loadPermissions();
+
+      toast.success('Usuário logado com sucesso');
+    } catch (error) {
+      console.error(error?.message);
+      toast.error('Não foi possível entrar com o Google. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const value = useMemo(
     () => ({
       isLoggedIn,
@@ -161,9 +192,10 @@ const AuthProvider = ({ children }) => {
       formStage,
       setFormStage,
       login,
+      loginWithGoogle,
       logout,
     }),
-    [isLoggedIn, user, loading, formStage, setFormStage, login, logout],
+    [isLoggedIn, user, loading, formStage, setFormStage, login, loginWithGoogle, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

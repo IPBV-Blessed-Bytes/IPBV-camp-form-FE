@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,10 +8,11 @@ import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import AuthShell from '@/components/Global/AuthShell';
+import GoogleSignInButton from '@/components/Global/GoogleSignInButton';
 
 const CustomerLogin = () => {
   const navigate = useNavigate();
-  const { login, isLoggedIn, loading } = useAuth();
+  const { login, loginWithGoogle, isLoggedIn, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +33,8 @@ const CustomerLogin = () => {
     e.preventDefault();
     await login(email, password);
   };
+
+  const handleGoogleCredential = useCallback((credential) => loginWithGoogle(credential), [loginWithGoogle]);
 
   return (
     <AuthShell title="Entrar" subtitle="Acesse sua conta para acompanhar sua inscrição.">
@@ -70,7 +73,13 @@ const CustomerLogin = () => {
             <Button type="submit" variant="teal-blue" className="w-100 mt-4 fw-bold">
               Entrar
             </Button>
-            <button type="button" className="w-100 mt-2 btn-alter-link" onClick={() => navigate('/criar-conta')}>
+            <div className="d-flex align-items-center gap-2 my-3 text-secondary small">
+              <div className="flex-grow-1 border-top" />
+              <span>ou</span>
+              <div className="flex-grow-1 border-top" />
+            </div>
+            <GoogleSignInButton onCredential={handleGoogleCredential} />
+            <button type="button" className="w-100 mt-3 btn-alter-link" onClick={() => navigate('/criar-conta')}>
               Não tem conta? Criar conta
             </button>
             <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/esqueci-senha?origin=customer')}>

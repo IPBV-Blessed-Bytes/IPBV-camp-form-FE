@@ -6,6 +6,11 @@ export const login = async ({ login, password }) => {
   return data;
 };
 
+export const googleLogin = async (credential) => {
+  const { data } = await fetcher.post('/auth/google', { credential });
+  return data;
+};
+
 export const getMyPermissions = async () => {
   const { data } = await authFetcher.get('/auth/me/permissions');
   if (Array.isArray(data)) return data;

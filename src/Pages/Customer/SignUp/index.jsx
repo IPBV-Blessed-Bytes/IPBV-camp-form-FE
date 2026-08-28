@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -6,18 +6,36 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { registerGuest, resendConfirmation } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
+import useAuth from '@/hooks/useAuth';
+import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import AuthShell from '@/components/Global/AuthShell';
+import GoogleSignInButton from '@/components/Global/GoogleSignInButton';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { loginWithGoogle, isLoggedIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const resume = sessionStorage.getItem(FORM_STORAGE_KEYS.resumeCheckout);
+      if (resume !== null) {
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.resumeCheckout);
+        navigate('/');
+      } else {
+        navigate('/minha-conta');
+      }
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleGoogleCredential = useCallback((credential) => loginWithGoogle(credential), [loginWithGoogle]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,7 +150,13 @@ const SignUp = () => {
                 <Button type="submit" variant="teal-blue" className="w-100 mt-4 fw-bold">
                   Criar conta
                 </Button>
-                <Button type="button" className="w-100 mt-2 btn-alter-link" onClick={() => navigate('/entrar')}>
+                <div className="d-flex align-items-center gap-2 my-3 text-secondary small">
+                  <div className="flex-grow-1 border-top" />
+                  <span>ou</span>
+                  <div className="flex-grow-1 border-top" />
+                </div>
+                <GoogleSignInButton onCredential={handleGoogleCredential} />
+                <Button type="button" className="w-100 mt-3 btn-alter-link" onClick={() => navigate('/entrar')}>
                   Já tem conta? Entrar
                 </Button>
                 <Button type="Button" className="w-100 btn-alter-link" onClick={() => navigate('/')}>
