@@ -164,7 +164,7 @@ const BeforePayment = () => {
                   </div>
                 ))}
 
-                <div className="packages-horizontal-line-cart"></div>
+                {userTotals.length !== 0 && <div className="packages-horizontal-line-cart"></div>}
 
                 <div className="summary-total-geral mb-3">
                   <h5 className="fw-bold">Total:</h5>

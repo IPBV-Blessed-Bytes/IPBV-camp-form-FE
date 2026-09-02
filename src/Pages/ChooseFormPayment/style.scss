@@ -90,3 +90,34 @@
     }
   }
 }
+
+.payment-installments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.installment-chip {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 999px;
+  color: $dark-gray;
+  cursor: pointer;
+  font-weight: 700;
+  min-width: 52px;
+  padding: 0.45rem 0.9rem;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    border-color: $primary;
+  }
+
+  &.is-active {
+    background: $primary;
+    border-color: $primary;
+    color: $white;
+  }
+}

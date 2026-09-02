@@ -290,7 +290,11 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       const checkoutStatus = response.data.checkout_status;
       setStatus('loaded');
 
-      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
+      if (checkoutStatus === 'Boletos generated') {
+        sessionStorage.setItem('generatedBoletosOrder', response.data.order_number || '');
+        navigate('/minha-conta/boletos');
+        toast.success('Boletos gerados! Pague o primeiro para confirmar sua vaga.');
+      } else if (checkoutUrl && checkoutStatus === 'Checkout generated') {
         window.open(checkoutUrl, '_self');
         toast.success('Redirecionando para pagamento...');
       } else if ([200, 201].includes(response.status)) {
@@ -301,7 +305,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         toast.error('Erro ao criar checkout');
       }
     },
-    [goToSuccessPage],
+    [goToSuccessPage, navigate],
   );
 
   const sendForm = useCallback(
@@ -361,6 +365,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
               finalPrice: totalPrice,
             },
             formPayment: formikValues.formPayment || 'nonPaid',
+            boletoInstallments: Number(formikValues.boletoInstallments) || 1,
             registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
             totalPrice,
             manualRegistration: false,

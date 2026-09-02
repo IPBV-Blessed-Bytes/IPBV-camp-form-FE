@@ -1,0 +1,196 @@
+@use '../../../styles/Variables.scss' as *;
+
+.boleto-list {
+  &__progress {
+    margin-bottom: 1.5rem;
+  }
+
+  &__progress-track {
+    background: $alternate-light-gray;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+
+  &__progress-fill {
+    background: $primary;
+    border-radius: 999px;
+    height: 100%;
+    transition: width 0.4s ease;
+  }
+
+  &__progress-label {
+    color: $primary;
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+.boleto-card {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-left: 5px solid $primary;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.15rem 1.25rem;
+
+  &.is-paid {
+    border-left-color: #2e7d32;
+  }
+
+  &.is-overdue {
+    border-left-color: #c62828;
+  }
+
+  &.is-canceled {
+    border-left-color: #6c757d;
+  }
+
+  &__top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__seq {
+    color: $dark-gray;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  &__badge {
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.7rem;
+
+    &.is-pending {
+      background: rgba(#f0ad4e, 0.18);
+      color: #9a6a00;
+    }
+
+    &.is-paid {
+      background: rgba(#2e7d32, 0.15);
+      color: #2e7d32;
+    }
+
+    &.is-overdue {
+      background: rgba(#c62828, 0.15);
+      color: #c62828;
+    }
+
+    &.is-canceled {
+      background: rgba(#6c757d, 0.15);
+      color: #6c757d;
+    }
+  }
+
+  &__amount {
+    color: $dark-gray;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  &__due {
+    align-items: center;
+    color: #6c757d;
+    display: flex;
+    font-size: 0.9rem;
+    gap: 0.4rem;
+  }
+
+  &__line {
+    align-items: center;
+    background: rgba($primary, 0.06);
+    border: 1px dashed rgba($primary, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    padding: 0.55rem 0.7rem;
+    text-align: left;
+    transition: background 0.15s ease;
+    width: 100%;
+
+    &:hover {
+      background: rgba($primary, 0.12);
+    }
+  }
+
+  &__line-text {
+    color: $dark-gray;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__line-copy {
+    color: $primary;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.2rem;
+  }
+
+  &__btn {
+    align-items: center;
+    border-radius: 8px;
+    display: inline-flex;
+    flex: 1;
+    font-size: 0.88rem;
+    font-weight: 600;
+    gap: 0.4rem;
+    justify-content: center;
+    padding: 0.55rem 0.6rem;
+    text-decoration: none;
+    transition: filter 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+
+    svg {
+      flex-shrink: 0;
+      height: 16px;
+      width: 16px;
+    }
+
+    &--primary {
+      background: $primary;
+      color: $white;
+
+      &:hover {
+        color: $white;
+        filter: brightness(0.94);
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      border: 1px solid rgba($primary, 0.5);
+      color: $primary;
+
+      &:hover {
+        background: rgba($primary, 0.08);
+        color: $primary;
+      }
+    }
+  }
+}

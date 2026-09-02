@@ -579,7 +579,10 @@ a:not(
   .faq-link,
   .pagarme-btn,
   .info-home-link,
-  .back-to-list-btn
+  .back-to-list-btn,
+  .boleto-card__btn--ghost,
+  .boleto-contact__wa,
+  .boleto-contact__email
 ) {
   color: $white;
   text-decoration: none;

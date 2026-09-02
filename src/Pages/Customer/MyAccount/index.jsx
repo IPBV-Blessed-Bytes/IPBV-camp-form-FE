@@ -11,6 +11,8 @@ import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
 import { rgShipper, issuingState } from '@/utils/constants';
 import { getMyRegistrations, getMyRegistration, createChangeRequest, getMyChangeRequests } from '@/services/me';
+import { getBoletosByOrder } from '@/services/boletos';
+import BoletoList from '@/components/Global/BoletoList';
 
 const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
@@ -29,6 +31,7 @@ const MyAccount = () => {
   const contactPhone = useContactPhone();
   const [registrations, setRegistrations] = useState([]);
   const [changeRequests, setChangeRequests] = useState([]);
+  const [boletosByOrder, setBoletosByOrder] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [showEdit, setShowEdit] = useState(false);
@@ -42,6 +45,16 @@ const MyAccount = () => {
       const [regs, reqs] = await Promise.all([getMyRegistrations(), getMyChangeRequests()]);
       setRegistrations(regs);
       setChangeRequests(reqs);
+
+      const orderNumbers = [...new Set(regs.map((r) => r.orderNumber).filter(Boolean))];
+      const boletoResults = await Promise.all(
+        orderNumbers.map((orderNumber) =>
+          getBoletosByOrder(orderNumber)
+            .then((list) => [orderNumber, list])
+            .catch(() => [orderNumber, []]),
+        ),
+      );
+      setBoletosByOrder(Object.fromEntries(boletoResults.filter(([, list]) => list.length > 0)));
     } catch (error) {
       toast.error('Não foi possível carregar seus dados.');
     } finally {
@@ -226,6 +239,16 @@ const MyAccount = () => {
                   })}
                 </tbody>
               </Table>
+
+              {boletosByOrder[group.orderNumber] && (
+                <div className="account-boletos">
+                  <div className="account-boletos__title">
+                    <Icons typeIcon="barcode" iconSize={18} fill="#007185" />
+                    <span>Boletos deste pedido</span>
+                  </div>
+                  <BoletoList boletos={boletosByOrder[group.orderNumber]} showProgress />
+                </div>
+              )}
             </div>
           ))
         )}

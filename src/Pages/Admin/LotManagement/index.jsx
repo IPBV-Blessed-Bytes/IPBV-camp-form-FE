@@ -8,7 +8,6 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 import { getLotsAuthenticated, createLot, updateLot as updateLotRequest, deleteLot } from '@/services/lots';
-import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
@@ -47,9 +46,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     startDate: '',
     endDate: '',
   });
-  const [baseDate, setBaseDate] = useState('');
-  const [baseDateExists, setBaseDateExists] = useState(false);
-  const [showBaseDateModal, setShowBaseDateModal] = useState(false);
   const [search, setSearch] = useState('');
 
   scrollUp();
@@ -67,26 +63,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
-  const fetchBaseDate = async () => {
-    try {
-      setLoadingContent(true);
-      const data = await getBaseDate();
-      if (data && data.baseDate) {
-        setBaseDate(data.baseDate);
-        setBaseDateExists(true);
-      }
-    } catch (error) {
-      if (error.response?.status !== 404) {
-        console.error('Erro ao buscar data base:', error);
-      }
-    } finally {
-      setLoadingContent(false);
-    }
-  };
-
   useEffect(() => {
     fetchLots();
-    fetchBaseDate();
   }, []);
 
   const handleLotChange = (id, field, value, nestedField = null) => {
@@ -198,33 +176,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
-  const handleSaveBaseDate = async () => {
-    if (!baseDate) {
-      toast.warning('Por favor, selecione uma data válida');
-      return;
-    }
-
-    try {
-      setLoadingContent(true);
-      if (baseDateExists) {
-        await updateBaseDate(baseDate);
-        toast.success('Data do evento atualizada com sucesso');
-        registerLog(`Alterou a data do evento para ${baseDate}`, loggedUsername);
-      } else {
-        await createBaseDate(baseDate);
-        toast.success('Data do evento criada com sucesso');
-        registerLog(`Criou a data do evento: ${baseDate}`, loggedUsername);
-        setBaseDateExists(true);
-      }
-      setShowBaseDateModal(false);
-    } catch (error) {
-      console.error(error);
-      toast.error('Erro ao salvar data base');
-    } finally {
-      setLoadingContent(false);
-    }
-  };
-
   const now = new Date();
   const currentLot = lots.find((lot) => {
     const start = parseDate(lot.startDate);
@@ -258,26 +209,14 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
     },
-    {
-      fill: '#fff',
-      iconSize: 22,
-      id: 'edit-base-date',
-      name: 'Alterar Data do Evento',
-      onClick: async () => {
-        await fetchBaseDate();
-        setShowBaseDateModal(true);
-      },
-      typeButton: 'teal-blue',
-      typeIcon: 'calendar-alt',
-    },
   ];
 
   return (
     <div className="admin-subpage admin-subpage--lots">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Lotes e Data"
-        subtitle="Lotes de preço e data do evento"
+        title="Lotes"
+        subtitle="Lotes de preço por data determinada"
         typeIcon="calendar"
       />
 
@@ -493,45 +432,6 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               </Col>
             </Row>
           </Form>
-        </CustomModal>
-
-        <CustomModal
-          show={showBaseDateModal}
-          onHide={() => setShowBaseDateModal(false)}
-          variant="confirm"
-          icon="plus"
-          title="Alterar Data do Evento"
-          centered={false}
-          footer={
-            <>
-              <Button variant="secondary" onClick={() => setShowBaseDateModal(false)}>
-                Cancelar
-              </Button>
-              <Button variant="primary" className="btn-confirm" onClick={handleSaveBaseDate}>
-                Salvar
-              </Button>
-            </>
-          }
-        >
-          <Form.Group>
-            <Form.Label>
-              <b>Selecione a data do evento:</b>
-            </Form.Label>
-            <DatePicker
-              selected={parseDate(baseDate)}
-              onChange={(date) => setBaseDate(formatDate(date))}
-              className="form-control form-control-lg mb-2"
-              placeholderText="dd/mm/aaaa"
-              dateFormat="dd/MM/yyyy"
-              locale="ptBR"
-              dropdownMode="select"
-              showMonthDropdown
-              showYearDropdown
-            />
-            <Form.Text>
-              Esta é a data de início do evento e será usada como referência para o cálculo de idades e pacotes.
-            </Form.Text>
-          </Form.Group>
         </CustomModal>
 
         <Loading loading={loading || loadingContent} />

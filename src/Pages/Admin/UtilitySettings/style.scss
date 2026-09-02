@@ -1,7 +1,43 @@
+@use '../../../styles/Variables.scss' as *;
+
 .utility-settings {
   &__content {
-    max-width: 640px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 1rem;
+  }
+}
+
+.utility-card {
+  background: $white;
+  border: 1px solid $alternate-light-gray;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  &__header {
+    align-items: center;
+    background: rgba($primary, 0.08);
+    border-bottom: 1px solid $alternate-light-gray;
+    color: $primary;
+    display: flex;
+    font-size: 1.05rem;
+    font-weight: 700;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem;
+  }
+
+  &__icon {
+    align-items: center;
+    background: rgba($primary, 0.12);
+    border-radius: 8px;
+    display: flex;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+  }
+
+  &__body {
+    padding: 1.25rem;
   }
 }

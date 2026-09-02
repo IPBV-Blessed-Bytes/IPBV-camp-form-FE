@@ -251,6 +251,14 @@ const AdminLoggedIn = ({
       typeIcon: 'feedback',
       iconSize: 50,
     },
+     {
+      permission: settingsButtonPermissions,
+      path: 'boletos',
+      cardType: 'boletos-card',
+      title: 'Boletos',
+      typeIcon: 'barcode',
+      iconSize: 45,
+    },
     {
       permission: checkinPermissions,
       path: 'checkin',

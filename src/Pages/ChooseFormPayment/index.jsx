@@ -9,6 +9,9 @@ import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 import Icons from '@/components/Global/Icons';
+import { getPublicSetting } from '@/services/settings';
+import { getMaxBoletoInstallments } from '@/utils/boletoInstallments';
+import { initBaseDate } from '@/Pages/Packages/utils/calculateAge';
 
 const PAYMENT_OPTIONS = [
   { key: 'creditCard', label: 'Cartão de Crédito', description: 'Parcele em até 12x', icon: 'credit-card' },
@@ -22,6 +25,18 @@ const ChooseFormPayment = () => {
   const updateForm = updateFormValues('formPayment');
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const [installments, setInstallments] = useState(1);
+  const [eventDate, setEventDate] = useState('');
+  const [boletoMax, setBoletoMax] = useState('');
+
+  useEffect(() => {
+    Promise.all([initBaseDate(), getPublicSetting('boleto_max_installments')])
+      .then(([baseDate, maxValue]) => {
+        setEventDate(baseDate || '');
+        setBoletoMax(maxValue || '');
+      })
+      .catch(() => {});
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +50,7 @@ const ChooseFormPayment = () => {
     },
   });
 
-  const { values, errors, setValues, handleSubmit } = formik;
+  const { values, errors, setValues } = formik;
 
   const handleManualSubmit = async () => {
     try {
@@ -55,7 +70,7 @@ const ChooseFormPayment = () => {
 
   const handleConfirmAdvance = () => {
     setShowConfirm(false);
-    handleSubmit();
+    sendForm({ formPayment: values.formPayment, boletoInstallments: installments });
   };
 
   useEffect(() => {
@@ -74,8 +89,15 @@ const ChooseFormPayment = () => {
   const handleSelectPayment = (key) => {
     updateForm(key);
     setValues({ formPayment: key });
+    setInstallments(1);
     formik.setErrors({});
   };
+
+  const boletoConfigured = Boolean(eventDate);
+  const maxInstallments = boletoConfigured ? getMaxBoletoInstallments(eventDate, boletoMax) : 1;
+  const boletoAvailable = boletoConfigured ? maxInstallments >= 1 : true;
+  const visibleOptions = PAYMENT_OPTIONS.filter((option) => option.key !== 'ticket' || boletoAvailable);
+  const showInstallments = values.formPayment === 'ticket' && maxInstallments >= 2;
 
   useEffect(() => {
     setBackStepFlag(true);
@@ -102,8 +124,12 @@ const ChooseFormPayment = () => {
               <b>Escolha sua forma de pagamento:</b>
             </p>
             <div className="payment-grid">
-              {PAYMENT_OPTIONS.map((option) => {
+              {visibleOptions.map((option) => {
                 const active = values.formPayment === option.key;
+                const description =
+                  option.key === 'ticket' && maxInstallments >= 2
+                    ? `Parcele em até ${maxInstallments}x (boletos mensais)`
+                    : option.description;
                 return (
                   <button
                     key={option.key}
@@ -115,12 +141,37 @@ const ChooseFormPayment = () => {
                       <Icons typeIcon={option.icon} iconSize={26} fill={active ? '#fff' : '#007185'} />
                     </span>
                     <span className="payment-card__title">{option.label}</span>
-                    <span className="payment-card__desc">{option.description}</span>
+                    <span className="payment-card__desc">{description}</span>
                     {active && <span className="payment-card__badge">Selecionado</span>}
                   </button>
                 );
               })}
             </div>
+
+            {showInstallments && (
+              <div className="payment-installments-block mt-3">
+                <p className="mb-2">
+                  <b>Em quantas parcelas (boletos mensais)?</b>
+                </p>
+                <div className="payment-installments">
+                  {Array.from({ length: maxInstallments }, (_, i) => i + 1).map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      className={`installment-chip ${installments === n ? 'is-active' : ''}`}
+                      onClick={() => setInstallments(n)}
+                    >
+                      {n}x
+                    </button>
+                  ))}
+                </div>
+                <p className="text-secondary small mt-3 mb-0">
+                  Serão gerados {installments} {installments === 1 ? 'boleto' : 'boletos mensais'}. O 1º confirma sua
+                  vaga; os demais mantêm a inscrição em dia.
+                </p>
+              </div>
+            )}
+
             {errors.formPayment && <div className="text-danger small mt-2">{errors.formPayment}</div>}
 
             <Loading loading={loading} />

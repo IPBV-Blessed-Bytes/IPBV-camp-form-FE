@@ -132,6 +132,9 @@ $admin-accent-checkin: $slime-green;
   &--checkin-card {
     --session-accent: #{$admin-accent-checkin};
   }
+  &--boletos-card {
+    --session-accent: #d39e00;
+  }
 }
 
 .admin-notes {

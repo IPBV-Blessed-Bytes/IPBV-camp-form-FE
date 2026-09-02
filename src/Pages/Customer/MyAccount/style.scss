@@ -235,3 +235,24 @@
     margin-top: 0;
   }
 }
+
+.account-boletos {
+  border-top: 1px solid $alternate-light-gray;
+  padding: 0.875rem;
+
+  @media (max-width: $sm) {
+    padding: 1.25rem 1rem;
+  }
+
+  &__title {
+    align-items: center;
+    color: $primary;
+    display: flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 0.4rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.9rem;
+    text-transform: uppercase;
+  }
+}

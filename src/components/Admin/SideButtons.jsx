@@ -79,7 +79,7 @@ const SideButtons = ({ secondaryPermission }) => {
           className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/lotes') : () => navigate('/admin/lotes')}
         >
-          Lotes e Data&nbsp;
+          Lotes&nbsp;
           <Icons className="settings-icons" typeIcon="calendar" iconSize={22} fill={'#fff'} />
         </button>
 

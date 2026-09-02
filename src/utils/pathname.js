@@ -13,7 +13,8 @@ const shouldRenderForm = (pathname) => {
     pathname !== '/criar-conta' &&
     pathname !== '/entrar' &&
     pathname !== '/confirmar-email' &&
-    pathname !== '/minha-conta'
+    pathname !== '/minha-conta' &&
+    pathname !== '/minha-conta/boletos'
   );
 };
 
