@@ -1,0 +1,22 @@
+@use '../../../styles/Variables.scss' as *;
+
+.donation-modal {
+  &__desc {
+    color: $dark-gray;
+    font-size: 0.95rem;
+  }
+
+  &__label {
+    color: $dark-gray;
+    margin-bottom: 0.35rem;
+  }
+
+  &__hint {
+    align-items: center;
+    color: $alternate-dark-gray;
+    display: flex;
+    font-size: 0.85rem;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+}

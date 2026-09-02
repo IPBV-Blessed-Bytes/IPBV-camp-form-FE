@@ -41,6 +41,7 @@ const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
 const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
 const AdminBoletos = lazy(() => import('../Pages/Admin/Boletos'));
 const AdminPaymentFees = lazy(() => import('../Pages/Admin/PaymentFees'));
+const AdminDonations = lazy(() => import('../Pages/Admin/Donations'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
@@ -263,6 +264,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminPaymentFees loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/doacoes')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminDonations loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

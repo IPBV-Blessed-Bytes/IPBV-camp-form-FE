@@ -5,6 +5,7 @@ export const FORM_STORAGE_KEYS = {
   previousUserData: 'previousUserData',
   currentFormIndex: 'currentFormIndex',
   resumeCheckout: 'resumeCheckout',
+  donation: 'donation',
 };
 
 export const getTempData = () => JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.tempData)) || {};

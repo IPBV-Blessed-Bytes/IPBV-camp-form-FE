@@ -9,6 +9,9 @@ $admin-accent-rooms: $secondary;
 $admin-accent-teams: $baby-blue;
 $admin-accent-feedback: $light-heavy-blue;
 $admin-accent-checkin: $slime-green;
+$admin-accent-boletos: $orange-brown;
+$admin-accent-fees: $alternate-dark-gray;
+$admin-accent-donations: $violet;
 
 .admin {
   background-color: $background-gray;
@@ -133,10 +136,13 @@ $admin-accent-checkin: $slime-green;
     --session-accent: #{$admin-accent-checkin};
   }
   &--boletos-card {
-    --session-accent: #d39e00;
+    --session-accent: #{$admin-accent-boletos};
   }
   &--fees-card {
-    --session-accent: #2e8b7f;
+    --session-accent: #{$admin-accent-fees};
+  }
+  &--donations-card {
+    --session-accent: #{$admin-accent-donations};
   }
 }
 

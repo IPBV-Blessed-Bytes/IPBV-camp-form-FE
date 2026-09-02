@@ -268,6 +268,14 @@ const AdminLoggedIn = ({
       iconSize: 45,
     },
     {
+      permission: settingsButtonPermissions,
+      path: 'doacoes',
+      cardType: 'donations-card',
+      title: 'Doações',
+      typeIcon: 'couple',
+      iconSize: 45,
+    },
+    {
       permission: checkinPermissions,
       path: 'checkin',
       cardType: 'checkin-card',

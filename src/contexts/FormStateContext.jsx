@@ -375,11 +375,14 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         };
 
         const formsToSend = formValues.filter(isUserValid).map(buildFormPayload);
-        const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+        const donation = Number(sessionStorage.getItem(FORM_STORAGE_KEYS.donation) || 0);
+        const finalPriceCheckout =
+          formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0) + donation;
 
         const response = await createCheckout({
           forms: sanitizeForms(formsToSend),
           finalPriceCheckout,
+          donation,
         });
 
         handleCheckoutResponse(response);

@@ -10,6 +10,7 @@ import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import PaymentSimulatorModal from '@/components/Global/PaymentSimulatorModal';
+import DonationModal from '@/components/Global/DonationModal';
 import { getPublicSetting } from '@/services/settings';
 import { parseFees } from '@/utils/paymentFees';
 import { getMaxBoletoInstallments } from '@/utils/boletoInstallments';
@@ -35,9 +36,12 @@ const BeforePayment = () => {
   const [fees, setFees] = useState(null);
   const [maxBoletoInstallments, setMaxBoletoInstallments] = useState(1);
   const [showSimulator, setShowSimulator] = useState(false);
+  const [showDonation, setShowDonation] = useState(false);
+  const [donation, setDonation] = useState(() => sessionStorage.getItem(FORM_STORAGE_KEYS.donation) || '');
   const navigateTo = useNavigate();
   const { isLoggedIn } = useAuth();
-  const cartIsFree = cartTotal === 0;
+  const donationValue = Number(donation) || 0;
+  const cartIsFree = cartTotal === 0 && donationValue === 0;
 
   const isUserValid = (user) => {
     const hasName = user?.personalInformation?.name && user.personalInformation.name.trim() !== '';
@@ -51,6 +55,10 @@ const BeforePayment = () => {
     setBackStepFlag(false);
     sessionStorage.setItem('savedUsers', JSON.stringify(validFormValues));
   }, [validFormValues]);
+
+  useEffect(() => {
+    sessionStorage.setItem(FORM_STORAGE_KEYS.donation, String(donationValue));
+  }, [donationValue]);
 
   useEffect(() => {
     getPublicSetting('payment_fees')
@@ -144,6 +152,7 @@ const BeforePayment = () => {
   const { totalFinal, userTotals } = getSummaryValues(validFormValues);
 
   const totalGeral = totalFinal;
+  const totalWithDonation = totalGeral + donationValue;
 
   return (
     <Container className="form__container__cart-height">
@@ -185,9 +194,16 @@ const BeforePayment = () => {
 
                 {userTotals.length !== 0 && <div className="packages-horizontal-line-cart"></div>}
 
+                {donationValue > 0 && (
+                  <div className="summary-total-package">
+                    <h5 className="summary-total-package-label">Doação:</h5>
+                    <h5 className="summary-total-package-value">R$ {donationValue},00</h5>
+                  </div>
+                )}
+
                 <div className="summary-total-geral mb-3">
                   <h5 className="fw-bold">Total:</h5>
-                  <h5 className="fw-bold">R$ {totalGeral},00</h5>
+                  <h5 className="fw-bold">R$ {totalWithDonation},00</h5>
                 </div>
 
                 <div className="summary-buttons d-grid gap-3">
@@ -207,6 +223,17 @@ const BeforePayment = () => {
                       Simular Taxas de Pagamento
                     </Button>
                   )}
+                  {validFormValues.length > 0 && (
+                    <Button
+                      variant="outline-teal-blue"
+                      size="lg"
+                      className="d-flex align-items-center justify-content-center gap-2 donation-button"
+                      onClick={() => setShowDonation(true)}
+                    >
+                      <Icons typeIcon="couple" iconSize={24} fill="#007185" />
+                      Ajuda social{donationValue > 0 ? ` · R$ ${donationValue}` : ''}
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card.Body>
@@ -216,9 +243,16 @@ const BeforePayment = () => {
       <PaymentSimulatorModal
         show={showSimulator}
         onHide={() => setShowSimulator(false)}
-        base={totalGeral}
+        base={totalWithDonation}
         fees={fees}
         maxBoletoInstallments={maxBoletoInstallments}
+      />
+
+      <DonationModal
+        show={showDonation}
+        onHide={() => setShowDonation(false)}
+        donation={donation}
+        onChange={setDonation}
       />
 
       <Loading loading={loading} />
