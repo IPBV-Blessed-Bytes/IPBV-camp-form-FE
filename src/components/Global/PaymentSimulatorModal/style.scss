@@ -1,0 +1,91 @@
+@use '../../../styles/Variables.scss' as *;
+
+.fees-simulator {
+  &__intro {
+    color: $dark-gray;
+    font-size: 0.92rem;
+  }
+
+  &__highlights {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__highlight {
+    align-items: center;
+    background: rgba($primary, 0.05);
+    border: 1px solid $alternate-light-gray;
+    border-radius: 12px;
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
+
+  &__highlight-icon {
+    align-items: center;
+    background: $white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
+  }
+
+  &__highlight-label {
+    color: $alternate-dark-gray;
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  &__highlight-value {
+    color: $dark-gray;
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  &__card-title {
+    align-items: center;
+    color: $primary;
+    display: flex;
+    font-weight: 700;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+  }
+
+  &__table {
+    margin: 0;
+
+    thead th {
+      background: rgba($primary, 0.08);
+      border: none;
+      color: $primary;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      padding: 0.55rem 1rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 0.55rem 1rem;
+      vertical-align: middle;
+    }
+  }
+}

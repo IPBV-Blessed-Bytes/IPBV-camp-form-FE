@@ -260,6 +260,14 @@ const AdminLoggedIn = ({
       iconSize: 45,
     },
     {
+      permission: settingsButtonPermissions,
+      path: 'taxas',
+      cardType: 'fees-card',
+      title: 'Taxas de Pagamento',
+      typeIcon: 'money',
+      iconSize: 45,
+    },
+    {
       permission: checkinPermissions,
       path: 'checkin',
       cardType: 'checkin-card',

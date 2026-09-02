@@ -9,9 +9,13 @@ import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
+import PaymentSimulatorModal from '@/components/Global/PaymentSimulatorModal';
+import { getPublicSetting } from '@/services/settings';
+import { parseFees } from '@/utils/paymentFees';
+import { getMaxBoletoInstallments } from '@/utils/boletoInstallments';
 import { loadProducts } from '../Packages/utils/products';
 import { loadAgePriceRules } from '../Packages/utils/ageRules';
-import calculateAge from '../Packages/utils/calculateAge';
+import calculateAge, { initBaseDate } from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
 
 const BeforePayment = () => {
@@ -28,6 +32,9 @@ const BeforePayment = () => {
   } = useFormState();
   const [cartTotal, setCartTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [fees, setFees] = useState(null);
+  const [maxBoletoInstallments, setMaxBoletoInstallments] = useState(1);
+  const [showSimulator, setShowSimulator] = useState(false);
   const navigateTo = useNavigate();
   const { isLoggedIn } = useAuth();
   const cartIsFree = cartTotal === 0;
@@ -44,6 +51,18 @@ const BeforePayment = () => {
     setBackStepFlag(false);
     sessionStorage.setItem('savedUsers', JSON.stringify(validFormValues));
   }, [validFormValues]);
+
+  useEffect(() => {
+    getPublicSetting('payment_fees')
+      .then((value) => setFees(parseFees(value)))
+      .catch(() => setFees(parseFees(null)));
+
+    Promise.all([initBaseDate(), getPublicSetting('boleto_max_installments')])
+      .then(([baseDate, cap]) => {
+        if (baseDate) setMaxBoletoInstallments(getMaxBoletoInstallments(baseDate, cap));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (status === 'loaded') {
@@ -177,12 +196,31 @@ const BeforePayment = () => {
                       {isLoggedIn ? (cartIsFree ? 'Finalizar Inscrição' : 'Pagamento') : 'Fazer login para continuar'}
                     </Button>
                   )}
+                  {validFormValues.length > 0 && !cartIsFree && (
+                    <Button
+                      variant="outline-secondary"
+                      size="lg"
+                      className="d-flex align-items-center justify-content-center gap-2 fees-button"
+                      onClick={() => setShowSimulator(true)}
+                    >
+                      <Icons typeIcon="money" iconSize={26} fill="#6c757d" />
+                      Simular Taxas de Pagamento
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      <PaymentSimulatorModal
+        show={showSimulator}
+        onHide={() => setShowSimulator(false)}
+        base={totalGeral}
+        fees={fees}
+        maxBoletoInstallments={maxBoletoInstallments}
+      />
+
       <Loading loading={loading} />
     </Container>
   );
