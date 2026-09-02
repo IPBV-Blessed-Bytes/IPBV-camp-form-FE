@@ -212,6 +212,19 @@ const BeforePayment = () => {
                       {isLoggedIn ? (cartIsFree ? 'Finalizar Inscrição' : 'Pagamento') : 'Fazer login para continuar'}
                     </Button>
                   )}
+
+                  {validFormValues.length > 0 && (
+                    <Button
+                      variant="outline-teal-blue"
+                      size="lg"
+                      className="d-flex align-items-center justify-content-center gap-2 donation-button"
+                      onClick={() => setShowDonation(true)}
+                    >
+                      <Icons typeIcon="couple" iconSize={24} fill="#007185" />
+                      Doe para Alguém
+                    </Button>
+                  )}
+                  
                   {validFormValues.length > 0 && !cartIsFree && (
                     <Button
                       variant="outline-secondary"
@@ -221,17 +234,6 @@ const BeforePayment = () => {
                     >
                       <Icons typeIcon="money" iconSize={26} fill="#6c757d" />
                       Simular Taxas de Pagamento
-                    </Button>
-                  )}
-                  {validFormValues.length > 0 && (
-                    <Button
-                      variant="outline-teal-blue"
-                      size="lg"
-                      className="d-flex align-items-center justify-content-center gap-2 donation-button"
-                      onClick={() => setShowDonation(true)}
-                    >
-                      <Icons typeIcon="couple" iconSize={24} fill="#007185" />
-                      Ajuda social{donationValue > 0 ? ` · R$ ${donationValue}` : ''}
                     </Button>
                   )}
                 </div>

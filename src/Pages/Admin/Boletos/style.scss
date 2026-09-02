@@ -108,3 +108,21 @@ $overdue: #c62828;
     }
   }
 }
+
+.boleto-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  &__btn {
+    white-space: nowrap;
+  }
+}
+
+.btn-new-ticket {
+  border-color: $light-medium-blue !important;
+
+  &:hover {
+    background-color: $light-medium-blue;
+  }
+}

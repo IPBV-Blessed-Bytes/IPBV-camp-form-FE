@@ -426,6 +426,7 @@ body {
 .btn-outline-intense-green:hover,
 .btn-outline-teal-blue:hover,
 .btn.btn-teal-blue:hover,
+.btn.btn-new-ticket:hover,
 .btn.btn-teal-blue {
   color: $white;
   opacity: 0.9;
@@ -718,7 +719,8 @@ button.accordion-button:not(.collapsed) {
 .btn-outline-intense-green,
 .btn-outline-teal-blue,
 .btn-outline-primary,
-.cart-container .btn-outline-secondary {
+.cart-container .btn-outline-secondary,
+.btn-new-ticket.btn-outline-secondary {
   border-width: 3px !important;
 }
 

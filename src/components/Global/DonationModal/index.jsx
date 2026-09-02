@@ -11,7 +11,7 @@ const DonationModal = ({ show, onHide, donation, onChange }) => (
     variant="info"
     title="Ajuda Social"
     icon="couple"
-    iconFill="#007185"
+    iconFill="#2E5AAC"
     footer={
       <Button variant="teal-blue" onClick={onHide}>
         Confirmar
@@ -20,8 +20,9 @@ const DonationModal = ({ show, onHide, donation, onChange }) => (
   >
     <div className="donation-modal">
       <p className="donation-modal__desc">
-        Contribua com um valor para ajudar quem <b>não tem condições</b> de arcar com o acampamento. O valor é somado ao
-        seu total, <b>sem desconto</b>, e destinado integralmente à ajuda social.
+        Contribua com um valor para ajudar quem realmente <b>não tem condições</b> de arcar com o valor acampamento. O
+        valor é somado ao seu total, <b>sem desconto</b>, e destinado integralmente ao fundo de ajuda. Uma comissão irá
+        decidir os que serão auxiliados por esse fundo de ajuda.
       </p>
 
       <Form.Label className="donation-modal__label">

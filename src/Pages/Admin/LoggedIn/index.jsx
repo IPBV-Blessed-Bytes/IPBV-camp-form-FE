@@ -251,7 +251,15 @@ const AdminLoggedIn = ({
       typeIcon: 'feedback',
       iconSize: 50,
     },
-     {
+    {
+      permission: checkinPermissions,
+      path: 'checkin',
+      cardType: 'checkin-card',
+      title: 'Check-in',
+      typeIcon: 'checkin',
+      iconSize: 50,
+    },
+    {
       permission: settingsButtonPermissions,
       path: 'boletos',
       cardType: 'boletos-card',
@@ -274,14 +282,6 @@ const AdminLoggedIn = ({
       title: 'Doações',
       typeIcon: 'couple',
       iconSize: 45,
-    },
-    {
-      permission: checkinPermissions,
-      path: 'checkin',
-      cardType: 'checkin-card',
-      title: 'Check-in',
-      typeIcon: 'checkin',
-      iconSize: 50,
     },
   ];
 
