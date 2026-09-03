@@ -48,13 +48,6 @@ const STAGES = [
     icon: 'settings',
     tone: 'danger',
   },
-  {
-    key: 'google-forms',
-    label: 'Google Forms',
-    description: 'Redireciona os inscritos para um Google Forms externo.',
-    icon: 'form-context',
-    tone: 'info',
-  },
 ];
 
 const AdminFormStage = ({ loggedUsername }) => {
