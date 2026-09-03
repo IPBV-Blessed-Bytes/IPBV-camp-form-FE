@@ -14,6 +14,9 @@ import CoreTable from '@/components/Admin/CampersTable/CoreTable';
 import TablePagination from '@/components/Admin/CampersTable/TablePagination';
 import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
 import ImportCampersModal from '@/components/Admin/CampersTable/ImportCampersModal';
+import RefundModal from '@/components/Admin/RefundModal';
+import { listAllBoletos } from '@/services/boletos';
+import { listAllRefunds } from '@/services/refunds';
 
 import useCampersData from './hooks/useCampersData';
 import { useProductCatalog } from './hooks/useProductCatalog';
@@ -38,7 +41,7 @@ const formatCurrentDate = () => {
 const AdminCampers = ({ loggedUsername, userRole }) => {
   scrollUp();
 
-  const { data, loading, setFormSubmitted, saveEdit, addCamper, importCampers, deleteSelected, deleteOne } =
+  const { data, loading, setFormSubmitted, saveEdit, addCamper, importCampers, deleteSelected, deleteOne, fetchData } =
     useCampersData({ loggedUsername });
 
   const catalog = useProductCatalog();
@@ -60,6 +63,19 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [modalType, setModalType] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [childrenFilter, setChildrenFilter] = useState(false);
+  const [refundTarget, setRefundTarget] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState({ boletosByOrder: {}, refundedOrders: new Set() });
+
+  useEffect(() => {
+    Promise.all([listAllBoletos().catch(() => []), listAllRefunds().catch(() => [])]).then(([boletos, refunds]) => {
+      const boletosByOrder = {};
+      boletos.forEach((boleto) => {
+        (boletosByOrder[boleto.orderNumber] = boletosByOrder[boleto.orderNumber] || []).push(boleto);
+      });
+      const refundedOrders = new Set(refunds.map((refund) => refund.orderNumber).filter(Boolean));
+      setPaymentInfo({ boletosByOrder, refundedOrders });
+    });
+  }, [data]);
 
   const currentDate = formatCurrentDate();
 
@@ -87,6 +103,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     setEditRowIndex(index);
     setShowDeleteModal(true);
     setName(row.original.personalInformation.name);
+  };
+
+  const handleRefundClick = (camper) => {
+    setRefundTarget(camper);
   };
 
   const handleCheckboxChange = (index, rowName) => {
@@ -136,11 +156,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleCheckboxChange,
         handleEditClick,
         handleDeleteClick,
+        handleRefundClick,
         adminTableEditDeletePermissions,
         catalog,
+        paymentInfo,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, selectedRows, catalog],
+    [data, selectedRows, catalog, paymentInfo],
   );
 
   const {
@@ -335,6 +357,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           onHide={() => setShowImportModal(false)}
           onImport={importCampers}
           loading={loading}
+        />
+
+        <RefundModal
+          camper={refundTarget}
+          onHide={() => setRefundTarget(null)}
+          onDone={fetchData}
+          loggedUsername={loggedUsername}
         />
 
         <Loading loading={loading} />

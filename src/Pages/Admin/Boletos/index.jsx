@@ -6,6 +6,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
 import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto } from '@/services/boletos';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
@@ -118,6 +119,10 @@ const AdminBoletos = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await updateBoletoDueDate(dueTarget.id, format(newDate, 'yyyy-MM-dd'));
+      registerLog(
+        `Alterou o vencimento do boleto ${dueTarget.installmentNumber}/${dueTarget.totalInstallments} do pedido ${dueTarget.orderNumber}`,
+        loggedUsername,
+      );
       toast.success('Vencimento atualizado. O pagador foi notificado por e-mail.');
       setDueTarget(null);
       reload();
@@ -135,6 +140,10 @@ const AdminBoletos = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await cancelBoleto(cancelTarget.id);
+      registerLog(
+        `Cancelou o boleto ${cancelTarget.installmentNumber}/${cancelTarget.totalInstallments} do pedido ${cancelTarget.orderNumber}`,
+        loggedUsername,
+      );
       toast.success('Boleto cancelado. O pagador foi notificado por e-mail.');
       setCancelTarget(null);
       reload();
@@ -160,6 +169,10 @@ const AdminBoletos = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await reissueBoleto(reissueTarget.id, reissueAmount, format(reissueDate, 'yyyy-MM-dd'));
+      registerLog(
+        `Gerou um novo boleto de R$ ${reissueAmount} para o pedido ${reissueTarget.orderNumber}`,
+        loggedUsername,
+      );
       toast.success('Novo boleto gerado. O pagador foi notificado por e-mail.');
       setReissueTarget(null);
       reload();

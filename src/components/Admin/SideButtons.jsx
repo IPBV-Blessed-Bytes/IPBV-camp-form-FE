@@ -109,12 +109,20 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
-          onClick={
-            formStage === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')
-          }
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/pulseiras') : () => navigate('/admin/pulseiras')}
         >
           Pulseiras&nbsp;
           <Icons className="settings-icons" typeIcon="wristband" iconSize={25} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
+          onClick={
+            formStage === 'maintenance' ? () => navigate('/dev/reembolsos') : () => navigate('/admin/reembolsos')
+          }
+        >
+          Reembolsos&nbsp;
+          <Icons className="settings-icons" typeIcon="cash" iconSize={22} fill={'#fff'} />
         </button>
 
         <button
@@ -125,6 +133,14 @@ const SideButtons = ({ secondaryPermission }) => {
         >
           Solicitações de Alteração&nbsp;
           <Icons className="settings-icons" typeIcon="refresh" iconSize={22} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/taxas') : () => navigate('/admin/taxas')}
+        >
+          Taxas de Pagamento&nbsp;
+          <Icons className="settings-icons" typeIcon="money" iconSize={22} fill={'#fff'} />
         </button>
 
         <button

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import { getSetting, updateSetting } from '@/services/settings';
+import { registerLog } from '@/services/logs';
 import { parseFees, DEFAULT_FEES } from '@/utils/paymentFees';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -48,6 +49,7 @@ const AdminPaymentFees = ({ loggedUsername }) => {
         ),
       };
       await updateSetting(FEES_KEY, JSON.stringify(payload));
+      registerLog('Atualizou as taxas de pagamento', loggedUsername);
       setFees(payload);
       toast.success('Taxas atualizadas.');
     } catch {
@@ -75,7 +77,7 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                   <span className="fees-card__icon">
                     <Icons typeIcon="money" iconSize={20} fill="#007185" />
                   </span>
-                  <span>Taxas gerais</span>
+                  <span>Taxas Gerais</span>
                 </div>
                 <div className="fees-card__body">
                   <Form.Group className="mb-4">
@@ -138,13 +140,13 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                   <span className="fees-card__icon">
                     <Icons typeIcon="credit-card" iconSize={20} fill="#007185" />
                   </span>
-                  <span>Percentual do cartão por parcela</span>
+                  <span>Percentual do Cartão por Parcela</span>
                 </div>
                 <div className="fees-card__body">
                   <Row className="g-2">
                     {INSTALLMENTS.map((n) => (
-                      <Col xs={6} sm={4} key={n}>
-                        <Form.Label className="fees-card__installment-label">{n}x</Form.Label>
+                      <Col xs={6} sm={4} key={n} className="mb-3">
+                        <Form.Label className="fees-card__installment-label">• {n}x</Form.Label>
                         <InputGroup size="sm">
                           <Form.Control
                             type="number"
@@ -162,10 +164,11 @@ const AdminPaymentFees = ({ loggedUsername }) => {
               </div>
             </Col>
           </Row>
-
-          <Button variant="teal-blue" size="lg" className="mt-3" onClick={handleSave} disabled={saving}>
-            Salvar taxas
-          </Button>
+          <div className="d-flex justify-content-end">
+            <Button variant="teal-blue" size="lg" className="mt-3" onClick={handleSave} disabled={saving}>
+              Salvar Taxas
+            </Button>
+          </div>
 
           <Loading loading={loading} />
         </Form>

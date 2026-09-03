@@ -269,14 +269,6 @@ const AdminLoggedIn = ({
     },
     {
       permission: settingsButtonPermissions,
-      path: 'taxas',
-      cardType: 'fees-card',
-      title: 'Taxas de Pagamento',
-      typeIcon: 'money',
-      iconSize: 45,
-    },
-    {
-      permission: settingsButtonPermissions,
       path: 'doacoes',
       cardType: 'donations-card',
       title: 'Doações',

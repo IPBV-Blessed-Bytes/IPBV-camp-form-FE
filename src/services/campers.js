@@ -26,6 +26,11 @@ export const deleteCamper = async (id) => {
   return data;
 };
 
+export const refundCamper = async (id, payload) => {
+  const { data } = await authFetcher.post(`/camper/${id}/refund`, payload);
+  return data;
+};
+
 export const deleteCampers = async (ids) => {
   await Promise.all(ids.map((id) => authFetcher.delete(`/camper/${id}`)));
 };

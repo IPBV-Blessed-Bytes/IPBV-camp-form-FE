@@ -42,6 +42,7 @@ const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
 const AdminBoletos = lazy(() => import('../Pages/Admin/Boletos'));
 const AdminPaymentFees = lazy(() => import('../Pages/Admin/PaymentFees'));
 const AdminDonations = lazy(() => import('../Pages/Admin/Donations'));
+const AdminRefunds = lazy(() => import('../Pages/Admin/Refunds'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
@@ -272,6 +273,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminDonations loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/reembolsos')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminRefunds loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

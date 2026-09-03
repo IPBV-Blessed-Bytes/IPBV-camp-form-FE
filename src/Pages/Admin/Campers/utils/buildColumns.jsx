@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Badge } from 'react-bootstrap';
 
 import { CREW_OPTIONS } from '@/utils/constants';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
@@ -11,6 +11,22 @@ import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFil
 import { alphabeticalSort, ageFilterFn } from './tableFilters';
 
 const ORDER_URL_PREFIX = 'https://dash.pagar.me/merch_Al154387U9uZDPV2/acc_5d3nayjiPBsdGnA0/orders/';
+
+const getPaymentStatus = (row, paymentInfo) => {
+  const info = paymentInfo || {};
+  if (row.totalPrice === '0') return { label: 'Não pagante', bg: 'secondary' };
+  if (info.refundedOrders?.has(row.orderNumber)) return { label: 'Reembolsado', bg: 'danger' };
+  const boletos = info.boletosByOrder?.[row.orderNumber];
+  if (boletos && boletos.length) {
+    const paid = boletos.filter((boleto) => boleto.status === 'PAID').length;
+    const overdue = boletos.some((boleto) => boleto.status === 'OVERDUE');
+    return {
+      label: `${overdue ? 'Inadimplente' : 'Parcelado'} ${paid}/${boletos.length}`,
+      bg: overdue ? 'danger' : 'info',
+    };
+  }
+  return { label: 'Pago', bg: 'success' };
+};
 
 const filterWith = (FilterComponent, extraProps = {}) =>
   function ColumnFilterWrapper({ column }) {
@@ -30,8 +46,10 @@ export const buildCampersColumns = ({
   handleCheckboxChange,
   handleEditClick,
   handleDeleteClick,
+  handleRefundClick,
   adminTableEditDeletePermissions,
   catalog,
+  paymentInfo,
 }) => {
   const textFilter = filterWith(ColumnFilter);
   const selectFilter = (options) => filterWith(ColumnFilterWithSelect, { options });
@@ -60,6 +78,19 @@ export const buildCampersColumns = ({
       >
         <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
       </Button>
+      {row.original.totalPrice !== '0' && (
+        <>
+          {' '}
+          <Button
+            disabled={!adminTableEditDeletePermissions}
+            variant="outline-warning"
+            onClick={() => handleRefundClick(row.original)}
+            title="Reembolsar inscrição"
+          >
+            <Icons typeIcon="money" iconSize={24} fill="#e0a800" />
+          </Button>
+        </>
+      )}
     </div>
   );
 
@@ -183,6 +214,16 @@ export const buildCampersColumns = ({
           default:
             return 'Não Pagante';
         }
+      },
+    },
+    {
+      Header: 'Status de Pagamento:',
+      accessor: (row) => getPaymentStatus(row, paymentInfo).label,
+      Filter: textFilter,
+      sortType: 'alphanumeric',
+      Cell: ({ row }) => {
+        const status = getPaymentStatus(row.original, paymentInfo);
+        return <Badge bg={status.bg}>{status.label}</Badge>;
       },
     },
     {
