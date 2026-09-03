@@ -22,6 +22,7 @@ const SPREADSHEET_KEY = 'old_spreadsheet_url';
 const BOLETO_MAX_KEY = 'boleto_max_installments';
 const CREW_BUS_KEY = 'crew_bus_vacancies';
 const PAGARME_DASH_KEY = 'pagarme_dashboard_url';
+const BACKUP_EMAIL_KEY = 'backup_email';
 
 const parseDate = (dateString) => {
   if (!dateString) return null;
@@ -42,6 +43,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [boletoMax, setBoletoMax] = useState('');
   const [crewBus, setCrewBus] = useState('');
   const [pagarmeDash, setPagarmeDash] = useState('');
+  const [backupEmail, setBackupEmail] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -51,13 +53,14 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, baseDateData] =
+      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, baseDateData] =
         await Promise.all([
           getSetting(CONTACT_KEY),
           getSetting(SPREADSHEET_KEY),
           getSetting(BOLETO_MAX_KEY),
           getSetting(CREW_BUS_KEY),
           getSetting(PAGARME_DASH_KEY),
+          getSetting(BACKUP_EMAIL_KEY),
           getBaseDate(),
         ]);
       setContact(contactValue);
@@ -65,6 +68,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setBoletoMax(boletoMaxValue || '');
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
+      setBackupEmail(backupEmailValue || '');
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
         setBaseDateExists(true);
@@ -85,18 +89,21 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue] = await Promise.all([
-        updateSetting(CONTACT_KEY, contact.trim()),
-        updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
-        updateSetting(BOLETO_MAX_KEY, boletoMax.trim()),
-        updateSetting(CREW_BUS_KEY, crewBus.trim()),
-        updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
-      ]);
+      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue] =
+        await Promise.all([
+          updateSetting(CONTACT_KEY, contact.trim()),
+          updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
+          updateSetting(BOLETO_MAX_KEY, boletoMax.trim()),
+          updateSetting(CREW_BUS_KEY, crewBus.trim()),
+          updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
+          updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
+        ]);
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
       setBoletoMax(boletoMaxValue || '');
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
+      setBackupEmail(backupEmailValue || '');
 
       if (baseDate) {
         if (baseDateExists) {
@@ -166,7 +173,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     </Form.Text>
                   </Form.Group>
 
-                  <Form.Group className="mb-0">
+                  <Form.Group className="mb-5">
                     <Form.Label>
                       <b>Link do Painel PagarMe (pedidos):</b>
                     </Form.Label>
@@ -178,6 +185,22 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     <Form.Text className="text-muted-italic">
                       Prefixo do link &quot;ver pedido&quot; no PagarMe (com o merchant/account da sua conta). O número
                       do pedido é adicionado ao final.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-0">
+                    <Form.Label>
+                      <b>E-mail do Backup Diário:</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="email"
+                      value={backupEmail}
+                      onChange={(e) => setBackupEmail(e.target.value)}
+                      placeholder="secretaria@exemplo.com"
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Todo dia de madrugada o sistema envia a planilha (CSV) dos inscritos para este e-mail. Em branco =
+                      envia para o e-mail remetente do sistema.
                     </Form.Text>
                   </Form.Group>
                 </div>

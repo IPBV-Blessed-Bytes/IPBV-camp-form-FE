@@ -79,19 +79,16 @@ export const buildCampersColumns = ({
       >
         <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
       </Button>
-      {row.original.totalPrice !== '0' && (
-        <>
-          {' '}
-          <Button
-            disabled={!adminTableEditDeletePermissions}
-            variant="outline-warning"
-            onClick={() => handleRefundClick(row.original)}
-            title="Reembolsar inscrição"
-          >
-            <Icons typeIcon="money" iconSize={24} fill="#e0a800" />
-          </Button>
-        </>
-      )}
+      {' '}
+      <Button
+        className="refund-action-btn"
+        disabled={!adminTableEditDeletePermissions || row.original.totalPrice === '0'}
+        variant="outline-warning"
+        onClick={() => handleRefundClick(row.original)}
+        title={row.original.totalPrice === '0' ? 'Inscrição não pagante — nada a reembolsar' : 'Reembolsar inscrição'}
+      >
+        <Icons typeIcon="money" iconSize={24} fill="#e0a800" />
+      </Button>
     </div>
   );
 
