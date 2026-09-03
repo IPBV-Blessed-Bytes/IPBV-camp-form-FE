@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { getNonPayingChildren, getCrewBus } from '@/services/stats';
 import { registerLog } from '@/services/logs';
+import { getSetting } from '@/services/settings';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
@@ -64,6 +65,7 @@ const AdminLoggedIn = ({
 
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
   const [crewBusUsers, setCrewBusUsers] = useState(0);
+  const [crewBusVacancies, setCrewBusVacancies] = useState(22);
   const [loading, setLoading] = useState(true);
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
@@ -79,10 +81,15 @@ const AdminLoggedIn = ({
       setLoading(true);
 
       try {
-        const [nonPayingChildren, crewBus] = await Promise.all([getNonPayingChildren(), getCrewBus()]);
+        const [nonPayingChildren, crewBus, crewBusSetting] = await Promise.all([
+          getNonPayingChildren(),
+          getCrewBus(),
+          getSetting('crew_bus_vacancies').catch(() => ''),
+        ]);
 
         setFilteredCountNonPayingChildren(nonPayingChildren?.quantity || 0);
         setCrewBusUsers(crewBus?.quantity || 0);
+        setCrewBusVacancies(Number(crewBusSetting) || 22);
       } catch (error) {
         console.error('Erro ao buscar contadores do admin:', error);
       } finally {
@@ -172,7 +179,7 @@ const AdminLoggedIn = ({
         {
           title: 'Ônibus Equipe',
           filledVacancies: Number(crewBusUsers),
-          remainingVacancies: Math.max(22 - crewBusUsers, 0),
+          remainingVacancies: Math.max(crewBusVacancies - crewBusUsers, 0),
           showRemainingVacancies: true,
         },
         {
@@ -190,6 +197,7 @@ const AdminLoggedIn = ({
     totalRegistrations,
     filteredCountNonPayingChildren,
     crewBusUsers,
+    crewBusVacancies,
     totalSeats,
     totalBusVacancies,
   ]);

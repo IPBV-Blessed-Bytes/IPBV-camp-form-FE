@@ -17,6 +17,7 @@ import ImportCampersModal from '@/components/Admin/CampersTable/ImportCampersMod
 import RefundModal from '@/components/Admin/RefundModal';
 import { listAllBoletos } from '@/services/boletos';
 import { listAllRefunds } from '@/services/refunds';
+import { getSetting } from '@/services/settings';
 
 import useCampersData from './hooks/useCampersData';
 import { useProductCatalog } from './hooks/useProductCatalog';
@@ -65,6 +66,13 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const [childrenFilter, setChildrenFilter] = useState(false);
   const [refundTarget, setRefundTarget] = useState(null);
   const [paymentInfo, setPaymentInfo] = useState({ boletosByOrder: {}, refundedOrders: new Set() });
+  const [orderUrlPrefix, setOrderUrlPrefix] = useState('');
+
+  useEffect(() => {
+    getSetting('pagarme_dashboard_url')
+      .then((value) => setOrderUrlPrefix(value || ''))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     Promise.all([listAllBoletos().catch(() => []), listAllRefunds().catch(() => [])]).then(([boletos, refunds]) => {
@@ -160,9 +168,10 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         adminTableEditDeletePermissions,
         catalog,
         paymentInfo,
+        orderUrlPrefix,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, selectedRows, catalog, paymentInfo],
+    [data, selectedRows, catalog, paymentInfo, orderUrlPrefix],
   );
 
   const {

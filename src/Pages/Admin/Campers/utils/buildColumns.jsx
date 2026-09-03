@@ -50,6 +50,7 @@ export const buildCampersColumns = ({
   adminTableEditDeletePermissions,
   catalog,
   paymentInfo,
+  orderUrlPrefix,
 }) => {
   const textFilter = filterWith(ColumnFilter);
   const selectFilter = (options) => filterWith(ColumnFilterWithSelect, { options });
@@ -574,7 +575,12 @@ export const buildCampersColumns = ({
       sortType: 'alphanumeric',
       Cell: ({ value }) =>
         value ? (
-          <a href={`${ORDER_URL_PREFIX}${value}`} className="order-url" target="_blank" rel="noopener noreferrer">
+          <a
+            href={`${orderUrlPrefix || ORDER_URL_PREFIX}${value}`}
+            className="order-url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {value}
           </a>
         ) : (
