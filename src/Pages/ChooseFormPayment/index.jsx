@@ -169,6 +169,12 @@ const ChooseFormPayment = () => {
                   Serão gerados {installments} {installments === 1 ? 'boleto' : 'boletos mensais'}. O 1º confirma sua
                   vaga; os demais mantêm a inscrição em dia.
                 </p>
+                {installments >= 2 && (
+                  <p className="payment-installments-warning small mt-2 mb-0">
+                    Se o vencimento da <b>última parcela</b> ficar a <b>menos de 20 dias</b> do início do acampamento,
+                    ele é <b>antecipado automaticamente</b> para garantir que o pagamento seja compensado a tempo.
+                  </p>
+                )}
               </div>
             )}
 

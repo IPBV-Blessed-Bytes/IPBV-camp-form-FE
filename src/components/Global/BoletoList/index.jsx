@@ -51,6 +51,17 @@ const BoletoList = ({ boletos, showProgress }) => {
         </div>
       )}
 
+      {total > 1 && (
+        <div className="boleto-list__note">
+          <Icons typeIcon="info" iconSize={18} fill="#007185" />
+          <span>
+            Para garantir que o pagamento seja compensado a tempo, quando o vencimento da <b>última parcela</b> ficaria
+            a <b>menos de 20 dias</b> do início do acampamento, ele é <b>antecipado automaticamente</b> para uma data
+            anterior.
+          </span>
+        </div>
+      )}
+
       <div className="boleto-list__grid">
         {boletos.map((boleto) => {
           const status = STATUS[boleto.status] || { label: boleto.status || 'Pendente', className: 'is-pending' };
