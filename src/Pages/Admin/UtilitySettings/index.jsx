@@ -8,6 +8,7 @@ import { parse, isValid } from 'date-fns';
 
 import { getSetting, updateSetting } from '@/services/settings';
 import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
@@ -93,6 +94,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         }
       }
 
+      registerLog('Atualizou as informações utilitárias', loggedUsername);
       toast.success('Informações utilitárias atualizadas.');
     } catch {
       toast.error('Erro ao salvar as informações utilitárias.');

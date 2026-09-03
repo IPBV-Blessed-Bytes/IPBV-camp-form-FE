@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import { listFaqs, createFaq, updateFaq, deleteFaq } from '@/services/faqs';
+import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
@@ -63,6 +64,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
         await createFaq({ ...payload, order: faqs.length });
         toast.success('Pergunta criada.');
       }
+      registerLog(draft.id ? 'Editou uma pergunta do FAQ' : 'Criou uma pergunta no FAQ', loggedUsername);
       setShowModal(false);
       await load();
     } catch (err) {
@@ -82,6 +84,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       await Promise.all(
         reordered.map((faq, i) => updateFaq(faq.id, { question: faq.question, answer: faq.answer, order: i })),
       );
+      registerLog('Reordenou as perguntas do FAQ', loggedUsername);
       await load();
     } catch (err) {
       toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
@@ -95,6 +98,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteFaq(toDelete.id);
+      registerLog('Excluiu uma pergunta do FAQ', loggedUsername);
       setToDelete(null);
       await load();
     } catch (err) {
