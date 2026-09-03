@@ -31,6 +31,7 @@ import Loading from '@/components/Global/Loading';
 import InfoButton from '@/components/Global/InfoButton';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
+import BoletoList from '@/components/Global/BoletoList';
 import '@/Pages/Home/style.scss';
 import '@/components/Style/Cart.scss';
 import '@/Pages/BeforePayment/style.scss';
@@ -65,7 +66,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -117,6 +118,8 @@ const DynamicForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [introDone, setIntroDone] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [boletoInstallments, setBoletoInstallments] = useState(1);
+  const [boletoResult, setBoletoResult] = useState(null);
 
   const { data: homeInfo } = useQuery({
     queryKey: ['home-info', getEventSlug()],
@@ -326,7 +329,13 @@ const DynamicForm = () => {
 
     setSubmitting(true);
     try {
-      const { payment_url: paymentUrl } = await createGenericCheckout({ registrations, paymentMethod });
+      const result = await createGenericCheckout({ registrations, paymentMethod, boletoInstallments });
+      if (result?.boletos?.length) {
+        setBoletoResult(result.boletos.map((boleto) => ({ ...boleto, boletoUrl: boleto.url || boleto.boletoUrl })));
+        window.scrollTo(0, 0);
+        return;
+      }
+      const paymentUrl = result?.payment_url;
       if (!paymentUrl) {
         toast.error('Não foi possível gerar o pagamento. Tente novamente.');
         return;
@@ -348,6 +357,8 @@ const DynamicForm = () => {
     setPeople([]);
     setIntroDone(false);
     setPaymentMethod('');
+    setBoletoInstallments(1);
+    setBoletoResult(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -371,6 +382,33 @@ const DynamicForm = () => {
               >
                 {isLoggedIn ? 'Ir para minha conta' : 'Entrar na minha conta'}
               </button>
+            </Col>
+          </Row>
+        </div>
+        <Footer handleAdminClick={() => navigate('/admin')} />
+      </div>
+    );
+  }
+
+  if (boletoResult) {
+    return (
+      <div className="components-container">
+        <Header />
+        <div className="form__container container">
+          <Row className="justify-content-center">
+            <Col lg={10} className="my-5">
+              <div className="text-center">
+                <h2>Boletos gerados! 🎉</h2>
+                <p className="mt-3">
+                  Pague o <b>1º boleto</b> para confirmar sua vaga. Enviamos todos os boletos também para o seu e-mail.
+                </p>
+              </div>
+              <BoletoList boletos={boletoResult} />
+              <div className="text-center">
+                <button className="btn btn-teal-blue mt-3" onClick={restart}>
+                  Voltar ao início
+                </button>
+              </div>
             </Col>
           </Row>
         </div>
@@ -734,13 +772,46 @@ const DynamicForm = () => {
                   </p>
                   <Form.Group className="mt-4" controlId="payment-method">
                     <Form.Label className="fw-bold">Escolha sua forma de pagamento:</Form.Label>
-                    <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                    <Form.Select
+                      value={paymentMethod}
+                      onChange={(e) => {
+                        setPaymentMethod(e.target.value);
+                        setBoletoInstallments(1);
+                      }}
+                    >
                       <option value="">Selecione uma opção</option>
                       <option value="creditCard">Cartão de Crédito (Até 12x)</option>
                       <option value="pix">PIX</option>
-                      <option value="ticket">Boleto</option>
+                      {boletoEnabled && <option value="ticket">Boleto</option>}
                     </Form.Select>
                   </Form.Group>
+
+                  {paymentMethod === 'ticket' && boletoMaxInstallments >= 2 && (
+                    <div className="mt-4">
+                      <Form.Label className="fw-bold">Em quantas parcelas (boletos mensais)?</Form.Label>
+                      <div className="dynamic-form__installments">
+                        {Array.from({ length: boletoMaxInstallments }, (_, i) => i + 1).map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            className={`installment-chip ${boletoInstallments === n ? 'is-active' : ''}`}
+                            onClick={() => setBoletoInstallments(n)}
+                          >
+                            {n}x
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-secondary small mt-2 mb-0">
+                        Serão gerados {boletoInstallments} {boletoInstallments === 1 ? 'boleto' : 'boletos mensais'}. O
+                        1º confirma sua vaga; os demais mantêm a inscrição em dia.
+                      </p>
+                      <p className="text-secondary small mt-2 mb-0">
+                        Se o vencimento da <b>última parcela</b> ficar a <b>menos de 20 dias</b> do início do evento, ele
+                        é <b>antecipado automaticamente</b> para garantir que o pagamento seja compensado a tempo.
+                      </p>
+                    </div>
+                  )}
+
                   <p className="text-muted mt-4">
                     {people.length} inscrição(ões) · Total <b>{formatPrice(grandTotal)}</b>
                   </p>
