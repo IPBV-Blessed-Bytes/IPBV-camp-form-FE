@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { eventPath } from '@/config/eventScope';
@@ -7,11 +7,13 @@ import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import GoogleSignInButton from '@/components/Global/GoogleSignInButton';
 
 const CustomerLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isLoggedIn, loading } = useAuth();
+  const { login, loginWithGoogle, isLoggedIn, loading } = useAuth();
+  const handleGoogleCredential = useCallback((credential) => loginWithGoogle(credential), [loginWithGoogle]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +70,12 @@ const CustomerLogin = () => {
             <Button type="submit" variant="primary" className="w-100 mt-4 fw-bold">
               Entrar
             </Button>
+            <div className="d-flex align-items-center gap-2 my-3 text-secondary small">
+              <hr className="flex-grow-1 m-0" /> ou <hr className="flex-grow-1 m-0" />
+            </div>
+            <div className="d-flex justify-content-center">
+              <GoogleSignInButton onCredential={handleGoogleCredential} />
+            </div>
             <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/criar-conta')}>
               Não tem conta? Criar conta
             </button>
