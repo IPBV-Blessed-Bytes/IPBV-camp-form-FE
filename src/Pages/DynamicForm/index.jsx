@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Container, Row, Col, Button, Card, Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { parse, isValid } from 'date-fns';
@@ -126,6 +126,7 @@ const DynamicForm = () => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [boletoInstallments, setBoletoInstallments] = useState(1);
   const [boletoResult, setBoletoResult] = useState(null);
+  const [donation, setDonation] = useState('');
 
   const { data: homeInfo } = useQuery({
     queryKey: ['home-info', getEventSlug()],
@@ -365,7 +366,12 @@ const DynamicForm = () => {
 
     setSubmitting(true);
     try {
-      const result = await createGenericCheckout({ registrations, paymentMethod, boletoInstallments });
+      const result = await createGenericCheckout({
+        registrations,
+        paymentMethod,
+        boletoInstallments,
+        donation: Number(donation) || 0,
+      });
       if (result?.boletos?.length) {
         setBoletoResult(result.boletos.map((boleto) => ({ ...boleto, boletoUrl: boleto.url || boleto.boletoUrl })));
         window.scrollTo(0, 0);
@@ -395,6 +401,7 @@ const DynamicForm = () => {
     setPaymentMethod('');
     setBoletoInstallments(1);
     setBoletoResult(null);
+    setDonation('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -857,8 +864,28 @@ const DynamicForm = () => {
                     </div>
                   )}
 
+                  <Form.Group className="mt-4" controlId="donation-input">
+                    <Form.Label className="fw-bold">Quer incluir uma doação social? (opcional)</Form.Label>
+                    <InputGroup style={{ maxWidth: '220px' }}>
+                      <InputGroup.Text>R$</InputGroup.Text>
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                        value={donation}
+                        onChange={(e) => setDonation(e.target.value.replace(/[^0-9]/g, ''))}
+                      />
+                    </InputGroup>
+                    <Form.Text className="text-muted-italic">
+                      A doação é somada ao seu pagamento e destinada ao projeto social do evento.
+                    </Form.Text>
+                  </Form.Group>
+
                   <p className="text-muted mt-4">
-                    {people.length} inscrição(ões) · Total <b>{formatPrice(grandTotal)}</b>
+                    {people.length} inscrição(ões)
+                    {Number(donation) > 0 && ` + doação ${formatPrice(Number(donation))}`} · Total{' '}
+                    <b>{formatPrice(grandTotal + (Number(donation) || 0))}</b>
                   </p>
                 </div>
               </FormStepLayout>

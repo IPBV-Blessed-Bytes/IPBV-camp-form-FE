@@ -227,6 +227,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: registeredButtonHomePermissions,
+      path: 'doacoes',
+      cardType: 'registered-card',
+      title: 'Doações',
+      typeIcon: 'couple',
+      iconSize: 40,
+    },
+    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
