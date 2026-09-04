@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { eventPath } from '@/config/eventScope';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -10,6 +10,7 @@ import Icons from '@/components/Global/Icons';
 
 const CustomerLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isLoggedIn, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,9 +18,9 @@ const CustomerLogin = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/minha-conta');
+      navigate(location.state?.from || '/minha-conta');
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

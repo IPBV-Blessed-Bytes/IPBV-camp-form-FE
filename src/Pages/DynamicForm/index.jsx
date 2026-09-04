@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Container, Row, Col, Button, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -22,7 +22,7 @@ import { getPublicBaseDate } from '@/services/baseDate';
 import { findActiveLot } from '@/utils/activeLot';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
-import { getEventSlug } from '@/config/eventScope';
+import { getEventSlug, eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
@@ -61,6 +61,12 @@ const displayValue = (field, value) => {
   }
   return String(value);
 };
+
+const PAYMENT_OPTIONS = [
+  { key: 'creditCard', label: 'Cartão de Crédito', description: 'Parcele em até 12x', icon: 'credit-card' },
+  { key: 'pix', label: 'PIX', description: 'Aprovação na hora', icon: 'cash' },
+  { key: 'ticket', label: 'Boleto', description: 'Boletos mensais', icon: 'barcode' },
+];
 
 const DynamicForm = () => {
   const navigate = useNavigate();
@@ -250,6 +256,38 @@ const DynamicForm = () => {
 
   const cartStepIndex = useMemo(() => wizardSteps.findIndex((s) => s.kind === 'cart'), [wizardSteps]);
 
+  const cartRestoredRef = useRef(false);
+  useEffect(() => {
+    if (cartRestoredRef.current || cartStepIndex < 0 || !isLoggedIn) return;
+    try {
+      const saved = sessionStorage.getItem(`dynamic-cart:${slug}`);
+      if (saved) {
+        const { people: savedPeople, answers: savedAnswers } = JSON.parse(saved);
+        if (Array.isArray(savedPeople) && savedPeople.length) {
+          setPeople(savedPeople);
+          if (savedAnswers && Object.keys(savedAnswers).length) setAnswers(savedAnswers);
+          setStepIndex(cartStepIndex);
+          setMaxStepReached((max) => Math.max(max, cartStepIndex));
+          toast.info('Seu carrinho foi restaurado. Você já pode finalizar o pagamento.');
+        }
+        sessionStorage.removeItem(`dynamic-cart:${slug}`);
+      }
+      cartRestoredRef.current = true;
+    } catch {
+      cartRestoredRef.current = true;
+    }
+  }, [cartStepIndex, isLoggedIn, slug]);
+
+  const requireLogin = () => {
+    try {
+      sessionStorage.setItem(`dynamic-cart:${slug}`, JSON.stringify({ people, answers: currentAnswers }));
+    } catch {
+      // ignore storage errors
+    }
+    toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
+    navigate('/entrar', { state: { from: eventPath('/') } });
+  };
+
   const commitAndGoToCart = () => {
     if (!validateCurrentPerson()) return;
     setPeople((prev) => [...prev, currentAnswers]);
@@ -288,8 +326,7 @@ const DynamicForm = () => {
 
   const handleSubmit = async () => {
     if (!isLoggedIn) {
-      toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
-      navigate('/entrar');
+      requireLogin();
       return;
     }
 
@@ -311,8 +348,7 @@ const DynamicForm = () => {
 
   const handlePayment = async () => {
     if (!isLoggedIn) {
-      toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
-      navigate('/entrar');
+      requireLogin();
       return;
     }
 
@@ -770,21 +806,30 @@ const DynamicForm = () => {
                     <i>não é necessário enviar comprovante de pagamento!</i> Todo o processo é digital e registrado
                     automaticamente em nossa base de dados.
                   </p>
-                  <Form.Group className="mt-4" controlId="payment-method">
-                    <Form.Label className="fw-bold">Escolha sua forma de pagamento:</Form.Label>
-                    <Form.Select
-                      value={paymentMethod}
-                      onChange={(e) => {
-                        setPaymentMethod(e.target.value);
-                        setBoletoInstallments(1);
-                      }}
-                    >
-                      <option value="">Selecione uma opção</option>
-                      <option value="creditCard">Cartão de Crédito (Até 12x)</option>
-                      <option value="pix">PIX</option>
-                      {boletoEnabled && <option value="ticket">Boleto</option>}
-                    </Form.Select>
-                  </Form.Group>
+                  <p className="payment-heading fw-bold mt-4 mb-2">Escolha sua forma de pagamento:</p>
+                  <div className="payment-grid">
+                    {PAYMENT_OPTIONS.filter((option) => option.key !== 'ticket' || boletoEnabled).map((option) => {
+                      const active = paymentMethod === option.key;
+                      return (
+                        <button
+                          key={option.key}
+                          type="button"
+                          className={`payment-card ${active ? 'is-active' : ''}`}
+                          onClick={() => {
+                            setPaymentMethod(option.key);
+                            setBoletoInstallments(1);
+                          }}
+                        >
+                          <span className="payment-card__icon">
+                            <Icons typeIcon={option.icon} iconSize={26} fill={active ? '#fff' : iconColor} />
+                          </span>
+                          <span className="payment-card__title">{option.label}</span>
+                          <span className="payment-card__desc">{option.description}</span>
+                          {active && <span className="payment-card__badge">Selecionado</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
 
                   {paymentMethod === 'ticket' && boletoMaxInstallments >= 2 && (
                     <div className="mt-4">
