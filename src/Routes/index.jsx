@@ -61,6 +61,7 @@ const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
+const AdminBoletos = lazy(() => import('@/Pages/Admin/Boletos'));
 const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
 const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
 const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
@@ -196,6 +197,18 @@ const FormRoutes = () => {
                   requiredPermission="REGISTRATIONS_READ"
                 >
                   <AdminCampers formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/boletos')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                  userRole={userRole}
+                  requiredPermission="REGISTRATIONS_READ"
+                >
+                  <AdminBoletos loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

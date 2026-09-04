@@ -211,6 +211,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: registeredButtonHomePermissions,
+      path: 'boletos',
+      cardType: 'registered-card',
+      title: 'Boletos',
+      typeIcon: 'barcode',
+      iconSize: 40,
+    },
+    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',

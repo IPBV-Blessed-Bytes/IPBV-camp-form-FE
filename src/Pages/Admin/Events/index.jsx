@@ -38,6 +38,8 @@ const EMPTY_EVENT = {
   paymentEnabled: true,
   agePricingEnabled: false,
   registrationFeeEnabled: false,
+  boletoEnabled: false,
+  boletoMaxInstallments: 5,
   iconKey: '',
   contactMessage: '',
   shareMessage: '',
@@ -98,6 +100,8 @@ const AdminEvents = ({ loggedUsername }) => {
       paymentEnabled: event.paymentEnabled ?? true,
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
+      boletoEnabled: event.boletoEnabled ?? false,
+      boletoMaxInstallments: event.boletoMaxInstallments ?? 5,
       iconKey: event.iconKey || '',
       contactMessage: event.contactMessage || '',
       shareMessage: event.shareMessage || '',
@@ -153,6 +157,8 @@ const AdminEvents = ({ loggedUsername }) => {
       paymentEnabled: draft.paymentEnabled,
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
+      boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
+      boletoMaxInstallments: Number(draft.boletoMaxInstallments) || 1,
       iconKey: draft.iconKey || null,
       contactMessage: draft.contactMessage.trim() || null,
       shareMessage: draft.shareMessage.trim() || null,
@@ -607,6 +613,30 @@ const AdminEvents = ({ loggedUsername }) => {
               <Form.Text className="text-muted-italic">
                 Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada acampante.
               </Form.Text>
+
+              <Form.Check
+                type="switch"
+                id="event-boleto-switch"
+                className="mt-3"
+                label="Boleto parcelado"
+                checked={draft.boletoEnabled}
+                onChange={(e) => handleChange('boletoEnabled')(e.target.checked)}
+              />
+              <Form.Text className="text-muted-italic">
+                Permite pagar a inscrição em boletos mensais. O 1º boleto confirma a vaga.
+              </Form.Text>
+              {draft.boletoEnabled && (
+                <Form.Group className="mt-2" controlId="event-boleto-max">
+                  <Form.Label className="mb-1">Máximo de parcelas</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={1}
+                    max={12}
+                    value={draft.boletoMaxInstallments}
+                    onChange={(e) => handleChange('boletoMaxInstallments')(e.target.value)}
+                  />
+                </Form.Group>
+              )}
             </>
           )}
         </Form>
