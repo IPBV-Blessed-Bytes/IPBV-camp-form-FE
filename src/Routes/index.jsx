@@ -42,6 +42,7 @@ const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
 const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
 const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
+const AdminCheckinSubmissions = lazy(() => import('@/Pages/Admin/CheckinSubmissions'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
@@ -55,6 +56,7 @@ const CustomerSignUp = lazy(() => import('@/Pages/Customer/SignUp'));
 const CustomerLogin = lazy(() => import('@/Pages/Customer/Login'));
 const CustomerConfirmEmail = lazy(() => import('@/Pages/Customer/ConfirmEmail'));
 const CustomerMyAccount = lazy(() => import('@/Pages/Customer/MyAccount'));
+const CustomerMyEventRegistrations = lazy(() => import('@/Pages/Customer/MyEventRegistrations'));
 const AdminFeedback = lazy(() => import('../Pages/Admin/Feedback'));
 const AdminFormStage = lazy(() => import('@/Pages/Admin/FormStage'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
@@ -312,6 +314,14 @@ const FormRoutes = () => {
               }
             />
             <Route
+              path={adminPath('/checkin-inscricoes')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
+                  <AdminCheckinSubmissions loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path={adminPath('/logs')}
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
@@ -481,6 +491,7 @@ const FormRoutes = () => {
             <Route path="/entrar" element={<CustomerLogin />} />
             <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
             <Route path="/minha-conta" element={<CustomerMyAccount />} />
+            <Route path="/minhas-inscricoes" element={<CustomerMyEventRegistrations />} />
 
             {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
               <>

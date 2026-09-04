@@ -5,6 +5,11 @@ export const getMyRegistrations = async () => {
   return Array.isArray(data?.registrations) ? data.registrations : [];
 };
 
+export const getMyEventRegistrations = async () => {
+  const { data } = await authFetcher.get('/me/event-registrations');
+  return Array.isArray(data?.registrations) ? data.registrations : [];
+};
+
 export const getMyRegistration = async (id) => {
   const { data } = await authFetcher.get(`/me/registrations/${id}`);
   return data;

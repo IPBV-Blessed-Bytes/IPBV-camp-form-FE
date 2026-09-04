@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import QRCode from 'qrcode';
 import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
+import { buildCheckoutQr } from '@/utils/checkinQr';
 
 const formatCpf = (value) => {
   const digits = String(value ?? '').replace(/\D/g, '').slice(0, 11);
@@ -13,20 +14,21 @@ const formatCpf = (value) => {
     .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 };
 
-const CheckinQrModal = ({ show, onHide, cpf, name }) => {
+const CheckinQrModal = ({ show, onHide, cpf, name, orderNumber, count }) => {
   const [dataUrl, setDataUrl] = useState('');
+  const isCheckout = Boolean(orderNumber);
 
   useEffect(() => {
     if (!show) return;
-    const digits = String(cpf ?? '').replace(/\D/g, '');
-    if (!digits) {
+    const content = isCheckout ? buildCheckoutQr(orderNumber) : String(cpf ?? '').replace(/\D/g, '');
+    if (!content) {
       setDataUrl('');
       return;
     }
-    QRCode.toDataURL(digits, { width: 320, margin: 2 })
+    QRCode.toDataURL(content, { width: 320, margin: 2 })
       .then(setDataUrl)
       .catch(() => setDataUrl(''));
-  }, [show, cpf]);
+  }, [show, cpf, orderNumber, isCheckout]);
 
   return (
     <CustomModal show={show} onHide={onHide} variant="info" icon="camera" title="QR de Check-in">
@@ -41,8 +43,17 @@ const CheckinQrModal = ({ show, onHide, cpf, name }) => {
             <Spinner animation="border" />
           </div>
         )}
-        {name && <p className="fw-bold mt-3 mb-0">{name}</p>}
-        <p className="text-secondary mb-0">{formatCpf(cpf)}</p>
+        {isCheckout ? (
+          <>
+            <p className="fw-bold mt-3 mb-0">Pedido {orderNumber}</p>
+            {count ? <p className="text-secondary mb-0">{count} inscrição(ões)</p> : null}
+          </>
+        ) : (
+          <>
+            {name && <p className="fw-bold mt-3 mb-0">{name}</p>}
+            <p className="text-secondary mb-0">{formatCpf(cpf)}</p>
+          </>
+        )}
       </div>
     </CustomModal>
   );
@@ -53,6 +64,8 @@ CheckinQrModal.propTypes = {
   onHide: PropTypes.func.isRequired,
   cpf: PropTypes.string,
   name: PropTypes.string,
+  orderNumber: PropTypes.string,
+  count: PropTypes.number,
 };
 
 export default CheckinQrModal;

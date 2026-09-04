@@ -19,3 +19,18 @@ export const deleteSubmission = async (id) => {
   const { data } = await fetcher.delete(`/submissions/${id}`);
   return data;
 };
+
+export const getSubmissionsByOrder = async (orderNumber) => {
+  const { data } = await fetcher.get(`/submissions/order/${orderNumber}`);
+  return data?.submissions || [];
+};
+
+export const checkinSubmission = async (id, value = true) => {
+  const { data } = await fetcher.post(`/submissions/${id}/checkin`, { checkin: value });
+  return data;
+};
+
+export const checkinOrder = async (orderNumber) => {
+  const { data } = await fetcher.post(`/submissions/order/${orderNumber}/checkin`);
+  return data?.submissions || [];
+};

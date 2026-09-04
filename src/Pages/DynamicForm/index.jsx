@@ -447,8 +447,11 @@ const DynamicForm = () => {
                 </p>
               </div>
               <BoletoList boletos={boletoResult} />
-              <div className="text-center">
-                <button className="btn btn-teal-blue mt-3" onClick={restart}>
+              <div className="text-center d-flex flex-column align-items-center gap-2">
+                <button className="btn btn-outline-teal-blue mt-3" onClick={() => navigate('/minhas-inscricoes')}>
+                  Ver minhas inscrições
+                </button>
+                <button className="btn btn-teal-blue" onClick={restart}>
                   Voltar ao início
                 </button>
               </div>
@@ -469,9 +472,14 @@ const DynamicForm = () => {
             <Col lg={8} className="text-center my-5">
               <h2>Inscrição enviada! 🎉</h2>
               <p className="mt-3">Recebemos suas respostas com sucesso.</p>
-              <button className="btn btn-teal-blue mt-3" onClick={restart}>
-                Voltar ao início
-              </button>
+              <div className="d-flex flex-column align-items-center gap-2">
+                <button className="btn btn-outline-teal-blue mt-3" onClick={() => navigate('/minhas-inscricoes')}>
+                  Ver minhas inscrições
+                </button>
+                <button className="btn btn-teal-blue" onClick={restart}>
+                  Voltar ao início
+                </button>
+              </div>
             </Col>
           </Row>
         </div>
