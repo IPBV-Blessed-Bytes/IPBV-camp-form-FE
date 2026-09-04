@@ -235,6 +235,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: registeredButtonHomePermissions,
+      path: 'lixeira',
+      cardType: 'registered-card',
+      title: 'Lixeira',
+      typeIcon: 'delete',
+      iconSize: 40,
+    },
+    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
