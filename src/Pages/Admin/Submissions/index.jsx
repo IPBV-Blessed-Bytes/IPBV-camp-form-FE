@@ -10,6 +10,7 @@ import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
+import RefundModal from '@/components/Admin/RefundModal';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
@@ -102,6 +103,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState('');
+  const [refundTarget, setRefundTarget] = useState(null);
 
   const loadSubmissions = async () => {
     setLoading(true);
@@ -286,6 +288,11 @@ const AdminSubmissions = ({ loggedUsername }) => {
                         <Button size="sm" variant="outline-danger" onClick={() => setToDelete(submission)}>
                           Excluir
                         </Button>
+                        {submission.paymentStatus === 'paid' && Number(submission.totalCents) > 0 && (
+                          <Button size="sm" variant="outline-warning" onClick={() => setRefundTarget(submission)}>
+                            Reembolsar
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -401,6 +408,13 @@ const AdminSubmissions = ({ loggedUsername }) => {
         Tem certeza que deseja excluir esta inscrição{toDelete?.userEmail ? ` (${toDelete.userEmail})` : ''}? Esta ação
         não pode ser desfeita.
       </CustomModal>
+
+      <RefundModal
+        submission={refundTarget}
+        onHide={() => setRefundTarget(null)}
+        onDone={loadSubmissions}
+        loggedUsername={loggedUsername}
+      />
 
       <Loading loading={busy} />
     </div>

@@ -62,6 +62,7 @@ const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsMan
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
 const AdminBoletos = lazy(() => import('@/Pages/Admin/Boletos'));
+const AdminRefunds = lazy(() => import('@/Pages/Admin/Refunds'));
 const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
 const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
 const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
@@ -209,6 +210,18 @@ const FormRoutes = () => {
                   requiredPermission="REGISTRATIONS_READ"
                 >
                   <AdminBoletos loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/reembolsos')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                  userRole={userRole}
+                  requiredPermission="REGISTRATIONS_READ"
+                >
+                  <AdminRefunds loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

@@ -219,6 +219,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: registeredButtonHomePermissions,
+      path: 'reembolsos',
+      cardType: 'registered-card',
+      title: 'Reembolsos',
+      typeIcon: 'money',
+      iconSize: 40,
+    },
+    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
