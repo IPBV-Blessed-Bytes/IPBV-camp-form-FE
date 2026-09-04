@@ -51,6 +51,7 @@ const emptyField = (sectionId) => ({
   placeholder: '',
   helpText: '',
   options: [],
+  source: '',
   consentText: '',
   consentLink: '',
 });
@@ -174,6 +175,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       placeholder: field.placeholder || '',
       helpText: field.helpText || '',
       options: Array.isArray(field.options) ? field.options : [],
+      source: field.config?.source || '',
       consentText: field.config?.text || '',
       consentLink: field.config?.link || '',
     });
@@ -202,19 +204,25 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     placeholder: isOptionType || isConsent ? null : fieldDraft.placeholder.trim() || null,
     helpText: fieldDraft.helpText.trim() || null,
     order,
-    options: isOptionType
-      ? fieldDraft.options
-          .filter((opt) => opt.label.trim())
-          .map((opt) => ({ label: opt.label.trim(), value: (opt.value || opt.label).trim() }))
-      : null,
-    config: isConsent ? { text: fieldDraft.consentText.trim(), link: fieldDraft.consentLink.trim() || null } : null,
+    options:
+      isOptionType && !fieldDraft.source
+        ? fieldDraft.options
+            .filter((opt) => opt.label.trim())
+            .map((opt) => ({ label: opt.label.trim(), value: (opt.value || opt.label).trim() }))
+        : null,
+    config: isConsent
+      ? { text: fieldDraft.consentText.trim(), link: fieldDraft.consentLink.trim() || null }
+      : isOptionType && fieldDraft.source
+        ? { source: fieldDraft.source }
+        : null,
   });
 
   const validateField = () => {
     if (!fieldDraft.sectionId) return 'Selecione uma seção.';
     if (!fieldDraft.label.trim()) return 'O rótulo do campo é obrigatório.';
     if (!fieldDraft.key.trim()) return 'O identificador do campo é obrigatório.';
-    if (isOptionType && !fieldDraft.options.some((opt) => opt.label.trim())) return 'Adicione ao menos uma opção.';
+    if (isOptionType && !fieldDraft.source && !fieldDraft.options.some((opt) => opt.label.trim()))
+      return 'Adicione ao menos uma opção.';
     if (isConsent && !fieldDraft.consentText.trim()) return 'Informe o texto do consentimento.';
     return null;
   };
@@ -546,6 +554,24 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           )}
 
           {isOptionType && (
+            <Form.Group className="mb-3">
+              <Form.Label>Origem das opções</Form.Label>
+              <Form.Select value={fieldDraft.source} onChange={(e) => patchField({ source: e.target.value })}>
+                <option value="">Digitar manualmente</option>
+                <option value="products">Produtos do evento</option>
+                <option value="lots">Lotes do evento</option>
+                <option value="package_categories">Categorias de pacote</option>
+              </Form.Select>
+              {fieldDraft.source && (
+                <Form.Text className="text-muted-italic">
+                  As opções vêm automaticamente da fonte selecionada e se atualizam sozinhas quando você editar os dados
+                  do evento.
+                </Form.Text>
+              )}
+            </Form.Group>
+          )}
+
+          {isOptionType && !fieldDraft.source && (
             <Form.Group className="mb-3">
               <Form.Label>Opções</Form.Label>
               {fieldDraft.options.map((opt, index) => (
