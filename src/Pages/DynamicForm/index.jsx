@@ -10,6 +10,7 @@ import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
 import DynamicField from '@/form/dynamic/DynamicField';
 import PackageStep from '@/form/dynamic/PackageStep';
+import RideStep from '@/form/dynamic/RideStep';
 import { computeAge, packageTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
 import { createGenericCheckout } from '@/services/checkout';
@@ -151,9 +152,18 @@ const DynamicForm = () => {
   const age = useMemo(() => computeAge(currentAnswers.nascimento, baseDate), [currentAnswers.nascimento, baseDate]);
 
   const wizardSteps = useMemo(() => {
-    const steps = sections.map((s) =>
-      s.moduleType === 'package' ? { kind: 'package', section: s } : { kind: 'section', section: s },
-    );
+    const steps = [];
+    sections.forEach((s) => {
+      if (s.moduleType === 'package') {
+        steps.push({ kind: 'package', section: s });
+        return;
+      }
+      if (s.moduleType === 'ride') {
+        if (people.length === 0) steps.push({ kind: 'ride', section: s });
+        return;
+      }
+      steps.push({ kind: 'section', section: s });
+    });
     if (paymentEnabled && !steps.some((s) => s.kind === 'package')) steps.push({ kind: 'package' });
     steps.push({ kind: 'review' });
     if (paymentEnabled) {
@@ -161,12 +171,12 @@ const DynamicForm = () => {
       steps.push({ kind: 'payment' });
     }
     return steps;
-  }, [sections, paymentEnabled]);
+  }, [sections, paymentEnabled, people.length]);
 
   const currentStep = wizardSteps[stepIndex];
   const isReview = currentStep?.kind === 'review';
   const stepLabel = (st) =>
-    ({ section: st.section?.name, package: st.section?.name || 'Pacote', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
+    ({ section: st.section?.name, package: st.section?.name || 'Pacote', ride: st.section?.name || 'Carona', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
       st.kind
     ];
   const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
@@ -209,6 +219,18 @@ const DynamicForm = () => {
       const missing = packageCategories.filter((c) => c.required && !(selection[c.id]?.length));
       if (missing.length) {
         toast.error(`Escolha uma opção em: ${missing.map((m) => m.name).join(', ')}`);
+        return false;
+      }
+      return true;
+    }
+    if (currentStep.kind === 'ride') {
+      const ride = currentAnswers.__ride || {};
+      if (ride.mode === 'offer' && !(Number(ride.seats) > 0)) {
+        toast.error('Informe quantas vagas você tem no carro.');
+        return false;
+      }
+      if ((ride.mode === 'offer' || ride.mode === 'need') && !(ride.phone || '').trim()) {
+        toast.error('Informe um WhatsApp para combinar a carona.');
         return false;
       }
       return true;
@@ -923,6 +945,15 @@ const DynamicForm = () => {
                   </Button>
                 </div>
               </div>
+            ) : currentStep.kind === 'ride' ? (
+              <FormStepLayout
+                title={currentStep.section?.name || 'Carona'}
+                onBack={stepIndex === 0 ? undefined : goBack}
+                onNext={goNext}
+                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
+              >
+                <RideStep value={currentAnswers.__ride} onChange={(sel) => setValue('__ride', sel)} />
+              </FormStepLayout>
             ) : (
               <FormStepLayout
                 title={currentStep.section.name}

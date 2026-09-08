@@ -129,19 +129,19 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     }
   };
 
-  const hasPackageModule = sections.some((section) => section.moduleType === 'package');
+  const hasModule = (type) => sections.some((section) => section.moduleType === type);
 
-  const createPackageModule = async () => {
-    if (hasPackageModule) {
-      toast.error('Já existe um módulo de pacote neste formulário.');
+  const createModule = async (type, name) => {
+    if (hasModule(type)) {
+      toast.error(`Já existe um módulo de ${name.toLowerCase()} neste formulário.`);
       return;
     }
     setSaving(true);
     try {
-      await createFormSection({ name: 'Pacote', order: sections.length, moduleType: 'package' });
+      await createFormSection({ name, order: sections.length, moduleType: type });
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao adicionar o módulo de pacote.');
+      toast.error(getApiErrorMessage(err) || `Erro ao adicionar o módulo de ${name.toLowerCase()}.`);
     } finally {
       setSaving(false);
     }
@@ -333,14 +333,25 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             Nova Seção&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
-          {!hasPackageModule && (
+          {!hasModule('package') && (
             <Button
               className="d-flex align-items-center"
               variant="outline-teal-blue"
-              onClick={createPackageModule}
+              onClick={() => createModule('package', 'Pacote')}
               disabled={saving}
             >
               Módulo: Pacote&nbsp;&nbsp;
+              <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
+            </Button>
+          )}
+          {!hasModule('ride') && (
+            <Button
+              className="d-flex align-items-center"
+              variant="outline-teal-blue"
+              onClick={() => createModule('ride', 'Carona')}
+              disabled={saving}
+            >
+              Módulo: Carona&nbsp;&nbsp;
               <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
             </Button>
           )}
@@ -418,9 +429,20 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
                 {section.moduleType ? (
                   <p className="form-builder__section-empty">
-                    <b>Módulo: {section.moduleType === 'package' ? 'Pacote' : section.moduleType}</b> — seleção de
-                    produtos/lote com preço por idade. As opções vêm das telas de Produtos, Lotes e Categorias. Esta
-                    seção define a <b>posição</b> do módulo no formulário.
+                    {section.moduleType === 'package' ? (
+                      <>
+                        <b>Módulo: Pacote</b> — seleção de produtos/lote com preço por idade. As opções vêm das telas de
+                        Produtos, Lotes e Categorias.
+                      </>
+                    ) : section.moduleType === 'ride' ? (
+                      <>
+                        <b>Módulo: Carona</b> — oferta/pedido de carona por inscrição (vagas, contato e observação). As
+                        respostas alimentam a tela de Caronas.
+                      </>
+                    ) : (
+                      <b>Módulo: {section.moduleType}</b>
+                    )}{' '}
+                    Esta seção define a <b>posição</b> do módulo no formulário.
                   </p>
                 ) : section.fields.length === 0 ? (
                   <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
