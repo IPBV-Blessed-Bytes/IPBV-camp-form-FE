@@ -129,6 +129,24 @@ const AdminFormBuilder = ({ loggedUsername }) => {
     }
   };
 
+  const hasPackageModule = sections.some((section) => section.moduleType === 'package');
+
+  const createPackageModule = async () => {
+    if (hasPackageModule) {
+      toast.error('Já existe um módulo de pacote neste formulário.');
+      return;
+    }
+    setSaving(true);
+    try {
+      await createFormSection({ name: 'Pacote', order: sections.length, moduleType: 'package' });
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao adicionar o módulo de pacote.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const moveSection = async (index, direction) => {
     const target = index + direction;
     if (target < 0 || target >= sections.length) return;
@@ -315,6 +333,17 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             Nova Seção&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
+          {!hasPackageModule && (
+            <Button
+              className="d-flex align-items-center"
+              variant="outline-teal-blue"
+              onClick={createPackageModule}
+              disabled={saving}
+            >
+              Módulo: Pacote&nbsp;&nbsp;
+              <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
+            </Button>
+          )}
         </div>
 
         {loading ? (
@@ -349,19 +378,21 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                   </div>
                   <h5 className="form-builder__section-title">{section.name}</h5>
                   <div className="form-builder__section-actions">
-                    <Form.Select
-                      size="sm"
-                      className="form-builder__columns"
-                      value={section.columns || 1}
-                      onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
-                      disabled={saving}
-                      aria-label="Colunas por linha da seção"
-                      title="Quantos campos por linha nesta seção"
-                    >
-                      <option value={1}>1 coluna</option>
-                      <option value={2}>2 colunas</option>
-                      <option value={3}>3 colunas</option>
-                    </Form.Select>
+                    {!section.moduleType && (
+                      <Form.Select
+                        size="sm"
+                        className="form-builder__columns"
+                        value={section.columns || 1}
+                        onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
+                        disabled={saving}
+                        aria-label="Colunas por linha da seção"
+                        title="Quantos campos por linha nesta seção"
+                      >
+                        <option value={1}>1 coluna</option>
+                        <option value={2}>2 colunas</option>
+                        <option value={3}>3 colunas</option>
+                      </Form.Select>
+                    )}
                     <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
                       Renomear
                     </Button>
@@ -385,7 +416,13 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                   </div>
                 </div>
 
-                {section.fields.length === 0 ? (
+                {section.moduleType ? (
+                  <p className="form-builder__section-empty">
+                    <b>Módulo: {section.moduleType === 'package' ? 'Pacote' : section.moduleType}</b> — seleção de
+                    produtos/lote com preço por idade. As opções vêm das telas de Produtos, Lotes e Categorias. Esta
+                    seção define a <b>posição</b> do módulo no formulário.
+                  </p>
+                ) : section.fields.length === 0 ? (
                   <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
                 ) : (
                   <ul className="form-builder__list">
@@ -441,9 +478,11 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                   </ul>
                 )}
 
-                <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
-                  + Adicionar campo
-                </Button>
+                {!section.moduleType && (
+                  <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
+                    + Adicionar campo
+                  </Button>
+                )}
               </div>
             ))}
           </div>

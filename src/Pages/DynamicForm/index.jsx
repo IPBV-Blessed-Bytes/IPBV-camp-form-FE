@@ -140,7 +140,10 @@ const DynamicForm = () => {
     return topFilled || (homeInfo?.bottom?.length || 0) > 0;
   }, [homeInfo]);
 
-  const sections = useMemo(() => allSections.filter((section) => section.fields.length > 0), [allSections]);
+  const sections = useMemo(
+    () => allSections.filter((section) => section.fields.length > 0 || section.moduleType),
+    [allSections],
+  );
 
   const initializedAnswers = useMemo(() => initialAnswers(fields), [fields]);
   const currentAnswers = Object.keys(answers).length ? answers : initializedAnswers;
@@ -148,8 +151,10 @@ const DynamicForm = () => {
   const age = useMemo(() => computeAge(currentAnswers.nascimento, baseDate), [currentAnswers.nascimento, baseDate]);
 
   const wizardSteps = useMemo(() => {
-    const steps = sections.map((s) => ({ kind: 'section', section: s }));
-    if (paymentEnabled) steps.push({ kind: 'package' });
+    const steps = sections.map((s) =>
+      s.moduleType === 'package' ? { kind: 'package', section: s } : { kind: 'section', section: s },
+    );
+    if (paymentEnabled && !steps.some((s) => s.kind === 'package')) steps.push({ kind: 'package' });
     steps.push({ kind: 'review' });
     if (paymentEnabled) {
       steps.push({ kind: 'cart' });
@@ -161,7 +166,7 @@ const DynamicForm = () => {
   const currentStep = wizardSteps[stepIndex];
   const isReview = currentStep?.kind === 'review';
   const stepLabel = (st) =>
-    ({ section: st.section?.name, package: 'Pacote', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
+    ({ section: st.section?.name, package: st.section?.name || 'Pacote', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
       st.kind
     ];
   const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
@@ -910,11 +915,11 @@ const DynamicForm = () => {
                   onChange={(sel) => setValue('__package', sel)}
                 />
                 <div className="form-step__nav dynamic-package__nav">
-                  <Button variant="light" size="lg" onClick={goBack}>
+                  <Button variant="light" size="lg" onClick={goBack} disabled={stepIndex === 0}>
                     Voltar
                   </Button>
                   <Button variant="warning" size="lg" onClick={goNext}>
-                    Revisar
+                    {wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
                   </Button>
                 </div>
               </div>
