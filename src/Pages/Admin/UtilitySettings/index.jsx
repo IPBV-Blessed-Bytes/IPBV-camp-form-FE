@@ -23,6 +23,26 @@ const BOLETO_MAX_KEY = 'boleto_max_installments';
 const CREW_BUS_KEY = 'crew_bus_vacancies';
 const PAGARME_DASH_KEY = 'pagarme_dashboard_url';
 const BACKUP_EMAIL_KEY = 'backup_email';
+const EVENT_MAP_KEY = 'event_map';
+const SOCIAL_LINKS_KEY = 'social_links';
+
+const SOCIAL_NETWORKS = [
+  { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/suaigreja' },
+  { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/suaigreja' },
+  { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@suaigreja' },
+  { key: 'spotify', label: 'Spotify', placeholder: 'https://open.spotify.com/...' },
+  { key: 'twitter', label: 'Twitter / X', placeholder: 'https://x.com/suaigreja' },
+  { key: 'email', label: 'E-mail', placeholder: 'contato@suaigreja.com' },
+];
+
+const parseSocial = (value) => {
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+};
 
 const parseDate = (dateString) => {
   if (!dateString) return null;
@@ -44,6 +64,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [crewBus, setCrewBus] = useState('');
   const [pagarmeDash, setPagarmeDash] = useState('');
   const [backupEmail, setBackupEmail] = useState('');
+  const [eventMap, setEventMap] = useState('');
+  const [social, setSocial] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -53,7 +75,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, baseDateData] =
+      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue, baseDateData] =
         await Promise.all([
           getSetting(CONTACT_KEY),
           getSetting(SPREADSHEET_KEY),
@@ -61,6 +83,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
           getSetting(CREW_BUS_KEY),
           getSetting(PAGARME_DASH_KEY),
           getSetting(BACKUP_EMAIL_KEY),
+          getSetting(EVENT_MAP_KEY),
+          getSetting(SOCIAL_LINKS_KEY),
           getBaseDate(),
         ]);
       setContact(contactValue);
@@ -69,6 +93,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
       setBackupEmail(backupEmailValue || '');
+      setEventMap(eventMapValue || '');
+      setSocial(parseSocial(socialValue));
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
         setBaseDateExists(true);
@@ -89,7 +115,13 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue] =
+      const cleanSocial = SOCIAL_NETWORKS.reduce((acc, network) => {
+        const value = (social[network.key] || '').trim();
+        if (value) acc[network.key] = value;
+        return acc;
+      }, {});
+
+      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue] =
         await Promise.all([
           updateSetting(CONTACT_KEY, contact.trim()),
           updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
@@ -97,6 +129,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
           updateSetting(CREW_BUS_KEY, crewBus.trim()),
           updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
           updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
+          updateSetting(EVENT_MAP_KEY, eventMap.trim()),
+          updateSetting(SOCIAL_LINKS_KEY, JSON.stringify(cleanSocial)),
         ]);
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
@@ -104,6 +138,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
       setBackupEmail(backupEmailValue || '');
+      setEventMap(eventMapValue || '');
+      setSocial(parseSocial(socialValue));
 
       if (baseDate) {
         if (baseDateExists) {
@@ -272,6 +308,60 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                       Total de vagas no ônibus reservado para a equipe/crew (usado no contador da home do admin).
                     </Form.Text>
                   </Form.Group>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="location-pin" iconSize={20} fill="#007185" />
+                  </span>
+                  <span>Local do evento (mapa)</span>
+                </div>
+                <div className="utility-card__body">
+                  <Form.Group className="mb-5">
+                    <Form.Label>
+                      <b>Endereço ou link do Google Maps:</b>
+                    </Form.Label>
+                    <Form.Control
+                      value={eventMap}
+                      onChange={(e) => setEventMap(e.target.value)}
+                      placeholder="Rua Exemplo, 123 - Bairro, Cidade - UF"
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Mostra um mapa do local na home do evento. Deixe em branco para ocultar.
+                    </Form.Text>
+                  </Form.Group>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="world" iconSize={20} fill="#007185" />
+                  </span>
+                  <span>Redes sociais (rodapé)</span>
+                </div>
+                <div className="utility-card__body">
+                  {SOCIAL_NETWORKS.map((network) => (
+                    <Form.Group className="mb-3" key={network.key}>
+                      <Form.Label>
+                        <b>{network.label}:</b>
+                      </Form.Label>
+                      <Form.Control
+                        value={social[network.key] || ''}
+                        onChange={(e) => setSocial((prev) => ({ ...prev, [network.key]: e.target.value }))}
+                        placeholder={network.placeholder}
+                      />
+                    </Form.Group>
+                  ))}
+                  <Form.Text className="text-muted-italic">
+                    Cada ícone só aparece no rodapé quando o link é preenchido.
+                  </Form.Text>
                 </div>
               </div>
             </Col>

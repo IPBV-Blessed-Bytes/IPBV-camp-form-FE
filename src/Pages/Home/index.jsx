@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
 import { getHomeInfo } from '@/services/homeInfo';
+import { getPublicSetting } from '@/services/settings';
 import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
@@ -23,6 +24,13 @@ const FormHome = ({ onLgpdClose }) => {
   const [showLgpdModal, setShowLgpdModal] = useState(false);
   const [homepageInfo, setHomepageInfo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mapQuery, setMapQuery] = useState('');
+
+  useEffect(() => {
+    getPublicSetting('event_map')
+      .then((value) => setMapQuery(value || ''))
+      .catch(() => {});
+  }, []);
 
   const CACHE_KEY = 'homepageInfo';
   const CACHE_TTL = 1000 * 60 * 60;
@@ -141,6 +149,21 @@ const FormHome = ({ onLgpdClose }) => {
                 </ul>
               </Col>
             </Row>
+            {mapQuery && (
+              <Row className="justify-content-center">
+                <Col xl={9}>
+                  <h4 className="mb-3 fw-bold">Onde será</h4>
+                  <div className="home-map">
+                    <iframe
+                      title="Local do evento"
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                      loading="lazy"
+                      allowFullScreen
+                    />
+                  </div>
+                </Col>
+              </Row>
+            )}
             <Loading loading={loading} />
           </Container>
       </FormStepLayout>
