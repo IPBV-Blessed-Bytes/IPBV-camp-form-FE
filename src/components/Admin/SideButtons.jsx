@@ -132,6 +132,14 @@ const SideButtons = ({ secondaryPermission }) => {
           Vagas&nbsp;
           <Icons className="settings-icons" typeIcon="camp" iconSize={25} fill={'#fff'} />
         </button>
+
+        <button
+          className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/backup') : () => navigate('/admin/backup')}
+        >
+          Backup&nbsp;
+          <Icons className="settings-icons" typeIcon="excel" iconSize={22} fill={'#fff'} />
+        </button>
       </div>
     </>
   );

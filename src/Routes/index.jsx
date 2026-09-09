@@ -63,6 +63,7 @@ const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
+const AdminBackup = lazy(() => import('@/Pages/Admin/Backup'));
 const AdminBoletos = lazy(() => import('@/Pages/Admin/Boletos'));
 const AdminRefunds = lazy(() => import('@/Pages/Admin/Refunds'));
 const AdminDonations = lazy(() => import('@/Pages/Admin/Donations'));
@@ -421,6 +422,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminEvents formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/backup')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminBackup formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
