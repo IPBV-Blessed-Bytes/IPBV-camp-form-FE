@@ -73,7 +73,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, mapQuery } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -138,8 +138,8 @@ const DynamicForm = () => {
   const hasHomeInfo = useMemo(() => {
     const top = homeInfo?.top || {};
     const topFilled = Object.values(top).some((value) => value && String(value).trim());
-    return topFilled || (homeInfo?.bottom?.length || 0) > 0;
-  }, [homeInfo]);
+    return topFilled || (homeInfo?.bottom?.length || 0) > 0 || Boolean(mapQuery);
+  }, [homeInfo, mapQuery]);
 
   const sections = useMemo(
     () => allSections.filter((section) => section.fields.length > 0 || section.moduleType),
@@ -602,6 +602,22 @@ const DynamicForm = () => {
                             </li>
                           ))}
                         </ul>
+                      </Col>
+                    </Row>
+                  )}
+
+                  {mapQuery && (
+                    <Row className="justify-content-center">
+                      <Col xl={9}>
+                        <h4 className="mb-3 fw-bold">Onde será</h4>
+                        <div className="home-map">
+                          <iframe
+                            title="Local do evento"
+                            src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                            loading="lazy"
+                            allowFullScreen
+                          />
+                        </div>
                       </Col>
                     </Row>
                   )}

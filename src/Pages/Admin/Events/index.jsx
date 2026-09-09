@@ -45,6 +45,35 @@ const EMPTY_EVENT = {
   shareMessage: '',
   oldSpreadsheetUrl: '',
   faviconUrl: '',
+  mapQuery: '',
+  social: {},
+};
+
+const SOCIAL_NETWORKS = [
+  { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/seuevento' },
+  { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/seuevento' },
+  { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@seuevento' },
+  { key: 'spotify', label: 'Spotify', placeholder: 'https://open.spotify.com/...' },
+  { key: 'twitter', label: 'Twitter / X', placeholder: 'https://x.com/seuevento' },
+  { key: 'email', label: 'E-mail', placeholder: 'contato@seuevento.com' },
+];
+
+const parseSocial = (value) => {
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+};
+
+const buildSocial = (social) => {
+  const clean = SOCIAL_NETWORKS.reduce((acc, network) => {
+    const value = (social?.[network.key] || '').trim();
+    if (value) acc[network.key] = value;
+    return acc;
+  }, {});
+  return Object.keys(clean).length ? JSON.stringify(clean) : null;
 };
 
 const slugify = (value) =>
@@ -107,6 +136,8 @@ const AdminEvents = ({ loggedUsername }) => {
       shareMessage: event.shareMessage || '',
       oldSpreadsheetUrl: event.oldSpreadsheetUrl || '',
       faviconUrl: event.faviconUrl || '',
+      mapQuery: event.mapQuery || '',
+      social: parseSocial(event.socialLinks),
     });
     setShowFormModal(true);
   };
@@ -164,6 +195,8 @@ const AdminEvents = ({ loggedUsername }) => {
       shareMessage: draft.shareMessage.trim() || null,
       oldSpreadsheetUrl: draft.oldSpreadsheetUrl.trim() || null,
       faviconUrl: draft.faviconUrl.trim() || null,
+      mapQuery: draft.mapQuery.trim() || null,
+      socialLinks: buildSocial(draft.social),
     };
 
     try {
@@ -572,6 +605,47 @@ const AdminEvents = ({ loggedUsername }) => {
                 </Form.Text>
               </Form.Group>
             </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Local do evento (mapa):</b>
+                </Form.Label>
+                <Form.Control
+                  value={draft.mapQuery}
+                  onChange={(e) => handleChange('mapQuery')(e.target.value)}
+                  placeholder="Endereço ou link do Google Maps"
+                />
+                <Form.Text className="text-muted-italic">
+                  Mostra um mapa do local na home do evento. Deixe em branco para ocultar.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <hr className="my-4" />
+
+          <h6 className="fw-bold mb-2">Redes sociais (rodapé)</h6>
+          <Form.Text className="text-muted-italic d-block mb-3">
+            Cada ícone só aparece no rodapé do evento quando o link é preenchido.
+          </Form.Text>
+          <Row className="g-3">
+            {SOCIAL_NETWORKS.map((network) => (
+              <Col xs={12} md={6} key={network.key}>
+                <Form.Group>
+                  <Form.Label>
+                    <b>{network.label}:</b>
+                  </Form.Label>
+                  <Form.Control
+                    value={draft.social?.[network.key] || ''}
+                    onChange={(e) =>
+                      setDraft((prev) => ({ ...prev, social: { ...prev.social, [network.key]: e.target.value } }))
+                    }
+                    placeholder={network.placeholder}
+                  />
+                </Form.Group>
+              </Col>
+            ))}
           </Row>
 
           <hr className="my-4" />

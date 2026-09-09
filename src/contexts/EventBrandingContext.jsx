@@ -73,6 +73,8 @@ export const EventBrandingProvider = ({ children }) => {
       shareMessage: event?.shareMessage || '',
       oldSpreadsheetUrl: event?.oldSpreadsheetUrl || '',
       faviconUrl,
+      mapQuery: event?.mapQuery || '',
+      socialLinks: event?.socialLinks || '',
       loading: isLoading,
     }),
     [event, color, secondaryColor, faviconUrl, isLoading],
