@@ -9,3 +9,13 @@ export const emailBackup = async () => {
   const { data } = await authFetcher.post('/backup/email');
   return data;
 };
+
+export const getBackupConfig = async () => {
+  const { data } = await authFetcher.get('/backup/config');
+  return data;
+};
+
+export const saveBackupConfig = async (payload) => {
+  const { data } = await authFetcher.put('/backup/config', payload);
+  return data;
+};
