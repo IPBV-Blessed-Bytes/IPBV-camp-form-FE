@@ -65,6 +65,7 @@ const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsMan
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const AdminUtilitySettings = lazy(() => import('@/Pages/Admin/UtilitySettings'));
+const AdminBackup = lazy(() => import('@/Pages/Admin/Backup'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -353,6 +354,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminUtilitySettings formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/backup')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminBackup formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

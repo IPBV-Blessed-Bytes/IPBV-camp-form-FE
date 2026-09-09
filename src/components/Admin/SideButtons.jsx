@@ -69,6 +69,14 @@ const SideButtons = ({ secondaryPermission }) => {
 
         <button
           className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/backup') : () => navigate('/admin/backup')}
+        >
+          Backup&nbsp;
+          <Icons className="settings-icons" typeIcon="excel" iconSize={22} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/lixeira') : () => navigate('/admin/lixeira')}
         >
           Lixeira&nbsp;
