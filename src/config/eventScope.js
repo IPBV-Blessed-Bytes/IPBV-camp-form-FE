@@ -1,6 +1,6 @@
-const DEFAULT_EVENT_SLUG = 'acampamento-ipbv';
-
 export const SELECTED_EVENT_KEY = 'selected-event';
+
+export const GLOBAL_ADMIN_SEGMENTS = new Set(['', 'eventos', 'usuarios', 'papeis', 'logs']);
 
 export const EVENT_SCOPED_PREFIXES = new Set([
   'camper',
@@ -34,8 +34,12 @@ export const getEventSlugFromPath = (pathname = window.location.pathname) => {
   return match ? decodeURIComponent(match[1]) : null;
 };
 
-export const getEventSlug = () =>
-  getEventSlugFromPath() || localStorage.getItem(SELECTED_EVENT_KEY) || DEFAULT_EVENT_SLUG;
+export const getEventSlug = () => getEventSlugFromPath() || localStorage.getItem(SELECTED_EVENT_KEY) || null;
+
+export const adminSegmentFromPath = (pathname = window.location.pathname) => {
+  const match = pathname.match(/^\/(?:admin|dev)(?:\/([^/?#]+))?/);
+  return match ? { isAdmin: true, segment: match[1] || '' } : { isAdmin: false, segment: null };
+};
 
 export const setSelectedEvent = (slug) => {
   if (slug) localStorage.setItem(SELECTED_EVENT_KEY, slug);
@@ -47,7 +51,10 @@ export const withEventScope = (url) => {
   const segment = url.split('/')[1]?.split(/[?#]/)[0];
   if (!EVENT_SCOPED_PREFIXES.has(segment)) return url;
 
-  return `/e/${getEventSlug()}${url}`;
+  const slug = getEventSlug();
+  if (!slug) return url;
+
+  return `/e/${slug}${url}`;
 };
 
 export const stripEventPrefix = (pathname = window.location.pathname) => {

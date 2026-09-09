@@ -189,3 +189,18 @@ $admin-accent-checkin: $slime-green;
     }
   }
 }
+
+.admin-home__no-event {
+  max-width: 560px;
+  margin: 3rem auto;
+  text-align: center;
+
+  h4 {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    color: #6b6b6b;
+  }
+}

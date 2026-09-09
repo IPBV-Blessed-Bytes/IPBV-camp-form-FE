@@ -11,6 +11,7 @@ import {
 import { isTokenValid, getApiErrorMessage } from '@/fetchers/helpers';
 import { login as loginRequest, googleLogin as googleLoginRequest, getMyPermissions } from '@/services/auth';
 import { getFormStage } from '@/services/formStage';
+import { getEventSlug } from '@/config/eventScope';
 
 const loadPermissions = async () => {
   try {
@@ -67,15 +68,23 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchFormStage = async () => {
+      // No event selected: the app boots in a neutral stage so the admin shell/login
+      // still renders (formStage is event-scoped and would 403 without an event).
+      if (!getEventSlug()) {
+        setFormStageState('form-on');
+        sessionStorage.setItem(FORM_STAGE_KEY, 'form-on');
+        return;
+      }
       setLoading(true);
       try {
         const data = await getFormStage();
-        const context = data?.formStage || '';
+        const context = data?.formStage || 'form-on';
 
         setFormStageState(context);
         sessionStorage.setItem(FORM_STAGE_KEY, context);
       } catch (error) {
         console.error('[AuthProvider] erro ao buscar formStage', error);
+        setFormStageState((prev) => prev || 'form-on');
       } finally {
         setLoading(false);
       }

@@ -8,6 +8,7 @@ import { getNonPayingChildren, getCrewBus } from '@/services/stats';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
+import { getEventSlug } from '@/config/eventScope';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import PackageCard from '@/components/Admin/PackageCard';
@@ -312,6 +313,17 @@ const AdminLoggedIn = ({
     <div className="admin-home">
       <AdminTopbar username={splitedLoggedInUsername} logout={logout} />
 
+      {!getEventSlug() ? (
+        <div className="admin-home__content">
+          <div className="admin-home__no-event">
+            <h4>Selecione um evento</h4>
+            <p>
+              Escolha um evento no seletor <b>Evento</b> no topo para administrá-lo. As telas por evento (inscrições,
+              quartos, formulário, backup, etc.) precisam de um evento selecionado.
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className="admin-home__content">
         <Row className="navigation-header gx-3">
           {navigationSessions.map((session) => {
@@ -407,6 +419,7 @@ const AdminLoggedIn = ({
           </Row>
         )}
       </div>
+      )}
     </div>
   );
 };

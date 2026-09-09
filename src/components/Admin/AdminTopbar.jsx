@@ -56,10 +56,15 @@ const AdminTopbar = ({ username, logout }) => {
           <span className="admin-topbar__event-label">Evento:</span>
           <select
             className="admin-topbar__event-select"
-            value={currentSlug}
+            value={currentSlug || ''}
             onChange={(e) => handleEventChange(e.target.value)}
             aria-label="Selecionar evento"
           >
+            {!currentSlug && (
+              <option value="" disabled>
+                Selecione um evento…
+              </option>
+            )}
             {events.map((event) => (
               <option key={event.slug} value={event.slug}>
                 {event.name || event.slug}

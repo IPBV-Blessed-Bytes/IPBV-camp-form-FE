@@ -11,9 +11,11 @@ const useBaseYear = () => {
     if (baseYear) return undefined;
 
     let canceled = false;
-    initBaseDate().then((date) => {
-      if (!canceled) setBaseYear(extractYear(date));
-    });
+    initBaseDate()
+      .then((date) => {
+        if (!canceled) setBaseYear(extractYear(date));
+      })
+      .catch(() => {});
 
     return () => {
       canceled = true;
