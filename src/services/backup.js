@@ -19,3 +19,8 @@ export const saveBackupConfig = async (payload) => {
   const { data } = await authFetcher.put('/backup/config', payload);
   return data;
 };
+
+export const restoreBackup = async (payload) => {
+  const { data } = await authFetcher.post('/backup/restore', payload);
+  return data;
+};

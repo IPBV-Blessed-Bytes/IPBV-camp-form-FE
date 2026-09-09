@@ -3,7 +3,7 @@ import { Button, Card, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
-import { exportBackup, emailBackup, getBackupConfig, saveBackupConfig } from '@/services/backup';
+import { exportBackup, emailBackup, getBackupConfig, saveBackupConfig, restoreBackup } from '@/services/backup';
 import { registerLog } from '@/services/logs';
 import { getEventSlug } from '@/config/eventScope';
 import scrollUp from '@/hooks/useScrollUp';
@@ -16,6 +16,8 @@ const AdminBackup = ({ loggedUsername }) => {
   const [emailing, setEmailing] = useState(false);
   const [config, setConfig] = useState({ backupEmail: '', backupFrequency: 'off', lastBackupAt: null });
   const [savingConfig, setSavingConfig] = useState(false);
+  const [restore, setRestore] = useState({ snapshot: null, fileName: '', newSlug: '', newName: '' });
+  const [restoring, setRestoring] = useState(false);
   scrollUp();
 
   const slug = getEventSlug();
@@ -81,6 +83,51 @@ const AdminBackup = ({ loggedUsername }) => {
       toast.error('Não foi possível enviar o backup por e-mail.');
     } finally {
       setEmailing(false);
+    }
+  };
+
+  const handleFile = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!parsed?.tables) {
+          toast.error('Arquivo de backup inválido.');
+          return;
+        }
+        setRestore((prev) => ({ ...prev, snapshot: parsed, fileName: file.name }));
+      } catch {
+        toast.error('Não foi possível ler o arquivo (JSON inválido).');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleRestore = async () => {
+    if (!restore.snapshot) {
+      toast.error('Selecione um arquivo de backup.');
+      return;
+    }
+    if (!restore.newSlug.trim()) {
+      toast.error('Informe o slug do novo evento.');
+      return;
+    }
+    setRestoring(true);
+    try {
+      const res = await restoreBackup({
+        newSlug: restore.newSlug.trim(),
+        newName: restore.newName.trim(),
+        snapshot: restore.snapshot,
+      });
+      toast.success(`Evento restaurado em "${res.slug}" (${res.restoredRows} registros).`);
+      registerLog(`Restaurou um backup no evento ${res.slug}`, loggedUsername);
+      setRestore({ snapshot: null, fileName: '', newSlug: '', newName: '' });
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Não foi possível restaurar o backup.');
+    } finally {
+      setRestoring(false);
     }
   };
 
@@ -168,6 +215,44 @@ const AdminBackup = ({ loggedUsername }) => {
             )}
             <Button variant="teal-blue" onClick={handleSaveConfig} disabled={savingConfig}>
               {savingConfig ? 'Salvando...' : 'Salvar agendamento'}
+            </Button>
+          </Card.Body>
+        </Card>
+
+        <Card className="backup-card mt-4">
+          <Card.Body>
+            <Card.Title>Restaurar backup</Card.Title>
+            <p className="text-secondary">
+              Cria um <b>novo evento</b> a partir de um arquivo de backup (configuração, formulário, produtos, lotes,
+              inscrições e quartos). Não altera eventos existentes.
+            </p>
+            <Form.Group className="mb-3">
+              <Form.Label>Arquivo de backup (.json)</Form.Label>
+              <Form.Control type="file" accept="application/json,.json" onChange={handleFile} />
+              {restore.fileName && <Form.Text className="text-success">Selecionado: {restore.fileName}</Form.Text>}
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Slug do novo evento</Form.Label>
+              <Form.Control
+                type="text"
+                value={restore.newSlug}
+                onChange={(e) => setRestore((prev) => ({ ...prev, newSlug: e.target.value }))}
+                placeholder="acampamento-2027"
+                style={{ maxWidth: 420 }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Nome do novo evento (opcional)</Form.Label>
+              <Form.Control
+                type="text"
+                value={restore.newName}
+                onChange={(e) => setRestore((prev) => ({ ...prev, newName: e.target.value }))}
+                placeholder="Acampamento 2027"
+                style={{ maxWidth: 420 }}
+              />
+            </Form.Group>
+            <Button variant="teal-blue" onClick={handleRestore} disabled={restoring || !restore.snapshot}>
+              {restoring ? 'Restaurando...' : 'Restaurar como novo evento'}
             </Button>
           </Card.Body>
         </Card>
