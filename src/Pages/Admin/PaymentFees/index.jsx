@@ -44,6 +44,7 @@ const AdminPaymentFees = ({ loggedUsername }) => {
         pixPercent: Number(fees.pixPercent) || 0,
         boletoFixed: Number(fees.boletoFixed) || 0,
         cardFixed: Number(fees.cardFixed) || 0,
+        transactionFixed: Number(fees.transactionFixed) || 0,
         cardInstallmentPercent: Object.fromEntries(
           INSTALLMENTS.map((n) => [n, Number(fees.cardInstallmentPercent[n]) || 0]),
         ),
@@ -94,6 +95,9 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                       />
                       <InputGroup.Text>%</InputGroup.Text>
                     </InputGroup>
+                    <Form.Text className="text-muted-italic">
+                      Percentual que o PagarMe cobra sobre cada pagamento via Pix.
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-4">
@@ -110,9 +114,12 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                         onChange={(e) => setField('boletoFixed', e.target.value)}
                       />
                     </InputGroup>
+                    <Form.Text className="text-muted-italic">
+                      Valor fixo que o PagarMe cobra por cada boleto pago (à vista ou por parcela).
+                    </Form.Text>
                   </Form.Group>
 
-                  <Form.Group className="mb-0">
+                  <Form.Group className="mb-4">
                     <Form.Label>
                       <b>Cartão (valor fixo por transação):</b>
                     </Form.Label>
@@ -127,7 +134,27 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                       />
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
-                      Somado ao percentual da parcela (ex.: 1x = % da tabela + este valor fixo).
+                      Valor fixo somado ao percentual da parcela (ex.: 1x = % da tabela + este valor fixo).
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-0">
+                    <Form.Label>
+                      <b>Taxa por transação (valor fixo):</b>
+                    </Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>R$</InputGroup.Text>
+                      <Form.Control
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={fees.transactionFixed}
+                        onChange={(e) => setField('transactionFixed', e.target.value)}
+                      />
+                    </InputGroup>
+                    <Form.Text className="text-muted-italic">
+                      Valor fixo cobrado pelo PagarMe em cada transação de Pix e boleto (ex.: R$0,99). Por isso o
+                      boleto sai por valor + boleto + esta taxa.
                     </Form.Text>
                   </Form.Group>
                 </div>
@@ -143,6 +170,10 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                   <span>Percentual do Cartão por Parcela</span>
                 </div>
                 <div className="fees-card__body">
+                  <Form.Text className="text-muted-italic d-block mb-3">
+                    Percentual que o PagarMe cobra conforme o número de parcelas no cartão. Quanto mais parcelas,
+                    maior a taxa. Aplicado sobre o valor da inscrição, somado ao valor fixo do cartão.
+                  </Form.Text>
                   <Row className="g-2">
                     {INSTALLMENTS.map((n) => (
                       <Col xs={6} sm={4} key={n} className="mb-3">
