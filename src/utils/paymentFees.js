@@ -2,6 +2,7 @@ export const DEFAULT_FEES = {
   pixPercent: 1.19,
   boletoFixed: 3.49,
   cardFixed: 1.48,
+  transactionFixed: 0.99,
   cardInstallmentPercent: {
     1: 4.79,
     2: 7.31,
@@ -26,6 +27,7 @@ export const parseFees = (raw) => {
       pixPercent: Number(parsed.pixPercent ?? DEFAULT_FEES.pixPercent),
       boletoFixed: Number(parsed.boletoFixed ?? DEFAULT_FEES.boletoFixed),
       cardFixed: Number(parsed.cardFixed ?? DEFAULT_FEES.cardFixed),
+      transactionFixed: Number(parsed.transactionFixed ?? DEFAULT_FEES.transactionFixed),
       cardInstallmentPercent: { ...DEFAULT_FEES.cardInstallmentPercent, ...(parsed.cardInstallmentPercent || {}) },
     };
   } catch {
@@ -45,9 +47,10 @@ export const simulatePayments = (base, fees, maxBoletoInstallments = 1) => {
   const config = fees || DEFAULT_FEES;
   const value = Number(base) || 0;
   const boletoFee = Number(config.boletoFixed) || 0;
+  const txFee = Number(config.transactionFixed) || 0;
 
-  const pix = grossUp(value, config.pixPercent, 0);
-  const boleto = value + boletoFee;
+  const pix = grossUp(value, config.pixPercent, txFee);
+  const boleto = value + boletoFee + txFee;
   const card = Object.keys(config.cardInstallmentPercent)
     .map(Number)
     .sort((a, b) => a - b)
@@ -58,7 +61,7 @@ export const simulatePayments = (base, fees, maxBoletoInstallments = 1) => {
 
   const boletoInstallments = [];
   for (let n = 2; n <= Number(maxBoletoInstallments || 1); n += 1) {
-    const total = value + n * boletoFee;
+    const total = value + n * (boletoFee + txFee);
     boletoInstallments.push({ installments: n, total, perInstallment: total / n });
   }
 
