@@ -43,6 +43,14 @@ const SideButtons = ({ secondaryPermission }) => {
       <div className={`settings-floating-buttons ${showSettingsButtons ? 'show' : ''}`}>
         <button
           className="settings-message-button"
+          onClick={formStage === 'maintenance' ? () => navigate('/dev/backup') : () => navigate('/admin/backup')}
+        >
+          Backup&nbsp;
+          <Icons className="settings-icons" typeIcon="excel" iconSize={22} fill={'#fff'} />
+        </button>
+
+        <button
+          className="settings-message-button"
           onClick={formStage === 'maintenance' ? () => navigate('/dev/estagio') : () => navigate('/admin/estagio')}
         >
           Estágio do Formulário&nbsp;
@@ -65,14 +73,6 @@ const SideButtons = ({ secondaryPermission }) => {
         >
           Informações Utilitárias&nbsp;
           <Icons className="settings-icons" typeIcon="settings" iconSize={22} fill={'#fff'} />
-        </button>
-
-        <button
-          className="settings-message-button"
-          onClick={formStage === 'maintenance' ? () => navigate('/dev/backup') : () => navigate('/admin/backup')}
-        >
-          Backup&nbsp;
-          <Icons className="settings-icons" typeIcon="excel" iconSize={22} fill={'#fff'} />
         </button>
 
         <button
