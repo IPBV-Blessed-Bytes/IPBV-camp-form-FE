@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
+import { Alert, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -70,6 +70,17 @@ const AdminPaymentFees = ({ loggedUsername }) => {
       />
 
       <div className="payment-fees__content">
+        <Alert variant="warning" className="d-flex gap-3 align-items-start">
+          <Icons typeIcon="danger" iconSize={24} fill="#997404" />
+          <div>
+            <Alert.Heading className="h6 fw-bold mb-1">Estes valores são só para o simulador</Alert.Heading>
+            <span className="small">
+              As taxas abaixo alimentam <b>apenas o simulador de taxas do carrinho</b> — uma estimativa mostrada
+              ao cliente. Elas <b>não alteram o valor efetivamente cobrado</b>: a cobrança real é fixa no sistema.
+              Editar aqui muda só o que o simulador exibe, não o que o cliente paga.
+            </span>
+          </div>
+        </Alert>
         <Form>
           <Row className="g-3">
             <Col xs={12} lg={5}>
@@ -115,11 +126,32 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                       />
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
-                      Valor fixo que o PagarMe cobra por cada boleto pago (à vista ou por parcela).
+                      Valor fixo do PagarMe por boleto pago. Somado à &quot;Taxa por transação&quot; abaixo, cada
+                      boleto sai por R$ 4,48 (3,49 + 0,99).
                     </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-4">
+                    <Form.Label>
+                      <b>Taxa por transação - Pix e Boleto (valor fixo):</b>
+                    </Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>R$</InputGroup.Text>
+                      <Form.Control
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={fees.transactionFixed ?? DEFAULT_FEES.transactionFixed}
+                        onChange={(e) => setField('transactionFixed', e.target.value)}
+                      />
+                    </InputGroup>
+                    <Form.Text className="text-muted-italic">
+                      Valor fixo cobrado pelo PagarMe em cada transação de Pix e boleto (ex.: R$0,99). Por isso o
+                      boleto sai por valor + boleto + esta taxa.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-0">
                     <Form.Label>
                       <b>Cartão (valor fixo por transação):</b>
                     </Form.Label>
@@ -135,26 +167,6 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
                       Valor fixo somado ao percentual da parcela (ex.: 1x = % da tabela + este valor fixo).
-                    </Form.Text>
-                  </Form.Group>
-
-                  <Form.Group className="mb-0">
-                    <Form.Label>
-                      <b>Taxa por transação (valor fixo):</b>
-                    </Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text>R$</InputGroup.Text>
-                      <Form.Control
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={fees.transactionFixed}
-                        onChange={(e) => setField('transactionFixed', e.target.value)}
-                      />
-                    </InputGroup>
-                    <Form.Text className="text-muted-italic">
-                      Valor fixo cobrado pelo PagarMe em cada transação de Pix e boleto (ex.: R$0,99). Por isso o
-                      boleto sai por valor + boleto + esta taxa.
                     </Form.Text>
                   </Form.Group>
                 </div>
