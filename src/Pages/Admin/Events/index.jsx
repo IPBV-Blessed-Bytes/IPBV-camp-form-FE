@@ -40,6 +40,7 @@ const EMPTY_EVENT = {
   registrationFeeEnabled: false,
   boletoEnabled: false,
   boletoMaxInstallments: 5,
+  boletoMinDaysBeforeEvent: '',
   iconKey: '',
   contactMessage: '',
   shareMessage: '',
@@ -131,6 +132,7 @@ const AdminEvents = ({ loggedUsername }) => {
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
       boletoEnabled: event.boletoEnabled ?? false,
       boletoMaxInstallments: event.boletoMaxInstallments ?? 5,
+      boletoMinDaysBeforeEvent: event.boletoMinDaysBeforeEvent ?? '',
       iconKey: event.iconKey || '',
       contactMessage: event.contactMessage || '',
       shareMessage: event.shareMessage || '',
@@ -190,6 +192,7 @@ const AdminEvents = ({ loggedUsername }) => {
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
       boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
       boletoMaxInstallments: Number(draft.boletoMaxInstallments) || 1,
+      boletoMinDaysBeforeEvent: draft.boletoMinDaysBeforeEvent ? Number(draft.boletoMinDaysBeforeEvent) : null,
       iconKey: draft.iconKey || null,
       contactMessage: draft.contactMessage.trim() || null,
       shareMessage: draft.shareMessage.trim() || null,
@@ -700,16 +703,33 @@ const AdminEvents = ({ loggedUsername }) => {
                 Permite pagar a inscrição em boletos mensais. O 1º boleto confirma a vaga.
               </Form.Text>
               {draft.boletoEnabled && (
-                <Form.Group className="mt-2" controlId="event-boleto-max">
-                  <Form.Label className="mb-1">Máximo de parcelas</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min={1}
-                    max={12}
-                    value={draft.boletoMaxInstallments}
-                    onChange={(e) => handleChange('boletoMaxInstallments')(e.target.value)}
-                  />
-                </Form.Group>
+                <>
+                  <Form.Group className="mt-2" controlId="event-boleto-max">
+                    <Form.Label className="mb-1">Máximo de parcelas</Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={1}
+                      max={12}
+                      value={draft.boletoMaxInstallments}
+                      onChange={(e) => handleChange('boletoMaxInstallments')(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mt-2" controlId="event-boleto-min-days">
+                    <Form.Label className="mb-1">Vencimento do último boleto (dias antes do evento)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={1}
+                      placeholder="20"
+                      value={draft.boletoMinDaysBeforeEvent}
+                      onChange={(e) => handleChange('boletoMinDaysBeforeEvent')(e.target.value)}
+                    />
+                    <Form.Text muted>
+                      O último boleto vence no máximo esse número de dias antes do evento, garantindo que o
+                      pagamento (que leva de 2 a 5 dias úteis para cair na conta) entre antes da data. Em branco
+                      usa o padrão (20 dias).
+                    </Form.Text>
+                  </Form.Group>
+                </>
               )}
             </>
           )}
