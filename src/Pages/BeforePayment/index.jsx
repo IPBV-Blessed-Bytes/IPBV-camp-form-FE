@@ -9,6 +9,9 @@ import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
 import Loading from '@/components/Global/Loading';
+import PaymentSimulatorModal from '@/components/Global/PaymentSimulatorModal';
+import { DEFAULT_FEES } from '@/utils/paymentFees';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { loadProducts } from '../Packages/utils/products';
 import calculateAge from '../Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
@@ -32,8 +35,10 @@ const BeforePayment = () => {
   const [individualBase, setIndividualBase] = useState(0);
   const [rawFee, setRawFee] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showSimulator, setShowSimulator] = useState(false);
   const navigateTo = useNavigate();
   const cartIsFree = cartTotal === 0;
+  const { boletoEnabled, boletoMaxInstallments } = useEventBranding();
 
   const isUserValid = (user) => {
     const hasName = user?.personalInformation?.name && user.personalInformation.name.trim() !== '';
@@ -250,12 +255,30 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                       {cartIsFree ? 'Finalizar Inscrição' : 'Pagamento'}
                     </Button>
                   )}
+                  {validFormValues.length > 0 && !cartIsFree && (
+                    <Button
+                      variant="outline-secondary"
+                      className="d-flex align-items-center justify-content-center gap-2"
+                      onClick={() => setShowSimulator(true)}
+                    >
+                      <Icons typeIcon="money" iconSize={20} fill="#6c757d" />
+                      Simular Taxas de Pagamento
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      <PaymentSimulatorModal
+        show={showSimulator}
+        onHide={() => setShowSimulator(false)}
+        base={totalGeral}
+        fees={DEFAULT_FEES}
+        maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
+      />
+
       <Loading loading={loading} />
     </Container>
   );
