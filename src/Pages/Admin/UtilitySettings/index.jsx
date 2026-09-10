@@ -20,6 +20,7 @@ registerLocale('ptBR', ptBR);
 const CONTACT_KEY = 'contact_phone';
 const SPREADSHEET_KEY = 'old_spreadsheet_url';
 const BOLETO_MAX_KEY = 'boleto_max_installments';
+const BOLETO_MIN_DAYS_KEY = 'boleto_min_days_before_event';
 const CREW_BUS_KEY = 'crew_bus_vacancies';
 const PAGARME_DASH_KEY = 'pagarme_dashboard_url';
 const BACKUP_EMAIL_KEY = 'backup_email';
@@ -61,6 +62,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [baseDate, setBaseDate] = useState('');
   const [baseDateExists, setBaseDateExists] = useState(false);
   const [boletoMax, setBoletoMax] = useState('');
+  const [boletoMinDays, setBoletoMinDays] = useState('');
   const [crewBus, setCrewBus] = useState('');
   const [pagarmeDash, setPagarmeDash] = useState('');
   const [backupEmail, setBackupEmail] = useState('');
@@ -75,11 +77,12 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue, baseDateData] =
+      const [contactValue, spreadsheetValue, boletoMaxValue, boletoMinDaysValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue, baseDateData] =
         await Promise.all([
           getSetting(CONTACT_KEY),
           getSetting(SPREADSHEET_KEY),
           getSetting(BOLETO_MAX_KEY),
+          getSetting(BOLETO_MIN_DAYS_KEY),
           getSetting(CREW_BUS_KEY),
           getSetting(PAGARME_DASH_KEY),
           getSetting(BACKUP_EMAIL_KEY),
@@ -90,6 +93,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setContact(contactValue);
       setSpreadsheet(spreadsheetValue);
       setBoletoMax(boletoMaxValue || '');
+      setBoletoMinDays(boletoMinDaysValue || '');
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
       setBackupEmail(backupEmailValue || '');
@@ -121,11 +125,12 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         return acc;
       }, {});
 
-      const [contactValue, spreadsheetValue, boletoMaxValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue] =
+      const [contactValue, spreadsheetValue, boletoMaxValue, boletoMinDaysValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue] =
         await Promise.all([
           updateSetting(CONTACT_KEY, contact.trim()),
           updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
           updateSetting(BOLETO_MAX_KEY, boletoMax.trim()),
+          updateSetting(BOLETO_MIN_DAYS_KEY, boletoMinDays.trim()),
           updateSetting(CREW_BUS_KEY, crewBus.trim()),
           updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
           updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
@@ -135,6 +140,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
       setBoletoMax(boletoMaxValue || '');
+      setBoletoMinDays(boletoMinDaysValue || '');
       setCrewBus(crewBusValue || '');
       setPagarmeDash(pagarmeDashValue || '');
       setBackupEmail(backupEmailValue || '');
@@ -290,6 +296,25 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     <Form.Text className="text-muted-italic">
                       Teto de parcelas do boleto. O inscrito escolhe de 1 até este limite, respeitando os meses que
                       faltam para o evento.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-5">
+                    <Form.Label>
+                      <b>Vencimento do Último Boleto (dias antes do evento):</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="1"
+                      value={boletoMinDays}
+                      onChange={(e) => setBoletoMinDays(e.target.value)}
+                      placeholder="10"
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Trava a data de vencimento do <b>último boleto</b> para no mínimo esta quantidade de dias
+                      corridos antes do evento. Considerando que o boleto será pago <b>até o vencimento</b>, o dinheiro
+                      leva de <b>2 a 5 dias úteis</b> para cair na conta (compensação + liquidação). Defina uma folga
+                      suficiente para o valor cair antes do evento. Em branco usa o padrão (10 dias).
                     </Form.Text>
                   </Form.Group>
 
