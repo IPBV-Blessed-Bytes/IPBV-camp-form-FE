@@ -7,16 +7,19 @@ import { exportBackup, emailBackup } from '@/services/backup';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
+import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import './style.scss';
 
 const AdminBackup = ({ loggedUsername }) => {
   const [downloading, setDownloading] = useState(false);
   const [emailing, setEmailing] = useState(false);
+  const [loading, setLoading] = useState(false);
   scrollUp();
 
   const handleDownload = async () => {
     setDownloading(true);
+    setLoading(true);
     try {
       const data = await exportBackup();
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -34,11 +37,13 @@ const AdminBackup = ({ loggedUsername }) => {
       toast.error('Não foi possível gerar o backup.');
     } finally {
       setDownloading(false);
+      setLoading(false);
     }
   };
 
   const handleEmail = async () => {
     setEmailing(true);
+    setLoading(true);
     try {
       const res = await emailBackup();
       if (res?.status === 'success') {
@@ -51,6 +56,7 @@ const AdminBackup = ({ loggedUsername }) => {
       toast.error('Não foi possível enviar o backup por e-mail.');
     } finally {
       setEmailing(false);
+      setLoading(false);
     }
   };
 
@@ -83,7 +89,7 @@ const AdminBackup = ({ loggedUsername }) => {
               <Card.Title>Baixar backup</Card.Title>
               <Card.Text className="text-secondary">Gera e baixa o arquivo JSON agora, no seu dispositivo.</Card.Text>
               <Button variant="teal-blue" onClick={handleDownload} disabled={downloading}>
-                {downloading ? 'Gerando...' : 'Baixar backup (JSON)'}
+                Baixar Backup (JSON)
               </Button>
             </Card.Body>
           </Card>
@@ -96,10 +102,12 @@ const AdminBackup = ({ loggedUsername }) => {
               <Card.Title>Enviar por e-mail</Card.Title>
               <Card.Text className="text-secondary">Envia o backup em anexo para o e-mail configurado.</Card.Text>
               <Button variant="outline-teal-blue" onClick={handleEmail} disabled={emailing}>
-                {emailing ? 'Enviando...' : 'Enviar por e-mail'}
+                Enviar por e-mail
               </Button>
             </Card.Body>
           </Card>
+
+          <Loading loading={loading} />
         </div>
       </div>
     </div>
