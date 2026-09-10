@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -22,9 +22,11 @@ const Login = ({
   const isAdminPathname = window.location.pathname === '/admin' || window.location.pathname === '/dev';
   const [showPassword, setShowPassword] = useState(false);
   const navigateTo = useNavigate();
-  const { login, logout, user, isLoggedIn, loading } = useAuth();
+  const { login, loginWithGoogle, logout, user, isLoggedIn, loading } = useAuth();
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const [sendLoggedMessage, setSendLoggedMessage] = useState(false);
+  const isPanelUser = isLoggedIn && Boolean(userRole) && userRole !== 'guest';
+  const handleGoogleCredential = (credential) => loginWithGoogle(credential, { area: 'admin' });
 
   scrollUp();
 
@@ -51,12 +53,13 @@ const Login = ({
               handleShowPassword={handleShowPassword}
               loginData={loginData}
               navigateTo={navigateTo}
+              onGoogleCredential={handleGoogleCredential}
               setLoginData={setLoginData}
               showPassword={showPassword}
             />
           )}
 
-          {isLoggedIn && (
+          {isLoggedIn && isPanelUser && (
             <AdminLoggedIn
               availablePackages={availablePackages}
               loggedInUsername={user || 'Usuário não identificado'}
@@ -72,6 +75,8 @@ const Login = ({
               userRole={userRole}
             />
           )}
+
+          {isLoggedIn && !isPanelUser && <Navigate replace to="/unauthorized" />}
 
           <Loading loading={loading} />
         </Container>

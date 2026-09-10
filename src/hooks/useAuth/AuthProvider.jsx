@@ -150,10 +150,15 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const loginWithGoogle = useCallback(async (credential) => {
+  const loginWithGoogle = useCallback(async (credential, options = {}) => {
     setLoading(true);
     try {
-      const data = await googleLoginRequest(credential);
+      const data = await googleLoginRequest(credential, options);
+
+      if (options.area === 'admin' && data.role === 'guest') {
+        toast.error('Esta conta não tem acesso ao painel administrativo.');
+        return;
+      }
 
       let email = '';
       try {
@@ -175,7 +180,11 @@ const AuthProvider = ({ children }) => {
       toast.success('Usuário logado com sucesso');
     } catch (error) {
       console.error(error?.message);
-      toast.error('Não foi possível entrar com o Google. Tente novamente.');
+      const message =
+        options.area === 'admin' && error?.response?.status === 401
+          ? 'Esta conta não tem acesso ao painel administrativo.'
+          : 'Não foi possível entrar com o Google. Tente novamente.';
+      toast.error(message);
     } finally {
       setLoading(false);
     }

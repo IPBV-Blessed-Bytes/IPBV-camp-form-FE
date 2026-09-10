@@ -6,8 +6,8 @@ export const login = async ({ login, password }) => {
   return data;
 };
 
-export const googleLogin = async (credential) => {
-  const { data } = await fetcher.post('/auth/google', { credential });
+export const googleLogin = async (credential, options = {}) => {
+  const { data } = await fetcher.post('/auth/google', { credential, area: options.area });
   return data;
 };
 

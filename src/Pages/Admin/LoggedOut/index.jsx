@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
+import GoogleSignInButton from '@/components/Global/GoogleSignInButton';
 import scrollUp from '@/hooks/useScrollUp';
 
 const AdminLoggedOut = ({
@@ -11,6 +12,7 @@ const AdminLoggedOut = ({
   handleShowPassword,
   loginData,
   navigateTo,
+  onGoogleCredential,
   setLoginData,
   showPassword,
 }) => {
@@ -88,6 +90,17 @@ const AdminLoggedOut = ({
             Acessar Painel
           </Button>
 
+          {onGoogleCredential && (
+            <>
+              <div className="d-flex align-items-center gap-2 my-3 text-secondary small">
+                <div className="flex-grow-1 border-top" />
+                <span>ou</span>
+                <div className="flex-grow-1 border-top" />
+              </div>
+              <GoogleSignInButton onCredential={onGoogleCredential} />
+            </>
+          )}
+
           <button type="button" className="btn-back-link" onClick={() => navigateTo('/esqueci-senha')}>
             Esqueci minha senha
           </button>
@@ -112,6 +125,7 @@ AdminLoggedOut.propTypes = {
   handleShowPassword: PropTypes.func,
   handleLogin: PropTypes.func,
   navigateTo: PropTypes.func,
+  onGoogleCredential: PropTypes.func,
   setLoginData: PropTypes.func,
   loginPage: PropTypes.bool,
   setLoginPage: PropTypes.func,
