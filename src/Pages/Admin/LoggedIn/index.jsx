@@ -11,10 +11,10 @@ import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
+import Icons from '@/components/Global/Icons';
 import PackageCard from '@/components/Admin/PackageCard';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
-import SideButtons from '@/components/Admin/SideButtons';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
@@ -67,12 +67,31 @@ const AdminLoggedIn = ({
   const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [crewBusVacancies, setCrewBusVacancies] = useState(22);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('main');
+  const [carouselDirection, setCarouselDirection] = useState('forward');
+  const [settingsPage, setSettingsPage] = useState(0);
 
   const splitedLoggedInUsername = loggedInUsername.split('@')[0];
 
   const { formStage } = useContext(AuthContext);
   const navigate = useNavigate();
   const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
+
+  const openSettingsView = () => {
+    setCarouselDirection('forward');
+    setSettingsPage(0);
+    setView('settings');
+  };
+
+  const openMainView = () => {
+    setCarouselDirection('back');
+    setView('main');
+  };
+
+  const goToSettingsPage = (nextPage, direction) => {
+    setCarouselDirection(direction);
+    setSettingsPage(nextPage);
+  };
 
   scrollUp();
 
@@ -285,16 +304,99 @@ const AdminLoggedIn = ({
     },
   ];
 
+  const settingsSessions = [
+    { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
+    { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
+    { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
+    { path: 'utilitarios', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 40, accent: '#cc6d00' },
+    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#dc3545' },
+    { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
+    { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#0066cc' },
+    { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },
+    { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 44, accent: '#2E5AAC' },
+    { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
+    { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
+    { path: 'reembolsos', title: 'Reembolsos', typeIcon: 'cash', iconSize: 40, accent: '#1a8a45' },
+    { path: 'solicitacoes', title: 'Solicitações de Alteração', typeIcon: 'refresh', iconSize: 40, accent: '#0c9183' },
+    { path: 'taxas', title: 'Taxas de Pagamento', typeIcon: 'money', iconSize: 40, accent: '#d39e00' },
+    { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
+    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
+  ];
+
+  const SETTINGS_PAGE_SIZE = 12;
+  const settingsPages = [];
+  for (let i = 0; i < settingsSessions.length; i += SETTINGS_PAGE_SIZE) {
+    settingsPages.push(settingsSessions.slice(i, i + SETTINGS_PAGE_SIZE));
+  }
+  const currentSettingsPage = Math.min(settingsPage, settingsPages.length - 1);
+
   return (
     <div className="admin-home">
       <AdminTopbar username={splitedLoggedInUsername} logout={logout} />
 
       <div className="admin-home__content">
-        <Row className="navigation-header gx-3">
-          {navigationSessions.map((session) => (
-            <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
-          ))}
-        </Row>
+        <div className="session-carousel">
+          {view === 'settings' && (
+            <div className="settings-toolbar">
+              <button type="button" className="settings-toolbar__back" onClick={openMainView}>
+                <Icons typeIcon="arrow-left" iconSize={18} fill="#495057" />
+                Sessões principais
+              </button>
+              {settingsPages.length > 1 && (
+                <div className="settings-toolbar__pager">
+                  <button
+                    type="button"
+                    className="settings-toolbar__page-btn"
+                    disabled={currentSettingsPage === 0}
+                    onClick={() => goToSettingsPage(currentSettingsPage - 1, 'back')}
+                  >
+                    ← Anterior
+                  </button>
+                  <span className="settings-toolbar__page-info">
+                    Página {currentSettingsPage + 1} de {settingsPages.length}
+                  </span>
+                  <button
+                    type="button"
+                    className="settings-toolbar__page-btn"
+                    disabled={currentSettingsPage === settingsPages.length - 1}
+                    onClick={() => goToSettingsPage(currentSettingsPage + 1, 'forward')}
+                  >
+                    Próxima →
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          <Row
+            key={view === 'settings' ? `settings-${currentSettingsPage}` : 'main'}
+            className={`navigation-header gx-3 session-pane session-pane--${carouselDirection}`}
+          >
+            {view === 'main' ? (
+              <>
+                {navigationSessions.map((session) => (
+                  <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
+                ))}
+                <SessionCard
+                  permission={settingsButtonPermissions}
+                  title="Configurações"
+                  typeIcon="settings"
+                  iconSize={42}
+                  accent="#37474f"
+                  onClick={openSettingsView}
+                />
+              </>
+            ) : (
+              settingsPages[currentSettingsPage].map((session) => (
+                <SessionCard
+                  key={session.path}
+                  permission={settingsButtonPermissions}
+                  {...session}
+                  onClick={() => navigate(`${routePrefix}/${session.path}`)}
+                />
+              ))
+            )}
+          </Row>
+        </div>
 
         {packagesAndTotalCardsPermissions && (
           <>
@@ -349,8 +451,6 @@ const AdminLoggedIn = ({
             <AdminCharts availablePackages={availablePackages} userRole={userRole} />
           </>
         )}
-
-        <SideButtons secondaryPermission={settingsButtonPermissions} />
 
         <Loading loading={spinnerLoading || loading} />
 
