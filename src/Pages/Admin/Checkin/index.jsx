@@ -320,6 +320,25 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     }
   };
 
+  const handleReviewUndo = async (camper) => {
+    if (!camper.checkin) return;
+    setReviewApproving(true);
+    try {
+      await checkinCamper(camper.id, { checkin: false, checkinTime: formatDateTimeBR() });
+      registerLog(`Desfez o check-in (via QR do pedido) do usuário ${camper.personalInformation.name}`, loggedUsername);
+      setReviewData((prev) =>
+        prev ? { ...prev, campers: prev.campers.map((c) => (c.id === camper.id ? { ...c, checkin: false } : c)) } : prev,
+      );
+      fetchCheckinStats();
+      toast.success('Check-in desfeito.');
+    } catch (error) {
+      console.error('Erro ao desfazer check-in:', error);
+      toast.error('Erro ao desfazer o check-in');
+    } finally {
+      setReviewApproving(false);
+    }
+  };
+
   const handleReviewApproveAll = async () => {
     if (!reviewData) return;
     const pending = reviewData.campers.filter((camper) => !camper.checkin);
@@ -576,8 +595,10 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         onHide={() => setReviewData(null)}
         orderNumber={reviewData?.orderNumber}
         campers={reviewData?.campers || []}
+        rooms={rooms}
         onApprove={handleReviewApprove}
         onApproveAll={handleReviewApproveAll}
+        onUndo={handleReviewUndo}
         approving={reviewApproving}
       />
     </div>
