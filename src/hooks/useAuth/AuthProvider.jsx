@@ -5,6 +5,7 @@ import {
   JWT_LOCAL_STORAGE_KEY,
   USER_STORAGE_KEY,
   USER_STORAGE_ROLE,
+  USER_DISPLAY_NAME_KEY,
   USER_PERMISSIONS_KEY,
   FORM_STAGE_KEY,
 } from '@/config';
@@ -37,6 +38,8 @@ const AuthProvider = ({ children }) => {
     const userData = localStorage.getItem(USER_STORAGE_KEY);
     if (userData) return JSON.parse(userData);
   });
+
+  const [displayName, setDisplayName] = useState(() => localStorage.getItem(USER_DISPLAY_NAME_KEY) || '');
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
@@ -101,10 +104,12 @@ const AuthProvider = ({ children }) => {
 
       setIsLoggedIn(true);
       setUser(userName);
+      setDisplayName(data.displayName || '');
 
       localStorage.setItem(JWT_LOCAL_STORAGE_KEY, data.token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userName));
       localStorage.setItem(USER_STORAGE_ROLE, data.role);
+      localStorage.setItem(USER_DISPLAY_NAME_KEY, data.displayName || '');
 
       await loadPermissions();
 
@@ -144,11 +149,13 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem(JWT_LOCAL_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_ROLE);
+    localStorage.removeItem(USER_DISPLAY_NAME_KEY);
     localStorage.removeItem(USER_PERMISSIONS_KEY);
     sessionStorage.removeItem(FORM_STAGE_KEY);
 
     setIsLoggedIn(false);
     setUser(undefined);
+    setDisplayName('');
 
     toast.success('Logout realizado com sucesso!');
   }, []);
@@ -173,10 +180,12 @@ const AuthProvider = ({ children }) => {
 
       setIsLoggedIn(true);
       setUser(email);
+      setDisplayName(data.displayName || '');
 
       localStorage.setItem(JWT_LOCAL_STORAGE_KEY, data.token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(email));
       localStorage.setItem(USER_STORAGE_ROLE, data.role);
+      localStorage.setItem(USER_DISPLAY_NAME_KEY, data.displayName || '');
 
       await loadPermissions();
 
@@ -197,6 +206,7 @@ const AuthProvider = ({ children }) => {
     () => ({
       isLoggedIn,
       user,
+      displayName,
       loading,
       formStage,
       setFormStage,
@@ -204,7 +214,7 @@ const AuthProvider = ({ children }) => {
       loginWithGoogle,
       logout,
     }),
-    [isLoggedIn, user, loading, formStage, setFormStage, login, loginWithGoogle, logout],
+    [isLoggedIn, user, displayName, loading, formStage, setFormStage, login, loginWithGoogle, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

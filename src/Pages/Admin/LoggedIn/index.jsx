@@ -71,9 +71,8 @@ const AdminLoggedIn = ({
   const [carouselDirection, setCarouselDirection] = useState('forward');
   const [settingsPage, setSettingsPage] = useState(0);
 
-  const splitedLoggedInUsername = loggedInUsername.split('@')[0];
-
-  const { formStage } = useContext(AuthContext);
+  const { formStage, displayName } = useContext(AuthContext);
+  const topbarName = displayName || loggedInUsername;
   const navigate = useNavigate();
   const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
 
@@ -332,7 +331,7 @@ const AdminLoggedIn = ({
 
   return (
     <div className="admin-home">
-      <AdminTopbar username={splitedLoggedInUsername} logout={logout} />
+      <AdminTopbar username={topbarName} logout={logout} />
 
       <div className="admin-home__content">
         <div className="session-carousel">
