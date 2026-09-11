@@ -128,7 +128,7 @@ const FormHome = ({ onLgpdClose }) => {
             </Row>
             <Row className="justify-content-center">
               <Col xl={9}>
-                <h4 className="mb-4 fw-bold">Informações Importantes</h4>
+                <h4 className="mb-4 mt-2 fw-bold">Informações Importantes</h4>
                 <ul className="info-home-list">
                   {homepageInfo?.bottom?.map((item) => (
                     <li key={item.id} className="mb-3">
@@ -152,7 +152,7 @@ const FormHome = ({ onLgpdClose }) => {
             {mapQuery && (
               <Row className="justify-content-center">
                 <Col xl={9}>
-                  <h4 className="mb-3 fw-bold">Onde será</h4>
+                  <h4 className="my-3 fw-bold">Onde Será</h4>
                   <div className="home-map">
                     <iframe
                       title="Local do evento"
