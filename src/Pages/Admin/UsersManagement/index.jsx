@@ -29,8 +29,8 @@ const ROLE_BADGE = {
   guest: 'light',
 };
 
-const initialsOf = (name = '') =>
-  name
+const initialsOf = (name) =>
+  String(name ?? '')
     .replace(/@.*/, '')
     .split(/[\s._-]+/)
     .filter(Boolean)
@@ -58,7 +58,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     try {
       const data = await listUsers();
       const sortedUsers = [...data].sort((a, b) =>
-        (a.displayName || a.email || '').localeCompare(b.displayName || b.email || ''),
+        (a.displayName || a.email || a.login || '').localeCompare(b.displayName || b.email || b.login || ''),
       );
       setUsers(sortedUsers);
     } catch (error) {
@@ -188,7 +188,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       (roleFilter === 'all' || u.role === roleFilter) &&
       (!term ||
         (u.displayName || '').toLowerCase().includes(term) ||
-        (u.email || '').toLowerCase().includes(term)),
+        (u.email || '').toLowerCase().includes(term) ||
+        (u.login || '').toLowerCase().includes(term)),
   );
 
   const toolsButtons = [
@@ -239,8 +240,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <tr key={user.id}>
                   <td>
                     <div className="user-cell">
-                      <span className="user-cell__avatar">{initialsOf(user.displayName || user.email)}</span>
-                      <em>{user.displayName || user.email}</em>
+                      <span className="user-cell__avatar">
+                        {initialsOf(user.displayName || user.email || user.login)}
+                      </span>
+                      <em>{user.displayName || user.email || user.login || '—'}</em>
                     </div>
                   </td>
                   <td>{user.email || <span className="text-secondary small">—</span>}</td>
