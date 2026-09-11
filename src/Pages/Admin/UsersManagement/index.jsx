@@ -17,6 +17,8 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
+const PROTECTED_EMAIL = 'acampamentoipbv@gmail.com';
+
 const ROLE_BADGE = {
   admin: 'danger',
   checker: 'info',
@@ -128,7 +130,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       registerLog(`Deletou usuário ${userToDelete.displayName || userToDelete.email}`, loggedUsername);
       setShowDeleteModal(false);
     } catch (error) {
-      toast.error('Erro ao deletar usuário');
+      toast.error(error?.response?.data || 'Erro ao deletar usuário');
     } finally {
       setLoading(false);
     }
@@ -255,14 +257,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                       variant="outline-success"
                       className="me-2"
                       onClick={() => handleEditClick(user)}
-                      disabled={user.email === 'admin@ipbv'}
                     >
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>
                     <Button
                       variant="outline-danger"
                       onClick={() => handleDeleteClick(user)}
-                      disabled={user.email === 'admin@ipbv'}
+                      disabled={user.email === PROTECTED_EMAIL}
+                      title={user.email === PROTECTED_EMAIL ? 'Usuário padrão — não pode ser excluído' : undefined}
                     >
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
@@ -286,13 +288,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancelar
             </Button>
-            <Button
-              className="btn-confirm"
-              variant="primary"
-              type="submit"
-              onClick={handleSubmit}
-              disabled={editingUser?.email === 'admin@ipbv'}
-            >
+            <Button className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit}>
               {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
             </Button>
           </>
