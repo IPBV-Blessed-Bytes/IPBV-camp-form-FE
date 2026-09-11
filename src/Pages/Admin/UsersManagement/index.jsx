@@ -39,7 +39,7 @@ const initialsOf = (name = '') =>
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [formData, setFormData] = useState({ userName: '', password: '', role: '', email: '' });
+  const [formData, setFormData] = useState({ displayName: '', password: '', role: '', email: '' });
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -55,7 +55,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       const data = await listUsers();
-      const sortedUsers = data.sort((a, b) => a.userName.localeCompare(b.userName));
+      const sortedUsers = data.sort((a, b) =>
+        (a.displayName || a.email || '').localeCompare(b.displayName || b.email || ''),
+      );
       setUsers(sortedUsers);
     } catch (error) {
       toast.error('Erro ao buscar usuários');
@@ -65,10 +67,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const validateForm = () => {
-    const { userName, password, role, email } = formData;
-    if (!userName || !role || !email || (!editingUser && !password)) {
+    const { displayName, password, role, email } = formData;
+    if (!displayName || !role || !email || (!editingUser && !password)) {
       toast.error(
-        editingUser ? 'Preencha nome, papel e e-mail' : 'Todos os campos são obrigatórios',
+        editingUser ? 'Preencha nome de exibição, papel e e-mail' : 'Todos os campos são obrigatórios',
       );
       return false;
     }
@@ -86,10 +88,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       return;
     }
 
-    const existingUser = users.find((user) => user.userName === formData.userName);
-    if (existingUser && (!editingUser || editingUser.userName !== formData.userName)) {
-      toast.error('Este nome de usuário já está em uso. Escolha outro nome');
-      return;
+    if (!editingUser) {
+      const existingUser = users.find((user) => user.email === formData.email);
+      if (existingUser) {
+        toast.error('Este e-mail já está cadastrado. Use outro e-mail');
+        return;
+      }
     }
 
     setLoading(true);
@@ -98,13 +102,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       if (editingUser) {
         await updateUser(editingUser.id, formData);
         toast.success('Usuário editado com sucesso');
-        registerLog(`Editou usuário ${editingUser.userName}`, loggedUsername);
+        registerLog(`Editou usuário ${editingUser.displayName || editingUser.email}`, loggedUsername);
       } else {
         await createUser(formData);
         toast.success('Usuário criado com sucesso');
-        registerLog(`Criou usuário ${formData.userName}`, loggedUsername);
+        registerLog(`Criou usuário ${formData.displayName || formData.email}`, loggedUsername);
       }
-      setFormData({ userName: '', password: '', role: '', email: '' });
+      setFormData({ displayName: '', password: '', role: '', email: '' });
       setEditingUser(null);
       fetchUsers();
       setShowModal(false);
@@ -121,7 +125,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       await deleteUser(userToDelete.id);
       toast.success('Usuário deletado com sucesso');
       fetchUsers();
-      registerLog(`Deletou usuário ${userToDelete.userName}`, loggedUsername);
+      registerLog(`Deletou usuário ${userToDelete.displayName || userToDelete.email}`, loggedUsername);
       setShowDeleteModal(false);
     } catch (error) {
       toast.error('Erro ao deletar usuário');
@@ -131,13 +135,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const handleCreateClick = () => {
-    setFormData({ userName: '', password: '', role: '', email: '' });
+    setFormData({ displayName: '', password: '', role: '', email: '' });
     setEditingUser(false);
     setShowModal(true);
   };
 
   const handleEditClick = (user) => {
-    setFormData({ userName: user.userName, password: '', role: user.role, email: user.email || '' });
+    setFormData({ displayName: user.displayName || '', password: '', role: user.role, email: user.email || '' });
     setEditingUser(user);
     setShowModal(true);
   };
@@ -180,7 +184,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   const filteredUsers = users.filter(
     (u) =>
       (roleFilter === 'all' || u.role === roleFilter) &&
-      (!term || (u.userName || '').toLowerCase().includes(term) || (u.email || '').toLowerCase().includes(term)),
+      (!term ||
+        (u.displayName || '').toLowerCase().includes(term) ||
+        (u.email || '').toLowerCase().includes(term)),
   );
 
   const toolsButtons = [
@@ -220,7 +226,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Usuário:</th>
+                <th className="table-cells-header">Nome:</th>
                 <th className="table-cells-header">E-mail:</th>
                 <th className="table-cells-header">Função:</th>
                 <th className="table-cells-header">Ações:</th>
@@ -231,8 +237,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 <tr key={user.id}>
                   <td>
                     <div className="user-cell">
-                      <span className="user-cell__avatar">{initialsOf(user.userName)}</span>
-                      <em>{user.userName}</em>
+                      <span className="user-cell__avatar">{initialsOf(user.displayName || user.email)}</span>
+                      <em>{user.displayName || user.email}</em>
                     </div>
                   </td>
                   <td>{user.email || <span className="text-secondary small">—</span>}</td>
@@ -249,14 +255,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                       variant="outline-success"
                       className="me-2"
                       onClick={() => handleEditClick(user)}
-                      disabled={user.userName === 'admin@ipbv'}
+                      disabled={user.email === 'admin@ipbv'}
                     >
                       <Icons typeIcon="edit" iconSize={24} />
                     </Button>
                     <Button
                       variant="outline-danger"
                       onClick={() => handleDeleteClick(user)}
-                      disabled={user.userName === 'admin@ipbv'}
+                      disabled={user.email === 'admin@ipbv'}
                     >
                       <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
                     </Button>
@@ -285,7 +291,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               variant="primary"
               type="submit"
               onClick={handleSubmit}
-              disabled={editingUser?.userName === 'admin@ipbv'}
+              disabled={editingUser?.email === 'admin@ipbv'}
             >
               {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
             </Button>
@@ -293,21 +299,24 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         }
       >
         <Form>
-            <Form.Group controlId="formLogin">
+            <Form.Group controlId="formDisplayName">
               <Form.Label>
-                <b>Usuário:</b>
+                <b>Nome de exibição:</b>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Digite o nome de usuário"
-                value={formData.userName}
-                onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                placeholder="Ex.: Alvinho Leal"
+                value={formData.displayName}
+                onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 size="lg"
               />
             </Form.Group>
             <Form.Group controlId="formEmail" className="mt-3">
               <Form.Label>
-                <b>E-mail:</b> <span className="text-secondary small">(usado para recuperar senha)</span>
+                <b>E-mail:</b>{' '}
+                <span className="text-secondary small">
+                  {editingUser ? '(identidade de acesso — não editável)' : '(será o login de acesso)'}
+                </span>
               </Form.Label>
               <Form.Control
                 type="email"
@@ -315,6 +324,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 size="lg"
+                disabled={!!editingUser}
+                readOnly={!!editingUser}
               />
             </Form.Group>
             <Form.Group controlId="formPassword" className="mt-3">
@@ -385,7 +396,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
           </>
         }
       >
-        Tem certeza que deseja excluir o usuário <strong>{userToDelete?.userName}</strong>?
+        Tem certeza que deseja excluir o usuário{' '}
+        <strong>{userToDelete?.displayName || userToDelete?.email}</strong>?
       </CustomModal>
 
         <Loading loading={loading} />
