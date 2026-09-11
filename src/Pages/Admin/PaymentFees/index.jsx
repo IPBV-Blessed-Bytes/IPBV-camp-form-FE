@@ -39,6 +39,8 @@ const AdminPaymentFees = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     setSaving(true);
+    setLoading(true);
+
     try {
       const payload = {
         pixPercent: Number(fees.pixPercent) || 0,
@@ -57,6 +59,7 @@ const AdminPaymentFees = ({ loggedUsername }) => {
       toast.error('Erro ao salvar as taxas.');
     } finally {
       setSaving(false);
+      setLoading(false);
     }
   };
 
@@ -75,9 +78,9 @@ const AdminPaymentFees = ({ loggedUsername }) => {
           <div>
             <Alert.Heading className="h6 fw-bold mb-1">Estes valores são só para o simulador</Alert.Heading>
             <span className="small">
-              As taxas abaixo alimentam <b>apenas o simulador de taxas do carrinho</b> — uma estimativa mostrada
-              ao cliente. Elas <b>não alteram o valor efetivamente cobrado</b>: a cobrança real é fixa no sistema.
-              Editar aqui muda só o que o simulador exibe, não o que o cliente paga.
+              As taxas abaixo alimentam <b>apenas o simulador de taxas do carrinho</b> — uma estimativa mostrada ao
+              cliente. Elas <b>não alteram o valor efetivamente cobrado</b>: a cobrança real é fixa no sistema. Editar
+              aqui muda só o que o simulador exibe, não o que o cliente paga.
             </span>
           </div>
         </Alert>
@@ -126,8 +129,8 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                       />
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
-                      Valor fixo do PagarMe por boleto pago. Somado à &quot;Taxa por transação&quot; abaixo, cada
-                      boleto sai por R$ 4,48 (3,49 + 0,99).
+                      Valor fixo do PagarMe por boleto pago. Somado à &quot;Taxa por transação&quot; abaixo, cada boleto
+                      sai por R$ 4,48 (3,49 + 0,99).
                     </Form.Text>
                   </Form.Group>
 
@@ -146,8 +149,8 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                       />
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
-                      Valor fixo cobrado pelo PagarMe em cada transação de Pix e boleto (ex.: R$0,99). Por isso o
-                      boleto sai por valor + boleto + esta taxa.
+                      Valor fixo cobrado pelo PagarMe em cada transação de Pix e boleto (ex.: R$0,99). Por isso o boleto
+                      sai por valor + boleto + esta taxa.
                     </Form.Text>
                   </Form.Group>
 
@@ -183,8 +186,8 @@ const AdminPaymentFees = ({ loggedUsername }) => {
                 </div>
                 <div className="fees-card__body">
                   <Form.Text className="text-muted-italic d-block mb-3">
-                    Percentual que o PagarMe cobra conforme o número de parcelas no cartão. Quanto mais parcelas,
-                    maior a taxa. Aplicado sobre o valor da inscrição, somado ao valor fixo do cartão.
+                    Percentual que o PagarMe cobra conforme o número de parcelas no cartão. Quanto mais parcelas, maior
+                    a taxa. Aplicado sobre o valor da inscrição, somado ao valor fixo do cartão.
                   </Form.Text>
                   <Row className="g-2">
                     {INSTALLMENTS.map((n) => (
