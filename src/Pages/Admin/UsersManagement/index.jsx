@@ -67,10 +67,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   };
 
   const validateForm = () => {
-    const { displayName, password, role, email } = formData;
-    if (!displayName || !role || !email || (!editingUser && !password)) {
+    const { password, role, email } = formData;
+    if (!role || !email || (!editingUser && !password)) {
       toast.error(
-        editingUser ? 'Preencha nome de exibição, papel e e-mail' : 'Todos os campos são obrigatórios',
+        editingUser ? 'Preencha papel e e-mail' : 'E-mail, senha e papel são obrigatórios',
       );
       return false;
     }
@@ -301,7 +301,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         <Form>
             <Form.Group controlId="formDisplayName">
               <Form.Label>
-                <b>Nome de exibição:</b>
+                <b>Nome de exibição:</b>{' '}
+                <span className="text-secondary small">(opcional — em branco usa o e-mail)</span>
               </Form.Label>
               <Form.Control
                 type="text"
