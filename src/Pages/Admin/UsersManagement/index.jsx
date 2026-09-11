@@ -55,7 +55,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       const data = await listUsers();
-      const sortedUsers = data.sort((a, b) =>
+      const sortedUsers = [...data].sort((a, b) =>
         (a.displayName || a.email || '').localeCompare(b.displayName || b.email || ''),
       );
       setUsers(sortedUsers);

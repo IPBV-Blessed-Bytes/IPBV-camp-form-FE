@@ -7,13 +7,13 @@ import '../Style/adminSubpage.scss'
 
 const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32 }) => {
   const navigate = useNavigate();
-  const { formStage, logout, user } = useAuth();
+  const { formStage, logout, user, displayName } = useAuth();
   const homePath = formStage === 'maintenance' ? '/dev' : '/admin';
-  const displayName = (username || user || 'Usuário').split('@')[0];
+  const topbarName = displayName || username || user || 'Usuário';
 
   return (
     <>
-      <AdminTopbar username={displayName} logout={logout} />
+      <AdminTopbar username={topbarName} logout={logout} />
 
       <div className="admin-subpage__hero">
         <div className="admin-subpage__hero-main">
