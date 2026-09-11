@@ -305,7 +305,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ex.: Alvinho Leal"
+                placeholder="Ex.: João Calvino"
                 value={formData.displayName}
                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 size="lg"
