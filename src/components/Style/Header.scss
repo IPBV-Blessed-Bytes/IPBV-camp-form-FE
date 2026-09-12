@@ -87,25 +87,6 @@
       justify-content: center;
       list-style-type: none;
       padding: 0;
-
-      li {
-        &:hover,
-        &.active {
-          color: $secondary;
-        }
-
-        &:hover {
-          opacity: 0.8;
-        }
-
-        &.active {
-          font-weight: bold;
-        }
-
-        &:before {
-          display: none;
-        }
-      }
     }
   }
 }
