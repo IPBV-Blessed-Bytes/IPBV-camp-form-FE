@@ -12,7 +12,13 @@ body {
   font-style: normal;
 }
 
-@import url('');
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('../../public/Fonts/dancing-script.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 // Form
 .form {
@@ -634,7 +640,7 @@ a:not(
 }
 
 .home-page-subtitle {
-  font-family: '', system-ui, serif;
+  font-family: 'Dancing Script', system-ui, serif;
 }
 
 button.accordion-button:not(.collapsed) {
