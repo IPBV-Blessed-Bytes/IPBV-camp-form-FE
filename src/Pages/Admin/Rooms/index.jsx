@@ -419,7 +419,7 @@ const AdminRooms = ({ loggedUsername }) => {
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lista de Agregados</Accordion.Header>
           <Accordion.Body>
-            <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
+            <Table striped bordered hover responsive className="custom-table" {...getTableProps()}>
               <thead>
                 {headerGroups.map((headerGroup) => {
                   const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();

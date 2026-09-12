@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Row } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy, usePagination } from 'react-table';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -318,30 +317,28 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
 
         <StatCards items={statItems} />
 
-        <Row>
-          <CoreTable
-            getTableProps={getTableProps}
-            getTableBodyProps={getTableBodyProps}
-            headerGroups={headerGroups}
-            rows={page}
-            prepareRow={prepareRow}
-            showFilters={showFilters}
-            selectedRows={selectedRows}
-          />
-          <TablePagination
-            pageIndex={pageIndex}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            totalRows={rows.length}
-            canPreviousPage={canPreviousPage}
-            canNextPage={canNextPage}
-            gotoPage={gotoPage}
-            previousPage={previousPage}
-            nextPage={nextPage}
-            setPageSize={setPageSize}
-            pageSizeOptions={PAGE_SIZE_OPTIONS}
-          />
-        </Row>
+        <CoreTable
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={page}
+          prepareRow={prepareRow}
+          showFilters={showFilters}
+          selectedRows={selectedRows}
+        />
+        <TablePagination
+          pageIndex={pageIndex}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          totalRows={rows.length}
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          gotoPage={gotoPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          setPageSize={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+        />
 
         <EditAndAddCamperModal
           name={name}

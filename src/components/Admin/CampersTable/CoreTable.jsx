@@ -5,64 +5,66 @@ import PropTypes from 'prop-types';
 
 const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, showFilters, selectedRows }) => {
   return (
-    <div className="table-responsive">
-      <Table striped bordered hover {...getTableProps()} className="custom-table">
-        <thead>
-          {headerGroups.map((headerGroup) => {
-            const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
-            return (
-              <React.Fragment key={headerGroupKey}>
-                <tr {...restHeaderGroupProps}>
-                  {headerGroup.headers.map((column) => {
-                    const { key: sortKey, ...restSortProps } = column.getHeaderProps(column.getSortByToggleProps());
+    <div className="admin-table-card">
+      <div className="table-responsive">
+        <Table striped bordered hover {...getTableProps()} className="custom-table">
+          <thead>
+            {headerGroups.map((headerGroup) => {
+              const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
+              return (
+                <React.Fragment key={headerGroupKey}>
+                  <tr {...restHeaderGroupProps}>
+                    {headerGroup.headers.map((column) => {
+                      const { key: sortKey, ...restSortProps } = column.getHeaderProps(column.getSortByToggleProps());
+                      return (
+                        <th className="table-cells-header" key={column.id}>
+                          <div className="d-flex justify-content-between align-items-center">
+                            {column.render('Header')}
+                            <span key={sortKey} {...restSortProps} className="sort-icon-wrapper px-3">
+                              <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill={'#fff'} />
+                            </span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                  {showFilters && (
+                    <tr className="filter">
+                      {headerGroup.headers.map((column) => (
+                        <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
+                      ))}
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              const { key: rowKey, ...restRowProps } = row.getRowProps();
+              return (
+                <tr key={rowKey} {...restRowProps}>
+                  {row.cells.map((cell) => {
+                    const { key: cellKey, ...restCellProps } = cell.getCellProps();
                     return (
-                      <th className="table-cells-header" key={column.id}>
-                        <div className="d-flex justify-content-between align-items-center">
-                          {column.render('Header')}
-                          <span key={sortKey} {...restSortProps} className="sort-icon-wrapper px-3">
-                            <Icons className="sort-icon" typeIcon="sort" iconSize={20} fill={'#fff'} />
-                          </span>
-                        </div>
-                      </th>
+                      <td
+                        className={`table-cells-cols${
+                          selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
+                        }`}
+                        key={cellKey}
+                        {...restCellProps}
+                      >
+                        {cell.render('Cell')}
+                      </td>
                     );
                   })}
                 </tr>
-                {showFilters && (
-                  <tr className="filter">
-                    {headerGroup.headers.map((column) => (
-                      <th key={column.id}>{column.canFilter ? column.render('Filter') : null}</th>
-                    ))}
-                  </tr>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            const { key: rowKey, ...restRowProps } = row.getRowProps();
-            return (
-              <tr key={rowKey} {...restRowProps}>
-                {row.cells.map((cell) => {
-                  const { key: cellKey, ...restCellProps } = cell.getCellProps();
-                  return (
-                    <td
-                      className={`table-cells-cols${
-                        selectedRows.some((selectedRow) => selectedRow.index === row.index) ? ' selected-row' : ''
-                      }`}
-                      key={cellKey}
-                      {...restCellProps}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+              );
+            })}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 };
