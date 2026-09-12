@@ -54,6 +54,8 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       toast.error('A pergunta é obrigatória.');
       return;
     }
+
+    setLoading(true);
     setSaving(true);
     const payload = { question: draft.question.trim(), answer: draft.answer || '' };
     try {
@@ -70,6 +72,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     } catch (err) {
       toast.error(getApiErrorMessage(err) || 'Erro ao salvar a pergunta.');
     } finally {
+      setLoading(false);
       setSaving(false);
     }
   };
@@ -112,7 +115,11 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
   const statItems = [
     { label: 'Perguntas', value: faqs.length },
     { label: 'Com resposta', value: answeredCount, tone: 'free' },
-    { label: 'Sem resposta', value: faqs.length - answeredCount, tone: faqs.length - answeredCount > 0 ? 'used' : 'default' },
+    {
+      label: 'Sem resposta',
+      value: faqs.length - answeredCount,
+      tone: faqs.length - answeredCount > 0 ? 'used' : 'default',
+    },
   ];
 
   return (
@@ -126,7 +133,6 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
 
       <div className="faq-builder__content">
         <StatCards items={statItems} />
-
         <div className="faq-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
             Nova Pergunta&nbsp;&nbsp;
@@ -134,9 +140,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
           </Button>
         </div>
 
-        {loading ? (
-          <Loading loading />
-        ) : faqs.length === 0 ? (
+        {faqs.length === 0 ? (
           <p className="faq-builder__empty">Nenhuma pergunta cadastrada. Crie a primeira acima.</p>
         ) : (
           <ul className="faq-builder__list">
@@ -174,6 +178,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
             ))}
           </ul>
         )}
+        <Loading loading={loading} />
       </div>
 
       <CustomModal
@@ -189,7 +194,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
               Cancelar
             </Button>
             <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar'}
+              Salvar
             </Button>
           </>
         }
