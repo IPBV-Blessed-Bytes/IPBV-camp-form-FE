@@ -39,8 +39,13 @@ $admin-accent-donations: $violet;
   border-radius: 14px !important;
   cursor: pointer;
   overflow: hidden;
+  min-height: 100px;
   position: relative;
   transition: all 0.2s ease;
+
+  @media (max-width: $sm) {
+    min-height: auto;
+  }
 
   &::before {
     background: var(--session-accent, #{$primary});
@@ -176,10 +181,6 @@ $admin-accent-donations: $violet;
       color: $dark-gray;
     }
   }
-}
-
-.session-carousel {
-  overflow-x: hidden;
 }
 
 .session-pane {
