@@ -164,7 +164,8 @@ const Packages = () => {
                   <h2 className="packages-page__lot-title">{activeLot?.name}</h2>
                   <Card.Title>Hospedagem</Card.Title>
                   <Card.Text>
-                    Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
+                    Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>. A
+                    hospedagem já contempla alimentação completa!
                     <em className="discount-description text-success small">
                       {getCategoryDiscountDescription('Hospedagem')}
                     </em>
@@ -175,7 +176,8 @@ const Packages = () => {
                     category="Hospedagem"
                     products={productsState}
                     ref={productListRef}
-                    packageCount={packageCount}                  />
+                    packageCount={packageCount}
+                  />
                 </Card.Body>
               </Card>
 
@@ -195,7 +197,8 @@ const Packages = () => {
                     category="Transporte"
                     products={productsState}
                     ref={productListRef}
-                    packageCount={packageCount}                  />
+                    packageCount={packageCount}
+                  />
                 </Card.Body>
               </Card>
             </>
