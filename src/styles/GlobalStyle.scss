@@ -640,7 +640,17 @@ a:not(
 }
 
 .home-page-subtitle {
+  color: $primary;
   font-family: 'Dancing Script', system-ui, serif;
+  font-size: 60px;
+
+  @media (max-width: $xl) {
+    font-size: 48px;
+  }
+
+  @media (max-width: $md) {
+    font-size: 42px;
+  }
 }
 
 button.accordion-button:not(.collapsed) {
