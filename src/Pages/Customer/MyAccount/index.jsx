@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
+import { useFormState } from '@/contexts/FormStateContext';
 import useAuth from '@/hooks/useAuth';
 import useContactPhone from '@/hooks/useContactPhone';
 import Icons from '@/components/Global/Icons';
@@ -36,7 +37,13 @@ const REQ_STATUS = {
 
 const MyAccount = () => {
   const navigate = useNavigate();
+  const { initialStep } = useFormState();
   const { isLoggedIn, user, logout } = useAuth();
+
+  const goToForm = () => {
+    initialStep();
+    navigate('/');
+  };
   const contactPhone = useContactPhone();
   const [registrations, setRegistrations] = useState([]);
   const [changeRequests, setChangeRequests] = useState([]);
@@ -136,14 +143,14 @@ const MyAccount = () => {
             <p className="my-account__subtitle">{user}</p>
           </div>
         </div>
-        <Button variant="teal-blue" className="my-account__btn my-account__btn--new" onClick={() => navigate('/')}>
+        <Button variant="teal-blue" className="my-account__btn my-account__btn--new" onClick={goToForm}>
           <Icons typeIcon="plus" iconSize={18} fill="#fff" />
           Nova Inscrição
         </Button>
         <Button
           variant="outline-teal-blue"
           className="my-account__btn my-account__btn--back outline-border-width-thin"
-          onClick={() => navigate('/')}
+          onClick={goToForm}
         >
           ← Voltar ao Formulário
         </Button>
@@ -170,7 +177,7 @@ const MyAccount = () => {
           <div className="account-card">
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
-              <Button variant="teal-blue" onClick={() => navigate('/')}>
+              <Button variant="teal-blue" onClick={goToForm}>
                 Fazer Inscrição
               </Button>
             </div>
