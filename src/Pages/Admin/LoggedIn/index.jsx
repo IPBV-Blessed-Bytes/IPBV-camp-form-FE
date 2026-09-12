@@ -136,25 +136,22 @@ const AdminLoggedIn = ({
     const {
       usedPackages = {},
       usedValidPackages = {},
-      pendingPackages = {},
       totalPackages = {},
     } = availablePackages || {};
 
     const calculatePackages = (dataSource) =>
       PACKAGE_MAPPING.map(({ key, totalKey, title }) => {
         const confirmed = Number(dataSource[key] || 0);
-        const pending = Number(pendingPackages[key] || 0);
         const total = totalPackages[totalKey] || 0;
         return {
           title,
           filledVacancies: confirmed,
-          remainingVacancies: Math.max(total - (confirmed + pending), 0),
+          remainingVacancies: Math.max(total - confirmed, 0),
           showRemainingVacancies: true,
         };
       });
 
     const busYesConfirmed = Number(usedValidPackages['bus-yes'] || 0);
-    const busYesPending = Number(pendingPackages['bus-yes'] || 0);
 
     return {
       validPackageCardsData: calculatePackages(usedValidPackages),
@@ -193,7 +190,7 @@ const AdminLoggedIn = ({
         {
           title: 'Ônibus Geral',
           filledVacancies: busYesConfirmed,
-          remainingVacancies: Math.max(totalBusVacancies - (busYesConfirmed + busYesPending), 0),
+          remainingVacancies: Math.max(totalBusVacancies - busYesConfirmed, 0),
           showRemainingVacancies: true,
         },
         {
