@@ -60,6 +60,12 @@
     :last-child {
       margin-bottom: 0;
     }
+
+    a {
+      color: $primary;
+      font-weight: bold;
+      text-decoration: underline;
+    }
   }
 
   .faq-link {
