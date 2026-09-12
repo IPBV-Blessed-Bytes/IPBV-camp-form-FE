@@ -8,7 +8,8 @@ import PropTypes from 'prop-types';
 import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
-import { FORM_STORAGE_KEYS, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
+import { FORM_STORAGE_KEYS, clearInscriptionDraftLocal, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
+import { deleteInscriptionDraft } from '@/services/me';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import { createCheckout } from '@/services/checkout';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
@@ -385,6 +386,9 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
           donation,
         });
 
+        clearInscriptionDraftLocal();
+        deleteInscriptionDraft().catch(() => {});
+
         handleCheckoutResponse(response);
       } catch (error) {
         setStatus('error');
@@ -393,6 +397,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
         sessionStorage.removeItem(FORM_STORAGE_KEYS.savedUsers);
         sessionStorage.removeItem(FORM_STORAGE_KEYS.currentFormIndex);
+        sessionStorage.removeItem(FORM_STORAGE_KEYS.resumeCheckout);
         setLoading(false);
       }
     },

@@ -5,7 +5,7 @@ import './style.scss';
 import { useFormState } from '@/contexts/FormStateContext';
 import useAuth from '@/hooks/useAuth';
 import { enumSteps } from '@/utils/constants';
-import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
+import { FORM_STORAGE_KEYS, saveInscriptionDraftLocal } from '@/utils/formStorage';
 import Cart from '@/components/Global/Cart';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
@@ -93,6 +93,7 @@ const BeforePayment = () => {
     if (validFormValues.length === 0) return;
     sessionStorage.setItem(FORM_STORAGE_KEYS.savedUsers, JSON.stringify(validFormValues));
     sessionStorage.setItem(FORM_STORAGE_KEYS.resumeCheckout, String(enumSteps.beforePayment));
+    saveInscriptionDraftLocal();
     navigateTo('/entrar');
   };
 

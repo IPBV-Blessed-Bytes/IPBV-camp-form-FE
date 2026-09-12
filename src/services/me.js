@@ -19,3 +19,17 @@ export const getMyChangeRequests = async () => {
   const { data } = await authFetcher.get('/me/change-requests');
   return Array.isArray(data?.changeRequests) ? data.changeRequests : [];
 };
+
+export const getInscriptionDraft = async () => {
+  const { data } = await authFetcher.get('/me/inscription-draft');
+  if (!data?.draft) return null;
+  try {
+    return typeof data.draft === 'string' ? JSON.parse(data.draft) : data.draft;
+  } catch {
+    return null;
+  }
+};
+
+export const deleteInscriptionDraft = async () => {
+  await authFetcher.delete('/me/inscription-draft');
+};

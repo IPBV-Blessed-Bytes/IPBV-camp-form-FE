@@ -7,7 +7,12 @@ import './style.scss';
 import { registerGuest, resendConfirmation } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import useAuth from '@/hooks/useAuth';
-import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
+import {
+  buildInscriptionDraft,
+  hasInscriptionDraft,
+  saveInscriptionDraftLocal,
+} from '@/utils/formStorage';
+import { resolvePostLoginRedirect } from '@/utils/postLoginRedirect';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import AuthShell from '@/components/Global/AuthShell';
@@ -25,13 +30,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      const resume = sessionStorage.getItem(FORM_STORAGE_KEYS.resumeCheckout);
-      if (resume !== null) {
-        sessionStorage.removeItem(FORM_STORAGE_KEYS.resumeCheckout);
-        navigate('/');
-      } else {
-        navigate('/minha-conta');
-      }
+      resolvePostLoginRedirect(navigate);
     }
   }, [isLoggedIn, navigate]);
 
@@ -53,7 +52,9 @@ const SignUp = () => {
     }
     setLoading(true);
     try {
-      await registerGuest({ email, password });
+      const draft = hasInscriptionDraft() ? JSON.stringify(buildInscriptionDraft()) : undefined;
+      if (draft) saveInscriptionDraftLocal();
+      await registerGuest({ email, password, draft });
       setRegistered(true);
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Não foi possível criar a conta. Tente novamente.');
