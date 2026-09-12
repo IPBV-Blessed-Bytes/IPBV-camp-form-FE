@@ -28,12 +28,19 @@ const ChooseFormPayment = () => {
   const [installments, setInstallments] = useState(1);
   const [eventDate, setEventDate] = useState('');
   const [boletoMax, setBoletoMax] = useState('');
+  const [minDaysBeforeEvent, setMinDaysBeforeEvent] = useState(20);
 
   useEffect(() => {
-    Promise.all([initBaseDate(), getPublicSetting('boleto_max_installments')])
-      .then(([baseDate, maxValue]) => {
+    Promise.all([
+      initBaseDate(),
+      getPublicSetting('boleto_max_installments'),
+      getPublicSetting('boleto_min_days_before_event'),
+    ])
+      .then(([baseDate, maxValue, minDaysValue]) => {
         setEventDate(baseDate || '');
         setBoletoMax(maxValue || '');
+        const parsed = Number(minDaysValue);
+        if (Number.isFinite(parsed) && parsed > 0) setMinDaysBeforeEvent(parsed);
       })
       .catch(() => {});
   }, []);
@@ -171,7 +178,7 @@ const ChooseFormPayment = () => {
                 </p>
                 {installments >= 2 && (
                   <p className="payment-installments-warning small mt-2 mb-0">
-                    Se o vencimento da <b>última parcela</b> ficar a <b>menos de 20 dias</b> do início do acampamento,
+                    Se o vencimento da <b>última parcela</b> ficar a <b>menos de {minDaysBeforeEvent} dias</b> do início do acampamento,
                     ele é <b>antecipado automaticamente</b> para garantir que o pagamento seja compensado a tempo.
                   </p>
                 )}
