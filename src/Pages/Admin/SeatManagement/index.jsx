@@ -23,7 +23,7 @@ const AdminSeatManagement = ({
   const [loadingContent, setLoadingContent] = useState(false);
 
   const packageLabels = {
-    schoolIndividual: 'Colégio Individual',
+    schoolIndividual: 'Colégio Coletivo',
     schoolFamily: 'Colégio Família',
     schoolCamping: 'Colégio Camping',
     seminary: 'Seminário',
