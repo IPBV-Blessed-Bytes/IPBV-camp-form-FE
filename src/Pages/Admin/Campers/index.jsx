@@ -246,7 +246,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
       typeIcon: 'filter',
     },
     {
-      buttonClassName: childrenFilter && 'btn-bw',
+      buttonClassName: childrenFilter ? 'btn-bw' : '',
       fill: childrenFilter ? '#fff' : '#007185',
       iconSize: 22,
       id: 'children-filter',
