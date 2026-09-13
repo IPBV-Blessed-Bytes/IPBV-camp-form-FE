@@ -11,6 +11,7 @@ import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import PaymentSimulatorModal from '@/components/Global/PaymentSimulatorModal';
 import DonationModal from '@/components/Global/DonationModal';
+import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
 import { getPublicSetting } from '@/services/settings';
 import { parseFees } from '@/utils/paymentFees';
 import { getMaxBoletoInstallments } from '@/utils/boletoInstallments';
@@ -237,6 +238,8 @@ const BeforePayment = () => {
                       Simular Taxas de Pagamento
                     </Button>
                   )}
+
+                  {validFormValues.length > 0 && <WhatsAppGroupButton />}
                 </div>
               </div>
             </Card.Body>

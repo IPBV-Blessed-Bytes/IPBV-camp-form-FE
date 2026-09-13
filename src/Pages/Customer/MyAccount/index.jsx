@@ -14,6 +14,8 @@ import { rgShipper, issuingState } from '@/utils/constants';
 import { getMyRegistrations, getMyRegistration, createChangeRequest, getMyChangeRequests } from '@/services/me';
 import { getBoletosByOrder } from '@/services/boletos';
 import BoletoList from '@/components/Global/BoletoList';
+import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
+import WhatsAppGroupQr from '@/components/Global/WhatsAppGroupQr';
 
 const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
@@ -154,6 +156,7 @@ const MyAccount = () => {
         >
           ← Voltar ao Formulário
         </Button>
+        <WhatsAppGroupButton className="my-account__btn my-account__btn--whatsapp" size={null} label="Grupo do WhatsApp" />
         <Button variant="outline-secondary" className="my-account__btn my-account__btn--logout" onClick={logout}>
           <Icons typeIcon="exit" iconSize={22} fill="none" stroke="currentColor" />
           Desconectar
@@ -305,6 +308,25 @@ const MyAccount = () => {
               </tbody>
             </Table>
           )}
+        </div>
+
+        <div className="account-section-header">
+          <h4 className="account-section-header__title">Grupo do WhatsApp</h4>
+          <div className="account-section-header__line" />
+        </div>
+
+        <div className="account-card whatsapp-group-card">
+          <div className="whatsapp-group-card__info">
+            <h4 className="whatsapp-group-card__title">Grupo do WhatsApp do evento</h4>
+            <p className="whatsapp-group-card__text">
+              Entre no grupo para receber todas as novidades. Escaneie o QR code com a câmera do celular ou use o botão
+              &quot;Grupo do WhatsApp&quot; acima. O grupo permanecerá com mensagens bloqueadas até a semana antes do
+              evento. Até lá apenas administradores poderão mensagens informativas.
+            </p>
+          </div>
+          <div className="whatsapp-group-card__qr">
+            <WhatsAppGroupQr size={200} />
+          </div>
         </div>
       </div>
 

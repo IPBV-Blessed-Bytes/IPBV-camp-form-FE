@@ -27,7 +27,7 @@
     min-width: 0;
 
     @media (max-width: $sm) {
-      flex: 1 1 55%;
+      flex: 1 1 0;
       margin-right: 0;
       order: 1;
     }
@@ -82,6 +82,7 @@
       display: flex;
       font-weight: bold;
       gap: 0.5rem;
+      justify-content: center;
 
       &:active {
         color: $white !important;
@@ -95,13 +96,18 @@
       }
 
       &--new {
-        flex: 1 1 45%;
+        flex: 1 1 100%;
         order: 3;
       }
 
       &--back {
-        flex: 1 1 45%;
+        flex: 1 1 100%;
         order: 4;
+      }
+
+      &--whatsapp {
+        flex: 1 1 100%;
+        order: 5;
       }
     }
   }
@@ -157,6 +163,45 @@
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+  }
+
+  .whatsapp-group-card {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+
+    &__info {
+      flex: 1 1 260px;
+    }
+
+    &__title {
+      color: $dark-gray;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+    }
+
+    &__text {
+      color: $dark-gray;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    &__qr {
+      flex: 0 0 auto;
+      line-height: 0;
+    }
+
+    @media (max-width: $sm) {
+      &__qr {
+        display: flex;
+        flex: 1 1 100%;
+        justify-content: center;
+      }
+    }
   }
 
   .account-order-header {
