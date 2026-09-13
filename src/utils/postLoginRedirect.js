@@ -1,8 +1,8 @@
 import {
   FORM_STORAGE_KEYS,
-  applyInscriptionDraft,
   clearInscriptionDraftLocal,
   getInscriptionDraftLocal,
+  stashPendingRestore,
 } from '@/utils/formStorage';
 import { getInscriptionDraft } from '@/services/me';
 
@@ -14,8 +14,7 @@ export const resolvePostLoginRedirect = async (navigate) => {
     return;
   }
 
-  const localDraft = getInscriptionDraftLocal();
-  if (applyInscriptionDraft(localDraft)) {
+  if (stashPendingRestore(getInscriptionDraftLocal())) {
     clearInscriptionDraftLocal();
     window.location.assign('/');
     return;
@@ -23,7 +22,7 @@ export const resolvePostLoginRedirect = async (navigate) => {
 
   try {
     const serverDraft = await getInscriptionDraft();
-    if (applyInscriptionDraft(serverDraft)) {
+    if (stashPendingRestore(serverDraft)) {
       window.location.assign('/');
       return;
     }

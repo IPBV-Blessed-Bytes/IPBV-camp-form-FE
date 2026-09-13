@@ -29,6 +29,7 @@ const DRAFT_KEYS = [
 ];
 
 const LOCAL_DRAFT_KEY = 'inscriptionDraft';
+const PENDING_RESTORE_KEY = 'pendingInscriptionRestore';
 
 export const buildInscriptionDraft = () => {
   const draft = {};
@@ -39,20 +40,22 @@ export const buildInscriptionDraft = () => {
   return draft;
 };
 
-export const hasInscriptionDraft = () => {
-  const savedUsers = sessionStorage.getItem(FORM_STORAGE_KEYS.savedUsers);
-  if (!savedUsers) return false;
+const isValidCamper = (user) =>
+  Boolean((user?.personalInformation?.name || '').trim() || (user?.personalInformation?.birthday || '').trim());
+
+const draftHasValidCamper = (draft) => {
+  if (!draft || typeof draft !== 'object') return false;
   try {
-    return JSON.parse(savedUsers).length > 0;
+    const users = JSON.parse(draft[FORM_STORAGE_KEYS.savedUsers] || '[]');
+    return Array.isArray(users) && users.some(isValidCamper);
   } catch {
     return false;
   }
 };
 
-export const applyInscriptionDraft = (draft) => {
-  if (!draft || typeof draft !== 'object') return false;
-  const savedUsers = draft[FORM_STORAGE_KEYS.savedUsers];
-  if (!savedUsers) return false;
+export const hasInscriptionDraft = () => draftHasValidCamper(buildInscriptionDraft());
+
+const applyDraftToSession = (draft) => {
   DRAFT_KEYS.forEach((key) => {
     if (draft[key] !== undefined && draft[key] !== null) {
       sessionStorage.setItem(key, draft[key]);
@@ -61,6 +64,34 @@ export const applyInscriptionDraft = (draft) => {
   if (draft[FORM_STORAGE_KEYS.resumeCheckout] === undefined) {
     sessionStorage.setItem(FORM_STORAGE_KEYS.resumeCheckout, String(enumSteps.beforePayment));
   }
+};
+
+export const stashPendingRestore = (draft) => {
+  if (!draftHasValidCamper(draft)) return false;
+  try {
+    sessionStorage.setItem(PENDING_RESTORE_KEY, JSON.stringify(draft));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const consumePendingRestore = () => {
+  let draft;
+  try {
+    const raw = sessionStorage.getItem(PENDING_RESTORE_KEY);
+    if (!raw) return false;
+    draft = JSON.parse(raw);
+  } catch {
+    return false;
+  }
+  try {
+    sessionStorage.removeItem(PENDING_RESTORE_KEY);
+  } catch {
+    /* ignore */
+  }
+  if (!draftHasValidCamper(draft)) return false;
+  applyDraftToSession(draft);
   return true;
 };
 

@@ -9,6 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles/GlobalStyle.scss';
+import { consumePendingRestore } from './utils/formStorage';
+
+consumePendingRestore();
 
 const queryClient = new QueryClient({
   defaultOptions: {
