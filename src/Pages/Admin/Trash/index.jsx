@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { listDeletedCampers, restoreDeletedCamper, purgeDeletedCamper } from '@/services/deletedCampers';
+import {
+  listDeletedCampers,
+  restoreDeletedCamper,
+  purgeDeletedCamper,
+  purgeAllDeletedCampers,
+} from '@/services/deletedCampers';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -24,6 +29,7 @@ const AdminTrash = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [purgeTarget, setPurgeTarget] = useState(null);
+  const [showPurgeAll, setShowPurgeAll] = useState(false);
 
   scrollUp();
 
@@ -78,6 +84,23 @@ const AdminTrash = ({ loggedUsername }) => {
     }
   };
 
+  const handlePurgeAll = async () => {
+    setSaving(true);
+    setLoading(true);
+    try {
+      await purgeAllDeletedCampers();
+      registerLog(`Esvaziou a lixeira (${items.length} inscrições removidas definitivamente)`, loggedUsername);
+      toast.success('Lixeira esvaziada.');
+      setShowPurgeAll(false);
+      reload();
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível esvaziar a lixeira.');
+    } finally {
+      setSaving(false);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="admin-subpage admin-subpage--trash">
       <AdminSubpageHeader
@@ -90,6 +113,14 @@ const AdminTrash = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <>
           <StatCards items={statItems} />
+
+          {items.length > 0 && (
+            <div className="d-flex justify-content-end mb-3">
+              <Button className="d-flex align-items-center" variant="danger" disabled={saving} onClick={() => setShowPurgeAll(true)}>
+                <Icons typeIcon="delete" iconSize={18} fill="#fff" /> &nbsp;Limpar lixeira
+              </Button>
+            </div>
+          )}
 
           <div className="admin-table-card">
             <Table striped bordered hover responsive className="custom-table">
@@ -174,6 +205,28 @@ const AdminTrash = ({ loggedUsername }) => {
             <b>não pode ser desfeita</b> e a inscrição não poderá mais ser restaurada.
           </p>
         )}
+      </CustomModal>
+
+      <CustomModal
+        show={showPurgeAll}
+        onHide={() => setShowPurgeAll(false)}
+        variant="cancel"
+        title="Limpar Lixeira"
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setShowPurgeAll(false)}>
+              Voltar
+            </Button>
+            <Button variant="danger" onClick={handlePurgeAll} disabled={saving}>
+              Limpar Lixeira
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Remover <b>definitivamente todas as {items.length} inscrições</b> da lixeira? Esta ação{' '}
+          <b>não pode ser desfeita</b> e nenhuma delas poderá mais ser restaurada.
+        </p>
       </CustomModal>
 
       <Loading loading={loading} />

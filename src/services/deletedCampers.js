@@ -14,3 +14,8 @@ export const purgeDeletedCamper = async (id) => {
   const { data } = await authFetcher.delete(`/deleted-campers/${id}`);
   return data;
 };
+
+export const purgeAllDeletedCampers = async () => {
+  const { data } = await authFetcher.delete('/deleted-campers');
+  return data;
+};
