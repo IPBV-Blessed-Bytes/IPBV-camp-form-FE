@@ -6,7 +6,7 @@ import { PHONE_MASK } from '@/utils/masks';
 import { additionalInformationSchema } from '@/form/validations/schema';
 import { useFormState } from '@/contexts/FormStateContext';
 import FormStepLayout from '@/components/Global/FormStepLayout';
-import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
+import { FORM_STORAGE_KEYS, getTempData } from '@/utils/formStorage';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
@@ -17,6 +17,7 @@ const Contact = () => {
 
   const { values, handleChange, errors, submitForm, setValues } = useFormik({
     initialValues,
+    enableReinitialize: true,
     onSubmit: () => {
       nextStep();
       updateForm(values);
@@ -29,6 +30,15 @@ const Contact = () => {
   const [isOtherChurch, setIsOtherChurch] = useState(false);
 
   useEffect(() => {
+    const tempData = getTempData();
+
+    if (tempData.contact) {
+      setValues((prevValues) => ({
+        ...prevValues,
+        ...tempData.contact,
+      }));
+    }
+
     const storedData = sessionStorage.getItem(FORM_STORAGE_KEYS.previousUserData);
 
     if (storedData) {
