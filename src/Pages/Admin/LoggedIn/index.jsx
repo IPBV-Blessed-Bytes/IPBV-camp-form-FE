@@ -133,11 +133,7 @@ const AdminLoggedIn = ({
       totalChildren,
       totalAdultsNonPaid,
     } = totalRegistrations;
-    const {
-      usedPackages = {},
-      usedValidPackages = {},
-      totalPackages = {},
-    } = availablePackages || {};
+    const { usedPackages = {}, usedValidPackages = {}, totalPackages = {} } = availablePackages || {};
 
     const calculatePackages = (dataSource) =>
       PACKAGE_MAPPING.map(({ key, totalKey, title }) => {
@@ -303,22 +299,22 @@ const AdminLoggedIn = ({
   ];
 
   const settingsSessions = [
-    { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
     { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
+    { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
     { path: 'utilitarios', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 40, accent: '#cc6d00' },
-    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#dc3545' },
-    { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#0066cc' },
-    { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },
-    { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 44, accent: '#2E5AAC' },
+    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
     { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
     { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
+    { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },
+    { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
     { path: 'reembolsos', title: 'Reembolsos', typeIcon: 'cash', iconSize: 40, accent: '#1a8a45' },
     { path: 'solicitacoes', title: 'Solicitações de Alteração', typeIcon: 'refresh', iconSize: 40, accent: '#0c9183' },
+    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#dc3545' },
+    { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
     { path: 'taxas', title: 'Taxas de Pagamento', typeIcon: 'money', iconSize: 40, accent: '#d39e00' },
-    { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
-    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
+    { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 44, accent: '#2E5AAC' },
   ];
 
   const SETTINGS_PAGE_SIZE = 12;
@@ -372,7 +368,11 @@ const AdminLoggedIn = ({
             {view === 'main' ? (
               <>
                 {navigationSessions.map((session) => (
-                  <SessionCard key={session.path} {...session} onClick={() => navigate(`${routePrefix}/${session.path}`)} />
+                  <SessionCard
+                    key={session.path}
+                    {...session}
+                    onClick={() => navigate(`${routePrefix}/${session.path}`)}
+                  />
                 ))}
                 <SessionCard
                   permission={settingsButtonPermissions}
