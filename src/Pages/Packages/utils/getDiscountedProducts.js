@@ -1,5 +1,6 @@
 import { products } from '@/Pages/Packages/utils/products';
 import { ageRules } from '@/Pages/Packages/utils/ageRules';
+import { formatBRL } from '@/utils/formatBRL';
 
 const applyRule = (basePrice, rule) => {
   if (rule.discountType === 'VALUE') {
@@ -13,7 +14,7 @@ const buildDescription = (basePrice, finalPrice, rule) => {
     return `Grátis para ${rule.minAge} a ${rule.maxAge} anos`;
   }
   if (rule.discountType === 'VALUE') {
-    return `R$ ${rule.discountAmount} de desconto para ${rule.minAge} a ${rule.maxAge} anos`;
+    return `R$ ${formatBRL(rule.discountAmount)} de desconto para ${rule.minAge} a ${rule.maxAge} anos`;
   }
   return `${rule.discountAmount}% de desconto para ${rule.minAge} a ${rule.maxAge} anos`;
 };

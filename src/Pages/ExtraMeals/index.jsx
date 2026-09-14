@@ -133,7 +133,7 @@ const ExtraMeals = () => {
         </>
       );
     } else {
-      return `R$ ${originalPrice},00`;
+      return `R$ ${formatBRL(originalPrice)}`;
     }
   };
 
@@ -315,7 +315,7 @@ const ExtraMeals = () => {
                 <Col>
                   <Card.Text className="d-flex justify-content-end">
                     <i>Valor Total das Refeições:</i>&nbsp;
-                    <b className="text-success-custom">R$ {totalPrice.toFixed(2)}</b>
+                    <b className="text-success-custom">R$ {formatBRL(totalPrice)}</b>
                   </Card.Text>
                 </Col>
               </Row>

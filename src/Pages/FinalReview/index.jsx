@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import FormStepLayout from '@/components/Global/FormStepLayout';
@@ -119,11 +120,11 @@ const FinalReview = () => {
                         <span className="form-review__section-title">Pacote:</span> <br />
                         Hospedagem = {formValues.package.accomodation.name}
                         <br />
-                        Preço = R$ {accomodationPrice}
+                        Preço = R$ {formatBRL(accomodationPrice)}
                         <span className="packages-horizontal-line" />
                         Transporte = {formValues.package.transportation.name}
                         <br />
-                        Preço = R$ {transportationPrice}
+                        Preço = R$ {formatBRL(transportationPrice)}
                         {!formValues.package.food.id &&
                           formValues.package.transportation.name &&
                           (formValues.contact.car === true || formValues.contact.needRide) === true && (
@@ -134,7 +135,7 @@ const FinalReview = () => {
                             <span className="packages-horizontal-line" />
                             Alimentação = {formValues.package.food.name}
                             <br />
-                            Preço = R$ {foodPrice}
+                            Preço = R$ {formatBRL(foodPrice)}
                             {!formValues.extraMeals?.totalPrice && <span className="packages-horizontal-line" />}
                           </>
                         )}
@@ -145,7 +146,7 @@ const FinalReview = () => {
                         <Card.Text>
                           <span className="form-review__section-title">Refeição Extra:</span>
                           <br />
-                          Preço = R$ {extraMealsPrice}
+                          Preço = R$ {formatBRL(extraMealsPrice)}
                           <div className="packages-horizontal-line-mobile" />
                         </Card.Text>
                       )}
@@ -162,11 +163,11 @@ const FinalReview = () => {
                         <br />
                         {discountNumeric > 0 ? (
                           <>
-                            <em className="text-decoration-line-through text-muted me-2">R$ {totalBeforeDiscount}</em>
-                            <em className="fw-bold text-success">R$ {finalTotal}</em>
+                            <em className="text-decoration-line-through text-muted me-2">R$ {formatBRL(totalBeforeDiscount)}</em>
+                            <em className="fw-bold text-success">R$ {formatBRL(finalTotal)}</em>
                           </>
                         ) : (
-                          <em className="fw-bold">R$ {finalTotal}</em>
+                          <em className="fw-bold">R$ {formatBRL(finalTotal)}</em>
                         )}
                       </Card.Text>
                     </Col>

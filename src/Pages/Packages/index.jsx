@@ -80,7 +80,7 @@ const Packages = () => {
   useEffect(() => {
     if (hasDiscount) {
       toast.info(
-        `Foi gerado um desconto no valor de R$ ${discount} em seu nome. O desconto já está aplicado ao valor final dos produtos.`,
+        `Foi gerado um desconto no valor de R$ ${formatBRL(discount)} em seu nome. O desconto já está aplicado ao valor final dos produtos.`,
       );
     }
   }, [hasDiscount, discount]);
