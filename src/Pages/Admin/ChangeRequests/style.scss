@@ -8,3 +8,42 @@
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+
+.change-diff {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.change-diff__row {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.change-diff__label {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: #555;
+}
+
+.change-diff__values {
+  font-size: 0.95rem;
+}
+
+.change-diff__before {
+  text-decoration: line-through;
+  color: #c0392b;
+}
+
+.change-diff__arrow {
+  color: #888;
+}
+
+.change-diff__after {
+  color: #1e7e34;
+  font-weight: 600;
+}
