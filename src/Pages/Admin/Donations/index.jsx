@@ -30,7 +30,8 @@ const AdminDonations = ({ loggedUsername }) => {
   useEffect(() => {
     listAllDonations()
       .then((list) => {
-        const sorted = [...list].sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+        const confirmedOnly = list.filter((donation) => donation.status === 'CONFIRMED');
+        const sorted = confirmedOnly.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
         setDonations(sorted);
       })
       .catch(() => toast.error('Erro ao carregar doações.'))
@@ -38,14 +39,10 @@ const AdminDonations = ({ loggedUsername }) => {
   }, []);
 
   const statItems = useMemo(() => {
-    const confirmed = donations.filter((donation) => donation.status === 'CONFIRMED');
-    const pending = donations.filter((donation) => donation.status === 'PENDING');
-    const confirmedTotal = confirmed.reduce((acc, donation) => acc + Number(donation.amount || 0), 0);
-    const pendingTotal = pending.reduce((acc, donation) => acc + Number(donation.amount || 0), 0);
+    const confirmedTotal = donations.reduce((acc, donation) => acc + Number(donation.amount || 0), 0);
     return [
       { label: 'Total confirmado (para o social)', value: formatBRL(confirmedTotal), tone: 'used' },
-      { label: 'Doadores confirmados', value: confirmed.length, tone: 'accent' },
-      { label: 'Aguardando pagamento', value: formatBRL(pendingTotal), tone: 'available' },
+      { label: 'Doadores confirmados', value: donations.length, tone: 'accent' },
     ];
   }, [donations]);
 
