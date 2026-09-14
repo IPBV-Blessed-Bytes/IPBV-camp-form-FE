@@ -432,6 +432,7 @@ body {
 .btn-outline-intense-green:hover,
 .btn-outline-teal-blue:hover,
 .btn.btn-teal-blue:hover,
+.btn.btn-teal-blue:active,
 .btn.btn-new-ticket:hover,
 .btn.btn-restore:hover,
 .btn.btn-teal-blue {
@@ -446,6 +447,10 @@ body {
 .btn-outline-teal-blue {
   &:active {
     color: $white !important;
+
+    svg:not(.rooms-rename-icon) {
+      fill: $white !important;
+    }
   }
 }
 
