@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { Container, Accordion, Card, Form, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
@@ -119,7 +120,7 @@ const ExtraMeals = () => {
     if (age < 7) {
       return (
         <>
-          <span className="price-with-discount">R$ {originalPrice},00</span> ⭢{' '}
+          <span className="price-with-discount">R$ {formatBRL(originalPrice)}</span> ⭢{' '}
           <span className="text-success-custom">R$ 0,00</span>
         </>
       );
@@ -127,8 +128,8 @@ const ExtraMeals = () => {
       discountedPrice = Math.round(originalPrice * 0.5);
       return (
         <>
-          <span className="price-with-discount">R$ {originalPrice},00</span> ⭢{' '}
-          <span className="text-success-custom">R$ {discountedPrice},00</span>
+          <span className="price-with-discount">R$ {formatBRL(originalPrice)}</span> ⭢{' '}
+          <span className="text-success-custom">R$ {formatBRL(discountedPrice)}</span>
         </>
       );
     } else {

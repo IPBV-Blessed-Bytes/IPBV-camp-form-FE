@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
@@ -231,7 +232,7 @@ const Packages = () => {
                         <small className="text-secondary">Não selecionado</small>
                       )}
                       {items.find((i) => i.category === 'Hospedagem') && (
-                        <div className="summary__accomodation__value">R$ {accomodationPrice},00</div>
+                        <div className="summary__accomodation__value">R$ {formatBRL(accomodationPrice)}</div>
                       )}
                     </div>
                     <div className="packages-horizontal-line-cart"></div>
@@ -250,7 +251,7 @@ const Packages = () => {
                         <small className="text-secondary">Não selecionado</small>
                       )}
                       {items.find((i) => i.category === 'Transporte') && (
-                        <div className="summary__accomodation__value">R$ {transportationPrice},00</div>
+                        <div className="summary__accomodation__value">R$ {formatBRL(transportationPrice)}</div>
                       )}
                     </div>
                     <div className="packages-horizontal-line-cart"></div>
@@ -270,7 +271,7 @@ const Packages = () => {
                             text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
                           />
                         </div>
-                        <div className="summary-discount-value">-R$ {discountNumeric},00</div>
+                        <div className="summary-discount-value">-R$ {formatBRL(discountNumeric)}</div>
                       </div>
                       <div className="packages-horizontal-line-cart"></div>
                     </div>
@@ -279,7 +280,7 @@ const Packages = () => {
                   <div className="summary__discount">
                     <strong className="d-flex justify-content-between">
                       <div>Total:</div>
-                      <div>R$ {finalTotal},00</div>
+                      <div>R$ {formatBRL(finalTotal)}</div>
                     </strong>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { useCart } from 'react-use-cart';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -104,7 +105,7 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
                 <div className="align-items-center mb-4">
                   <h3 className="product-title">{product.name}</h3>
                 </div>
-                <p className="product-price mb-4">R$ {product.price},00</p>
+                <p className="product-price mb-4">R$ {formatBRL(product.price)}</p>
                 {product.description && <p className="discount-description small mb-4">{product.description}</p>}
 
                 {!isAvailable ? (

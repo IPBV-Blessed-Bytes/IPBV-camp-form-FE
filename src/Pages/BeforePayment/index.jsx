@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import './style.scss';
@@ -190,7 +191,7 @@ const BeforePayment = () => {
                 {userTotals.map((camper, index) => (
                   <div className="summary-total-package" key={index}>
                     <h5 className="summary-total-package-label">{camper.name}:</h5>
-                    <h5 className="summary-total-package-value">R$ {camper.total},00</h5>
+                    <h5 className="summary-total-package-value">R$ {formatBRL(camper.total)}</h5>
                   </div>
                 ))}
 
@@ -199,13 +200,13 @@ const BeforePayment = () => {
                 {donationValue > 0 && (
                   <div className="summary-total-package">
                     <h5 className="summary-total-package-label">Doação:</h5>
-                    <h5 className="summary-total-package-value">R$ {donationValue},00</h5>
+                    <h5 className="summary-total-package-value">R$ {formatBRL(donationValue)}</h5>
                   </div>
                 )}
 
                 <div className="summary-total-geral mb-3">
                   <h5 className="fw-bold">Total:</h5>
-                  <h5 className="fw-bold">R$ {totalWithDonation},00</h5>
+                  <h5 className="fw-bold">R$ {formatBRL(totalWithDonation)}</h5>
                 </div>
 
                 <div className="summary-buttons d-grid gap-3">

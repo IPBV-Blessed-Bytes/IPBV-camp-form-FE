@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
@@ -102,7 +103,7 @@ const CpfData = () => {
                         <Col md={6} className="fw-bold">
                           <Card.Text>
                             <span className="form-review__section-title">Preço:</span> <br />
-                            R$ {personData?.price},00
+                            R$ {formatBRL(personData?.price)}
                           </Card.Text>
                         </Col>
                         <Col md={6} className="fw-bold">

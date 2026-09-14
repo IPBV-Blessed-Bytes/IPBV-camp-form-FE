@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatBRL } from '@/utils/formatBRL';
 import { Button, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
@@ -33,7 +34,7 @@ const renderPackageDetails = (user, age) => {
           <div className="d-flex justify-content-between">
             <h5>Hospedagem:</h5>
             <br />
-            <h5>R$ {accomodation},00</h5>
+            <h5>R$ {formatBRL(accomodation)}</h5>
           </div>
           <p>{user.package?.accomodation.name}</p>
         </div>
@@ -42,7 +43,7 @@ const renderPackageDetails = (user, age) => {
           <div className="d-flex justify-content-between">
             <h5>Transporte:</h5>
             <br />
-            <h5>R$ {transportation},00</h5>
+            <h5>R$ {formatBRL(transportation)}</h5>
           </div>
           <p>{user.package?.transportation.name}</p>
         </div>
@@ -52,7 +53,7 @@ const renderPackageDetails = (user, age) => {
             <div className="d-flex justify-content-between">
               <h5>Alimentação:</h5>
               <br />
-              <h5>R$ {food},00</h5>
+              <h5>R$ {formatBRL(food)}</h5>
             </div>
             <p>{user.package.food.name.split(' (')[0]}</p>
           </div>
@@ -75,7 +76,7 @@ const renderUserTotalInfo = (user, age) => {
     <div className="cart-item">
       <div className="item-info">
         <h5 className="cart-user-total fw-bold d-flex justify-content-between">
-          Total Acampante: <span>R$ {sumBeforeDiscount},00</span>
+          Total Acampante: <span>R$ {formatBRL(sumBeforeDiscount)}</span>
         </h5>
       </div>
     </div>
@@ -198,7 +199,7 @@ const Cart = ({
                       <div className="item-extra-meals mb-3">
                         <div className="d-flex justify-content-between">
                           <h5>Refeições Extras:</h5>
-                          <h5>R$ {Number(user.extraMeals?.totalPrice || 0)},00</h5>
+                          <h5>R$ {formatBRL(Number(user.extraMeals?.totalPrice || 0))}</h5>
                         </div>
                       </div>
                     </div>
