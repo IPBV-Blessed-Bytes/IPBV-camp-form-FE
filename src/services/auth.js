@@ -37,8 +37,8 @@ export const unlockAccount = async (token) => {
   return data;
 };
 
-export const registerGuest = async ({ email, password }) => {
-  const { data } = await fetcher.post('/auth/register', { email, password });
+export const registerGuest = async ({ email, password, draft }) => {
+  const { data } = await fetcher.post('/auth/register', { email, password, draft });
   return data;
 };
 

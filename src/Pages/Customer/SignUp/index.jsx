@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { registerGuest, resendConfirmation } from '@/services/auth';
+import { getInscriptionDraftLocal, draftHasContent } from '@/utils/formStorage';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import useAuth from '@/hooks/useAuth';
 import Loading from '@/components/Global/Loading';
@@ -39,7 +40,11 @@ const SignUp = () => {
     }
     setLoading(true);
     try {
-      await registerGuest({ email, password });
+      // Envia o rascunho da inscrição em andamento (se houver) para retomada
+      // cross-device após a confirmação de e-mail.
+      const localDraft = getInscriptionDraftLocal();
+      const draft = draftHasContent(localDraft) ? JSON.stringify(localDraft) : undefined;
+      await registerGuest({ email, password, draft });
       setRegistered(true);
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Não foi possível criar a conta. Tente novamente.');

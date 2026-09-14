@@ -25,6 +25,14 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getEventSlug, eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
+import { getInscriptionDraft, deleteInscriptionDraft } from '@/services/me';
+import {
+  buildInscriptionDraft,
+  saveInscriptionDraftLocal,
+  getInscriptionDraftLocal,
+  clearInscriptionDraftLocal,
+  draftHasContent,
+} from '@/utils/formStorage';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import FormStepLayout from '@/components/Global/FormStepLayout';
@@ -287,23 +295,70 @@ const DynamicForm = () => {
   const cartRestoredRef = useRef(false);
   useEffect(() => {
     if (cartRestoredRef.current || cartStepIndex < 0 || !isLoggedIn) return;
-    try {
-      const saved = sessionStorage.getItem(`dynamic-cart:${slug}`);
-      if (saved) {
-        const { people: savedPeople, answers: savedAnswers } = JSON.parse(saved);
-        if (Array.isArray(savedPeople) && savedPeople.length) {
-          setPeople(savedPeople);
-          if (savedAnswers && Object.keys(savedAnswers).length) setAnswers(savedAnswers);
-          setStepIndex(cartStepIndex);
-          setMaxStepReached((max) => Math.max(max, cartStepIndex));
-          toast.info('Seu carrinho foi restaurado. Você já pode finalizar o pagamento.');
-        }
+    cartRestoredRef.current = true;
+
+    const applyRestore = (savedPeople, savedAnswers) => {
+      if (!Array.isArray(savedPeople) || !savedPeople.length) return false;
+      setPeople(savedPeople);
+      if (savedAnswers && Object.keys(savedAnswers).length) setAnswers(savedAnswers);
+      setStepIndex(cartStepIndex);
+      setMaxStepReached((max) => Math.max(max, cartStepIndex));
+      toast.info('Seu carrinho foi restaurado. Você já pode finalizar o pagamento.');
+      return true;
+    };
+
+    const cleanupBridges = () => {
+      try {
         sessionStorage.removeItem(`dynamic-cart:${slug}`);
+      } catch {
+        // ignore
       }
-      cartRestoredRef.current = true;
-    } catch {
-      cartRestoredRef.current = true;
-    }
+      clearInscriptionDraftLocal();
+    };
+
+    // Retoma a inscrição em andamento em camadas: mesma aba (sessionStorage) ->
+    // outra aba do mesmo navegador (localStorage) -> outro dispositivo (servidor).
+    const restore = async () => {
+      try {
+        const saved = sessionStorage.getItem(`dynamic-cart:${slug}`);
+        if (saved) {
+          const { people: p, answers: a } = JSON.parse(saved);
+          if (applyRestore(p, a)) {
+            cleanupBridges();
+            return;
+          }
+        }
+      } catch {
+        // ignore
+      }
+
+      const localDraft = getInscriptionDraftLocal();
+      if (draftHasContent(localDraft) && localDraft.slug === slug && applyRestore(localDraft.people, localDraft.answers)) {
+        cleanupBridges();
+        deleteInscriptionDraft().catch(() => {});
+        return;
+      }
+
+      try {
+        const serverDraft = await getInscriptionDraft();
+        if (
+          draftHasContent(serverDraft) &&
+          serverDraft.slug === slug &&
+          applyRestore(serverDraft.people, serverDraft.answers)
+        ) {
+          cleanupBridges();
+          deleteInscriptionDraft().catch(() => {});
+          return;
+        }
+      } catch {
+        // ignore
+      }
+
+      cleanupBridges();
+    };
+
+    restore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartStepIndex, isLoggedIn, slug]);
 
   const requireLogin = () => {
@@ -312,8 +367,21 @@ const DynamicForm = () => {
     } catch {
       // ignore storage errors
     }
+    // Ponte em localStorage (sobrevive à confirmação de e-mail em outra aba) e,
+    // no cadastro, o draft também vai pro servidor (retomada cross-device).
+    saveInscriptionDraftLocal(buildInscriptionDraft(slug, people, currentAnswers));
     toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
     navigate('/entrar', { state: { from: eventPath('/') } });
+  };
+
+  const clearInscriptionDraft = () => {
+    clearInscriptionDraftLocal();
+    try {
+      sessionStorage.removeItem(`dynamic-cart:${slug}`);
+    } catch {
+      // ignore
+    }
+    deleteInscriptionDraft().catch(() => {});
   };
 
   const commitAndGoToCart = () => {
@@ -365,6 +433,7 @@ const DynamicForm = () => {
     setSubmitting(true);
     try {
       await createSubmission({ registrations });
+      clearInscriptionDraft();
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -400,6 +469,7 @@ const DynamicForm = () => {
         donation: Number(donation) || 0,
       });
       if (result?.boletos?.length) {
+        clearInscriptionDraft();
         setBoletoResult(result.boletos.map((boleto) => ({ ...boleto, boletoUrl: boleto.url || boleto.boletoUrl })));
         window.scrollTo(0, 0);
         return;
@@ -409,6 +479,7 @@ const DynamicForm = () => {
         toast.error('Não foi possível gerar o pagamento. Tente novamente.');
         return;
       }
+      clearInscriptionDraft();
       window.location.href = paymentUrl;
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao gerar o pagamento.');
