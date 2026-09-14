@@ -11,7 +11,13 @@ import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
 import { rgShipper, issuingState } from '@/utils/constants';
-import { getMyRegistrations, getMyRegistration, createChangeRequest, getMyChangeRequests } from '@/services/me';
+import {
+  getMyRegistrations,
+  getMyRegistration,
+  createChangeRequest,
+  getMyChangeRequests,
+  cancelPendingRegistration,
+} from '@/services/me';
 import { getBoletosByOrder } from '@/services/boletos';
 import BoletoList from '@/components/Global/BoletoList';
 import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
@@ -56,6 +62,8 @@ const MyAccount = () => {
   const [editData, setEditData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [qrTarget, setQrTarget] = useState(null);
+  const [cancelTarget, setCancelTarget] = useState(null);
+  const [canceling, setCanceling] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -118,6 +126,21 @@ const MyAccount = () => {
     }
   };
 
+  const handleConfirmCancel = async () => {
+    if (!cancelTarget) return;
+    setCanceling(true);
+    try {
+      await cancelPendingRegistration(cancelTarget.pendingId);
+      toast.success('Inscrição pendente cancelada.');
+      setCancelTarget(null);
+      fetchData();
+    } catch (error) {
+      toast.error('Não foi possível cancelar a inscrição.');
+    } finally {
+      setCanceling(false);
+    }
+  };
+
   const personal = editData?.personalInformation || {};
   const contact = editData?.contact || {};
 
@@ -125,11 +148,22 @@ const MyAccount = () => {
   registrations.forEach((r) => {
     const key = r.orderNumber || `no-order-${r.id}`;
     if (!groupMap.has(key)) {
-      groupMap.set(key, { key, orderNumber: r.orderNumber || '', registrations: [], confirmedCount: 0 });
+      groupMap.set(key, {
+        key,
+        orderNumber: r.orderNumber || '',
+        registrations: [],
+        confirmedCount: 0,
+        pendingCount: 0,
+        pendingId: null,
+      });
     }
     const group = groupMap.get(key);
     group.registrations.push(r);
     if (r.status === 'CONFIRMED') group.confirmedCount += 1;
+    if (r.status === 'PENDING_PAYMENT') {
+      group.pendingCount += 1;
+      if (group.pendingId === null) group.pendingId = r.id;
+    }
   });
   const registrationGroups = Array.from(groupMap.values());
 
@@ -199,6 +233,20 @@ const MyAccount = () => {
                     onClick={() => setQrTarget({ orderNumber: group.orderNumber, count: group.confirmedCount })}
                   >
                     <Icons typeIcon="camera" iconSize={18} fill="#fff" /> &nbsp;QR de check-in da família
+                  </Button>
+                )}
+                {group.confirmedCount === 0 && group.pendingCount > 0 && (
+                  <Button
+                    variant="outline-danger"
+                    onClick={() =>
+                      setCancelTarget({
+                        pendingId: group.pendingId,
+                        orderNumber: group.orderNumber,
+                        count: group.pendingCount,
+                      })
+                    }
+                  >
+                    Cancelar Inscrição
                   </Button>
                 )}
               </div>
@@ -338,6 +386,44 @@ const MyAccount = () => {
         orderNumber={qrTarget?.orderNumber}
         count={qrTarget?.count}
       />
+
+      <CustomModal
+        show={Boolean(cancelTarget)}
+        onHide={() => (canceling ? null : setCancelTarget(null))}
+        variant="cancel"
+        icon="error"
+        title="Cancelar Inscrição"
+        iconFill="#dc3545"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setCancelTarget(null)} disabled={canceling}>
+              Voltar
+            </Button>
+            <Button variant="danger" onClick={handleConfirmCancel} disabled={canceling}>
+              {canceling ? 'Cancelando...' : 'Sim, cancelar'}
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Tem certeza que deseja cancelar
+          {cancelTarget?.count > 1
+            ? ` as ${cancelTarget.count} inscrições pendentes deste pedido`
+            : ' esta inscrição pendente'}
+          ?
+        </p>
+        <Alert variant="warning" className="py-2 small mb-0">
+          Esta ação não pode ser desfeita. O pedido será removido da sua conta e os boletos gerados serão cancelados.
+          {cancelTarget?.count > 1 && (
+            <>
+              {' '}
+              Como o pagamento deste pedido é único, <b>todos os acampantes pendentes deste pedido</b> serão cancelados
+              juntos.
+            </>
+          )}{' '}
+          Se quiser participar depois, será necessário fazer uma nova inscrição.
+        </Alert>
+      </CustomModal>
 
       <CustomModal
         show={showEdit}
