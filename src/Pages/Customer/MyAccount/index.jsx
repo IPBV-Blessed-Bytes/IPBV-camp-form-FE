@@ -22,6 +22,7 @@ import { getBoletosByOrder } from '@/services/boletos';
 import BoletoList from '@/components/Global/BoletoList';
 import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
 import WhatsAppGroupQr from '@/components/Global/WhatsAppGroupQr';
+import Loading from '@/components/Global/Loading';
 
 const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
@@ -112,7 +113,9 @@ const MyAccount = () => {
   const setContact = (field, value) => setEditData((d) => ({ ...d, contact: { ...d.contact, [field]: value } }));
 
   const handleSubmitChange = async () => {
+    setLoading(true);
     setSaving(true);
+
     try {
       await createChangeRequest(editData.id, editData);
       toast.success('Solicitação de alteração enviada para aprovação.');
@@ -123,21 +126,27 @@ const MyAccount = () => {
       toast.error('Não foi possível enviar a solicitação.');
     } finally {
       setSaving(false);
+      setLoading(false);
+
     }
   };
 
   const handleConfirmCancel = async () => {
     if (!cancelTarget) return;
+    const pendingId = cancelTarget.pendingId;
+    setCancelTarget(null);
     setCanceling(true);
+    setLoading(true);
+
     try {
-      await cancelPendingRegistration(cancelTarget.pendingId);
+      await cancelPendingRegistration(pendingId);
       toast.success('Inscrição pendente cancelada.');
-      setCancelTarget(null);
-      fetchData();
+      await fetchData();
     } catch (error) {
       toast.error('Não foi possível cancelar a inscrição.');
     } finally {
       setCanceling(false);
+      setLoading(false);
     }
   };
 
@@ -190,7 +199,11 @@ const MyAccount = () => {
         >
           ← Voltar ao Formulário
         </Button>
-        <WhatsAppGroupButton className="my-account__btn my-account__btn--whatsapp" size={null} label="Grupo do WhatsApp" />
+        <WhatsAppGroupButton
+          className="my-account__btn my-account__btn--whatsapp"
+          size={null}
+          label="Grupo do WhatsApp"
+        />
         <Button variant="outline-secondary" className="my-account__btn my-account__btn--logout" onClick={logout}>
           <Icons typeIcon="exit" iconSize={22} fill="none" stroke="currentColor" />
           Desconectar
@@ -400,7 +413,7 @@ const MyAccount = () => {
               Voltar
             </Button>
             <Button variant="danger" onClick={handleConfirmCancel} disabled={canceling}>
-              {canceling ? 'Cancelando...' : 'Sim, cancelar'}
+              Sim, cancelar
             </Button>
           </>
         }
@@ -439,7 +452,7 @@ const MyAccount = () => {
               Cancelar
             </Button>
             <Button variant="teal-blue" onClick={handleSubmitChange} disabled={saving}>
-              {saving ? 'Enviando...' : 'Enviar solicitação'}
+              Enviar solicitação
             </Button>
           </>
         }
@@ -664,7 +677,9 @@ const MyAccount = () => {
             )}
           </Row>
         </Form>
+
       </CustomModal>
+        <Loading loading={loading} />
     </div>
   );
 };
