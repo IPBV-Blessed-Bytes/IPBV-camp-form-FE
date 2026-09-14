@@ -22,6 +22,7 @@ import StatCards from '@/components/Admin/StatCards';
 import QrScannerModal from '@/components/Global/QrScannerModal';
 import CheckinReviewModal from '@/components/Global/CheckinReviewModal';
 import { parseCheckoutQr } from '@/utils/checkinQr';
+import { accommodationCategory } from '@/utils/accommodationCategory';
 
 const AdminCheckin = ({ loggedUsername, userRole }) => {
   const [cpf, setCpf] = useState('');
@@ -123,25 +124,26 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       .replace(/ç/g, 'c')
       .trim();
 
-  const fetchUserWristbands = async (userId, foodName, teamName) => {
+  const fetchUserWristbands = async (userId, accomodationName, teamName) => {
     try {
       const wristbandsResponse = await listWristbands({ userId });
 
       const activeBands = wristbandsResponse.filter((band) => band.active);
 
       const teamBands = activeBands.filter((band) => band.type === 'TEAM');
-      const foodBands = activeBands.filter((band) => band.type === 'FOOD');
+      const hostingBands = activeBands.filter((band) => band.type === 'HOSTING');
 
       const wristbands = [];
 
-      if (foodName) {
-        const normalizedFoodName = normalizeText(foodName);
-        const matchedFood = foodBands.find((band) => normalizeText(band.label) === normalizedFoodName);
+      const hostingCategory = accommodationCategory(accomodationName);
+      if (hostingCategory) {
+        const normalizedHosting = normalizeText(hostingCategory);
+        const matchedHosting = hostingBands.find((band) => normalizeText(band.label) === normalizedHosting);
 
         wristbands.push({
-          id: 'food',
-          label: matchedFood?.label || '',
-          color: matchedFood?.color || '',
+          id: 'hosting',
+          label: matchedHosting?.label || '',
+          color: matchedHosting?.color || '',
         });
       }
 
@@ -222,7 +224,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     setCheckinStatus(user.checkin);
     setCpfMatches([]);
     setShowSuggestions(false);
-    fetchUserWristbands(user.id, user.package.foodName, user.teamName);
+    fetchUserWristbands(user.id, user.package.accomodationName, user.teamName);
 
     toast.success('Usuário selecionado');
 
@@ -501,7 +503,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
               {userWristbands.map((band) => (
                 <div key={band.id} className="checkin-wristbands__item">
                   <span className="checkin-wristbands__label">
-                    {band.id === 'food' ? 'Pulseira Alimentação' : 'Pulseira Time'}
+                    {band.id === 'hosting' ? 'Pulseira Hospedagem' : 'Pulseira Time'}
                   </span>
                   <span className="checkin-wristbands__swatch" style={{ background: band.color || 'transparent' }} />
                   {band.label && <span className="checkin-wristbands__name">{band.label}</span>}
@@ -538,10 +540,6 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
             <div className="checkin-info__item">
               <span className="checkin-info__label">Quarto</span>
               <span className="checkin-info__value">{userRoom?.name || 'Não alocado'}</span>
-            </div>
-            <div className="checkin-info__item">
-              <span className="checkin-info__label">Alimentação</span>
-              <span className="checkin-info__value">{userInfo.package.foodName || '-'}</span>
             </div>
             <div className="checkin-info__item">
               <span className="checkin-info__label">Time</span>

@@ -59,7 +59,7 @@ const AdminCharts = ({ availablePackages, userRole }) => {
     [campers],
   );
 
-  const { usedPackagesData, usedValidData, schoolPackagesData, foodData, busData } = useMemo(() => {
+  const { usedPackagesData, usedValidData, schoolPackagesData, busData } = useMemo(() => {
     const usedPk = availablePackages?.usedPackages || {};
     const usedValidPk = availablePackages?.usedValidPackages || {};
     const toHostEntries = (obj) =>
@@ -74,10 +74,6 @@ const AdminCharts = ({ availablePackages, userRole }) => {
         { name: 'Colégio Família', value: usedPk['host-college-family'] || 0 },
         { name: 'Colégio Camping', value: usedPk['host-college-camping'] || 0 },
         { name: 'Colégio Individual', value: usedPk['host-college-collective'] || 0 },
-      ],
-      foodData: [
-        { name: 'Com Alimentação', value: usedPk['food-complete'] || 0 },
-        { name: 'Sem Alimentação', value: usedPk['no-food'] || 0 },
       ],
       busData: [
         { name: 'Com Ônibus', value: usedPk['bus-yes'] || 0 },
@@ -120,7 +116,6 @@ const AdminCharts = ({ availablePackages, userRole }) => {
       {allInfoChartPermissions && (
         <div className="admin-charts__grid">
           <PieCard title="Colégio (Família / Camping / Individual)" data={schoolPackagesData} />
-          <PieCard title="Com e Sem Alimentação" data={foodData} />
           <PieCard title="Com e Sem Ônibus" data={busData} />
         </div>
       )}

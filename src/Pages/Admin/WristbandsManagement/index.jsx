@@ -11,7 +11,7 @@ import {
 import { registerLog } from '@/services/logs';
 import { useWristbandsList } from '@/hooks/useWristbandsList';
 import scrollUp from '@/hooks/useScrollUp';
-import { FOOD_NAME_OPTIONS } from '@/utils/constants';
+import { HOSTING_NAME_OPTIONS } from '@/utils/constants';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
@@ -48,14 +48,14 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       return false;
     }
 
-    if (type === 'FOOD') {
-      const duplicatedFood = wristbands.find(
+    if (type === 'HOSTING') {
+      const duplicatedHosting = wristbands.find(
         (band) =>
-          band.type === 'FOOD' && band.label === label && (!editingWristband || band.id !== editingWristband.id),
+          band.type === 'HOSTING' && band.label === label && (!editingWristband || band.id !== editingWristband.id),
       );
 
-      if (duplicatedFood) {
-        toast.error(`Já existe uma pulseira de alimentação do tipo ${label}. Não é possível cadastrar outra igual.`);
+      if (duplicatedHosting) {
+        toast.error(`Já existe uma pulseira de hospedagem do tipo ${label}. Não é possível cadastrar outra igual.`);
         return false;
       }
     }
@@ -125,18 +125,18 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
 
   const activeCount = wristbands.filter((b) => b.active).length;
   const teamCount = wristbands.filter((b) => b.type === 'TEAM').length;
-  const foodCount = wristbands.filter((b) => b.type === 'FOOD').length;
+  const hostingCount = wristbands.filter((b) => b.type === 'HOSTING').length;
   const statItems = [
     { label: 'Pulseiras', value: wristbands.length },
     { label: 'Ativas', value: activeCount, tone: 'free' },
     { label: 'Inativas', value: wristbands.length - activeCount, tone: 'used' },
     { label: 'Times', value: teamCount, tone: 'accent' },
-    { label: 'Alimentação', value: foodCount, tone: 'info' },
+    { label: 'Hospedagem', value: hostingCount, tone: 'info' },
   ];
   const typeChips = [
     { value: 'all', label: 'Todas', count: wristbands.length },
     { value: 'TEAM', label: 'Time', count: teamCount },
-    { value: 'FOOD', label: 'Alimentação', count: foodCount },
+    { value: 'HOSTING', label: 'Hospedagem', count: hostingCount },
   ];
   const term = search.trim().toLowerCase();
   const filtered = wristbands.filter(
@@ -160,7 +160,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Pulseiras"
-        subtitle="Pulseiras de times e de alimentação"
+        subtitle="Pulseiras de times e de hospedagem"
         typeIcon="wristband"
       />
 
@@ -191,8 +191,8 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               {filtered.map((band) => (
                 <tr key={band.id}>
                   <td>
-                    <Badge bg={band.type === 'FOOD' ? 'warning' : 'primary'} text={band.type === 'FOOD' ? 'dark' : undefined}>
-                      {band.type === 'FOOD' ? 'Alimentação' : 'Time'}
+                    <Badge bg={band.type === 'HOSTING' ? 'warning' : 'primary'} text={band.type === 'HOSTING' ? 'dark' : undefined}>
+                      {band.type === 'HOSTING' ? 'Hospedagem' : 'Time'}
                     </Badge>
                   </td>
                   <td>{band.label}</td>
@@ -251,7 +251,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                   Selecione uma opção
                 </option>
                 <option value="TEAM">Time</option>
-                <option value="FOOD">Alimentação</option>
+                <option value="HOSTING">Hospedagem</option>
               </Form.Select>
             </Form.Group>
 
@@ -260,7 +260,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                 <b>Nome:</b>
               </Form.Label>
 
-              {formData.type === 'FOOD' ? (
+              {formData.type === 'HOSTING' ? (
                 <Form.Select
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
@@ -268,7 +268,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                   <option value="" disabled>
                     Selecione uma opção
                   </option>
-                  {FOOD_NAME_OPTIONS.map((option) => (
+                  {HOSTING_NAME_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

@@ -195,14 +195,6 @@ const AdminLoggedIn = ({
           remainingVacancies: Math.max(crewBusVacancies - crewBusUsers, 0),
           showRemainingVacancies: true,
         },
-        {
-          title: 'Total com Alimentação',
-          filledVacancies: Number(usedPackages['food-complete'] || 0),
-        },
-        {
-          title: 'Total sem Alimentação',
-          filledVacancies: Number(usedPackages['no-food'] || 0),
-        },
       ],
     };
   }, [

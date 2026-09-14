@@ -21,7 +21,6 @@ import FilterChips from '@/components/Admin/FilterChips';
 const CATEGORIES = [
   { value: 'HOSPEDAGEM', label: 'Hospedagem' },
   { value: 'TRANSPORTE', label: 'Transporte' },
-  { value: 'ALIMENTACAO', label: 'Alimentação' },
 ];
 
 const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
@@ -251,7 +250,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
   }, {});
-  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info', ALIMENTACAO: 'used' };
+  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info' };
   const statItems = [
     { label: 'Produtos', value: products.length },
     { label: 'Ativos', value: activeCount, tone: 'free' },
@@ -473,7 +472,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ex.: Alimentação Parcial"
+                placeholder="Ex.: Colégio Quarto Coletivo"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 size="lg"

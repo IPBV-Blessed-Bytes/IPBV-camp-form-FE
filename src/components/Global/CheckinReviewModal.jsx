@@ -3,6 +3,7 @@ import { Row, Col, Button, Badge } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
 import { listWristbands } from '@/services/wristbands';
+import { accommodationCategory } from '@/utils/accommodationCategory';
 
 const formatCpf = (value) => {
   const digits = String(value ?? '')
@@ -30,14 +31,15 @@ const paymentLabel = (formPayment) => {
   return 'Não Pagante';
 };
 
-const buildWristbands = (bands, foodName, teamName) => {
+const buildWristbands = (bands, accomodationName, teamName) => {
   const active = (bands || []).filter((band) => band.active);
   const teamBands = active.filter((band) => band.type === 'TEAM');
-  const foodBands = active.filter((band) => band.type === 'FOOD');
+  const hostingBands = active.filter((band) => band.type === 'HOSTING');
   const wristbands = [];
-  if (foodName) {
-    const matched = foodBands.find((band) => normalizeText(band.label) === normalizeText(foodName));
-    wristbands.push({ id: 'food', label: matched?.label || '', color: matched?.color || '' });
+  const hostingCategory = accommodationCategory(accomodationName);
+  if (hostingCategory) {
+    const matched = hostingBands.find((band) => normalizeText(band.label) === normalizeText(hostingCategory));
+    wristbands.push({ id: 'hosting', label: matched?.label || '', color: matched?.color || '' });
   }
   if (teamName) {
     const matched = teamBands.find((band) => normalizeText(band.label) === normalizeText(teamName));
@@ -80,7 +82,7 @@ const CheckinReviewModal = ({
         const bands = await listWristbands({ userId: camper.id });
         setWristbandsByCamper((prev) => ({
           ...prev,
-          [camper.id]: buildWristbands(bands, camper.package?.foodName, camper.teamName),
+          [camper.id]: buildWristbands(bands, camper.package?.accomodationName, camper.teamName),
         }));
       } catch {
         setWristbandsByCamper((prev) => ({ ...prev, [camper.id]: [] }));
@@ -161,7 +163,7 @@ const CheckinReviewModal = ({
                               {bands.map((band) => (
                                 <div key={band.id} className="checkin-wristbands__item">
                                   <span className="checkin-wristbands__label">
-                                    {band.id === 'food' ? 'Pulseira Alimentação' : 'Pulseira Time'}
+                                    {band.id === 'hosting' ? 'Pulseira Hospedagem' : 'Pulseira Time'}
                                   </span>
                                   <span
                                     className="checkin-wristbands__swatch"
@@ -177,7 +179,6 @@ const CheckinReviewModal = ({
                           {detailRow('Valor do Pagamento', camper.totalPrice)}
                           {detailRow('Hospedagem', camper.package?.accomodationName)}
                           {detailRow('Quarto', roomNameFor(camper.personalInformation?.cpf) || 'Não alocado')}
-                          {detailRow('Alimentação', camper.package?.foodName)}
                           {detailRow('Time', camper.teamName || 'Time Não Selecionado')}
                           {detailRow('Observação da Equipe', camper.observation)}
                           {detailRow('Observação do Usuário', camper.finalObservation)}

@@ -2,21 +2,13 @@ import PropTypes from 'prop-types';
 import { Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ColumnsFields from './ColumnsFields';
-import { issuingState, rgShipper, food, CREW_OPTIONS } from '@/utils/constants';
-
-const removeAccents = (str) => str.normalize('NFD').replace(/[̀-ͯ]/g, '');
-
-const normalizedFoodOptions = food.map((item) => ({
-  value: removeAccents(item.value),
-  label: item.label,
-}));
+import { issuingState, rgShipper, CREW_OPTIONS } from '@/utils/constants';
 
 const getNestedValue = (data, path) => path.split('.').reduce((obj, key) => obj?.[key], data);
 
 const CATEGORY_BY_FIELD = {
   'package.accomodationName': 'HOSPEDAGEM',
   'package.transportationName': 'TRANSPORTE',
-  'package.foodName': 'ALIMENTACAO',
 };
 
 const TEAM_BUS_OPTION = { label: 'Ônibus Equipe', value: 'Onibus Equipe' };
@@ -71,14 +63,6 @@ const FIELDS = [
     ],
   },
   {
-    label: 'Alimentação',
-    name: 'package.foodName',
-    type: 'select',
-    placeholder: 'Selecione a alimentação',
-    oddOrEven: 'even',
-    options: normalizedFoodOptions,
-  },
-  {
     label: 'CPF',
     name: 'personalInformation.cpf',
     type: 'number',
@@ -104,7 +88,7 @@ const FIELDS = [
     oddOrEven: 'odd',
     options: issuingState,
   },
-  { label: 'Preço', name: 'totalPrice', type: 'number', placeholder: '500', oddOrEven: 'odd' },
+  { label: 'Preço', name: 'totalPrice', type: 'number', placeholder: '500', oddOrEven: 'even' },
   {
     label: 'Data de Nascimento',
     name: 'personalInformation.birthday',
@@ -119,7 +103,7 @@ const FIELDS = [
     name: 'personalInformation.gender',
     type: 'select',
     placeholder: 'Selecione sua categoria/gênero',
-    oddOrEven: 'odd',
+    oddOrEven: 'even',
     options: [
       { label: 'Criança', value: 'Crianca' },
       { label: 'Homem', value: 'Homem' },
@@ -131,7 +115,7 @@ const FIELDS = [
     name: 'contact.church',
     type: 'text',
     placeholder: 'Nome da Igreja',
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
   },
   { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
   {
@@ -151,19 +135,19 @@ const FIELDS = [
     name: 'contact.car',
     type: 'select',
     placeholder: 'Selecione se vai de carro',
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
     options: [
       { label: 'Sim', value: true },
       { label: 'Não', value: false },
     ],
   },
-  { label: 'Vagas de Carona', name: 'contact.numberVacancies', type: 'number', placeholder: '0', oddOrEven: 'odd' },
+  { label: 'Vagas de Carona', name: 'contact.numberVacancies', type: 'number', placeholder: '0', oddOrEven: 'even' },
   {
     label: 'Precisa de Carona',
     name: 'contact.needRide',
     type: 'select',
     placeholder: 'Selecione se precisa de carona',
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
     options: [
       { label: 'Sim', value: true },
       { label: 'Não', value: false },
@@ -174,14 +158,14 @@ const FIELDS = [
     name: 'contact.rideObservation',
     type: 'text',
     placeholder: 'Observação de carona',
-    oddOrEven: 'odd',
+    oddOrEven: 'even',
   },
   {
     label: 'Data de Inscrição',
     name: 'registrationDate',
     type: 'text',
     disabled: true,
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
   },
   { label: 'Alergia', name: 'contact.allergy', type: 'text', placeholder: 'Quais alergias', oddOrEven: 'even' },
   { label: 'Agregados', name: 'contact.aggregate', type: 'text', placeholder: 'Quais agregados', oddOrEven: 'odd' },
@@ -190,14 +174,14 @@ const FIELDS = [
     name: 'personalInformation.legalGuardianName',
     type: 'text',
     placeholder: 'Nome do Responsável Legal',
-    oddOrEven: 'odd',
+    oddOrEven: 'even',
   },
   {
     label: 'CPF do Resp. Legal',
     name: 'personalInformation.legalGuardianCpf',
     type: 'number',
     placeholder: '1234567890',
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
     errorMessage: 'Insira um CPF válido',
   },
   {
@@ -205,7 +189,7 @@ const FIELDS = [
     name: 'personalInformation.legalGuardianCellPhone',
     type: 'number',
     placeholder: '81993727854',
-    oddOrEven: 'odd',
+    oddOrEven: 'even',
   },
   {
     label: 'Equipe',
@@ -231,7 +215,7 @@ const FIELDS = [
     name: 'observation',
     type: 'text',
     placeholder: 'Observação sobre essa inscrição',
-    oddOrEven: 'even',
+    oddOrEven: 'odd',
   },
 ];
 

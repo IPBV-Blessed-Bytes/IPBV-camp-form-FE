@@ -146,11 +146,11 @@ export const buildCampersColumns = ({
           row.package.accomodationName === 'Colegio Quarto Familia' ||
           row.package.accomodationName === 'Colégio Camping' ||
           row.package.accomodationName === 'Colegio Camping'
-            ? '[COLÉGIO]'
+            ? 'COLÉGIO'
             : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
-            ? '[SEMINÁRIO]'
+            ? 'SEMINÁRIO'
             : row.package.accomodationName === 'Externo'
-            ? '[EXTERNO]'
+            ? 'EXTERNO'
             : ''
         } ${
           row.package.transportationName === 'Com Ônibus' ||
@@ -160,23 +160,6 @@ export const buildCampersColumns = ({
             ? 'COM ÔNIBUS'
             : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
             ? 'SEM ÔNIBUS'
-            : ''
-        } ${
-          row.package.foodName === 'Alimentação Completa (Café da manhã, Almoço e Jantar)' ||
-          row.package.foodName === 'Alimentacao Completa (Cafe da manha, Almoco e Jantar)' ||
-          row.package.foodName === 'Alimentação Completa (Café da manhã| Almoço e Jantar)' ||
-          row.package.foodName === 'Alimentacao Completa (Cafe da manha| Almoco e Jantar)' ||
-          row.package.foodName === 'Alimentacao Completa (Cafe da manha  Almoco e Jantar)' ||
-          row.package.foodName === 'Alimentação Completa' ||
-          row.package.foodName === 'Alimentacao Completa'
-            ? 'COM ALIMENTAÇÃO COMPLETA'
-            : row.package.foodName === 'Alimentação Parcial (Almoço e Jantar)' ||
-              row.package.foodName === 'Alimentacao Parcial (Almoco e Jantar)'
-            ? 'COM ALIMENTAÇÃO PARCIAL'
-            : row.package.foodName === '' ||
-              row.package.foodName === 'Sem Alimentação' ||
-              row.package.foodName === 'Sem Alimentacao'
-            ? 'SEM ALIMENTAÇÃO'
             : ''
         }`,
       Filter: textFilter,
@@ -275,17 +258,6 @@ export const buildCampersColumns = ({
           const normalizedValue = row.values[id]?.toLowerCase().replace('onibus', 'ônibus');
           return normalizedValue === filterValue.toLowerCase();
         }),
-    },
-    {
-      Header: 'Alimentação:',
-      accessor: 'package.foodName',
-      Filter: selectFilter([
-        { value: 'Alimentacao Completa', label: 'Alimentação Completa' },
-        { value: 'Sem Alimentacao', label: 'Sem Alimentação' },
-      ]),
-      filter: 'food',
-      sortType: 'alphanumeric',
-      Cell: renderPipedList,
     },
     {
       Header: 'CPF:',

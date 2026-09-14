@@ -92,8 +92,8 @@ const ImportCampersModal = ({ show, onHide, onImport, loading }) => {
           <div className="import-campers__select">
             <p className="import-campers__hint">
               Envie uma planilha <b>.xlsx</b> ou <b>.csv</b> seguindo o modelo. Cada linha vira uma inscrição.
-              As colunas <b>Hospedagem</b>, <b>Transporte</b> e <b>Alimentação</b> são casadas com um pacote já
-              existente. CPFs já cadastrados podem ser atualizados.
+              As colunas <b>Hospedagem</b> e <b>Transporte</b> são casadas com um pacote já existente. CPFs já
+              cadastrados podem ser atualizados.
             </p>
 
             <button type="button" className="import-campers__template my-2" onClick={downloadCampersTemplate}>

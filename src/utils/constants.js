@@ -116,14 +116,6 @@ export const issuingState = [
   { value: 'TO', label: 'TO' },
 ];
 
-export const food = [
-  {
-    value: 'Alimentação Completa',
-    label: 'Alimentação Completa',
-  },
-  { value: 'Sem Alimentação', label: 'Sem Alimentação' },
-];
-
 export const mealOptions = [
   { day: 'Sábado', name: 'Sábado - almoço', price: 26, checkboxMargin: '' },
   { day: 'Sábado', name: 'Sábado - jantar', price: 26, checkboxMargin: '' },
@@ -154,9 +146,10 @@ export const TABLE_HEADERS = [
 
 export const MAX_SIZE_CAMPERS = 1000;
 
-export const FOOD_NAME_OPTIONS = [
-  { label: 'Com Alimentação', value: 'Alimentação Completa' },
-  { label: 'Sem Alimentação', value: 'Sem Alimentação' },
+export const HOSTING_NAME_OPTIONS = [
+  { label: 'Colégio', value: 'Colégio' },
+  { label: 'Seminário', value: 'Seminário' },
+  { label: 'Externo', value: 'Externo' },
 ];
 
 export const CREW_OPTIONS = [

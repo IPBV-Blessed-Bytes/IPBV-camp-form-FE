@@ -116,12 +116,6 @@ const CpfData = () => {
                       <Row className="row-gap mt-3">
                         <Col md={6} className="fw-bold">
                           <Card.Text>
-                            <span className="form-review__section-title">Alimentação:</span> <br />
-                            {personData?.food}
-                          </Card.Text>
-                        </Col>
-                        <Col md={6} className="fw-bold">
-                          <Card.Text>
                             <span className="form-review__section-title">Transporte:</span>
                             <br />
                             {personData?.transportation}

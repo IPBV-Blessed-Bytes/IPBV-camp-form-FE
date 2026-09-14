@@ -54,16 +54,6 @@ export const ageFilterFn = (rows, id, filterValue) => {
 const booleanFilter = (getValue) => (rows, id, filterValue) =>
   filterValue === undefined ? rows : rows.filter((row) => toBool(getValue(row.values[id])) === filterValue);
 
-export const foodFilterFn = (rows, id, filterValue) => {
-  if (!filterValue) return rows;
-  const wantsComplete = !normalizeText(filterValue).includes('sem');
-  return rows.filter((row) => {
-    const food = normalizeText(row.values[id]);
-    const hasFood = food !== '' && !food.includes('sem aliment');
-    return hasFood === wantsComplete;
-  });
-};
-
 export const selectWithRide = booleanFilter((value) => value.car);
 export const selectWithCellphone = booleanFilter((value) => value.isWhatsApp);
 export const selectWithDiscount = booleanFilter((value) => value.discountCoupon);
@@ -74,7 +64,6 @@ export const selectWithConfirmationUserData = booleanFilter((value) => value);
 
 export const filterTypes = {
   text: textFilterFn,
-  food: foodFilterFn,
   selectWithRide,
   selectWithCellphone,
   selectWithDiscount,
