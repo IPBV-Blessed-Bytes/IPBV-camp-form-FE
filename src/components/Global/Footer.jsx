@@ -59,7 +59,12 @@ const Footer = ({ handleAdminClick }) => {
 
         <div className="form__footer__credits">
           <p className="form__footer__powered">
-            <a className="mail-to" href="mailto:alvinho.leal@live.com">
+            <a
+              className="mail-to"
+              href="https://wa.me/5581993727854?text=Ol%C3%A1!%20Queria%20informa%C3%A7%C3%B5es%20acerca%20do%20sistema%20de%20inscri%C3%A7%C3%B5es%20feito%20pelo%20Blessed%20Bytes%20Team."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Powered by Blessed Bytes Team
             </a>
             <span className="form__footer__sep"> • </span>

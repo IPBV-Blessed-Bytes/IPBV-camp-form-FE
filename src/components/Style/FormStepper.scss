@@ -24,11 +24,13 @@
 
     &:not(:first-child)::before {
       background: rgba($white, 0.35);
+      border-radius: 2px;
       content: '';
-      height: 2px;
+      height: 4px;
       left: -50%;
       position: absolute;
-      top: 16px;
+      top: 15px;
+      transition: background-color 0.2s ease;
       width: 100%;
       z-index: 0;
     }

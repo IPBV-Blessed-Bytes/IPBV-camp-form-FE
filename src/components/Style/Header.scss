@@ -148,16 +148,8 @@
           color: $secondary;
         }
 
-        &:hover {
-          opacity: 0.8;
-        }
-
         &.active {
           font-weight: bold;
-        }
-
-        &:before {
-          display: none;
         }
       }
     }

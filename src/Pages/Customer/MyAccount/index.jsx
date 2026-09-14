@@ -10,6 +10,7 @@ import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
+import { useFormState } from '@/contexts/FormStateContext';
 import { rgShipper, issuingState } from '@/utils/constants';
 import {
   getMyRegistrations,
@@ -33,6 +34,11 @@ const MyAccount = () => {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
   const { contact: eventContact } = useEventBranding();
+  const formState = useFormState({ optional: true });
+  const goToForm = () => {
+    formState?.initialStep?.();
+    navigate(eventPath('/'));
+  };
   const [registrations, setRegistrations] = useState([]);
   const [changeRequests, setChangeRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,10 +116,10 @@ const MyAccount = () => {
           </div>
         </div>
         <div className="my-account__actions">
-          <Button className="account-btn-primary" onClick={() => navigate(eventPath('/'))}>
+          <Button className="account-btn-primary" onClick={goToForm}>
             Nova inscrição
           </Button>
-          <Button variant="outline-teal-blue" onClick={() => navigate(eventPath('/'))}>
+          <Button variant="outline-teal-blue" onClick={goToForm}>
             Voltar ao formulário
           </Button>
           <Button variant="outline-secondary" onClick={logout}>
@@ -137,7 +143,7 @@ const MyAccount = () => {
           ) : registrations.length === 0 ? (
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
-              <Button className="account-btn-primary" onClick={() => navigate(eventPath('/'))}>
+              <Button className="account-btn-primary" onClick={goToForm}>
                 Fazer inscrição
               </Button>
             </div>
