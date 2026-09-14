@@ -17,6 +17,7 @@ import {
   getMyRegistration,
   createChangeRequest,
   getMyChangeRequests,
+  cancelPendingRegistration,
 } from '@/services/me';
 
 const REG_STATUS = {
@@ -56,6 +57,8 @@ const MyAccount = () => {
   const [editData, setEditData] = useState(null);
   const [saving, setSaving] = useState(false);
   const [qrTarget, setQrTarget] = useState(null);
+  const [cancelTarget, setCancelTarget] = useState(null);
+  const [canceling, setCanceling] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -108,6 +111,28 @@ const MyAccount = () => {
       setSaving(false);
     }
   };
+
+  const handleConfirmCancel = async () => {
+    if (!cancelTarget) return;
+    setCanceling(true);
+    try {
+      await cancelPendingRegistration(cancelTarget.id);
+      toast.success('Inscrição pendente cancelada.');
+      setCancelTarget(null);
+      await fetchData();
+    } catch (error) {
+      toast.error('Não foi possível cancelar a inscrição.');
+    } finally {
+      setCanceling(false);
+    }
+  };
+
+  const pendingInSameOrder =
+    cancelTarget && cancelTarget.orderNumber
+      ? registrations.filter(
+          (r) => r.status === 'PENDING_PAYMENT' && r.orderNumber === cancelTarget.orderNumber,
+        ).length
+      : 1;
 
   const personal = editData?.personalInformation || {};
   const contact = editData?.contact || {};
@@ -209,16 +234,23 @@ const MyAccount = () => {
                               QR de Check-in
                             </Button>
                           </div>
-                        ) : r.paymentUrl ? (
-                          <Button
-                            size="sm"
-                            className="account-btn-primary"
-                            href={r.paymentUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Pagar
-                          </Button>
+                        ) : r.status === 'PENDING_PAYMENT' ? (
+                          <div className="d-flex flex-wrap gap-2">
+                            {r.paymentUrl && (
+                              <Button
+                                size="sm"
+                                className="account-btn-primary"
+                                href={r.paymentUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Pagar
+                              </Button>
+                            )}
+                            <Button size="sm" variant="outline-danger" onClick={() => setCancelTarget(r)}>
+                              Cancelar
+                            </Button>
+                          </div>
                         ) : (
                           <span className="text-secondary small">—</span>
                         )}
@@ -274,6 +306,44 @@ const MyAccount = () => {
         cpf={qrTarget?.cpf}
         name={qrTarget?.name}
       />
+
+      <CustomModal
+        show={Boolean(cancelTarget)}
+        onHide={() => (canceling ? null : setCancelTarget(null))}
+        variant="cancel"
+        icon="error"
+        iconFill="#dc3545"
+        title="Cancelar inscrição"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setCancelTarget(null)} disabled={canceling}>
+              Voltar
+            </Button>
+            <Button variant="danger" onClick={handleConfirmCancel} disabled={canceling}>
+              {canceling ? 'Cancelando...' : 'Sim, cancelar'}
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Tem certeza que deseja cancelar
+          {pendingInSameOrder > 1
+            ? ` as ${pendingInSameOrder} inscrições pendentes deste pedido`
+            : ' esta inscrição pendente'}
+          ?
+        </p>
+        <Alert variant="warning" className="py-2 small mb-0">
+          Esta ação não pode ser desfeita. O pedido será removido da sua conta.
+          {pendingInSameOrder > 1 && (
+            <>
+              {' '}
+              Como o pagamento deste pedido é único, <b>todos os acampantes pendentes deste pedido</b> serão cancelados
+              juntos.
+            </>
+          )}{' '}
+          Se quiser participar depois, será necessário fazer uma nova inscrição.
+        </Alert>
+      </CustomModal>
 
       <CustomModal
         show={showEdit}

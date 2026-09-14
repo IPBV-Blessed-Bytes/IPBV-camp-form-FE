@@ -20,6 +20,10 @@ export const createChangeRequest = async (id, payload) => {
   return data;
 };
 
+export const cancelPendingRegistration = async (id) => {
+  await authFetcher.delete(`/me/registrations/pending/${id}`);
+};
+
 export const getMyChangeRequests = async () => {
   const { data } = await authFetcher.get('/me/change-requests');
   return Array.isArray(data?.changeRequests) ? data.changeRequests : [];
