@@ -10,7 +10,13 @@ import useContactPhone from '@/hooks/useContactPhone';
 import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
+import DatePicker from 'react-datepicker';
+import { ptBR } from 'date-fns/locale';
+import { InputMask, format } from '@react-input/mask';
 import { rgShipper, issuingState } from '@/utils/constants';
+import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
+import { parseDate, formatDate, extractNumbers } from '@/Pages/PersonalData/utils/fieldHelpers';
+import MaskedDateInput from '@/components/Global/MaskedDateInput';
 import {
   getMyRegistrations,
   getMyRegistration,
@@ -61,6 +67,8 @@ const MyAccount = () => {
 
   const [showEdit, setShowEdit] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [justification, setJustification] = useState('');
+  const [justificationError, setJustificationError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [qrTarget, setQrTarget] = useState(null);
   const [cancelTarget, setCancelTarget] = useState(null);
@@ -101,11 +109,15 @@ const MyAccount = () => {
     try {
       const data = await getMyRegistration(registrationId);
       setEditData(data);
+      setJustification('');
+      setJustificationError(false);
       setShowEdit(true);
     } catch (error) {
       toast.error('Não foi possível carregar os dados da inscrição.');
     }
   };
+
+  const onBirthdayChange = (date) => setPersonal('birthday', date ? formatDate(date) : '');
 
   const setPersonal = (field, value) =>
     setEditData((d) => ({ ...d, personalInformation: { ...d.personalInformation, [field]: value } }));
@@ -113,14 +125,21 @@ const MyAccount = () => {
   const setContact = (field, value) => setEditData((d) => ({ ...d, contact: { ...d.contact, [field]: value } }));
 
   const handleSubmitChange = async () => {
+    if (!justification.trim()) {
+      setJustificationError(true);
+      toast.error('Informe a justificativa da alteração.');
+      return;
+    }
     setLoading(true);
     setSaving(true);
 
     try {
-      await createChangeRequest(editData.id, editData);
+      await createChangeRequest(editData.id, editData, justification.trim());
       toast.success('Solicitação de alteração enviada para aprovação.');
       setShowEdit(false);
       setEditData(null);
+      setJustification('');
+      setJustificationError(false);
       fetchData();
     } catch (error) {
       toast.error('Não foi possível enviar a solicitação.');
@@ -351,6 +370,7 @@ const MyAccount = () => {
                   <th>Campista:</th>
                   <th>Enviada em:</th>
                   <th>Status:</th>
+                  <th>Resposta da equipe:</th>
                 </tr>
               </thead>
               <tbody>
@@ -362,6 +382,9 @@ const MyAccount = () => {
                       <td>{cr.createdAt ? new Date(cr.createdAt).toLocaleString('pt-BR') : '—'}</td>
                       <td>
                         <Badge bg={status.bg}>{status.label}</Badge>
+                      </td>
+                      <td className="small">
+                        {cr.reviewNote ? cr.reviewNote : <span className="text-secondary">—</span>}
                       </td>
                     </tr>
                   );
@@ -477,23 +500,44 @@ const MyAccount = () => {
             <Col md={6}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">Data de Nascimento</Form.Label>
-                <Form.Control
-                  placeholder="dd/mm/aaaa"
-                  value={personal.birthday || ''}
-                  onChange={(e) => setPersonal('birthday', e.target.value)}
-                />
+                <div className="custom-datepicker-wrapper">
+                  <Form.Control
+                    as={DatePicker}
+                    selected={parseDate(personal.birthday)}
+                    onChange={onBirthdayChange}
+                    locale={ptBR}
+                    autoComplete="off"
+                    dateFormat="dd/MM/yyyy"
+                    dropdownMode="select"
+                    maxDate={new Date()}
+                    placeholderText="dd/mm/aaaa"
+                    showMonthDropdown
+                    showYearDropdown
+                    customInput={<MaskedDateInput />}
+                  />
+                </div>
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">CPF</Form.Label>
-                <Form.Control value={personal.cpf || ''} onChange={(e) => setPersonal('cpf', e.target.value)} />
+                <InputMask
+                  component={Form.Control}
+                  {...CPF_MASK}
+                  value={format(extractNumbers(personal.cpf || ''), CPF_MASK)}
+                  onChange={(e) => setPersonal('cpf', extractNumbers(e.target.value))}
+                  placeholder="000.000.000-00"
+                />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">RG</Form.Label>
-                <Form.Control value={personal.rg || ''} onChange={(e) => setPersonal('rg', e.target.value)} />
+                <Form.Control
+                  type="number"
+                  value={personal.rg || ''}
+                  onChange={(e) => setPersonal('rg', e.target.value)}
+                />
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -556,18 +600,24 @@ const MyAccount = () => {
             <Col md={3}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">CPF do responsável</Form.Label>
-                <Form.Control
-                  value={personal.legalGuardianCpf || ''}
-                  onChange={(e) => setPersonal('legalGuardianCpf', e.target.value)}
+                <InputMask
+                  component={Form.Control}
+                  {...CPF_MASK}
+                  value={format(extractNumbers(personal.legalGuardianCpf || ''), CPF_MASK)}
+                  onChange={(e) => setPersonal('legalGuardianCpf', extractNumbers(e.target.value))}
+                  placeholder="000.000.000-00"
                 />
               </Form.Group>
             </Col>
             <Col md={3}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">Celular do responsável</Form.Label>
-                <Form.Control
-                  value={personal.legalGuardianCellPhone || ''}
-                  onChange={(e) => setPersonal('legalGuardianCellPhone', e.target.value)}
+                <InputMask
+                  component={Form.Control}
+                  {...PHONE_MASK}
+                  value={format(extractNumbers(personal.legalGuardianCellPhone || ''), PHONE_MASK)}
+                  onChange={(e) => setPersonal('legalGuardianCellPhone', extractNumbers(e.target.value))}
+                  placeholder="(00) 00000-0000"
                 />
               </Form.Group>
             </Col>
@@ -578,9 +628,12 @@ const MyAccount = () => {
             <Col md={6}>
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold">Celular</Form.Label>
-                <Form.Control
-                  value={contact.cellPhone || ''}
-                  onChange={(e) => setContact('cellPhone', e.target.value)}
+                <InputMask
+                  component={Form.Control}
+                  {...PHONE_MASK}
+                  value={format(extractNumbers(contact.cellPhone || ''), PHONE_MASK)}
+                  onChange={(e) => setContact('cellPhone', extractNumbers(e.target.value))}
+                  placeholder="(00) 00000-0000"
                 />
               </Form.Group>
             </Col>
@@ -676,6 +729,22 @@ const MyAccount = () => {
               </Col>
             )}
           </Row>
+
+          <h6 className="account-edit__section">Justificativa</h6>
+          <Form.Group className="mb-2">
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={justification}
+              isInvalid={justificationError}
+              onChange={(e) => {
+                setJustification(e.target.value);
+                if (e.target.value.trim()) setJustificationError(false);
+              }}
+              placeholder="Informe o motivo desta alteração (ex.: corrigir CPF digitado errado, atualizar o celular de contato). Isso ajuda a equipe a avaliar e aprovar sua solicitação."
+            />
+            <Form.Control.Feedback type="invalid">Informe a justificativa da alteração.</Form.Control.Feedback>
+          </Form.Group>
         </Form>
 
       </CustomModal>

@@ -12,6 +12,8 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
+import ReviewModal from './ReviewModal';
+import { buildChangeDiff } from './diff';
 
 const REQ_STATUS = {
   PENDING: { label: 'Pendente', bg: 'warning' },
@@ -24,6 +26,8 @@ const AdminChangeRequests = ({ loggedUsername }) => {
   const [requests, setRequests] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [reviewTarget, setReviewTarget] = useState(null);
+  const [processing, setProcessing] = useState(false);
 
   scrollUp();
 
@@ -42,49 +46,42 @@ const AdminChangeRequests = ({ loggedUsername }) => {
     fetchRequests();
   }, []);
 
-  const handleApprove = async (request) => {
-    setLoading(true);
+  const handleApprove = async (note) => {
+    if (!reviewTarget) return;
+    setProcessing(true);
     try {
-      await approveChangeRequest(request.id);
+      await approveChangeRequest(reviewTarget.id, note);
       toast.success('Solicitação aprovada');
-      registerLog(`Aprovou alteração da inscrição ${request.camperName || request.camperId}`, loggedUsername);
+      registerLog(`Aprovou alteração da inscrição ${reviewTarget.camperName || reviewTarget.camperId}`, loggedUsername);
+      setReviewTarget(null);
       fetchRequests();
     } catch (error) {
       toast.error('Erro ao aprovar solicitação');
     } finally {
-      setLoading(false);
+      setProcessing(false);
     }
   };
 
-  const handleReject = async (request) => {
-    setLoading(true);
+  const handleReject = async (note) => {
+    if (!reviewTarget) return;
+    setProcessing(true);
     try {
-      await rejectChangeRequest(request.id);
+      await rejectChangeRequest(reviewTarget.id, note);
       toast.success('Solicitação rejeitada');
-      registerLog(`Rejeitou alteração da inscrição ${request.camperName || request.camperId}`, loggedUsername);
+      registerLog(`Rejeitou alteração da inscrição ${reviewTarget.camperName || reviewTarget.camperId}`, loggedUsername);
+      setReviewTarget(null);
       fetchRequests();
     } catch (error) {
       toast.error('Erro ao rejeitar solicitação');
     } finally {
-      setLoading(false);
+      setProcessing(false);
     }
   };
 
-  const proposed = (request) => {
-    const p = request.payload?.personalInformation || {};
-    const c = request.payload?.contact || {};
-    return [
-      p.name && `Nome: ${p.name}`,
-      p.rg && `RG: ${p.rg}`,
-      p.gender && `Gênero: ${p.gender}`,
-      c.cellPhone && `Celular: ${c.cellPhone}`,
-      c.email && `E-mail: ${c.email}`,
-      c.church && `Igreja: ${c.church}`,
-      c.allergy && `Alergia: ${c.allergy}`,
-    ]
-      .filter(Boolean)
+  const proposed = (request) =>
+    buildChangeDiff(request)
+      .map((d) => `${d.label}: ${d.after || '(vazio)'}`)
       .join(' · ');
-  };
 
   const statusOf = (request) => (request.status || 'PENDING').toUpperCase();
   const countBy = (status) => requests.filter((r) => statusOf(r) === status).length;
@@ -169,18 +166,12 @@ const AdminChangeRequests = ({ loggedUsername }) => {
                         </Badge>
                       </td>
                       <td>
-                        {isPending ? (
-                          <>
-                            <Button variant="outline-success" className="me-2" onClick={() => handleApprove(request)}>
-                              Aprovar
-                            </Button>
-                            <Button variant="outline-danger" onClick={() => handleReject(request)}>
-                              Rejeitar
-                            </Button>
-                          </>
-                        ) : (
-                          <span className="text-secondary small">—</span>
-                        )}
+                        <Button
+                          variant={isPending ? 'outline-teal-blue' : 'outline-secondary'}
+                          onClick={() => setReviewTarget(request)}
+                        >
+                          {isPending ? 'Revisar' : 'Ver detalhes'}
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -190,8 +181,17 @@ const AdminChangeRequests = ({ loggedUsername }) => {
           </Table>
         </div>
 
-        <Loading loading={loading} />
+        <Loading loading={loading || processing} />
       </div>
+
+      <ReviewModal
+        show={Boolean(reviewTarget)}
+        onHide={() => setReviewTarget(null)}
+        request={reviewTarget}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        processing={processing}
+      />
     </div>
   );
 };

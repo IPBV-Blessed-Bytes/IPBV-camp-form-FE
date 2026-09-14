@@ -10,8 +10,11 @@ export const getMyRegistration = async (id) => {
   return data;
 };
 
-export const createChangeRequest = async (id, payload) => {
-  const { data } = await authFetcher.post(`/me/registrations/${id}/change-request`, payload);
+export const createChangeRequest = async (id, payload, justification) => {
+  const { data } = await authFetcher.post(`/me/registrations/${id}/change-request`, {
+    data: payload,
+    justification,
+  });
   return data;
 };
 
