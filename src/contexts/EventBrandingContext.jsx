@@ -68,6 +68,7 @@ export const EventBrandingProvider = ({ children }) => {
       registrationFeeEnabled: Boolean(event?.registrationFeeEnabled),
       boletoEnabled: Boolean(event?.boletoEnabled),
       boletoMaxInstallments: Number(event?.boletoMaxInstallments) || 1,
+      boletoMinDaysBeforeEvent: Number(event?.boletoMinDaysBeforeEvent) || 20,
       registrationsOpen: event?.registrationsOpen !== false,
       contactMessage: event?.contactMessage || '',
       shareMessage: event?.shareMessage || '',

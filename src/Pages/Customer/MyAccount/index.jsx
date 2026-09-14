@@ -24,6 +24,15 @@ const REG_STATUS = {
   PENDING_PAYMENT: { label: 'Aguardando pagamento', bg: 'warning' },
 };
 
+const PAYMENT_METHOD_LABELS = {
+  creditCard: 'Cartão de Crédito',
+  pix: 'PIX',
+  ticket: 'Boleto Bancário',
+  boleto: 'Boleto Bancário',
+};
+
+const paymentMethodLabel = (value) => PAYMENT_METHOD_LABELS[value] || 'Não Pagante';
+
 const REQ_STATUS = {
   PENDING: { label: 'Pendente', bg: 'warning' },
   APPROVED: { label: 'Aprovada', bg: 'success' },
@@ -159,6 +168,7 @@ const MyAccount = () => {
                   <th>Alimentação</th>
                   <th>Valor</th>
                   <th>Status do Pagamento</th>
+                  <th>Tipo de Pagamento</th>
                   <th>Status do Check-in</th>
                   <th>Ações</th>
                 </tr>
@@ -178,6 +188,7 @@ const MyAccount = () => {
                       <td>
                         <Badge bg={status.bg}>{status.label}</Badge>
                       </td>
+                      <td>{paymentMethodLabel(r.paymentMethod)}</td>
                       <td>
                         {r.checkin ? (
                           <Badge bg="success">Check-in feito</Badge>

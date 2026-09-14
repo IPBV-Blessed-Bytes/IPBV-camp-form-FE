@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import Icons from '@/components/Global/Icons';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
 import './style.scss';
 
 const STATUS = {
@@ -22,6 +23,7 @@ const formatDate = (value) => {
 const pdfLink = (url) => (url ? `${url}?format=pdf` : '');
 
 const BoletoList = ({ boletos, showProgress }) => {
+  const { boletoMinDaysBeforeEvent = 20 } = useEventBranding();
   const total = boletos.length;
   const paidCount = boletos.filter((boleto) => boleto.status === 'PAID').length;
 
@@ -56,7 +58,7 @@ const BoletoList = ({ boletos, showProgress }) => {
           <Icons typeIcon="info" iconSize={18} fill="#007185" />
           <span>
             Para garantir que o pagamento seja compensado a tempo, quando o vencimento da <b>última parcela</b> ficaria
-            a <b>menos de 20 dias</b> do início do acampamento, ele é <b>antecipado automaticamente</b> para uma data
+            a <b>menos de {boletoMinDaysBeforeEvent} dias</b> do início do acampamento, ele é <b>antecipado automaticamente</b> para uma data
             anterior.
           </span>
         </div>

@@ -73,7 +73,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, mapQuery } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, mapQuery } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -909,7 +909,7 @@ const DynamicForm = () => {
                         1º confirma sua vaga; os demais mantêm a inscrição em dia.
                       </p>
                       <p className="text-secondary small mt-2 mb-0">
-                        Se o vencimento da <b>última parcela</b> ficar a <b>menos de 20 dias</b> do início do evento, ele
+                        Se o vencimento da <b>última parcela</b> ficar a <b>menos de {boletoMinDaysBeforeEvent} dias</b> do início do evento, ele
                         é <b>antecipado automaticamente</b> para garantir que o pagamento seja compensado a tempo.
                       </p>
                     </div>
