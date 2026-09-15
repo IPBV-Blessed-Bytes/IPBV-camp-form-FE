@@ -1,45 +1,42 @@
 import { Locator, Page } from '@playwright/test';
 
 export class AuthenticationComponent {
-  readonly churchFooterLogo: Locator;
   readonly adminAccess: Locator;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly eyeIcon: Locator;
   readonly signInButton: Locator;
-  readonly logOutButton: Locator;
+  private loggedUser = '';
 
   constructor(readonly page: Page) {
-    this.churchFooterLogo = page.locator('.form__footer-logo');
-    this.adminAccess = page.getByRole('heading', { name: 'ACESSO ADMINISTRAÇÃO' });
-    this.usernameInput = page.getByRole('textbox', { name: 'Nome de Usuário:' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Senha:' });
-    this.eyeIcon = page.locator('svg.login-icon');
-    this.signInButton = page.getByRole('button', { name: 'Entrar' });
-    this.logOutButton = page.getByRole('button', { name: 'Desconectar' });
+    // "Acessar Painel" só existe quando NÃO logado — serve de indicador de logout.
+    this.adminAccess = page.getByRole('button', { name: 'Acessar Painel' });
+    this.usernameInput = page.locator('#login');
+    this.passwordInput = page.locator('#password');
+    this.eyeIcon = page.locator('button.password-toggle-btn');
+    this.signInButton = page.getByRole('button', { name: 'Acessar Painel' });
   }
 
   async goToHomePage() {
-    await this.page.goto('/', {
-      waitUntil: 'commit',
-    });
+    await this.page.goto('/', { waitUntil: 'commit' });
   }
 
   async goToAdminPage() {
-    await this.page.goto('/admin', {
-      waitUntil: 'commit',
-    });
+    await this.page.goto('/admin', { waitUntil: 'commit' });
   }
 
   async login(user: { email: string; password: string }) {
     await this.goToAdminPage();
     await this.fillUsername(user.email);
     await this.fillPassword(user.password);
+    this.loggedUser = user.email.split('@')[0];
     await this.signInButton.click();
   }
 
   async logout() {
-    await this.logOutButton.click();
+    // O logout vive num dropdown no topbar (botão com o nome do usuário).
+    await this.page.locator(`button:has-text("${this.loggedUser}")`).first().click();
+    await this.page.getByRole('button', { name: 'Desconectar' }).click();
   }
 
   async fillUsername(username: string) {

@@ -11,11 +11,6 @@ test.describe('Authentication flow', () => {
     await expect(authentication.adminAccess).toBeVisible();
   });
 
-  test('Verify if is possible open login page by icon click', async ({ authentication }) => {
-    await authentication.goToHomePage();
-    await authentication.churchFooterLogo.click();
-  });
-
   test('Verify if it is possible to show and hide the login password', async ({ authentication }) => {
     const testCredentials = testsConfig.users.adminUser.password;
 
