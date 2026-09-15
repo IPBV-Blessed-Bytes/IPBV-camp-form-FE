@@ -14,3 +14,8 @@ export const purgeDeletedRegistration = async (id) => {
   const { data } = await authFetcher.delete(`/deleted-registrations/${id}`);
   return data;
 };
+
+export const purgeAllDeletedRegistrations = async () => {
+  const { data } = await authFetcher.delete('/deleted-registrations');
+  return data;
+};
