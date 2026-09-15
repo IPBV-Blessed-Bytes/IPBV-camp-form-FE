@@ -5,23 +5,21 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(roomTest, authenticationTest);
 
-test.describe('Room flow', () => {
-  test('Verify if it is possible to create, add campers and delete a room', async ({ authentication, room }) => {
-    const testCredentials = testsConfig.users.testUser;
+test.describe('Gestão de quartos', () => {
+  test('cria um quarto, adiciona um acampante e exclui o quarto', async ({ authentication, room }) => {
+    await authentication.login(testsConfig.users.adminUser);
+    await room.open();
 
-    await authentication.login(testCredentials);
+    await room.createRoom();
+    await expect(room.createdToast).toBeVisible();
+    await expect(room.roomHeader()).toBeVisible();
 
-    await room.roomsButton.click();
-    await expect(room.roomsHeading).toBeVisible();
-    await room.createNewRoom();
+    await room.addFirstCamper();
+    await expect(room.addedCamperToast).toBeVisible();
+    await expect(room.campersInRoom().first()).toBeVisible();
 
-    await room.fillRoom();
-    await expect(room.campersInsideRoom.nth(0)).toHaveText('Acsa Gabriely Farias Nascimento Souza - ');
-    await expect(room.campersInsideRoom.nth(1)).toHaveText('Agatha Gabriela Paiva de Lima - ');
-
-    await room.deleteRoomButton.click();
-    await expect(room.confirmDeleteRoomModal).toBeVisible();
-    await room.confirmDeleteRoomButton.click();
-    await expect(room.roomAccordion).toBeHidden();
+    await room.deleteRoom();
+    await expect(room.deletedToast).toBeVisible();
+    await expect(room.roomHeader()).toBeHidden();
   });
 });

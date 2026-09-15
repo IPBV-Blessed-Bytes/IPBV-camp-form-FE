@@ -5,16 +5,13 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(authenticationTest, extraMealsTest);
 
-test.describe('Extra Meals flow', () => {
-  test('Verify if it is possible to view extra meals previously created', async ({ authentication, extraMeals }) => {
-    const testCredentials = testsConfig.users.testUser;
+test.describe('Refeições extras', () => {
+  test('exibe a lista de acampantes com refeições extras', async ({ authentication, extraMeals }) => {
+    await authentication.login(testsConfig.users.adminUser);
+    await extraMeals.open();
 
-    await authentication.login(testCredentials);
-
-    await extraMeals.extraMealsButton.click();
-    await expect(extraMeals.extraMealsHeading).toBeVisible();
-    await expect(extraMeals.extraMealsTable).toBeVisible();
-    await expect(extraMeals.tableCamperColumn).toBeVisible();
-    await expect(extraMeals.tableDaysColumn).toBeVisible();
+    await expect(extraMeals.heading).toBeVisible();
+    await expect(extraMeals.camperColumn).toBeVisible();
+    await expect(extraMeals.daysColumn).toBeVisible();
   });
 });

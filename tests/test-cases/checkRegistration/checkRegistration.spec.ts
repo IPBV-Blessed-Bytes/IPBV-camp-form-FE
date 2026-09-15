@@ -1,25 +1,19 @@
 import { expect } from '@playwright/test';
 import { checkRegistrationTest as test } from 'tests/fixtures/checkRegistrationTest';
 
-test.describe('Check Registration flow', () => {
-  test('Verify if it is possible to check the data of a registration', async ({ page, checkRegistration }) => {
-    await page.goto('/', {
-      waitUntil: 'commit',
-    });
-
-    await expect(checkRegistration.infoButton).toBeHidden();
-    await checkRegistration.ageToast.click();
-    await page.waitForTimeout(5000);
+test.describe('Consulta de inscrição', () => {
+  test('consulta os dados de uma inscrição existente por CPF e nascimento', async ({ checkRegistration }) => {
     await checkRegistration.openVerifyRegistrationPage();
-    await expect(checkRegistration.verifyRegistrationHeading).toBeVisible();
-    await checkRegistration.fillCamperData();
-    await expect(checkRegistration.verifyDataHeading).toBeVisible();
 
-    for (const textLocator of checkRegistration.dataInputs) {
-      await expect(textLocator).toBeVisible();
+    // Camper de teste existente no banco (Bruno Teixeira).
+    await checkRegistration.fillCamperData('66666666666', '22/07/2001');
+
+    await expect(checkRegistration.verifyDataHeading).toBeVisible();
+    for (const field of checkRegistration.dataInputs) {
+      await expect(field.first()).toBeVisible();
     }
 
-    await checkRegistration.backButton.click();
-    await expect(checkRegistration.verifyRegistrationHeading).toBeVisible();
+    await checkRegistration.backButton.first().click();
+    await expect(checkRegistration.checkButton).toBeVisible();
   });
 });

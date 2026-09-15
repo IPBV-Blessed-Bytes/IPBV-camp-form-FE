@@ -119,8 +119,11 @@ export class FormComponent {
   }
 
   private async selectFirstProduct(title: string) {
-    const button = this.categoryCard(title).locator('button.product-button').first();
-    await button.waitFor({ state: 'visible', timeout: 15000 });
+    // Espera o card da categoria carregar (produtos são buscados de forma assíncrona).
+    const card = this.categoryCard(title);
+    await card.first().waitFor({ state: 'visible', timeout: 20000 });
+    const button = card.locator('button.product-button').first();
+    await button.waitFor({ state: 'visible', timeout: 20000 });
     await button.scrollIntoViewIfNeeded();
     await button.click({ timeout: 12000 });
     await this.page.waitForTimeout(400);

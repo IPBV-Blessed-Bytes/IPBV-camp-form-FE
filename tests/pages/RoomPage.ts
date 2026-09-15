@@ -1,50 +1,62 @@
 import { Locator, Page } from '@playwright/test';
 
 export class RoomComponent {
-  readonly roomsButton: Locator;
-  readonly roomsHeading: Locator;
+  readonly heading: Locator;
   readonly addNewRoomButton: Locator;
   readonly roomNameInput: Locator;
   readonly createRoomButton: Locator;
-  readonly roomAccordion: Locator;
-  readonly selectCamperToAddRoom: Locator;
-  readonly confirmAddRoomButton: Locator;
-  readonly campersInsideRoom: Locator;
-  readonly deleteRoomButton: Locator;
-  readonly confirmDeleteRoomModal: Locator;
+  readonly createdToast: Locator;
+  readonly addedCamperToast: Locator;
+  readonly deletedToast: Locator;
   readonly confirmDeleteRoomButton: Locator;
+  readonly roomName: string;
 
   constructor(readonly page: Page) {
-    this.roomsButton = page.getByText('Quartos');
-    this.roomsHeading = page.getByRole('heading', { name: 'Gerenciamento de Quartos' });
+    this.heading = page.locator('.admin-subpage__title', { hasText: 'Quartos' });
     this.addNewRoomButton = page.getByRole('button', { name: 'Adicionar Novo Quarto' });
-    this.roomNameInput = page.getByRole('textbox', { name: 'Nome do Quarto:' });
+    this.roomNameInput = page.getByPlaceholder('Nome do novo quarto');
     this.createRoomButton = page.getByRole('button', { name: 'Criar Quarto' });
-    this.roomAccordion = page.getByRole('button', { name: 'nome do quarto' });
-    this.selectCamperToAddRoom = page.getByRole('combobox');
-    this.confirmAddRoomButton = page.getByRole('button', { name: 'Adicionar ao Quarto' });
-    this.campersInsideRoom = page
-      .locator('.accordion-item')
-      .filter({
-        has: page.getByRole('button', { name: 'nome do quarto' }),
-      })
-      .locator('ol li');
-    this.deleteRoomButton = page.getByRole('button', { name: 'Excluir Quarto' });
-    this.confirmDeleteRoomModal = page.locator('div').filter({ hasText: 'Confirmar Exclusão' }).nth(3);
-    this.confirmDeleteRoomButton = page.getByRole('button', { name: 'Excluir', exact: true });
+    this.createdToast = page.getByText('Quarto criado com sucesso');
+    this.addedCamperToast = page.getByText('Acampante adicionado ao quarto');
+    this.deletedToast = page.getByText('Quarto excluido com sucesso');
+    this.confirmDeleteRoomButton = page.locator('.modal.show').getByRole('button', { name: 'Excluir', exact: true });
+    // Nome único evita colisão com quartos já existentes / execuções anteriores.
+    this.roomName = `Quarto Teste ${Date.now()}`;
   }
 
-  async createNewRoom() {
+  // Item de accordion do quarto criado neste teste.
+  roomItem = (): Locator =>
+    this.page.locator('.accordion-item').filter({ hasText: this.roomName });
+
+  roomHeader = (): Locator => this.roomItem().getByRole('button', { name: this.roomName });
+
+  async open() {
+    await this.page.goto('/admin/quartos', { waitUntil: 'domcontentloaded' });
+    await this.heading.waitFor({ state: 'visible', timeout: 15000 });
+  }
+
+  async createRoom() {
     await this.addNewRoomButton.click();
-    await this.roomNameInput.fill('nome do quarto');
+    await this.roomNameInput.waitFor({ state: 'visible' });
+    await this.roomNameInput.fill(this.roomName);
     await this.createRoomButton.click();
   }
 
-  async fillRoom() {
-    await this.roomAccordion.click();
-    await this.selectCamperToAddRoom.selectOption('492');
-    await this.confirmAddRoomButton.click();
-    await this.selectCamperToAddRoom.selectOption('416');
-    await this.confirmAddRoomButton.click();
+  async addFirstCamper() {
+    await this.roomHeader().click();
+    const item = this.roomItem();
+    const select = item.locator('select');
+    await select.waitFor({ state: 'visible' });
+    // Seleciona o primeiro acampante disponível (índice 1; 0 é o placeholder).
+    await select.selectOption({ index: 1 });
+    await item.getByRole('button', { name: 'Adicionar ao Quarto' }).click();
+  }
+
+  campersInRoom = (): Locator => this.roomItem().locator('ul.list-unstyled li');
+
+  async deleteRoom() {
+    await this.roomItem().getByRole('button', { name: 'Excluir' }).click();
+    await this.confirmDeleteRoomButton.waitFor({ state: 'visible' });
+    await this.confirmDeleteRoomButton.click();
   }
 }

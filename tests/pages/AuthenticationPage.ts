@@ -31,6 +31,8 @@ export class AuthenticationComponent {
     await this.fillPassword(user.password);
     this.loggedUser = user.email.split('@')[0];
     await this.signInButton.click();
+    // Espera a autenticação concluir: o botão de acesso some quando logado.
+    await this.adminAccess.waitFor({ state: 'hidden', timeout: 15000 });
   }
 
   async logout() {

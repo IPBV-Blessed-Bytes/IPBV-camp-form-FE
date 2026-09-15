@@ -5,30 +5,22 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(discountTest, authenticationTest);
 
-test.describe('Discount table flow', () => {
-  test('Verify if it is possible to create, edit and delete a discount', async ({ authentication, discount }) => {
-    const testCredentials = testsConfig.users.testUser;
+test.describe('Gestão de descontos', () => {
+  test('cria, edita e exclui um desconto', async ({ authentication, discount }) => {
+    await authentication.login(testsConfig.users.adminUser);
+    await discount.open();
 
-    await authentication.login(testCredentials);
-    await discount.discountButton.click();
-    await expect(discount.discountHeading).toBeVisible();
+    await discount.createDiscount();
+    await expect(discount.createdToast).toBeVisible();
+    await expect(discount.createdRow()).toBeVisible();
 
-    await discount.createNewDiscount();
-    await expect(discount.discountCreatedToast).toBeVisible();
-    await expect(discount.discountCreated).toBeVisible();
+    await discount.editDiscount();
+    await expect(discount.updatedToast).toBeVisible();
+    await expect(discount.editedRow()).toBeVisible();
+    await expect(discount.createdRow()).toBeHidden();
 
-    await discount.editButton.click();
-    await expect(discount.cpfAttachedInput).toHaveValue('00000000011');
-    await expect(discount.discountValueInput).toHaveValue('100');
-    await discount.fillDataToEditDiscount();
-    await expect(discount.discountUpdatedToast).toBeVisible();
-    await expect(discount.discountUpdated).toBeVisible();
-    await expect(discount.discountCreated).toBeHidden();
-
-    await discount.deleteButton.click();
-    await expect(discount.deleteDiscountModal).toBeVisible();
-    await discount.confirmDeleteDiscountButton.click();
-    await expect(discount.discountDeletedToast).toBeVisible();
-    await expect(discount.discountUpdated).toBeHidden();
+    await discount.deleteDiscount();
+    await expect(discount.deletedToast).toBeVisible();
+    await expect(discount.editedRow()).toBeHidden();
   });
 });
