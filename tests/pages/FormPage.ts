@@ -2,17 +2,17 @@ import { Locator, Page, expect } from '@playwright/test';
 
 export type PersonData = {
   name: string;
-  cpf: string; // apenas dígitos
-  birthday: string; // dd/mm/aaaa
+  cpf: string;
+  birthday: string;
   rg?: string;
   gender: 'Criança (até 10 anos)' | 'Adulto Masculino' | 'Adulto Feminimo';
   guardianName?: string;
-  guardianCpf?: string; // dígitos
-  guardianPhone?: string; // dígitos
+  guardianCpf?: string;
+  guardianPhone?: string;
 };
 
 export type ContactData = {
-  phone: string; // dígitos
+  phone: string;
   email: string;
 };
 
@@ -23,7 +23,6 @@ export class FormComponent {
     this.advanceButton = page.getByRole('button', { name: 'Avançar' });
   }
 
-  // Fecha qualquer modal aberto (LGPD, confirmação de idade, etc.).
   async clearModal() {
     for (let i = 0; i < 3; i++) {
       const modal = this.page.locator('.modal.show');
@@ -39,10 +38,9 @@ export class FormComponent {
   async open() {
     await this.page.goto('/', { waitUntil: 'networkidle' });
     await this.page.waitForTimeout(800);
-    await this.clearModal(); // modal da LGPD
+    await this.clearModal();
   }
 
-  // Remove um backdrop de modal que às vezes fica preso e intercepta cliques.
   private async removeStuckBackdrop() {
     await this.page
       .evaluate(() => {
@@ -72,15 +70,13 @@ export class FormComponent {
     await this.page.locator('#cpf').click();
     await this.page.locator('#cpf').pressSequentially(person.cpf, { delay: 12 });
     await this.page.locator('#rg').fill(person.rg ?? '1234567');
-    // Datepicker mascarado: fill + Enter confirma a data e abre o modal de idade.
     await this.page.locator('#birthday').fill(person.birthday);
     await this.page.locator('#birthday').press('Enter');
     await this.page.waitForTimeout(600);
-    await this.clearModal(); // Confirmação de Idade
+    await this.clearModal();
     await this.page.selectOption('#rgShipper', { index: 1 });
     await this.page.selectOption('#rgShipperState', { index: 1 });
     await this.page.selectOption('#gender', { label: person.gender });
-    // Menor de idade: campos de responsável legal (aparecem após escolher Criança).
     if (person.gender === 'Criança (até 10 anos)') {
       const gName = this.page.locator('#legalGuardianName');
       await gName.waitFor({ state: 'visible', timeout: 8000 });
@@ -92,7 +88,6 @@ export class FormComponent {
       const gPhone = this.page.locator('#legalGuardianCellPhone');
       await gPhone.click();
       await gPhone.pressSequentially(person.guardianPhone ?? '81988887777', { delay: 15 });
-      // valida que o CPF do responsável de fato entrou
       await this.page.waitForTimeout(200);
     }
   }
@@ -104,7 +99,7 @@ export class FormComponent {
     await this.page.locator('#cellPhone').pressSequentially(contact.phone, { delay: 12 });
     await this.page.locator('input[type="email"]').first().fill(contact.email);
     await this.page.locator('#church').selectOption({ index: 1 });
-    await this.page.locator('select:not([id])').first().selectOption({ label: 'Não' }); // É WhatsApp?
+    await this.page.locator('select:not([id])').first().selectOption({ label: 'Não' });
     await this.page.locator('#car').selectOption({ label: 'Não' });
     await this.page.waitForTimeout(300);
     await this.page.locator('#needRide').selectOption({ label: 'Não' });
@@ -112,14 +107,11 @@ export class FormComponent {
     await this.page.locator('#hasAggregate').selectOption({ label: 'Não' });
   }
 
-  // Card da categoria (Hospedagem/Transporte), identificado pelo TÍTULO do card
-  // (evita casar o "Resumo do Pacote", que também cita "Transporte").
   private categoryCard(title: string): Locator {
     return this.page.locator('.card').filter({ has: this.page.locator('.card-title', { hasText: title }) });
   }
 
   private async selectFirstProduct(title: string) {
-    // Espera o card da categoria carregar (produtos são buscados de forma assíncrona).
     const card = this.categoryCard(title);
     await card.first().waitFor({ state: 'visible', timeout: 20000 });
     const button = card.locator('button.product-button').first();
@@ -134,7 +126,6 @@ export class FormComponent {
     await this.selectFirstProduct('Transporte');
   }
 
-  // Na Revisão há checkboxes obrigatórios (confirmação de dados + autorização LGPD).
   async confirmReview() {
     const boxes = this.page.locator('input[type="checkbox"]');
     const total = await boxes.count();
@@ -144,17 +135,16 @@ export class FormComponent {
     await this.page.waitForTimeout(200);
   }
 
-  // Passa por Dados -> Contato -> Pacote -> Revisão -> Carrinho.
   async fillWholeFlow(person: PersonData, contact: ContactData) {
-    await this.advance(); // Início -> Dados
+    await this.advance();
     await this.fillPersonalData(person);
-    await this.advance(); // Dados -> Contato
+    await this.advance();
     await this.fillContact(contact);
-    await this.advance(); // Contato -> Pacote
+    await this.advance();
     await this.selectPackages();
-    await this.advance(); // Pacote -> Revisão
+    await this.advance();
     await this.confirmReview();
-    await this.advance(); // Revisão -> Carrinho
+    await this.advance();
   }
 
   async expectStepTitle(title: RegExp | string) {

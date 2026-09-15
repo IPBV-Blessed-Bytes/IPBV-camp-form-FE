@@ -33,12 +33,10 @@ test.describe('Gestão de usuários', () => {
     await expect(userCreation.createdToast).toBeVisible();
     await expect(userCreation.userRow(email)).toBeVisible();
 
-    // Tenta criar de novo com o mesmo e-mail.
     await userCreation.createUser(email, 'admin');
     await expect(userCreation.emailInUseToast).toBeVisible();
     await userCreation.cancelButton.click();
 
-    // Limpa o usuário criado.
     await userCreation.deleteUser(email);
     await expect(userCreation.deletedToast).toBeVisible();
     await expect(userCreation.userRow(email)).toBeHidden();

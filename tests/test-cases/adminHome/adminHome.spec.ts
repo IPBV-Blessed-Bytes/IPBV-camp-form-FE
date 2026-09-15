@@ -5,7 +5,6 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(adminHomeTest, authenticationTest);
 
-// Cada card do painel leva a uma subpágina com um heading conhecido.
 const SECTIONS: { card: string; heading: string }[] = [
   { card: 'Inscrições', heading: 'Inscrições' },
   { card: 'Boletos', heading: 'Boletos' },

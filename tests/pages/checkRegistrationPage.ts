@@ -14,7 +14,6 @@ export class CheckRegistrationComponent {
     this.checkButton = page.getByRole('button', { name: 'Consultar' });
     this.verifyDataHeading = page.getByText('Consulta de Dados');
     this.backButton = page.getByRole('button', { name: 'Voltar' });
-    // Campos exibidos na consulta (alimentação foi removida — sempre inclusa).
     this.dataInputs = [
       page.getByText('Nome:'),
       page.getByText('Hospedagem:'),

@@ -22,7 +22,6 @@ test.describe('Avoid Bypass', () => {
     const checkerUser = testsConfig.users.checkerUser;
 
     await authentication.login(checkerUser);
-    // login concluído (some o botão da tela de login), independente do papel
     await expect(page.getByRole('button', { name: 'Acessar Painel' })).toBeHidden();
     await avoidBypass.goToAllowedPage();
     await page.waitForLoadState('networkidle');

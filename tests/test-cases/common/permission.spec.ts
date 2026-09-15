@@ -5,7 +5,6 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(commonTest, authenticationTest);
 
-// Cards que cada papel DEVE e NÃO DEVE ver no painel.
 const ALL_CARDS = [
   'Inscrições',
   'Caronas',
@@ -45,7 +44,6 @@ test.describe('Permissões por papel', () => {
     await assertCards(permission, ROLE_CARDS.admin);
     await permission.openCampers();
     await page.waitForLoadState('networkidle');
-    // Na tabela de inscritos, o admin pode criar uma nova inscrição.
     await expect(permission.newCamperButton).toBeVisible();
   });
 

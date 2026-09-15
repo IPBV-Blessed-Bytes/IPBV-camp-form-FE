@@ -33,7 +33,6 @@ export class UserCreationComponent {
     this.emailInUseToast = page.getByText('Este e-mail já está cadastrado');
   }
 
-  // Linha identificada pelo e-mail (identidade única do usuário).
   userRow = (email: string): Locator =>
     this.page.locator('tbody tr').filter({ has: this.page.locator('td', { hasText: email }) });
 
@@ -50,7 +49,6 @@ export class UserCreationComponent {
     await this.passwordInput.fill('senha@test');
     await this.roleSelect.selectOption(role);
     await this.submitCreateButton.click();
-    // Em caso de sucesso o modal fecha; se o e-mail já existe, permanece aberto.
     await Promise.race([
       this.emailInput.waitFor({ state: 'hidden', timeout: 15000 }),
       this.emailInUseToast.waitFor({ state: 'visible', timeout: 15000 }),

@@ -20,11 +20,9 @@ export class RoomComponent {
     this.addedCamperToast = page.getByText('Acampante adicionado ao quarto');
     this.deletedToast = page.getByText('Quarto excluido com sucesso');
     this.confirmDeleteRoomButton = page.locator('.modal.show').getByRole('button', { name: 'Excluir', exact: true });
-    // Nome único evita colisão com quartos já existentes / execuções anteriores.
     this.roomName = `Quarto Teste ${Date.now()}`;
   }
 
-  // Item de accordion do quarto criado neste teste.
   roomItem = (): Locator =>
     this.page.locator('.accordion-item').filter({ hasText: this.roomName });
 
@@ -47,7 +45,6 @@ export class RoomComponent {
     const item = this.roomItem();
     const select = item.locator('select');
     await select.waitFor({ state: 'visible' });
-    // Seleciona o primeiro acampante disponível (índice 1; 0 é o placeholder).
     await select.selectOption({ index: 1 });
     await item.getByRole('button', { name: 'Adicionar ao Quarto' }).click();
   }

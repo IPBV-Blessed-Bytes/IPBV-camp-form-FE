@@ -15,11 +15,9 @@ test.describe('Check-in de acampante', () => {
     await expect(checkin.birthdayLabel).toBeVisible();
     await expect(checkin.accommodationLabel).toBeVisible();
 
-    // Marca o check-in.
     await checkin.setCheckin('true');
     await expect(checkin.checkedInToast).toBeVisible();
 
-    // Desfaz o check-in.
     await checkin.setCheckin('false');
     await expect(checkin.checkedOutToast).toBeVisible();
   });

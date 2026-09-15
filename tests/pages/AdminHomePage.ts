@@ -7,7 +7,6 @@ export class AdminHomeComponent {
     this.backButton = page.getByRole('button', { name: 'Voltar' });
   }
 
-  // Card de navegação do painel (SessionCard = div clicável com o título).
   card(title: string): Locator {
     return this.page.locator('.session-card').filter({ hasText: title });
   }

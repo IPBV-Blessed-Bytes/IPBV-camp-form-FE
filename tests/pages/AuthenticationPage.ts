@@ -9,7 +9,6 @@ export class AuthenticationComponent {
   private loggedUser = '';
 
   constructor(readonly page: Page) {
-    // "Acessar Painel" só existe quando NÃO logado — serve de indicador de logout.
     this.adminAccess = page.getByRole('button', { name: 'Acessar Painel' });
     this.usernameInput = page.locator('#login');
     this.passwordInput = page.locator('#password');
@@ -31,12 +30,10 @@ export class AuthenticationComponent {
     await this.fillPassword(user.password);
     this.loggedUser = user.email.split('@')[0];
     await this.signInButton.click();
-    // Espera a autenticação concluir: o botão de acesso some quando logado.
     await this.adminAccess.waitFor({ state: 'hidden', timeout: 15000 });
   }
 
   async logout() {
-    // O logout vive num dropdown no topbar (botão com o nome do usuário).
     await this.page.locator(`button:has-text("${this.loggedUser}")`).first().click();
     await this.page.getByRole('button', { name: 'Desconectar' }).click();
   }

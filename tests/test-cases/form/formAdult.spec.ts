@@ -15,7 +15,6 @@ test.describe('Form flow — adulto', () => {
       { phone: '81999998888', email: 'adulto.e2e@teste.com' },
     );
 
-    // No carrinho (BeforePayment): há o botão de adicionar acampante e o CTA de login (deslogado).
     await expect(page.getByRole('button', { name: 'Adicionar Acampante' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Fazer login para continuar' })).toBeVisible();
   });

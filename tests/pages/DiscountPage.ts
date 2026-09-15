@@ -35,7 +35,6 @@ export class DiscountComponent {
     await this.heading.waitFor({ state: 'visible', timeout: 15000 });
   }
 
-  // Linha da tabela cujo CPF (exibido formatado) casa.
   row(cpfFmt: string): Locator {
     return this.page.locator('tbody tr').filter({ has: this.page.locator('td', { hasText: cpfFmt }) });
   }

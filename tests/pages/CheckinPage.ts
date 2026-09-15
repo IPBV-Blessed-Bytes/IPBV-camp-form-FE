@@ -1,6 +1,5 @@
 import { Locator, Page } from '@playwright/test';
 
-// Acampante semeado no banco de testes (mesmo usado na consulta de inscrição).
 const CAMPER_CPF = '66666666666';
 
 export class CheckinComponent {
@@ -38,7 +37,6 @@ export class CheckinComponent {
   async searchCamper() {
     await this.cpfInput.click();
     await this.cpfInput.pressSequentially(CAMPER_CPF, { delay: 12 });
-    // A busca é automática e exibe sugestões; clicar a primeira seleciona o acampante.
     await this.suggestionItem.first().waitFor({ state: 'visible', timeout: 15000 });
     await this.suggestionItem.first().click();
     await this.camperName.waitFor({ state: 'visible', timeout: 15000 });
