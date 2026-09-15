@@ -1,0 +1,39 @@
+name: CI
+
+# Checagens estáticas em cada push e PR pra main: garantem que o código
+# compila e reportam o lint. Não sobem a aplicação nem fazem requests — é
+# só verificação de build, então não tocam nenhum ambiente (teste ou prod).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Lint roda como aviso (não-bloqueante) porque o código tem débito de
+      # lint pré-existente (2 erros + 18 warnings com --max-warnings 0).
+      # Quando o débito for zerado, remover o continue-on-error pra torná-lo
+      # obrigatório.
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true
+
+      # Build é o gate obrigatório: se não compila, o CI falha.
+      - name: Build
+        run: npm run build
