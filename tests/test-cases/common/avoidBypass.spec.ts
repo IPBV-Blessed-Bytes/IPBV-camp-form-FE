@@ -2,7 +2,6 @@ import { expect, mergeTests } from '@playwright/test';
 import { commonTest } from 'tests/fixtures/commonTest';
 import { authenticationTest } from 'tests/fixtures/authenticationTest';
 import { testsConfig } from 'tests/tests.config';
-import { BASE_URL } from '@/config';
 
 const test = mergeTests(commonTest, authenticationTest);
 
@@ -23,8 +22,10 @@ test.describe('Avoid Bypass', () => {
     const checkerUser = testsConfig.users.checkerUser;
 
     await authentication.login(checkerUser);
-    await page.waitForResponse(`${BASE_URL}/auth/login`);
+    // login concluído (some o botão da tela de login), independente do papel
+    await expect(page.getByRole('button', { name: 'Acessar Painel' })).toBeHidden();
     await avoidBypass.goToAllowedPage();
+    await page.waitForLoadState('networkidle');
     await expect(avoidBypass.checkinPageHeading).toBeVisible();
     await avoidBypass.goToPageNotAllowed();
     await expect(avoidBypass.dontHavePermission).toBeVisible();

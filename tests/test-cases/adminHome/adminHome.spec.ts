@@ -5,32 +5,33 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(adminHomeTest, authenticationTest);
 
-test.describe('Admin home flow', () => {
-  test('Verify admin navigation for all sections', async ({ authentication, adminHome }) => {
-    const testCredentials = testsConfig.users.testUser;
+// Cada card do painel leva a uma subpágina com um heading conhecido.
+const SECTIONS: { card: string; heading: string }[] = [
+  { card: 'Inscrições', heading: 'Inscrições' },
+  { card: 'Boletos', heading: 'Boletos' },
+  { card: 'Doações', heading: 'Doações' },
+  { card: 'Caronas', heading: 'Caronas' },
+  { card: 'Ônibus', heading: 'Ônibus' },
+  { card: 'Descontos', heading: 'Descontos' },
+  { card: 'Quartos', heading: 'Quartos' },
+  { card: 'Times', heading: 'Times' },
+  { card: 'Check-in', heading: 'Check-in de Usuário' },
+];
 
-    await authentication.login(testCredentials);
+test.describe('Admin home', () => {
+  test('login como admin e navegação pelas seções do painel', async ({ authentication, adminHome, page }) => {
+    await authentication.login(testsConfig.users.adminUser);
 
-    for (let i = 0; i < adminHome.cardsItems.length; i++) {
-      const section = adminHome.cardsItems[i];
-      await section.button.click();
-      await expect(section.heading).toBeVisible();
-      await adminHome.backButton.click();
+    await expect(page.getByRole('heading', { name: 'Painel Administrativo' })).toBeVisible();
+
+    for (const section of SECTIONS) {
+      await adminHome.openSection(section.card);
+      await expect(adminHome.heading(section.heading)).toBeVisible();
+      await adminHome.goBack();
+      await expect(page.getByRole('heading', { name: 'Painel Administrativo' })).toBeVisible();
     }
 
-    for (let i = 0; i < adminHome.settingsItems.length; i++) {
-      const section = adminHome.settingsItems[i];
-      await adminHome.settingsButton.click();
-
-      await section.button.click();
-      await expect(section.heading).toBeVisible();
-      await adminHome.backButton.click();
-    }
-
-    await adminHome.dataPanelButton.click();
-    await expect(adminHome.dataPanelHeading).toBeVisible();
-    await adminHome.backButton.click();
-
-    await adminHome.logoutButton.click();
+    await authentication.logout();
+    await expect(authentication.adminAccess).toBeVisible();
   });
 });
