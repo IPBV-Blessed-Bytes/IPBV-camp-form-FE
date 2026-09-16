@@ -21,7 +21,6 @@ import FilterChips from '@/components/Admin/FilterChips';
 const CATEGORIES = [
   { value: 'HOSPEDAGEM', label: 'Hospedagem' },
   { value: 'TRANSPORTE', label: 'Transporte' },
-  { value: 'ALIMENTACAO', label: 'Alimentação' },
 ];
 
 const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
@@ -172,8 +171,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const patchBracket = (productId, patch) =>
     setBracketDrafts((prev) => ({ ...prev, [productId]: { ...(prev[productId] || {}), ...patch } }));
 
-  const handleAddBracket = async (product) => {
-    const draft = bracketDrafts[product.id] || {};
+  const handleAddBracket = async ({ id: scopeId, name: scopeName, key: draftKey }) => {
+    const draft = bracketDrafts[draftKey] || {};
     const minAge = Number(draft.minAge);
     const maxAge = Number(draft.maxAge);
     const discountType = draft.discountType === 'VALUE' ? 'VALUE' : 'PERCENT';
@@ -201,22 +200,25 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     }
 
     const overlaps = ageRules.some(
-      (rule) => rule.productId === product.id && minAge <= rule.maxAge && rule.minAge <= maxAge,
+      (rule) =>
+        (scopeId == null ? rule.productId == null : rule.productId === scopeId) &&
+        minAge <= rule.maxAge &&
+        rule.minAge <= maxAge,
     );
     if (overlaps) {
-      toast.error('Esta faixa de idade se sobrepõe a outra já cadastrada para o produto');
+      toast.error('Esta faixa de idade se sobrepõe a outra já cadastrada');
       return;
     }
 
     setLoading(true);
     try {
-      await createAgePriceRule({ productId: product.id, minAge, maxAge, discountType, discountAmount });
+      await createAgePriceRule({ productId: scopeId, minAge, maxAge, discountType, discountAmount });
       toast.success('Faixa de desconto adicionada');
       const label = discountType === 'VALUE' ? `R$ ${discountAmount}` : `${discountAmount}%`;
-      registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${label}) em ${product.name}`, loggedUsername);
+      registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${label}) em ${scopeName}`, loggedUsername);
       setBracketDrafts((prev) => ({
         ...prev,
-        [product.id]: { minAge: '', maxAge: '', discountType, discountAmount: '' },
+        [draftKey]: { minAge: '', maxAge: '', discountType, discountAmount: '' },
       }));
       fetchAll();
     } catch (error) {
@@ -241,6 +243,73 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     }
   };
 
+  const renderBandsBlock = (rules, scope) => {
+    const draft = bracketDrafts[scope.key] || {};
+    const sorted = [...rules].sort((a, b) => a.minAge - b.minAge);
+    return (
+      <>
+        {sorted.length === 0 ? (
+          <div className="age-rules__empty">Sem faixas de desconto.</div>
+        ) : (
+          sorted.map((rule) => (
+            <div key={rule.id} className="age-rules__row">
+              <span className="age-rules__label">
+                {rule.minAge}–{rule.maxAge} anos →{' '}
+                <b>
+                  {rule.discountType === 'VALUE'
+                    ? `R$ ${rule.discountAmount} off`
+                    : `${rule.discountAmount}% off`}
+                </b>
+                {rule.discountType === 'PERCENT' && rule.discountAmount >= 100 ? ' (grátis)' : ''}
+              </span>
+              <ActionButton
+                action="delete"
+                iconSize={17}
+                label="Remover faixa"
+                onClick={() => handleRemoveBracket(rule, scope.name)}
+              />
+            </div>
+          ))
+        )}
+
+        <div className="age-rules__add">
+          <Form.Control
+            type="number"
+            min="0"
+            placeholder="de"
+            value={draft.minAge ?? ''}
+            onChange={(e) => patchBracket(scope.key, { minAge: e.target.value })}
+          />
+          <Form.Control
+            type="number"
+            min="0"
+            placeholder="até"
+            value={draft.maxAge ?? ''}
+            onChange={(e) => patchBracket(scope.key, { maxAge: e.target.value })}
+          />
+          <Form.Select
+            aria-label="Tipo de desconto"
+            value={draft.discountType ?? 'PERCENT'}
+            onChange={(e) => patchBracket(scope.key, { discountType: e.target.value })}
+          >
+            <option value="PERCENT">%</option>
+            <option value="VALUE">R$</option>
+          </Form.Select>
+          <Form.Control
+            type="number"
+            min="0"
+            placeholder={(draft.discountType ?? 'PERCENT') === 'VALUE' ? 'R$ off' : '% off'}
+            value={draft.discountAmount ?? ''}
+            onChange={(e) => patchBracket(scope.key, { discountAmount: e.target.value })}
+          />
+          <Button variant="outline-teal-blue" size="sm" onClick={() => handleAddBracket(scope)}>
+            Adicionar
+          </Button>
+        </div>
+      </>
+    );
+  };
+
   const setLotField = (lotId, field, value) => {
     setLotPrices((prev) => ({
       ...prev,
@@ -253,7 +322,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
   }, {});
-  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info', ALIMENTACAO: 'free' };
+  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info' };
   const statItems = [
     { label: 'Produtos', value: products.length },
     { label: 'Ativos', value: activeCount, tone: 'free' },
@@ -360,21 +429,35 @@ const AdminProductsManagement = ({ loggedUsername }) => {
           </Table>
         </div>
 
-        <SectionHeader title="Faixas de idade (desconto)" count={ageRules.length} />
+        <SectionHeader title="Desconto de alimentação por idade (global)" />
         <p className="age-rules__hint">
-          As faixas abaixo são aplicadas automaticamente no formulário conforme a idade do inscrito. As de
-          hospedagem/transporte incidem sobre o produto; as de <b>Alimentação</b> são a <b>faixa global</b>{' '}
-          que incide sobre a parte-alimentação de qualquer hospedagem.
+          Aplica-se automaticamente à <b>parte-alimentação</b> de qualquer hospedagem, conforme a idade do
+          inscrito. Configure aqui uma única vez (ex.: 0–8 anos grátis, 9–14 anos 50%).
         </p>
-
         <div className="age-rules">
-          {products.map((product) => {
-            const productRules = ageRules
-              .filter((rule) => rule.productId === product.id)
-              .sort((a, b) => a.minAge - b.minAge);
-            const draft = bracketDrafts[product.id] || {};
+          <div className="age-rules__product">
+            <div className="age-rules__product-head">
+              <span className="age-rules__product-name">Alimentação</span>
+              <Badge bg="light" text="dark" className="age-rules__product-cat">
+                Global
+              </Badge>
+            </div>
+            {renderBandsBlock(ageRules.filter((rule) => rule.productId == null), {
+              id: null,
+              name: 'Alimentação',
+              key: 'FOOD',
+            })}
+          </div>
+        </div>
 
-            return (
+        <SectionHeader title="Desconto por idade — hospedagem/transporte" />
+        <p className="age-rules__hint">
+          Incidem sobre o preço do próprio produto (a parte-alimentação da hospedagem usa a faixa global acima).
+        </p>
+        <div className="age-rules">
+          {products
+            .filter((product) => product.category === 'HOSPEDAGEM' || product.category === 'TRANSPORTE')
+            .map((product) => (
               <div key={product.id} className="age-rules__product">
                 <div className="age-rules__product-head">
                   <span className="age-rules__product-name">{product.name}</span>
@@ -382,68 +465,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     {categoryLabel(product.category)}
                   </Badge>
                 </div>
-
-                {productRules.length === 0 ? (
-                  <div className="age-rules__empty">Sem faixas de desconto.</div>
-                ) : (
-                  productRules.map((rule) => (
-                    <div key={rule.id} className="age-rules__row">
-                      <span className="age-rules__label">
-                        {rule.minAge}–{rule.maxAge} anos →{' '}
-                        <b>
-                          {rule.discountType === 'VALUE'
-                            ? `R$ ${rule.discountAmount} off`
-                            : `${rule.discountAmount}% off`}
-                        </b>
-                        {rule.discountType === 'PERCENT' && rule.discountAmount >= 100 ? ' (grátis)' : ''}
-                      </span>
-                      <ActionButton
-                        action="delete"
-                        iconSize={17}
-                        label="Remover faixa"
-                        onClick={() => handleRemoveBracket(rule, product.name)}
-                      />
-                    </div>
-                  ))
-                )}
-
-                <div className="age-rules__add">
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    placeholder="de"
-                    value={draft.minAge ?? ''}
-                    onChange={(e) => patchBracket(product.id, { minAge: e.target.value })}
-                  />
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    placeholder="até"
-                    value={draft.maxAge ?? ''}
-                    onChange={(e) => patchBracket(product.id, { maxAge: e.target.value })}
-                  />
-                  <Form.Select
-                    aria-label="Tipo de desconto"
-                    value={draft.discountType ?? 'PERCENT'}
-                    onChange={(e) => patchBracket(product.id, { discountType: e.target.value })}
-                  >
-                    <option value="PERCENT">%</option>
-                    <option value="VALUE">R$</option>
-                  </Form.Select>
-                  <Form.Control
-                    type="number"
-                    min="0"
-                    placeholder={(draft.discountType ?? 'PERCENT') === 'VALUE' ? 'R$ off' : '% off'}
-                    value={draft.discountAmount ?? ''}
-                    onChange={(e) => patchBracket(product.id, { discountAmount: e.target.value })}
-                  />
-                  <Button variant="outline-teal-blue" size="sm" onClick={() => handleAddBracket(product)}>
-                    Adicionar
-                  </Button>
-                </div>
+                {renderBandsBlock(ageRules.filter((rule) => rule.productId === product.id), {
+                  id: product.id,
+                  name: product.name,
+                  key: product.id,
+                })}
               </div>
-            );
-          })}
+            ))}
         </div>
 
         <CustomModal

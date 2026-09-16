@@ -24,7 +24,7 @@ const ruleLabel = (rule) => {
 const getDiscountedProducts = (ageRaw) => {
   const age = Number(ageRaw);
 
-  const globalFoodRules = ageRules.filter((r) => r.productCategory === 'ALIMENTACAO');
+  const globalFoodRules = ageRules.filter((r) => r.productId == null);
 
   return products.map((product) => {
     const ownRules = ageRules.filter((r) => r.productId === product.productId);
