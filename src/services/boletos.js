@@ -29,3 +29,8 @@ export const reissueBoleto = async (id, amount, dueDate) => {
   const { data } = await authFetcher.post(`/boleto-installments/${id}/reissue`, { amount: String(amount), dueDate });
   return data;
 };
+
+export const deleteBoletosByOrder = async (orderNumber) => {
+  const { data } = await authFetcher.delete(`/boleto-installments/order/${orderNumber}`);
+  return data;
+};

@@ -1,3 +1,5 @@
+@use '../../../styles/Variables.scss' as *;
+
 .products-toolbar {
   align-items: center;
   display: flex;
@@ -169,9 +171,13 @@
 
       &__fields {
         display: grid;
-        grid-template-columns: 1fr 84px;
+        grid-template-columns: 1fr 120px;
         gap: 8px;
         align-items: end;
+
+        @media (max-width: $xl) {
+          grid-template-columns: auto;
+        }
       }
     }
   }

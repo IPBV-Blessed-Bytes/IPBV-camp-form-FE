@@ -34,6 +34,7 @@ const CamperFormModal = ({
     <CustomModal
       show={show}
       size="xl"
+      dialogClassName="camper-form-modal"
       onHide={onHide}
       variant="confirm"
       icon={icon}

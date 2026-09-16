@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Badge, Button, Form, InputGroup } from 'react-bootstrap';
+import { Table, Badge, Button, Form, InputGroup, Accordion } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
-import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto } from '@/services/boletos';
+import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto, deleteBoletosByOrder } from '@/services/boletos';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import CustomModal from '@/components/Global/CustomModal';
 import './style.scss';
 
@@ -85,6 +86,7 @@ const AdminBoletos = ({ loggedUsername }) => {
   const [reissueTarget, setReissueTarget] = useState(null);
   const [reissueAmount, setReissueAmount] = useState('');
   const [reissueDate, setReissueDate] = useState(null);
+  const [deleteOrderTarget, setDeleteOrderTarget] = useState(null);
   const [saving, setSaving] = useState(false);
 
   scrollUp();
@@ -184,6 +186,27 @@ const AdminBoletos = ({ loggedUsername }) => {
     }
   };
 
+  const handleDeleteOrder = async () => {
+    if (!deleteOrderTarget) return;
+    setLoading(true);
+    setSaving(true);
+    try {
+      await deleteBoletosByOrder(deleteOrderTarget.orderNumber);
+      registerLog(
+        `Excluiu todos os boletos do pedido ${deleteOrderTarget.orderNumber} (pagador ${deleteOrderTarget.payerName})`,
+        loggedUsername,
+      );
+      toast.success('Boletos do pedido excluídos.');
+      setDeleteOrderTarget(null);
+      reload();
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível excluir os boletos do pedido.');
+    } finally {
+      setSaving(false);
+      setLoading(false);
+    }
+  };
+
   const statItems = useMemo(() => {
     const paid = boletos.filter((boleto) => boleto.status === 'PAID').length;
     const overdue = boletos.filter((boleto) => boleto.status === 'OVERDUE').length;
@@ -224,6 +247,34 @@ const AdminBoletos = ({ loggedUsername }) => {
         group.maxDays = Math.max(group.maxDays, daysOverdue(boleto.dueDate));
       });
     return Array.from(map.values()).sort((a, b) => b.maxDays - a.maxDays);
+  }, [boletos]);
+
+  const groupedBoletos = useMemo(() => {
+    const map = new Map();
+    boletos.forEach((boleto) => {
+      const key = boleto.orderNumber || boleto.cpf;
+      if (!map.has(key)) {
+        map.set(key, {
+          key,
+          orderNumber: boleto.orderNumber,
+          payerName: boleto.payerName,
+          cpf: boleto.cpf,
+          cellPhone: boleto.cellPhone,
+          email: boleto.email || boleto.payerEmail,
+          whatsApp: boleto.whatsApp,
+          installments: [],
+          totalAmount: 0,
+          paidCount: 0,
+          hasOverdue: false,
+        });
+      }
+      const group = map.get(key);
+      group.installments.push(boleto);
+      group.totalAmount += Number(boleto.amount || 0);
+      if (boleto.status === 'PAID') group.paidCount += 1;
+      if (boleto.status === 'OVERDUE') group.hasOverdue = true;
+    });
+    return Array.from(map.values());
   }, [boletos]);
 
   return (
@@ -296,88 +347,113 @@ const AdminBoletos = ({ loggedUsername }) => {
           )}
 
           <div className="admin-table-card">
-            <Table striped bordered hover responsive className="custom-table">
-              <thead>
-                <tr>
-                  <th className="table-cells-header">Pedido:</th>
-                  <th className="table-cells-header">Pagador:</th>
-                  <th className="table-cells-header">CPF:</th>
-                  <th className="table-cells-header">Status:</th>
-                  <th className="table-cells-header">Contato:</th>
-                  <th className="table-cells-header">Parcela:</th>
-                  <th className="table-cells-header">Valor:</th>
-                  <th className="table-cells-header">Vencimento:</th>
-                  <th className="table-cells-header">Pago em:</th>
-                  <th className="table-cells-header">Ações:</th>
-                </tr>
-              </thead>
-              <tbody>
-                {boletos.length === 0 ? (
-                  <tr>
-                    <td colSpan={10} className="text-center text-secondary py-4">
-                      Nenhum boleto parcelado gerado.
-                    </td>
-                  </tr>
-                ) : (
-                  boletos.map((boleto) => {
-                    const status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
-                    return (
-                      <tr key={boleto.id} className={boleto.status === 'OVERDUE' ? 'boleto-row-overdue' : ''}>
-                        <td>{boleto.orderNumber}</td>
-                        <td>{boleto.payerName}</td>
-                        <td>{boleto.cpf}</td>
-                        <td>
-                          <Badge bg={status.bg}>{status.label}</Badge>
-                        </td>
-                        <td>
-                          <ContactLinks
-                            cellPhone={boleto.cellPhone}
-                            email={boleto.email || boleto.payerEmail}
-                            whatsApp={boleto.whatsApp}
-                          />
-                        </td>
-                        <td>
-                          {boleto.installmentNumber}/{boleto.totalInstallments}
-                        </td>
-                        <td>R$ {formatBRL(boleto.amount)}</td>
-                        <td>{formatDate(boleto.dueDate)}</td>
-                        <td>{boleto.paidAt ? formatDate(boleto.paidAt) : '—'}</td>
-                        <td>
-                          <div className="boleto-actions">
-                            {isEditable(boleto.status) && (
-                              <>
-                                <Button
-                                  variant="outline-success"
-                                  onClick={() => openDueDate(boleto)}
-                                  title="Alterar vencimento"
-                                >
-                                  <Icons typeIcon="edit" iconSize={22} />
-                                </Button>{' '}
-                                <Button
-                                  variant="outline-danger"
-                                  onClick={() => setCancelTarget(boleto)}
-                                  title="Cancelar boleto"
-                                >
-                                  <Icons typeIcon="delete" iconSize={22} fill="#dc3545" />
-                                </Button>{' '}
-                              </>
-                            )}
-                            <Button
-                              className="btn-new-ticket"
-                              variant="outline-secondary"
-                              onClick={() => openReissue(boleto)}
-                              title="Gerar novo boleto"
-                            >
-                              <Icons typeIcon="refresh" iconSize={22} fill="#155a9b" />
-                            </Button>
+            {boletos.length === 0 ? (
+              <div className="text-center text-secondary py-4">Nenhum boleto parcelado gerado.</div>
+            ) : (
+              <Accordion alwaysOpen className="boletos-accordion">
+                {groupedBoletos.map((group) => {
+                  const total = group.installments.length;
+                  const overallBg = group.hasOverdue ? 'danger' : group.paidCount === total ? 'success' : 'warning';
+                  const overallLabel = group.hasOverdue
+                    ? 'Com atraso'
+                    : group.paidCount === total
+                      ? 'Quitado'
+                      : `${group.paidCount}/${total} pagas`;
+                  return (
+                    <Accordion.Item eventKey={String(group.key)} key={group.key}>
+                      <Accordion.Header>
+                        <div className="boleto-group-head">
+                          <span className="boleto-group-head__order">Pedido #{group.orderNumber}</span>
+                          <span>·</span>
+                          <span className="boleto-group-head__payer">Pagador: {group.payerName}</span>
+                          <span>·</span>
+                          <span className="boleto-group-head__cpf">CPF: {group.cpf}</span>
+                          <span>·</span>
+                          <Badge bg={overallBg} className="boleto-group-head__status">
+                            {overallLabel}
+                          </Badge>
+                          <span className="boleto-group-head__total">
+                            R$ {formatBRL(group.totalAmount)} · {total}x
+                          </span>
+                        </div>
+                      </Accordion.Header>
+                      <Accordion.Body>
+                        <div className="boleto-group-toolbar">
+                          <div className="boleto-group-contact">
+                            <ContactLinks cellPhone={group.cellPhone} email={group.email} whatsApp={group.whatsApp} />
                           </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </Table>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            className="boleto-group-delete"
+                            onClick={() => setDeleteOrderTarget(group)}
+                          >
+                            <Icons typeIcon="delete" iconSize={16} fill={'#dc3545'} />
+                            Excluir todos os boletos do pedido
+                          </Button>
+                        </div>
+                        <Table responsive className="boleto-installments-table">
+                          <thead>
+                            <tr>
+                              <th>Parcela</th>
+                              <th>Valor</th>
+                              <th>Vencimento</th>
+                              <th>Pago em</th>
+                              <th>Status</th>
+                              <th>Ações</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {group.installments.map((boleto) => {
+                              const status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
+                              return (
+                                <tr key={boleto.id} className={boleto.status === 'OVERDUE' ? 'boleto-row-overdue' : ''}>
+                                  <td>
+                                    {boleto.installmentNumber}/{boleto.totalInstallments}
+                                  </td>
+                                  <td>R$ {formatBRL(boleto.amount)}</td>
+                                  <td>{formatDate(boleto.dueDate)}</td>
+                                  <td>{boleto.paidAt ? formatDate(boleto.paidAt) : '—'}</td>
+                                  <td>
+                                    <Badge bg={status.bg}>{status.label}</Badge>
+                                  </td>
+                                  <td>
+                                    <div className="table-action-cell">
+                                      {isEditable(boleto.status) && (
+                                        <>
+                                          <ActionButton
+                                            action="edit"
+                                            iconSize={18}
+                                            title="Alterar vencimento"
+                                            onClick={() => openDueDate(boleto)}
+                                          />
+                                          <ActionButton
+                                            action="delete"
+                                            iconSize={18}
+                                            title="Cancelar boleto"
+                                            onClick={() => setCancelTarget(boleto)}
+                                          />
+                                        </>
+                                      )}
+                                      <ActionButton
+                                        action="reissue"
+                                        iconSize={18}
+                                        title="Gerar novo boleto"
+                                        onClick={() => openReissue(boleto)}
+                                      />
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </Table>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  );
+                })}
+              </Accordion>
+            )}
           </div>
         </>
       </div>
@@ -454,6 +530,37 @@ const AdminBoletos = ({ loggedUsername }) => {
               O boleto é marcado como cancelado e o pagador é avisado por e-mail para <b>não pagá-lo</b> (ele deixa de
               ser cobrado e expira sozinho). Se ainda precisar receber, gere um <b>novo boleto</b> pelo botão de
               reemissão.
+            </p>
+          </>
+        )}
+      </CustomModal>
+
+      <CustomModal
+        show={Boolean(deleteOrderTarget)}
+        onHide={() => setDeleteOrderTarget(null)}
+        variant="cancel"
+        title="Excluir Boletos do Pedido"
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setDeleteOrderTarget(null)}>
+              Voltar
+            </Button>
+            <Button variant="danger" onClick={handleDeleteOrder} disabled={saving}>
+              Excluir Todos
+            </Button>
+          </>
+        }
+      >
+        {deleteOrderTarget && (
+          <>
+            <p>
+              Excluir <b>todos os {deleteOrderTarget.installments.length} boletos</b> do pedido{' '}
+              <b>#{deleteOrderTarget.orderNumber}</b> (pagador <b>{deleteOrderTarget.payerName}</b>)? O pedido some desta
+              lista.
+            </p>
+            <p className="text-secondary small mb-0">
+              Isso é uma <b>remoção administrativa</b>: apaga apenas os registros aqui. <b>Não reembolsa</b> nem cancela
+              nada no PagarMe — parcelas já pagas não devolvem valor, e boletos pendentes continuam existindo no gateway.
             </p>
           </>
         )}
