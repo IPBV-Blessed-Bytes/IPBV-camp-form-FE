@@ -68,7 +68,7 @@ const CamperFormModal = ({
       {isEdit && formData?.personalInformation?.guardianDocuments && (
         <div className="camper-form-docs mt-3">
           <h6 className="mb-2">
-            <b>Documentos do responsável (menor de idade)</b>
+            <b>Documentos do Responsável (menor de idade):</b>
           </h6>
           <div className="d-flex flex-wrap gap-2">
             {formData.personalInformation.guardianDocuments
