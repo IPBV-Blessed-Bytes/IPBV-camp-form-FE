@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import Tips from '@/components/Global/Tips';
 import Icons from '@/components/Global/Icons';
 import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
+import { BASE_URL } from '@/config';
 import { uploadGuardianDocument } from '@/services/documents';
 import { extractNumbers } from '../utils/fieldHelpers';
 
@@ -191,7 +192,12 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                     hidden
                   />
                 </label>
-                <a className="guardian-template-btn" href="/autorizacao-menor.pdf" download>
+                <a
+                  className="guardian-template-btn"
+                  href={`${BASE_URL}/documents/template`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Icons typeIcon="download" iconSize={18} />
                   <span>Modelo de Autorização</span>
                 </a>

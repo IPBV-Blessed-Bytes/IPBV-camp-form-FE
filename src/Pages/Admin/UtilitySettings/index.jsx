@@ -7,6 +7,8 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 
 import { getSetting, updateSetting } from '@/services/settings';
+import { uploadGuardianDocument } from '@/services/documents';
+import { BASE_URL } from '@/config';
 import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
@@ -26,6 +28,7 @@ const PAGARME_DASH_KEY = 'pagarme_dashboard_url';
 const BACKUP_EMAIL_KEY = 'backup_email';
 const EVENT_MAP_KEY = 'event_map';
 const SOCIAL_LINKS_KEY = 'social_links';
+const DECLARATION_TEMPLATE_KEY = 'guardian_declaration_template_id';
 
 const SOCIAL_NETWORKS = [
   { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/suaigreja' },
@@ -68,6 +71,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [backupEmail, setBackupEmail] = useState('');
   const [eventMap, setEventMap] = useState('');
   const [social, setSocial] = useState({});
+  const [templateId, setTemplateId] = useState('');
+  const [uploadingTemplate, setUploadingTemplate] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -77,19 +82,31 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     setLoading(true);
 
     try {
-      const [contactValue, spreadsheetValue, boletoMaxValue, boletoMinDaysValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue, baseDateData] =
-        await Promise.all([
-          getSetting(CONTACT_KEY),
-          getSetting(SPREADSHEET_KEY),
-          getSetting(BOLETO_MAX_KEY),
-          getSetting(BOLETO_MIN_DAYS_KEY),
-          getSetting(CREW_BUS_KEY),
-          getSetting(PAGARME_DASH_KEY),
-          getSetting(BACKUP_EMAIL_KEY),
-          getSetting(EVENT_MAP_KEY),
-          getSetting(SOCIAL_LINKS_KEY),
-          getBaseDate(),
-        ]);
+      const [
+        contactValue,
+        spreadsheetValue,
+        boletoMaxValue,
+        boletoMinDaysValue,
+        crewBusValue,
+        pagarmeDashValue,
+        backupEmailValue,
+        eventMapValue,
+        socialValue,
+        templateValue,
+        baseDateData,
+      ] = await Promise.all([
+        getSetting(CONTACT_KEY),
+        getSetting(SPREADSHEET_KEY),
+        getSetting(BOLETO_MAX_KEY),
+        getSetting(BOLETO_MIN_DAYS_KEY),
+        getSetting(CREW_BUS_KEY),
+        getSetting(PAGARME_DASH_KEY),
+        getSetting(BACKUP_EMAIL_KEY),
+        getSetting(EVENT_MAP_KEY),
+        getSetting(SOCIAL_LINKS_KEY),
+        getSetting(DECLARATION_TEMPLATE_KEY),
+        getBaseDate(),
+      ]);
       setContact(contactValue);
       setSpreadsheet(spreadsheetValue);
       setBoletoMax(boletoMaxValue || '');
@@ -99,6 +116,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setBackupEmail(backupEmailValue || '');
       setEventMap(eventMapValue || '');
       setSocial(parseSocial(socialValue));
+      setTemplateId(templateValue || '');
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
         setBaseDateExists(true);
@@ -125,18 +143,27 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         return acc;
       }, {});
 
-      const [contactValue, spreadsheetValue, boletoMaxValue, boletoMinDaysValue, crewBusValue, pagarmeDashValue, backupEmailValue, eventMapValue, socialValue] =
-        await Promise.all([
-          updateSetting(CONTACT_KEY, contact.trim()),
-          updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
-          updateSetting(BOLETO_MAX_KEY, boletoMax.trim()),
-          updateSetting(BOLETO_MIN_DAYS_KEY, boletoMinDays.trim()),
-          updateSetting(CREW_BUS_KEY, crewBus.trim()),
-          updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
-          updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
-          updateSetting(EVENT_MAP_KEY, eventMap.trim()),
-          updateSetting(SOCIAL_LINKS_KEY, JSON.stringify(cleanSocial)),
-        ]);
+      const [
+        contactValue,
+        spreadsheetValue,
+        boletoMaxValue,
+        boletoMinDaysValue,
+        crewBusValue,
+        pagarmeDashValue,
+        backupEmailValue,
+        eventMapValue,
+        socialValue,
+      ] = await Promise.all([
+        updateSetting(CONTACT_KEY, contact.trim()),
+        updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
+        updateSetting(BOLETO_MAX_KEY, boletoMax.trim()),
+        updateSetting(BOLETO_MIN_DAYS_KEY, boletoMinDays.trim()),
+        updateSetting(CREW_BUS_KEY, crewBus.trim()),
+        updateSetting(PAGARME_DASH_KEY, pagarmeDash.trim()),
+        updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
+        updateSetting(EVENT_MAP_KEY, eventMap.trim()),
+        updateSetting(SOCIAL_LINKS_KEY, JSON.stringify(cleanSocial)),
+      ]);
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
       setBoletoMax(boletoMaxValue || '');
@@ -162,6 +189,27 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       toast.error('Erro ao salvar as informações utilitárias.');
     } finally {
       setSaving(false);
+      setLoading(false);
+    }
+  };
+
+  const handleTemplateChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploadingTemplate(true);
+    setLoading(true);
+    try {
+      const data = await uploadGuardianDocument(file);
+      await updateSetting(DECLARATION_TEMPLATE_KEY, String(data.id));
+      setTemplateId(String(data.id));
+      registerLog('Atualizou o modelo da declaração de responsabilidade', loggedUsername);
+      toast.success('Modelo da declaração atualizado.');
+    } catch (error) {
+      console.error('Erro ao enviar o modelo:', error);
+      toast.error('Não foi possível enviar o modelo. Tente novamente.');
+    } finally {
+      setUploadingTemplate(false);
+      event.target.value = '';
       setLoading(false);
     }
   };
@@ -311,10 +359,10 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                       placeholder="10"
                     />
                     <Form.Text className="text-muted-italic">
-                      Trava a data de vencimento do <b>último boleto</b> para no mínimo esta quantidade de dias
-                      corridos antes do evento. Considerando que o boleto será pago <b>até o vencimento</b>, o dinheiro
-                      leva de <b>2 a 5 dias úteis</b> para cair na conta (compensação + liquidação). Defina uma folga
-                      suficiente para o valor cair antes do evento. Em branco usa o padrão (10 dias).
+                      Trava a data de vencimento do <b>último boleto</b> para no mínimo esta quantidade de dias corridos
+                      antes do evento. Considerando que o boleto será pago <b>até o vencimento</b>, o dinheiro leva de{' '}
+                      <b>2 a 5 dias úteis</b> para cair na conta (compensação + liquidação). Defina uma folga suficiente
+                      para o valor cair antes do evento. Em branco usa o padrão (10 dias).
                     </Form.Text>
                   </Form.Group>
 
@@ -387,6 +435,52 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                   <Form.Text className="text-muted-italic">
                     Cada ícone só aparece no rodapé quando o link é preenchido.
                   </Form.Text>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="notebook" iconSize={20} fill="#007185" />
+                  </span>
+                  <span>Modelo da Declaração (menor de idade)</span>
+                </div>
+                <div className="utility-card__body">
+                  <Form.Group className="mb-3">
+                    <Form.Label>
+                      <b>Declaração de responsabilidade (PDF):</b>
+                    </Form.Label>
+                    <div className="utility-template-actions">
+                      <label className="utility-template-btn">
+                        <Icons typeIcon="upload" iconSize={18} />
+                        <span>{templateId ? 'Trocar Modelo' : 'Enviar Modelo'}</span>
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          disabled={uploadingTemplate}
+                          onChange={handleTemplateChange}
+                          hidden
+                        />
+                      </label>
+                      {templateId && (
+                        <a
+                          className="utility-template-btn utility-template-btn--ghost"
+                          href={`${BASE_URL}/documents/template`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Icons typeIcon="download" iconSize={18} />
+                          <span>Ver Atual</span>
+                        </a>
+                      )}
+                    </div>
+                    <Form.Text className="text-muted-italic">
+                      É o PDF que o inscrito menor de idade baixa, imprime, assina e reenvia. Substitua aqui quando o
+                      termo mudar.
+                    </Form.Text>
+                  </Form.Group>
                 </div>
               </div>
             </Col>

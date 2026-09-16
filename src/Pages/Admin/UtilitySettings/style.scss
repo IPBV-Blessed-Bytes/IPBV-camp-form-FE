@@ -41,3 +41,47 @@
     padding: 1.25rem;
   }
 }
+
+.utility-template-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.utility-template-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  background: $teal-blue;
+  border: 1px solid $teal-blue;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: #005e6e;
+    border-color: #005e6e;
+    color: #fff;
+  }
+
+  &--ghost {
+    color: $teal-blue;
+    background: rgba(0, 113, 133, 0.08);
+    border-color: rgba(0, 113, 133, 0.35);
+
+    &:hover {
+      background: rgba(0, 113, 133, 0.16);
+      color: $teal-blue;
+    }
+  }
+}
