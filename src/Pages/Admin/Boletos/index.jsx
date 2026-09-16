@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
-import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto } from '@/services/boletos';
+import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto, deleteBoletosByOrder } from '@/services/boletos';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -86,6 +86,7 @@ const AdminBoletos = ({ loggedUsername }) => {
   const [reissueTarget, setReissueTarget] = useState(null);
   const [reissueAmount, setReissueAmount] = useState('');
   const [reissueDate, setReissueDate] = useState(null);
+  const [deleteOrderTarget, setDeleteOrderTarget] = useState(null);
   const [saving, setSaving] = useState(false);
 
   scrollUp();
@@ -179,6 +180,27 @@ const AdminBoletos = ({ loggedUsername }) => {
       reload();
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível gerar o novo boleto.');
+    } finally {
+      setSaving(false);
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async () => {
+    if (!deleteOrderTarget) return;
+    setLoading(true);
+    setSaving(true);
+    try {
+      await deleteBoletosByOrder(deleteOrderTarget.orderNumber);
+      registerLog(
+        `Excluiu todos os boletos do pedido ${deleteOrderTarget.orderNumber} (pagador ${deleteOrderTarget.payerName})`,
+        loggedUsername,
+      );
+      toast.success('Boletos do pedido excluídos.');
+      setDeleteOrderTarget(null);
+      reload();
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível excluir os boletos do pedido.');
     } finally {
       setSaving(false);
       setLoading(false);
@@ -356,8 +378,19 @@ const AdminBoletos = ({ loggedUsername }) => {
                         </div>
                       </Accordion.Header>
                       <Accordion.Body>
-                        <div className="boleto-group-contact">
-                          <ContactLinks cellPhone={group.cellPhone} email={group.email} whatsApp={group.whatsApp} />
+                        <div className="boleto-group-toolbar">
+                          <div className="boleto-group-contact">
+                            <ContactLinks cellPhone={group.cellPhone} email={group.email} whatsApp={group.whatsApp} />
+                          </div>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            className="boleto-group-delete"
+                            onClick={() => setDeleteOrderTarget(group)}
+                          >
+                            <Icons typeIcon="delete" iconSize={16} fill={'#dc3545'} />
+                            Excluir todos os boletos do pedido
+                          </Button>
                         </div>
                         <Table responsive className="boleto-installments-table">
                           <thead>
@@ -497,6 +530,37 @@ const AdminBoletos = ({ loggedUsername }) => {
               O boleto é marcado como cancelado e o pagador é avisado por e-mail para <b>não pagá-lo</b> (ele deixa de
               ser cobrado e expira sozinho). Se ainda precisar receber, gere um <b>novo boleto</b> pelo botão de
               reemissão.
+            </p>
+          </>
+        )}
+      </CustomModal>
+
+      <CustomModal
+        show={Boolean(deleteOrderTarget)}
+        onHide={() => setDeleteOrderTarget(null)}
+        variant="cancel"
+        title="Excluir Boletos do Pedido"
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setDeleteOrderTarget(null)}>
+              Voltar
+            </Button>
+            <Button variant="danger" onClick={handleDeleteOrder} disabled={saving}>
+              Excluir Todos
+            </Button>
+          </>
+        }
+      >
+        {deleteOrderTarget && (
+          <>
+            <p>
+              Excluir <b>todos os {deleteOrderTarget.installments.length} boletos</b> do pedido{' '}
+              <b>#{deleteOrderTarget.orderNumber}</b> (pagador <b>{deleteOrderTarget.payerName}</b>)? O pedido some desta
+              lista.
+            </p>
+            <p className="text-secondary small mb-0">
+              Isso é uma <b>remoção administrativa</b>: apaga apenas os registros aqui. <b>Não reembolsa</b> nem cancela
+              nada no PagarMe — parcelas já pagas não devolvem valor, e boletos pendentes continuam existindo no gateway.
             </p>
           </>
         )}

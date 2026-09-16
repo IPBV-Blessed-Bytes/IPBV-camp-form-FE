@@ -169,8 +169,24 @@ $overdue: #c62828;
     }
   }
 
-  .boleto-group-contact {
+  .boleto-group-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
     margin-bottom: 0.5rem;
+  }
+
+  .boleto-group-contact {
+    margin-bottom: 0;
+  }
+
+  .boleto-group-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
   }
 
   .boleto-installments-table {

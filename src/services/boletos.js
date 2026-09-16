@@ -25,3 +25,8 @@ export const reissueBoleto = async (id, amount, dueDate) => {
   const { data } = await authFetcher.post(`/boletos/${id}/reissue`, { amount: String(amount), dueDate });
   return data;
 };
+
+export const deleteBoletosByOrder = async (orderNumber) => {
+  const { data } = await authFetcher.delete(`/boletos/order/${orderNumber}`);
+  return data;
+};
