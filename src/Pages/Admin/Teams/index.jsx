@@ -358,7 +358,7 @@ const AdminTeams = ({ loggedUsername }) => {
           <tbody>
             {filteredTeams.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-start text-secondary py-4">
+                <td colSpan={5} className="text-start text-secondary p-4">
                   Nenhum time registrado
                 </td>
               </tr>

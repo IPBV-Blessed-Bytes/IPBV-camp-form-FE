@@ -348,7 +348,7 @@ const AdminBoletos = ({ loggedUsername }) => {
 
           <div className="admin-table-card">
             {boletos.length === 0 ? (
-              <div className="text-start text-secondary py-4">Nenhum boleto parcelado gerado</div>
+              <div className="text-start text-secondary p-4">Nenhum boleto parcelado gerado</div>
             ) : (
               <Accordion alwaysOpen className="boletos-accordion">
                 {groupedBoletos.map((group) => {

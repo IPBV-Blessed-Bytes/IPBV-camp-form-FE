@@ -214,7 +214,7 @@ const AdminFeedback = ({ loggedUsername }) => {
             <tbody>
               {filteredFeedbacks.length === 0 ? (
                 <tr>
-                  <td colSpan={TABLE_HEADERS.length} className="text-start text-secondary py-4">
+                  <td colSpan={TABLE_HEADERS.length} className="text-start text-secondary p-4">
                     Nenhuma opinião registrada
                   </td>
                 </tr>

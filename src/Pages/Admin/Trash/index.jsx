@@ -139,7 +139,7 @@ const AdminTrash = ({ loggedUsername }) => {
               <tbody>
                 {items.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-start text-secondary py-4">
+                    <td colSpan={7} className="text-start text-secondary p-4">
                       A lixeira está vazia
                     </td>
                   </tr>

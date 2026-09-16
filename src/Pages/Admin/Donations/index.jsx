@@ -81,7 +81,7 @@ const AdminDonations = ({ loggedUsername }) => {
                 <tbody>
                   {donations.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="text-start text-secondary py-4">
+                      <td colSpan={7} className="text-start text-secondary p-4">
                         Nenhuma doação registrada
                       </td>
                     </tr>

@@ -43,7 +43,7 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
             <tr>
               <td
                 colSpan={headerGroups[headerGroups.length - 1]?.headers.length || 1}
-                className="text-start text-secondary py-4"
+                className="text-start text-secondary p-4"
               >
                 Nenhum inscrito registrado
               </td>

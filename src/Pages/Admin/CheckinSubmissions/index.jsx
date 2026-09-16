@@ -179,7 +179,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                 <tbody>
                   {submissions.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="text-start text-secondary py-4">
+                      <td colSpan={5} className="text-start text-secondary p-4">
                         Nenhuma inscrição
                       </td>
                     </tr>
