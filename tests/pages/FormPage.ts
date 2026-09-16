@@ -65,10 +65,20 @@ export class FormComponent {
     await this.clearModal();
   }
 
+  private async typeMasked(selector: string, digits: string) {
+    const input = this.page.locator(selector);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await input.click();
+      await input.fill('');
+      await input.pressSequentially(digits, { delay: 45 });
+      const value = await input.inputValue();
+      if ((value.match(/\d/g) || []).length >= digits.length) return;
+    }
+  }
+
   async fillPersonalData(person: PersonData) {
     await this.page.locator('#name').fill(person.name);
-    await this.page.locator('#cpf').click();
-    await this.page.locator('#cpf').pressSequentially(person.cpf, { delay: 12 });
+    await this.typeMasked('#cpf', person.cpf);
     await this.page.locator('#rg').fill(person.rg ?? '1234567');
     await this.page.locator('#birthday').fill(person.birthday);
     await this.page.locator('#birthday').press('Enter');
@@ -81,13 +91,9 @@ export class FormComponent {
       const gName = this.page.locator('#legalGuardianName');
       await gName.waitFor({ state: 'visible', timeout: 8000 });
       await gName.fill(person.guardianName ?? 'Responsável Teste');
-      const gCpf = this.page.locator('#legalGuardianCpf');
-      await gCpf.waitFor({ state: 'visible', timeout: 8000 });
-      await gCpf.click();
-      await gCpf.pressSequentially(person.guardianCpf ?? '11144477735', { delay: 15 });
-      const gPhone = this.page.locator('#legalGuardianCellPhone');
-      await gPhone.click();
-      await gPhone.pressSequentially(person.guardianPhone ?? '81988887777', { delay: 15 });
+      await this.page.locator('#legalGuardianCpf').waitFor({ state: 'visible', timeout: 8000 });
+      await this.typeMasked('#legalGuardianCpf', person.guardianCpf ?? '11144477735');
+      await this.typeMasked('#legalGuardianCellPhone', person.guardianPhone ?? '81988887777');
       await this.page.waitForTimeout(200);
     }
   }
@@ -95,8 +101,7 @@ export class FormComponent {
   async fillContact(contact: ContactData) {
     await this.clearModal();
     await this.removeStuckBackdrop();
-    await this.page.locator('#cellPhone').click();
-    await this.page.locator('#cellPhone').pressSequentially(contact.phone, { delay: 12 });
+    await this.typeMasked('#cellPhone', contact.phone);
     await this.page.locator('input[type="email"]').first().fill(contact.email);
     await this.page.locator('#church').selectOption({ index: 1 });
     await this.page.locator('select:not([id])').first().selectOption({ label: 'Não' });
