@@ -20,6 +20,7 @@ export const initialValues = [
       legalGuardianName: '',
       legalGuardianCpf: '',
       legalGuardianCellPhone: '',
+      guardianDocuments: '',
       cpf: '',
       rg: '',
       rgShipper: '',

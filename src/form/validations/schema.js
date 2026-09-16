@@ -28,6 +28,13 @@ const personalInformationSchema = yup.object().shape({
       ? schema.min(10, 'Informe um número de telefone válido').required('Informe o telefone do responsável legal')
       : schema.strip();
   }),
+
+  guardianDocuments: yup.string().when('birthday', (birthday, schema) => {
+    const isMinor = birthday && calculateAge(new Date(birthday)) < 18;
+    return isMinor
+      ? schema.required('Envie a certidão de nascimento e a declaração de responsabilidade')
+      : schema.strip();
+  }),
 });
 
 const additionalInformationSchema = yup.object().shape({

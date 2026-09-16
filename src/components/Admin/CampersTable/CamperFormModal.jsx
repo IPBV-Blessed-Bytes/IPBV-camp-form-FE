@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
 import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormChange';
 import { useProductCatalog } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
+import { openGuardianDocument } from '@/services/documents';
 import Columns from './Columns';
 
 const CamperFormModal = ({
@@ -64,6 +65,29 @@ const CamperFormModal = ({
           catalog={catalog}
         />
       </Form>
+      {isEdit && formData?.personalInformation?.guardianDocuments && (
+        <div className="camper-form-docs mt-3">
+          <h6 className="mb-2">
+            <b>Documentos do responsável (menor de idade)</b>
+          </h6>
+          <div className="d-flex flex-wrap gap-2">
+            {formData.personalInformation.guardianDocuments
+              .split(',')
+              .map((id) => id.trim())
+              .filter(Boolean)
+              .map((id) => (
+                <Button
+                  key={id}
+                  variant="outline-teal-blue"
+                  size="sm"
+                  onClick={() => openGuardianDocument(id)}
+                >
+                  Abrir documento #{id}
+                </Button>
+              ))}
+          </div>
+        </div>
+      )}
     </CustomModal>
   );
 };

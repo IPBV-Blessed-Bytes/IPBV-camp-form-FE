@@ -12,6 +12,7 @@ export const sanitizeFields = (data) => ({
     legalGuardianCellPhone: data.personalInformation?.legalGuardianCellPhone || '',
     legalGuardianCpf: data.personalInformation?.legalGuardianCpf || '',
     legalGuardianName: data.personalInformation?.legalGuardianName || '',
+    guardianDocuments: data.personalInformation?.guardianDocuments || '',
   },
   contact: {
     cellPhone: data.contact?.cellPhone || '',
