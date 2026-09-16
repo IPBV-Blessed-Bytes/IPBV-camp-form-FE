@@ -126,3 +126,65 @@ $overdue: #c62828;
     background-color: $light-medium-blue;
   }
 }
+
+.boletos-accordion {
+  .accordion-button {
+    padding-block: 0.75rem;
+
+    &:not(.collapsed) {
+      color: inherit;
+      background-color: #f1f6f8;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .boleto-group-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-right: 0.75rem;
+
+    &__order {
+      font-weight: 700;
+    }
+
+    &__payer {
+      font-weight: 600;
+    }
+
+    &__cpf {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    &__total {
+      margin-left: auto;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+
+  .boleto-group-contact {
+    margin-bottom: 0.5rem;
+  }
+
+  .boleto-installments-table {
+    margin-bottom: 0;
+
+    th {
+      font-size: 0.8rem;
+      color: #6c757d;
+      font-weight: 600;
+      border-bottom: 1px solid #e3e8ec;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  }
+}
