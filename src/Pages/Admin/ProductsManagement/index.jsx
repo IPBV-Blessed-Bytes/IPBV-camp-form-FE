@@ -547,7 +547,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     {formData.category === 'HOSPEDAGEM' && (
                       <Form.Group>
                         <Form.Label className="small mb-0">
-                          Parte alimentação (R$)
+                          Alimentação (R$)
                         </Form.Label>
                         <Form.Control
                           type="number"
