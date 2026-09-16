@@ -197,7 +197,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/carona')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="RIDES_MANAGE">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="RIDES_MANAGE"
+                >
                   <AdminRide formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -217,7 +221,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/descontos')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole} requiredPermission="COUPONS_MANAGE">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                  userRole={userRole}
+                  requiredPermission="COUPONS_MANAGE"
+                >
                   <AdminDiscount formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -225,7 +233,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/quartos')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="ROOMS_MANAGE">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="ROOMS_MANAGE"
+                >
                   <AdminRooms formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -233,7 +245,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/times')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'team-creator']} userRole={userRole} requiredPermission="TEAMS_MANAGE">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'team-creator']}
+                  userRole={userRole}
+                  requiredPermission="TEAMS_MANAGE"
+                >
                   <AdminTeams formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -241,7 +257,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/alimentacao')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="EXTRAMEALS_VIEW">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="EXTRAMEALS_VIEW"
+                >
                   <AdminExtraMeals />
                 </ProtectedRoute>
               }
@@ -424,7 +444,11 @@ const FormRoutes = () => {
             <Route
               path={adminPath('/opiniao')}
               element={
-                <ProtectedRoute allowedRoles={['admin', 'collaborator']} userRole={userRole} requiredPermission="FEEDBACK_VIEW">
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator']}
+                  userRole={userRole}
+                  requiredPermission="FEEDBACK_VIEW"
+                >
                   <AdminFeedback formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
@@ -434,22 +458,20 @@ const FormRoutes = () => {
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
 
-            <Route path="/esqueci-senha" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/unlock" element={<Unlock />} />
-
-            <Route path="/criar-conta" element={<CustomerSignUp />} />
-            <Route path="/entrar" element={<CustomerLogin />} />
-            <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
-            <Route path="/minha-conta" element={<CustomerMyAccount />} />
-            <Route path="/minha-conta/boletos" element={<Boletos />} />
-
             {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
               <>
                 <Route path="/opiniao" element={<FormFeedback />} />
                 <Route path="/verificacao" element={<CpfReview />} />
                 <Route path="/verificacao/dados" element={<CpfData />} />
                 <Route path="/perguntas" element={<FAQ />} />
+                <Route path="/esqueci-senha" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/unlock" element={<Unlock />} />
+                <Route path="/criar-conta" element={<CustomerSignUp />} />
+                <Route path="/entrar" element={<CustomerLogin />} />
+                <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
+                <Route path="/minha-conta" element={<CustomerMyAccount />} />
+                <Route path="/minha-conta/boletos" element={<Boletos />} />
               </>
             )}
           </Routes>
