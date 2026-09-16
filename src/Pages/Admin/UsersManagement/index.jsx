@@ -237,7 +237,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="text-start text-secondary p-4">
+                    Nenhum usuário registrado
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user) => (
                 <tr key={user.id}>
                   <td>
                     <div className="user-cell">
@@ -269,7 +276,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </Table>
         </div>

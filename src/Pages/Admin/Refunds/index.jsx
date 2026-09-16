@@ -73,8 +73,8 @@ const AdminRefunds = ({ loggedUsername }) => {
                 <tbody>
                   {refunds.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="text-center text-secondary py-4">
-                        Nenhum reembolso registrado.
+                      <td colSpan={7} className="text-start text-secondary p-4">
+                        Nenhum reembolso registrado
                       </td>
                     </tr>
                   ) : (

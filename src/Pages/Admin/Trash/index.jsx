@@ -139,8 +139,8 @@ const AdminTrash = ({ loggedUsername }) => {
               <tbody>
                 {items.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center text-secondary py-4">
-                      A lixeira está vazia.
+                    <td colSpan={7} className="text-start text-secondary p-4">
+                      A lixeira está vazia
                     </td>
                   </tr>
                 ) : (

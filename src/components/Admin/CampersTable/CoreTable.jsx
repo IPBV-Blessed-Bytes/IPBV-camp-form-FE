@@ -40,6 +40,13 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
             })}
           </thead>
           <tbody {...getTableBodyProps()}>
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={headerGroups[headerGroups.length - 1]?.headers.length || 1} className="text-start text-secondary p-4">
+                  Nenhum inscrito registrado
+                </td>
+              </tr>
+            )}
             {rows.map((row) => {
               prepareRow(row);
               const { key: rowKey, ...restRowProps } = row.getRowProps();

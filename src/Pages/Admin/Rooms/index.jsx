@@ -448,7 +448,7 @@ const AdminRooms = ({ loggedUsername }) => {
               <tbody {...getTableBodyProps()}>
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan="2" className="text-center">
+                    <td colSpan="2" className="text-start text-secondary p-4">
                       Nenhum usuário com agregados encontrado
                     </td>
                   </tr>

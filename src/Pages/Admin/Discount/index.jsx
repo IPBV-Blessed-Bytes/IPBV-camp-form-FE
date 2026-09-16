@@ -250,7 +250,14 @@ const AdminDiscount = ({ loggedUsername }) => {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item) => {
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-start text-secondary p-4">
+                  Nenhum desconto registrado
+                </td>
+              </tr>
+            ) : (
+              filtered.map((item) => {
               return (
                 <tr key={item.id}>
                   <td>{formatCpf(item.cpf)}</td>
@@ -272,7 +279,8 @@ const AdminDiscount = ({ loggedUsername }) => {
                   </td>
                 </tr>
               );
-            })}
+            })
+            )}
           </tbody>
             </Table>
           </div>

@@ -355,7 +355,14 @@ const AdminTeams = ({ loggedUsername }) => {
           </thead>
 
           <tbody>
-            {filteredTeams.map((team) => (
+            {filteredTeams.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-start text-secondary p-4">
+                  Nenhum time registrado
+                </td>
+              </tr>
+            ) : (
+              filteredTeams.map((team) => (
               <tr key={team.id}>
                 <td>{team.name}</td>
 
@@ -417,7 +424,8 @@ const AdminTeams = ({ loggedUsername }) => {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
             </Table>
           </div>
