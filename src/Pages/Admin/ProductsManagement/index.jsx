@@ -21,6 +21,7 @@ import FilterChips from '@/components/Admin/FilterChips';
 const CATEGORIES = [
   { value: 'HOSPEDAGEM', label: 'Hospedagem' },
   { value: 'TRANSPORTE', label: 'Transporte' },
+  { value: 'ALIMENTACAO', label: 'Alimentação' },
 ];
 
 const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
@@ -252,7 +253,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
   }, {});
-  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info' };
+  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info', ALIMENTACAO: 'free' };
   const statItems = [
     { label: 'Produtos', value: products.length },
     { label: 'Ativos', value: activeCount, tone: 'free' },
