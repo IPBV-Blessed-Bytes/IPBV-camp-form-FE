@@ -189,11 +189,15 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                     hidden
                   />
                 </label>
-                <a className="guardian-template-btn" href="/declaracao-responsabilidade-menor.pdf" download>
+                <a className="guardian-template-btn" href="/autorizacao-menor.pdf" download>
                   <Icons typeIcon="download" iconSize={18} />
                   <span>Modelo da Declaração</span>
                 </a>
               </div>
+              <Form.Text className="text-muted d-block mt-2">
+                Baixe o modelo da declaração de responsabilidade, imprima e assine. Depois envie a foto ou PDF
+                da declaração assinada <b>junto com a certidão de nascimento</b> do menor.
+              </Form.Text>
               {uploading && (
                 <div className="mt-2 d-flex align-items-center gap-2 text-secondary">
                   <Spinner animation="border" size="sm" /> Enviando arquivo...
