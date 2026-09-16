@@ -526,9 +526,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               <b>Preço e vagas por lote</b>
             </h6>
             <p className="text-secondary small">
-              Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas. A <b>Parte alimentação</b> é
-              quanto do preço corresponde à alimentação embutida — o desconto por idade de alimentação
-              (faixa global) incide sobre ela, e o desconto de hospedagem sobre o restante.
+              Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas. Na hospedagem, o <b>Preço</b> é
+              só a hospedagem e a <b>Parte alimentação</b> é <b>somada</b> a ele para formar o total; o desconto
+              por idade de alimentação (faixa global) incide sobre a alimentação, e o de hospedagem sobre o preço.
             </p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (

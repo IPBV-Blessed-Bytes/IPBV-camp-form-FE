@@ -29,38 +29,42 @@ const getDiscountedProducts = (ageRaw) => {
   return products.map((product) => {
     const ownRules = ageRules.filter((r) => r.productId === product.productId);
     const isAccommodation = product.category === 'Hospedagem';
-    const foodPortion = isAccommodation ? Math.min(product.foodPrice || 0, product.price) : 0;
+    const accommodationPrice = product.price;
+    const foodPrice = isAccommodation ? product.foodPrice || 0 : 0;
+    const basePrice = accommodationPrice + foodPrice;
 
-    let price = product.price;
+    let price = basePrice;
     let discountDescription = '';
 
-    if (foodPortion > 0) {
-      const accommodationPortion = product.price - foodPortion;
+    if (foodPrice > 0) {
       const accommodationRule = findRule(ownRules, age);
       const foodRule = findRule(globalFoodRules, age);
 
-      const discountedAccommodation = applyRule(accommodationPortion, accommodationRule);
-      const discountedFood = applyRule(foodPortion, foodRule);
+      const discountedAccommodation = applyRule(accommodationPrice, accommodationRule);
+      const discountedFood = applyRule(foodPrice, foodRule);
       price = discountedAccommodation + discountedFood;
 
       const parts = [];
-      if (discountedAccommodation < accommodationPortion) {
+      if (discountedAccommodation < accommodationPrice) {
         parts.push(`hospedagem ${ruleLabel(accommodationRule)}`);
       }
-      if (discountedFood < foodPortion) {
+      if (discountedFood < foodPrice) {
         parts.push(`alimentação ${ruleLabel(foodRule)}`);
       }
       discountDescription = price <= 0 ? 'Grátis para essa idade' : parts.join(' + ');
     } else {
       const rule = findRule(ownRules, age);
-      const discounted = applyRule(product.price, rule);
-      if (discounted < product.price) {
+      const discounted = applyRule(basePrice, rule);
+      if (discounted < basePrice) {
         price = discounted;
-        discountDescription = price <= 0 ? `Grátis para ${rule.minAge} a ${rule.maxAge} anos` : `${ruleLabel(rule)} para ${rule.minAge} a ${rule.maxAge} anos`;
+        discountDescription =
+          price <= 0
+            ? `Grátis para ${rule.minAge} a ${rule.maxAge} anos`
+            : `${ruleLabel(rule)} para ${rule.minAge} a ${rule.maxAge} anos`;
       }
     }
 
-    if (product.price === 0) {
+    if (basePrice === 0) {
       discountDescription = '';
     }
 
