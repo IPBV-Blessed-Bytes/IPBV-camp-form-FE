@@ -14,6 +14,7 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import CustomModal from '@/components/Global/CustomModal';
 
 const formatDate = (iso) => {
@@ -152,26 +153,23 @@ const AdminTrash = ({ loggedUsername }) => {
                       <td>{STATUS_LABEL[item.paymentStatus] || item.paymentStatus || '—'}</td>
                       <td>{item.deletedBy || '—'}</td>
                       <td>
-                        <div className="d-flex gap-2">
-                          <Button
-                            className="btn-restore"
-                            variant="outline-success"
-                            size="sm"
+                        <div className="table-action-cell">
+                          <ActionButton
+                            action="restore"
+                            iconSize={18}
                             disabled={saving}
                             onClick={() => handleRestore(item)}
                             title="Restaurar inscrição"
                           >
-                            <Icons typeIcon="refresh" iconSize={18} fill="#198754" /> <b>Restaurar</b>
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
+                            Restaurar
+                          </ActionButton>
+                          <ActionButton
+                            action="delete"
+                            iconSize={18}
                             disabled={saving}
                             onClick={() => setPurgeTarget(item)}
                             title="Excluir definitivamente"
-                          >
-                            <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
-                          </Button>
+                          />
                         </div>
                       </td>
                     </tr>

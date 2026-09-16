@@ -15,7 +15,7 @@ import {
 import { useWristbandsList } from '@/hooks/useWristbandsList';
 import { useCampersList } from '@/hooks/useCampersList';
 import { registerLog } from '@/services/logs';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
@@ -381,13 +381,13 @@ const AdminTeams = ({ loggedUsername }) => {
                               <div className="d-flex justify-content-between align-items-center mb-2">
                                 <span>{camper.name}</span>
 
-                                <Button
-                                  variant="outline-danger"
-                                  size="sm"
-                                  onClick={() => handleOpenRemoveCamperModal(camper.id)}
-                                >
-                                  <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                                </Button>
+                                <div className="table-action-cell">
+                                  <ActionButton
+                                    action="delete"
+                                    label="Remover acampante"
+                                    onClick={() => handleOpenRemoveCamperModal(camper.id)}
+                                  />
+                                </div>
                               </div>
                               <hr className="horizontal-line" />
                             </React.Fragment>
@@ -400,22 +400,22 @@ const AdminTeams = ({ loggedUsername }) => {
                   </Accordion>
                 </td>
                 <td>
-                  <Button variant="outline-primary" className="me-2" onClick={() => handleOpenAddCamperModal(team)}>
-                    <Icons typeIcon="plus" iconSize={20} fill="#0d6efd" />
-                  </Button>
-
-                  <Button variant="outline-success" className="me-2" onClick={() => handleOpenModal(team)}>
-                    <Icons typeIcon="edit" iconSize={24} />
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    onClick={() => {
-                      setSelectedTeamToRemove(team);
-                      setShowRemoveTeamModal(true);
-                    }}
-                  >
-                    <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                  </Button>
+                  <div className="table-action-cell">
+                    <ActionButton
+                      action="add"
+                      label="Adicionar acampante"
+                      onClick={() => handleOpenAddCamperModal(team)}
+                    />
+                    <ActionButton action="edit" label="Editar time" onClick={() => handleOpenModal(team)} />
+                    <ActionButton
+                      action="delete"
+                      label="Remover time"
+                      onClick={() => {
+                        setSelectedTeamToRemove(team);
+                        setShowRemoveTeamModal(true);
+                      }}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

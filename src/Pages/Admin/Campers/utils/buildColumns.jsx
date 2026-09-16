@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import { CREW_OPTIONS } from '@/utils/constants';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
 import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
@@ -45,21 +45,19 @@ export const buildCampersColumns = ({
   });
 
   const editDeleteCell = ({ row }) => (
-    <div>
-      <Button
+    <div className="table-action-cell">
+      <ActionButton
+        action="edit"
+        label="Editar inscrição"
         disabled={!adminTableEditDeletePermissions}
-        variant="outline-success"
         onClick={() => handleEditClick(row.index)}
-      >
-        <Icons typeIcon="edit" iconSize={24} />
-      </Button>{' '}
-      <Button
+      />
+      <ActionButton
+        action="delete"
+        label="Excluir inscrição"
         disabled={!adminTableEditDeletePermissions}
-        variant="outline-danger"
         onClick={() => handleDeleteClick(row.index, row)}
-      >
-        <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-      </Button>
+      />
     </div>
   );
 

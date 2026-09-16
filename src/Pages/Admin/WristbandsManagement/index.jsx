@@ -12,7 +12,7 @@ import { registerLog } from '@/services/logs';
 import { useWristbandsList } from '@/hooks/useWristbandsList';
 import scrollUp from '@/hooks/useScrollUp';
 import { FOOD_NAME_OPTIONS } from '@/utils/constants';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -206,12 +206,10 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                     <Badge bg={band.active ? 'success' : 'secondary'}>{band.active ? 'Ativa' : 'Inativa'}</Badge>
                   </td>
                   <td>
-                    <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(band)}>
-                      <Icons typeIcon="edit" iconSize={24} />
-                    </Button>
-                    <Button variant="outline-danger" onClick={() => handleDeleteClick(band)}>
-                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                    </Button>
+                    <div className="table-action-cell">
+                      <ActionButton action="edit" label="Editar pulseira" onClick={() => handleEditClick(band)} />
+                      <ActionButton action="delete" label="Excluir pulseira" onClick={() => handleDeleteClick(band)} />
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -10,7 +10,7 @@ import { getLotsAuthenticated } from '@/services/lots';
 import { listPackageCategories } from '@/services/packageCategories';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -345,12 +345,10 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     </div>
                   </td>
                   <td>
-                    <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(product)}>
-                      <Icons typeIcon="edit" iconSize={24} />
-                    </Button>
-                    <Button variant="outline-danger" onClick={() => handleDeleteClick(product)}>
-                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                    </Button>
+                    <div className="table-action-cell">
+                      <ActionButton action="edit" label="Editar produto" onClick={() => handleEditClick(product)} />
+                      <ActionButton action="delete" label="Excluir produto" onClick={() => handleDeleteClick(product)} />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -393,14 +391,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                         </b>
                         {rule.discountType === 'PERCENT' && Number(rule.discountAmount) >= 100 ? ' (grátis)' : ''}
                       </span>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
+                      <ActionButton
+                        action="delete"
+                        iconSize={17}
+                        label="Remover faixa"
                         onClick={() => handleRemoveBracket(rule, product.name)}
-                        aria-label="Remover faixa"
-                      >
-                        <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
-                      </Button>
+                      />
                     </div>
                   ))
                 )}
