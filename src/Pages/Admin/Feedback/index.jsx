@@ -212,7 +212,14 @@ const AdminFeedback = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredFeedbacks.map((feedback, rowIndex) => {
+              {filteredFeedbacks.length === 0 ? (
+                <tr>
+                  <td colSpan={TABLE_HEADERS.length} className="text-start text-secondary py-4">
+                    Nenhuma opinião registrada
+                  </td>
+                </tr>
+              ) : (
+                filteredFeedbacks.map((feedback, rowIndex) => {
                 const values = Object.values(feedback);
                 return (
                   <tr key={rowIndex}>
@@ -232,7 +239,8 @@ const AdminFeedback = ({ loggedUsername }) => {
                     })}
                   </tr>
                 );
-              })}
+              })
+              )}
             </tbody>
           </Table>
         </div>

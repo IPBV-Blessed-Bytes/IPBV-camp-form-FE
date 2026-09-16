@@ -188,7 +188,14 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((band) => (
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-start text-secondary py-4">
+                    Nenhuma pulseira registrada
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((band) => (
                 <tr key={band.id}>
                   <td>
                     <Badge bg={band.type === 'FOOD' ? 'warning' : 'primary'} text={band.type === 'FOOD' ? 'dark' : undefined}>
@@ -212,7 +219,8 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </Table>
         </div>

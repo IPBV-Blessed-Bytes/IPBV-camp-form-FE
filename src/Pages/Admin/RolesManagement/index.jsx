@@ -196,7 +196,14 @@ const AdminRolesManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredRoles.map((role) => (
+              {filteredRoles.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="text-start text-secondary py-4">
+                    Nenhum papel registrado
+                  </td>
+                </tr>
+              ) : (
+                filteredRoles.map((role) => (
                 <tr key={role.id}>
                   <td>
                     <em>{role.label || role.name}</em>
@@ -227,7 +234,8 @@ const AdminRolesManagement = ({ loggedUsername }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </Table>
         </div>

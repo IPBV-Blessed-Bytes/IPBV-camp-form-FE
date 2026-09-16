@@ -143,8 +143,8 @@ const AdminChangeRequests = ({ loggedUsername }) => {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-secondary">
-                    Nenhuma solicitação encontrada.
+                  <td colSpan={5} className="text-start text-secondary py-4">
+                    Nenhuma solicitação encontrada
                   </td>
                 </tr>
               ) : (

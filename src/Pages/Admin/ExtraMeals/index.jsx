@@ -86,7 +86,14 @@ const AdminExtraMeals = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user) => (
+          {filteredUsers.length === 0 ? (
+            <tr>
+              <td colSpan={2} className="text-start text-secondary py-4">
+                Nenhum acampante com refeições extras registrado
+              </td>
+            </tr>
+          ) : (
+            filteredUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.personalInformation.name}</td>
               <td>
@@ -103,7 +110,8 @@ const AdminExtraMeals = () => {
                 )}
               </td>
             </tr>
-          ))}
+          ))
+          )}
         </tbody>
           </Table>
         </div>

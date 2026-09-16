@@ -320,7 +320,14 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
+              {filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-start text-secondary py-4">
+                    Nenhum produto registrado
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td>
                     <em>{product.name}</em>
@@ -351,7 +358,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </Table>
         </div>
