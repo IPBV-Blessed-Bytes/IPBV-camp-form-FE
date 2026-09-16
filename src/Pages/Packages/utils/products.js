@@ -21,6 +21,7 @@ export const loadProducts = async () => {
       productId: product.id,
       name: product.name,
       price: Number(product.price ?? 0),
+      foodPrice: Number(product.foodPrice ?? 0),
       description: product.description,
       category: toCategoryLabel(product.category),
       vacancies: product.vacancies ?? null,

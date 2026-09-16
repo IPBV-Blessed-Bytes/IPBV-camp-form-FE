@@ -10,6 +10,7 @@ export const loadAgePriceRules = async () => {
     ageRules = list.map((rule) => ({
       id: rule.id,
       productId: rule.productId,
+      productCategory: rule.productCategory,
       minAge: Number(rule.minAge ?? 0),
       maxAge: Number(rule.maxAge ?? 0),
       discountType: rule.discountType === 'VALUE' ? 'VALUE' : 'PERCENT',

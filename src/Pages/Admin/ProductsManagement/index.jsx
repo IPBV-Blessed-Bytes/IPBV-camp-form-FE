@@ -88,6 +88,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       const row = priceForLot(product, lot.id);
       initial[lot.id] = {
         price: row?.price ?? 0,
+        foodPrice: row?.foodPrice ?? 0,
         vacancies: row?.vacancies ?? '',
       };
     });
@@ -114,6 +115,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     for (const [lotId, values] of entries) {
       await setLotProductPrice(lotId, productId, {
         price: Number(values.price || 0),
+        foodPrice: Number(values.foodPrice || 0),
         vacancies: values.vacancies === '' ? null : Number(values.vacancies),
       });
     }
@@ -241,7 +243,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const setLotField = (lotId, field, value) => {
     setLotPrices((prev) => ({
       ...prev,
-      [lotId]: { ...(prev[lotId] || { price: 0, vacancies: '' }), [field]: value },
+      [lotId]: { ...(prev[lotId] || { price: 0, foodPrice: 0, vacancies: '' }), [field]: value },
     }));
   };
 
@@ -359,7 +361,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
         <SectionHeader title="Faixas de idade (desconto)" count={ageRules.length} />
         <p className="age-rules__hint">
-          As faixas abaixo são aplicadas automaticamente no formulário conforme a idade do inscrito, <b>por produto</b>.
+          As faixas abaixo são aplicadas automaticamente no formulário conforme a idade do inscrito. As de
+          hospedagem/transporte incidem sobre o produto; as de <b>Alimentação</b> são a <b>faixa global</b>{' '}
+          que incide sobre a parte-alimentação de qualquer hospedagem.
         </p>
 
         <div className="age-rules">
@@ -521,7 +525,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
             <h6 className="mt-3">
               <b>Preço e vagas por lote</b>
             </h6>
-            <p className="text-secondary small">Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas.</p>
+            <p className="text-secondary small">
+              Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas. A <b>Parte alimentação</b> é
+              quanto do preço corresponde à alimentação embutida — o desconto por idade de alimentação
+              (faixa global) incide sobre ela, e o desconto de hospedagem sobre o restante.
+            </p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (
                 <div key={lot.id} className="lot-price-card">
@@ -536,6 +544,19 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                         onChange={(e) => setLotField(lot.id, 'price', e.target.value)}
                       />
                     </Form.Group>
+                    {formData.category === 'HOSPEDAGEM' && (
+                      <Form.Group>
+                        <Form.Label className="small mb-0">
+                          Parte alimentação (R$)
+                        </Form.Label>
+                        <Form.Control
+                          type="number"
+                          min="0"
+                          value={lotPrices[lot.id]?.foodPrice ?? 0}
+                          onChange={(e) => setLotField(lot.id, 'foodPrice', e.target.value)}
+                        />
+                      </Form.Group>
+                    )}
                     <Form.Group>
                       <Form.Label className="small mb-0">Vagas</Form.Label>
                       <Form.Control
