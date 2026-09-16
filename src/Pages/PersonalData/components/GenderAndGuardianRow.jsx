@@ -173,11 +173,13 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                   typeIcon="info"
                   size={18}
                   color={'#7f7878'}
-                  text="Envie foto/PDF da certidão de nascimento do menor e da declaração de responsabilidade assinada. Baixe o modelo da declaração no link abaixo."
+                  text="Envie foto/PDF da certidão de nascimento do menor e da declaração de responsabilidade assinada, caso este vá sem um responsável legal. Baixe o modelo da declaração no link abaixo."
                 />
               </div>
               <div className="guardian-docs-actions">
-                <label className={`guardian-upload-btn${errors.guardianDocuments ? ' guardian-upload-btn--invalid' : ''}`}>
+                <label
+                  className={`guardian-upload-btn${errors.guardianDocuments ? ' guardian-upload-btn--invalid' : ''}`}
+                >
                   <Icons typeIcon="upload" iconSize={18} />
                   <span>Selecionar Arquivos</span>
                   <input
@@ -191,12 +193,14 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                 </label>
                 <a className="guardian-template-btn" href="/autorizacao-menor.pdf" download>
                   <Icons typeIcon="download" iconSize={18} />
-                  <span>Modelo da Declaração</span>
+                  <span>Modelo de Autorização</span>
                 </a>
               </div>
               <Form.Text className="text-muted d-block mt-2">
-                Baixe o modelo da declaração de responsabilidade, imprima e assine. Depois envie a foto ou PDF
-                da declaração assinada <b>junto com a certidão de nascimento</b> do menor.
+                Baixe o modelo de autorização para viagem de menor desacompanhado caso o menor for sozinho, imprima e
+                assine. Depois envie a foto ou PDF da declaração assinada <b>junto com a certidão de nascimento</b> do
+                menor. Caso o menor de idade esteja acompanhado de responsável,{' '}
+                <b>basta enviar a certidão de nascimento.</b>
               </Form.Text>
               {uploading && (
                 <div className="mt-2 d-flex align-items-center gap-2 text-secondary">
