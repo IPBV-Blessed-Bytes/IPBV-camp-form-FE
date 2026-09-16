@@ -14,7 +14,7 @@ const Offline = () => {
 
   return (
     <>
-      <Header />
+      <Header showLogin={false} />
       <div className="form__container container">
         <FormStepLayout>
             <Container>

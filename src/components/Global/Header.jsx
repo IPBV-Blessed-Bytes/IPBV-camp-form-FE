@@ -13,7 +13,7 @@ import FormStepper from './FormStepper';
 
 const HEADER_STEPS = ['Início', 'Dados', 'Contato', 'Pacote', 'Revisão', 'Carrinho', 'Pagamento'];
 
-const Header = ({ showNavMenu = false }) => {
+const Header = ({ showNavMenu = false, showLogin = true }) => {
   const baseYear = useBaseYear();
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,15 +73,18 @@ const Header = ({ showNavMenu = false }) => {
         </div>
 
         <div className="form__header__right">
-          {isLoggedIn ? (
-            <button type="button" className="header-login-link" onClick={() => navigate('/minha-conta')}>
-              Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
-            </button>
-          ) : (
-            <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
-              Já tem cadastro? <span>Faça seu login</span>
-            </button>
+          {showLogin && (
+            isLoggedIn ? (
+              <button type="button" className="header-login-link" onClick={() => navigate('/minha-conta')}>
+                Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
+              </button>
+            ) : (
+              <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
+                Já tem cadastro? <span>Faça seu login</span>
+              </button>
+            )
           )}
+
           {showCartButton && (
             <Button
               className="cart-btn"
