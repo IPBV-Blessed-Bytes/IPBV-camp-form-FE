@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 import Tips from '@/components/Global/Tips';
+import Icons from '@/components/Global/Icons';
 import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
 import { uploadGuardianDocument } from '@/services/documents';
 import { extractNumbers } from '../utils/fieldHelpers';
@@ -175,17 +176,22 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                   text="Envie foto/PDF da certidão de nascimento do menor e da declaração de responsabilidade assinada. Baixe o modelo da declaração no link abaixo."
                 />
               </div>
-              <Form.Control
-                type="file"
-                multiple
-                accept="image/*,application/pdf"
-                isInvalid={!!errors.guardianDocuments}
-                disabled={uploading}
-                onChange={handleDocumentsChange}
-              />
-              <div className="mt-3">
-                <a className="declaration-of-responsibility" href="/declaracao-responsabilidade-menor.pdf" download>
-                  Baixar modelo da declaração de responsabilidade
+              <div className="guardian-docs-actions">
+                <label className={`guardian-upload-btn${errors.guardianDocuments ? ' guardian-upload-btn--invalid' : ''}`}>
+                  <Icons typeIcon="upload" iconSize={18} />
+                  <span>Selecionar arquivos</span>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*,application/pdf"
+                    disabled={uploading}
+                    onChange={handleDocumentsChange}
+                    hidden
+                  />
+                </label>
+                <a className="guardian-template-btn" href="/declaracao-responsabilidade-menor.pdf" download>
+                  <Icons typeIcon="download" iconSize={18} />
+                  <span>Modelo da declaração</span>
                 </a>
               </div>
               {uploading && (

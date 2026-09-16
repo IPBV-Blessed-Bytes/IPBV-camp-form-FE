@@ -5,3 +5,54 @@
     font-weight: 700;
     text-decoration: underline;
 }
+
+.guardian-docs-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+}
+
+.guardian-upload-btn,
+.guardian-template-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+
+.guardian-upload-btn {
+    color: #fff;
+    background: $teal-blue;
+    border: 1px solid $teal-blue;
+
+    &:hover {
+        background: #005e6e;
+        border-color: #005e6e;
+    }
+
+    &--invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.2);
+    }
+}
+
+.guardian-template-btn {
+    color: $teal-blue;
+    background: rgba(0, 113, 133, 0.08);
+    border: 1px solid rgba(0, 113, 133, 0.35);
+
+    &:hover {
+        background: rgba(0, 113, 133, 0.16);
+    }
+}
