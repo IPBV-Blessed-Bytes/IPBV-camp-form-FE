@@ -165,7 +165,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
             <Form.Group>
               <div className="d-flex gap-2">
                 <Form.Label>
-                  <b>Certidão de nascimento + declaração de responsabilidade:</b>
+                  <b>Certidão de Nascimento + Declaração de Responsabilidade:</b>
                 </Form.Label>
                 <Tips
                   placement="top"
@@ -183,8 +183,8 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                 disabled={uploading}
                 onChange={handleDocumentsChange}
               />
-              <div className="mt-1">
-                <a href="/declaracao-responsabilidade-menor.pdf" download>
+              <div className="mt-3">
+                <a className="declaration-of-responsibility" href="/declaracao-responsabilidade-menor.pdf" download>
                   Baixar modelo da declaração de responsabilidade
                 </a>
               </div>

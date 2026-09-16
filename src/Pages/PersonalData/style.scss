@@ -1,1 +1,7 @@
 @use '../../styles/Variables.scss' as *;
+
+.declaration-of-responsibility {
+    color: $primary;
+    font-weight: 700;
+    text-decoration: underline;
+}
