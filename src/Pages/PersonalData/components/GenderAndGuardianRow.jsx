@@ -179,7 +179,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
               <div className="guardian-docs-actions">
                 <label className={`guardian-upload-btn${errors.guardianDocuments ? ' guardian-upload-btn--invalid' : ''}`}>
                   <Icons typeIcon="upload" iconSize={18} />
-                  <span>Selecionar arquivos</span>
+                  <span>Selecionar Arquivos</span>
                   <input
                     type="file"
                     multiple
@@ -191,7 +191,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                 </label>
                 <a className="guardian-template-btn" href="/declaracao-responsabilidade-menor.pdf" download>
                   <Icons typeIcon="download" iconSize={18} />
-                  <span>Modelo da declaração</span>
+                  <span>Modelo da Declaração</span>
                 </a>
               </div>
               {uploading && (
