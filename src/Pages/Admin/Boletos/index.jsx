@@ -331,23 +331,22 @@ const AdminBoletos = ({ loggedUsername }) => {
               <Accordion alwaysOpen className="boletos-accordion">
                 {groupedBoletos.map((group) => {
                   const total = group.installments.length;
-                  const overallBg = group.hasOverdue
-                    ? 'danger'
-                    : group.paidCount === total
-                    ? 'success'
-                    : 'warning';
+                  const overallBg = group.hasOverdue ? 'danger' : group.paidCount === total ? 'success' : 'warning';
                   const overallLabel = group.hasOverdue
                     ? 'Com atraso'
                     : group.paidCount === total
-                    ? 'Quitado'
-                    : `${group.paidCount}/${total} pagas`;
+                      ? 'Quitado'
+                      : `${group.paidCount}/${total} pagas`;
                   return (
                     <Accordion.Item eventKey={String(group.key)} key={group.key}>
                       <Accordion.Header>
                         <div className="boleto-group-head">
-                          <span className="boleto-group-head__order">Pedido {group.orderNumber}</span>
-                          <span className="boleto-group-head__payer">{group.payerName}</span>
-                          <span className="boleto-group-head__cpf">{group.cpf}</span>
+                          <span className="boleto-group-head__order">Pedido #{group.orderNumber}</span>
+                          <span>·</span>
+                          <span className="boleto-group-head__payer">Pagador: {group.payerName}</span>
+                          <span>·</span>
+                          <span className="boleto-group-head__cpf">CPF: {group.cpf}</span>
+                          <span>·</span>
                           <Badge bg={overallBg} className="boleto-group-head__status">
                             {overallLabel}
                           </Badge>
@@ -358,11 +357,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                       </Accordion.Header>
                       <Accordion.Body>
                         <div className="boleto-group-contact">
-                          <ContactLinks
-                            cellPhone={group.cellPhone}
-                            email={group.email}
-                            whatsApp={group.whatsApp}
-                          />
+                          <ContactLinks cellPhone={group.cellPhone} email={group.email} whatsApp={group.whatsApp} />
                         </div>
                         <Table responsive className="boleto-installments-table">
                           <thead>
@@ -379,10 +374,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                             {group.installments.map((boleto) => {
                               const status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
                               return (
-                                <tr
-                                  key={boleto.id}
-                                  className={boleto.status === 'OVERDUE' ? 'boleto-row-overdue' : ''}
-                                >
+                                <tr key={boleto.id} className={boleto.status === 'OVERDUE' ? 'boleto-row-overdue' : ''}>
                                   <td>
                                     {boleto.installmentNumber}/{boleto.totalInstallments}
                                   </td>
