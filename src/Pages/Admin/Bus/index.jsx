@@ -5,6 +5,7 @@ import './style.scss';
 
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -184,9 +185,14 @@ const AdminBus = ({ loggedUsername, userRole }) => {
                   <td>{camper.personalInformation?.birthday || '-'}</td>
                   {canEdit && (
                     <td>
-                      <Button variant="outline-success" onClick={() => openEdit({ camper, originalIndex })}>
-                        <Icons typeIcon="edit" iconSize={22} />
-                      </Button>
+                      <div className="table-action-cell">
+                        <ActionButton
+                          action="edit"
+                          iconSize={22}
+                          label="Editar passageiro"
+                          onClick={() => openEdit({ camper, originalIndex })}
+                        />
+                      </div>
                     </td>
                   )}
                 </tr>

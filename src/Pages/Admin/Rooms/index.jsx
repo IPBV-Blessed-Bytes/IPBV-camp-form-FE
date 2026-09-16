@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import {
@@ -529,15 +530,13 @@ const AdminRooms = ({ loggedUsername }) => {
                     </Badge>
                   </div>
 
-                  <div className="d-flex gap-2">
-                    <Button variant="outline-teal-blue" size="sm" onClick={() => handleShowEditModal(room)}>
-                      <Icons className="rooms-rename-icon" typeIcon="edit" iconSize={18} />
-                      &nbsp;Renomear
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => handleShowDeleteModal(room)}>
-                      <Icons typeIcon="delete" iconSize={18} fill="#dc3545" />
-                      &nbsp;Excluir
-                    </Button>
+                  <div className="table-action-cell">
+                    <ActionButton action="edit" iconSize={18} onClick={() => handleShowEditModal(room)}>
+                      Renomear
+                    </ActionButton>
+                    <ActionButton action="delete" iconSize={18} onClick={() => handleShowDeleteModal(room)}>
+                      Excluir
+                    </ActionButton>
                   </div>
                 </div>
 
@@ -580,13 +579,14 @@ const AdminRooms = ({ loggedUsername }) => {
                           {camper.name}
                         </Badge>
 
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleShowDeleteCamperFromRoomModal(camper)}
-                        >
-                          <Icons typeIcon="delete" iconSize={16} fill="#dc3545" />
-                        </Button>
+                        <div className="table-action-cell">
+                          <ActionButton
+                            action="delete"
+                            iconSize={16}
+                            label="Remover do quarto"
+                            onClick={() => handleShowDeleteCamperFromRoomModal(camper)}
+                          />
+                        </div>
                       </li>
                     ))}
                   </ul>

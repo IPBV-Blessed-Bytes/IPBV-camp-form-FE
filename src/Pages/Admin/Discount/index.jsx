@@ -7,7 +7,7 @@ import { downloadSingleSheet } from '@/utils/excelExport';
 import { registerLog } from '@/services/logs';
 import { listCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/services/coupons';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -265,12 +265,10 @@ const AdminDiscount = ({ loggedUsername }) => {
                   <td>{item.discountReason || <span className="text-secondary">—</span>}</td>
                   <td>{item.totalPrice ? formatBRL(item.totalPrice) : <span className="text-secondary">—</span>}</td>
                   <td>
-                    <Button variant="outline-success" onClick={() => openModal(item)}>
-                      <Icons typeIcon="edit" iconSize={24} />
-                    </Button>{' '}
-                    <Button variant="outline-danger" onClick={() => openConfirmDeleteModal(item)}>
-                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                    </Button>
+                    <div className="table-action-cell">
+                      <ActionButton action="edit" label="Editar desconto" onClick={() => openModal(item)} />
+                      <ActionButton action="delete" label="Excluir desconto" onClick={() => openConfirmDeleteModal(item)} />
+                    </div>
                   </td>
                 </tr>
               );

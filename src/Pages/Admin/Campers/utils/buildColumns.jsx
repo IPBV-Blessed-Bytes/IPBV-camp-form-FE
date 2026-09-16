@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Form, Button, Badge } from 'react-bootstrap';
+import { Form, Badge } from 'react-bootstrap';
 
 import { CREW_OPTIONS } from '@/utils/constants';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
 import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
 import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
@@ -64,31 +64,25 @@ export const buildCampersColumns = ({
   });
 
   const editDeleteCell = ({ row }) => (
-    <div>
-      <Button
+    <div className="table-action-cell">
+      <ActionButton
+        action="edit"
+        label="Editar inscrição"
         disabled={!adminTableEditDeletePermissions}
-        variant="outline-success"
         onClick={() => handleEditClick(row.index)}
-      >
-        <Icons typeIcon="edit" iconSize={24} />
-      </Button>{' '}
-      <Button
+      />
+      <ActionButton
+        action="delete"
+        label="Excluir inscrição"
         disabled={!adminTableEditDeletePermissions}
-        variant="outline-danger"
         onClick={() => handleDeleteClick(row.index, row)}
-      >
-        <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-      </Button>
-      {' '}
-      <Button
-        className="refund-action-btn"
+      />
+      <ActionButton
+        action="refund"
         disabled={!adminTableEditDeletePermissions || row.original.totalPrice === '0'}
-        variant="outline-warning"
         onClick={() => handleRefundClick(row.original)}
         title={row.original.totalPrice === '0' ? 'Inscrição não pagante — nada a reembolsar' : 'Reembolsar inscrição'}
-      >
-        <Icons typeIcon="money" iconSize={24} fill="#e0a800" />
-      </Button>
+      />
     </div>
   );
 

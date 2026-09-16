@@ -6,7 +6,7 @@ import './style.scss';
 import { registerLog } from '@/services/logs';
 import { getRoles, getPermissions, createRole, updateRole, deleteRole } from '@/services/roles';
 import scrollUp from '@/hooks/useScrollUp';
-import Icons from '@/components/Global/Icons';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -215,17 +215,16 @@ const AdminRolesManagement = ({ loggedUsername }) => {
                     </Badge>
                   </td>
                   <td>
-                    <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(role)}>
-                      <Icons typeIcon="edit" iconSize={24} />
-                    </Button>
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => handleDeleteClick(role)}
-                      disabled={role.system}
-                      title={role.system ? 'Papel de sistema não pode ser excluído' : ''}
-                    >
-                      <Icons typeIcon="delete" iconSize={24} fill="#dc3545" />
-                    </Button>
+                    <div className="table-action-cell">
+                      <ActionButton action="edit" label="Editar papel" onClick={() => handleEditClick(role)} />
+                      <ActionButton
+                        action="delete"
+                        label="Excluir papel"
+                        onClick={() => handleDeleteClick(role)}
+                        disabled={role.system}
+                        title={role.system ? 'Papel de sistema não pode ser excluído' : ''}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
