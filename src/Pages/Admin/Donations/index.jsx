@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { listAllDonations } from '@/services/donations';
 import scrollUp from '@/hooks/useScrollUp';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 
@@ -49,6 +51,31 @@ const AdminDonations = ({ loggedUsername }) => {
     ];
   }, [donations]);
 
+  const generateExcel = () => {
+    const rows = donations.map((donation) => ({
+      Pedido: donation.orderNumber,
+      Pagador: donation.payerName,
+      CPF: donation.cpf,
+      'Total do Pacote': Number(donation.packageTotal || 0),
+      Doação: Number(donation.amount || 0),
+      Data: formatDate(donation.confirmedAt || donation.createdAt),
+      Status: (STATUS[donation.status] || {}).label || donation.status,
+    }));
+    downloadSingleSheet({ filename: 'doacoes.xlsx', sheetName: 'Doações', rows });
+  };
+
+  const toolsButtons = [
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'donations-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+  ];
+
   return (
     <div className="admin-subpage admin-subpage--donations">
       <AdminSubpageHeader
@@ -63,6 +90,8 @@ const AdminDonations = ({ loggedUsername }) => {
           <Loading loading />
         ) : (
           <>
+            <AdminToolbar buttons={toolsButtons} />
+
             <StatCards items={statItems} />
 
             <div className="admin-table-card">
