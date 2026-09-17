@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Badge } from 'react-bootstrap';
+import { Table, Badge, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { listAllDonations } from '@/services/donations';
+import { listAllDonations, createManualDonation } from '@/services/donations';
+import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
+import CustomModal from '@/components/Global/CustomModal';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import Loading from '@/components/Global/Loading';
 
 const formatBRL = (reais) => (Number(reais) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -23,21 +26,33 @@ const STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
 };
 
+const EMPTY_FORM = { payerName: '', cpf: '', packageTotal: '', amount: '', bankAccount: '' };
+
 const AdminDonations = ({ loggedUsername }) => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showInsert, setShowInsert] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
 
   scrollUp();
 
-  useEffect(() => {
-    listAllDonations()
+  const reload = (silent = false) => {
+    if (!silent) setLoading(true);
+    return listAllDonations()
       .then((list) => {
         const confirmedOnly = list.filter((donation) => donation.status === 'CONFIRMED');
         const sorted = confirmedOnly.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
         setDonations(sorted);
       })
       .catch(() => toast.error('Erro ao carregar doações.'))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!silent) setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    reload();
   }, []);
 
   const statItems = useMemo(() => {
@@ -48,15 +63,51 @@ const AdminDonations = ({ loggedUsername }) => {
     ];
   }, [donations]);
 
+  const setField = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleInsert = async () => {
+    if (!form.payerName.trim()) {
+      toast.error('Informe o nome do doador.');
+      return;
+    }
+    const amount = parseInt(form.amount, 10);
+    if (!amount || amount <= 0) {
+      toast.error('Informe um valor de doação válido.');
+      return;
+    }
+    setSaving(true);
+    try {
+      const packageTotal = form.packageTotal === '' ? null : parseInt(form.packageTotal, 10);
+      await createManualDonation({
+        payerName: form.payerName.trim(),
+        cpf: form.cpf.trim(),
+        packageTotal: Number.isNaN(packageTotal) ? null : packageTotal,
+        amount,
+        bankAccount: form.bankAccount.trim(),
+      });
+      registerLog(`Inseriu manualmente uma doação de R$ ${amount} (${form.payerName.trim()})`, loggedUsername);
+      toast.success('Doação inserida.');
+      setShowInsert(false);
+      setForm(EMPTY_FORM);
+      await reload(true);
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível inserir a doação.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const generateExcel = () => {
     const rows = donations.map((donation) => ({
       Pedido: donation.orderNumber,
-      Pagador: donation.payerName,
+      Doador: donation.payerName,
       CPF: donation.cpf,
       'Total do Pacote': Number(donation.packageTotal || 0),
       Doação: Number(donation.amount || 0),
       Data: formatDate(donation.confirmedAt || donation.createdAt),
       Status: (STATUS[donation.status] || {}).label || donation.status,
+      'Inserção Manual': donation.manualInsertion ? 'Sim' : 'Não',
+      'Conta Bancária': donation.bankAccount || '',
     }));
     downloadSingleSheet({ filename: 'doacoes.xlsx', sheetName: 'Doações', rows });
   };
@@ -70,6 +121,18 @@ const AdminDonations = ({ loggedUsername }) => {
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
+    },
+    {
+      fill: '#fff',
+      iconSize: 22,
+      id: 'donations-insert',
+      name: 'Inserir Doação',
+      onClick: () => {
+        setForm(EMPTY_FORM);
+        setShowInsert(true);
+      },
+      typeButton: 'teal-blue',
+      typeIcon: 'couple',
     },
   ];
 
@@ -102,12 +165,14 @@ const AdminDonations = ({ loggedUsername }) => {
                     <th className="table-cells-header">Valor do pacote:</th>
                     <th className="table-cells-header">Doação:</th>
                     <th className="table-cells-header">Data:</th>
+                    <th className="table-cells-header">Inserção Manual:</th>
+                    <th className="table-cells-header">Conta Bancária:</th>
                   </tr>
                 </thead>
                 <tbody>
                   {donations.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="text-start text-secondary p-4">
+                      <td colSpan={9} className="text-start text-secondary p-4">
                         Nenhuma doação registrada
                       </td>
                     </tr>
@@ -116,15 +181,21 @@ const AdminDonations = ({ loggedUsername }) => {
                       const status = STATUS[donation.status] || { label: donation.status, bg: 'secondary' };
                       return (
                         <tr key={donation.id}>
-                          <td>{donation.orderNumber}</td>
+                          <td>{donation.orderNumber || '—'}</td>
                           <td>{donation.payerName}</td>
-                          <td>{donation.cpf}</td>
+                          <td>{donation.cpf || '—'}</td>
                           <td>
                             <Badge bg={status.bg}>{status.label}</Badge>
                           </td>
-                          <td>{formatBRL(donation.packageTotal)}</td>
+                          <td>{donation.packageTotal == null ? '—' : formatBRL(donation.packageTotal)}</td>
                           <td className="fw-bold">{formatBRL(donation.amount)}</td>
                           <td>{formatDate(donation.confirmedAt || donation.createdAt)}</td>
+                          <td>
+                            <Badge bg={donation.manualInsertion ? 'info' : 'secondary'}>
+                              {donation.manualInsertion ? 'Sim' : 'Não'}
+                            </Badge>
+                          </td>
+                          <td>{donation.bankAccount || '—'}</td>
                         </tr>
                       );
                     })
@@ -135,6 +206,75 @@ const AdminDonations = ({ loggedUsername }) => {
           </>
         )}
       </div>
+
+      <CustomModal
+        show={showInsert}
+        onHide={() => setShowInsert(false)}
+        variant="confirm"
+        title="Inserir Doação"
+        icon="couple"
+        iconFill="#007185"
+        footer={
+          <>
+            <SpinnerButton variant="outline-secondary" onClick={() => setShowInsert(false)}>
+              Voltar
+            </SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={handleInsert} loading={saving}>
+              Inserir
+            </SpinnerButton>
+          </>
+        }
+      >
+        <p className="text-secondary small mb-3">
+          Para doações feitas fora do fluxo padrão (inscritos manuais ou doações direto na conta da igreja). A doação
+          entra como <b>confirmada</b> com a data de agora.
+        </p>
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <b>Nome do doador:</b>
+          </Form.Label>
+          <Form.Control value={form.payerName} onChange={(e) => setField('payerName', e.target.value)} />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <b>CPF:</b>
+          </Form.Label>
+          <Form.Control value={form.cpf} onChange={(e) => setField('cpf', e.target.value)} placeholder="Opcional" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <b>Valor do pacote (R$):</b>
+          </Form.Label>
+          <Form.Control
+            type="number"
+            min="0"
+            value={form.packageTotal}
+            onChange={(e) => setField('packageTotal', e.target.value)}
+            placeholder="Opcional"
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <b>Valor da doação (R$):</b>
+          </Form.Label>
+          <Form.Control
+            type="number"
+            min="1"
+            value={form.amount}
+            onChange={(e) => setField('amount', e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
+            <b>Conta bancária:</b>
+          </Form.Label>
+          <Form.Control
+            value={form.bankAccount}
+            onChange={(e) => setField('bankAccount', e.target.value)}
+            placeholder="Conta em que a doação foi paga"
+          />
+        </Form.Group>
+      </CustomModal>
     </div>
   );
 };
