@@ -9,6 +9,7 @@ import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
+import ChatbotWidget from '@/components/Global/ChatbotWidget';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
 
@@ -159,6 +160,8 @@ const FormRoutes = () => {
               )}
 
               <Footer handleAdminClick={handleAdminClick} />
+
+              <ChatbotWidget />
             </>
           )}
         </div>
