@@ -8,7 +8,9 @@ import { format } from 'date-fns';
 import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto, deleteBoletosByOrder } from '@/services/boletos';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -277,6 +279,34 @@ const AdminBoletos = ({ loggedUsername }) => {
     return Array.from(map.values());
   }, [boletos]);
 
+  const generateExcel = () => {
+    const rows = boletos.map((boleto) => ({
+      Pedido: boleto.orderNumber,
+      Pagador: boleto.payerName,
+      CPF: boleto.cpf,
+      Contato: boleto.cellPhone || '',
+      Email: boleto.email || boleto.payerEmail || '',
+      Parcela: `${boleto.installmentNumber}/${boleto.totalInstallments}`,
+      Valor: Number(boleto.amount || 0) / 100,
+      Vencimento: formatDate(boleto.dueDate),
+      'Pago em': boleto.paidAt ? formatDate(boleto.paidAt) : '',
+      Status: (STATUS[boleto.status] || {}).label || boleto.status,
+    }));
+    downloadSingleSheet({ filename: 'boletos.xlsx', sheetName: 'Boletos', rows });
+  };
+
+  const toolsButtons = [
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'boletos-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+  ];
+
   return (
     <div className="admin-subpage admin-subpage--boletos">
       <AdminSubpageHeader
@@ -288,6 +318,8 @@ const AdminBoletos = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <>
+          <AdminToolbar buttons={toolsButtons} />
+
           <StatCards items={statItems} />
 
           {inadimplentes.length > 0 && (

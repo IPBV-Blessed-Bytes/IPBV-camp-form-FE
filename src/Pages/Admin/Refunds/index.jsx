@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { listAllRefunds } from '@/services/refunds';
 import scrollUp from '@/hooks/useScrollUp';
+import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 
@@ -41,6 +43,31 @@ const AdminRefunds = ({ loggedUsername }) => {
     ];
   }, [refunds]);
 
+  const generateExcel = () => {
+    const rows = refunds.map((refund) => ({
+      Data: formatDate(refund.refundedAt),
+      Inscrito: refund.payerName,
+      CPF: refund.cpf,
+      Pedido: refund.orderNumber || '',
+      Método: METHOD_LABEL[refund.paymentMethod] || refund.paymentMethod,
+      Valor: Number(refund.amount || 0),
+      'Inscrição excluída': refund.deleted ? 'Sim' : 'Não',
+    }));
+    downloadSingleSheet({ filename: 'reembolsos.xlsx', sheetName: 'Reembolsos', rows });
+  };
+
+  const toolsButtons = [
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'refunds-excel',
+      name: 'Baixar Relatório',
+      onClick: generateExcel,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+    },
+  ];
+
   return (
     <div className="admin-subpage admin-subpage--refunds">
       <AdminSubpageHeader
@@ -55,6 +82,8 @@ const AdminRefunds = ({ loggedUsername }) => {
           <Loading loading />
         ) : (
           <>
+            <AdminToolbar buttons={toolsButtons} />
+
             <StatCards items={statItems} />
 
             <div className="admin-table-card">
