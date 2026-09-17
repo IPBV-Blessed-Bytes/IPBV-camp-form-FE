@@ -2,6 +2,7 @@ import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CamperFormModal from './CamperFormModal';
 
 const EditAndAddCamperModal = ({
@@ -17,6 +18,9 @@ const EditAndAddCamperModal = ({
   currentDate,
   onSaveEdit,
   onAddSubmit,
+  savingEdit,
+  savingAdd,
+  deleting,
   handleCloseDeleteModal,
   handleConfirmDeleteAll,
   handleConfirmDeleteSpecific,
@@ -34,6 +38,7 @@ const EditAndAddCamperModal = ({
       currentDate={currentDate}
       isEdit
       onSubmit={onSaveEdit}
+      submitting={savingEdit}
     />
 
     <CamperFormModal
@@ -46,6 +51,7 @@ const EditAndAddCamperModal = ({
       initialData={{}}
       currentDate={currentDate}
       onSubmit={onAddSubmit}
+      submitting={savingAdd}
     />
 
     <CustomModal
@@ -59,13 +65,14 @@ const EditAndAddCamperModal = ({
           <Button variant="secondary" onClick={handleCloseDeleteModal}>
             Cancelar
           </Button>
-          <Button
+          <SpinnerButton
             variant="danger"
             className="btn-cancel"
             onClick={modalType === 'delete-all' ? handleConfirmDeleteAll : handleConfirmDeleteSpecific}
+            loading={deleting}
           >
             Deletar
-          </Button>
+          </SpinnerButton>
         </>
       }
     >
@@ -89,6 +96,9 @@ EditAndAddCamperModal.propTypes = {
   currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   onSaveEdit: PropTypes.func,
   onAddSubmit: PropTypes.func,
+  savingEdit: PropTypes.bool,
+  savingAdd: PropTypes.bool,
+  deleting: PropTypes.bool,
   handleCloseDeleteModal: PropTypes.func,
   handleConfirmDeleteAll: PropTypes.func,
   handleConfirmDeleteSpecific: PropTypes.func,

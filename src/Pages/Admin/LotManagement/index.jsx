@@ -10,6 +10,7 @@ import { parse, isValid } from 'date-fns';
 import { getLotsAuthenticated, createLot, updateLot as updateLotRequest, deleteLot } from '@/services/lots';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -36,6 +37,7 @@ const formatDate = (date) => {
 
 const AdminLotManagement = ({ loading, loggedUsername }) => {
   const [loadingContent, setLoadingContent] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [lots, setLots] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLot, setSelectedLot] = useState(null);
@@ -50,16 +52,16 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
 
   scrollUp();
 
-  const fetchLots = async () => {
+  const fetchLots = async (silent = false) => {
     try {
-      setLoadingContent(true);
+      if (!silent) setLoadingContent(true);
       const data = await getLotsAuthenticated();
       setLots(data?.lots || []);
     } catch (error) {
       console.error(error);
       toast.error('Erro ao carregar lotes');
     } finally {
-      setLoadingContent(false);
+      if (!silent) setLoadingContent(false);
     }
   };
 
@@ -112,17 +114,17 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     if (!selectedLot) return;
 
     try {
-      setLoadingContent(true);
+      setSaving(true);
       await deleteLot(selectedLot.id);
       toast.success(`${selectedLot.name} deletado com sucesso`);
       registerLog(`Deletou o ${selectedLot.name}`, loggedUsername);
       setShowDeleteModal(false);
-      fetchLots();
+      await fetchLots(true);
     } catch (error) {
       console.error(error);
       toast.error('Erro ao deletar lote');
     } finally {
-      setLoadingContent(false);
+      setSaving(false);
     }
   };
 
@@ -151,7 +153,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
 
     try {
-      setLoadingContent(true);
+      setSaving(true);
       await createLot({
         name: newLot.name,
         startDate: newLot.startDate,
@@ -167,12 +169,12 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: '',
         endDate: '',
       });
-      fetchLots();
+      await fetchLots(true);
     } catch (error) {
       console.error(error);
       toast.error('Erro ao adicionar lote');
     } finally {
-      setLoadingContent(false);
+      setSaving(false);
     }
   };
 
@@ -347,9 +349,9 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="danger" className="btn-cancel" onClick={handleDeleteLot}>
+              <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDeleteLot} loading={saving}>
                 Deletar
-              </Button>
+              </SpinnerButton>
             </>
           }
         >
@@ -369,9 +371,9 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowAddModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="primary" className="btn-confirm" onClick={handleAddLot}>
+              <SpinnerButton variant="primary" className="btn-confirm" onClick={handleAddLot} loading={saving}>
                 Adicionar
-              </Button>
+              </SpinnerButton>
             </>
           }
         >

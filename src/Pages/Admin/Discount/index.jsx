@@ -9,6 +9,7 @@ import { listCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/service
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -41,6 +42,7 @@ const AdminDiscount = ({ loggedUsername }) => {
   const [discount, setDiscount] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingDiscount, setEditingDiscount] = useState(null);
   const [discountToDelete, setDiscountToDelete] = useState(null);
@@ -54,62 +56,63 @@ const AdminDiscount = ({ loggedUsername }) => {
     fetchDiscounts();
   }, []);
 
-  const fetchDiscounts = async () => {
+  const fetchDiscounts = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const data = await listCoupons();
       setDiscount(data.coupons);
     } catch (error) {
       toast.error('Erro ao buscar descontos');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   const handleCreateDiscount = async () => {
-    setLoading(true);
+    setSaving(true);
 
     try {
       await createCoupon({ ...newDiscount, id: Date.now().toString() });
       toast.success('Desconto criado com sucesso');
       setShowModal(false);
-      fetchDiscounts();
       registerLog(`Criou o desconto atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
+      await fetchDiscounts(true);
     } catch (error) {
       toast.error('Erro ao criar desconto');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleEditDiscount = async () => {
-    setLoading(true);
+    setSaving(true);
 
     try {
       await updateCoupon(editingDiscount.id, editingDiscount);
       toast.success('Desconto atualizado com sucesso');
       setShowModal(false);
-      fetchDiscounts();
       registerLog(`Editou o desconto atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
+      await fetchDiscounts(true);
     } catch (error) {
       toast.error('Erro ao atualizar desconto');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleDeleteDiscount = async (discountToDelete) => {
-    setLoading(true);
+    setSaving(true);
 
     try {
       await deleteCoupon(discountToDelete.id, discountToDelete);
       toast.success('Desconto excluído com sucesso');
       setShowConfirmDelete(false);
-      fetchDiscounts();
       registerLog(`Excluiu o desconto atrelado ao CPF ${discountToDelete.cpf}`, loggedUsername);
+      await fetchDiscounts(true);
     } catch (error) {
       toast.error('Erro ao excluir desconto');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -299,9 +302,9 @@ const AdminDiscount = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={closeModal}>
               Cancelar
             </Button>
-            <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
+            <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={saving}>
               {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -374,13 +377,14 @@ const AdminDiscount = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={closeConfirmDeleteModal}>
               Cancelar
             </Button>
-            <Button
+            <SpinnerButton
               variant="danger"
               className="btn-cancel"
               onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}
+              loading={saving}
             >
               Excluir
-            </Button>
+            </SpinnerButton>
           </>
         }
       >

@@ -9,6 +9,7 @@ import { downloadSingleSheet } from '@/utils/excelExport';
 import Icons from '@/components/Global/Icons';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import {
   listAggregates,
@@ -32,6 +33,7 @@ const AdminRooms = ({ loggedUsername }) => {
   const [roomSortOrder, setRoomSortOrder] = useState('asc');
   const [selectedCamper, setSelectedCamper] = useState({});
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -46,8 +48,8 @@ const AdminRooms = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const fetchUsers = async () => {
-    setLoading(true);
+  const fetchUsers = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const data = await listAggregates();
       setDropdownCampers(data);
@@ -55,7 +57,7 @@ const AdminRooms = ({ loggedUsername }) => {
       toast.error('Erro ao carregar usuários');
       console.error('Erro ao buscar usuários:', error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -76,7 +78,7 @@ const AdminRooms = ({ loggedUsername }) => {
     }
 
     const newRoom = { id: uuidv4(), name: newRoomName, campers: [] };
-    setLoading(true);
+    setSaving(true);
 
     try {
       const data = await createRoomRequest(newRoom);
@@ -91,7 +93,7 @@ const AdminRooms = ({ loggedUsername }) => {
       toast.error('Erro ao criar quarto');
       console.error('Erro ao criar quarto:', error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -136,14 +138,14 @@ const AdminRooms = ({ loggedUsername }) => {
         name: roomToDelete.name,
         campers: roomToDelete.campers || [],
       };
-      setLoading(true);
+      setSaving(true);
 
       try {
         const data = await deleteRoom(roomToDelete.id, roomData);
 
         if (data === 'Quarto removido com sucesso.') {
           refetchRooms();
-          fetchUsers();
+          fetchUsers(true);
           toast.success('Quarto excluido com sucesso');
           registerLog(`Excluiu o quarto com nome ${roomToDelete.name}`, loggedUsername);
           handleCloseDeleteModal();
@@ -152,7 +154,7 @@ const AdminRooms = ({ loggedUsername }) => {
         toast.error('Erro ao excluir quarto');
         console.error('Erro ao excluir quarto:', error);
       } finally {
-        setLoading(false);
+        setSaving(false);
       }
     }
   };
@@ -168,7 +170,7 @@ const AdminRooms = ({ loggedUsername }) => {
       const roomData = {
         name: renamedRoomName,
       };
-      setLoading(true);
+      setSaving(true);
 
       try {
         const data = await renameRoomRequest(roomToRename.id, roomData);
@@ -183,7 +185,7 @@ const AdminRooms = ({ loggedUsername }) => {
         toast.error('Erro ao renomear quarto');
         console.error('Erro ao renomear quarto:', error);
       } finally {
-        setLoading(false);
+        setSaving(false);
       }
     }
   };
@@ -252,7 +254,7 @@ const AdminRooms = ({ loggedUsername }) => {
       toast.error('Erro: Nenhum acampante selecionado.');
       return;
     }
-    setLoading(true);
+    setSaving(true);
 
     try {
       const data = await removeCamperFromRoom(camperToDelete.id);
@@ -260,14 +262,14 @@ const AdminRooms = ({ loggedUsername }) => {
       if (data === 'Acampante removido do quarto com sucesso.') {
         toast.success('Acampante removido do quarto com sucesso');
         refetchRooms();
-        fetchUsers();
+        fetchUsers(true);
         handleCloseDeleteCamperFromRoomModal();
       }
     } catch (error) {
       toast.error('Erro ao apagar acampante do quarto');
       console.error('Erro ao apagar acampante do quarto:', error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -609,9 +611,9 @@ const AdminRooms = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={handleCloseModal}>
               Cancelar
             </Button>
-            <Button variant="primary" className="btn-confirm" onClick={createRoom}>
+            <SpinnerButton variant="primary" className="btn-confirm" onClick={createRoom} loading={saving}>
               Criar Quarto
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -640,9 +642,9 @@ const AdminRooms = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={handleCloseDeleteModal}>
               Cancelar
             </Button>
-            <Button variant="danger" className="btn-cancel" onClick={confirmDeleteRoom}>
+            <SpinnerButton variant="danger" className="btn-cancel" onClick={confirmDeleteRoom} loading={saving}>
               Excluir
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -662,9 +664,9 @@ const AdminRooms = ({ loggedUsername }) => {
               <Button variant="secondary" onClick={handleCloseEditModal}>
                 Cancelar
               </Button>
-              <Button variant="success" className="btn-confirm" onClick={renameRoom}>
+              <SpinnerButton variant="success" className="btn-confirm" onClick={renameRoom} loading={saving}>
                 Salvar
-              </Button>
+              </SpinnerButton>
             </>
           }
         >
@@ -693,9 +695,14 @@ const AdminRooms = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
               Cancelar
             </Button>
-            <Button variant="danger" className="btn-cancel" onClick={() => deleteCamperFromRoom(camperToDelete)}>
+            <SpinnerButton
+              variant="danger"
+              className="btn-cancel"
+              onClick={() => deleteCamperFromRoom(camperToDelete)}
+              loading={saving}
+            >
               Excluir
-            </Button>
+            </SpinnerButton>
           </>
         }
       >

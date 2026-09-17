@@ -41,8 +41,20 @@ const formatCurrentDate = () => {
 const AdminCampers = ({ loggedUsername, userRole }) => {
   scrollUp();
 
-  const { data, loading, setFormSubmitted, saveEdit, addCamper, importCampers, deleteSelected, deleteOne, fetchData } =
-    useCampersData({ loggedUsername });
+  const {
+    data,
+    loading,
+    savingEdit,
+    savingAdd,
+    deleting,
+    setFormSubmitted,
+    saveEdit,
+    addCamper,
+    importCampers,
+    deleteSelected,
+    deleteOne,
+    fetchData,
+  } = useCampersData({ loggedUsername });
 
   const catalog = useProductCatalog();
 
@@ -353,6 +365,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
           currentDate={currentDate}
           onSaveEdit={handleSaveEdit}
           onAddSubmit={handleAddSubmit}
+          savingEdit={savingEdit}
+          savingAdd={savingAdd}
+          deleting={deleting}
           handleCloseDeleteModal={() => setShowDeleteModal(false)}
           handleConfirmDeleteAll={handleConfirmDeleteAll}
           handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}

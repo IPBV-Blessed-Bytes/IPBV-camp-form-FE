@@ -62,13 +62,10 @@ const useCampersData = ({ loggedUsername }) => {
   const deleteManyMutation = useMutation({ mutationFn: (ids) => deleteCampers(ids) });
   const importMutation = useMutation({ mutationFn: (payload) => bulkImportCampers(payload) });
 
-  const loading =
-    isLoading ||
-    updateMutation.isPending ||
-    createMutation.isPending ||
-    deleteOneMutation.isPending ||
-    deleteManyMutation.isPending ||
-    importMutation.isPending;
+  const loading = isLoading || importMutation.isPending;
+  const savingEdit = updateMutation.isPending;
+  const savingAdd = createMutation.isPending;
+  const deleting = deleteOneMutation.isPending || deleteManyMutation.isPending;
 
   const saveEdit = async ({ editFormData, editRowIndex }) => {
     const payload = buildEditPayload(editFormData);
@@ -165,6 +162,9 @@ const useCampersData = ({ loggedUsername }) => {
   return {
     data,
     loading,
+    savingEdit,
+    savingAdd,
+    deleting,
     formSubmitted,
     setFormSubmitted,
     fetchData: refetch,

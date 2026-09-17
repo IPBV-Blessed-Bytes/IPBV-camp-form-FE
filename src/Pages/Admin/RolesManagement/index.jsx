@@ -8,6 +8,7 @@ import { getRoles, getPermissions, createRole, updateRole, deleteRole } from '@/
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -20,6 +21,7 @@ const emptyForm = { name: '', label: '' };
 
 const AdminRolesManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [formData, setFormData] = useState(emptyForm);
@@ -33,8 +35,8 @@ const AdminRolesManagement = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const fetchAll = async () => {
-    setLoading(true);
+  const fetchAll = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [rolesData, permsData] = await Promise.all([getRoles(), getPermissions()]);
       setRoles(Array.isArray(rolesData) ? rolesData : []);
@@ -42,7 +44,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao buscar papéis e permissões');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -92,7 +94,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
 
     const permsPayload = permissions.filter((p) => selectedPerms.has(p.id));
 
-    setLoading(true);
+    setSaving(true);
     try {
       if (editingRole) {
         await updateRole(editingRole.id, { label: formData.label, permissions: permsPayload });
@@ -107,26 +109,26 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       setEditingRole(null);
       setFormData(emptyForm);
       setSelectedPerms(new Set());
-      fetchAll();
+      await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao salvar papel');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await deleteRole(roleToDelete.id);
       toast.success('Papel excluído com sucesso');
       registerLog(`Excluiu papel ${roleToDelete.name}`, loggedUsername);
       setShowDeleteModal(false);
-      fetchAll();
+      await fetchAll(true);
     } catch (error) {
       toast.error('Não foi possível excluir o papel (papéis de sistema não podem ser excluídos)');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -253,9 +255,9 @@ const AdminRolesManagement = ({ loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowModal(false)}>
                 Cancelar
               </Button>
-              <Button className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit}>
+              <SpinnerButton className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit} loading={saving}>
                 {editingRole ? 'Salvar Alterações' : 'Criar Papel'}
-              </Button>
+              </SpinnerButton>
             </>
           }
         >
@@ -322,9 +324,9 @@ const AdminRolesManagement = ({ loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
+              <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
                 Excluir
-              </Button>
+              </SpinnerButton>
             </>
           }
         >

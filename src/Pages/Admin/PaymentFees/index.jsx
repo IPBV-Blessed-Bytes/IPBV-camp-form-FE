@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
+import { Alert, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -9,6 +9,7 @@ import { parseFees, DEFAULT_FEES } from '@/utils/paymentFees';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
@@ -39,7 +40,6 @@ const AdminPaymentFees = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     setSaving(true);
-    setLoading(true);
 
     try {
       const payload = {
@@ -59,7 +59,6 @@ const AdminPaymentFees = ({ loggedUsername }) => {
       toast.error('Erro ao salvar as taxas.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
@@ -211,9 +210,9 @@ const AdminPaymentFees = ({ loggedUsername }) => {
             </Col>
           </Row>
           <div className="d-flex justify-content-end">
-            <Button variant="teal-blue" size="lg" className="mt-3" onClick={handleSave} disabled={saving}>
+            <SpinnerButton variant="teal-blue" size="lg" className="mt-3" onClick={handleSave} loading={saving}>
               Salvar Taxas
-            </Button>
+            </SpinnerButton>
           </div>
 
           <Loading loading={loading} />

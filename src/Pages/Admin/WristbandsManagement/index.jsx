@@ -14,6 +14,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import { HOSTING_NAME_OPTIONS } from '@/utils/constants';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -23,7 +24,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
 const AdminWristbandsManagement = ({ loggedUsername }) => {
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { wristbands, isLoading: loadingWristbands, refetch: refetchWristbands } = useWristbandsList();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -68,7 +69,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
 
     if (!validateForm()) return;
 
-    setLoading(true);
+    setSaving(true);
     try {
       if (editingWristband) {
         await updateWristband(editingWristband.id, formData);
@@ -87,12 +88,12 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao salvar pulseira');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await deleteWristband(wristbandToDelete.id);
       toast.success('Pulseira removida com sucesso');
@@ -102,7 +103,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao remover pulseira');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -238,9 +239,9 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancelar
             </Button>
-            <Button className="btn-confirm" variant="primary" onClick={handleSubmit}>
+            <SpinnerButton className="btn-confirm" variant="primary" onClick={handleSubmit} loading={saving}>
               {editingWristband ? 'Salvar alterações' : 'Criar Pulseira'}
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -335,16 +336,16 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
+            <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>
               Deletar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
         Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
       </CustomModal>
 
-        <Loading loading={loading || loadingWristbands} />
+        <Loading loading={loadingWristbands} />
       </div>
     </div>
   );

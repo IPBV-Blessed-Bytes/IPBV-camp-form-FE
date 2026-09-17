@@ -15,6 +15,7 @@ import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import ActionButton from '@/components/Global/ActionButton';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 
 const formatDate = (iso) => {
@@ -34,12 +35,14 @@ const AdminTrash = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const reload = () => {
-    setLoading(true);
-    listDeletedCampers()
+  const reload = (silent = false) => {
+    if (!silent) setLoading(true);
+    return listDeletedCampers()
       .then(setItems)
       .catch(() => toast.error('Erro ao carregar a lixeira.'))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!silent) setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -49,25 +52,22 @@ const AdminTrash = ({ loggedUsername }) => {
   const statItems = useMemo(() => [{ label: 'Inscrições na lixeira', value: items.length, tone: 'accent' }], [items]);
 
   const handleRestore = async (item) => {
-    setLoading(true);
     setSaving(true);
     try {
       await restoreDeletedCamper(item.id);
       registerLog(`Restaurou a inscrição de ${item.name} (CPF ${item.cpf})`, loggedUsername);
       toast.success('Inscrição restaurada para os acampantes.');
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível restaurar a inscrição.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
   const handlePurge = async () => {
     if (!purgeTarget) return;
     setSaving(true);
-    setLoading(true);
     try {
       await purgeDeletedCamper(purgeTarget.id);
       registerLog(
@@ -76,29 +76,26 @@ const AdminTrash = ({ loggedUsername }) => {
       );
       toast.success('Removido definitivamente da lixeira.');
       setPurgeTarget(null);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível remover.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
   const handlePurgeAll = async () => {
     setSaving(true);
-    setLoading(true);
     try {
       await purgeAllDeletedCampers();
       registerLog(`Esvaziou a lixeira (${items.length} inscrições removidas definitivamente)`, loggedUsername);
       toast.success('Lixeira esvaziada.');
       setShowPurgeAll(false);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível esvaziar a lixeira.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
@@ -191,9 +188,9 @@ const AdminTrash = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setPurgeTarget(null)}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handlePurge} disabled={saving}>
+            <SpinnerButton variant="danger" onClick={handlePurge} loading={saving}>
               Excluir definitivamente
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -215,9 +212,9 @@ const AdminTrash = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setShowPurgeAll(false)}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handlePurgeAll} disabled={saving}>
+            <SpinnerButton variant="danger" onClick={handlePurgeAll} loading={saving}>
               Limpar Lixeira
-            </Button>
+            </SpinnerButton>
           </>
         }
       >

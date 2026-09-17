@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormChange';
 import { useProductCatalog } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
 import { openGuardianDocument } from '@/services/documents';
@@ -19,6 +20,7 @@ const CamperFormModal = ({
   currentDate,
   isEdit,
   onSubmit,
+  submitting,
 }) => {
   const [formData, setFormData] = useState(initialData || {});
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -47,9 +49,9 @@ const CamperFormModal = ({
           <Button variant="secondary" onClick={onHide}>
             Cancelar
           </Button>
-          <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
+          <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={submitting}>
             {submitLabel}
-          </Button>
+          </SpinnerButton>
         </>
       }
     >
@@ -103,6 +105,7 @@ CamperFormModal.propTypes = {
   currentDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   isEdit: PropTypes.bool,
   onSubmit: PropTypes.func,
+  submitting: PropTypes.bool,
 };
 
 export default CamperFormModal;
