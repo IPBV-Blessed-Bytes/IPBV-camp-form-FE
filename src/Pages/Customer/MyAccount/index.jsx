@@ -29,6 +29,7 @@ import BoletoList from '@/components/Global/BoletoList';
 import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
 import WhatsAppGroupQr from '@/components/Global/WhatsAppGroupQr';
 import useWhatsAppGroupLink from '@/hooks/useWhatsAppGroupLink';
+import { printReceipt } from '@/utils/receipt';
 import Loading from '@/components/Global/Loading';
 
 const REG_STATUS = {
@@ -267,6 +268,11 @@ const MyAccount = () => {
                     onClick={() => setQrTarget({ orderNumber: group.orderNumber, count: group.confirmedCount })}
                   >
                     <Icons typeIcon="camera" iconSize={18} fill="#fff" /> &nbsp;QR de check-in da família
+                  </Button>
+                )}
+                {group.confirmedCount > 0 && (
+                  <Button variant="outline-teal-blue" onClick={() => printReceipt(group, user)}>
+                    <Icons typeIcon="download" iconSize={18} fill="#007185" /> &nbsp;Recibo
                   </Button>
                 )}
                 {group.confirmedCount === 0 && group.pendingCount > 0 && (
