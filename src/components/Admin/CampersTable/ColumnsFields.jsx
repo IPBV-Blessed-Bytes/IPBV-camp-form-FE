@@ -1,14 +1,20 @@
 import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Col } from 'react-bootstrap';
+import { InputMask, format as formatMask } from '@react-input/mask';
 import Icons from '@/components/Global/Icons';
+import MaskedDateInput from '@/components/Global/MaskedDateInput';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format, parse } from 'date-fns';
+import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
 import '../../Style/ColumnsFields.scss';
+
+const onlyDigits = (value) => String(value ?? '').replace(/\D/g, '');
 
 const ColumnFields = ({
   type,
+  mask,
   label,
   name,
   value,
@@ -90,6 +96,20 @@ const ColumnFields = ({
             maxDate={new Date()}
             showMonthDropdown
             showYearDropdown
+            customInput={<MaskedDateInput />}
+          />
+        ) : mask === 'cpf' || mask === 'phone' ? (
+          <InputMask
+            component={Form.Control}
+            {...(mask === 'cpf' ? CPF_MASK : PHONE_MASK)}
+            name={name}
+            value={formatMask(onlyDigits(value), mask === 'cpf' ? CPF_MASK : PHONE_MASK)}
+            onChange={(event) => onChange({ target: { name, value: onlyDigits(event.target.value) } })}
+            className={`form-control-lg form-control-bg ${addForm && 'custom-new-registration'} ${
+              showError && 'msg-error'
+            } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
+            placeholder={placeholder}
+            disabled={disabled}
           />
         ) : (
           <>
@@ -119,6 +139,7 @@ const ColumnFields = ({
 
 ColumnFields.propTypes = {
   type: PropTypes.string,
+  mask: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),

@@ -81,8 +81,9 @@ const FIELDS = [
   {
     label: 'CPF',
     name: 'personalInformation.cpf',
-    type: 'number',
-    placeholder: '1234567890',
+    type: 'text',
+    mask: 'cpf',
+    placeholder: '000.000.000-00',
     oddOrEven: 'even',
     required: true,
     errorMessage: 'Insira um CPF válido',
@@ -133,7 +134,14 @@ const FIELDS = [
     placeholder: 'Nome da Igreja',
     oddOrEven: 'even',
   },
-  { label: 'Celular', name: 'contact.cellPhone', type: 'number', placeholder: '81993727854', oddOrEven: 'even' },
+  {
+    label: 'Celular',
+    name: 'contact.cellPhone',
+    type: 'text',
+    mask: 'phone',
+    placeholder: '(00) 00000-0000',
+    oddOrEven: 'even',
+  },
   {
     label: 'Whatsapp',
     name: 'contact.isWhatsApp',
@@ -195,16 +203,18 @@ const FIELDS = [
   {
     label: 'CPF do Resp. Legal',
     name: 'personalInformation.legalGuardianCpf',
-    type: 'number',
-    placeholder: '1234567890',
+    type: 'text',
+    mask: 'cpf',
+    placeholder: '000.000.000-00',
     oddOrEven: 'even',
     errorMessage: 'Insira um CPF válido',
   },
   {
     label: 'Celular do Resp. Legal',
     name: 'personalInformation.legalGuardianCellPhone',
-    type: 'number',
-    placeholder: '81993727854',
+    type: 'text',
+    mask: 'phone',
+    placeholder: '(00) 00000-0000',
     oddOrEven: 'odd',
   },
   {
@@ -268,6 +278,7 @@ const Columns = ({ addFormData, editFormData, handleFormChange, addForm, editFor
             key={index}
             label={field.label}
             type={field.type || 'text'}
+            mask={field.mask}
             name={field.name}
             value={value}
             onChange={handleFormChange}
