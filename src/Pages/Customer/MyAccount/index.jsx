@@ -47,6 +47,12 @@ const PAYMENT_METHOD_LABELS = {
 
 const paymentMethodLabel = (value) => PAYMENT_METHOD_LABELS[value] || 'Não Pagante';
 
+const waLink = (phone) => {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (!digits) return '';
+  return `https://wa.me/${digits.startsWith('55') ? digits : `55${digits}`}`;
+};
+
 const REQ_STATUS = {
   PENDING: { label: 'Pendente', bg: 'warning' },
   APPROVED: { label: 'Aprovada', bg: 'success' },
@@ -305,7 +311,23 @@ const MyAccount = () => {
                     const status = REG_STATUS[r.status] || { label: r.status, bg: 'secondary' };
                     return (
                       <tr key={`${r.status}-${r.id}`}>
-                        <td>{r.name || <span className="text-secondary">—</span>}</td>
+                        <td>
+                          {r.name || <span className="text-secondary">—</span>}
+                          {r.rideMatches?.length > 0 &&
+                            r.rideMatches.map((m, i) => (
+                              <div key={i} className="small text-secondary mt-1">
+                                🚗 {m.role === 'caronista' ? 'Motorista' : 'Passageiro'}: {m.name}
+                                {m.cellPhone && (
+                                  <>
+                                    {' — '}
+                                    <a href={waLink(m.cellPhone)} target="_blank" rel="noopener noreferrer">
+                                      {m.cellPhone}
+                                    </a>
+                                  </>
+                                )}
+                              </div>
+                            ))}
+                        </td>
                         <td>{r.cpf}</td>
                         <td>{r.accomodation}</td>
                         <td>{r.transportation}</td>
