@@ -15,6 +15,7 @@ import StatCards from '@/components/Admin/StatCards';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import ActionButton from '@/components/Global/ActionButton';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import './style.scss';
 
@@ -93,9 +94,9 @@ const AdminBoletos = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const reload = () => {
-    setLoading(true);
-    listAllBoletos()
+  const reload = (silent = false) => {
+    if (!silent) setLoading(true);
+    return listAllBoletos()
       .then((list) => {
         const sorted = [...list].sort((a, b) => {
           if (a.orderNumber === b.orderNumber) return a.installmentNumber - b.installmentNumber;
@@ -104,7 +105,9 @@ const AdminBoletos = ({ loggedUsername }) => {
         setBoletos(sorted);
       })
       .catch(() => toast.error('Erro ao carregar boletos.'))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!silent) setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -118,7 +121,6 @@ const AdminBoletos = ({ loggedUsername }) => {
   };
 
   const handleSaveDueDate = async () => {
-    setLoading(true);
     if (!dueTarget || !newDate) return;
     setSaving(true);
     try {
@@ -129,17 +131,15 @@ const AdminBoletos = ({ loggedUsername }) => {
       );
       toast.success('Vencimento atualizado. O pagador foi notificado por e-mail.');
       setDueTarget(null);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível atualizar o vencimento.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
   const handleCancel = async () => {
-    setLoading(true);
     if (!cancelTarget) return;
     setSaving(true);
     try {
@@ -150,12 +150,11 @@ const AdminBoletos = ({ loggedUsername }) => {
       );
       toast.success('Boleto cancelado. O pagador foi notificado por e-mail.');
       setCancelTarget(null);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível cancelar o boleto.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
@@ -168,7 +167,6 @@ const AdminBoletos = ({ loggedUsername }) => {
   };
 
   const handleReissue = async () => {
-    setLoading(true);
     if (!reissueTarget || !reissueDate || !reissueAmount) return;
     setSaving(true);
     try {
@@ -179,18 +177,16 @@ const AdminBoletos = ({ loggedUsername }) => {
       );
       toast.success('Novo boleto gerado. O pagador foi notificado por e-mail.');
       setReissueTarget(null);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível gerar o novo boleto.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
   const handleDeleteOrder = async () => {
     if (!deleteOrderTarget) return;
-    setLoading(true);
     setSaving(true);
     try {
       await deleteBoletosByOrder(deleteOrderTarget.orderNumber);
@@ -200,12 +196,11 @@ const AdminBoletos = ({ loggedUsername }) => {
       );
       toast.success('Boletos do pedido excluídos.');
       setDeleteOrderTarget(null);
-      reload();
+      await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível excluir os boletos do pedido.');
     } finally {
       setSaving(false);
-      setLoading(false);
     }
   };
 
@@ -502,9 +497,9 @@ const AdminBoletos = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setDueTarget(null)}>
               Voltar
             </Button>
-            <Button variant="teal-blue" onClick={handleSaveDueDate} disabled={saving}>
+            <SpinnerButton variant="teal-blue" onClick={handleSaveDueDate} loading={saving}>
               Salvar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -543,9 +538,9 @@ const AdminBoletos = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setCancelTarget(null)}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handleCancel} disabled={saving}>
+            <SpinnerButton variant="danger" onClick={handleCancel} loading={saving}>
               Cancelar Boleto
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -577,9 +572,9 @@ const AdminBoletos = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setDeleteOrderTarget(null)}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handleDeleteOrder} disabled={saving}>
+            <SpinnerButton variant="danger" onClick={handleDeleteOrder} loading={saving}>
               Excluir Todos
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -610,9 +605,9 @@ const AdminBoletos = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setReissueTarget(null)}>
               Voltar
             </Button>
-            <Button variant="teal-blue" onClick={handleReissue} disabled={saving}>
+            <SpinnerButton variant="teal-blue" onClick={handleReissue} loading={saving}>
               Gerar Boleto
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
