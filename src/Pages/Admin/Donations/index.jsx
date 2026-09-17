@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Table, Badge, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { listAllDonations, createManualDonation } from '@/services/donations';
+import {
+  listAllDonations,
+  createManualDonation,
+  updateManualDonation,
+  deleteManualDonation,
+} from '@/services/donations';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -11,6 +16,7 @@ import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
 import SpinnerButton from '@/components/Global/SpinnerButton';
+import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 
 const formatBRL = (reais) => (Number(reais) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -32,8 +38,10 @@ const AdminDonations = ({ loggedUsername }) => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showInsert, setShowInsert] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   scrollUp();
 
@@ -65,7 +73,25 @@ const AdminDonations = ({ loggedUsername }) => {
 
   const setField = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleInsert = async () => {
+  const openInsert = () => {
+    setEditId(null);
+    setForm(EMPTY_FORM);
+    setShowInsert(true);
+  };
+
+  const openEdit = (donation) => {
+    setEditId(donation.id);
+    setForm({
+      payerName: donation.payerName || '',
+      cpf: donation.cpf || '',
+      packageTotal: donation.packageTotal == null ? '' : String(donation.packageTotal),
+      amount: donation.amount == null ? '' : String(donation.amount),
+      bankAccount: donation.bankAccount || '',
+    });
+    setShowInsert(true);
+  };
+
+  const handleSave = async () => {
     if (!form.payerName.trim()) {
       toast.error('Informe o nome do doador.');
       return;
@@ -77,21 +103,45 @@ const AdminDonations = ({ loggedUsername }) => {
     }
     setSaving(true);
     try {
-      const packageTotal = form.packageTotal === '' ? null : parseInt(form.packageTotal, 10);
-      await createManualDonation({
+      const packageTotalParsed = form.packageTotal === '' ? null : parseInt(form.packageTotal, 10);
+      const payload = {
         payerName: form.payerName.trim(),
         cpf: form.cpf.trim(),
-        packageTotal: Number.isNaN(packageTotal) ? null : packageTotal,
+        packageTotal: Number.isNaN(packageTotalParsed) ? null : packageTotalParsed,
         amount,
         bankAccount: form.bankAccount.trim(),
-      });
-      registerLog(`Inseriu manualmente uma doação de R$ ${amount} (${form.payerName.trim()})`, loggedUsername);
-      toast.success('Doação inserida.');
+      };
+      if (editId) {
+        await updateManualDonation(editId, payload);
+        registerLog(`Editou a doação manual de ${payload.payerName} (R$ ${amount})`, loggedUsername);
+        toast.success('Doação atualizada.');
+      } else {
+        await createManualDonation(payload);
+        registerLog(`Inseriu manualmente uma doação de R$ ${amount} (${payload.payerName})`, loggedUsername);
+        toast.success('Doação inserida.');
+      }
       setShowInsert(false);
+      setEditId(null);
       setForm(EMPTY_FORM);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível inserir a doação.');
+      toast.error(error?.response?.data || 'Não foi possível salvar a doação.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setSaving(true);
+    try {
+      await deleteManualDonation(deleteTarget.id);
+      registerLog(`Excluiu a doação manual de ${deleteTarget.payerName}`, loggedUsername);
+      toast.success('Doação excluída.');
+      setDeleteTarget(null);
+      await reload(true);
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível excluir a doação.');
     } finally {
       setSaving(false);
     }
@@ -127,12 +177,9 @@ const AdminDonations = ({ loggedUsername }) => {
       iconSize: 22,
       id: 'donations-insert',
       name: 'Inserir Doação',
-      onClick: () => {
-        setForm(EMPTY_FORM);
-        setShowInsert(true);
-      },
+      onClick: openInsert,
       typeButton: 'teal-blue',
-      typeIcon: 'couple',
+      typeIcon: 'plus',
     },
   ];
 
@@ -167,12 +214,13 @@ const AdminDonations = ({ loggedUsername }) => {
                     <th className="table-cells-header">Data:</th>
                     <th className="table-cells-header">Inserção Manual:</th>
                     <th className="table-cells-header">Conta Bancária:</th>
+                    <th className="table-cells-header">Ações:</th>
                   </tr>
                 </thead>
                 <tbody>
                   {donations.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="text-start text-secondary p-4">
+                      <td colSpan={10} className="text-start text-secondary p-4">
                         Nenhuma doação registrada
                       </td>
                     </tr>
@@ -196,6 +244,26 @@ const AdminDonations = ({ loggedUsername }) => {
                             </Badge>
                           </td>
                           <td>{donation.bankAccount || '—'}</td>
+                          <td>
+                            {donation.manualInsertion ? (
+                              <div className="table-action-cell">
+                                <ActionButton
+                                  action="edit"
+                                  iconSize={18}
+                                  title="Editar"
+                                  onClick={() => openEdit(donation)}
+                                />
+                                <ActionButton
+                                  action="delete"
+                                  iconSize={18}
+                                  title="Excluir"
+                                  onClick={() => setDeleteTarget(donation)}
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-secondary">—</span>
+                            )}
+                          </td>
                         </tr>
                       );
                     })
@@ -211,27 +279,29 @@ const AdminDonations = ({ loggedUsername }) => {
         show={showInsert}
         onHide={() => setShowInsert(false)}
         variant="confirm"
-        title="Inserir Doação"
-        icon="couple"
-        iconFill="#007185"
+        title={editId ? 'Editar Doação' : 'Inserir Doação'}
+        icon={editId ? 'edit' : 'plus'}
+        iconFill={editId ? '' : '#057c05'}
         footer={
           <>
             <SpinnerButton variant="outline-secondary" onClick={() => setShowInsert(false)}>
               Voltar
             </SpinnerButton>
-            <SpinnerButton variant="teal-blue" onClick={handleInsert} loading={saving}>
-              Inserir
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>
+              {editId ? 'Salvar' : 'Inserir'}
             </SpinnerButton>
           </>
         }
       >
-        <p className="text-secondary small mb-3">
-          Para doações feitas fora do fluxo padrão (inscritos manuais ou doações direto na conta da igreja). A doação
-          entra como <b>confirmada</b> com a data de agora.
-        </p>
+        {!editId && (
+          <p className="text-secondary small mb-3">
+            Para doações feitas fora do fluxo padrão (inscritos manuais ou doações direto na conta da igreja). A doação
+            entra como <b>confirmada</b> com a data de agora.
+          </p>
+        )}
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Nome do doador:</b>
+            <b>Nome do Doador:</b>
           </Form.Label>
           <Form.Control value={form.payerName} onChange={(e) => setField('payerName', e.target.value)} />
         </Form.Group>
@@ -243,7 +313,7 @@ const AdminDonations = ({ loggedUsername }) => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Valor do pacote (R$):</b>
+            <b>Valor do Pacote (R$):</b>
           </Form.Label>
           <Form.Control
             type="number"
@@ -255,7 +325,7 @@ const AdminDonations = ({ loggedUsername }) => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Valor da doação (R$):</b>
+            <b>Valor da Doação (R$):</b>
           </Form.Label>
           <Form.Control
             type="number"
@@ -266,7 +336,7 @@ const AdminDonations = ({ loggedUsername }) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>
-            <b>Conta bancária:</b>
+            <b>Conta Bancária:</b>
           </Form.Label>
           <Form.Control
             value={form.bankAccount}
@@ -274,6 +344,30 @@ const AdminDonations = ({ loggedUsername }) => {
             placeholder="Conta em que a doação foi paga"
           />
         </Form.Group>
+      </CustomModal>
+
+      <CustomModal
+        show={Boolean(deleteTarget)}
+        onHide={() => setDeleteTarget(null)}
+        variant="cancel"
+        title="Excluir Doação"
+        footer={
+          <>
+            <SpinnerButton variant="outline-secondary" onClick={() => setDeleteTarget(null)}>
+              Voltar
+            </SpinnerButton>
+            <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>
+              Excluir
+            </SpinnerButton>
+          </>
+        }
+      >
+        {deleteTarget && (
+          <p>
+            Excluir a doação manual de <b>{deleteTarget.payerName}</b> (R$ {deleteTarget.amount})? Esta ação não pode
+            ser desfeita.
+          </p>
+        )}
       </CustomModal>
     </div>
   );
