@@ -30,6 +30,7 @@ import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
 import WhatsAppGroupQr from '@/components/Global/WhatsAppGroupQr';
 import useWhatsAppGroupLink from '@/hooks/useWhatsAppGroupLink';
 import { printReceipt } from '@/utils/receipt';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import Loading from '@/components/Global/Loading';
 
 const REG_STATUS = {
@@ -77,8 +78,8 @@ const MyAccount = () => {
   const [cancelTarget, setCancelTarget] = useState(null);
   const [canceling, setCanceling] = useState(false);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [regs, reqs] = await Promise.all([getMyRegistrations(), getMyChangeRequests()]);
       setRegistrations(regs);
@@ -96,7 +97,7 @@ const MyAccount = () => {
     } catch (error) {
       toast.error('Não foi possível carregar seus dados.');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -133,7 +134,6 @@ const MyAccount = () => {
       toast.error('Informe a justificativa da alteração.');
       return;
     }
-    setLoading(true);
     setSaving(true);
 
     try {
@@ -143,32 +143,28 @@ const MyAccount = () => {
       setEditData(null);
       setJustification('');
       setJustificationError(false);
-      fetchData();
+      await fetchData(true);
     } catch (error) {
       toast.error('Não foi possível enviar a solicitação.');
     } finally {
       setSaving(false);
-      setLoading(false);
-
     }
   };
 
   const handleConfirmCancel = async () => {
     if (!cancelTarget) return;
     const pendingId = cancelTarget.pendingId;
-    setCancelTarget(null);
     setCanceling(true);
-    setLoading(true);
 
     try {
       await cancelPendingRegistration(pendingId);
       toast.success('Inscrição pendente cancelada.');
-      await fetchData();
+      setCancelTarget(null);
+      await fetchData(true);
     } catch (error) {
       toast.error('Não foi possível cancelar a inscrição.');
     } finally {
       setCanceling(false);
-      setLoading(false);
     }
   };
 
@@ -447,9 +443,9 @@ const MyAccount = () => {
             <Button variant="secondary" onClick={() => setCancelTarget(null)} disabled={canceling}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handleConfirmCancel} disabled={canceling}>
+            <SpinnerButton variant="danger" onClick={handleConfirmCancel} loading={canceling}>
               Sim, cancelar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -486,9 +482,9 @@ const MyAccount = () => {
             <Button variant="secondary" onClick={() => setShowEdit(false)}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSubmitChange} disabled={saving}>
+            <SpinnerButton variant="teal-blue" onClick={handleSubmitChange} loading={saving}>
               Enviar solicitação
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
