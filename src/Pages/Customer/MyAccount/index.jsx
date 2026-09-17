@@ -28,6 +28,7 @@ import { getBoletosByOrder } from '@/services/boletos';
 import BoletoList from '@/components/Global/BoletoList';
 import WhatsAppGroupButton from '@/components/Global/WhatsAppGroupButton';
 import WhatsAppGroupQr from '@/components/Global/WhatsAppGroupQr';
+import useWhatsAppGroupLink from '@/hooks/useWhatsAppGroupLink';
 import Loading from '@/components/Global/Loading';
 
 const REG_STATUS = {
@@ -60,6 +61,7 @@ const MyAccount = () => {
     navigate('/');
   };
   const contactPhone = useContactPhone();
+  const whatsappLink = useWhatsAppGroupLink();
   const [registrations, setRegistrations] = useState([]);
   const [changeRequests, setChangeRequests] = useState([]);
   const [boletosByOrder, setBoletosByOrder] = useState({});
@@ -394,24 +396,28 @@ const MyAccount = () => {
           )}
         </div>
 
-        <div className="account-section-header">
-          <h4 className="account-section-header__title">Grupo do WhatsApp</h4>
-          <div className="account-section-header__line" />
-        </div>
+        {whatsappLink && (
+          <>
+            <div className="account-section-header">
+              <h4 className="account-section-header__title">Grupo do WhatsApp</h4>
+              <div className="account-section-header__line" />
+            </div>
 
-        <div className="account-card whatsapp-group-card">
-          <div className="whatsapp-group-card__info">
-            <h4 className="whatsapp-group-card__title">Grupo do WhatsApp do evento</h4>
-            <p className="whatsapp-group-card__text">
-              Entre no grupo para receber todas as novidades. Escaneie o QR code com a câmera do celular ou use o botão
-              &quot;Grupo do WhatsApp&quot; acima. O grupo permanecerá com mensagens bloqueadas até a semana antes do
-              evento. Até lá apenas administradores poderão mensagens informativas.
-            </p>
-          </div>
-          <div className="whatsapp-group-card__qr">
-            <WhatsAppGroupQr size={200} />
-          </div>
-        </div>
+            <div className="account-card whatsapp-group-card">
+              <div className="whatsapp-group-card__info">
+                <h4 className="whatsapp-group-card__title">Grupo do WhatsApp do evento</h4>
+                <p className="whatsapp-group-card__text">
+                  Entre no grupo para receber todas as novidades. Escaneie o QR code com a câmera do celular ou use o
+                  botão &quot;Grupo do WhatsApp&quot; acima. O grupo permanecerá com mensagens bloqueadas até a semana
+                  antes do evento. Até lá apenas administradores poderão mensagens informativas.
+                </p>
+              </div>
+              <div className="whatsapp-group-card__qr">
+                <WhatsAppGroupQr size={200} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <CheckinQrModal

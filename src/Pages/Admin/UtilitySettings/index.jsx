@@ -29,6 +29,7 @@ const BACKUP_EMAIL_KEY = 'backup_email';
 const EVENT_MAP_KEY = 'event_map';
 const SOCIAL_LINKS_KEY = 'social_links';
 const DECLARATION_TEMPLATE_KEY = 'guardian_declaration_template_id';
+const WHATSAPP_GROUP_KEY = 'whatsapp_group_link';
 
 const SOCIAL_NETWORKS = [
   { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/suaigreja' },
@@ -72,6 +73,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [eventMap, setEventMap] = useState('');
   const [social, setSocial] = useState({});
   const [templateId, setTemplateId] = useState('');
+  const [whatsappGroup, setWhatsappGroup] = useState('');
   const [uploadingTemplate, setUploadingTemplate] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -93,6 +95,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         eventMapValue,
         socialValue,
         templateValue,
+        whatsappValue,
         baseDateData,
       ] = await Promise.all([
         getSetting(CONTACT_KEY),
@@ -105,6 +108,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         getSetting(EVENT_MAP_KEY),
         getSetting(SOCIAL_LINKS_KEY),
         getSetting(DECLARATION_TEMPLATE_KEY),
+        getSetting(WHATSAPP_GROUP_KEY),
         getBaseDate(),
       ]);
       setContact(contactValue);
@@ -117,6 +121,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setEventMap(eventMapValue || '');
       setSocial(parseSocial(socialValue));
       setTemplateId(templateValue || '');
+      setWhatsappGroup(whatsappValue || '');
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
         setBaseDateExists(true);
@@ -153,6 +158,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         backupEmailValue,
         eventMapValue,
         socialValue,
+        whatsappValue,
       ] = await Promise.all([
         updateSetting(CONTACT_KEY, contact.trim()),
         updateSetting(SPREADSHEET_KEY, spreadsheet.trim()),
@@ -163,6 +169,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         updateSetting(BACKUP_EMAIL_KEY, backupEmail.trim()),
         updateSetting(EVENT_MAP_KEY, eventMap.trim()),
         updateSetting(SOCIAL_LINKS_KEY, JSON.stringify(cleanSocial)),
+        updateSetting(WHATSAPP_GROUP_KEY, whatsappGroup.trim()),
       ]);
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
@@ -173,6 +180,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setBackupEmail(backupEmailValue || '');
       setEventMap(eventMapValue || '');
       setSocial(parseSocial(socialValue));
+      setWhatsappGroup(whatsappValue || '');
 
       if (baseDate) {
         if (baseDateExists) {
@@ -479,6 +487,33 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     <Form.Text className="text-muted-italic">
                       É o PDF que o inscrito menor de idade baixa, imprime, assina e reenvia. Substitua aqui quando o
                       termo mudar.
+                    </Form.Text>
+                  </Form.Group>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="whatsapp" iconSize={20} fill="#007185" />
+                  </span>
+                  <span>Grupo do WhatsApp</span>
+                </div>
+                <div className="utility-card__body">
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Link do grupo:</b>
+                    </Form.Label>
+                    <Form.Control
+                      value={whatsappGroup}
+                      onChange={(e) => setWhatsappGroup(e.target.value)}
+                      placeholder="https://chat.whatsapp.com/..."
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Link de convite do grupo do evento. O botão e o QR code só aparecem quando este link está
+                      preenchido; o QR é gerado automaticamente a partir dele.
                     </Form.Text>
                   </Form.Group>
                 </div>

@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import QRCode from 'qrcode';
-import { WHATSAPP_GROUP_LINK } from '@/config/whatsappGroup';
+import useWhatsAppGroupLink from '@/hooks/useWhatsAppGroupLink';
 
 const WhatsAppGroupQr = ({ size }) => {
   const [dataUrl, setDataUrl] = useState('');
+  const link = useWhatsAppGroupLink();
 
   useEffect(() => {
-    QRCode.toDataURL(WHATSAPP_GROUP_LINK, { width: 320, margin: 2 })
+    if (!link) {
+      setDataUrl('');
+      return;
+    }
+    QRCode.toDataURL(link, { width: 320, margin: 2 })
       .then(setDataUrl)
       .catch(() => setDataUrl(''));
-  }, []);
+  }, [link]);
 
-  if (!dataUrl) return null;
+  if (!link || !dataUrl) return null;
 
   return (
     <img
