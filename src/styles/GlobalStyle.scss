@@ -203,7 +203,7 @@ body {
 
 // Admin table
 .table-hover > tbody > tr:hover > * {
-  --bs-table-bg-state: #b2dfb2;
+  --bs-table-bg-state: $light-green;
 }
 
 .table-cells-header {
