@@ -25,6 +25,8 @@ import {
   getMyChangeRequests,
   cancelPendingRegistration,
 } from '@/services/me';
+import SpinnerButton from '@/components/Global/SpinnerButton';
+import { printReceipt } from '@/utils/receipt';
 
 const REG_STATUS = {
   CONFIRMED: { label: 'Confirmada', bg: 'success' },
@@ -40,6 +42,12 @@ const PAYMENT_METHOD_LABELS = {
 
 const paymentMethodLabel = (value) => PAYMENT_METHOD_LABELS[value] || 'Não Pagante';
 
+const waLink = (phone) => {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (!digits) return '';
+  return `https://wa.me/${digits.startsWith('55') ? digits : `55${digits}`}`;
+};
+
 const REQ_STATUS = {
   PENDING: { label: 'Pendente', bg: 'warning' },
   APPROVED: { label: 'Aprovada', bg: 'success' },
@@ -49,7 +57,7 @@ const REQ_STATUS = {
 const MyAccount = () => {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
-  const { contact: eventContact } = useEventBranding();
+  const { contact: eventContact, name: eventName } = useEventBranding();
   const formState = useFormState({ optional: true });
   const goToForm = () => {
     formState?.initialStep?.();
@@ -68,8 +76,8 @@ const MyAccount = () => {
   const [cancelTarget, setCancelTarget] = useState(null);
   const [canceling, setCanceling] = useState(false);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [regs, reqs] = await Promise.all([getMyRegistrations(), getMyChangeRequests()]);
       setRegistrations(regs);
@@ -77,7 +85,7 @@ const MyAccount = () => {
     } catch (error) {
       toast.error('Não foi possível carregar seus dados.');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -123,7 +131,7 @@ const MyAccount = () => {
       setEditData(null);
       setJustification('');
       setJustificationError(false);
-      fetchData();
+      await fetchData(true);
     } catch (error) {
       toast.error('Não foi possível enviar a solicitação.');
     } finally {
@@ -155,6 +163,13 @@ const MyAccount = () => {
 
   const personal = editData?.personalInformation || {};
   const contact = editData?.contact || {};
+
+  const printOrderReceipt = (registration) => {
+    const regs = registration.orderNumber
+      ? registrations.filter((x) => x.status === 'CONFIRMED' && x.orderNumber === registration.orderNumber)
+      : [registration];
+    printReceipt({ orderNumber: registration.orderNumber, registrations: regs }, user, eventName);
+  };
 
   return (
     <div className="my-account">
@@ -223,7 +238,23 @@ const MyAccount = () => {
                   return (
                     <tr key={`${r.status}-${r.id}`}>
                       <td>{r.orderNumber || <span className="text-secondary">—</span>}</td>
-                      <td>{r.name || <span className="text-secondary">—</span>}</td>
+                      <td>
+                        {r.name || <span className="text-secondary">—</span>}
+                        {r.rideMatches?.length > 0 &&
+                          r.rideMatches.map((m, i) => (
+                            <div key={i} className="small text-secondary mt-1">
+                              🚗 {m.role === 'caronista' ? 'Motorista' : 'Passageiro'}: {m.name}
+                              {m.cellPhone && (
+                                <>
+                                  {' — '}
+                                  <a href={waLink(m.cellPhone)} target="_blank" rel="noopener noreferrer">
+                                    {m.cellPhone}
+                                  </a>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                      </td>
                       <td>{r.cpf}</td>
                       <td>{r.accomodation}</td>
                       <td>{r.transportation}</td>
@@ -251,6 +282,9 @@ const MyAccount = () => {
                               onClick={() => setQrTarget({ cpf: r.cpf, name: r.name })}
                             >
                               QR de Check-in
+                            </Button>
+                            <Button variant="outline-teal-blue" onClick={() => printOrderReceipt(r)}>
+                              <Icons typeIcon="notebook" iconSize={18} fill="#007185" /> &nbsp;Recibo
                             </Button>
                           </div>
                         ) : r.status === 'PENDING_PAYMENT' ? (
@@ -342,9 +376,9 @@ const MyAccount = () => {
             <Button variant="secondary" onClick={() => setCancelTarget(null)} disabled={canceling}>
               Voltar
             </Button>
-            <Button variant="danger" onClick={handleConfirmCancel} disabled={canceling}>
-              {canceling ? 'Cancelando...' : 'Sim, cancelar'}
-            </Button>
+            <SpinnerButton variant="danger" onClick={handleConfirmCancel} loading={canceling}>
+              Sim, cancelar
+            </SpinnerButton>
           </>
         }
       >
@@ -380,9 +414,9 @@ const MyAccount = () => {
             <Button variant="secondary" onClick={() => setShowEdit(false)}>
               Cancelar
             </Button>
-            <Button className="account-btn-primary" onClick={handleSubmitChange} disabled={saving}>
-              {saving ? 'Enviando...' : 'Enviar solicitação'}
-            </Button>
+            <SpinnerButton className="account-btn-primary" onClick={handleSubmitChange} loading={saving}>
+              Enviar solicitação
+            </SpinnerButton>
           </>
         }
       >
