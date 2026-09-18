@@ -301,7 +301,7 @@ const AdminDonations = ({ loggedUsername }) => {
         )}
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Nome do Doador:</b>
+            <b>Nome do Doador: <span className="text-danger">*</span></b>
           </Form.Label>
           <Form.Control value={form.payerName} onChange={(e) => setField('payerName', e.target.value)} />
         </Form.Group>
@@ -309,7 +309,7 @@ const AdminDonations = ({ loggedUsername }) => {
           <Form.Label>
             <b>CPF:</b>
           </Form.Label>
-          <Form.Control value={form.cpf} onChange={(e) => setField('cpf', e.target.value)} placeholder="Opcional" />
+          <Form.Control value={form.cpf} onChange={(e) => setField('cpf', e.target.value)} type="number" placeholder="000.000.000-00"/>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
@@ -320,18 +320,19 @@ const AdminDonations = ({ loggedUsername }) => {
             min="0"
             value={form.packageTotal}
             onChange={(e) => setField('packageTotal', e.target.value)}
-            placeholder="Opcional"
+            placeholder="Valor pago no pacote do usuário"
           />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Valor da Doação (R$):</b>
+            <b>Valor da Doação (R$): <span className="text-danger">*</span></b>
           </Form.Label>
           <Form.Control
             type="number"
             min="1"
             value={form.amount}
             onChange={(e) => setField('amount', e.target.value)}
+            placeholder="Valor doado pelo usuário"
           />
         </Form.Group>
         <Form.Group>
