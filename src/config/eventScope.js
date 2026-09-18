@@ -29,6 +29,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'crew-bus',
   'donations',
   'deleted-registrations',
+  'chatbot',
 ]);
 
 export const getEventSlugFromPath = (pathname = window.location.pathname) => {

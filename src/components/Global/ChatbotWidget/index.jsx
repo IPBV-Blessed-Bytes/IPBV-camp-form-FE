@@ -1,0 +1,109 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getChatbotEnabled, askChatbot } from '@/services/chatbot';
+import { useEventBranding } from '@/contexts/EventBrandingContext';
+import './style.scss';
+
+const ChatbotWidget = () => {
+  const { name: eventName } = useEventBranding();
+  const assistantName = eventName ? `Assistente · ${eventName}` : 'Assistente do evento';
+  const welcome = useMemo(
+    () =>
+      `Olá! Sou o assistente${eventName ? ` de ${eventName}` : ' do evento'}. Posso ajudar com dúvidas sobre a inscrição e o evento. Como posso ajudar?`,
+    [eventName],
+  );
+
+  const [enabled, setEnabled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([{ role: 'assistant', content: welcome }]);
+  const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    getChatbotEnabled().then(setEnabled);
+  }, []);
+
+  useEffect(() => {
+    setMessages((prev) => (prev.length === 1 && prev[0].role === 'assistant' ? [{ role: 'assistant', content: welcome }] : prev));
+  }, [welcome]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages, open, sending]);
+
+  if (!enabled) return null;
+
+  const send = async () => {
+    const text = input.trim();
+    if (!text || sending) return;
+    const history = messages.filter((m) => m.role === 'user' || m.role === 'assistant');
+    const next = [...messages, { role: 'user', content: text }];
+    setMessages(next);
+    setInput('');
+    setSending(true);
+    try {
+      const answer = await askChatbot(text, history);
+      setMessages([...next, { role: 'assistant', content: answer || 'Desculpe, não consegui responder agora.' }]);
+    } catch {
+      setMessages([...next, { role: 'assistant', content: 'Desculpe, não consegui responder agora. Tente novamente.' }]);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="chatbot">
+      {open && (
+        <div className="chatbot__panel" role="dialog" aria-label={assistantName}>
+          <div className="chatbot__header">
+            <span className="chatbot__title">{assistantName}</span>
+            <button type="button" className="chatbot__close" onClick={() => setOpen(false)} aria-label="Fechar">
+              ×
+            </button>
+          </div>
+          <div className="chatbot__messages" ref={listRef}>
+            {messages.map((m, i) => (
+              <div key={i} className={`chatbot__msg chatbot__msg--${m.role}`}>
+                {m.content}
+              </div>
+            ))}
+            {sending && <div className="chatbot__msg chatbot__msg--assistant chatbot__msg--typing">Digitando…</div>}
+          </div>
+          <form
+            className="chatbot__input"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+          >
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Digite sua dúvida…"
+              maxLength={1000}
+              disabled={sending}
+            />
+            <button type="submit" disabled={sending || !input.trim()} aria-label="Enviar">
+              Enviar
+            </button>
+          </form>
+        </div>
+      )}
+      <button
+        type="button"
+        className="chatbot__fab"
+        onClick={() => setOpen((o) => !o)}
+        aria-label={open ? 'Fechar assistente' : 'Abrir assistente'}
+      >
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="currentColor">
+          <path d="M12 3C6.98 3 3 6.58 3 11c0 2.06.86 3.94 2.29 5.38-.1 1.2-.5 2.5-1.24 3.62 1.5-.2 2.86-.7 3.98-1.42 1.2.42 2.53.65 3.97.65 5.02 0 9-3.58 9-8s-3.98-8-9-8Zm-4 8a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm4 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm4 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z" />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
+export default ChatbotWidget;

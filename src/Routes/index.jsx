@@ -11,6 +11,7 @@ import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import CustomCarousel from '@/components/Global/CustomCarousel';
+import ChatbotWidget from '@/components/Global/ChatbotWidget';
 
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import DynamicForm from '../Pages/DynamicForm';
@@ -171,6 +172,8 @@ const FormRoutes = () => {
               )}
 
               <Footer handleAdminClick={handleAdminClick} />
+
+              <ChatbotWidget />
             </>
           )}
         </div>
