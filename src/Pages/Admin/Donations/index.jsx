@@ -66,7 +66,7 @@ const AdminDonations = ({ loggedUsername }) => {
   const statItems = useMemo(() => {
     const confirmedTotal = donations.reduce((acc, donation) => acc + Number(donation.amount || 0), 0);
     return [
-      { label: 'Total confirmado (para o social)', value: formatBRL(confirmedTotal), tone: 'used' },
+      { label: 'Total doado', value: formatBRL(confirmedTotal), tone: 'used' },
       { label: 'Doadores confirmados', value: donations.length, tone: 'accent' },
     ];
   }, [donations]);
@@ -188,7 +188,7 @@ const AdminDonations = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Doações"
-        subtitle="Contribuições para ajuda a pessoas necessitadas feitas no carrinho, separadas do valor dos pacotes."
+        subtitle="Contribuições para ajuda a pessoas necessitadas, separadas do valor dos pacotes."
         typeIcon="couple"
       />
 
