@@ -1,6 +1,5 @@
 const yesNo = (value) => (value ? 'Sim' : 'Não');
 
-// Campos comparados no diff (mesma ordem do formulário do cliente).
 export const PERSONAL_FIELDS = [
   { key: 'name', label: 'Nome' },
   { key: 'birthday', label: 'Data de Nascimento' },
@@ -46,7 +45,6 @@ const diffSection = (current, proposed, section, fields) => {
     .filter(Boolean);
 };
 
-// Retorna somente os campos que realmente mudaram (payload vs estado atual).
 export const buildChangeDiff = (request) => [
   ...diffSection(request?.current, request?.payload, 'personalInformation', PERSONAL_FIELDS),
   ...diffSection(request?.current, request?.payload, 'contact', CONTACT_FIELDS),

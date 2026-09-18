@@ -15,8 +15,6 @@ import { config as checkin } from 'tests/test-cases/checkin/config';
 export default defineConfig({
   testDir: './tests',
 
-  // E2E contra um único dev server + banco compartilhado: execução serial evita
-  // contenção de recursos e condições de corrida entre suites que mutam estado.
   workers: 1,
 
   reporter: [
@@ -31,8 +29,6 @@ export default defineConfig({
   use: {
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
-    // Evita que uma ação em elemento opcional (ex.: modal que não aparece)
-    // fique presa até o timeout do teste inteiro.
     actionTimeout: 15000,
   },
 

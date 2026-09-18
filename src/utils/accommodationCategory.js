@@ -1,5 +1,3 @@
-// Mapeia o nome da hospedagem (com todas as variações) para a categoria ampla
-// usada na pulseira de hospedagem: Colégio, Seminário ou Externo.
 const normalize = (text = '') =>
   text
     .toLowerCase()

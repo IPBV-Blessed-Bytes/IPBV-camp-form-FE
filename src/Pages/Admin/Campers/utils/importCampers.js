@@ -1,7 +1,5 @@
 import * as XLSX from 'xlsx';
 
-// Friendly spreadsheet header (same as the export) -> flat field expected by POST /camper/bulk-import.
-// Headers not listed here are ignored on import (e.g. computed/derived columns).
 export const IMPORT_HEADER_TO_FIELD = {
   Nome: 'name',
   CPF: 'cpf',
@@ -38,7 +36,6 @@ export const IMPORT_HEADER_TO_FIELD = {
   Checkin: 'checkin',
 };
 
-// Column order for the downloadable template (mirrors the export layout).
 export const TEMPLATE_HEADERS = [
   'Nome',
   'CPF',
@@ -111,8 +108,6 @@ export const downloadCampersTemplate = () => {
 
 const isFilledDate = (value) => /^\d{2}\/\d{2}\/\d{4}$/.test(String(value).trim());
 
-// Reads an .xlsx/.csv file and maps each row to the flat payload the BE expects.
-// Returns { rows, errors } where errors flag rows missing required fields.
 export const parseCampersFile = async (file) => {
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: 'array' });
@@ -132,7 +127,7 @@ export const parseCampersFile = async (file) => {
       if (field) mapped[field] = typeof value === 'string' ? value.trim() : String(value);
     });
 
-    const rowNumber = index + 2; // +1 header, +1 to 1-index
+    const rowNumber = index + 2;
     const missing = REQUIRED_FIELDS.filter(({ field }) => !String(mapped[field] || '').trim()).map((r) => r.header);
     if (missing.length) {
       errors.push({ row: rowNumber, name: mapped.name || '(sem nome)', message: `Faltando: ${missing.join(', ')}` });
