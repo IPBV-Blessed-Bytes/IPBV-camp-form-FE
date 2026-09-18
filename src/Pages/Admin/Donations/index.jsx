@@ -174,7 +174,7 @@ const AdminDonations = ({ loggedUsername }) => {
     },
     {
       fill: '#fff',
-      iconSize: 22,
+      iconSize: 20,
       id: 'donations-insert',
       name: 'Inserir Doação',
       onClick: openInsert,
