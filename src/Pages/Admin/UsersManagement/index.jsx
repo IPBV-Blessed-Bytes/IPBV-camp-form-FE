@@ -10,6 +10,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -39,6 +40,7 @@ const initialsOf = (name = '') =>
 
 const AdminUsersManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({ userName: '', password: '', role: '', email: '' });
   const [editingUser, setEditingUser] = useState(null);
@@ -52,8 +54,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const fetchUsers = async () => {
-    setLoading(true);
+  const fetchUsers = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const data = await listUsers();
       const sortedUsers = data.sort((a, b) => a.userName.localeCompare(b.userName));
@@ -61,7 +63,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao buscar usuários');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -93,7 +95,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
 
     try {
       if (editingUser) {
@@ -107,27 +109,28 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       }
       setFormData({ userName: '', password: '', role: '', email: '' });
       setEditingUser(null);
-      fetchUsers();
       setShowModal(false);
+      await fetchUsers(true);
     } catch (error) {
       toast.error('Erro ao salvar usuário');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await deleteUser(userToDelete.id);
       toast.success('Usuário deletado com sucesso');
       fetchUsers();
       registerLog(`Deletou usuário ${userToDelete.userName}`, loggedUsername);
       setShowDeleteModal(false);
+      await fetchUsers(true);
     } catch (error) {
       toast.error('Erro ao deletar usuário');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -288,15 +291,16 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancelar
             </Button>
-            <Button
+            <SpinnerButton
               className="btn-confirm"
               variant="primary"
               type="submit"
               onClick={handleSubmit}
+              loading={saving}
               disabled={editingUser?.userName === 'admin@ipbv'}
             >
               {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -387,9 +391,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
               Cancelar
             </Button>
-            <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
+            <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
               Deletar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >

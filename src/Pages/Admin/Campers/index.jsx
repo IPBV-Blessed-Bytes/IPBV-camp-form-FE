@@ -41,6 +41,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   const {
     data,
     loading,
+    savingEdit,
+    savingAdd,
+    deleting,
     setFormSubmitted,
     saveEdit,
     addCamper,
@@ -335,6 +338,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         currentDate={currentDate}
         onSaveEdit={handleSaveEdit}
         onAddSubmit={handleAddSubmit}
+        savingEdit={savingEdit}
+        savingAdd={savingAdd}
+        deleting={deleting}
         handleCloseDeleteModal={() => setShowDeleteModal(false)}
         handleConfirmDeleteAll={handleConfirmDeleteAll}
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}

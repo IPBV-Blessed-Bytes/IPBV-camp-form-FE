@@ -18,6 +18,7 @@ import { registerLog } from '@/services/logs';
 import ActionButton from '@/components/Global/ActionButton';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
@@ -26,7 +27,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 
 const AdminTeams = ({ loggedUsername }) => {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editTeam, setEditTeam] = useState(null);
@@ -46,16 +47,16 @@ const AdminTeams = ({ loggedUsername }) => {
   const [search, setSearch] = useState('');
   const [camperSearch, setCamperSearch] = useState('');
 
-  const fetchTeams = async () => {
+  const fetchTeams = async (silent = false) => {
     try {
-      setLoadingTeams(true);
+      if (!silent) setLoadingTeams(true);
       const data = await listTeams();
       setTeams(data || []);
     } catch (error) {
       toast.error('Erro ao carregar times');
       console.error(error);
     } finally {
-      setLoadingTeams(false);
+      if (!silent) setLoadingTeams(false);
     }
   };
 
@@ -98,7 +99,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
   const handleSubmit = async () => {
     try {
-      setLoading(true);
+      setSaving(true);
       const payload = buildPayload();
 
       if (editTeam) {
@@ -112,12 +113,12 @@ const AdminTeams = ({ loggedUsername }) => {
       }
 
       handleCloseModal();
-      fetchTeams();
+      await fetchTeams(true);
     } catch (error) {
       toast.error('Erro ao salvar time');
       console.error(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -125,7 +126,7 @@ const AdminTeams = ({ loggedUsername }) => {
     if (!selectedCampersIds.length || !selectedTeam) return;
 
     try {
-      setLoading(true);
+      setSaving(true);
 
       const payload = {
         campers: selectedCampersIds.map((id) => ({
@@ -144,13 +145,13 @@ const AdminTeams = ({ loggedUsername }) => {
       setSelectedTeam(null);
       setShowAddCamperModal(false);
 
-      fetchTeams();
+      await fetchTeams(true);
       refetchCampers();
     } catch (error) {
       toast.error('Erro ao adicionar acampantes ao time');
       console.error(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -158,11 +159,11 @@ const AdminTeams = ({ loggedUsername }) => {
     if (!selectedCamperId) return;
 
     try {
-      setLoading(true);
+      setSaving(true);
 
       await removeCamperFromTeam(selectedCamperId);
 
-      fetchTeams();
+      await fetchTeams(true);
       refetchCampers();
 
       toast.success('Acampante removido do time');
@@ -173,7 +174,7 @@ const AdminTeams = ({ loggedUsername }) => {
       toast.error('Erro ao remover acampante do time');
       console.error(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -192,7 +193,7 @@ const AdminTeams = ({ loggedUsername }) => {
     if (!selectedTeamToRemove) return;
 
     try {
-      setLoading(true);
+      setSaving(true);
 
       if (selectedTeamToRemove.campers?.length) {
         await Promise.all(selectedTeamToRemove.campers.map((camper) => removeCamperFromTeam(camper.id)));
@@ -203,7 +204,7 @@ const AdminTeams = ({ loggedUsername }) => {
       toast.success('Time removido com sucesso');
       registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);
 
-      fetchTeams();
+      await fetchTeams(true);
       refetchCampers();
 
       setShowRemoveTeamModal(false);
@@ -212,7 +213,7 @@ const AdminTeams = ({ loggedUsername }) => {
       toast.error('Erro ao remover time');
       console.error(error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -445,9 +446,9 @@ const AdminTeams = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={handleCloseModal}>
               Cancelar
             </Button>
-            <Button variant="primary" className="btn-confirm" onClick={handleSubmit}>
+            <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={saving}>
               {editTeam ? 'Salvar Alterações' : 'Criar Time'}
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -515,14 +516,15 @@ const AdminTeams = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
               Cancelar
             </Button>
-            <Button
+            <SpinnerButton
               variant="primary"
               className="btn-confirm"
               onClick={addCampersToTeam}
               disabled={!selectedCampersIds.length}
+              loading={saving}
             >
               Adicionar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -584,9 +586,9 @@ const AdminTeams = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowRemoveCamperModal(false)}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleConfirmRemoveCamper}>
+            <SpinnerButton variant="danger" onClick={handleConfirmRemoveCamper} loading={saving}>
               Remover
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -604,9 +606,9 @@ const AdminTeams = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setShowRemoveTeamModal(false)}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleConfirmRemoveTeam}>
+            <SpinnerButton variant="danger" onClick={handleConfirmRemoveTeam} loading={saving}>
               Excluir
-            </Button>
+            </SpinnerButton>
           </>
         }
       >
@@ -615,7 +617,7 @@ const AdminTeams = ({ loggedUsername }) => {
         </p>
       </CustomModal>
 
-        <Loading loading={loading || loadingTeams} />
+        <Loading loading={loadingTeams} />
       </div>
     </div>
   );

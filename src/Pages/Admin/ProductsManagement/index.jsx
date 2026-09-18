@@ -12,6 +12,7 @@ import { getApiErrorMessage } from '@/fetchers/helpers';
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -24,6 +25,7 @@ const emptyForm = { name: '', description: '', packageCategoryId: '', active: tr
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [products, setProducts] = useState([]);
   const [lots, setLots] = useState([]);
   const [packageCategories, setPackageCategories] = useState([]);
@@ -40,8 +42,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   scrollUp();
 
-  const fetchAll = async () => {
-    setLoading(true);
+  const fetchAll = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [productsData, lotsData, categoriesData, rulesData] = await Promise.all([
         getAllProducts(),
@@ -57,7 +59,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     } catch (error) {
       toast.error('Erro ao buscar produtos');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -201,7 +203,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setLoading(true);
+    setSaving(true);
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, buildPayload());
@@ -221,26 +223,26 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       setEditingProduct(null);
       setFormData(emptyForm);
       setLotPrices({});
-      fetchAll();
+      await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao salvar produto');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await deleteProduct(productToDelete.id);
       toast.success('Produto excluído com sucesso');
       registerLog(`Excluiu produto ${productToDelete.name}`, loggedUsername);
       setShowDeleteModal(false);
-      fetchAll();
+      await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao excluir produto');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -462,9 +464,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowModal(false)}>
                 Cancelar
               </Button>
-              <Button className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit}>
+              <SpinnerButton className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit} loading={saving}>
                 {editingProduct ? 'Salvar Alterações' : 'Criar Produto'}
-              </Button>
+              </SpinnerButton>
             </>
           }
         >
@@ -575,9 +577,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="danger" className="btn-cancel" onClick={handleDelete}>
+              <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
                 Excluir
-              </Button>
+              </SpinnerButton>
             </>
           }
         >
