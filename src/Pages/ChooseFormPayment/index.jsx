@@ -5,12 +5,12 @@ import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
-import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 
 const ChooseFormPayment = () => {
-  const { backStep, currentFormValues, loading, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
+  const { backStep, currentFormValues, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
   const initialValues = currentFormValues;
   const updateForm = updateFormValues('formPayment');
 
@@ -47,7 +47,6 @@ const ChooseFormPayment = () => {
   };
 
   const handleConfirmAdvance = () => {
-    setShowConfirm(false);
     handleSubmit();
   };
 
@@ -112,8 +111,6 @@ const ChooseFormPayment = () => {
                 <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
               </Form.Group>
             </Form>
-
-            <Loading loading={loading} />
           </Container>
       </FormStepLayout>
 
@@ -127,9 +124,14 @@ const ChooseFormPayment = () => {
             <Button variant="outline-secondary" onClick={() => setShowConfirm(false)}>
               Voltar
             </Button>
-            <Button variant="danger" className="btn-cancel" onClick={handleConfirmAdvance}>
+            <SpinnerButton
+              variant="danger"
+              className="btn-cancel"
+              onClick={handleConfirmAdvance}
+              loading={status === 'loading' || status === 'loaded'}
+            >
               Avançar
-            </Button>
+            </SpinnerButton>
           </>
         }
       >

@@ -14,7 +14,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import './style.scss';
 import { cpfReviewSchema } from '@/form/validations/schema';
 import InfoButton from '../../components/Global/InfoButton';
-import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import Footer from '@/components/Global/Footer';
 import Header from '@/components/Global/Header';
 import FormStepLayout from '@/components/Global/FormStepLayout';
@@ -149,13 +149,12 @@ const CpfReview = () => {
                         </Button>
                       </Col>
                       <Col className="justify-content-end d-flex" md={6}>
-                        <Button className="w-100" type="submit" variant="teal-blue" size="lg">
+                        <SpinnerButton className="w-100" type="submit" variant="teal-blue" size="lg" loading={loading}>
                           Consultar
-                        </Button>
+                        </SpinnerButton>
                       </Col>
                     </Row>
                   </Form>
-                  <Loading loading={loading} />
                 </Container>
             </FormStepLayout>
           </div>
