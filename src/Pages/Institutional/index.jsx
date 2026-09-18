@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
+import ChatbotWidget from '@/components/Global/ChatbotWidget';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl } from '@/services/institutional';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
@@ -251,6 +252,8 @@ const Institutional = () => {
       </section>
 
       <Footer handleAdminClick={handleAdminClick} />
+
+      <ChatbotWidget />
     </div>
   );
 };
