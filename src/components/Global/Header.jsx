@@ -55,6 +55,10 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
     <header className="form__header">
       <Container>
         <div className="form__header__left">
+          <button type="button" className="header-back-link" onClick={() => navigate('/')}>
+            <Icons typeIcon="arrow-left" iconSize={16} fill="#ffffff" /> Área Institucional
+          </button>
+
           <h2>
             <a className="header-title" href="/">
               ACAMPAMENTO IPBV {baseYear}
@@ -104,6 +108,7 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
 
 Header.propTypes = {
   showNavMenu: PropTypes.bool,
+  showLogin: PropTypes.bool,
 };
 
 export default Header;

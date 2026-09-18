@@ -27,6 +27,38 @@
     gap: 1rem;
   }
 
+  .header-back-link {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $white;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.14);
+      text-decoration: underline;
+    }
+
+    @media (max-width: $md) {
+      position: static;
+      transform: none;
+      display: inline-flex;
+      margin-bottom: 0.5rem;
+    }
+  }
+
   .header-login-link {
     background: none;
     border: none;

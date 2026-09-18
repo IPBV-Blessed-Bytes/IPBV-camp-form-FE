@@ -66,7 +66,7 @@ const MyAccount = () => {
 
   const goToForm = () => {
     initialStep();
-    navigate('/');
+    navigate('/inscricao');
   };
   const contactPhone = useContactPhone();
   const whatsappLink = useWhatsAppGroupLink();

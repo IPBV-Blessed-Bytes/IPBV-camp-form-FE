@@ -31,6 +31,7 @@ import Maintenance from '@/Pages/Maintenance';
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
+import Institutional from '@/Pages/Institutional';
 
 const AdminCampers = lazy(() => import('../Pages/Admin/Campers'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
@@ -67,6 +68,7 @@ const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'))
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const AdminUtilitySettings = lazy(() => import('@/Pages/Admin/UtilitySettings'));
 const AdminBackup = lazy(() => import('@/Pages/Admin/Backup'));
+const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
 const FormRoutes = () => {
@@ -170,6 +172,7 @@ const FormRoutes = () => {
       <div className="routes">
         <Suspense fallback={<Loading loading />}>
           <Routes>
+            <Route path="/" element={<Institutional />} />
             <Route
               path={adminPath('')}
               element={
@@ -385,6 +388,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminBackup formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/institucional')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminInstitutional loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

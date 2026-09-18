@@ -3,6 +3,7 @@ const isAdminPath = (pathname) =>
 
 const shouldRenderForm = (pathname) => {
   return (
+    pathname !== '/' &&
     pathname !== '/opiniao' &&
     pathname !== '/verificacao' &&
     pathname !== '/verificacao/dados' &&

@@ -79,7 +79,7 @@ const CustomerLogin = () => {
             <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/esqueci-senha?origin=customer')}>
               Esqueci minha senha
             </button>
-            <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/')}>
+            <button type="button" className="w-100 btn-alter-link" onClick={() => navigate('/inscricao')}>
               ← Voltar ao formulário
             </button>
       </Form>

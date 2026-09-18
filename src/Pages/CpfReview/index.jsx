@@ -142,7 +142,7 @@ const CpfReview = () => {
                           className="w-100 mb-3 mb-sm-3 mb-md-0"
                           variant="outline-teal-blue"
                           size="lg"
-                          onClick={() => navigate('/')}
+                          onClick={() => navigate('/inscricao')}
                         >
                           Voltar
                         </Button>

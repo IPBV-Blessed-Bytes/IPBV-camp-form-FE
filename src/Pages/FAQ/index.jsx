@@ -27,7 +27,7 @@ const FAQ = () => {
     <div className="components-container">
       <Header />
       <div className="form__container faq">
-        <FormStepLayout onBack={() => navigate('/')}>
+        <FormStepLayout onBack={() => navigate('/inscricao')}>
             <Card.Title>Perguntas Frequentes:</Card.Title>
             <Card.Text>
               Dúvidas frequentes que podem ajudar no processo de inscrição, no pré e durante o acampamento. Caso ainda

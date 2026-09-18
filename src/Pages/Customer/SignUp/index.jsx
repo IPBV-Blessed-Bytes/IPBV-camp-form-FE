@@ -89,7 +89,7 @@ const SignUp = () => {
               <Button variant="primary" className="w-100 mt-3" onClick={() => navigate('/entrar')}>
                 Ir para o login
               </Button>
-              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/')}>
+              <button type="button" className="btn btn-link w-100 mt-2" onClick={() => navigate('/inscricao')}>
                 ← Voltar ao formulário
               </button>
             </div>
@@ -160,7 +160,7 @@ const SignUp = () => {
                 <Button type="button" className="w-100 mt-3 btn-alter-link" onClick={() => navigate('/entrar')}>
                   Já tem conta? Entrar
                 </Button>
-                <Button type="Button" className="w-100 btn-alter-link" onClick={() => navigate('/')}>
+                <Button type="Button" className="w-100 btn-alter-link" onClick={() => navigate('/inscricao')}>
                   ← Voltar ao formulário
                 </Button>
               </Form>

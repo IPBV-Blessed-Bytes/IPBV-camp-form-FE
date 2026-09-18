@@ -291,6 +291,7 @@ const AdminLoggedIn = ({
   ];
 
   const settingsSessions = [
+    { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 42, accent: '#007185' },
     { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
     { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },

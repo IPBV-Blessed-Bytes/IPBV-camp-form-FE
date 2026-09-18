@@ -11,7 +11,7 @@ const Success = () => {
     resetFormValues();
     initialStep();
     resetFormSubmitted();
-    window.location.pathname = '/';
+    window.location.pathname = '/inscricao';
   };
 
   return (
