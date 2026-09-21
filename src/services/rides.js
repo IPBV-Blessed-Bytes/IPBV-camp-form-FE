@@ -24,3 +24,8 @@ export const deleteRide = async (needRideId) => {
   const { data } = await authFetcher.delete(`/ride/${needRideId}`);
   return data;
 };
+
+export const autoLinkRides = async () => {
+  const { data } = await authFetcher.post('/ride/auto-link');
+  return data;
+};
