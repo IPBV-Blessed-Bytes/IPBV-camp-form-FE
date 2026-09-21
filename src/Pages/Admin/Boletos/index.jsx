@@ -204,24 +204,37 @@ const AdminBoletos = ({ loggedUsername }) => {
     }
   };
 
+  const validOrderKeys = useMemo(() => {
+    const set = new Set();
+    boletos.forEach((boleto) => {
+      if (boleto.status === 'PAID') set.add(boleto.orderNumber || boleto.cpf);
+    });
+    return set;
+  }, [boletos]);
+
+  const isValidOrder = (boleto) => validOrderKeys.has(boleto.orderNumber || boleto.cpf);
+
   const statItems = useMemo(() => {
     const paid = boletos.filter((boleto) => boleto.status === 'PAID').length;
-    const overdue = boletos.filter((boleto) => boleto.status === 'OVERDUE').length;
+    const overdue = boletos.filter((boleto) => boleto.status === 'OVERDUE' && isValidOrder(boleto)).length;
     const pending = boletos.filter((boleto) => boleto.status === 'PENDING').length;
-    const orders = new Set(boletos.map((boleto) => boleto.orderNumber)).size;
+    const orders = new Set(boletos.map((boleto) => boleto.orderNumber || boleto.cpf));
+    const unpaidOrders = [...orders].filter((key) => !validOrderKeys.has(key)).length;
     return [
-      { label: 'Pedidos parcelados', value: orders, tone: 'info' },
+      { label: 'Pedidos parcelados', value: orders.size, tone: 'info' },
       { label: 'Total de boletos', value: boletos.length, tone: 'accent' },
       { label: 'Boletos pagos', value: paid, tone: 'used' },
       { label: 'Boletos pendentes', value: pending, tone: 'available' },
-      { label: 'Boletos vencidos', value: overdue, tone: 'danger' },
+      { label: 'Parcelas em atraso', value: overdue, tone: 'danger' },
+      { label: 'Pedidos não pagos', value: unpaidOrders, tone: 'warning' },
     ];
-  }, [boletos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boletos, validOrderKeys]);
 
   const inadimplentes = useMemo(() => {
     const map = new Map();
     boletos
-      .filter((boleto) => boleto.status === 'OVERDUE')
+      .filter((boleto) => boleto.status === 'OVERDUE' && validOrderKeys.has(boleto.orderNumber || boleto.cpf))
       .forEach((boleto) => {
         const key = boleto.orderNumber || boleto.cpf;
         if (!map.has(key)) {
@@ -244,7 +257,8 @@ const AdminBoletos = ({ loggedUsername }) => {
         group.maxDays = Math.max(group.maxDays, daysOverdue(boleto.dueDate));
       });
     return Array.from(map.values()).sort((a, b) => b.maxDays - a.maxDays);
-  }, [boletos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boletos, validOrderKeys]);
 
   const groupedBoletos = useMemo(() => {
     const map = new Map();
@@ -285,7 +299,10 @@ const AdminBoletos = ({ loggedUsername }) => {
       Valor: Number(boleto.amount || 0) / 100,
       Vencimento: formatDate(boleto.dueDate),
       'Pago em': boleto.paidAt ? formatDate(boleto.paidAt) : '',
-      Status: (STATUS[boleto.status] || {}).label || boleto.status,
+      Status:
+        boleto.status !== 'PAID' && boleto.status !== 'CANCELED' && !isValidOrder(boleto)
+          ? 'Não pago'
+          : (STATUS[boleto.status] || {}).label || boleto.status,
     }));
     downloadSingleSheet({ filename: 'boletos.xlsx', sheetName: 'Boletos', rows });
   };
@@ -380,12 +397,22 @@ const AdminBoletos = ({ loggedUsername }) => {
               <Accordion alwaysOpen className="boletos-accordion">
                 {groupedBoletos.map((group) => {
                   const total = group.installments.length;
-                  const overallBg = group.hasOverdue ? 'danger' : group.paidCount === total ? 'success' : 'warning';
-                  const overallLabel = group.hasOverdue
-                    ? 'Com atraso'
-                    : group.paidCount === total
-                      ? 'Quitado'
-                      : `${group.paidCount}/${total} pagas`;
+                  const isValid = group.paidCount > 0;
+                  let overallBg;
+                  let overallLabel;
+                  if (!isValid) {
+                    overallBg = 'dark';
+                    overallLabel = 'Não pago';
+                  } else if (group.hasOverdue) {
+                    overallBg = 'danger';
+                    overallLabel = 'Com atraso';
+                  } else if (group.paidCount === total) {
+                    overallBg = 'success';
+                    overallLabel = 'Quitado';
+                  } else {
+                    overallBg = 'warning';
+                    overallLabel = `${group.paidCount}/${total} pagas`;
+                  }
                   return (
                     <Accordion.Item eventKey={String(group.key)} key={group.key}>
                       <Accordion.Header>
@@ -432,9 +459,17 @@ const AdminBoletos = ({ loggedUsername }) => {
                           </thead>
                           <tbody>
                             {group.installments.map((boleto) => {
-                              const status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
+                              const isRealOverdue = isValid && boleto.status === 'OVERDUE';
+                              let status;
+                              if (boleto.status === 'PAID' || boleto.status === 'CANCELED') {
+                                status = STATUS[boleto.status];
+                              } else if (!isValid) {
+                                status = { label: 'Não pago', bg: 'dark' };
+                              } else {
+                                status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
+                              }
                               return (
-                                <tr key={boleto.id} className={boleto.status === 'OVERDUE' ? 'boleto-row-overdue' : ''}>
+                                <tr key={boleto.id} className={isRealOverdue ? 'boleto-row-overdue' : ''}>
                                   <td>
                                     {boleto.installmentNumber}/{boleto.totalInstallments}
                                   </td>
