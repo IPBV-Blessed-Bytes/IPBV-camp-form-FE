@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
@@ -74,12 +75,12 @@ const Institutional = () => {
             ))}
           </nav>
           <div className="inst-nav__actions">
-            <button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
+            <Button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
               Minha conta
-            </button>
-            <button type="button" className="inst-btn inst-btn--primary" onClick={goToForm}>
+            </Button>
+            <Button type="button" className="inst-btn inst-btn--primary" onClick={goToForm}>
               Inscreva-se
-            </button>
+            </Button>
           </div>
         </div>
       </header>
@@ -105,12 +106,12 @@ const Institutional = () => {
             </div>
           )}
           <div className="inst-hero__cta">
-            <button type="button" className="inst-btn inst-btn--primary inst-btn--lg" onClick={goToForm}>
+            <Button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
               Fazer minha inscrição
-            </button>
-            <button type="button" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
+            </Button>
+            <Button type="button" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
               Saiba mais
-            </button>
+            </Button>
           </div>
         </div>
         {stats.length > 0 && (
@@ -245,9 +246,9 @@ const Institutional = () => {
       <section className="inst-final">
         <h2>Pronto para viver essa experiência?</h2>
         <p>As vagas são limitadas. Garanta a sua inscrição agora mesmo.</p>
-        <button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
+        <Button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
           Quero me inscrever
-        </button>
+        </Button>
       </section>
 
       <Footer handleAdminClick={handleAdminClick} />
