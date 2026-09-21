@@ -27,6 +27,7 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
   const isBoleto = method === 'ticket';
   const isCredit = method === 'creditCard';
   const deadlineDays = isCredit ? 180 : 90;
+  const netValue = Math.round(Number(camper?.totalPrice || 0));
 
   useEffect(() => {
     if (camper) {
@@ -42,6 +43,10 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
   const setBankField = (field, value) => setBank((current) => ({ ...current, [field]: value }));
 
   const handleConfirm = async (deleteAfter) => {
+    if (netValue > 0 && Number(amount) > netValue) {
+      toast.error(`O reembolso não pode passar do valor do pacote (R$ ${netValue}). A taxa é absorvida pelo cliente.`);
+      return;
+    }
     setLoading(true);
     setSaving(true);
     try {
@@ -99,11 +104,11 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
             <b>{camper.orderNumber || '—'}</b>).
           </p>
           <Alert variant="warning" className="py-2 small">
-            No estorno <b>total</b>, o cliente recebe de volta o <b>valor integral</b> que pagou (qualquer forma de
-            pagamento). Porém as <b>taxas de processamento do PagarMe{isCredit ? ' e a antecipação' : ''} não são
-            devolvidas à organização</b> — a igreja absorve esse custo, não o cliente. Prazo para estornar:{' '}
-            <b>até {deadlineDays} dias</b> após o pagamento{isCredit ? ' (cartão de crédito)' : ' (Pix e boleto)'};
-            depois disso o PagarMe não permite mais o estorno.
+            Reembolse <b>no máximo o valor do pacote (R$ {netValue})</b>. Esse é o valor líquido que a igreja recebeu;
+            a <b>taxa do PagarMe é absorvida pelo cliente</b> (ela não é devolvida no estorno), então a{' '}
+            <b>igreja não tem prejuízo</b>. Reembolsar acima disso (o valor cheio com a taxa) faria a igreja perder a
+            taxa — por isso não é permitido. Prazo para estornar: <b>até {deadlineDays} dias</b> após o pagamento
+            {isCredit ? ' (cartão de crédito)' : ' (Pix e boleto)'}; depois o PagarMe não permite mais.
           </Alert>
 
           <Form.Group className="mb-3">
@@ -113,13 +118,15 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
               <Form.Control
                 type="number"
                 min="1"
+                max={netValue || undefined}
                 step="1"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ''))}
               />
             </InputGroup>
             <Form.Text className="text-muted-italic">
-              Padrão: valor total da inscrição. Ajuste se quiser reembolsar algum valor parcial.
+              Padrão e máximo: o valor do pacote (R$ {netValue}). Você pode reduzir para um estorno parcial, mas não
+              ultrapassar — a taxa fica por conta do cliente para a igreja não ter prejuízo.
             </Form.Text>
           </Form.Group>
 
