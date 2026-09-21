@@ -25,6 +25,9 @@ const RefundModal = ({ submission, onHide, onDone, loggedUsername }) => {
 
   const method = submission?.paymentMethod || '';
   const isBoleto = method === 'boleto';
+  const isCredit = !isBoleto && method !== 'pix';
+  const deadlineDays = isCredit ? 180 : 90;
+  const netValue = Math.round(Number(submission?.totalCents || 0) / 100);
   const payerName = submission?.answers?.nome || submission?.userEmail || '—';
 
   useEffect(() => {
@@ -41,6 +44,10 @@ const RefundModal = ({ submission, onHide, onDone, loggedUsername }) => {
   const setBankField = (field, value) => setBank((current) => ({ ...current, [field]: value }));
 
   const handleConfirm = async (deleteAfter) => {
+    if (netValue > 0 && Number(amount) > netValue) {
+      toast.error(`O reembolso não pode passar do valor do pacote (R$ ${netValue}). A taxa é absorvida pelo cliente.`);
+      return;
+    }
     setLoading(true);
     setSaving(true);
     try {
@@ -97,8 +104,11 @@ const RefundModal = ({ submission, onHide, onDone, loggedUsername }) => {
             Reembolsar a inscrição de <b>{payerName}</b> (pedido <b>{submission.orderNumber || '—'}</b>).
           </p>
           <Alert variant="warning" className="py-2 small">
-            A <b>taxa do PagarMe não é devolvida</b>. Os reembolsos são do valor líquido pago pelo cliente, então o
-            usuário absorve o custo e não recebe a taxa que pagou.
+            Reembolse <b>no máximo o valor do pacote (R$ {netValue})</b>. Esse é o valor líquido que a organização
+            recebeu; a <b>taxa do PagarMe é absorvida pelo cliente</b> (ela não é devolvida no estorno), então a{' '}
+            <b>organização não tem prejuízo</b>. Reembolsar acima disso faria a organização perder a taxa — por isso
+            não é permitido. Prazo para estornar: <b>até {deadlineDays} dias</b> após o pagamento
+            {isCredit ? ' (cartão de crédito)' : ' (Pix e boleto)'}; depois o PagarMe não permite mais.
           </Alert>
 
           <Form.Group className="mb-3">
@@ -108,13 +118,15 @@ const RefundModal = ({ submission, onHide, onDone, loggedUsername }) => {
               <Form.Control
                 type="number"
                 min="1"
+                max={netValue || undefined}
                 step="1"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ''))}
               />
             </InputGroup>
             <Form.Text className="text-muted-italic">
-              Padrão: valor total da inscrição. Ajuste se quiser reembolsar algum valor parcial.
+              Padrão e máximo: o valor do pacote (R$ {netValue}). Você pode reduzir para um estorno parcial, mas não
+              ultrapassar — a taxa fica por conta do cliente para a organização não ter prejuízo.
             </Form.Text>
           </Form.Group>
 
