@@ -12,6 +12,7 @@ import {
   setRideChecked,
   matchRide,
   deleteRide,
+  autoLinkRides,
 } from '@/services/rides';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -82,23 +83,44 @@ const AdminRide = ({ loggedUsername }) => {
   const [carSort, setCarSort] = useState('free');
   const [showDeleteRelationshipModal, setShowDeleteRelationshipModal] = useState(false);
   const [camperToDelete, setCamperToDelete] = useState(false);
+  const [autoLinkOpen, setAutoLinkOpen] = useState(false);
+  const [autoLinking, setAutoLinking] = useState(false);
 
   scrollUp();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [offerRide, needRide] = await Promise.all([listRideOffers(), listRideNeeds()]);
-        setRideData({ offerRide, needRide });
-      } catch (error) {
-        console.error('Erro ao buscar os dados:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const reload = async () => {
+    try {
+      const [offerRide, needRide] = await Promise.all([listRideOffers(), listRideNeeds()]);
+      setRideData({ offerRide, needRide });
+    } catch (error) {
+      console.error('Erro ao buscar os dados:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleAutoLink = async () => {
+    setAutoLinking(true);
+    try {
+      const result = await autoLinkRides();
+      registerLog('Vinculou caronas automaticamente', loggedUsername);
+      toast.success(
+        `Caronas vinculadas: ${result.linked} passageiro(s) alocado(s), ${result.unmatched} sem vaga.`,
+      );
+      setAutoLinkOpen(false);
+      await reload();
+    } catch (error) {
+      console.error('Erro ao vincular automaticamente:', error);
+      toast.error('Não foi possível vincular as caronas automaticamente.');
+    } finally {
+      setAutoLinking(false);
+    }
+  };
 
   const handleCheckboxChange = async (type, id, checked) => {
     try {
@@ -263,6 +285,15 @@ const AdminRide = ({ loggedUsername }) => {
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
+    },
+    {
+      fill: '#fff',
+      iconSize: 20,
+      id: 'rides-autolink',
+      name: 'Vincular automaticamente',
+      onClick: () => setAutoLinkOpen(true),
+      typeButton: 'teal-blue',
+      typeIcon: 'ride',
     },
   ];
 
@@ -469,6 +500,32 @@ const AdminRide = ({ loggedUsername }) => {
           }
         >
           Tem certeza de que deseja remover esse passageiro dessa carona?
+        </CustomModal>
+
+        <CustomModal
+          show={autoLinkOpen}
+          onHide={() => setAutoLinkOpen(false)}
+          variant="confirm"
+          title="Vincular caronas automaticamente"
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setAutoLinkOpen(false)} disabled={autoLinking}>
+                Cancelar
+              </Button>
+              <Button variant="teal-blue" onClick={handleAutoLink} disabled={autoLinking}>
+                {autoLinking ? 'Vinculando...' : 'Vincular todos'}
+              </Button>
+            </>
+          }
+        >
+          <p>
+            Isso <b>refaz todos os vínculos</b> de carona: os passageiros são realocados nos carros por ordem de
+            solicitação, preenchendo as vagas de cada carro. Quem sobrar (sem vaga) fica aguardando.
+          </p>
+          <p className="text-secondary small mb-0">
+            Você pode clicar de novo depois — se surgirem novas vagas, tudo é reposicionado seguindo a mesma ordem.
+          </p>
         </CustomModal>
 
         <Loading loading={loading} />
