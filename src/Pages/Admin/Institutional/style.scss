@@ -1,0 +1,109 @@
+@use '../../../styles/Variables.scss' as *;
+
+.inst-admin {
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  &__card {
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+
+    h5 {
+      font-weight: 700;
+      color: $primary;
+      margin-bottom: 16px;
+    }
+
+    h6 {
+      font-weight: 700;
+      margin: 6px 0 12px;
+    }
+  }
+
+  &__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 8px 0 12px;
+    flex-wrap: wrap;
+  }
+
+  &__row {
+    margin-bottom: 12px;
+    row-gap: 8px;
+  }
+
+  &__subcard {
+    background: #f7f9fa;
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+
+    @media (max-width: $xl) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: $md) {
+      grid-template-columns: 1fr;
+    }
+
+    .inst-admin__subcard {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.inst-admin-image {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  &__preview {
+    background: #eef2f4;
+    border: 1px dashed #c9d3d9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &--wide {
+      width: 160px;
+      height: 96px;
+    }
+
+    &--avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}

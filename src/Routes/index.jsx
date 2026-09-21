@@ -30,6 +30,7 @@ import CpfData from '../Pages/CpfReview/CpfData';
 import Login from '../Pages/Admin/Login';
 import Maintenance from '@/Pages/Maintenance';
 import EventCatalog from '@/Pages/EventCatalog';
+import Institutional from '@/Pages/Institutional';
 
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
@@ -74,6 +75,7 @@ const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
 const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
+const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
 
 const FormRoutes = () => {
   const [showInfoButton, setShowInfoButton] = useState(false);
@@ -487,6 +489,14 @@ const FormRoutes = () => {
               }
             />
             <Route
+              path={adminPath('/institucional')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminInstitutional loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/unauthorized"
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
@@ -502,6 +512,8 @@ const FormRoutes = () => {
             <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
             <Route path="/minha-conta" element={<CustomerMyAccount />} />
             <Route path="/minhas-inscricoes" element={<CustomerMyEventRegistrations />} />
+
+            <Route path="/e/:slug" element={<Institutional />} />
 
             {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
               <>

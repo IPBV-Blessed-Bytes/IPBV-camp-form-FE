@@ -68,7 +68,7 @@ const Header = ({
     <header className="form__header">
       <Container>
         <div className="form__header__back">
-          <button type="button" className="header-back-link" onClick={() => navigate('/')}>
+          <button type="button" className="header-back-link" onClick={() => navigate(eventPath('/'))}>
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <path
                 d="M15 6l-6 6 6 6"
@@ -79,7 +79,7 @@ const Header = ({
                 strokeLinejoin="round"
               />
             </svg>
-            <span>Todos os eventos</span>
+            <span>Área Institucional</span>
           </button>
         </div>
 
