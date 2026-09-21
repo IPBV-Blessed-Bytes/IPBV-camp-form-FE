@@ -429,6 +429,17 @@ $inst-tint: #f4f8f9;
   }
 }
 
+.inst-schedule__empty {
+  text-align: center;
+  color: $inst-muted;
+  background: #fff;
+  border: 1px dashed $inst-line;
+  border-radius: 16px;
+  padding: 40px 24px;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
 .inst-team {
   text-align: center;
   background: #fff;

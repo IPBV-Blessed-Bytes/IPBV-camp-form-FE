@@ -47,9 +47,11 @@ const Institutional = () => {
   const schedule = content.schedule || {};
   const days = schedule.days || [];
   const team = content.team || {};
-  const members = team.members || [];
+  const members = (team.members || []).filter(
+    (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
+  );
   const gallery = content.gallery || {};
-  const photos = gallery.photos || [];
+  const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
   const notices = content.notices || {};
   const noticeItems = notices.items || [];
 
@@ -148,12 +150,12 @@ const Institutional = () => {
         </section>
       )}
 
-      {days.length > 0 && (
-        <section className="inst-section inst-section--tinted" id="programacao">
-          <div className="inst-section__head">
-            <h2>{schedule.title || 'Programação'}</h2>
-            {schedule.subtitle && <p>{schedule.subtitle}</p>}
-          </div>
+      <section className="inst-section inst-section--tinted" id="programacao">
+        <div className="inst-section__head">
+          <h2>{schedule.title || 'Programação'}</h2>
+          {schedule.subtitle && <p>{schedule.subtitle}</p>}
+        </div>
+        {days.length > 0 ? (
           <div className="inst-schedule">
             {days.map((d, di) => (
               <div key={`${d.day}-${di}`} className="inst-schedule__day">
@@ -169,8 +171,10 @@ const Institutional = () => {
               </div>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="inst-schedule__empty">A programação completa será divulgada em breve.</p>
+        )}
+      </section>
 
       {members.length > 0 && (
         <section className="inst-section" id="equipe">
