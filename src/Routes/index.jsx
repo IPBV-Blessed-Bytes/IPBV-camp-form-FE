@@ -172,8 +172,6 @@ const FormRoutes = () => {
               )}
 
               <Footer handleAdminClick={handleAdminClick} />
-
-              <ChatbotWidget />
             </>
           )}
         </div>
@@ -516,6 +514,8 @@ const FormRoutes = () => {
           </Routes>
         </Suspense>
       </div>
+
+      {!adminPathname && <ChatbotWidget />}
     </div>
   );
 };

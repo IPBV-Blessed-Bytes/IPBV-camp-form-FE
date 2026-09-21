@@ -1,7 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { getChatbotEnabled, askChatbot } from '@/services/chatbot';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import './style.scss';
+
+const renderRich = (text) => {
+  const escaped = String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  const withBullets = escaped
+    .split('\n')
+    .map((line) => line.replace(/^\s*[*-]\s+/, '• '))
+    .join('\n');
+  const withBold = withBullets.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  return DOMPurify.sanitize(withBold, { ALLOWED_TAGS: ['strong', 'br'], ALLOWED_ATTR: [] });
+};
 
 const ChatbotWidget = () => {
   const { name: eventName } = useEventBranding();
@@ -64,11 +78,19 @@ const ChatbotWidget = () => {
             </button>
           </div>
           <div className="chatbot__messages" ref={listRef}>
-            {messages.map((m, i) => (
-              <div key={i} className={`chatbot__msg chatbot__msg--${m.role}`}>
-                {m.content}
-              </div>
-            ))}
+            {messages.map((m, i) =>
+              m.role === 'assistant' ? (
+                <div
+                  key={i}
+                  className="chatbot__msg chatbot__msg--assistant"
+                  dangerouslySetInnerHTML={{ __html: renderRich(m.content) }}
+                />
+              ) : (
+                <div key={i} className={`chatbot__msg chatbot__msg--${m.role}`}>
+                  {m.content}
+                </div>
+              ),
+            )}
             {sending && <div className="chatbot__msg chatbot__msg--assistant chatbot__msg--typing">Digitando…</div>}
           </div>
           <form
