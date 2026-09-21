@@ -25,6 +25,8 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
 
   const method = camper?.formPayment?.formPayment || '';
   const isBoleto = method === 'ticket';
+  const isCredit = method === 'creditCard';
+  const deadlineDays = isCredit ? 180 : 90;
 
   useEffect(() => {
     if (camper) {
@@ -97,8 +99,11 @@ const RefundModal = ({ camper, onHide, onDone, loggedUsername }) => {
             <b>{camper.orderNumber || '—'}</b>).
           </p>
           <Alert variant="warning" className="py-2 small">
-            A <b>taxa do PagarMe não é devolvida</b>. Os reembolsos são do valor líquido pago pelo cliente, então o
-            usuário absorve o custo e não recebe a taxa que pagou.
+            No estorno <b>total</b>, o cliente recebe de volta o <b>valor integral</b> que pagou (qualquer forma de
+            pagamento). Porém as <b>taxas de processamento do PagarMe{isCredit ? ' e a antecipação' : ''} não são
+            devolvidas à organização</b> — a igreja absorve esse custo, não o cliente. Prazo para estornar:{' '}
+            <b>até {deadlineDays} dias</b> após o pagamento{isCredit ? ' (cartão de crédito)' : ' (Pix e boleto)'};
+            depois disso o PagarMe não permite mais o estorno.
           </Alert>
 
           <Form.Group className="mb-3">
