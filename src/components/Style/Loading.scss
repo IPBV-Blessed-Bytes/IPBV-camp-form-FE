@@ -32,3 +32,14 @@
     color: $baby-blue;
   }
 }
+
+.tent-spinner {
+  display: inline-flex;
+  animation: tent-spin 1s steps(4) infinite;
+}
+
+@keyframes tent-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

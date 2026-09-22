@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import Icons from './Icons';
 import '../Style/Loading.scss';
 
 const Loading = ({ loading, messageText }) => {
@@ -11,7 +12,9 @@ const Loading = ({ loading, messageText }) => {
       {loading && (
         <div className="overlay">
           <div className="spinner-container">
-            <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            <span className="tent-spinner" role="status" aria-hidden="true">
+              <Icons typeIcon="tent" iconSize={52} fill="#007185" />
+            </span>
             <span>
               <b>
                 <em>{messageText || 'Processando dados'}</em>
