@@ -2,6 +2,10 @@ import PropTypes from 'prop-types';
 import '../Style/Loading.scss';
 
 const Loading = ({ loading, messageText }) => {
+  if (loading && window.location.pathname === '/') {
+    return <div className="loading-blank" />;
+  }
+
   return (
     <>
       {loading && (
