@@ -6,6 +6,7 @@ import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl } from '@/services/institutional';
+import { getPublicSetting } from '@/services/settings';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
 import './style.scss';
 
@@ -14,6 +15,7 @@ const Institutional = () => {
   const { handleAdminClick } = useFormState();
   const [scrolled, setScrolled] = useState(false);
   const [content, setContent] = useState(null);
+  const [mapQuery, setMapQuery] = useState('');
 
   const goToForm = () => navigate('/inscricao');
   const goToAccount = () => navigate('/minha-conta');
@@ -22,6 +24,12 @@ const Institutional = () => {
     getInstitutionalContent()
       .then((data) => setContent(data && Object.keys(data).length ? data : DEFAULT_INSTITUTIONAL_CONTENT))
       .catch(() => setContent(DEFAULT_INSTITUTIONAL_CONTENT));
+  }, []);
+
+  useEffect(() => {
+    getPublicSetting('event_map')
+      .then((value) => setMapQuery(value || ''))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -243,6 +251,22 @@ const Institutional = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {mapQuery && (
+        <section className="inst-section inst-section--tinted" id="como-chegar">
+          <div className="inst-section__head">
+            <h2>Como chegar</h2>
+          </div>
+          <div className="inst-map">
+            <iframe
+              title="Como chegar"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+              loading="lazy"
+              allowFullScreen
+            />
           </div>
         </section>
       )}

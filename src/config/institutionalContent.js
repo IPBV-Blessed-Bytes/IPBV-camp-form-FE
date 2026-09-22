@@ -110,4 +110,5 @@ export const INSTITUTIONAL_NAV = [
   { id: 'equipe', label: 'Equipe' },
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
+  { id: 'como-chegar', label: 'Como chegar' },
 ];
