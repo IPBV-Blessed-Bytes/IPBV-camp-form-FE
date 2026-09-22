@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ const STAGE_BADGE = (event) => {
   return { bg: 'success', text: undefined, label: 'Inscrições Abertas' };
 };
 
-import { listAllEvents, createEvent, updateEvent, deleteEvent } from '@/services/events';
+import { listAllEvents, createEvent, updateEvent, deleteEvent, uploadEventImage, deleteEventImage, eventImageUrl } from '@/services/events';
 import { setSelectedEvent } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -95,6 +95,10 @@ const AdminEvents = ({ loggedUsername }) => {
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState(EMPTY_EVENT);
   const [search, setSearch] = useState('');
+  const [imageBusy, setImageBusy] = useState(false);
+  const [imageVersion, setImageVersion] = useState(0);
+  const [hasImage, setHasImage] = useState(false);
+  const imageInputRef = useRef(null);
 
   const loadEvents = async () => {
     setLoading(true);
@@ -141,7 +145,41 @@ const AdminEvents = ({ loggedUsername }) => {
       mapQuery: event.mapQuery || '',
       social: parseSocial(event.socialLinks),
     });
+    setHasImage(false);
+    setImageVersion(Date.now());
     setShowFormModal(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file || !draft.id) return;
+    setImageBusy(true);
+    try {
+      await uploadEventImage(draft.id, file);
+      setImageVersion(Date.now());
+      setHasImage(true);
+      toast.success('Imagem do card atualizada.');
+    } catch {
+      toast.error('Não foi possível enviar a imagem.');
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
+  const handleImageRemove = async () => {
+    if (!draft.id) return;
+    setImageBusy(true);
+    try {
+      await deleteEventImage(draft.id);
+      setHasImage(false);
+      setImageVersion(Date.now());
+      toast.success('Imagem do card removida.');
+    } catch {
+      toast.error('Não foi possível remover a imagem.');
+    } finally {
+      setImageBusy(false);
+    }
   };
 
   const handleChange = (field) => (value) => setDraft((prev) => ({ ...prev, [field]: value }));
@@ -514,6 +552,49 @@ const AdminEvents = ({ loggedUsername }) => {
                 </div>
                 <Form.Text className="text-muted-italic">
                   Escolha um ícone para aparecer no card do evento na página inicial. Ele assume a cor principal.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Imagem do Card:</b>
+                </Form.Label>
+                {draft.id ? (
+                  <div className="event-image-field">
+                    <img
+                      className="event-image-field__preview"
+                      src={`${eventImageUrl(draft.id)}?v=${imageVersion}`}
+                      alt="Imagem do card"
+                      style={hasImage ? undefined : { display: 'none' }}
+                      onLoad={() => setHasImage(true)}
+                      onError={() => setHasImage(false)}
+                    />
+                    <div className="event-image-field__actions">
+                      <input ref={imageInputRef} type="file" accept="image/*" hidden onChange={handleImageUpload} />
+                      <Button
+                        variant="outline-teal-blue"
+                        size="sm"
+                        disabled={imageBusy}
+                        onClick={() => imageInputRef.current?.click()}
+                      >
+                        {imageBusy ? 'Enviando...' : hasImage ? 'Trocar imagem' : 'Enviar imagem'}
+                      </Button>
+                      {hasImage && (
+                        <Button variant="outline-danger" size="sm" disabled={imageBusy} onClick={handleImageRemove}>
+                          Remover
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <Form.Text className="text-muted-italic d-block">
+                    Salve o evento primeiro para adicionar uma imagem ao card.
+                  </Form.Text>
+                )}
+                <Form.Text className="text-muted-italic">
+                  Aparece no topo do card do evento no catálogo. Deixe sem imagem para usar só o ícone.
                 </Form.Text>
               </Form.Group>
             </Col>

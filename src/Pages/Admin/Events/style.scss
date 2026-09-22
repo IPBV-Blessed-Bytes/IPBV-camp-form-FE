@@ -216,3 +216,24 @@
     text-align: center;
   }
 }
+
+.event-image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__preview {
+    width: 100%;
+    max-width: 320px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e6eaee;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}

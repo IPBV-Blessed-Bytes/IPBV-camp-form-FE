@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-import { listEvents } from '@/services/events';
+import { listEvents, eventImageUrl } from '@/services/events';
 import { eventPath, setSelectedEvent } from '@/config/eventScope';
 import Loading from '@/components/Global/Loading';
 import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
@@ -11,6 +11,21 @@ import './style.scss';
 const ICON_KEYS = new Set(EVENT_ICONS.map((icon) => icon.key));
 
 const DEFAULT_COLOR = '#007185';
+
+const EventCardImage = ({ id, alt }) => {
+  const [status, setStatus] = useState('loading');
+  if (status === 'error') return null;
+  return (
+    <img
+      className="event-card__img"
+      src={eventImageUrl(id)}
+      alt={alt}
+      style={status === 'loading' ? { display: 'none' } : undefined}
+      onLoad={() => setStatus('ok')}
+      onError={() => setStatus('error')}
+    />
+  );
+};
 
 const EventCatalog = () => {
   const navigate = useNavigate();
@@ -72,6 +87,8 @@ const EventCatalog = () => {
                   style={{ '--card-accent': color }}
                   onClick={handleClick}
                 >
+                  <EventCardImage id={event.id} alt={event.name} />
+
                   <span className="event-card__icon">
                     {ICON_KEYS.has(event.iconKey) ? (
                       <EventIcons typeIcon={event.iconKey} iconSize={50} />
