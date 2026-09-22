@@ -103,6 +103,11 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
       { title: 'Parcelamento', text: 'Você pode pagar em boletos mensais ou no cartão. Simule as taxas na hora da inscrição.' },
     ],
   },
+  partners: {
+    title: 'Parceiros',
+    subtitle: '',
+    logos: [],
+  },
 };
 
 export const INSTITUTIONAL_NAV = [
@@ -111,5 +116,6 @@ export const INSTITUTIONAL_NAV = [
   { id: 'equipe', label: 'Equipe' },
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
+  { id: 'parceiros', label: 'Parceiros' },
   { id: 'como-chegar', label: 'Como chegar' },
 ];

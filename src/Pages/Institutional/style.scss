@@ -520,6 +520,8 @@ $inst-tint: #f4f8f9;
   }
 
   &__item {
+    position: relative;
+    overflow: hidden;
     aspect-ratio: 4 / 3;
     border-radius: 14px;
     display: flex;
@@ -529,12 +531,48 @@ $inst-tint: #f4f8f9;
     font-weight: 600;
     box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55);
 
-    &--photo {
-      background-size: cover;
-      background-position: center;
+    .inst-gallery__cover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+    }
+
+    &--clickable {
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55), 0 12px 26px rgba(0, 0, 0, 0.18);
+      }
+    }
+
+    .inst-gallery__count {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1;
     }
 
     span {
+      position: relative;
+      z-index: 1;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -555,6 +593,103 @@ $inst-tint: #f4f8f9;
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.inst-gallery-modal {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  @media (max-width: $sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+}
+
+.inst-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: zoom-out;
+
+  img {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    cursor: default;
+  }
+
+  &__close {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+  }
+}
+
+.inst-partners {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+
+  &__item {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid $inst-line;
+    border-radius: 14px;
+    padding: 18px;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    @media (max-width: $sm) {
+      width: 140px;
+      height: 90px;
+    }
+  }
 }
 
 .inst-notice {
