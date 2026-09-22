@@ -81,6 +81,15 @@ const Institutional = () => {
     ? { backgroundImage: `url(${institutionalImageUrl(hero.backgroundImageId)})` }
     : undefined;
 
+  const sectionVisible = {
+    sobre: !!(about.title || about.text || highlights.length > 0),
+    programacao: true,
+    equipe: members.length > 0,
+    galeria: photos.length > 0,
+    avisos: noticeItems.length > 0,
+    'como-chegar': !!mapQuery,
+  };
+
   return (
     <div className="institutional">
       <header className={`inst-nav${scrolled ? ' inst-nav--scrolled' : ''}`}>
@@ -92,7 +101,7 @@ const Institutional = () => {
             {brand}
           </button>
           <nav className="inst-nav__links">
-            {INSTITUTIONAL_NAV.map((n) => (
+            {INSTITUTIONAL_NAV.filter((n) => sectionVisible[n.id] !== false).map((n) => (
               <button key={n.id} type="button" onClick={() => scrollTo(n.id)}>
                 {n.label}
               </button>
