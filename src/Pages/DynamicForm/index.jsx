@@ -41,6 +41,8 @@ import InfoButton from '@/components/Global/InfoButton';
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
 import BoletoList from '@/components/Global/BoletoList';
+import PaymentSimulatorModal from '@/components/Global/PaymentSimulatorModal';
+import { DEFAULT_FEES } from '@/utils/paymentFees';
 import '@/Pages/Home/style.scss';
 import '@/components/Style/Cart.scss';
 import '@/Pages/BeforePayment/style.scss';
@@ -136,6 +138,7 @@ const DynamicForm = () => {
   const [boletoInstallments, setBoletoInstallments] = useState(1);
   const [boletoResult, setBoletoResult] = useState(null);
   const [donation, setDonation] = useState('');
+  const [showSimulator, setShowSimulator] = useState(false);
 
   const { data: homeInfo } = useQuery({
     queryKey: ['home-info', getEventSlug()],
@@ -890,12 +893,24 @@ const DynamicForm = () => {
                                 Pagamento
                               </Button>
                             )}
+                            {grandTotal > 0 && (
+                              <Button variant="outline-secondary" onClick={() => setShowSimulator(true)}>
+                                <Icons typeIcon="money" iconSize={20} fill="#6c757d" /> Simular Taxas de Pagamento
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
                 </Row>
+                <PaymentSimulatorModal
+                  show={showSimulator}
+                  onHide={() => setShowSimulator(false)}
+                  base={grandTotal}
+                  fees={DEFAULT_FEES}
+                  maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
+                />
               </div>
             ) : currentStep.kind === 'payment' ? (
               <FormStepLayout
