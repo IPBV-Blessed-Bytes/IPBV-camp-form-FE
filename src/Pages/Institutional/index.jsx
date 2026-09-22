@@ -314,7 +314,7 @@ const Institutional = () => {
       {mapQuery && (
         <section className="inst-section inst-section--tinted" id="como-chegar">
           <div className="inst-section__head">
-            <h2>Como chegar</h2>
+            <h2>Como Chegar</h2>
           </div>
           <div className="inst-map">
             <iframe
