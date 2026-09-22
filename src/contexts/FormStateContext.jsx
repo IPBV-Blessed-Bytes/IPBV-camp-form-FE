@@ -152,7 +152,10 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
 
   const hasFood = items.some((item) => products.find((p) => p.id === item.id && p.category === 'Alimentação'));
 
-  const handleAdminClick = useCallback(() => navigate('/admin'), [navigate]);
+  const handleAdminClick = useCallback(() => {
+    navigate('/admin');
+    scrollTop();
+  }, [navigate]);
 
   const handlePersonData = useCallback((data) => setPersonData(data), []);
 

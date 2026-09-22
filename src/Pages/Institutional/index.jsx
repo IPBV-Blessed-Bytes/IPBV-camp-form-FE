@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
+import { scrollTop } from '@/hooks/useScrollUp';
 import { useFormState } from '@/contexts/FormStateContext';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
-import { getInstitutionalContent, institutionalImageUrl } from '@/services/institutional';
+import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
 import { eventPath } from '@/config/eventScope';
 import './style.scss';
@@ -13,17 +15,30 @@ import './style.scss';
 const Institutional = () => {
   const navigate = useNavigate();
   const { handleAdminClick } = useFormState();
-  const { name: eventName } = useEventBranding();
+  const { name: eventName, mapQuery } = useEventBranding();
   const [scrolled, setScrolled] = useState(false);
   const [content, setContent] = useState(null);
+  const [visits, setVisits] = useState(null);
 
-  const goToForm = () => navigate(eventPath('/inscricao'));
-  const goToAccount = () => navigate('/minha-conta');
+  const goToForm = () => {
+    navigate(eventPath('/inscricao'));
+    scrollTop();
+  };
+  const goToAccount = () => {
+    navigate('/minha-conta');
+    scrollTop();
+  };
 
   useEffect(() => {
     getInstitutionalContent()
       .then((data) => setContent(data && Object.keys(data).length ? data : DEFAULT_INSTITUTIONAL_CONTENT))
       .catch(() => setContent(DEFAULT_INSTITUTIONAL_CONTENT));
+  }, []);
+
+  useEffect(() => {
+    registerInstitutionalVisit()
+      .then(setVisits)
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -49,15 +64,26 @@ const Institutional = () => {
   const schedule = content.schedule || {};
   const days = schedule.days || [];
   const team = content.team || {};
-  const members = team.members || [];
+  const members = (team.members || []).filter(
+    (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
+  );
   const gallery = content.gallery || {};
-  const photos = gallery.photos || [];
+  const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
   const notices = content.notices || {};
   const noticeItems = notices.items || [];
 
   const heroStyle = hero.backgroundImageId
     ? { backgroundImage: `url(${institutionalImageUrl(hero.backgroundImageId)})` }
     : undefined;
+
+  const sectionVisible = {
+    sobre: !!(about.title || about.text || highlights.length > 0),
+    programacao: true,
+    equipe: members.length > 0,
+    galeria: photos.length > 0,
+    avisos: noticeItems.length > 0,
+    'como-chegar': !!mapQuery,
+  };
 
   return (
     <div className="institutional">
@@ -70,19 +96,19 @@ const Institutional = () => {
             {brand}
           </button>
           <nav className="inst-nav__links">
-            {INSTITUTIONAL_NAV.map((n) => (
+            {INSTITUTIONAL_NAV.filter((n) => sectionVisible[n.id] !== false).map((n) => (
               <button key={n.id} type="button" onClick={() => scrollTo(n.id)}>
                 {n.label}
               </button>
             ))}
           </nav>
           <div className="inst-nav__actions">
-            <button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
+            <Button type="button" variant="" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
               Minha conta
-            </button>
-            <button type="button" className="inst-btn inst-btn--primary" onClick={goToForm}>
+            </Button>
+            <Button type="button" variant="" className="inst-btn inst-btn--primary" onClick={goToForm}>
               Inscreva-se
-            </button>
+            </Button>
           </div>
         </div>
       </header>
@@ -108,12 +134,12 @@ const Institutional = () => {
             </div>
           )}
           <div className="inst-hero__cta">
-            <button type="button" className="inst-btn inst-btn--primary inst-btn--lg" onClick={goToForm}>
+            <Button type="button" variant="" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
               Fazer minha inscrição
-            </button>
-            <button type="button" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
+            </Button>
+            <Button type="button" variant="" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
               Saiba mais
-            </button>
+            </Button>
           </div>
         </div>
         {stats.length > 0 && (
@@ -150,12 +176,12 @@ const Institutional = () => {
         </section>
       )}
 
-      {days.length > 0 && (
-        <section className="inst-section inst-section--tinted" id="programacao">
-          <div className="inst-section__head">
-            <h2>{schedule.title || 'Programação'}</h2>
-            {schedule.subtitle && <p>{schedule.subtitle}</p>}
-          </div>
+      <section className="inst-section inst-section--tinted" id="programacao">
+        <div className="inst-section__head">
+          <h2>{schedule.title || 'Programação'}</h2>
+          {schedule.subtitle && <p>{schedule.subtitle}</p>}
+        </div>
+        {days.length > 0 ? (
           <div className="inst-schedule">
             {days.map((d, di) => (
               <div key={`${d.day}-${di}`} className="inst-schedule__day">
@@ -171,8 +197,10 @@ const Institutional = () => {
               </div>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="inst-schedule__empty">A programação completa será divulgada em breve.</p>
+        )}
+      </section>
 
       {members.length > 0 && (
         <section className="inst-section" id="equipe">
@@ -245,12 +273,34 @@ const Institutional = () => {
         </section>
       )}
 
+      {mapQuery && (
+        <section className="inst-section inst-section--tinted" id="como-chegar">
+          <div className="inst-section__head">
+            <h2>Como chegar</h2>
+          </div>
+          <div className="inst-map">
+            <iframe
+              title="Como chegar"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
+        </section>
+      )}
+
       <section className="inst-final">
         <h2>Pronto para viver essa experiência?</h2>
         <p>As vagas são limitadas. Garanta a sua inscrição agora mesmo.</p>
-        <button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
+        <Button type="button" variant="" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
           Quero me inscrever
-        </button>
+        </Button>
+        {content.showVisits && visits != null && (
+          <span className="inst-visits">
+            <Icons typeIcon="visible-password" iconSize={16} stroke="rgba(255,255,255,0.85)" fill="none" />
+            {visits.toLocaleString('pt-BR')} visitas
+          </span>
+        )}
       </section>
 
       <Footer handleAdminClick={handleAdminClick} />

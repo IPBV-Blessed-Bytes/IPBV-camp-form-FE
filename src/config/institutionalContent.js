@@ -19,6 +19,7 @@ export const GALLERY_TONES = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 export const DEFAULT_INSTITUTIONAL_CONTENT = {
   brand: 'Acampamento IPBV',
+  showVisits: false,
   hero: {
     tagline: 'Retiro de Verão 2027',
     title: 'Um final de semana para renovar a fé, criar laços e descansar em Deus.',
@@ -110,4 +111,5 @@ export const INSTITUTIONAL_NAV = [
   { id: 'equipe', label: 'Equipe' },
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
+  { id: 'como-chegar', label: 'Como chegar' },
 ];

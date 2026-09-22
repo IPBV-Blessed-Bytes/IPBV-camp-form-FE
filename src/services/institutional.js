@@ -33,3 +33,8 @@ export const institutionalImageUrl = (id) => {
   const slug = getEventSlug();
   return slug ? `${BASE_URL}/e/${slug}/institutional/images/${id}` : `${BASE_URL}/institutional/images/${id}`;
 };
+
+export const registerInstitutionalVisit = async () => {
+  const { data } = await fetcher.post('/institutional/visit');
+  return data?.count ?? null;
+};

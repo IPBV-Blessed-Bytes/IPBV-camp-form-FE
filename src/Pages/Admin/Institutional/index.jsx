@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -128,10 +128,31 @@ const AdminInstitutional = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <div className="inst-admin__toolbar">
-          <Button className="align-itens-end d-flex" variant="teal-blue" size="lg" onClick={handleSave} disabled={saving}>
-            {saving ? 'Salvando...' : 'Salvar alterações'}
+          <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
+            <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
+            {saving && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-0.5rem', marginLeft: '-0.5rem' }}
+              />
+            )}
           </Button>
         </div>
+
+        <section className="inst-admin__card">
+          <h5>Contador de visitas</h5>
+          <Form.Check
+            type="switch"
+            id="inst-show-visits"
+            label="Exibir o número de visitas na página pública"
+            checked={!!form.showVisits}
+            onChange={(e) => patch((n) => { n.showVisits = e.target.checked; })}
+          />
+        </section>
 
         <section className="inst-admin__card">
           <h5>Topo (destaque)</h5>
@@ -413,8 +434,18 @@ const AdminInstitutional = ({ loggedUsername }) => {
         </section>
 
         <div className="inst-admin__toolbar">
-          <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving}>
-            {saving ? 'Salvando...' : 'Salvar alterações'}
+          <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
+            <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
+            {saving && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-0.5rem', marginLeft: '-0.5rem' }}
+              />
+            )}
           </Button>
         </div>
       </div>

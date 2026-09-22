@@ -8,6 +8,7 @@ import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { eventPath, stripEventPrefix } from '@/config/eventScope';
+import { scrollTop } from '@/hooks/useScrollUp';
 import '../Style/Header.scss';
 import '../Style/Cart.scss';
 import Icons from './Icons';
@@ -68,7 +69,7 @@ const Header = ({
     <header className="form__header">
       <Container>
         <div className="form__header__back">
-          <button type="button" className="header-back-link" onClick={() => navigate(eventPath('/'))}>
+          <Button type="button" variant="" className="header-back-link" onClick={() => navigate(eventPath('/'))}>
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <path
                 d="M15 6l-6 6 6 6"
@@ -80,7 +81,7 @@ const Header = ({
               />
             </svg>
             <span>Área Institucional</span>
-          </button>
+          </Button>
         </div>
 
         <div className="form__header__left">
@@ -103,13 +104,13 @@ const Header = ({
 
         <div className="form__header__right">
           {isLoggedIn ? (
-            <button type="button" className="header-login-link" onClick={() => navigate('/minha-conta')}>
+            <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/minha-conta'); scrollTop(); }}>
               Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
-            </button>
+            </Button>
           ) : (
-            <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
+            <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/entrar'); scrollTop(); }}>
               Já tem cadastro? <span>Faça seu login</span>
-            </button>
+            </Button>
           )}
           {stepperSteps
             ? cartCount > 0 && (
