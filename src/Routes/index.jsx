@@ -11,7 +11,6 @@ import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
 import ChatbotWidget from '@/components/Global/ChatbotWidget';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
-import CustomCarousel from '@/components/Global/CustomCarousel';
 
 import FormHome from '../Pages/Home';
 import FormPersonalData from '../Pages/PersonalData';
@@ -156,10 +155,6 @@ const FormRoutes = () => {
               )}
 
               {showInfoButton && <InfoButton timeout />}
-
-              {(steps === enumSteps.home || steps === enumSteps.success) && (
-                <CustomCarousel title="Parceiros" images={[]} />
-              )}
 
               <Footer handleAdminClick={handleAdminClick} />
             </>

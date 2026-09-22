@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
+import CustomModal from '@/components/Global/CustomModal';
 import { scrollTop } from '@/hooks/useScrollUp';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
@@ -18,6 +19,8 @@ const Institutional = () => {
   const [content, setContent] = useState(null);
   const [mapQuery, setMapQuery] = useState('');
   const [visits, setVisits] = useState(null);
+  const [galleryModal, setGalleryModal] = useState(null);
+  const [lightbox, setLightbox] = useState(null);
 
   const goToForm = () => {
     navigate('/inscricao');
@@ -76,6 +79,8 @@ const Institutional = () => {
   const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
   const notices = content.notices || {};
   const noticeItems = notices.items || [];
+  const partners = content.partners || {};
+  const partnerLogos = (partners.logos || []).filter((l) => l && l.imageId);
 
   const heroStyle = hero.backgroundImageId
     ? { backgroundImage: `url(${institutionalImageUrl(hero.backgroundImageId)})` }
@@ -87,6 +92,7 @@ const Institutional = () => {
     equipe: members.length > 0,
     galeria: photos.length > 0,
     avisos: noticeItems.length > 0,
+    parceiros: partnerLogos.length > 0,
     'como-chegar': !!mapQuery,
   };
 
@@ -238,21 +244,32 @@ const Institutional = () => {
             {gallery.subtitle && <p>{gallery.subtitle}</p>}
           </div>
           <div className="inst-gallery">
-            {photos.map((p, i) => (
-              <div
-                key={`${p.label}-${i}`}
-                className={`inst-gallery__item inst-gallery__item--${GALLERY_TONES[i % GALLERY_TONES.length]}${
-                  p.imageId ? ' inst-gallery__item--photo' : ''
-                }`}
-                style={p.imageId ? { backgroundImage: `url(${institutionalImageUrl(p.imageId)})` } : undefined}
-              >
-                {p.label && (
-                  <span>
-                    {!p.imageId && <Icons typeIcon="camera" iconSize={22} fill="#ffffff" />} {p.label}
-                  </span>
-                )}
-              </div>
-            ))}
+            {photos.map((p, i) => {
+              const album = (p.images || []).filter(Boolean);
+              const hasAlbum = album.length > 0;
+              return (
+                <div
+                  key={`${p.label}-${i}`}
+                  className={`inst-gallery__item inst-gallery__item--${GALLERY_TONES[i % GALLERY_TONES.length]}${
+                    hasAlbum ? ' inst-gallery__item--clickable' : ''
+                  }`}
+                  onClick={hasAlbum ? () => setGalleryModal({ label: p.label, images: album }) : undefined}
+                  onKeyDown={hasAlbum ? (e) => (e.key === 'Enter' || e.key === ' ') && setGalleryModal({ label: p.label, images: album }) : undefined}
+                  role={hasAlbum ? 'button' : undefined}
+                  tabIndex={hasAlbum ? 0 : undefined}
+                >
+                  {p.imageId && (
+                    <img className="inst-gallery__cover" src={institutionalImageUrl(p.imageId)} alt={p.label || 'Galeria'} loading="lazy" />
+                  )}
+                  {hasAlbum && <span className="inst-gallery__count">{album.length}</span>}
+                  {p.label && (
+                    <span className="inst-gallery__label">
+                      {!p.imageId && <Icons typeIcon="camera" iconSize={22} fill="#ffffff" />} {p.label}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -272,6 +289,22 @@ const Institutional = () => {
                   <h3>{n.title}</h3>
                   <p>{n.text}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {partnerLogos.length > 0 && (
+        <section className="inst-section" id="parceiros">
+          <div className="inst-section__head">
+            <h2>{partners.title || 'Parceiros'}</h2>
+            {partners.subtitle && <p>{partners.subtitle}</p>}
+          </div>
+          <div className="inst-partners">
+            {partnerLogos.map((l, i) => (
+              <div key={`${l.name || 'parceiro'}-${i}`} className="inst-partners__item">
+                <img src={institutionalImageUrl(l.imageId)} alt={l.name || 'Parceiro'} />
               </div>
             ))}
           </div>
@@ -309,6 +342,43 @@ const Institutional = () => {
       </section>
 
       <Footer handleAdminClick={handleAdminClick} />
+
+      <CustomModal
+        show={!!galleryModal}
+        onHide={() => setGalleryModal(null)}
+        variant="info"
+        icon="camera"
+        title={galleryModal?.label || 'Galeria'}
+        size="lg"
+      >
+        <div className="inst-gallery-modal">
+          {(galleryModal?.images || []).map((id, i) => (
+            <img
+              key={`${id}-${i}`}
+              src={institutionalImageUrl(id)}
+              alt={`${galleryModal?.label || 'foto'} ${i + 1}`}
+              onClick={() => setLightbox(id)}
+            />
+          ))}
+        </div>
+      </CustomModal>
+
+      {lightbox && (
+        <div
+          className="inst-lightbox"
+          role="button"
+          tabIndex={0}
+          onClick={() => setLightbox(null)}
+          onKeyDown={(e) => (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && setLightbox(null)}
+        >
+          <button type="button" className="inst-lightbox__close" aria-label="Fechar" onClick={() => setLightbox(null)}>
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+          </button>
+          <img src={institutionalImageUrl(lightbox)} alt="Foto ampliada" onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
     </div>
   );
 };

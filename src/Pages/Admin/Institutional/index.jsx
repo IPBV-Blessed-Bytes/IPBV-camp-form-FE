@@ -116,6 +116,7 @@ const AdminInstitutional = ({ loggedUsername }) => {
   const team = form.team || {};
   const gallery = form.gallery || {};
   const notices = form.notices || {};
+  const partners = form.partners || {};
 
   return (
     <div className="admin-subpage inst-admin">
@@ -382,7 +383,7 @@ const AdminInstitutional = ({ loggedUsername }) => {
           </Row>
           <div className="inst-admin__card-head">
             <h6>Fotos</h6>
-            <Button variant="outline-teal-blue" size="sm" onClick={() => patch((n) => { (n.gallery.photos ||= []).push({ imageId: null, label: '' }); })}>
+            <Button variant="outline-teal-blue" size="sm" onClick={() => patch((n) => { (n.gallery.photos ||= []).push({ imageId: null, label: '', images: [] }); })}>
               + Adicionar foto
             </Button>
           </div>
@@ -392,6 +393,7 @@ const AdminInstitutional = ({ loggedUsername }) => {
                 <div className="d-flex justify-content-end">
                   <ActionButton action="delete" title="Remover" onClick={() => patch((n) => { n.gallery.photos.splice(i, 1); })} />
                 </div>
+                <Form.Label>Capa</Form.Label>
                 <ImageField
                   imageId={p.imageId}
                   shape="wide"
@@ -400,6 +402,28 @@ const AdminInstitutional = ({ loggedUsername }) => {
                 />
                 <Form.Label className="mt-2">Legenda</Form.Label>
                 <Form.Control value={p.label || ''} onChange={(e) => patch((n) => { n.gallery.photos[i].label = e.target.value; })} />
+                <Form.Label className="mt-3">Álbum (abre no modal ao clicar)</Form.Label>
+                {(p.images || []).map((imgId, ii) => (
+                  <div key={ii} className="inst-admin__album-item">
+                    <div className="d-flex justify-content-end">
+                      <ActionButton action="delete" title="Remover" onClick={() => patch((n) => { n.gallery.photos[i].images.splice(ii, 1); })} />
+                    </div>
+                    <ImageField
+                      imageId={imgId}
+                      shape="wide"
+                      label={p.label}
+                      onChange={(id) => patch((n) => { if (id) n.gallery.photos[i].images[ii] = id; else n.gallery.photos[i].images.splice(ii, 1); })}
+                    />
+                  </div>
+                ))}
+                <div className="inst-admin__album-item">
+                  <ImageField
+                    imageId={null}
+                    shape="wide"
+                    label={p.label}
+                    onChange={(id) => patch((n) => { if (id) (n.gallery.photos[i].images ||= []).push(id); })}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -431,6 +455,46 @@ const AdminInstitutional = ({ loggedUsername }) => {
               </Col>
             </Row>
           ))}
+        </section>
+
+        <section className="inst-admin__card">
+          <div className="inst-admin__card-head">
+            <h5>Parceiros</h5>
+            <Button variant="outline-teal-blue" size="sm" onClick={() => patch((n) => { (n.partners ||= {}).logos ||= []; n.partners.logos.push({ imageId: null, name: '' }); })}>
+              + Adicionar parceiro
+            </Button>
+          </div>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label><b>Título da Seção:</b></Form.Label>
+                <Form.Control value={partners.title || ''} onChange={(e) => patch((n) => { (n.partners ||= {}).title = e.target.value; })} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label><b>Subtítulo (opcional):</b></Form.Label>
+                <Form.Control value={partners.subtitle || ''} onChange={(e) => patch((n) => { (n.partners ||= {}).subtitle = e.target.value; })} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="inst-admin__grid">
+            {(partners.logos || []).map((l, i) => (
+              <div key={i} className="inst-admin__subcard">
+                <div className="d-flex justify-content-end">
+                  <ActionButton action="delete" title="Remover" onClick={() => patch((n) => { n.partners.logos.splice(i, 1); })} />
+                </div>
+                <ImageField
+                  imageId={l.imageId}
+                  shape="wide"
+                  label={l.name}
+                  onChange={(id) => patch((n) => { n.partners.logos[i].imageId = id; })}
+                />
+                <Form.Label className="mt-2">Nome (opcional)</Form.Label>
+                <Form.Control value={l.name || ''} onChange={(e) => patch((n) => { n.partners.logos[i].name = e.target.value; })} />
+              </div>
+            ))}
+          </div>
         </section>
 
         <div className="inst-admin__toolbar">
