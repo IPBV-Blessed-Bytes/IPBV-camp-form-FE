@@ -8,6 +8,7 @@ import useBaseYear from '@/hooks/useBaseYear';
 import { useFormState } from '@/contexts/FormStateContext';
 import '../Style/Header.scss';
 import '../Style/Cart.scss';
+import { scrollTop } from '@/hooks/useScrollUp';
 import Icons from './Icons';
 import FormStepper from './FormStepper';
 
@@ -55,9 +56,9 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
     <header className="form__header">
       <Container>
         <div className="form__header__left">
-          <button type="button" className="header-back-link" onClick={() => navigate('/')}>
+          <Button type="button" variant="" className="header-back-link" onClick={() => navigate('/')}>
             <Icons typeIcon="arrow-left" iconSize={16} fill="#ffffff" /> Área Institucional
-          </button>
+          </Button>
 
           <h2>
             <a className="header-title" href="/">
@@ -79,13 +80,13 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
         <div className="form__header__right">
           {showLogin && (
             isLoggedIn ? (
-              <button type="button" className="header-login-link" onClick={() => navigate('/minha-conta')}>
+              <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/minha-conta'); scrollTop(); }}>
                 Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
-              </button>
+              </Button>
             ) : (
-              <button type="button" className="header-login-link" onClick={() => navigate('/entrar')}>
+              <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/entrar'); scrollTop(); }}>
                 Já tem cadastro? <span>Faça seu login</span>
-              </button>
+              </Button>
             )
           )}
 

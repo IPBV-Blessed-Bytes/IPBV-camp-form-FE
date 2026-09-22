@@ -28,3 +28,8 @@ export const deleteInstitutionalImage = async (id) => {
 };
 
 export const institutionalImageUrl = (id) => (id ? `${BASE_URL}/institutional/images/${id}` : '');
+
+export const registerInstitutionalVisit = async () => {
+  const { data } = await fetcher.post('/institutional/visit');
+  return data?.count ?? null;
+};

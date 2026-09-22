@@ -4,8 +4,9 @@ import { Button } from 'react-bootstrap';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
+import { scrollTop } from '@/hooks/useScrollUp';
 import { useFormState } from '@/contexts/FormStateContext';
-import { getInstitutionalContent, institutionalImageUrl } from '@/services/institutional';
+import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { getPublicSetting } from '@/services/settings';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
 import './style.scss';
@@ -16,9 +17,16 @@ const Institutional = () => {
   const [scrolled, setScrolled] = useState(false);
   const [content, setContent] = useState(null);
   const [mapQuery, setMapQuery] = useState('');
+  const [visits, setVisits] = useState(null);
 
-  const goToForm = () => navigate('/inscricao');
-  const goToAccount = () => navigate('/minha-conta');
+  const goToForm = () => {
+    navigate('/inscricao');
+    scrollTop();
+  };
+  const goToAccount = () => {
+    navigate('/minha-conta');
+    scrollTop();
+  };
 
   useEffect(() => {
     getInstitutionalContent()
@@ -29,6 +37,12 @@ const Institutional = () => {
   useEffect(() => {
     getPublicSetting('event_map')
       .then((value) => setMapQuery(value || ''))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    registerInstitutionalVisit()
+      .then(setVisits)
       .catch(() => {});
   }, []);
 
@@ -44,7 +58,7 @@ const Institutional = () => {
   };
 
   if (!content) {
-    return <Loading loading />;
+        return <Loading loading />;
   }
 
   const brand = content.brand || 'Inscrições';
@@ -277,6 +291,12 @@ const Institutional = () => {
         <Button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
           Quero me inscrever
         </Button>
+        {content.showVisits && visits != null && (
+          <span className="inst-visits">
+            <Icons typeIcon="visible-password" iconSize={16} stroke="rgba(255,255,255,0.85)" fill="none" />
+            {visits.toLocaleString('pt-BR')} visitas
+          </span>
+        )}
       </section>
 
       <Footer handleAdminClick={handleAdminClick} />

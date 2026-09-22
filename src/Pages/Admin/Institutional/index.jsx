@@ -144,6 +144,17 @@ const AdminInstitutional = ({ loggedUsername }) => {
         </div>
 
         <section className="inst-admin__card">
+          <h5>Contador de visitas</h5>
+          <Form.Check
+            type="switch"
+            id="inst-show-visits"
+            label="Exibir o número de visitas na página pública"
+            checked={!!form.showVisits}
+            onChange={(e) => patch((n) => { n.showVisits = e.target.checked; })}
+          />
+        </section>
+
+        <section className="inst-admin__card">
           <h5>Topo (destaque)</h5>
           <Row>
             <Col md={6}>

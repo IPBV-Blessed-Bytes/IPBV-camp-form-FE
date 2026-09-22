@@ -602,5 +602,16 @@ $inst-tint: #f4f8f9;
     font-size: 1.1rem;
     margin-bottom: 26px;
   }
+
+  .inst-visits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 26px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 }
 
