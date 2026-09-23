@@ -40,6 +40,20 @@ const STATUS_BADGE = {
   canceled: { bg: 'secondary', label: 'Cancelado' },
 };
 
+const BILLING_STATUS_OPTIONS = [
+  { value: 'trial', label: 'Trial' },
+  { value: 'active', label: 'Ativo (em dia)' },
+  { value: 'past_due', label: 'Inadimplente' },
+  { value: 'canceled', label: 'Cancelado' },
+];
+
+const BILLING_BADGE = {
+  active: { bg: 'success', label: 'Em dia' },
+  trial: { bg: 'info', label: 'Trial' },
+  past_due: { bg: 'warning', text: 'dark', label: 'Inadimplente' },
+  canceled: { bg: 'secondary', label: 'Cancelado' },
+};
+
 const slugify = (value) =>
   value
     .toLowerCase()
@@ -57,6 +71,9 @@ const EMPTY_ORG = {
   status: 'active',
   pagarmeRecipientId: '',
   platformFeePercent: '',
+  billingStatus: 'active',
+  dueDate: '',
+  trialEndsAt: '',
 };
 
 const EMPTY_FAQ = {
@@ -178,6 +195,9 @@ const Platform = () => {
       status: org.status || 'active',
       pagarmeRecipientId: org.pagarmeRecipientId || '',
       platformFeePercent: org.platformFeePercent ?? '',
+      billingStatus: org.billingStatus || 'active',
+      dueDate: org.dueDate || '',
+      trialEndsAt: org.trialEndsAt || '',
     });
     setShowModal(true);
   };
@@ -203,6 +223,9 @@ const Platform = () => {
             draft.platformFeePercent === '' || draft.platformFeePercent === null
               ? null
               : Number(draft.platformFeePercent),
+          billingStatus: draft.billingStatus || null,
+          dueDate: draft.dueDate || null,
+          trialEndsAt: draft.trialEndsAt || null,
         });
         toast.success('Organização atualizada com sucesso.');
       } else {
@@ -274,6 +297,7 @@ const Platform = () => {
                   <th>Contato</th>
                   <th>Plano</th>
                   <th>Status</th>
+                  <th>Cobrança</th>
                   <th className="text-center">Nº de eventos</th>
                   <th className="text-end">Ações</th>
                 </tr>
@@ -293,6 +317,20 @@ const Platform = () => {
                         <Badge bg={badge.bg} text={badge.text}>
                           {badge.label}
                         </Badge>
+                      </td>
+                      <td>
+                        {(() => {
+                          const billing = BILLING_BADGE[org.billingStatus] || {
+                            bg: 'light',
+                            text: 'dark',
+                            label: org.billingStatus || '—',
+                          };
+                          return (
+                            <Badge bg={billing.bg} text={billing.text}>
+                              {billing.label}
+                            </Badge>
+                          );
+                        })()}
                       </td>
                       <td className="text-center">{org.eventCount ?? 0}</td>
                       <td className="text-end">
@@ -476,6 +514,48 @@ const Platform = () => {
                       placeholder="padrão da plataforma"
                     />
                     <Form.Text className="text-muted">% retido por inscrição paga. Vazio = usa o padrão.</Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={4}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Cobrança:</b>
+                    </Form.Label>
+                    <Form.Select value={draft.billingStatus} onChange={(e) => handleChange('billingStatus')(e.target.value)}>
+                      {BILLING_STATUS_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={4}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Vencimento:</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={draft.dueDate}
+                      onChange={(e) => handleChange('dueDate')(e.target.value)}
+                    />
+                    <Form.Text className="text-muted">Bloqueia form em +2d, admin em +7d.</Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={4}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Fim do trial:</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={draft.trialEndsAt}
+                      onChange={(e) => handleChange('trialEndsAt')(e.target.value)}
+                    />
                   </Form.Group>
                 </Col>
               </>
