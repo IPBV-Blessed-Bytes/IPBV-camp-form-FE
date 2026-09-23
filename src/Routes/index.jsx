@@ -75,6 +75,8 @@ const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
+const Platform = lazy(() => import('@/Pages/Platform'));
+const Storefront = lazy(() => import('@/Pages/Storefront'));
 
 const FormRoutes = () => {
   const [showInfoButton, setShowInfoButton] = useState(false);
@@ -497,6 +499,9 @@ const FormRoutes = () => {
             />
 
             <Route path="/" element={<EventCatalog />} />
+
+            <Route path="/platform" element={<Platform />} />
+            <Route path="/comprar" element={<Storefront />} />
 
             <Route path="/esqueci-senha" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />

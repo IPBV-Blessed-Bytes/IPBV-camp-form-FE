@@ -1,0 +1,100 @@
+@use '../../styles/Variables.scss' as *;
+
+.platform {
+  min-height: 100vh;
+  background: $background-gray;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.5rem;
+    background: $white;
+    border-bottom: 1px solid $alternate-light-gray;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $dark-gray;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: $alternate-dark-gray;
+  }
+
+  &__content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  &__empty {
+    text-align: center;
+    color: $alternate-dark-gray;
+    padding: 3rem 0;
+  }
+
+  &__table-wrap {
+    background: $white;
+    border: 1px solid $alternate-light-gray;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  &__table {
+    margin: 0;
+
+    thead th {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: $alternate-dark-gray;
+      background: $light-gray;
+    }
+
+    td,
+    th {
+      vertical-align: middle;
+    }
+
+    code {
+      color: $primary;
+    }
+  }
+
+  &__form-readonly {
+    color: $dark-gray;
+    font-weight: 600;
+  }
+
+  &__denied {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 4rem 1.5rem;
+    text-align: center;
+    color: $dark-gray;
+
+    p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (max-width: $sm) {
+    &__header {
+      padding: 1rem;
+    }
+
+    &__content {
+      padding: 1rem 1rem 2.5rem;
+    }
+  }
+}
