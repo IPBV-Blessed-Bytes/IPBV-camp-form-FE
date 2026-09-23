@@ -36,6 +36,7 @@ const EMPTY_EVENT = {
   active: true,
   registrationsOpen: true,
   paymentEnabled: true,
+  feeMode: 'passed',
   agePricingEnabled: false,
   registrationFeeEnabled: false,
   boletoEnabled: false,
@@ -132,6 +133,7 @@ const AdminEvents = ({ loggedUsername }) => {
       active: event.active ?? true,
       registrationsOpen: event.registrationsOpen !== false,
       paymentEnabled: event.paymentEnabled ?? true,
+      feeMode: event.feeMode || 'passed',
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
       boletoEnabled: event.boletoEnabled ?? false,
@@ -226,6 +228,7 @@ const AdminEvents = ({ loggedUsername }) => {
       active: draft.active,
       registrationsOpen: draft.registrationsOpen,
       paymentEnabled: draft.paymentEnabled,
+      feeMode: draft.paymentEnabled ? draft.feeMode : 'passed',
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
       boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
@@ -748,6 +751,17 @@ const AdminEvents = ({ loggedUsername }) => {
 
           {draft.paymentEnabled && (
             <>
+              <Form.Group className="mt-3">
+                <Form.Label className="fw-bold mb-1 d-block">Taxa da plataforma sobre a inscrição:</Form.Label>
+                <Form.Select value={draft.feeMode} onChange={(e) => handleChange('feeMode')(e.target.value)}>
+                  <option value="passed">Repassar ao inscrito (somada ao valor no checkout)</option>
+                  <option value="absorbed">Absorver (descontada do valor que recebo)</option>
+                </Form.Select>
+                <Form.Text className="text-muted-italic">
+                  Define se a taxa da plataforma é somada ao que o inscrito paga ou descontada do valor da igreja.
+                </Form.Text>
+              </Form.Group>
+
               <Form.Check
                 type="switch"
                 id="event-age-pricing-switch"
