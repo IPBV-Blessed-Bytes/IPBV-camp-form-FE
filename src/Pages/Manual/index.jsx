@@ -340,6 +340,14 @@ const DonoDocs = () => (
         Sem inscrição paga não há split, então a igreja paga uma <strong>taxa fixa</strong> a você (por evento, ou um
         valor por eventos ilimitados), com <strong>14 dias de trial</strong>.
       </p>
+      <div className="manual__callout">
+        <div className="manual__callout-k">Onde definir</div>
+        <p>
+          O <strong>%</strong> padrão, a <strong>taxa de evento gratuito</strong> e o <strong>anual</strong> são
+          editados em <strong>Preços da plataforma</strong>, no painel do dono. A taxa (%) pode ser sobrescrita por
+          igreja. Padrões atuais: 5%, R$39/evento, R$290/ano.
+        </p>
+      </div>
       <div className="manual__callout is-warn">
         <div className="manual__callout-k">Valide com contador</div>
         <p>Você é o marketplace de registro; o PagarMe é a instituição regulada. Valide NF do seu percentual e enquadramento fiscal com um contador.</p>
@@ -559,25 +567,25 @@ const VendasDocs = () => (
       <h2>Preços</h2>
       <p>Pensado para <strong>não onerar igreja pequena</strong>: você paga conforme usa.</p>
       <div className="manual__pricegrid">
-        <div className="manual__price">
-          <h4>Evento gratuito</h4>
-          <div className="amt">Taxa fixa <small>por evento</small></div>
-          <ul><li>14 dias de trial</li><li>Inscrições ilimitadas</li><li>Opção de valor por eventos ilimitados</li></ul>
-        </div>
         <div className="manual__price is-feature">
           <h4>Evento pago</h4>
-          <div className="amt">% <small>por inscrição paga</small></div>
-          <ul><li>Só paga sobre o que vende</li><li>Dinheiro na conta da igreja</li><li>PIX, cartão e boleto</li></ul>
+          <div className="amt">5% <small>por inscrição paga</small></div>
+          <ul><li>Taxa de serviço somada ao inscrito</li><li>Dinheiro na conta da igreja</li><li>PIX, cartão e boleto</li></ul>
         </div>
         <div className="manual__price">
-          <h4>Plano anual</h4>
-          <div className="amt">Opcional</div>
-          <ul><li>Reduz ou zera o %</li><li>Ideal para muitos eventos</li><li>Recorrência previsível</li></ul>
+          <h4>Evento gratuito</h4>
+          <div className="amt">R$39 <small>por evento</small></div>
+          <ul><li>Ou R$290/ano ilimitado</li><li>14 dias de trial</li><li>Inscrições ilimitadas</li></ul>
+        </div>
+        <div className="manual__price">
+          <h4>Sem mensalidade</h4>
+          <div className="amt">R$0 <small>fixo</small></div>
+          <ul><li>Você paga conforme usa</li><li>Sem assinatura obrigatória</li><li>Acessível a igreja pequena</li></ul>
         </div>
       </div>
       <div className="manual__callout">
         <div className="manual__callout-k">Nota</div>
-        <p>Os valores exatos (percentual e taxa fixa) estão em definição. O modelo é <strong>pay-as-you-go</strong>: sem mensalidade obrigatória, sem custódia do dinheiro da igreja.</p>
+        <p>Modelo <strong>pay-as-you-go</strong>: sem mensalidade obrigatória, sem custódia do dinheiro da igreja. Os valores (o %, a taxa de evento gratuito e o anual) são definidos pelo dono no painel da plataforma.</p>
       </div>
     </section>
 

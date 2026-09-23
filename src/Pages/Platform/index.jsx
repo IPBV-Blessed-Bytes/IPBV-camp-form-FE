@@ -13,6 +13,8 @@ import {
   createPlatformFaq,
   updatePlatformFaq,
   deletePlatformFaq,
+  getPlatformSettings,
+  updatePlatformSettings,
 } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
@@ -98,22 +100,53 @@ const Platform = () => {
   const [showFaqModal, setShowFaqModal] = useState(false);
   const [faqDraft, setFaqDraft] = useState(EMPTY_FAQ);
   const [savingFaq, setSavingFaq] = useState(false);
+  const [pricing, setPricing] = useState({ feePercent: '', freeEventFee: '', freeEventAnnual: '' });
+  const [savingPricing, setSavingPricing] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsData, orgs, faqList] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData] = await Promise.all([
         getPlatformStats(),
         listPlatformOrganizations(),
         listPlatformFaqs(),
+        getPlatformSettings(),
       ]);
       setStats(statsData);
       setOrganizations(orgs);
       setFaqs(faqList);
+      if (settingsData) {
+        setPricing({
+          feePercent: settingsData.defaultFeePercent ?? '',
+          freeEventFee: ((settingsData.freeEventFeeCents ?? 0) / 100).toString(),
+          freeEventAnnual: ((settingsData.freeEventAnnualCents ?? 0) / 100).toString(),
+        });
+      }
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao carregar dados da plataforma.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSavePricing = async () => {
+    const percent = Number(pricing.feePercent);
+    if (Number.isNaN(percent) || percent < 0 || percent > 100) {
+      toast.error('A taxa (%) deve estar entre 0 e 100.');
+      return;
+    }
+    setSavingPricing(true);
+    try {
+      await updatePlatformSettings({
+        defaultFeePercent: Math.round(percent),
+        freeEventFeeCents: Math.round(Number(pricing.freeEventFee || 0) * 100),
+        freeEventAnnualCents: Math.round(Number(pricing.freeEventAnnual || 0) * 100),
+      });
+      toast.success('Preços da plataforma atualizados.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao salvar os preços.');
+    } finally {
+      setSavingPricing(false);
     }
   };
 
@@ -289,6 +322,67 @@ const Platform = () => {
 
       <div className="platform__content">
         {stats && <StatCards items={statItems} />}
+
+        <section className="platform__pricing">
+          <div className="platform__pricing-head">
+            <div>
+              <h2 className="platform__pricing-title">Preços da plataforma</h2>
+              <p className="platform__pricing-subtitle">
+                Valores padrão aplicados a todas as igrejas. A taxa (%) pode ser sobrescrita por organização.
+              </p>
+            </div>
+          </div>
+          <Row className="g-3 align-items-end">
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Taxa por inscrição paga (%):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={pricing.feePercent}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, feePercent: e.target.value }))}
+                />
+                <Form.Text className="text-muted">Somada ao inscrito no checkout.</Form.Text>
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Evento gratuito — por evento (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={pricing.freeEventFee}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, freeEventFee: e.target.value }))}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Evento gratuito — anual ilimitado (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={pricing.freeEventAnnual}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, freeEventAnnual: e.target.value }))}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="platform__pricing-actions">
+            <Button variant="teal-blue" onClick={handleSavePricing} disabled={savingPricing}>
+              {savingPricing ? 'Salvando...' : 'Salvar preços'}
+            </Button>
+          </div>
+        </section>
 
         {loading ? (
           <Loading loading />

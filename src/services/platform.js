@@ -31,6 +31,16 @@ export const platformSignup = async (payload) => {
   return data;
 };
 
+export const getPlatformSettings = async () => {
+  const { data } = await fetcher.get('/platform/settings');
+  return data;
+};
+
+export const updatePlatformSettings = async (payload) => {
+  const { data } = await authFetcher.put('/platform/settings', payload);
+  return data;
+};
+
 export const listPlatformFaqs = async () => {
   const { data } = await fetcher.get('/platform/faqs');
   return data?.faqs || [];

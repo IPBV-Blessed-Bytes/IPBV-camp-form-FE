@@ -4,32 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { platformSignup, listPlatformFaqs } from '@/services/platform';
+import { platformSignup, listPlatformFaqs, getPlatformSettings } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
-const PLANS = [
-  {
-    value: 'free',
-    name: 'Grátis',
-    price: 'R$ 0',
-    blurb: 'Para começar: um evento, inscrições ilimitadas e formulário personalizável.',
-  },
-  {
-    value: 'basico',
-    name: 'Básico',
-    price: 'R$ 49/mês',
-    blurb: 'Vários eventos, pagamentos online (Pix, cartão e boleto) e relatórios.',
-  },
-  {
-    value: 'pro',
-    name: 'Pro',
-    price: 'R$ 99/mês',
-    blurb: 'Tudo do Básico, mais white-label completo, equipe e suporte prioritário.',
-  },
-];
+const formatBRL = (cents) =>
+  ((cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
 const slugify = (value) =>
   value
@@ -41,7 +23,7 @@ const slugify = (value) =>
 
 const Storefront = () => {
   const navigate = useNavigate();
-  const [plan, setPlan] = useState('free');
+  const [settings, setSettings] = useState(null);
   const [churchName, setChurchName] = useState('');
   const [slug, setSlug] = useState('');
   const [adminName, setAdminName] = useState('');
@@ -56,6 +38,9 @@ const Storefront = () => {
     listPlatformFaqs()
       .then(setFaqs)
       .catch(() => setFaqs([]));
+    getPlatformSettings()
+      .then(setSettings)
+      .catch(() => setSettings(null));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -85,7 +70,7 @@ const Storefront = () => {
         adminName: adminName.trim(),
         adminEmail: adminEmail.trim(),
         adminPassword,
-        plan,
+        plan: 'free',
       });
       setResult({ ...data, churchName: churchName.trim() });
     } catch (error) {
@@ -138,23 +123,45 @@ const Storefront = () => {
 
       <Container className="storefront__body">
         <section className="storefront__plans">
-          <h2 className="storefront__section-title">Escolha seu plano</h2>
+          <h2 className="storefront__section-title">Preços simples, sem mensalidade</h2>
+          <p className="storefront__plans-lede">
+            Criar a conta é grátis. Você só paga quando cria um evento — e no evento pago, só sobre o que vende.
+          </p>
           <Row className="g-3">
-            {PLANS.map((item) => (
-              <Col xs={12} md={4} key={item.value}>
-                <button
-                  type="button"
-                  className={`storefront__plan ${plan === item.value ? 'is-selected' : ''}`}
-                  onClick={() => setPlan(item.value)}
-                  aria-pressed={plan === item.value}
-                >
-                  <span className="storefront__plan-name">{item.name}</span>
-                  <span className="storefront__plan-price">{item.price}</span>
-                  <span className="storefront__plan-blurb">{item.blurb}</span>
-                  {plan === item.value && <span className="storefront__plan-check">Selecionado</span>}
-                </button>
-              </Col>
-            ))}
+            <Col xs={12} md={4}>
+              <div className="storefront__plan storefront__plan--feature">
+                <span className="storefront__plan-name">Evento pago</span>
+                <span className="storefront__plan-price">
+                  {settings ? `${settings.defaultFeePercent}%` : '—'}
+                  <small> por inscrição</small>
+                </span>
+                <span className="storefront__plan-blurb">
+                  Taxa de serviço somada ao inscrito. O dinheiro cai na conta da sua igreja (PIX, cartão e boleto).
+                </span>
+              </div>
+            </Col>
+            <Col xs={12} md={4}>
+              <div className="storefront__plan">
+                <span className="storefront__plan-name">Evento gratuito</span>
+                <span className="storefront__plan-price">
+                  {settings ? formatBRL(settings.freeEventFeeCents) : '—'}
+                  <small> por evento</small>
+                </span>
+                <span className="storefront__plan-blurb">
+                  Ou {settings ? formatBRL(settings.freeEventAnnualCents) : '—'}/ano para eventos ilimitados. 14 dias
+                  de teste grátis.
+                </span>
+              </div>
+            </Col>
+            <Col xs={12} md={4}>
+              <div className="storefront__plan">
+                <span className="storefront__plan-name">Sem mensalidade</span>
+                <span className="storefront__plan-price">R$ 0<small> fixo</small></span>
+                <span className="storefront__plan-blurb">
+                  Nada de assinatura obrigatória que pese na igreja pequena. Você paga conforme usa.
+                </span>
+              </div>
+            </Col>
           </Row>
         </section>
 
@@ -240,11 +247,6 @@ const Storefront = () => {
                 </Form.Group>
               </Col>
 
-              <Col xs={12} md={6} className="d-flex align-items-end">
-                <div className="storefront__chosen-plan">
-                  Plano selecionado: <strong>{PLANS.find((item) => item.value === plan)?.name}</strong>
-                </div>
-              </Col>
             </Row>
 
             <Button type="submit" variant="teal-blue" size="lg" className="storefront__submit fw-bold" disabled={loading}>

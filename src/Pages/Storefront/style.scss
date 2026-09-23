@@ -37,6 +37,11 @@
     margin: 2.5rem 0 1.25rem;
   }
 
+  &__plans-lede {
+    color: $alternate-dark-gray;
+    margin: 0.25rem 0 1rem;
+  }
+
   &__plan {
     display: flex;
     flex-direction: column;
@@ -48,15 +53,8 @@
     border: 2px solid $alternate-light-gray;
     border-radius: 14px;
     padding: 1.25rem;
-    cursor: pointer;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 
-    &:hover {
-      border-color: $primary;
-      transform: translateY(-2px);
-    }
-
-    &.is-selected {
+    &--feature {
       border-color: $primary;
       box-shadow: 0 6px 18px rgba(0, 113, 133, 0.18);
     }
@@ -72,6 +70,12 @@
     font-size: 1.4rem;
     font-weight: 800;
     color: $primary;
+
+    small {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $alternate-dark-gray;
+    }
   }
 
   &__plan-blurb {
