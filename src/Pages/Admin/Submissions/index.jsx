@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import useEventSchema from '@/hooks/useEventSchema';
 import { formatValue } from '@/form/dynamic/formatAnswer';
 import { listSubmissions, updateSubmission, deleteSubmission } from '@/services/submissions';
+import { listAdminFields, updateSubmissionAdminAnswers } from '@/services/adminFields';
 import { getEventSlug } from '@/config/eventScope';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -87,6 +88,8 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(null);
   const [editAnswers, setEditAnswers] = useState({});
+  const [editAdminAnswers, setEditAdminAnswers] = useState({});
+  const [adminFields, setAdminFields] = useState([]);
   const [editStatus, setEditStatus] = useState('');
   const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -106,6 +109,9 @@ const AdminSubmissions = ({ loggedUsername }) => {
 
   useEffect(() => {
     loadSubmissions();
+    listAdminFields()
+      .then(setAdminFields)
+      .catch(() => setAdminFields([]));
   }, []);
 
   const hasPayment = useMemo(() => submissions.some((s) => s.paymentStatus != null), [submissions]);
@@ -113,10 +119,13 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const openEdit = (submission) => {
     setEditing(submission);
     setEditAnswers({ ...(submission.answers || {}) });
+    setEditAdminAnswers({ ...(submission.adminAnswers || {}) });
     setEditStatus(submission.paymentStatus || '');
   };
 
   const handleEditChange = (key, value) => setEditAnswers((prev) => ({ ...prev, [key]: value }));
+
+  const handleAdminEditChange = (key, value) => setEditAdminAnswers((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     if (!editing) return;
@@ -125,6 +134,9 @@ const AdminSubmissions = ({ loggedUsername }) => {
       const payload = { answers: editAnswers };
       if (hasPayment || editStatus) payload.paymentStatus = editStatus || null;
       await updateSubmission(editing.id, payload);
+      if (adminFields.length) {
+        await updateSubmissionAdminAnswers(editing.id, editAdminAnswers);
+      }
       toast.success('Inscrição atualizada com sucesso.');
       setEditing(null);
       await loadSubmissions();
@@ -158,6 +170,9 @@ const AdminSubmissions = ({ loggedUsername }) => {
       fields.forEach((field) => {
         row[field.label] = formatValue(field, submission.answers?.[field.key]);
       });
+      adminFields.forEach((field) => {
+        row[field.label] = formatValue(field, submission.adminAnswers?.[field.key]);
+      });
       return row;
     });
     const headers = [
@@ -165,6 +180,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
       'E-mail',
       ...(hasPayment ? ['Status'] : []),
       ...fields.map((f) => f.label),
+      ...adminFields.map((f) => f.label),
     ];
     downloadSingleSheet({ filename: `inscricoes-${slug}.xlsx`, sheetName: 'Inscrições', rows, headers });
   };
@@ -240,6 +256,11 @@ const AdminSubmissions = ({ loggedUsername }) => {
                   {fields.map((field) => (
                     <th key={field.key}>{field.label}</th>
                   ))}
+                  {adminFields.map((field) => (
+                    <th key={`adm-${field.key}`} className="admin-submissions__admin-col">
+                      {field.label}
+                    </th>
+                  ))}
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -264,6 +285,11 @@ const AdminSubmissions = ({ loggedUsername }) => {
                     )}
                     {fields.map((field) => (
                       <td key={field.key}>{formatValue(field, submission.answers?.[field.key])}</td>
+                    ))}
+                    {adminFields.map((field) => (
+                      <td key={`adm-${field.key}`} className="admin-submissions__admin-col">
+                        {formatValue(field, submission.adminAnswers?.[field.key])}
+                      </td>
                     ))}
                     <td>
                       <div className="admin-submissions__actions">
@@ -320,6 +346,14 @@ const AdminSubmissions = ({ loggedUsername }) => {
                 <span>{formatValue(field, selected.answers?.[field.key])}</span>
               </div>
             ))}
+            {adminFields.map((field) => (
+              <div key={`adm-${field.key}`} className="d-flex justify-content-between border-bottom py-2">
+                <span className="fw-bold">
+                  {field.label} <span className="admin-submissions__admin-tag">admin</span>
+                </span>
+                <span>{formatValue(field, selected.adminAnswers?.[field.key])}</span>
+              </div>
+            ))}
           </div>
         )}
       </CustomModal>
@@ -373,6 +407,23 @@ const AdminSubmissions = ({ loggedUsername }) => {
                 />
               </Form.Group>
             ))}
+            {adminFields.length > 0 && (
+              <div className="admin-submissions__admin-section">
+                <p className="admin-submissions__admin-section-title">Campos administrativos</p>
+                {adminFields.map((field) => (
+                  <Form.Group key={`adm-${field.key}`} className="mb-3">
+                    <Form.Label>
+                      <b>{field.label}</b>
+                    </Form.Label>
+                    <EditField
+                      field={field}
+                      value={editAdminAnswers[field.key]}
+                      onChange={(value) => handleAdminEditChange(field.key, value)}
+                    />
+                  </Form.Group>
+                ))}
+              </div>
+            )}
           </Form>
         )}
       </CustomModal>

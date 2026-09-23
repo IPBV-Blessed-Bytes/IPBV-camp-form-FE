@@ -44,4 +44,33 @@
       white-space: nowrap;
     }
   }
+
+  &__admin-col {
+    background-color: #f4f2fb;
+  }
+
+  &__admin-tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0 0.4rem;
+    border-radius: 10px;
+    background: #ede9f8;
+    color: #5c6bc0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  &__admin-section {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #cdc7e6;
+  }
+
+  &__admin-section-title {
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    color: #5c6bc0;
+  }
 }
