@@ -7,6 +7,7 @@ import { listFormFields, createFormField, updateFormField, deleteFormField } fro
 import { listFormSections, createFormSection, updateFormSection, deleteFormSection } from '@/services/formSections';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
+import { EVENT_TEMPLATES } from '@/config/eventTemplates';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import MinorTemplateCard from '@/components/Admin/MinorTemplateCard';
@@ -64,6 +65,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [applyingTemplate, setApplyingTemplate] = useState(null);
 
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [sectionDraft, setSectionDraft] = useState({ id: null, name: '' });
@@ -132,6 +134,50 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   };
 
   const hasModule = (type) => sections.some((section) => section.moduleType === type);
+
+  const applyTemplate = async (template) => {
+    if (sections.length > 0) {
+      toast.error('Aplique um modelo apenas em um formulário vazio.');
+      return;
+    }
+    setApplyingTemplate(template.key);
+    try {
+      const createdSections = await Promise.all(
+        template.sections.map((blueprint, order) =>
+          createFormSection({ name: blueprint.name, order, moduleType: blueprint.moduleType || null }).then(
+            (created) => ({ created, blueprint }),
+          ),
+        ),
+      );
+      let fieldOrder = 0;
+      const fieldPayloads = [];
+      createdSections.forEach(({ created, blueprint }) => {
+        (blueprint.fields || []).forEach((field) => {
+          fieldPayloads.push({
+            sectionId: created.id,
+            key: field.key,
+            label: field.label,
+            type: field.type,
+            required: Boolean(field.required),
+            placeholder: null,
+            helpText: field.helpText || null,
+            order: fieldOrder,
+            options: field.options || null,
+            config: field.config || null,
+          });
+          fieldOrder += 1;
+        });
+      });
+      await Promise.all(fieldPayloads.map((payload) => createFormField(payload)));
+      toast.success(`Modelo "${template.label}" aplicado.`);
+      await load();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Erro ao aplicar o modelo.');
+      await load();
+    } finally {
+      setApplyingTemplate(null);
+    }
+  };
 
   const createModule = async (type, name) => {
     if (hasModule(type)) {
@@ -364,7 +410,31 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : sections.length === 0 ? (
-          <p className="form-builder__empty">Crie uma seção para começar a adicionar campos.</p>
+          <div className="form-builder__templates">
+            <p className="form-builder__templates-title">Comece com um modelo pronto</p>
+            <p className="form-builder__templates-hint">
+              Cria as seções e campos base para o tipo de evento. Você ajusta tudo depois. Disponível apenas com o
+              formulário vazio.
+            </p>
+            <div className="form-builder__templates-grid">
+              {EVENT_TEMPLATES.map((tpl) => (
+                <button
+                  key={tpl.key}
+                  type="button"
+                  className="form-builder__template-card"
+                  disabled={Boolean(applyingTemplate)}
+                  onClick={() => applyTemplate(tpl)}
+                >
+                  <span className="form-builder__template-name">{tpl.label}</span>
+                  <span className="form-builder__template-desc">{tpl.description}</span>
+                  {applyingTemplate === tpl.key && (
+                    <span className="form-builder__template-status">Aplicando...</span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <p className="form-builder__empty">Ou crie uma seção manualmente acima.</p>
+          </div>
         ) : (
           <div className="form-builder__sections">
             {sectionsWithFields.map((section, sectionIndex) => (
