@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
 import { listUsers, createUser, updateUser, deleteUser } from '@/services/users';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getRoles } from '@/services/roles';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
@@ -132,7 +133,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       setShowDeleteModal(false);
       await fetchUsers(true);
     } catch (error) {
-      toast.error('Erro ao deletar usuário');
+      toast.error(getApiErrorMessage(error) || 'Erro ao deletar usuário');
     } finally {
       setSaving(false);
     }
@@ -184,6 +185,9 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     { value: 'all', label: 'Todos', count: users.length },
     ...rolesPresent.map((r) => ({ value: r, label: translateRole(r), count: byRole[r] })),
   ];
+  const adminCount = users.filter((u) => u.role === 'admin').length;
+  const isLastAdmin = (user) => user.role === 'admin' && adminCount <= 1;
+
   const term = search.trim().toLowerCase();
   const filteredUsers = users.filter(
     (u) =>
@@ -265,13 +269,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                         action="edit"
                         label="Editar usuário"
                         onClick={() => handleEditClick(user)}
-                        disabled={user.email === 'admin@ipbv'}
                       />
                       <ActionButton
                         action="delete"
-                        label="Excluir usuário"
+                        label={isLastAdmin(user) ? 'Não é possível excluir o único administrador' : 'Excluir usuário'}
                         onClick={() => handleDeleteClick(user)}
-                        disabled={user.email === 'admin@ipbv'}
+                        disabled={isLastAdmin(user)}
                       />
                     </div>
                   </td>
@@ -301,7 +304,6 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               type="submit"
               onClick={handleSubmit}
               loading={saving}
-              disabled={editingUser?.email === 'admin@ipbv'}
             >
               {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
             </SpinnerButton>
