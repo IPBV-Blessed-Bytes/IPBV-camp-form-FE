@@ -28,6 +28,7 @@ const SECTIONS = {
     { id: 'd-cobranca', title: 'Como você recebe' },
     { id: 'd-inadimplencia', title: 'Inadimplência' },
     { id: 'd-config', title: 'Configuração' },
+    { id: 'd-hosting', title: 'Custo de hospedagem' },
     { id: 'd-golive', title: 'Go-live' },
   ],
   tecnico: [
@@ -381,6 +382,50 @@ const DonoDocs = () => (
           </tbody>
         </table>
       </div>
+    </section>
+
+    <section className="manual__doc" id="d-hosting">
+      <h2>Custo de hospedagem</h2>
+      <p>
+        Como é <strong>uma instância única</strong> servindo todas as igrejas, o custo é fixo (não cresce por
+        cliente) até precisar escalar. Componentes:
+      </p>
+      <div className="manual__table-wrap">
+        <table className="manual__table">
+          <thead><tr><th>Componente</th><th>Opção típica</th><th>Custo/mês (ref.)</th></tr></thead>
+          <tbody>
+            <tr><td>Frontend (estático)</td><td>Vercel / Netlify / Cloudflare Pages</td><td>Grátis–US$20</td></tr>
+            <tr><td>Backend (JVM ~1&nbsp;GB)</td><td>VPS (Hostinger/DO) ou Railway/Fly.io</td><td>US$7–15</td></tr>
+            <tr><td>Banco MySQL</td><td>No mesmo VPS, ou gerenciado</td><td>US$0–15</td></tr>
+            <tr><td>E-mail transacional</td><td>Brevo/Resend (tier grátis)</td><td>Grátis–US$10</td></tr>
+            <tr><td>Storage de arquivos</td><td>S3 / Cloudflare R2 (se migrar do banco)</td><td>~Grátis–US$5</td></tr>
+            <tr><td>Domínio</td><td>anual, rateado</td><td>~US$1–3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Dois cenários realistas em baixo volume:</p>
+      <ul>
+        <li><strong>Enxuto</strong> (VPS único self-managed + FE grátis + e-mail no tier grátis): <strong>~US$10–18/mês</strong> (~R$60–100).</li>
+        <li><strong>Gerenciado</strong> (Railway/Render + banco gerenciado + FE grátis): <strong>~US$25–45/mês</strong> (~R$140–250).</li>
+      </ul>
+      <div className="manual__callout is-warn">
+        <div className="manual__callout-k">Ponto de atenção</div>
+        <p>
+          Hoje imagens e PDFs são guardados como BLOB no MySQL — isso incha o banco e encarece o storage gerenciado.
+          Migrar esses arquivos para <strong>object storage</strong> (S3/R2) reduz custo e melhora performance.
+        </p>
+      </div>
+      <div className="manual__callout is-good">
+        <div className="manual__callout-k">Ponto de equilíbrio</div>
+        <p>
+          Com custo fixo de ~R$100/mês: a um ticket médio de R$150 e taxa de 5%, <strong>~14 inscrições pagas/mês</strong>
+          já cobrem a infra; ou uma a duas taxas de evento gratuito. Isso alimenta a definição de preços.
+        </p>
+      </div>
+      <p className="manual__lede" style={{ fontSize: '14px' }}>
+        Valores são <strong>referências</strong> (câmbio ~R$5,50/US$, varia) para dimensionar — confirme na
+        contratação.
+      </p>
     </section>
 
     <section className="manual__doc" id="d-golive">
