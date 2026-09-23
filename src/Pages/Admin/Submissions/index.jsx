@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import useEventSchema from '@/hooks/useEventSchema';
+import { formatValue } from '@/form/dynamic/formatAnswer';
 import { listSubmissions, updateSubmission, deleteSubmission } from '@/services/submissions';
 import { getEventSlug } from '@/config/eventScope';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -22,19 +23,6 @@ const PAYMENT_STATUS = [
 ];
 
 const paymentMeta = (value) => PAYMENT_STATUS.find((s) => s.value === value);
-
-const formatValue = (field, value) => {
-  if (value == null || value === '') return '—';
-  if (field.type === 'consent') return value ? 'Sim' : 'Não';
-  if (field.type === 'checkbox') {
-    const labels = (field.options || []).filter((o) => (value || []).includes(o.value)).map((o) => o.label);
-    return labels.length ? labels.join(', ') : '—';
-  }
-  if (field.type === 'select' || field.type === 'radio') {
-    return (field.options || []).find((o) => o.value === value)?.label || value;
-  }
-  return String(value);
-};
 
 const formatDate = (iso) => {
   if (!iso) return '—';

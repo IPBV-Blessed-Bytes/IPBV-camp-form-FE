@@ -10,6 +10,7 @@ import {
 } from '@/services/submissions';
 import { parseCheckoutQr } from '@/utils/checkinQr';
 import { registerLog } from '@/services/logs';
+import useEventSchema from '@/hooks/useEventSchema';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
@@ -23,10 +24,17 @@ const mapPerson = (submission) => ({
   name: submission.answers?.nome || '',
   cpf: submission.answers?.cpf || '',
   checkin: submission.checkin,
+  checkinTime: submission.checkinTime,
   paymentStatus: submission.paymentStatus,
+  paymentMethod: submission.paymentMethod,
+  totalCents: submission.totalCents,
+  orderNumber: submission.orderNumber,
+  createdAt: submission.createdAt,
+  answers: submission.answers || {},
 });
 
 const AdminCheckinSubmissions = ({ loggedUsername }) => {
+  const { fields } = useEventSchema();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [orderInput, setOrderInput] = useState('');
@@ -101,6 +109,19 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       await refreshReview(reviewOrder);
     } catch {
       toast.error('Erro ao fazer check-in.');
+    } finally {
+      setApproving(false);
+    }
+  };
+
+  const undoOne = async (person) => {
+    setApproving(true);
+    try {
+      await checkinSubmission(person.id, false);
+      registerLog(`Desfez check-in de ${person.name || person.cpf} (pedido ${reviewOrder})`, loggedUsername);
+      await refreshReview(reviewOrder);
+    } catch {
+      toast.error('Erro ao desfazer o check-in.');
     } finally {
       setApproving(false);
     }
@@ -221,8 +242,10 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
         onHide={() => setReviewOrder(null)}
         orderNumber={reviewOrder}
         submissions={reviewPeople}
+        fields={fields}
         onApprove={approveOne}
         onApproveAll={approveAll}
+        onUndo={undoOne}
         approving={approving}
       />
     </div>
