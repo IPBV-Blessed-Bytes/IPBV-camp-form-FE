@@ -13,6 +13,10 @@ import { config as faq } from 'tests/test-cases/faq/config';
 import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
 import { config as userCreation } from 'tests/test-cases/userCreation/config';
 import { config as checkin } from 'tests/test-cases/checkin/config';
+import { config as platformPanel } from 'tests/test-cases/platform/config';
+import { config as manual } from 'tests/test-cases/manual/config';
+import { config as storefront } from 'tests/test-cases/storefront/config';
+import { config as formBuilder } from 'tests/test-cases/formBuilder/config';
 
 export default defineConfig({
   testDir: './tests',
@@ -45,5 +49,9 @@ export default defineConfig({
     extraMeals,
     userCreation,
     checkin,
+    platformPanel,
+    manual,
+    storefront,
+    formBuilder,
   ],
 });
