@@ -14,6 +14,7 @@ const SessionCard = ({
   accentColor,
   canEdit,
   onEdit,
+  ctaText,
 }) => (
   <>
     {permission && (
@@ -42,7 +43,7 @@ const SessionCard = ({
             </div>
             <div className="session-card__content">
               <h5 className="session-card__title">{title}</h5>
-              <span className="session-card__cta">Acessar →</span>
+              <span className="session-card__cta">{ctaText || 'Acessar →'}</span>
             </div>
           </Card.Body>
         </Card>
@@ -62,6 +63,7 @@ SessionCard.propTypes = {
   accentColor: PropTypes.string,
   canEdit: PropTypes.bool,
   onEdit: PropTypes.func,
+  ctaText: PropTypes.string,
 };
 
 export default SessionCard;

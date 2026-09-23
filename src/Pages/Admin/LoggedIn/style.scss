@@ -204,3 +204,101 @@ $admin-accent-checkin: $slime-green;
     color: #6b6b6b;
   }
 }
+
+.session-carousel {
+  overflow-x: hidden;
+}
+
+.session-pane {
+  will-change: transform, opacity;
+}
+
+.session-pane--forward {
+  animation: session-pane-in-right 0.35s ease both;
+}
+
+.session-pane--back {
+  animation: session-pane-in-left 0.35s ease both;
+}
+
+@keyframes session-pane-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes session-pane-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.settings-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: $white;
+    border: 1px solid $border-gray;
+    border-radius: 8px;
+    padding: 0.45rem 0.9rem;
+    font-weight: 600;
+    color: $dark-gray;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: $hover-gray;
+      border-color: $alternate-dark-gray;
+    }
+  }
+
+  &__pager {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__page-btn {
+    background: $white;
+    border: 1px solid $border-gray;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    color: $primary;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background: $hover-gray;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  &__page-info {
+    font-size: 0.9rem;
+    color: $alternate-dark-gray;
+    font-weight: 600;
+  }
+}
