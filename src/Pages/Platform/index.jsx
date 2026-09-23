@@ -55,6 +55,8 @@ const EMPTY_ORG = {
   contactEmail: '',
   plan: 'free',
   status: 'active',
+  pagarmeRecipientId: '',
+  platformFeePercent: '',
 };
 
 const EMPTY_FAQ = {
@@ -174,6 +176,8 @@ const Platform = () => {
       contactEmail: org.contactEmail || '',
       plan: org.plan || 'free',
       status: org.status || 'active',
+      pagarmeRecipientId: org.pagarmeRecipientId || '',
+      platformFeePercent: org.platformFeePercent ?? '',
     });
     setShowModal(true);
   };
@@ -194,6 +198,11 @@ const Platform = () => {
           contactEmail: draft.contactEmail.trim() || null,
           plan: draft.plan || null,
           status: draft.status || null,
+          pagarmeRecipientId: draft.pagarmeRecipientId.trim() || null,
+          platformFeePercent:
+            draft.platformFeePercent === '' || draft.platformFeePercent === null
+              ? null
+              : Number(draft.platformFeePercent),
         });
         toast.success('Organização atualizada com sucesso.');
       } else {
@@ -436,6 +445,41 @@ const Platform = () => {
                 </Form.Select>
               </Form.Group>
             </Col>
+
+            {draft.id && (
+              <>
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Recebedor PagarMe (recipient_id):</b>
+                    </Form.Label>
+                    <Form.Control
+                      value={draft.pagarmeRecipientId}
+                      onChange={(e) => handleChange('pagarmeRecipientId')(e.target.value)}
+                      placeholder="rp_xxxxxxxxxxxxxxxx"
+                    />
+                    <Form.Text className="text-muted">Conta da igreja no split. Preenchido no onboarding.</Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Taxa da plataforma (%):</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={draft.platformFeePercent}
+                      onChange={(e) => handleChange('platformFeePercent')(e.target.value)}
+                      placeholder="padrão da plataforma"
+                    />
+                    <Form.Text className="text-muted">% retido por inscrição paga. Vazio = usa o padrão.</Form.Text>
+                  </Form.Group>
+                </Col>
+              </>
+            )}
           </Row>
         </Form>
       </CustomModal>
