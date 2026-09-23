@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Accordion, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { platformSignup } from '@/services/platform';
+import { platformSignup, listPlatformFaqs } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -50,6 +50,13 @@ const Storefront = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    listPlatformFaqs()
+      .then(setFaqs)
+      .catch(() => setFaqs([]));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -245,6 +252,22 @@ const Storefront = () => {
             </Button>
           </Form>
         </section>
+
+        {faqs.length > 0 && (
+          <section className="storefront__faqs">
+            <h2 className="storefront__section-title">Perguntas frequentes</h2>
+            <Accordion className="storefront__faqs-list">
+              {faqs.map((faq, index) => (
+                <Accordion.Item eventKey={String(index)} key={faq.id}>
+                  <Accordion.Header>{faq.question}</Accordion.Header>
+                  <Accordion.Body>
+                    <div className="storefront__faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          </section>
+        )}
       </Container>
 
       <Loading loading={loading} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
+import { Accordion, Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import {
@@ -8,6 +8,10 @@ import {
   listPlatformOrganizations,
   createPlatformOrganization,
   updatePlatformOrganization,
+  listPlatformFaqs,
+  createPlatformFaq,
+  updatePlatformFaq,
+  deletePlatformFaq,
 } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
@@ -53,6 +57,13 @@ const EMPTY_ORG = {
   status: 'active',
 };
 
+const EMPTY_FAQ = {
+  id: null,
+  question: '',
+  answer: '',
+  order: 0,
+};
+
 const Platform = () => {
   const [checking, setChecking] = useState(true);
   const [owner, setOwner] = useState(false);
@@ -62,17 +73,81 @@ const Platform = () => {
   const [organizations, setOrganizations] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [draft, setDraft] = useState(EMPTY_ORG);
+  const [faqs, setFaqs] = useState([]);
+  const [showFaqModal, setShowFaqModal] = useState(false);
+  const [faqDraft, setFaqDraft] = useState(EMPTY_FAQ);
+  const [savingFaq, setSavingFaq] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsData, orgs] = await Promise.all([getPlatformStats(), listPlatformOrganizations()]);
+      const [statsData, orgs, faqList] = await Promise.all([
+        getPlatformStats(),
+        listPlatformOrganizations(),
+        listPlatformFaqs(),
+      ]);
       setStats(statsData);
       setOrganizations(orgs);
+      setFaqs(faqList);
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao carregar dados da plataforma.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreateFaq = () => {
+    setFaqDraft({ ...EMPTY_FAQ, order: faqs.length });
+    setShowFaqModal(true);
+  };
+
+  const openEditFaq = (faq) => {
+    setFaqDraft({
+      id: faq.id,
+      question: faq.question || '',
+      answer: faq.answer || '',
+      order: faq.order ?? 0,
+    });
+    setShowFaqModal(true);
+  };
+
+  const handleFaqChange = (field) => (value) => setFaqDraft((prev) => ({ ...prev, [field]: value }));
+
+  const handleSaveFaq = async () => {
+    if (!faqDraft.question.trim()) {
+      toast.error('A pergunta é obrigatória.');
+      return;
+    }
+    setSavingFaq(true);
+    try {
+      const payload = {
+        question: faqDraft.question.trim(),
+        answer: faqDraft.answer,
+        order: Number(faqDraft.order) || 0,
+      };
+      if (faqDraft.id) {
+        await updatePlatformFaq(faqDraft.id, payload);
+        toast.success('Pergunta atualizada com sucesso.');
+      } else {
+        await createPlatformFaq(payload);
+        toast.success('Pergunta criada com sucesso.');
+      }
+      setShowFaqModal(false);
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao salvar a pergunta.');
+    } finally {
+      setSavingFaq(false);
+    }
+  };
+
+  const handleDeleteFaq = async (id) => {
+    try {
+      await deletePlatformFaq(id);
+      toast.success('Pergunta excluída com sucesso.');
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao excluir a pergunta.');
     }
   };
 
@@ -223,6 +298,42 @@ const Platform = () => {
             </Table>
           </div>
         )}
+
+        <section className="platform__faqs">
+          <div className="platform__faqs-header">
+            <div>
+              <h2 className="platform__faqs-title">Perguntas frequentes da loja</h2>
+              <p className="platform__faqs-subtitle">Exibidas na página pública de vendas.</p>
+            </div>
+            <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreateFaq}>
+              Nova pergunta&nbsp;&nbsp;
+              <Icons typeIcon="plus" iconSize={16} fill="#fff" />
+            </Button>
+          </div>
+
+          {faqs.length === 0 ? (
+            <p className="platform__empty">Nenhuma pergunta cadastrada.</p>
+          ) : (
+            <Accordion className="platform__faqs-list" alwaysOpen>
+              {faqs.map((faq, index) => (
+                <Accordion.Item eventKey={String(index)} key={faq.id}>
+                  <Accordion.Header>{faq.question}</Accordion.Header>
+                  <Accordion.Body>
+                    <div className="platform__faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                    <div className="platform__faq-actions">
+                      <Button size="sm" variant="outline-teal-blue" onClick={() => openEditFaq(faq)}>
+                        Editar
+                      </Button>
+                      <Button size="sm" variant="outline-danger" onClick={() => handleDeleteFaq(faq.id)}>
+                        Excluir
+                      </Button>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          )}
+        </section>
       </div>
 
       <CustomModal
@@ -323,6 +434,70 @@ const Platform = () => {
                     </option>
                   ))}
                 </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </CustomModal>
+
+      <CustomModal
+        show={showFaqModal}
+        onHide={() => setShowFaqModal(false)}
+        variant="info"
+        title={faqDraft.id ? 'Editar pergunta' : 'Nova pergunta'}
+        icon={faqDraft.id ? 'edit-modal' : 'plus'}
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setShowFaqModal(false)} disabled={savingFaq}>
+              Cancelar
+            </Button>
+            <Button variant="teal-blue" onClick={handleSaveFaq} disabled={savingFaq}>
+              {savingFaq ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </>
+        }
+      >
+        <Form className="platform__form">
+          <Row className="g-3">
+            <Col xs={12}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Pergunta:</b>
+                </Form.Label>
+                <Form.Control
+                  value={faqDraft.question}
+                  onChange={(e) => handleFaqChange('question')(e.target.value)}
+                  placeholder="Ex.: Como funciona a cobrança?"
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Resposta:</b>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={5}
+                  value={faqDraft.answer}
+                  onChange={(e) => handleFaqChange('answer')(e.target.value)}
+                  placeholder="Resposta (aceita HTML simples)."
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Ordem:</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  value={faqDraft.order}
+                  onChange={(e) => handleFaqChange('order')(e.target.value)}
+                />
               </Form.Group>
             </Col>
           </Row>

@@ -88,6 +88,40 @@
     }
   }
 
+  &__faqs {
+    margin-top: 2.5rem;
+  }
+
+  &__faqs-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  &__faqs-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  &__faqs-subtitle {
+    margin: 0.15rem 0 0;
+    color: $dark-gray;
+    font-size: 0.95rem;
+  }
+
+  &__faq-answer {
+    margin-bottom: 0.75rem;
+  }
+
+  &__faq-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   @media (max-width: $sm) {
     &__header {
       padding: 1rem;
