@@ -60,6 +60,8 @@ const Institutional = () => {
   }
 
   const brand = content.brand || eventName || 'Inscrições';
+  const template = content.template || 'template-1';
+  const accent = content.color || '#007185';
   const hero = content.hero || {};
   const stats = content.stats || [];
   const about = content.about || {};
@@ -92,12 +94,12 @@ const Institutional = () => {
   };
 
   return (
-    <div className="institutional">
+    <div className={`institutional institutional--${template}`} style={{ '--inst-accent': accent }}>
       <header className={`inst-nav${scrolled ? ' inst-nav--scrolled' : ''}`}>
         <div className="inst-nav__inner">
           <button type="button" className="inst-nav__brand" onClick={() => scrollTo('topo')}>
             <span className="inst-nav__logo">
-              <Icons typeIcon="tent" iconSize={22} fill="#007185" />
+              <Icons typeIcon="tent" iconSize={22} fill={accent} />
             </span>
             {brand}
           </button>
@@ -171,7 +173,7 @@ const Institutional = () => {
               {highlights.map((h, i) => (
                 <div key={`${h.title}-${i}`} className="inst-card inst-card--highlight">
                   <span className="inst-card__icon">
-                    <Icons typeIcon={h.icon || 'info'} iconSize={28} fill="#007185" />
+                    <Icons typeIcon={h.icon || 'info'} iconSize={28} fill={accent} />
                   </span>
                   <h3>{h.title}</h3>
                   <p>{h.text}</p>
@@ -221,7 +223,7 @@ const Institutional = () => {
                   {m.imageId ? (
                     <img src={institutionalImageUrl(m.imageId)} alt={m.name} />
                   ) : (
-                    <Icons typeIcon="person" iconSize={34} fill="#007185" />
+                    <Icons typeIcon="person" iconSize={34} fill={accent} />
                   )}
                 </div>
                 <h3>{m.name}</h3>
@@ -278,7 +280,7 @@ const Institutional = () => {
             {noticeItems.map((n, i) => (
               <div key={`${n.title}-${i}`} className="inst-notice">
                 <span className="inst-notice__mark">
-                  <Icons typeIcon="megaphone" iconSize={22} fill="#007185" />
+                  <Icons typeIcon="megaphone" iconSize={22} fill={accent} />
                 </span>
                 <div>
                   <h3>{n.title}</h3>

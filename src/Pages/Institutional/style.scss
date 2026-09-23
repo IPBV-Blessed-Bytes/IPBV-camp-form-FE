@@ -6,6 +6,7 @@ $inst-line: #e6ebef;
 $inst-tint: #f4f8f9;
 
 .institutional {
+  --inst-accent: #007185;
   color: $inst-ink;
   background: #fff;
 
@@ -28,7 +29,7 @@ $inst-tint: #f4f8f9;
     }
 
     &--primary {
-      background: $primary;
+      background: var(--inst-accent);
       color: #fff;
       &:hover {
         filter: brightness(0.93);
@@ -45,9 +46,9 @@ $inst-tint: #f4f8f9;
 
     &--ghost {
       background: transparent;
-      color: $primary;
+      color: var(--inst-accent);
       &:hover {
-        background: rgba(0, 113, 133, 0.08);
+        background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
       }
     }
 
@@ -96,7 +97,7 @@ $inst-tint: #f4f8f9;
     gap: 8px;
     font-weight: 800;
     font-size: 1.05rem;
-    color: $primary;
+    color: var(--inst-accent);
     background: none;
     border: none;
     cursor: pointer;
@@ -108,7 +109,7 @@ $inst-tint: #f4f8f9;
     height: 38px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 113, 133, 0.1);
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
     border-radius: 50%;
   }
 
@@ -127,8 +128,8 @@ $inst-tint: #f4f8f9;
       border-radius: 8px;
       cursor: pointer;
       &:hover {
-        color: $primary;
-        background: rgba(0, 113, 133, 0.07);
+        color: var(--inst-accent);
+        background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
       }
     }
 
@@ -158,7 +159,7 @@ $inst-tint: #f4f8f9;
 .inst-hero {
   position: relative;
   background:
-    linear-gradient(135deg, rgba(0, 94, 110, 0.96), rgba(0, 113, 133, 0.9)),
+    linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, #000), var(--inst-accent)),
     radial-gradient(circle at 80% 20%, rgba(255, 219, 88, 0.35), transparent 45%);
   color: #fff;
   padding: 72px 20px 0;
@@ -268,7 +269,7 @@ $inst-tint: #f4f8f9;
     display: block;
     font-size: 1.8rem;
     font-weight: 800;
-    color: $primary;
+    color: var(--inst-accent);
   }
 
   span {
@@ -365,7 +366,7 @@ $inst-tint: #f4f8f9;
     height: 56px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 113, 133, 0.1);
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
     border-radius: 14px;
     margin-bottom: 16px;
   }
@@ -401,10 +402,10 @@ $inst-tint: #f4f8f9;
     h3 {
       font-size: 1.15rem;
       font-weight: 700;
-      color: $primary;
+      color: var(--inst-accent);
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 2px solid rgba(0, 113, 133, 0.12);
+      border-bottom: 2px solid color-mix(in srgb, var(--inst-accent) 22%, #fff);
     }
 
     ul {
@@ -426,7 +427,7 @@ $inst-tint: #f4f8f9;
   &__time {
     flex: 0 0 44px;
     font-weight: 700;
-    color: $primary;
+    color: var(--inst-accent);
     font-size: 0.9rem;
   }
 
@@ -482,7 +483,7 @@ $inst-tint: #f4f8f9;
     height: 76px;
     margin: 0 auto 14px;
     border-radius: 50%;
-    background: rgba(0, 113, 133, 0.1);
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -697,7 +698,7 @@ $inst-tint: #f4f8f9;
   gap: 16px;
   background: #fff;
   border: 1px solid $inst-line;
-  border-left: 4px solid $primary;
+  border-left: 4px solid var(--inst-accent);
   border-radius: 12px;
   padding: 18px 20px;
 
@@ -706,7 +707,7 @@ $inst-tint: #f4f8f9;
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: rgba(0, 113, 133, 0.1);
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -728,7 +729,7 @@ $inst-tint: #f4f8f9;
 .inst-final {
   text-align: center;
   padding: 76px 20px;
-  background: linear-gradient(135deg, #005e6e, #007185);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, #000), var(--inst-accent));
   color: #fff;
 
   h2 {
@@ -752,6 +753,513 @@ $inst-tint: #f4f8f9;
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
     font-weight: 500;
+  }
+}
+
+.institutional--template-2 {
+  .inst-btn {
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .inst-btn--primary {
+    background: transparent;
+    color: var(--inst-accent);
+    border: 1.5px solid var(--inst-accent);
+    padding: 9px 22px;
+    &:hover {
+      filter: none;
+      background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
+    }
+  }
+
+  .inst-btn--outline-light {
+    color: $inst-ink;
+    border-color: color-mix(in srgb, var(--inst-accent) 45%, #fff);
+    &:hover {
+      background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
+    }
+  }
+
+  .inst-hero {
+    background: color-mix(in srgb, var(--inst-accent) 6%, #fff);
+    color: $inst-ink;
+    padding-top: 92px;
+
+    &--image .inst-hero__overlay {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
+    }
+  }
+
+  .inst-hero__tag {
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    color: var(--inst-accent);
+    border: 1px solid color-mix(in srgb, var(--inst-accent) 30%, #fff);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .inst-hero__title {
+    color: $inst-ink;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .inst-hero__subtitle {
+    color: $inst-muted;
+  }
+
+  .inst-hero__meta {
+    color: $inst-ink;
+    font-weight: 500;
+  }
+
+  .inst-hero__stats {
+    background: #fff;
+    border: 1px solid $inst-line;
+    border-bottom: none;
+    box-shadow: none;
+  }
+
+  .inst-section__head {
+    h2 {
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    p {
+      text-transform: none;
+    }
+  }
+
+  .inst-card,
+  .inst-schedule__day,
+  .inst-team,
+  .inst-notice,
+  .inst-partners__item {
+    border-radius: 8px;
+    border: 1px solid $inst-line;
+    box-shadow: none;
+  }
+
+  .inst-card {
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: color-mix(in srgb, var(--inst-accent) 40%, #fff);
+    }
+  }
+
+  .inst-card__icon,
+  .inst-notice__mark {
+    border-radius: 8px;
+  }
+
+  .inst-team:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: color-mix(in srgb, var(--inst-accent) 40%, #fff);
+  }
+
+  .inst-map {
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .inst-gallery__item {
+    border-radius: 8px;
+  }
+
+  .inst-final {
+    background: color-mix(in srgb, var(--inst-accent) 6%, #fff);
+    color: $inst-ink;
+
+    h2 {
+      font-weight: 700;
+    }
+    p {
+      color: $inst-muted;
+    }
+    .inst-visits {
+      color: $inst-muted;
+    }
+  }
+}
+
+.institutional--template-3 {
+  background: #0f1720;
+  color: #e4e9ef;
+
+  .inst-btn--ghost {
+    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+    &:hover {
+      background: color-mix(in srgb, var(--inst-accent) 22%, #0f1720);
+    }
+  }
+
+  .inst-btn--outline-light {
+    color: #e4e9ef;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .inst-nav {
+    background: rgba(15, 23, 32, 0.85);
+    border-bottom-color: transparent;
+
+    &--scrolled {
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .inst-nav__brand {
+    color: color-mix(in srgb, var(--inst-accent) 60%, #fff);
+  }
+
+  .inst-nav__logo {
+    background: color-mix(in srgb, var(--inst-accent) 28%, #0f1720);
+  }
+
+  .inst-nav__links button {
+    color: #c3cdd8;
+    &:hover {
+      color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  .inst-hero {
+    background:
+      radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--inst-accent) 55%, transparent), transparent 46%),
+      linear-gradient(135deg, #0b131c, #131c26);
+  }
+
+  .inst-hero__title {
+    color: #f4f7fa;
+  }
+
+  .inst-hero__stats {
+    background: #1b2530;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .inst-stat {
+    color: #e4e9ef;
+    strong {
+      color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+    }
+    span {
+      color: #9aa7b4;
+    }
+    & + & {
+      border-left-color: rgba(255, 255, 255, 0.1);
+      @media (max-width: $sm) {
+        border-top-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .inst-section--tinted {
+    background: #131c26;
+  }
+
+  .inst-section__head {
+    h2 {
+      color: #f4f7fa;
+    }
+    p {
+      color: #9aa7b4;
+    }
+  }
+
+  .inst-card,
+  .inst-schedule__day,
+  .inst-team,
+  .inst-notice {
+    background: #1b2530;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #e4e9ef;
+  }
+
+  .inst-card h3,
+  .inst-team h3,
+  .inst-notice h3 {
+    color: #f4f7fa;
+  }
+
+  .inst-card p,
+  .inst-notice p,
+  .inst-team span,
+  .inst-schedule__title {
+    color: #9aa7b4;
+  }
+
+  .inst-card:hover,
+  .inst-team:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  .inst-card__icon,
+  .inst-notice__mark,
+  .inst-team__avatar,
+  .inst-nav__logo {
+    background: color-mix(in srgb, var(--inst-accent) 24%, #0f1720);
+  }
+
+  .inst-schedule__day h3 {
+    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .inst-schedule__time {
+    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+  }
+
+  .inst-schedule__empty {
+    background: #1b2530;
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #9aa7b4;
+  }
+
+  .inst-partners__item {
+    background: #1b2530;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .inst-map {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.institutional--template-4 {
+  .inst-hero__title,
+  .inst-section__head h2,
+  .inst-card h3,
+  .inst-schedule__day h3,
+  .inst-team h3,
+  .inst-notice h3,
+  .inst-final h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .inst-hero {
+    padding-top: 88px;
+  }
+
+  .inst-hero__content {
+    max-width: 760px;
+    margin-left: max(0px, calc(50% - 560px));
+    margin-right: auto;
+    text-align: left;
+  }
+
+  .inst-hero__title {
+    line-height: 1.18;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .inst-hero__subtitle {
+    margin-left: 0;
+    line-height: 1.7;
+  }
+
+  .inst-hero__meta,
+  .inst-hero__cta {
+    justify-content: flex-start;
+  }
+
+  .inst-section__head {
+    max-width: 760px;
+    margin-left: 0;
+    margin-right: auto;
+    text-align: left;
+    padding-bottom: 18px;
+    border-bottom: 1px solid $inst-line;
+
+    h2 {
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+    }
+    p {
+      line-height: 1.75;
+    }
+  }
+
+  .inst-section--tinted .inst-section__head {
+    border-bottom-color: color-mix(in srgb, var(--inst-accent) 18%, $inst-tint);
+  }
+
+  .inst-cards--3,
+  .inst-cards--4 {
+    grid-template-columns: repeat(2, 1fr);
+    @media (max-width: $lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .inst-card,
+  .inst-team,
+  .inst-notice,
+  .inst-schedule__day {
+    border-radius: 4px;
+    box-shadow: none;
+  }
+
+  .inst-card {
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: color-mix(in srgb, var(--inst-accent) 35%, #fff);
+    }
+  }
+
+  .inst-card p,
+  .inst-notice p {
+    line-height: 1.7;
+  }
+
+  .inst-team:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .inst-final {
+    p {
+      line-height: 1.7;
+    }
+  }
+}
+
+.institutional--template-5 {
+  .inst-btn {
+    border-radius: 999px;
+    font-weight: 800;
+    padding: 12px 26px;
+  }
+
+  .inst-btn--lg {
+    padding: 16px 34px;
+  }
+
+  .inst-btn--primary {
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--inst-accent) 35%, transparent);
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .inst-hero {
+    padding-top: 84px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, #000), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 60%, #fff)),
+      radial-gradient(circle at 82% 18%, rgba(255, 219, 88, 0.5), transparent 46%);
+  }
+
+  .inst-hero__title {
+    font-size: clamp(2.1rem, 5vw, 3.5rem);
+    font-weight: 900;
+  }
+
+  .inst-hero__stats {
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.18);
+  }
+
+  .inst-section--tinted {
+    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+  }
+
+  .inst-section__head h2 {
+    font-weight: 900;
+    color: color-mix(in srgb, var(--inst-accent) 55%, #000);
+  }
+
+  .inst-cards,
+  .inst-schedule {
+    gap: 22px;
+  }
+
+  .inst-card,
+  .inst-schedule__day,
+  .inst-team,
+  .inst-notice,
+  .inst-map,
+  .inst-partners__item {
+    border-radius: 22px;
+  }
+
+  .inst-card {
+    border: none;
+    border-left: 6px solid var(--inst-accent);
+    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--inst-accent) 12%, transparent);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 36px color-mix(in srgb, var(--inst-accent) 20%, transparent);
+    }
+
+    &--highlight {
+      background: var(--inst-accent);
+      border-left-color: color-mix(in srgb, var(--inst-accent) 60%, #000);
+      color: #fff;
+      h3,
+      p {
+        color: #fff;
+      }
+      .inst-card__icon {
+        background: rgba(255, 255, 255, 0.22);
+      }
+    }
+  }
+
+  .inst-card__icon,
+  .inst-notice__mark {
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--inst-accent) 16%, #fff);
+  }
+
+  .inst-schedule__day {
+    border: none;
+    box-shadow: 0 10px 26px color-mix(in srgb, var(--inst-accent) 10%, transparent);
+  }
+
+  .inst-team {
+    border: none;
+    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 36px color-mix(in srgb, var(--inst-accent) 18%, transparent);
+    }
+  }
+
+  .inst-team__avatar {
+    background: color-mix(in srgb, var(--inst-accent) 16%, #fff);
+  }
+
+  .inst-notice {
+    border: none;
+    border-left: 6px solid var(--inst-accent);
+    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--inst-accent) 10%, transparent);
+  }
+
+  .inst-gallery {
+    gap: 18px;
+  }
+
+  .inst-gallery__item {
+    border-radius: 22px;
+  }
+
+  .inst-map {
+    box-shadow: 0 16px 34px color-mix(in srgb, var(--inst-accent) 16%, transparent);
+  }
+
+  .inst-final {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, #000), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 62%, #fff));
   }
 }
 

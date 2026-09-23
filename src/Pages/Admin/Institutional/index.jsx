@@ -9,7 +9,12 @@ import {
   uploadInstitutionalImage,
   institutionalImageUrl,
 } from '@/services/institutional';
-import { DEFAULT_INSTITUTIONAL_CONTENT, HIGHLIGHT_ICON_OPTIONS } from '@/config/institutionalContent';
+import {
+  DEFAULT_INSTITUTIONAL_CONTENT,
+  DEFAULT_INSTITUTIONAL_COLOR,
+  HIGHLIGHT_ICON_OPTIONS,
+  INSTITUTIONAL_TEMPLATES,
+} from '@/config/institutionalContent';
 import { registerLog } from '@/services/logs';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -143,6 +148,41 @@ const AdminInstitutional = ({ loggedUsername }) => {
             )}
           </Button>
         </div>
+
+        <section className="inst-admin__card">
+          <h5>Template e cor</h5>
+          <Form.Label><b>Cor do institucional:</b></Form.Label>
+          <div className="inst-admin__color-row">
+            <Form.Control
+              type="color"
+              value={form.color || DEFAULT_INSTITUTIONAL_COLOR}
+              onChange={(e) => patch((n) => { n.color = e.target.value; })}
+              title="Cor do institucional"
+            />
+            <Form.Control
+              value={form.color || ''}
+              placeholder={DEFAULT_INSTITUTIONAL_COLOR}
+              onChange={(e) => patch((n) => { n.color = e.target.value; })}
+            />
+          </div>
+          <Form.Text className="text-muted-italic d-block mb-3">
+            Cor de destaque da página institucional (independente da cor do formulário).
+          </Form.Text>
+          <Form.Label><b>Template (visual da página):</b></Form.Label>
+          <div className="inst-admin__templates">
+            {INSTITUTIONAL_TEMPLATES.map((t) => (
+              <button
+                type="button"
+                key={t.id}
+                className={`inst-admin__template${(form.template || 'template-1') === t.id ? ' is-selected' : ''}`}
+                onClick={() => patch((n) => { n.template = t.id; })}
+              >
+                <strong>{t.label}</strong>
+                <span>{t.description}</span>
+              </button>
+            ))}
+          </div>
+        </section>
 
         <section className="inst-admin__card">
           <h5>Contador de visitas</h5>

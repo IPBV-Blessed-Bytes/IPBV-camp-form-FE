@@ -17,8 +17,20 @@ export const HIGHLIGHT_ICON_OPTIONS = [
 
 export const GALLERY_TONES = ['a', 'b', 'c', 'd', 'e', 'f'];
 
+export const DEFAULT_INSTITUTIONAL_COLOR = '#007185';
+
+export const INSTITUTIONAL_TEMPLATES = [
+  { id: 'template-1', label: 'Clássico', description: 'Layout padrão (o atual): hero em degradê, cards e seções centralizadas.' },
+  { id: 'template-2', label: 'Minimalista', description: 'Clean e arejado: hero claro, tipografia grande, cards planos com borda fina.' },
+  { id: 'template-3', label: 'Escuro', description: 'Hero escuro de alto contraste, seções em faixa e destaques na cor do evento.' },
+  { id: 'template-4', label: 'Editorial', description: 'Colunas estreitas, alinhamento à esquerda e ar de revista.' },
+  { id: 'template-5', label: 'Vibrante', description: 'Bem colorido: acento forte, cantos arredondados e cards cheios.' },
+];
+
 export const DEFAULT_INSTITUTIONAL_CONTENT = {
   brand: 'Acampamento IPBV',
+  template: 'template-1',
+  color: DEFAULT_INSTITUTIONAL_COLOR,
   showVisits: false,
   hero: {
     tagline: 'Retiro de Verão 2027',
