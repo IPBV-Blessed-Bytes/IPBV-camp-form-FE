@@ -72,6 +72,7 @@ const AdminTrash = lazy(() => import('@/Pages/Admin/Trash'));
 const AdminFormBuilder = lazy(() => import('@/Pages/Admin/FormBuilder'));
 const AdminSubmissions = lazy(() => import('@/Pages/Admin/Submissions'));
 const AdminFieldsManager = lazy(() => import('@/Pages/Admin/AdminFieldsManager'));
+const AdminManual = lazy(() => import('@/Pages/Manual'));
 const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
@@ -447,6 +448,17 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminFieldsManager loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/manual')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
+                  userRole={userRole}
+                >
+                  <AdminManual loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

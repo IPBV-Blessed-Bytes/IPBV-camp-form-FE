@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Accordion, Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -84,6 +85,7 @@ const EMPTY_FAQ = {
 };
 
 const Platform = () => {
+  const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [owner, setOwner] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -274,10 +276,15 @@ const Platform = () => {
           <h1 className="platform__title">Painel da Plataforma</h1>
           <p className="platform__subtitle">Gestão de clientes (tenants)</p>
         </div>
-        <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-          Nova organização&nbsp;&nbsp;
-          <Icons typeIcon="plus" iconSize={16} fill="#fff" />
-        </Button>
+        <div className="d-flex align-items-center gap-2">
+          <Button variant="outline-teal-blue" onClick={() => navigate('/admin/manual')}>
+            Manual
+          </Button>
+          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
+            Nova organização&nbsp;&nbsp;
+            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
+          </Button>
+        </div>
       </header>
 
       <div className="platform__content">

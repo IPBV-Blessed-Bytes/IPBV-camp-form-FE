@@ -122,6 +122,17 @@ const AdminTopbar = ({ username, logout }) => {
                 <span>Painel da Plataforma</span>
               </button>
             )}
+            <button
+              type="button"
+              className="admin-topbar__menu-item"
+              onClick={() => {
+                setOpen(false);
+                navigate('/admin/manual');
+              }}
+            >
+              <Icons typeIcon="info" iconSize={18} fill="#555050" />
+              <span>Manual / Ajuda</span>
+            </button>
             <div className="admin-topbar__menu-divider" />
             <button
               type="button"
