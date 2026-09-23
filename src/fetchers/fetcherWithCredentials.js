@@ -52,6 +52,10 @@ fetcherWithCredentials.interceptors.response.use(
       );
     }
 
+    if (error?.response?.status === 403 && error.response.data?.tier_blocked) {
+      toast.error('Recurso disponível apenas no plano Completo.');
+    }
+
 	return Promise.reject(error)
   },
 );
