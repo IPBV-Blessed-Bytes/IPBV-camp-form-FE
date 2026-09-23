@@ -11,11 +11,11 @@ export class AuthenticationComponent {
 
   constructor(readonly page: Page) {
     this.churchFooterLogo = page.locator('.form__footer-logo');
-    this.adminAccess = page.getByRole('heading', { name: 'ACESSO ADMINISTRAÇÃO' });
-    this.usernameInput = page.getByRole('textbox', { name: 'Nome de Usuário:' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Senha:' });
+    this.adminAccess = page.getByRole('heading', { name: 'Painel Administrativo' });
+    this.usernameInput = page.getByRole('textbox', { name: 'Nome de Usuário' });
+    this.passwordInput = page.getByLabel('Senha', { exact: true });
     this.eyeIcon = page.locator('svg.login-icon');
-    this.signInButton = page.getByRole('button', { name: 'Entrar' });
+    this.signInButton = page.getByRole('button', { name: 'Acessar Painel' });
     this.logOutButton = page.getByRole('button', { name: 'Desconectar' });
   }
 
