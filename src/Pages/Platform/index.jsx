@@ -43,6 +43,11 @@ const STATUS_BADGE = {
   canceled: { bg: 'secondary', label: 'Cancelado' },
 };
 
+const TIER_OPTIONS = [
+  { value: 'completo', label: 'Completo (todos os recursos)' },
+  { value: 'essencial', label: 'Essencial (form + inscritos)' },
+];
+
 const BILLING_STATUS_OPTIONS = [
   { value: 'trial', label: 'Trial' },
   { value: 'active', label: 'Ativo (em dia)' },
@@ -72,6 +77,7 @@ const EMPTY_ORG = {
   contactEmail: '',
   plan: 'free',
   status: 'active',
+  tier: 'completo',
   pagarmeRecipientId: '',
   platformFeePercent: '',
   billingStatus: 'active',
@@ -100,7 +106,13 @@ const Platform = () => {
   const [showFaqModal, setShowFaqModal] = useState(false);
   const [faqDraft, setFaqDraft] = useState(EMPTY_FAQ);
   const [savingFaq, setSavingFaq] = useState(false);
-  const [pricing, setPricing] = useState({ feePercent: '', freeEventFee: '', freeEventAnnual: '' });
+  const [pricing, setPricing] = useState({
+    feePercent: '',
+    freeEventFee: '',
+    freeEventAnnual: '',
+    essencialFeePercent: '',
+    essencialFreeEventFee: '',
+  });
   const [savingPricing, setSavingPricing] = useState(false);
 
   const loadData = async () => {
@@ -120,6 +132,8 @@ const Platform = () => {
           feePercent: settingsData.defaultFeePercent ?? '',
           freeEventFee: ((settingsData.freeEventFeeCents ?? 0) / 100).toString(),
           freeEventAnnual: ((settingsData.freeEventAnnualCents ?? 0) / 100).toString(),
+          essencialFeePercent: settingsData.essencialFeePercent ?? '',
+          essencialFreeEventFee: ((settingsData.essencialFreeEventFeeCents ?? 0) / 100).toString(),
         });
       }
     } catch (error) {
@@ -141,6 +155,8 @@ const Platform = () => {
         defaultFeePercent: Math.round(percent),
         freeEventFeeCents: Math.round(Number(pricing.freeEventFee || 0) * 100),
         freeEventAnnualCents: Math.round(Number(pricing.freeEventAnnual || 0) * 100),
+        essencialFeePercent: Math.round(Number(pricing.essencialFeePercent || 0)),
+        essencialFreeEventFeeCents: Math.round(Number(pricing.essencialFreeEventFee || 0) * 100),
       });
       toast.success('Preços da plataforma atualizados.');
     } catch (error) {
@@ -228,6 +244,7 @@ const Platform = () => {
       contactEmail: org.contactEmail || '',
       plan: org.plan || 'free',
       status: org.status || 'active',
+      tier: org.tier || 'completo',
       pagarmeRecipientId: org.pagarmeRecipientId || '',
       platformFeePercent: org.platformFeePercent ?? '',
       billingStatus: org.billingStatus || 'active',
@@ -253,6 +270,7 @@ const Platform = () => {
           contactEmail: draft.contactEmail.trim() || null,
           plan: draft.plan || null,
           status: draft.status || null,
+          tier: draft.tier || null,
           pagarmeRecipientId: draft.pagarmeRecipientId.trim() || null,
           platformFeePercent:
             draft.platformFeePercent === '' || draft.platformFeePercent === null
@@ -377,6 +395,39 @@ const Platform = () => {
               </Form.Group>
             </Col>
           </Row>
+
+          <p className="platform__pricing-tier-title">Plano Essencial (form + inscritos)</p>
+          <Row className="g-3 align-items-end">
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Taxa Essencial (%):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={pricing.essencialFeePercent}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, essencialFeePercent: e.target.value }))}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Essencial — evento gratuito (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={pricing.essencialFreeEventFee}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, essencialFreeEventFee: e.target.value }))}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
           <div className="platform__pricing-actions">
             <Button variant="teal-blue" onClick={handleSavePricing} disabled={savingPricing}>
               {savingPricing ? 'Salvando...' : 'Salvar preços'}
@@ -582,6 +633,22 @@ const Platform = () => {
                     </option>
                   ))}
                 </Form.Select>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Nível de recursos:</b>
+                </Form.Label>
+                <Form.Select value={draft.tier} onChange={(e) => handleChange('tier')(e.target.value)}>
+                  {TIER_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Form.Select>
+                <Form.Text className="text-muted">Essencial oculta logística (caronas, quartos, times, etc.).</Form.Text>
               </Form.Group>
             </Col>
 

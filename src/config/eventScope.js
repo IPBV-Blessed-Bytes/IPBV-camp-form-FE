@@ -34,6 +34,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'admin-fields',
   'minor-template',
   'uploads',
+  'plan-tier',
 ]);
 
 export const getEventSlugFromPath = (pathname = window.location.pathname) => {

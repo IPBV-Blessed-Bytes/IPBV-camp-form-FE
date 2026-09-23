@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { getNonPayingChildren, getCrewBus } from '@/services/stats';
+import { getPlanTier } from '@/services/planTier';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
@@ -21,6 +22,16 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
 import { useAdminSessions } from '@/hooks/useAdminSessions';
 import { resolveSession } from '@/config/adminSessions';
+
+const ESSENCIAL_HIDDEN_PATHS = new Set([
+  'carona',
+  'onibus',
+  'quartos',
+  'times',
+  'pulseiras',
+  'checkin',
+  'checkin-inscricoes',
+]);
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -69,6 +80,7 @@ const AdminLoggedIn = ({
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
   const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [tier, setTier] = useState('completo');
   const [editingSession, setEditingSession] = useState(null);
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
@@ -99,6 +111,12 @@ const AdminLoggedIn = ({
   };
 
   scrollUp();
+
+  useEffect(() => {
+    getPlanTier()
+      .then(setTier)
+      .catch(() => setTier('completo'));
+  }, []);
 
   useEffect(() => {
     const fetchAdminHomeCounters = async () => {
@@ -350,8 +368,11 @@ const AdminLoggedIn = ({
 
   const SETTINGS_PAGE_SIZE = 12;
   const settingsPages = [];
-  for (let i = 0; i < settingsSessions.length; i += SETTINGS_PAGE_SIZE) {
-    settingsPages.push(settingsSessions.slice(i, i + SETTINGS_PAGE_SIZE));
+  const visibleSettingsSessions = settingsSessions.filter(
+    (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
+  );
+  for (let i = 0; i < visibleSettingsSessions.length; i += SETTINGS_PAGE_SIZE) {
+    settingsPages.push(visibleSettingsSessions.slice(i, i + SETTINGS_PAGE_SIZE));
   }
   const currentSettingsPage = Math.min(settingsPage, settingsPages.length - 1);
 
@@ -409,7 +430,9 @@ const AdminLoggedIn = ({
           >
             {view === 'main' ? (
               <>
-                {navigationSessions.map((session) => {
+                {navigationSessions
+                  .filter((session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path))
+                  .map((session) => {
                   const resolved = resolveSession(session.path, sessionConfigs[session.path]);
                   return (
                     <SessionCard
