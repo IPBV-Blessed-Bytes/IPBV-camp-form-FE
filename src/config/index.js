@@ -10,6 +10,8 @@ export const LOGIN_ROUTE = '/admin';
 
 export const USER_STORAGE_KEY = 'user-data';
 
+export const USER_DISPLAY_NAME_KEY = 'user-display-name';
+
 export const USER_STORAGE_ROLE = 'user-role';
 
 export const USER_PERMISSIONS_KEY = 'user-permissions';

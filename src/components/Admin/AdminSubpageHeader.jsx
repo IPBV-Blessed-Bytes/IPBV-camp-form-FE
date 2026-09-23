@@ -9,9 +9,9 @@ import '../Style/adminSubpage.scss';
 
 const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32, sessionKey }) => {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout, user, displayName: authDisplayName } = useAuth();
   const { configs } = useAdminSessions();
-  const displayName = (username || user || 'Usuário').split('@')[0];
+  const topbarName = authDisplayName || username || user || 'Usuário';
 
   const resolved = sessionKey ? resolveSession(sessionKey, configs[sessionKey]) : null;
   const displayTitle = resolved?.title || title;
@@ -20,7 +20,7 @@ const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32
 
   return (
     <>
-      <AdminTopbar username={displayName} logout={logout} />
+      <AdminTopbar username={topbarName} logout={logout} />
 
       <div className="admin-subpage__hero">
         <div className="admin-subpage__hero-main">

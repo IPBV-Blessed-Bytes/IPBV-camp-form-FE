@@ -8,6 +8,7 @@ import { listAllEvents } from '@/services/events';
 
 const getInitials = (name) => {
   if (!name) return '?';
+  if (name.includes('@')) return name.split('@')[0].slice(0, 2).toUpperCase();
   const parts = name.replace(/[._-]/g, ' ').split(/\s+/).filter(Boolean);
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
@@ -83,7 +84,7 @@ const AdminTopbar = ({ username, logout }) => {
           aria-expanded={open}
         >
           <span className="admin-topbar__avatar">{getInitials(username)}</span>
-          <span className="admin-topbar__user-name">{username}</span>
+          <span className="admin-topbar__user-name">{username?.includes('@') ? username.split('@')[0] : username}</span>
           <span className={`admin-topbar__chevron ${open ? 'is-open' : ''}`}>▾</span>
         </button>
 

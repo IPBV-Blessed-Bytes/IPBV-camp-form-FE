@@ -77,9 +77,8 @@ const AdminLoggedIn = ({
   const { configs: sessionConfigs, refetch: refetchSessions } = useAdminSessions();
   const canEditSessions = userRole === 'admin';
 
-  const splitedLoggedInUsername = loggedInUsername.split('@')[0];
-
-  const { formStage } = useContext(AuthContext);
+  const { formStage, displayName } = useContext(AuthContext);
+  const topbarName = displayName || loggedInUsername;
   const navigate = useNavigate();
   const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
 
@@ -357,7 +356,7 @@ const AdminLoggedIn = ({
 
   return (
     <div className="admin-home">
-      <AdminTopbar username={splitedLoggedInUsername} logout={logout} />
+      <AdminTopbar username={topbarName} logout={logout} />
 
       {!getEventSlug() ? (
         <div className="admin-home__content">
