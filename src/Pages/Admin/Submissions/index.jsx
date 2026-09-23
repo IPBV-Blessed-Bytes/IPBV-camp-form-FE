@@ -7,6 +7,7 @@ import useEventSchema from '@/hooks/useEventSchema';
 import { formatValue } from '@/form/dynamic/formatAnswer';
 import { listSubmissions, updateSubmission, deleteSubmission } from '@/services/submissions';
 import { listAdminFields, updateSubmissionAdminAnswers } from '@/services/adminFields';
+import { registrationFileUrl } from '@/services/uploads';
 import { getEventSlug } from '@/config/eventScope';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -29,6 +30,17 @@ const formatDate = (iso) => {
   if (!iso) return '—';
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString('pt-BR');
+};
+
+const renderFieldValue = (field, value) => {
+  if (field.type === 'file' && value?.id) {
+    return (
+      <a href={registrationFileUrl(value.id)} target="_blank" rel="noopener noreferrer">
+        {value.name || 'Arquivo'}
+      </a>
+    );
+  }
+  return formatValue(field, value);
 };
 
 const EditField = ({ field, value, onChange }) => {
@@ -69,6 +81,15 @@ const EditField = ({ field, value, onChange }) => {
   if (field.type === 'consent') {
     return (
       <Form.Check type="switch" label="Aceito" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
+    );
+  }
+  if (field.type === 'file') {
+    return value?.id ? (
+      <a href={registrationFileUrl(value.id)} target="_blank" rel="noopener noreferrer">
+        {value.name || 'Arquivo'}
+      </a>
+    ) : (
+      <span className="text-muted">Nenhum arquivo enviado</span>
     );
   }
   return <Form.Control type="text" value={value ?? ''} onChange={(e) => onChange(e.target.value)} />;
@@ -284,7 +305,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
                       </td>
                     )}
                     {fields.map((field) => (
-                      <td key={field.key}>{formatValue(field, submission.answers?.[field.key])}</td>
+                      <td key={field.key}>{renderFieldValue(field, submission.answers?.[field.key])}</td>
                     ))}
                     {adminFields.map((field) => (
                       <td key={`adm-${field.key}`} className="admin-submissions__admin-col">
@@ -343,7 +364,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
             {fields.map((field) => (
               <div key={field.key} className="d-flex justify-content-between border-bottom py-2">
                 <span className="fw-bold">{field.label}</span>
-                <span>{formatValue(field, selected.answers?.[field.key])}</span>
+                <span>{renderFieldValue(field, selected.answers?.[field.key])}</span>
               </div>
             ))}
             {adminFields.map((field) => (

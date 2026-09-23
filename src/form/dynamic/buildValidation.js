@@ -31,6 +31,11 @@ const ruleForField = (field) => {
         : yup.string().nullable().test('cpf', 'Informe um CPF válido (11 dígitos)', isValidCpf);
     }
 
+    case 'file':
+      return required
+        ? yup.mixed().test('file', REQUIRED_MESSAGE, (value) => Boolean(value && value.id))
+        : yup.mixed().nullable();
+
     default:
       return required ? yup.string().required(REQUIRED_MESSAGE) : yup.string().nullable();
   }
@@ -43,6 +48,7 @@ export const initialAnswers = (fields = []) =>
   fields.reduce((acc, field) => {
     if (field.type === 'checkbox') acc[field.key] = [];
     else if (field.type === 'consent') acc[field.key] = false;
+    else if (field.type === 'file') acc[field.key] = null;
     else acc[field.key] = '';
     return acc;
   }, {});

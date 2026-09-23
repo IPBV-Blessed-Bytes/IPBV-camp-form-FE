@@ -1,5 +1,6 @@
 export const formatValue = (field, value) => {
   if (value == null || value === '') return '—';
+  if (field.type === 'file') return value?.name || 'Arquivo enviado';
   if (field.type === 'consent') return value ? 'Sim' : 'Não';
   if (field.type === 'checkbox') {
     const labels = (field.options || []).filter((o) => (value || []).includes(o.value)).map((o) => o.label);

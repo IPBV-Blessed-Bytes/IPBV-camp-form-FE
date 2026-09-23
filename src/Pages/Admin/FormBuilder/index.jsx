@@ -27,6 +27,7 @@ const FIELD_TYPES = [
   { value: 'phone', label: 'Telefone' },
   { value: 'cpf', label: 'CPF (inscrição única)' },
   { value: 'consent', label: 'Consentimento (LGPD)' },
+  { value: 'file', label: 'Arquivo (upload)' },
 ];
 
 const OPTION_TYPES = ['select', 'radio', 'checkbox'];

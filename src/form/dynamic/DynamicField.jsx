@@ -1,10 +1,15 @@
-import { Form } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Form, Spinner } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { parse, format, isValid } from 'date-fns';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import MaskedDateInput from '@/components/Global/MaskedDateInput';
+import { uploadRegistrationFile, registrationFileUrl } from '@/services/uploads';
+import { getMinorTemplateExists, minorTemplateDownloadUrl } from '@/services/minorTemplate';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 
 const SCALAR_INPUT_TYPES = {
   text: 'text',
@@ -16,6 +21,30 @@ const SCALAR_INPUT_TYPES = {
 const DynamicField = ({ field, value, onChange, error }) => {
   const { key, label, type, required, placeholder, helpText, options = [], config } = field;
   const controlId = `field-${key}`;
+  const [uploading, setUploading] = useState(false);
+  const [templateExists, setTemplateExists] = useState(false);
+
+  useEffect(() => {
+    if (type !== 'file') return;
+    getMinorTemplateExists()
+      .then(setTemplateExists)
+      .catch(() => setTemplateExists(false));
+  }, [type]);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setUploading(true);
+    try {
+      const data = await uploadRegistrationFile(file);
+      onChange({ id: data.id, name: data.name });
+    } catch (err) {
+      toast.error(getApiErrorMessage(err) || 'Não foi possível enviar o arquivo.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const renderControl = () => {
     if (type === 'textarea') {
@@ -105,6 +134,48 @@ const DynamicField = ({ field, value, onChange, error }) => {
           isInvalid={Boolean(error)}
           customInput={<MaskedDateInput />}
         />
+      );
+    }
+
+    if (type === 'file') {
+      return (
+        <div className="dynamic-file">
+          {templateExists && (
+            <a
+              className="dynamic-file__template"
+              href={minorTemplateDownloadUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Baixar modelo
+            </a>
+          )}
+          <Form.Control
+            id={controlId}
+            type="file"
+            accept=".pdf,.doc,.docx,image/*"
+            isInvalid={Boolean(error)}
+            disabled={uploading}
+            onChange={handleFileChange}
+          />
+          {uploading && (
+            <span className="dynamic-file__status">
+              <Spinner animation="border" size="sm" /> Enviando...
+            </span>
+          )}
+          {!uploading && value?.name && (
+            <span className="dynamic-file__status">
+              Enviado:{' '}
+              {value.id ? (
+                <a href={registrationFileUrl(value.id)} target="_blank" rel="noopener noreferrer">
+                  {value.name}
+                </a>
+              ) : (
+                value.name
+              )}
+            </span>
+          )}
+        </div>
       );
     }
 

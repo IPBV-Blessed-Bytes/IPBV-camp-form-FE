@@ -133,3 +133,20 @@
     }
   }
 }
+
+.dynamic-file {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &__template {
+    align-self: flex-start;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  &__status {
+    font-size: 0.88rem;
+    color: #55606f;
+  }
+}
