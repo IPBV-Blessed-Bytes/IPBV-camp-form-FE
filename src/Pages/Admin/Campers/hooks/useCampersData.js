@@ -83,9 +83,9 @@ const useCampersData = ({ loggedUsername }) => {
       const status = error?.response?.status;
       const apiMessage = getApiErrorMessage(error);
       if (status === 409) {
-        toast.error(apiMessage || 'CPF já cadastrado para outro acampante');
+        toast.error(apiMessage || 'CPF já cadastrado para outro inscrito');
       } else if (status === 404) {
-        toast.error(apiMessage || 'Acampante não encontrado');
+        toast.error(apiMessage || 'Inscrito não encontrado');
       } else {
         toast.error('Ocorreu um erro ao tentar editar a inscrição. Tente novamente mais tarde');
       }
@@ -109,7 +109,7 @@ const useCampersData = ({ loggedUsername }) => {
       const status = error?.response?.status;
       const apiMessage = getApiErrorMessage(error);
       if (status === 409) {
-        toast.error(apiMessage || 'CPF já cadastrado para outro acampante');
+        toast.error(apiMessage || 'CPF já cadastrado para outro inscrito');
       } else {
         toast.error('Ocorreu um erro ao tentar criar a inscrição. Tente novamente mais tarde');
       }

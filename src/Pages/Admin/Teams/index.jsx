@@ -138,8 +138,8 @@ const AdminTeams = ({ loggedUsername }) => {
 
       await assignCamperToTeam(payload);
 
-      toast.success('Acampantes adicionados ao time');
-      registerLog(`Adicionou ${selectedCampersIds.length} acampantes ao time ${selectedTeam.name}`, loggedUsername);
+      toast.success('Inscritos adicionados ao time');
+      registerLog(`Adicionou ${selectedCampersIds.length} inscritos ao time ${selectedTeam.name}`, loggedUsername);
 
       setSelectedCampersIds([]);
       setSelectedTeam(null);
@@ -148,7 +148,7 @@ const AdminTeams = ({ loggedUsername }) => {
       await fetchTeams(true);
       refetchCampers();
     } catch (error) {
-      toast.error('Erro ao adicionar acampantes ao time');
+      toast.error('Erro ao adicionar inscritos ao time');
       console.error(error);
     } finally {
       setSaving(false);
@@ -166,12 +166,12 @@ const AdminTeams = ({ loggedUsername }) => {
       await fetchTeams(true);
       refetchCampers();
 
-      toast.success('Acampante removido do time');
-      registerLog(`Removeu o acampante ${selectedCamperId} de um time`, loggedUsername);
+      toast.success('Inscrito removido do time');
+      registerLog(`Removeu o inscrito ${selectedCamperId} de um time`, loggedUsername);
 
       setShowRemoveCamperModal(false);
     } catch (error) {
-      toast.error('Erro ao remover acampante do time');
+      toast.error('Erro ao remover inscrito do time');
       console.error(error);
     } finally {
       setSaving(false);
@@ -261,7 +261,7 @@ const AdminTeams = ({ loggedUsername }) => {
       const campers = team.campers || [];
       const campersCount = Number(team.campersCount ?? campers.length ?? 0);
 
-      const rows = [['Acampantes', 'Qtd. Acampantes']];
+      const rows = [['Inscritos', 'Qtd. Inscritos']];
 
       if (campers.length) {
         rows.push([campers[0]?.name || '', campersCount]);
@@ -291,7 +291,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const biggestTeam = teams.reduce((m, t) => Math.max(m, Number(t.campersCount ?? 0)), 0);
   const statItems = [
     { label: 'Times', value: teams.length },
-    { label: 'Acampantes alocados', value: totalAllocated, tone: 'free' },
+    { label: 'Inscritos alocados', value: totalAllocated, tone: 'free' },
     { label: 'Sem time', value: availableCampers.length, tone: 'used' },
     { label: 'Maior time', value: biggestTeam, tone: 'accent' },
   ];
@@ -328,7 +328,7 @@ const AdminTeams = ({ loggedUsername }) => {
         sessionKey="times"
         username={loggedUsername}
         title="Times"
-        subtitle="Times e seus acampantes"
+        subtitle="Times e seus inscritos"
         typeIcon="team"
       />
 
@@ -338,7 +338,7 @@ const AdminTeams = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="teams-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por time ou acampante..." />
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por time ou inscrito..." />
         </div>
 
         <SectionHeader title="Times" count={filteredTeams.length} />
@@ -351,7 +351,7 @@ const AdminTeams = ({ loggedUsername }) => {
               <th className="table-cells-header">Nome do Time:</th>
               <th className="table-cells-header">Cor da Pulseira:</th>
               <th className="table-cells-header">Quantidade:</th>
-              <th className="table-cells-header">Acampantes:</th>
+              <th className="table-cells-header">Inscritos:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
@@ -380,7 +380,7 @@ const AdminTeams = ({ loggedUsername }) => {
                 <td>
                   <Accordion>
                     <Accordion.Item eventKey="0">
-                      <Accordion.Header>Mostrar Acampantes</Accordion.Header>
+                      <Accordion.Header>Mostrar Inscritos</Accordion.Header>
 
                       <Accordion.Body>
                         {team.campers?.length ? (
@@ -392,7 +392,7 @@ const AdminTeams = ({ loggedUsername }) => {
                                 <div className="table-action-cell">
                                   <ActionButton
                                     action="delete"
-                                    label="Remover acampante"
+                                    label="Remover inscrito"
                                     onClick={() => handleOpenRemoveCamperModal(camper.id)}
                                   />
                                 </div>
@@ -401,7 +401,7 @@ const AdminTeams = ({ loggedUsername }) => {
                             </React.Fragment>
                           ))
                         ) : (
-                          <small className="text-muted">Nenhum Acampante</small>
+                          <small className="text-muted">Nenhum Inscrito</small>
                         )}
                       </Accordion.Body>
                     </Accordion.Item>
@@ -411,7 +411,7 @@ const AdminTeams = ({ loggedUsername }) => {
                   <div className="table-action-cell">
                     <ActionButton
                       action="add"
-                      label="Adicionar acampante"
+                      label="Adicionar inscrito"
                       onClick={() => handleOpenAddCamperModal(team)}
                     />
                     <ActionButton action="edit" label="Editar time" onClick={() => handleOpenModal(team)} />
@@ -509,7 +509,7 @@ const AdminTeams = ({ loggedUsername }) => {
         onHide={() => setShowAddCamperModal(false)}
         variant="confirm"
         icon="plus"
-        title="Adicionar Acampante"
+        title="Adicionar Inscrito"
         centered={false}
         footer={
           <>
@@ -530,14 +530,14 @@ const AdminTeams = ({ loggedUsername }) => {
       >
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Acampantes:</b>
+            <b>Inscritos:</b>
           </Form.Label>
 
-          <SearchBox value={camperSearch} onChange={setCamperSearch} placeholder="Buscar acampante..." />
+          <SearchBox value={camperSearch} onChange={setCamperSearch} placeholder="Buscar inscrito..." />
 
           <div className="camper-checklist">
             {loadingCampers ? (
-              <small className="text-muted">Buscando lista de acampantes...</small>
+              <small className="text-muted">Buscando lista de inscritos...</small>
             ) : filteredAvailableCampers.length ? (
               filteredAvailableCampers.map((camper) => {
                 const id = String(camper.id);
@@ -565,7 +565,7 @@ const AdminTeams = ({ loggedUsername }) => {
                 );
               })
             ) : (
-              <small className="text-muted">Nenhum acampante disponível</small>
+              <small className="text-muted">Nenhum inscrito disponível</small>
             )}
           </div>
 
@@ -579,7 +579,7 @@ const AdminTeams = ({ loggedUsername }) => {
         show={showRemoveCamperModal}
         onHide={() => setShowRemoveCamperModal(false)}
         variant="cancel"
-        title="Excluir Acampante"
+        title="Excluir Inscrito"
         centered={false}
         footer={
           <>
@@ -592,7 +592,7 @@ const AdminTeams = ({ loggedUsername }) => {
           </>
         }
       >
-        <p>Deseja realmente remover este acampante do time?</p>
+        <p>Deseja realmente remover este inscrito do time?</p>
       </CustomModal>
 
       <CustomModal

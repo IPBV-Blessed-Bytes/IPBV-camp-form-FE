@@ -291,7 +291,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         sessionKey="acampantes"
         username={loggedUsername}
         title="Inscrições"
-        subtitle="Todos os acampantes inscritos"
+        subtitle="Todos os inscritos inscritos"
         typeIcon="person"
       />
 

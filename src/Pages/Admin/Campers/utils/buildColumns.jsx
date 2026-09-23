@@ -446,7 +446,7 @@ export const buildCampersColumns = ({
       Cell: renderOrDash,
     },
     {
-      Header: 'Observação Acampante:',
+      Header: 'Observação Inscrito:',
       accessor: 'finalObservation',
       Filter: textFilter,
       sortType: 'alphanumeric',

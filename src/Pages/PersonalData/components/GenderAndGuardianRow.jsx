@@ -16,7 +16,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
         <Col md={6} className="mb-3">
           <Form.Group>
             <Form.Label>
-              <b>Categoria de Acampante:</b>
+              <b>Categoria de Inscrito:</b>
             </Form.Label>
             <Form.Select
               isInvalid={!!errors.gender}

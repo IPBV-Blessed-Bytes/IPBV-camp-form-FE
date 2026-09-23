@@ -119,7 +119,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const handleShowDeleteCamperFromRoomModal = (camper) => {
     if (!camper || !camper.id) {
-      toast.error('Erro: Acampante não encontrado.');
+      toast.error('Erro: Inscrito não encontrado.');
       return;
     }
     setCamperToDelete(camper);
@@ -215,7 +215,7 @@ const AdminRooms = ({ loggedUsername }) => {
         if (data === 'Quarto atualizado com sucesso.') {
           refetchRooms();
           fetchUsers();
-          toast.success('Acampante adicionado ao quarto');
+          toast.success('Inscrito adicionado ao quarto');
           registerLog(`Adicionou usuário ${camper.personalInformation.name} ao quarto ${roomName}`, loggedUsername);
         }
       } catch (error) {
@@ -251,7 +251,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const deleteCamperFromRoom = async (camperToDelete) => {
     if (!camperToDelete) {
-      toast.error('Erro: Nenhum acampante selecionado.');
+      toast.error('Erro: Nenhum inscrito selecionado.');
       return;
     }
     setSaving(true);
@@ -260,13 +260,13 @@ const AdminRooms = ({ loggedUsername }) => {
       const data = await removeCamperFromRoom(camperToDelete.id);
 
       if (data === 'Acampante removido do quarto com sucesso.') {
-        toast.success('Acampante removido do quarto com sucesso');
+        toast.success('Inscrito removido do quarto com sucesso');
         refetchRooms();
         fetchUsers(true);
         handleCloseDeleteCamperFromRoomModal();
       }
     } catch (error) {
-      toast.error('Erro ao apagar acampante do quarto');
+      toast.error('Erro ao apagar inscrito do quarto');
       console.error('Erro ao apagar acampante do quarto:', error);
     } finally {
       setSaving(false);
@@ -361,7 +361,7 @@ const AdminRooms = ({ loggedUsername }) => {
   const generateRoomExcel = () => {
     const rows = rooms.map((room) => ({
       Quarto: room.name,
-      Acampantes: room.campers.map((camper) => camper.name).join(', '),
+      Inscritos: room.campers.map((camper) => camper.name).join(', '),
     }));
 
     downloadSingleSheet({ filename: 'quartos.xlsx', sheetName: 'Quartos', rows });
@@ -375,7 +375,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
     return [
       { label: 'Quartos', value: totalRooms },
-      { label: 'Acampantes alocados', value: totalCampers, tone: 'accent' },
+      { label: 'Inscritos alocados', value: totalCampers, tone: 'accent' },
       { label: 'Quartos vazios', value: emptyRooms, tone: emptyRooms > 0 ? 'danger' : 'free' },
       { label: 'Média por quarto', value: average, tone: 'info' },
     ];
@@ -408,7 +408,7 @@ const AdminRooms = ({ loggedUsername }) => {
         sessionKey="quartos"
         username={loggedUsername}
         title="Quartos"
-        subtitle="Distribuição de acampantes por quarto"
+        subtitle="Distribuição de inscritos por quarto"
         typeIcon="rooms"
       />
 
@@ -546,7 +546,7 @@ const AdminRooms = ({ loggedUsername }) => {
                   defaultValue=""
                   onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
                 >
-                  <option value="">Selecione um acampante</option>
+                  <option value="">Selecione um inscrito</option>
                   {sortedDropdownCampers
                     .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
                     .map((camper) => (

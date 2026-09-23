@@ -26,7 +26,7 @@ const AdminExtraMeals = () => {
 
   const generateExcel = () => {
     const rows = usersWithExtraMeals.map((user) => ({
-      Acampante: user.personalInformation.name,
+      Inscrito: user.personalInformation.name,
       Refeições: user.extraMeals.extraMeals[0],
     }));
 
@@ -38,7 +38,7 @@ const AdminExtraMeals = () => {
     0,
   );
   const statItems = [
-    { label: 'Acampantes', value: usersWithExtraMeals.length },
+    { label: 'Inscritos', value: usersWithExtraMeals.length },
     { label: 'Total de dias', value: totalDays, tone: 'info' },
   ];
   const term = search.trim().toLowerCase();
@@ -62,7 +62,7 @@ const AdminExtraMeals = () => {
     <div className="admin-subpage admin-subpage--meals">
       <AdminSubpageHeader
         title="Usuários com Refeições Extras"
-        subtitle="Acampantes que solicitaram refeições adicionais"
+        subtitle="Inscritos que solicitaram refeições adicionais"
         typeIcon="food"
       />
 
@@ -72,7 +72,7 @@ const AdminExtraMeals = () => {
         <StatCards items={statItems} />
 
         <div className="meals-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por acampante..." />
+          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por inscrito..." />
         </div>
 
         <SectionHeader title="Refeições extras" count={filteredUsers.length} />
@@ -81,7 +81,7 @@ const AdminExtraMeals = () => {
           <Table striped bordered hover responsive className="custom-table">
             <thead>
           <tr>
-            <th className="table-cells-header">Acampante:</th>
+            <th className="table-cells-header">Inscrito:</th>
             <th className="table-cells-header">Refeições Extras (Dias):</th>
           </tr>
         </thead>
@@ -89,7 +89,7 @@ const AdminExtraMeals = () => {
           {filteredUsers.length === 0 ? (
             <tr>
               <td colSpan={2} className="text-start text-secondary p-4">
-                Nenhum acampante com refeições extras registrado
+                Nenhum inscrito com refeições extras registrado
               </td>
             </tr>
           ) : (

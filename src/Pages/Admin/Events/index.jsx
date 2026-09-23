@@ -764,12 +764,12 @@ const AdminEvents = ({ loggedUsername }) => {
                 type="switch"
                 id="event-registration-fee-switch"
                 className="mt-2"
-                label="Taxa de inscrição (somada a cada acampante)"
+                label="Taxa de inscrição (somada a cada inscrito)"
                 checked={draft.registrationFeeEnabled}
                 onChange={(e) => handleChange('registrationFeeEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada acampante.
+                Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada inscrito.
               </Form.Text>
 
               <Form.Check

@@ -76,7 +76,7 @@ const renderUserTotalInfo = (user, age) => {
     <div className="cart-item">
       <div className="item-info">
         <h5 className="cart-user-total fw-bold d-flex justify-content-between">
-          Total Acampante: <span>R$ {sumBeforeDiscount},00</span>
+          Total Inscrito: <span>R$ {sumBeforeDiscount},00</span>
         </h5>
       </div>
     </div>

@@ -345,7 +345,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                             typeIcon="info"
                             size={15}
                             color={'#7f7878'}
-                            text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                            text="Valor de desconto aplicado diretamente ao CPF do inscrito, mesmo que haja mais de um usuário no carrinho."
                           />
                         </div>
                         <div className="summary-discount-value">-R$ {discountNumeric},00</div>

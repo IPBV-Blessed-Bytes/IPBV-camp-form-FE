@@ -26,7 +26,7 @@ const FIELDS = [
     label: 'Nome',
     name: 'personalInformation.name',
     type: 'text',
-    placeholder: 'Nome do Acampante',
+    placeholder: 'Nome do Inscrito',
     oddOrEven: 'even',
   },
   {

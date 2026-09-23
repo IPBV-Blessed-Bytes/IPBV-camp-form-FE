@@ -203,7 +203,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       const status = error?.response?.status;
       const apiMessage = getApiErrorMessage(error);
       if (status === 404) {
-        toast.error(apiMessage || 'Acampante não encontrado');
+        toast.error(apiMessage || 'Inscrito não encontrado');
       } else {
         toast.error('Erro ao realizar check-in');
       }
@@ -253,14 +253,14 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       const match = users.find((u) => u.personalInformation.cpf.replace(/\D/g, '') === cpfDigits);
 
       if (!match) {
-        toast.warn('Nenhum acampante encontrado para este CPF');
+        toast.warn('Nenhum inscrito encontrado para este CPF');
         return;
       }
 
       selectUserRef.current(match);
 
       if (match.checkin) {
-        toast.info('Este acampante já estava com check-in feito.');
+        toast.info('Este inscrito já estava com check-in feito.');
         return;
       }
 
@@ -289,7 +289,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
     ? Math.round((checkinStats.checked / checkinStats.total) * 100)
     : 0;
   const checkinStatItems = [
-    { label: 'Total de acampantes', value: checkinStats.total },
+    { label: 'Total de inscritos', value: checkinStats.total },
     { label: 'Com check-in', value: checkinStats.checked, tone: 'free' },
     { label: 'Pendentes', value: pendingCheckins, tone: 'used' },
     { label: '% concluído', value: `${checkinPercent}%`, tone: 'info' },
@@ -300,7 +300,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'campers-table',
-      name: 'Tabela de Acampantes',
+      name: 'Tabela de Inscritos',
       onClick: () => goToCampersTable(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'add-person',
@@ -313,7 +313,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         sessionKey="checkin"
         username={loggedUsername}
         title="Check-in de Usuário"
-        subtitle="Confirmação de presença dos acampantes"
+        subtitle="Confirmação de presença dos inscritos"
         typeIcon="checkin"
       />
 
@@ -400,7 +400,7 @@ const AdminCheckin = ({ loggedUsername, userRole }) => {
         <div className="admin-panel checkin-user">
           <div className="checkin-user__head">
             <div className="checkin-user__identity">
-              <span className="checkin-user__eyebrow">Acampante</span>
+              <span className="checkin-user__eyebrow">Inscrito</span>
               <h2 className="checkin-user__name">{userInfo.personalInformation.name}</h2>
             </div>
             <span className={`checkin-status-badge checkin-status-badge--${checkinStatus ? 'in' : 'out'}`}>

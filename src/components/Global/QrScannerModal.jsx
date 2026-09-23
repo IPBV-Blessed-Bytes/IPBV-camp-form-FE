@@ -61,7 +61,7 @@ const QrScannerModal = ({ show, onHide, onScan }) => {
         </Alert>
       ) : (
         <>
-          <p className="text-secondary small">Aponte a câmera para o QR do acampante.</p>
+          <p className="text-secondary small">Aponte a câmera para o QR do inscrito.</p>
           <div id={REGION_ID} style={{ width: '100%' }} />
         </>
       )}

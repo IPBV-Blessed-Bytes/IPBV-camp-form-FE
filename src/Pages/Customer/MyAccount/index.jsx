@@ -394,7 +394,7 @@ const MyAccount = () => {
           {pendingInSameOrder > 1 && (
             <>
               {' '}
-              Como o pagamento deste pedido é único, <b>todos os acampantes pendentes deste pedido</b> serão cancelados
+              Como o pagamento deste pedido é único, <b>todos os inscritos pendentes deste pedido</b> serão cancelados
               juntos.
             </>
           )}{' '}

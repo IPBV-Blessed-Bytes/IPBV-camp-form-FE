@@ -453,7 +453,7 @@ const DynamicForm = () => {
     }
 
     if (!people.length) {
-      toast.error('Adicione ao menos um acampante ao carrinho.');
+      toast.error('Adicione ao menos um inscrito ao carrinho.');
       return;
     }
     if (!paymentMethod) {
@@ -791,7 +791,7 @@ const DynamicForm = () => {
                         {people.length === 0 ? (
                           <div className="empty-cart">
                             <Icons typeIcon="cart" iconSize={48} fill="#ced4da" />
-                            <p>Nenhum acampante adicionado ao carrinho</p>
+                            <p>Nenhum inscrito adicionado ao carrinho</p>
                           </div>
                         ) : (
                           people.map((person, personIndex) => {
@@ -840,7 +840,7 @@ const DynamicForm = () => {
                                   })}
                                   <div className="packages-horizontal-line-cart"></div>
                                   <h5 className="cart-user-total fw-bold d-flex justify-content-between">
-                                    Total Acampante: <span>{formatPrice(personTotal(person))}</span>
+                                    Total Inscrito: <span>{formatPrice(personTotal(person))}</span>
                                   </h5>
                                 </Card.Body>
                               </Card>
@@ -849,7 +849,7 @@ const DynamicForm = () => {
                         )}
                         <div className="text-center">
                           <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={addCamper}>
-                            <Icons typeIcon="plus" iconSize={25} fill="#6c757d" /> &nbsp;Adicionar Acampante
+                            <Icons typeIcon="plus" iconSize={25} fill="#6c757d" /> &nbsp;Adicionar Inscrito
                           </Button>
                         </div>
                       </Card.Body>
@@ -872,7 +872,7 @@ const DynamicForm = () => {
                                   typeIcon="info"
                                   size={15}
                                   color="#7f7878"
-                                  text="Taxa de inscrição do evento, somada ao valor do pacote de cada acampante."
+                                  text="Taxa de inscrição do evento, somada ao valor do pacote de cada inscrito."
                                 />
                               </div>
                               <h5 className="mb-0">{formatPrice(registrationFee)}</h5>

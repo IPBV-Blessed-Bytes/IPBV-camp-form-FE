@@ -56,7 +56,7 @@ const AdminTrash = ({ loggedUsername }) => {
     try {
       await restoreDeletedRegistration(item.id);
       registerLog(`Restaurou a inscrição de ${item.payerName} (CPF ${item.cpf})`, loggedUsername);
-      toast.success('Inscrição restaurada para os acampantes.');
+      toast.success('Inscrição restaurada para os inscritos.');
       await reload(true);
     } catch (error) {
       toast.error(error?.response?.data || 'Não foi possível restaurar a inscrição.');

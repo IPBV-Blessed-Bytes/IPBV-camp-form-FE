@@ -34,7 +34,7 @@ export const IMPORT_HEADER_TO_FIELD = {
   'Nome do Time': 'teamName',
   Equipe: 'crew',
   'Família Pastoral': 'pastoralFamily',
-  'Observação Acampante': 'finalObservation',
+  'Observação Inscrito': 'finalObservation',
   'Observação Adm': 'observation',
   Checkin: 'checkin',
 };
@@ -72,7 +72,7 @@ export const TEMPLATE_HEADERS = [
   'Nome do Time',
   'Equipe',
   'Família Pastoral',
-  'Observação Acampante',
+  'Observação Inscrito',
   'Observação Adm',
   'Checkin',
 ];

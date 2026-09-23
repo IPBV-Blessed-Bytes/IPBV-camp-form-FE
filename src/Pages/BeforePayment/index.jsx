@@ -192,7 +192,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
 
               <div className="text-center">
                 <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={goToPersonalData}>
-                  <Icons typeIcon="plus" iconSize={25} fill={'#6c757d'} /> &nbsp;Adicionar Acampante
+                  <Icons typeIcon="plus" iconSize={25} fill={'#6c757d'} /> &nbsp;Adicionar Inscrito
                 </Button>
               </div>
             </Card.Body>
@@ -235,7 +235,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                         typeIcon="info"
                         size={15}
                         color={'#7f7878'}
-                        text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                        text="Valor de desconto aplicado diretamente ao CPF do inscrito, mesmo que haja mais de um usuário no carrinho."
                       />
                     </div>
                     <h5 className="summary-discount-value">-R$ {totalDiscount},00</h5>

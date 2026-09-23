@@ -49,7 +49,7 @@ const PersonalData = () => {
       }
 
       if (values.cpf === values.legalGuardianCpf) {
-        toast.error('CPF do acampante não pode ser igual ao CPF do responsável legal');
+        toast.error('CPF do inscrito não pode ser igual ao CPF do responsável legal');
         return;
       }
 
