@@ -15,6 +15,7 @@ import {
   deletePlatformFaq,
   getPlatformSettings,
   updatePlatformSettings,
+  getPlatformBillingOverview,
 } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
@@ -62,6 +63,23 @@ const BILLING_BADGE = {
   canceled: { bg: 'secondary', label: 'Cancelado' },
 };
 
+const SITUATION_BADGE = {
+  healthy: { bg: 'success', label: 'Em dia' },
+  trial: { bg: 'info', label: 'Trial' },
+  warning: { bg: 'warning', text: 'dark', label: 'Vencendo' },
+  form_blocked: { bg: 'danger', label: 'Form bloqueado' },
+  admin_blocked: { bg: 'dark', label: 'Admin bloqueado' },
+  canceled: { bg: 'secondary', label: 'Cancelado' },
+};
+
+const SITUATION_ORDER = ['healthy', 'trial', 'warning', 'form_blocked', 'admin_blocked', 'canceled'];
+
+const formatDateBR = (iso) => {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  return d && m && y ? `${d}/${m}/${y}` : iso;
+};
+
 const slugify = (value) =>
   value
     .toLowerCase()
@@ -99,6 +117,7 @@ const Platform = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState(null);
+  const [overview, setOverview] = useState(null);
   const [organizations, setOrganizations] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [draft, setDraft] = useState(EMPTY_ORG);
@@ -118,13 +137,15 @@ const Platform = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsData, orgs, faqList, settingsData] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData, overviewData] = await Promise.all([
         getPlatformStats(),
         listPlatformOrganizations(),
         listPlatformFaqs(),
         getPlatformSettings(),
+        getPlatformBillingOverview(),
       ]);
       setStats(statsData);
+      setOverview(overviewData);
       setOrganizations(orgs);
       setFaqs(faqList);
       if (settingsData) {
@@ -340,6 +361,81 @@ const Platform = () => {
 
       <div className="platform__content">
         {stats && <StatCards items={statItems} />}
+
+        {overview && (
+          <section className="platform__billing">
+            <div className="platform__billing-head">
+              <h2 className="platform__billing-title">Cobrança &amp; inadimplência</h2>
+              <p className="platform__billing-subtitle">
+                Situação de cobrança das igrejas. {overview.trialsEndingSoon > 0
+                  ? `${overview.trialsEndingSoon} trial(s) vencendo em até 7 dias.`
+                  : 'Nenhum trial vencendo nos próximos 7 dias.'}
+              </p>
+            </div>
+
+            <div className="platform__billing-tiles">
+              {SITUATION_ORDER.filter((key) => (overview.bySituation?.[key] || 0) > 0).map((key) => {
+                const badge = SITUATION_BADGE[key];
+                return (
+                  <div key={key} className="platform__billing-tile">
+                    <span className="platform__billing-tile-value">{overview.bySituation[key]}</span>
+                    <Badge bg={badge.bg} text={badge.text}>
+                      {badge.label}
+                    </Badge>
+                  </div>
+                );
+              })}
+            </div>
+
+            {overview.attention?.length > 0 ? (
+              <div className="platform__table-wrap">
+                <Table hover responsive className="platform__table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Igreja</th>
+                      <th>Situação</th>
+                      <th>Vencimento / Trial</th>
+                      <th className="text-center">Bloqueio em</th>
+                      <th className="text-end">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {overview.attention.map((item) => {
+                      const badge = SITUATION_BADGE[item.situation] || { bg: 'light', text: 'dark', label: item.situation };
+                      const org = organizations.find((o) => o.id === item.id);
+                      return (
+                        <tr key={item.id}>
+                          <td className="fw-semibold">{item.name}</td>
+                          <td>
+                            <Badge bg={badge.bg} text={badge.text}>
+                              {badge.label}
+                            </Badge>
+                          </td>
+                          <td>{formatDateBR(item.dueDate || item.trialEndsAt)}</td>
+                          <td className="text-center">
+                            {item.daysUntilNextBlock != null ? `${item.daysUntilNextBlock} dia(s)` : '—'}
+                          </td>
+                          <td className="text-end">
+                            <Button
+                              size="sm"
+                              variant="outline-teal-blue"
+                              disabled={!org}
+                              onClick={() => org && openEdit(org)}
+                            >
+                              Gerenciar
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            ) : (
+              <p className="platform__billing-empty">Nenhuma igreja precisa de atenção no momento.</p>
+            )}
+          </section>
+        )}
 
         <section className="platform__pricing">
           <div className="platform__pricing-head">

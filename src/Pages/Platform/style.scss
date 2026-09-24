@@ -88,6 +88,55 @@
     }
   }
 
+  &__billing {
+    margin: 1.25rem 0 0.5rem;
+    padding: 1.25rem 1.4rem 1.4rem;
+    background: #fff;
+    border: 1px solid #e2e6ee;
+    border-radius: 12px;
+  }
+
+  &__billing-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  &__billing-subtitle {
+    margin: 0.15rem 0 1rem;
+    color: $dark-gray;
+    font-size: 0.92rem;
+  }
+
+  &__billing-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__billing-tile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f4f6f9;
+    border: 1px solid #e2e6ee;
+    border-radius: 10px;
+    padding: 0.5rem 0.85rem;
+  }
+
+  &__billing-tile-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e2530;
+  }
+
+  &__billing-empty {
+    color: $dark-gray;
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+
   &__pricing {
     margin: 1.25rem 0 0.5rem;
     padding: 1.25rem 1.4rem 1.4rem;

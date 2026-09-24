@@ -26,6 +26,11 @@ export const getPlatformStats = async () => {
   return data;
 };
 
+export const getPlatformBillingOverview = async () => {
+  const { data } = await authFetcher.get('/platform/billing-overview');
+  return data;
+};
+
 export const platformSignup = async (payload) => {
   const { data } = await fetcher.post('/platform/signup', payload);
   return data;
