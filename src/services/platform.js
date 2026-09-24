@@ -21,6 +21,11 @@ export const updatePlatformOrganization = async (id, payload) => {
   return data;
 };
 
+export const regularizePlatformOrganization = async (id, periodDays) => {
+  const { data } = await authFetcher.post(`/platform/organizations/${id}/regularize`, periodDays ? { periodDays } : {});
+  return data;
+};
+
 export const getPlatformStats = async () => {
   const { data } = await authFetcher.get('/platform/stats');
   return data;

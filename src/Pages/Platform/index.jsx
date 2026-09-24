@@ -16,6 +16,7 @@ import {
   getPlatformSettings,
   updatePlatformSettings,
   getPlatformBillingOverview,
+  regularizePlatformOrganization,
 } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
@@ -161,6 +162,16 @@ const Platform = () => {
       toast.error(getApiErrorMessage(error) || 'Erro ao carregar dados da plataforma.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRegularize = async (id) => {
+    try {
+      await regularizePlatformOrganization(id);
+      toast.success('Cobrança regularizada.');
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível regularizar.');
     }
   };
 
@@ -416,14 +427,25 @@ const Platform = () => {
                             {item.daysUntilNextBlock != null ? `${item.daysUntilNextBlock} dia(s)` : '—'}
                           </td>
                           <td className="text-end">
-                            <Button
-                              size="sm"
-                              variant="outline-teal-blue"
-                              disabled={!org}
-                              onClick={() => org && openEdit(org)}
-                            >
-                              Gerenciar
-                            </Button>
+                            <div className="d-flex justify-content-end gap-2">
+                              {item.situation !== 'trial' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline-success"
+                                  onClick={() => handleRegularize(item.id)}
+                                >
+                                  Regularizar
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="outline-teal-blue"
+                                disabled={!org}
+                                onClick={() => org && openEdit(org)}
+                              >
+                                Gerenciar
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       );
