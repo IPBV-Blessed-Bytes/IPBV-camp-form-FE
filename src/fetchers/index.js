@@ -17,4 +17,19 @@ fetcher.interceptors.request.use((config) => {
   return config;
 });
 
+fetcher.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error?.response?.status === 402 &&
+      error.response.data?.billing_blocked &&
+      typeof window !== 'undefined' &&
+      !window.location.pathname.endsWith('/indisponivel')
+    ) {
+      window.location.assign('/indisponivel');
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default fetcher;

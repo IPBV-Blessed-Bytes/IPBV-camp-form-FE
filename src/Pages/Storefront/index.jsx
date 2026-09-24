@@ -57,6 +57,14 @@ const Storefront = () => {
       toast.error('Informe seu e-mail.');
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(adminEmail.trim())) {
+      toast.error('Informe um e-mail válido.');
+      return;
+    }
+    if (!slug.trim()) {
+      toast.error('Informe um identificador (slug) para o seu sistema.');
+      return;
+    }
     if (adminPassword.length < 6) {
       toast.error('A senha deve ter ao menos 6 caracteres.');
       return;

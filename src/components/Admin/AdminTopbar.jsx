@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
 import { eventPath, getEventSlug, setSelectedEvent } from '@/config/eventScope';
-import { listAllEvents } from '@/services/events';
+import { listEvents } from '@/services/events';
 import { getPlatformMe } from '@/services/platform';
 
 const getInitials = (name) => {
@@ -35,7 +35,7 @@ const AdminTopbar = ({ username, logout }) => {
   }, []);
 
   useEffect(() => {
-    listAllEvents()
+    listEvents()
       .then((list) => setEvents(Array.isArray(list) ? list : list?.events || []))
       .catch(() => setEvents([]));
   }, []);

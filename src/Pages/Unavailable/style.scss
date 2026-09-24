@@ -1,0 +1,31 @@
+.unavailable {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+
+  &__card {
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e2e6ee;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 1px 2px rgba(24, 33, 56, 0.06), 0 8px 24px -12px rgba(24, 33, 56, 0.18);
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e2530;
+    margin: 0 0 0.75rem;
+  }
+
+  &__text {
+    color: #55606f;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
