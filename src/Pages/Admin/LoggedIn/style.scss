@@ -205,6 +205,65 @@ $admin-accent-checkin: $slime-green;
   }
 }
 
+.admin-home__recebimento-alert {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: #fff6e5;
+  border: 1px solid #f0c98a;
+  border-left: 5px solid #e0a800;
+  border-radius: 10px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.admin-home__recebimento-alert-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+
+  strong {
+    color: #7a4a00;
+  }
+
+  span {
+    color: #6b5427;
+    font-size: 0.9rem;
+  }
+}
+
+.admin-home__recebimento-alert-btn {
+  flex-shrink: 0;
+  border: none;
+  background: #e0a800;
+  color: #3d2b00;
+  font-weight: 700;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #c9960a;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-home__recebimento-alert {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-home__recebimento-alert-btn {
+    align-self: stretch;
+  }
+}
+
 .session-carousel {
   overflow-x: hidden;
 }

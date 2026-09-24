@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { getNonPayingChildren, getCrewBus } from '@/services/stats';
 import { getPlanTier } from '@/services/planTier';
+import { getRecipientOnboardingStatus } from '@/services/recipientOnboarding';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
@@ -81,6 +82,7 @@ const AdminLoggedIn = ({
   const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tier, setTier] = useState('completo');
+  const [needsRecebimento, setNeedsRecebimento] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
@@ -117,6 +119,16 @@ const AdminLoggedIn = ({
       .then(setTier)
       .catch(() => setTier('completo'));
   }, []);
+
+  useEffect(() => {
+    if (!settingsButtonPermissions) {
+      setNeedsRecebimento(false);
+      return;
+    }
+    getRecipientOnboardingStatus()
+      .then((status) => setNeedsRecebimento(status.required && !status.onboarded))
+      .catch(() => setNeedsRecebimento(false));
+  }, [settingsButtonPermissions]);
 
   useEffect(() => {
     const fetchAdminHomeCounters = async () => {
@@ -393,6 +405,25 @@ const AdminLoggedIn = ({
         </div>
       ) : (
       <div className="admin-home__content">
+        {needsRecebimento && (
+          <div className="admin-home__recebimento-alert" role="alert">
+            <Icons typeIcon="money" iconSize={30} fill="#8a5300" />
+            <div className="admin-home__recebimento-alert-text">
+              <strong>Configure o Recebimento antes de habilitar pagamentos.</strong>
+              <span>
+                Enquanto a conta que recebe as inscrições não estiver configurada, o checkout de eventos pagos fica
+                bloqueado e os inscritos não conseguem pagar.
+              </span>
+            </div>
+            <button
+              type="button"
+              className="admin-home__recebimento-alert-btn"
+              onClick={() => navigate(`${routePrefix}/recebimento`)}
+            >
+              Configurar Recebimento
+            </button>
+          </div>
+        )}
         <div className="session-carousel">
           {view === 'settings' && (
             <div className="settings-toolbar">
