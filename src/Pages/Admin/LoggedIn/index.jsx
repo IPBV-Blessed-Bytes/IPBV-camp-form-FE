@@ -352,6 +352,7 @@ const AdminLoggedIn = ({
   const settingsSessions = [
     { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
     { path: 'campos-admin', title: 'Campos Administrativos', typeIcon: 'edit', iconSize: 40, accent: '#5c6bc0' },
+    { path: 'recebimento', title: 'Recebimento', typeIcon: 'money', iconSize: 42, accent: '#057c05' },
     { path: 'eventos', title: 'Eventos', typeIcon: 'calendar', iconSize: 40, accent: '#2E5AAC' },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
     { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 40, accent: '#cc6d00' },

@@ -1,0 +1,57 @@
+@use '../../../styles/Variables.scss' as *;
+
+.recebimento {
+  &__content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  &__intro {
+    color: $dark-gray;
+    margin-bottom: 1.25rem;
+  }
+
+  &__form {
+    background: $white;
+    border: 1px solid #e2e6ee;
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  &__section {
+    font-weight: 700;
+    color: $primary;
+    margin: 1.5rem 0 0.25rem;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  &__done {
+    text-align: center;
+    max-width: 520px;
+    margin: 1rem auto;
+    background: $white;
+    border: 1px solid #e2e6ee;
+    border-radius: 14px;
+    padding: 2.5rem 2rem;
+
+    h3 {
+      margin: 0.75rem 0 0.5rem;
+      font-weight: 700;
+    }
+
+    p {
+      color: $dark-gray;
+      margin: 0;
+    }
+  }
+}
