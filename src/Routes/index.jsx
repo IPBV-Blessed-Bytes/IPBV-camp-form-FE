@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
@@ -529,7 +529,8 @@ const FormRoutes = () => {
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
 
-            <Route path="/" element={<EventCatalog />} />
+            <Route path="/" element={<Navigate to="/comprar" replace />} />
+            <Route path="/catalogo" element={<EventCatalog />} />
 
             <Route path="/platform" element={<Platform />} />
             <Route path="/comprar" element={<Storefront />} />
