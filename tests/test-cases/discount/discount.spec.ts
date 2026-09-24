@@ -7,10 +7,10 @@ const test = mergeTests(discountTest, authenticationTest);
 
 test.describe('Discount table flow', () => {
   test('Verify if it is possible to create, edit and delete a discount', async ({ authentication, discount }) => {
-    const testCredentials = testsConfig.users.testUser;
+    await authentication.login(testsConfig.users.adminUser);
+    await authentication.selectEvent('acampamento-ipbv');
 
-    await authentication.login(testCredentials);
-    await discount.discountButton.click();
+    await discount.openDiscountPage();
     await expect(discount.discountHeading).toBeVisible();
 
     await discount.createNewDiscount();
@@ -18,7 +18,7 @@ test.describe('Discount table flow', () => {
     await expect(discount.discountCreated).toBeVisible();
 
     await discount.editButton.click();
-    await expect(discount.cpfAttachedInput).toHaveValue('00000000011');
+    await expect(discount.cpfAttachedInput).toHaveValue('000.000.000-11');
     await expect(discount.discountValueInput).toHaveValue('100');
     await discount.fillDataToEditDiscount();
     await expect(discount.discountUpdatedToast).toBeVisible();

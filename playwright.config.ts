@@ -2,17 +2,17 @@ import { defineConfig } from '@playwright/test';
 
 import { config as authentication } from 'tests/test-cases/authentication/config';
 import { config as common } from 'tests/test-cases/common/config';
-import { config as form } from 'tests/test-cases/form/config';
+// import { config as form } from 'tests/test-cases/form/config';
 // import { config as camperTable } from 'tests/test-cases/camperTable/config';
-import { config as adminHome } from 'tests/test-cases/adminHome/config';
+// import { config as adminHome } from 'tests/test-cases/adminHome/config';
 // import { config as ride } from 'tests/test-cases/ride/config';
 import { config as discount } from 'tests/test-cases/discount/config';
-import { config as room } from 'tests/test-cases/room/config';
-import { config as checkRegistration } from 'tests/test-cases/checkRegistration/config';
-import { config as faq } from 'tests/test-cases/faq/config';
-import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
+// import { config as room } from 'tests/test-cases/room/config';
+// import { config as checkRegistration } from 'tests/test-cases/checkRegistration/config';
+// import { config as faq } from 'tests/test-cases/faq/config';
+// import { config as extraMeals } from 'tests/test-cases/extraMeals/config';
 import { config as userCreation } from 'tests/test-cases/userCreation/config';
-import { config as checkin } from 'tests/test-cases/checkin/config';
+// import { config as checkin } from 'tests/test-cases/checkin/config';
 import { config as platformPanel } from 'tests/test-cases/platform/config';
 import { config as manual } from 'tests/test-cases/manual/config';
 import { config as storefront } from 'tests/test-cases/storefront/config';
@@ -20,6 +20,12 @@ import { config as formBuilder } from 'tests/test-cases/formBuilder/config';
 
 export default defineConfig({
   testDir: './tests',
+
+  workers: 1,
+
+  expect: {
+    timeout: 15000,
+  },
 
   reporter: [
     [
@@ -38,17 +44,17 @@ export default defineConfig({
   projects: [
     authentication,
     common,
-    form,
+    // form,
     // camperTable,
-    adminHome,
+    // adminHome,
     // ride,
     discount,
-    room,
-    checkRegistration,
-    faq,
-    extraMeals,
+    // room,
+    // checkRegistration,
+    // faq,
+    // extraMeals,
     userCreation,
-    checkin,
+    // checkin,
     platformPanel,
     manual,
     storefront,

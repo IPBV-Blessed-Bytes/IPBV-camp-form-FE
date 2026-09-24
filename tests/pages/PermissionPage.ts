@@ -2,35 +2,28 @@ import { Locator, Page } from '@playwright/test';
 
 export class PermissionsComponent {
   readonly logoutButton: Locator;
-  readonly allAdminCards: Locator;
-  readonly allAdminCardsWithoutCheckin: Locator;
-  readonly registeredAndDiscountCards: Locator;
-  readonly justCheckinCard: Locator;
+  readonly inscricoesCard: Locator;
+  readonly caronasCard: Locator;
+  readonly descontosCard: Locator;
+  readonly quartosCard: Locator;
+  readonly timesCard: Locator;
+  readonly feedbacksCard: Locator;
+  readonly checkinCard: Locator;
+  readonly configuracoesCard: Locator;
   readonly packagesSession: Locator;
   readonly totalSession: Locator;
-  readonly managementSession: Locator;
-  readonly dataPanelSession: Locator;
-  readonly registeredButton: Locator;
-  readonly selectAllColumn: Locator;
-  readonly editDeleteColumn: Locator;
-  readonly newCamperButton: Locator;
 
   constructor(readonly page: Page) {
-    this.logoutButton = page.getByRole('button', { name: 'Desconectar' });
-    this.allAdminCards = page.getByText('InscritosCaronasDescontosQuartosFeedbacksAlimentação ExtraCheck-in');
-    this.allAdminCardsWithoutCheckin = page.getByText('InscritosCaronasDescontosQuartosFeedbacksAlimentação Extra');
-    this.registeredAndDiscountCards = page.getByText('InscritosDescontos');
-    this.justCheckinCard = page.getByText('Check-in');
-    this.packagesSession = page.getByRole('heading', { name: 'PACOTES:' });
-    this.totalSession = page.getByRole('heading', { name: 'TOTAL:' });
-    this.managementSession = page.locator('.settings-btn');
-    this.dataPanelSession = page.locator('.data-panel-btn');
-    this.registeredButton = page
-      .locator('div')
-      .filter({ hasText: /^Inscritos$/ })
-      .nth(2);
-    this.selectAllColumn = page.getByRole('cell', { name: 'Selecionar Todos' });
-    this.editDeleteColumn = page.getByRole('cell', { name: 'Editar / Deletar' });
-    this.newCamperButton = page.getByRole('button', { name: 'Nova Inscrição' });
+    this.logoutButton = page.locator('.admin-topbar__user');
+    this.inscricoesCard = page.getByRole('heading', { name: 'Inscrições', exact: true });
+    this.caronasCard = page.getByRole('heading', { name: 'Caronas', exact: true });
+    this.descontosCard = page.getByRole('heading', { name: 'Descontos', exact: true });
+    this.quartosCard = page.getByRole('heading', { name: 'Quartos', exact: true });
+    this.timesCard = page.getByRole('heading', { name: 'Times', exact: true });
+    this.feedbacksCard = page.getByRole('heading', { name: 'Feedbacks', exact: true });
+    this.checkinCard = page.getByRole('heading', { name: 'Check-in', exact: true });
+    this.configuracoesCard = page.getByRole('heading', { name: 'Configurações', exact: true });
+    this.packagesSession = page.getByRole('heading', { name: 'Pacotes válidos', exact: true });
+    this.totalSession = page.getByRole('heading', { name: 'Totais gerais', exact: true });
   }
 }

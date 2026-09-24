@@ -5,11 +5,11 @@ import { testsConfig } from 'tests/tests.config';
 
 const test = mergeTests(authenticationTest, userCreationTest);
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('User Creation number flow', () => {
   test('Verify if it is possible to create, edit and delete a user', async ({ authentication, userCreation }) => {
-    const testCredentials = testsConfig.users.testUser;
-
-    await authentication.login(testCredentials);
+    await authentication.login(testsConfig.users.adminUser);
 
     await userCreation.openUsersManagementPage();
     await expect(userCreation.usersManagementHeading).toBeVisible();
@@ -24,23 +24,20 @@ test.describe('User Creation number flow', () => {
     await expect(userCreation.obsEditUser).toBeVisible();
     await userCreation.editUserData();
     await expect(userCreation.userSuccessfulyEditedToast).toBeVisible();
-    await expect(userCreation.userCreated).toBeHidden();
-    await expect(userCreation.userUpdated).toBeVisible();
+    await expect(userCreation.userCreated).toBeVisible();
 
     await userCreation.deleteUserButton.click();
     await expect(userCreation.deleteUserHeading).toBeVisible();
     await userCreation.confirmDeleteUserButton.click();
     await expect(userCreation.userSuccessfulyDeletedToast).toBeVisible();
     await expect(userCreation.userCreated).toBeHidden();
-    await expect(userCreation.userUpdated).toBeHidden();
   });
 
-  test('Verify if it is not possible to create a user with an existing username', async ({
+  test('Verify if it is not possible to create a user with an existing email', async ({
     authentication,
     userCreation,
   }) => {
-    const testCredentials = testsConfig.users.testUser;
-    await authentication.login(testCredentials);
+    await authentication.login(testsConfig.users.adminUser);
 
     await userCreation.openUsersManagementPage();
     await expect(userCreation.usersManagementHeading).toBeVisible();
@@ -52,15 +49,14 @@ test.describe('User Creation number flow', () => {
 
     await userCreation.createNewUserButton.click();
     await userCreation.fillUserData();
-    await expect(userCreation.usernameAlreadyUsedToast).toBeVisible();
+    await expect(userCreation.emailAlreadyUsedToast).toBeVisible();
     await expect(userCreation.createUserHeading).toBeVisible();
     await userCreation.modalCloseButton.click();
 
-    await userCreation.deleteUserDuplicatedButton.click();
+    await userCreation.deleteUserButton.click();
     await expect(userCreation.deleteUserHeading).toBeVisible();
     await userCreation.confirmDeleteUserButton.click();
     await expect(userCreation.userSuccessfulyDeletedToast).toBeVisible();
     await expect(userCreation.userCreated).toBeHidden();
-    await expect(userCreation.userUpdated).toBeHidden();
   });
 });

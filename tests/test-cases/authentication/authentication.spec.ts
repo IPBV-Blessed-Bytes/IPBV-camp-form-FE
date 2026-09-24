@@ -12,7 +12,7 @@ test.describe('Authentication flow', () => {
   });
 
   test('Verify if is possible open login page by icon click', async ({ authentication }) => {
-    await authentication.goToHomePage();
+    await authentication.goToEventForm('igreja-teste-alfa');
     await authentication.churchFooterLogo.click();
   });
 

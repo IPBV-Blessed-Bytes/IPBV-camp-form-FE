@@ -8,11 +8,11 @@ export class AvoidBypassComponent {
   readonly checkinPageHeading: Locator;
 
   constructor(readonly page: Page) {
-    this.adminAccess = page.getByRole('heading', { name: 'ACESSO ADMINISTRAÇÃO' });
+    this.adminAccess = page.getByRole('heading', { name: 'Painel Administrativo' });
     this.logOutButon = page.getByRole('button', { name: 'Desconectar' });
     this.dontHavePermission = page.getByText('Você não tem permissão para');
     this.campersPageHeading = page.getByRole('heading', { name: 'Gerenciamento de Inscritos' });
-    this.checkinPageHeading = page.getByRole('heading', { name: 'Check-in de Usuário' });
+    this.checkinPageHeading = page.getByRole('heading', { name: 'Check-in', exact: true });
   }
 
   async goToAllowedPage() {
