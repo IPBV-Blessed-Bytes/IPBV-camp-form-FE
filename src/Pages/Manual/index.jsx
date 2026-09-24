@@ -370,9 +370,14 @@ const DonoDocs = () => (
         </table>
       </div>
       <p>
-        Um <strong>job diário</strong> envia os e-mails de aviso/bloqueio. Hoje a <strong>regularização é manual</strong>{' '}
-        (você muda o estado e a data no painel); a automática (pagamento confirmado reativa a org) entra junto com a
-        cobrança real no PagarMe.
+        Um <strong>job diário</strong> envia os e-mails de aviso/bloqueio. No painel, a seção{' '}
+        <strong>Cobrança &amp; inadimplência</strong> mostra a situação de todas as igrejas (em dia / vencendo / form
+        bloqueado / admin bloqueado) e uma lista de atenção com os dias até o próximo bloqueio.
+      </p>
+      <p>
+        Para reativar uma igreja, use o botão <strong>Regularizar</strong> (1 clique: volta a ativa e avança o
+        vencimento). A regularização <strong>automática</strong> — pagamento confirmado reativa a org via webhook —
+        já tem o endpoint pronto e entra junto com a cobrança real no PagarMe.
       </p>
     </section>
 
