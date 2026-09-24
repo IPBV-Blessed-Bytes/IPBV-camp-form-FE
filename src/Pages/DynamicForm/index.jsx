@@ -137,6 +137,7 @@ const DynamicForm = () => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [boletoInstallments, setBoletoInstallments] = useState(1);
   const [boletoResult, setBoletoResult] = useState(null);
+  const [pixResult, setPixResult] = useState(null);
   const [donation, setDonation] = useState('');
   const [showSimulator, setShowSimulator] = useState(false);
 
@@ -477,6 +478,12 @@ const DynamicForm = () => {
         window.scrollTo(0, 0);
         return;
       }
+      if (result?.pix?.qr_code || result?.pix?.qr_code_url) {
+        clearInscriptionDraft();
+        setPixResult(result.pix);
+        window.scrollTo(0, 0);
+        return;
+      }
       const paymentUrl = result?.payment_url;
       if (!paymentUrl) {
         toast.error('Não foi possível gerar o pagamento. Tente novamente.');
@@ -502,6 +509,7 @@ const DynamicForm = () => {
     setPaymentMethod('');
     setBoletoInstallments(1);
     setBoletoResult(null);
+    setPixResult(null);
     setDonation('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -555,6 +563,62 @@ const DynamicForm = () => {
                 <button className="btn btn-teal-blue" onClick={restart}>
                   Voltar ao início
                 </button>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <Footer handleAdminClick={() => navigate('/admin')} />
+      </div>
+    );
+  }
+
+  if (pixResult) {
+    return (
+      <div className="components-container">
+        <Header />
+        <div className="form__container container">
+          <Row className="justify-content-center">
+            <Col lg={8} className="my-5">
+              <div className="text-center">
+                <h2>Pague com Pix para confirmar</h2>
+                <p className="mt-3">
+                  Escaneie o QR code no app do seu banco ou copie o código Pix abaixo. A confirmação é automática.
+                </p>
+                {pixResult.qr_code_url && (
+                  <img
+                    src={pixResult.qr_code_url}
+                    alt="QR code Pix"
+                    style={{ maxWidth: '260px', width: '100%', margin: '1rem auto', display: 'block' }}
+                  />
+                )}
+                {pixResult.qr_code && (
+                  <div className="d-flex flex-column align-items-center gap-2 mt-3">
+                    <textarea
+                      readOnly
+                      value={pixResult.qr_code}
+                      rows={3}
+                      className="form-control"
+                      style={{ maxWidth: '480px', fontSize: '0.8rem' }}
+                    />
+                    <button
+                      className="btn btn-teal-blue"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(pixResult.qr_code);
+                        toast.success('Código Pix copiado!');
+                      }}
+                    >
+                      Copiar código Pix
+                    </button>
+                  </div>
+                )}
+                <div className="text-center d-flex flex-column align-items-center gap-2 mt-4">
+                  <button className="btn btn-outline-teal-blue" onClick={() => navigate('/minhas-inscricoes')}>
+                    Ver minhas inscrições
+                  </button>
+                  <button className="btn btn-teal-blue" onClick={restart}>
+                    Voltar ao início
+                  </button>
+                </div>
               </div>
             </Col>
           </Row>
