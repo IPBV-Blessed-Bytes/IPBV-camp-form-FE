@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Button, Spinner } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { confirmEmail } from '@/services/auth';
+import Loading from '@/components/Global/Loading';
 
 const ConfirmEmail = () => {
   const navigate = useNavigate();
@@ -27,9 +28,10 @@ const ConfirmEmail = () => {
           <h4 className="mb-4">Confirmação de e-mail</h4>
 
           {status === 'loading' && (
-            <div className="d-flex align-items-center gap-2">
-              <Spinner animation="border" size="sm" /> Confirmando seu e-mail...
-            </div>
+            <>
+              <p className="text-secondary mb-0">Confirmando seu e-mail...</p>
+              <Loading loading />
+            </>
           )}
 
           {status === 'ok' && (
