@@ -41,6 +41,11 @@ export const platformSignup = async (payload) => {
   return data;
 };
 
+export const platformSignupGoogle = async (payload) => {
+  const { data } = await fetcher.post('/platform/signup-google', payload);
+  return data;
+};
+
 export const getPlatformSettings = async () => {
   const { data } = await fetcher.get('/platform/settings');
   return data;

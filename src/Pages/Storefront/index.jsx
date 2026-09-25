@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { platformSignup, getPlatformSettings } from '@/services/platform';
+import { platformSignup, platformSignupGoogle, getPlatformSettings } from '@/services/platform';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
+import GoogleSignInButton from '@/components/Global/GoogleSignInButton';
 import { StoreNav, StoreFooter } from '@/components/Storefront/StorefrontChrome';
 import './style.scss';
 
@@ -82,30 +83,65 @@ const Storefront = () => {
     }
   };
 
+  const handleGoogle = async (credential) => {
+    if (!churchName.trim()) {
+      toast.error('Preencha o nome da igreja antes de continuar com o Google.');
+      return;
+    }
+    if (!slug.trim()) {
+      toast.error('Informe um identificador (slug) antes de continuar com o Google.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await platformSignupGoogle({
+        churchName: churchName.trim(),
+        slug: slug.trim() || undefined,
+        credential,
+        plan: 'free',
+      });
+      setResult({ ...data, churchName: churchName.trim(), google: true });
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível criar o sistema com o Google.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (result) {
+    const confirmed = result.emailVerified || result.google;
     return (
       <div className="storefront">
         <StoreNav />
         <Container className="storefront__success-wrap">
           <div className="storefront__success">
             <span className="storefront__success-badge">
-              <Icons typeIcon="checked" iconSize={40} fill="#057c05" />
+              <Icons typeIcon={confirmed ? 'checked' : 'email'} iconSize={40} fill={confirmed ? '#057c05' : '#0a5f86'} />
             </span>
             <h2>Pronto! O sistema da {result.churchName} foi criado.</h2>
-            <p>
-              Entre com o e-mail <strong>{adminEmail.trim()}</strong> e a senha que você acabou de definir para
-              administrar o seu sistema.
-            </p>
-            <div className="storefront__success-links">
-              <Button variant="teal-blue" size="lg" className="fw-bold" onClick={() => navigate('/admin')}>
-                Acessar o painel administrativo
-              </Button>
-              {result.eventPath && (
-                <a className="btn btn-outline-teal-blue btn-lg" href={result.eventPath}>
-                  Ver a página pública ({result.eventPath})
-                </a>
-              )}
-            </div>
+            {confirmed ? (
+              <>
+                <p>
+                  Entre com o e-mail <strong>{adminEmail.trim() || 'da sua conta Google'}</strong> para administrar o
+                  seu sistema.
+                </p>
+                <div className="storefront__success-links">
+                  <Button variant="teal-blue" size="lg" className="fw-bold" onClick={() => navigate('/admin')}>
+                    Acessar o painel administrativo
+                  </Button>
+                  {result.eventPath && (
+                    <a className="btn btn-outline-teal-blue btn-lg" href={result.eventPath}>
+                      Ver a página pública ({result.eventPath})
+                    </a>
+                  )}
+                </div>
+              </>
+            ) : (
+              <p>
+                Enviamos um e-mail de <strong>confirmação para {adminEmail.trim()}</strong>. Clique no link do e-mail
+                para ativar o acesso — depois é só entrar com o e-mail e a senha que você definiu.
+              </p>
+            )}
           </div>
         </Container>
         <StoreFooter />
@@ -225,6 +261,17 @@ const Storefront = () => {
               <Icons typeIcon="checked" iconSize={15} fill="#057c05" /> Sem taxa pra criar a conta. Você só paga quando
               cria um evento{settings ? ` — ${settings.defaultFeePercent}% por inscrição paga` : ''}.
             </p>
+
+            <div className="storefront__divider">
+              <span>ou</span>
+            </div>
+            <div className="storefront__google">
+              <GoogleSignInButton onCredential={handleGoogle} />
+              <p className="storefront__google-hint">
+                Preencha o nome e o identificador acima e use sua conta Google — sem senha, e o e-mail já entra
+                confirmado.
+              </p>
+            </div>
           </Form>
         </div>
       </Container>
