@@ -7,6 +7,7 @@ import { changePassword } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const EMPTY = { current: '', next: '', confirm: '' };
 
@@ -101,9 +102,7 @@ const ChangePasswordModal = ({ show, onHide }) => {
             <Button variant="outline-secondary" onClick={close} disabled={saving}>
               Cancelar
             </Button>
-            <Button type="submit" variant="teal-blue" className="fw-bold" disabled={saving}>
-              {saving ? 'Salvando...' : 'Alterar senha'}
-            </Button>
+            <SpinnerButton type="submit" variant="teal-blue" className="fw-bold" loading={saving}>Alterar senha</SpinnerButton>
           </div>
         </Form>
       </Modal.Body>

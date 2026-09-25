@@ -7,6 +7,7 @@ import { getPlatformBillingStatus, createPlatformCharge } from '@/services/platf
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const formatBRL = (cents) =>
   ((cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
@@ -217,9 +218,7 @@ const PlatformBillingBanner = ({ canManage }) => {
                 placeholder="(00) 00000-0000"
               />
 
-              <Button type="submit" variant="teal-blue" className="fw-bold mt-3 w-100" disabled={submitting}>
-                {submitting ? 'Gerando...' : 'Gerar cobrança'}
-              </Button>
+              <SpinnerButton type="submit" variant="teal-blue" className="fw-bold mt-3 w-100" loading={submitting}>Gerar cobrança</SpinnerButton>
             </Form>
           )}
         </Modal.Body>

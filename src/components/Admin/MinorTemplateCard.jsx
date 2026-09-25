@@ -11,6 +11,7 @@ import {
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Icons from '@/components/Global/Icons';
 import './MinorTemplateCard.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const MinorTemplateCard = () => {
   const inputRef = useRef(null);
@@ -85,9 +86,9 @@ const MinorTemplateCard = () => {
             Baixar atual
           </a>
         )}
-        <Button size="sm" variant="teal-blue" disabled={busy} onClick={() => inputRef.current?.click()}>
-          {busy ? 'Enviando...' : exists ? 'Substituir' : 'Enviar modelo'}
-        </Button>
+        <SpinnerButton size="sm" variant="teal-blue" loading={busy} onClick={() => inputRef.current?.click()}>
+          {exists ? 'Substituir' : 'Enviar modelo'}
+        </SpinnerButton>
         {!loading && exists && (
           <Button size="sm" variant="outline-danger" disabled={busy} onClick={handleDelete}>
             Remover

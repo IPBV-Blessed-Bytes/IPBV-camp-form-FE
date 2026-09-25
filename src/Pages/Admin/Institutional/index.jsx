@@ -22,6 +22,7 @@ import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -57,9 +58,9 @@ const ImageField = ({ imageId, onChange, label, shape }) => {
       </div>
       <div className="inst-admin-image__actions">
         <input ref={inputRef} type="file" accept="image/*" hidden onChange={handleFile} />
-        <Button variant="outline-teal-blue" size="sm" disabled={busy} onClick={() => inputRef.current?.click()}>
-          {busy ? 'Enviando...' : imageId ? 'Trocar imagem' : 'Enviar imagem'}
-        </Button>
+        <SpinnerButton variant="outline-teal-blue" size="sm" loading={busy} onClick={() => inputRef.current?.click()}>
+          {imageId ? 'Trocar imagem' : 'Enviar imagem'}
+        </SpinnerButton>
         {imageId && (
           <Button variant="outline-danger" size="sm" onClick={() => onChange(null)}>
             Remover

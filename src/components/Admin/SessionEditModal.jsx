@@ -7,6 +7,7 @@ import Icons from '@/components/Global/Icons';
 import { updateAdminSession } from '@/services/adminSessions';
 import { iconsOptions } from '@/utils/constants';
 import { fallbackTitle, fallbackDescription, defaultIconFor } from '@/config/adminSessions';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const DEFAULT_COLOR = '#007185';
 
@@ -59,9 +60,7 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
           <Button variant="secondary" onClick={onHide}>
             Cancelar
           </Button>
-          <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
-            {saving ? 'Salvando...' : 'Salvar'}
-          </Button>
+          <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
         </>
       }
     >

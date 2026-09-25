@@ -18,6 +18,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const SELECTION_RULES = [
   { value: 'single', label: 'Escolher uma' },
@@ -334,9 +335,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={save} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={save} loading={saving}>Salvar</SpinnerButton>
           </>
         }
       >
@@ -392,9 +391,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={confirmDelete} disabled={saving}>
-              {saving ? 'Excluindo...' : 'Excluir'}
-            </Button>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
           </>
         }
       >

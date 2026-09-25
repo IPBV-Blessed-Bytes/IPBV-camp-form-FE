@@ -10,6 +10,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const AdminBackup = ({ loggedUsername }) => {
   const [downloading, setDownloading] = useState(false);
@@ -159,9 +160,7 @@ const AdminBackup = ({ loggedUsername }) => {
               </span>
               <Card.Title>Baixar backup</Card.Title>
               <Card.Text className="text-secondary">Gera e baixa o arquivo JSON agora, no seu dispositivo.</Card.Text>
-              <Button variant="teal-blue" onClick={handleDownload} disabled={downloading}>
-                {downloading ? 'Gerando...' : 'Baixar backup (JSON)'}
-              </Button>
+              <SpinnerButton variant="teal-blue" onClick={handleDownload} loading={downloading}>Baixar backup (JSON)</SpinnerButton>
             </Card.Body>
           </Card>
 
@@ -172,9 +171,7 @@ const AdminBackup = ({ loggedUsername }) => {
               </span>
               <Card.Title>Enviar por e-mail</Card.Title>
               <Card.Text className="text-secondary">Envia o backup em anexo para o seu e-mail de administrador.</Card.Text>
-              <Button variant="outline-teal-blue" onClick={handleEmail} disabled={emailing}>
-                {emailing ? 'Enviando...' : 'Enviar para meu e-mail'}
-              </Button>
+              <SpinnerButton variant="outline-teal-blue" onClick={handleEmail} loading={emailing}>Enviar para meu e-mail</SpinnerButton>
             </Card.Body>
           </Card>
         </div>
@@ -213,9 +210,7 @@ const AdminBackup = ({ loggedUsername }) => {
                 Último backup automático: {String(config.lastBackupAt).slice(0, 16).replace('T', ' ')}
               </p>
             )}
-            <Button variant="teal-blue" onClick={handleSaveConfig} disabled={savingConfig}>
-              {savingConfig ? 'Salvando...' : 'Salvar agendamento'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSaveConfig} loading={savingConfig}>Salvar agendamento</SpinnerButton>
           </Card.Body>
         </Card>
 

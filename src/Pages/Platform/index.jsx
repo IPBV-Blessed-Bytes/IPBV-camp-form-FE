@@ -45,6 +45,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const PLAN_OPTIONS = [
   { value: 'free', label: 'Grátis' },
@@ -1053,9 +1054,7 @@ const Platform = () => {
           </Row>
 
           <div className="platform__pricing-actions">
-            <Button variant="teal-blue" onClick={handleSavePricing} disabled={savingPricing}>
-              {savingPricing ? 'Salvando...' : 'Salvar preços'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSavePricing} loading={savingPricing}>Salvar preços</SpinnerButton>
           </div>
         </section>
           )}
@@ -1287,9 +1286,7 @@ const Platform = () => {
               </Col>
             </Row>
             <div className="platform__pricing-actions">
-              <Button variant="teal-blue" onClick={handleSendBroadcast} disabled={sendingBroadcast}>
-                {sendingBroadcast ? 'Enviando...' : 'Enviar comunicado'}
-              </Button>
+              <SpinnerButton variant="teal-blue" onClick={handleSendBroadcast} loading={sendingBroadcast}>Enviar comunicado</SpinnerButton>
             </div>
           </section>
           )}
@@ -1331,9 +1328,7 @@ const Platform = () => {
                 </Form.Group>
               </Col>
               <Col xs={12} md={3}>
-                <Button variant="teal-blue" className="w-100" onClick={handleGrantAccess} disabled={savingGrant}>
-                  {savingGrant ? 'Concedendo...' : 'Conceder acesso'}
-                </Button>
+                <SpinnerButton variant="teal-blue" className="w-100" onClick={handleGrantAccess} loading={savingGrant}>Conceder acesso</SpinnerButton>
               </Col>
             </Row>
 
@@ -1472,9 +1467,7 @@ const Platform = () => {
 
             <div className="platform__pricing-tier-title">Backup / exportação</div>
             <p className="platform__pricing-subtitle">Baixe um CSV com todos os clientes (nome, plano, cobrança, eventos).</p>
-            <Button variant="teal-blue" onClick={handleExport} disabled={exporting}>
-              {exporting ? 'Exportando...' : 'Exportar clientes (CSV)'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleExport} loading={exporting}>Exportar clientes (CSV)</SpinnerButton>
           </section>
           )}
 
@@ -1520,9 +1513,7 @@ const Platform = () => {
             </Form.Group>
 
             <div className="platform__pricing-actions">
-              <Button variant="teal-blue" onClick={handleSaveSystemStage} disabled={savingSys}>
-                {savingSys ? 'Salvando...' : 'Aplicar estágio'}
-              </Button>
+              <SpinnerButton variant="teal-blue" onClick={handleSaveSystemStage} loading={savingSys}>Aplicar estágio</SpinnerButton>
             </div>
           </section>
           )}
@@ -1540,9 +1531,7 @@ const Platform = () => {
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
           </>
         }
       >
@@ -1771,9 +1760,7 @@ const Platform = () => {
             <Button variant="outline-secondary" onClick={() => setShowFaqModal(false)} disabled={savingFaq}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSaveFaq} disabled={savingFaq}>
-              {savingFaq ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSaveFaq} loading={savingFaq}>Salvar</SpinnerButton>
           </>
         }
       >
@@ -1835,9 +1822,7 @@ const Platform = () => {
             <Button variant="outline-secondary" onClick={() => setShowRoleModal(false)} disabled={savingRole}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSaveRole} disabled={savingRole}>
-              {savingRole ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSaveRole} loading={savingRole}>Salvar</SpinnerButton>
           </>
         }
       >

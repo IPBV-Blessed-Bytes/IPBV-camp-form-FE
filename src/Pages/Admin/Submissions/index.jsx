@@ -17,6 +17,7 @@ import RefundModal from '@/components/Admin/RefundModal';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const PAYMENT_STATUS = [
   { value: 'pending', label: 'Pendente', bg: 'warning', text: 'dark' },
@@ -392,9 +393,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setEditing(null)} disabled={busy}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSave} disabled={busy}>
-              {busy ? 'Salvando…' : 'Salvar alterações'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={busy}>Salvar alterações</SpinnerButton>
           </>
         }
       >
@@ -459,9 +458,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
             <Button variant="secondary" onClick={() => setToDelete(null)} disabled={busy}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete} disabled={busy}>
-              {busy ? 'Excluindo…' : 'Excluir'}
-            </Button>
+            <SpinnerButton variant="danger" onClick={handleDelete} loading={busy}>Excluir</SpinnerButton>
           </>
         }
       >

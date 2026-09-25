@@ -24,6 +24,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const EMPTY_EVENT = {
   id: null,
@@ -411,9 +412,7 @@ const AdminEvents = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setShowFormModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
           </>
         }
       >
@@ -841,9 +840,7 @@ const AdminEvents = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete} disabled={saving}>
-              {saving ? 'Excluindo...' : 'Excluir'}
-            </Button>
+            <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>Excluir</SpinnerButton>
           </>
         }
       >

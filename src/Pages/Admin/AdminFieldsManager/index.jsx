@@ -13,6 +13,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const FIELD_TYPES = [
   { value: 'text', label: 'Texto' },
@@ -206,9 +207,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="teal-blue" onClick={handleSave} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar'}
-            </Button>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
           </>
         }
       >
@@ -266,9 +265,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={confirmDelete} disabled={saving}>
-              {saving ? 'Excluindo...' : 'Excluir'}
-            </Button>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
           </>
         }
       >

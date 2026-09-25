@@ -47,6 +47,7 @@ import '@/Pages/Home/style.scss';
 import '@/components/Style/Cart.scss';
 import '@/Pages/BeforePayment/style.scss';
 import '@/form/dynamic/dynamicFields.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const STROKE_ICONS = ['roles', 'phone', 'visible-password'];
 const iconColorProps = (icon, color) =>
@@ -984,9 +985,7 @@ const DynamicForm = () => {
                     <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
                       Voltar
                     </Button>
-                    <Button variant="warning" size="lg" onClick={handlePayment} disabled={submitting}>
-                      {submitting ? 'Gerando pagamento...' : 'Avançar'}
-                    </Button>
+                    <SpinnerButton variant="warning" size="lg" onClick={handlePayment} loading={submitting}>Avançar</SpinnerButton>
                   </>
                 }
               >

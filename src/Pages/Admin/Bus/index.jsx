@@ -15,6 +15,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
 import useCampersData from '../Campers/hooks/useCampersData';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const BUS_TRANSPORTATIONS = ['Com Ônibus', 'Com Onibus', 'Ônibus Equipe', 'Onibus Equipe'];
 
@@ -222,9 +223,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
               <Button variant="secondary" onClick={() => setShowEditModal(false)} disabled={saving}>
                 Cancelar
               </Button>
-              <Button variant="confirm" onClick={handleSave} disabled={saving}>
-                {saving ? 'Salvando…' : 'Salvar alterações'}
-              </Button>
+              <SpinnerButton variant="confirm" onClick={handleSave} loading={saving}>Salvar alterações</SpinnerButton>
             </>
           }
         >

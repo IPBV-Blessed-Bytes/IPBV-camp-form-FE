@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -11,6 +11,7 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const EMPTY = {
   name: '',
@@ -254,9 +255,9 @@ const AdminRecebimento = ({ loggedUsername }) => {
               </Row>
 
               <div className="recebimento__actions">
-                <Button type="submit" variant="teal-blue" disabled={saving} className="fw-bold">
-                  {saving ? 'Enviando...' : 'Configurar recebimento'}
-                </Button>
+                <SpinnerButton type="submit" variant="teal-blue" className="fw-bold" loading={saving}>
+                  Configurar recebimento
+                </SpinnerButton>
               </div>
             </Form>
           </>

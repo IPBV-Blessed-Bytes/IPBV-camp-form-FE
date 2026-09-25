@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +9,7 @@ import { getPlatformMe } from '@/services/platform';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const OwnerLogin = () => {
   const navigate = useNavigate();
@@ -84,9 +85,9 @@ const OwnerLogin = () => {
                 </button>
               </div>
             </Form.Group>
-            <Button type="submit" variant="teal-blue" className="fw-bold w-100 mt-4" disabled={loading || checking}>
-              {checking ? 'Verificando...' : 'Entrar'}
-            </Button>
+            <SpinnerButton type="submit" variant="teal-blue" className="fw-bold w-100 mt-4" loading={loading || checking}>
+              Entrar
+            </SpinnerButton>
           </Form>
         </div>
       </Container>
