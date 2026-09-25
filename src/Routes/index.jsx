@@ -533,6 +533,7 @@ const FormRoutes = () => {
 
             <Route path="/" element={<Landing />} />
             <Route path="/catalogo" element={<EventCatalog />} />
+            <Route path="/o/:orgSlug" element={<EventCatalog />} />
 
             <Route path="/painel-interno" element={<OwnerLogin />} />
             <Route path="/platform" element={<Platform />} />

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -11,7 +11,8 @@ import PlatformBillingBanner from '@/components/Admin/PlatformBillingBanner';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
-import { getEventSlug } from '@/config/eventScope';
+import { getEventSlug, setSelectedEvent } from '@/config/eventScope';
+import { listMyEvents } from '@/services/events';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -84,6 +85,7 @@ const AdminLoggedIn = ({
   const [loading, setLoading] = useState(true);
   const [tier, setTier] = useState('completo');
   const [needsRecebimento, setNeedsRecebimento] = useState(false);
+  const [myEvents, setMyEvents] = useState([]);
   const [editingSession, setEditingSession] = useState(null);
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
@@ -120,6 +122,18 @@ const AdminLoggedIn = ({
       .then(setTier)
       .catch(() => setTier('completo'));
   }, []);
+
+  useEffect(() => {
+    if (getEventSlug()) return;
+    listMyEvents()
+      .then((list) => setMyEvents(Array.isArray(list) ? list : []))
+      .catch(() => setMyEvents([]));
+  }, []);
+
+  const chooseEvent = (slug) => {
+    setSelectedEvent(slug);
+    window.location.assign(routePrefix);
+  };
 
   useEffect(() => {
     if (!settingsButtonPermissions) {
@@ -396,12 +410,43 @@ const AdminLoggedIn = ({
 
       {!getEventSlug() ? (
         <div className="admin-home__content">
-          <div className="admin-home__no-event">
-            <h4>Selecione um evento</h4>
-            <p>
-              Escolha um evento no seletor <b>Evento</b> no topo para administrá-lo. As telas por evento (inscrições,
-              quartos, formulário, backup, etc.) precisam de um evento selecionado.
-            </p>
+          <div className="admin-home__events">
+            <div className="admin-home__events-head">
+              <h4>Meus eventos</h4>
+              <p>Escolha um evento para administrá-lo ou crie um novo.</p>
+            </div>
+            <Row className="gx-3 gy-3">
+              {myEvents.map((event) => (
+                <Col key={event.slug} xs={12} sm={6} lg={4}>
+                  <button
+                    type="button"
+                    className="admin-home__event-card"
+                    style={{ '--card-accent': event.color || '#007185' }}
+                    onClick={() => chooseEvent(event.slug)}
+                  >
+                    <span className="admin-home__event-initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
+                    {event.year && <span className="admin-home__event-year">{event.year}</span>}
+                    <span className="admin-home__event-name">{event.name}</span>
+                    <span className="admin-home__event-cta">Administrar →</span>
+                  </button>
+                </Col>
+              ))}
+              <Col xs={12} sm={6} lg={4}>
+                <button
+                  type="button"
+                  className="admin-home__event-card admin-home__event-card--new"
+                  onClick={() => navigate(`${routePrefix}/eventos`)}
+                >
+                  <span className="admin-home__event-plus">+</span>
+                  <span className="admin-home__event-name">Criar novo evento</span>
+                </button>
+              </Col>
+            </Row>
+            {myEvents.length === 0 && (
+              <p className="admin-home__events-empty">
+                Você ainda não tem eventos. Clique em <b>Criar novo evento</b> para começar.
+              </p>
+            )}
           </div>
         </div>
       ) : (

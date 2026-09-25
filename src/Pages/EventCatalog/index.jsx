@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { listEvents, eventImageUrl } from '@/services/events';
+import { listEvents, getOrganizationCatalog, eventImageUrl } from '@/services/events';
 import { eventPath, setSelectedEvent } from '@/config/eventScope';
 import Loading from '@/components/Global/Loading';
 import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
@@ -27,17 +28,30 @@ const EventCardImage = ({ id, alt }) => {
   );
 };
 
+EventCardImage.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  alt: PropTypes.string,
+};
+
 const EventCatalog = () => {
   const navigate = useNavigate();
+  const { orgSlug } = useParams();
   const [events, setEvents] = useState([]);
+  const [orgName, setOrgName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const data = await listEvents();
-        setEvents(Array.isArray(data) ? data : []);
+        if (orgSlug) {
+          const { organization, events: list } = await getOrganizationCatalog(orgSlug);
+          setOrgName(organization?.name || '');
+          setEvents(Array.isArray(list) ? list : []);
+        } else {
+          const data = await listEvents();
+          setEvents(Array.isArray(data) ? data : []);
+        }
       } catch {
         setError(true);
       } finally {
@@ -46,7 +60,11 @@ const EventCatalog = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [orgSlug]);
+
+  useEffect(() => {
+    document.title = orgName ? `Eventos · ${orgName}` : 'Escolha seu evento';
+  }, [orgName]);
 
   if (loading) return <Loading loading />;
 
@@ -55,7 +73,7 @@ const EventCatalog = () => {
       <Container>
         <div className="event-catalog__hero">
           <span className="event-catalog__eyebrow">Inscrições abertas</span>
-          <h1 className="event-catalog__title">Escolha seu Evento</h1>
+          <h1 className="event-catalog__title">{orgName || 'Escolha seu Evento'}</h1>
           <p className="event-catalog__subtitle">Selecione um evento abaixo para iniciar sua inscrição</p>
         </div>
 

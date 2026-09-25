@@ -14,6 +14,11 @@ export const listMyEvents = async () => {
   return data?.events || [];
 };
 
+export const getOrganizationCatalog = async (orgSlug) => {
+  const { data } = await fetcher.get(`/organizations/${orgSlug}/events`);
+  return { organization: data?.organization || null, events: data?.events || [] };
+};
+
 export const getEvent = async (slug) => {
   const { data } = await fetcher.get(`/events/${slug}`);
   return data;
