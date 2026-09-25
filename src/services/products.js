@@ -1,5 +1,23 @@
 import fetcher from '@/fetchers';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
+import { BASE_URL } from '@/config';
+import { eventPath } from '@/config/eventScope';
+
+export const productImageUrl = (id) => (id ? `${BASE_URL}${eventPath(`/products/${id}/image`)}` : '');
+
+export const uploadProductImage = async (id, file) => {
+  const form = new FormData();
+  form.append('file', file);
+  const { data } = await authFetcher.post(`/products/${id}/image`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+};
+
+export const deleteProductImage = async (id) => {
+  const { data } = await authFetcher.delete(`/products/${id}/image`);
+  return data;
+};
 
 export const getProducts = async () => {
   const { data } = await fetcher.get('/products');

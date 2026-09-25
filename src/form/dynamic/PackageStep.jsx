@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
+import { productImageUrl } from '@/services/products';
 import { productPrice, packageTotal, formatPrice, ruleForProduct, discountLabel } from './packagePricing';
 import '@/components/Style/ProductList.scss';
 import './PackageStep.scss';
@@ -55,11 +56,21 @@ const PackageStep = ({ categories, products, rules, age, lotName, registrationFe
                       return (
                         <div
                           key={product.id}
-                          className={`product-card ${alreadySelected ? 'product-card-is-active' : ''}`}
+                          className={`product-card ${product.hasImage ? 'product-card--has-image' : ''} ${alreadySelected ? 'product-card-is-active' : ''}`}
                         >
-                          <div className="align-items-center mb-4">
+                          {product.hasImage && (
+                            <div className="product-card__image">
+                              <img src={productImageUrl(product.id)} alt={product.name} />
+                            </div>
+                          )}
+                          <div className="align-items-center mb-2">
                             <h3 className="product-title">{product.name}</h3>
                           </div>
+                          {!product.hasImage && product.iconKey && (
+                            <div className="product-card__icon">
+                              <Icons typeIcon={product.iconKey} iconSize={40} fill="#007185" />
+                            </div>
+                          )}
                           <p className="product-price mb-2">{formatPrice(price)}</p>
                           {rule && price < Number(product.price || 0) && (
                             <p className="discount-description small mb-2">

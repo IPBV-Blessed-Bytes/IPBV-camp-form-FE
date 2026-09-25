@@ -4,7 +4,16 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
-import { getAllProducts, createProduct, updateProduct, deleteProduct, setLotProductPrice } from '@/services/products';
+import {
+  getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  setLotProductPrice,
+  uploadProductImage,
+  deleteProductImage,
+  productImageUrl,
+} from '@/services/products';
 import { listAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
 import { listPackageCategories } from '@/services/packageCategories';
@@ -14,6 +23,7 @@ import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
+import Icons from '@/components/Global/Icons';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
@@ -21,11 +31,47 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
-const emptyForm = { name: '', description: '', packageCategoryId: '', active: true };
+const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '' };
+
+const PRODUCT_ICONS = [
+  'cart', 'tent', 'camp', 'food', 'bus', 'ride', 'bible', 'music', 'wristband',
+  'camera', 'couple', 'family', 'man', 'woman', 'world', 'dart', 'reunion', 'barcode',
+];
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [imageBusy, setImageBusy] = useState(false);
+
+  const handleImageUpload = async (file) => {
+    if (!file || !editingProduct) return;
+    setImageBusy(true);
+    try {
+      await uploadProductImage(editingProduct.id, file);
+      toast.success('Imagem enviada.');
+      setEditingProduct((prev) => ({ ...prev, hasImage: true }));
+      await fetchAll(true);
+    } catch {
+      toast.error('Não foi possível enviar a imagem.');
+    } finally {
+      setImageBusy(false);
+    }
+  };
+
+  const handleImageRemove = async () => {
+    if (!editingProduct) return;
+    setImageBusy(true);
+    try {
+      await deleteProductImage(editingProduct.id);
+      toast.success('Imagem removida.');
+      setEditingProduct((prev) => ({ ...prev, hasImage: false }));
+      await fetchAll(true);
+    } catch {
+      toast.error('Não foi possível remover a imagem.');
+    } finally {
+      setImageBusy(false);
+    }
+  };
   const [products, setProducts] = useState([]);
   const [lots, setLots] = useState([]);
   const [packageCategories, setPackageCategories] = useState([]);
@@ -153,6 +199,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       description: product.description || '',
       packageCategoryId: product.packageCategoryId ?? '',
       active: product.active,
+      iconKey: product.iconKey || '',
     });
     const initial = {};
     lots.forEach((lot) => {
@@ -187,6 +234,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     description: formData.description,
     packageCategoryId: Number(formData.packageCategoryId),
     active: formData.active,
+    iconKey: formData.iconKey || '',
   });
 
   const saveLotPrices = async (productId) => {
@@ -518,6 +566,75 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               {packageCategories.length === 0 && (
                 <Form.Text className="text-muted">
                   Nenhuma categoria criada. Crie categorias na tela de Pacote do evento.
+                </Form.Text>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mt-3">
+              <Form.Label>
+                <b>Ícone do card (opcional):</b>
+              </Form.Label>
+              <div className="product-icon-picker">
+                <button
+                  type="button"
+                  className={`product-icon-picker__item ${!formData.iconKey ? 'is-active' : ''}`}
+                  onClick={() => setFormData({ ...formData, iconKey: '' })}
+                  title="Nenhum"
+                >
+                  —
+                </button>
+                {PRODUCT_ICONS.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`product-icon-picker__item ${formData.iconKey === key ? 'is-active' : ''}`}
+                    onClick={() => setFormData({ ...formData, iconKey: key })}
+                    title={key}
+                  >
+                    <Icons typeIcon={key} iconSize={22} fill={formData.iconKey === key ? '#007185' : '#555050'} />
+                  </button>
+                ))}
+              </div>
+              <Form.Text className="text-muted">
+                O ícone aparece abaixo do título, centralizado. Ideal quando não há imagem.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mt-3">
+              <Form.Label>
+                <b>Imagem do card (opcional):</b>
+              </Form.Label>
+              {editingProduct ? (
+                <div className="product-image-upload">
+                  {editingProduct.hasImage && (
+                    <img
+                      className="product-image-upload__preview"
+                      src={`${productImageUrl(editingProduct.id)}?t=${Date.now()}`}
+                      alt="Imagem do produto"
+                    />
+                  )}
+                  <div className="product-image-upload__actions">
+                    <label className="btn btn-outline-teal-blue btn-sm mb-0">
+                      {imageBusy ? 'Enviando...' : editingProduct.hasImage ? 'Trocar imagem' : 'Enviar imagem'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        disabled={imageBusy}
+                        onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
+                      />
+                    </label>
+                    {editingProduct.hasImage && (
+                      <Button size="sm" variant="outline-danger" disabled={imageBusy} onClick={handleImageRemove}>
+                        Remover
+                      </Button>
+                    )}
+                  </div>
+                  <Form.Text className="text-muted">A imagem aparece no topo do card (ideal p/ itens de loja).</Form.Text>
+                </div>
+              ) : (
+                <Form.Text className="text-muted d-block">
+                  Salve o produto primeiro para poder enviar uma imagem.
                 </Form.Text>
               )}
             </Form.Group>
