@@ -257,6 +257,15 @@
     margin: 0;
   }
 
+  &__pricing {
+    .form-label {
+      min-height: 2.6em;
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 0.4rem;
+    }
+  }
+
   &__pricing-tier-title {
     margin: 1.5rem 0 0.75rem;
     font-weight: 700;

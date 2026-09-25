@@ -485,7 +485,7 @@ const Platform = () => {
               </p>
             </div>
           </div>
-          <Row className="g-3 align-items-end">
+          <Row className="g-3 align-items-start">
             <Col xs={12} md={4}>
               <Form.Group>
                 <Form.Label>
@@ -532,7 +532,7 @@ const Platform = () => {
           </Row>
 
           <p className="platform__pricing-tier-title">Plano Essencial (form + inscritos)</p>
-          <Row className="g-3 align-items-end">
+          <Row className="g-3 align-items-start">
             <Col xs={12} md={4}>
               <Form.Group>
                 <Form.Label>
