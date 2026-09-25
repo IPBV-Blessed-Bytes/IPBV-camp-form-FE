@@ -626,8 +626,15 @@
     padding-bottom: 1.75rem;
   }
 
-  &__brand--footer {
-    color: $white;
+  &__footer-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     position: absolute;
     left: var(--bs-gutter-x, 0.75rem);
     top: 50%;
@@ -663,7 +670,7 @@
   }
 
   @media (max-width: $md) {
-    &__brand--footer {
+    &__footer-mark {
       position: static;
       transform: none;
     }

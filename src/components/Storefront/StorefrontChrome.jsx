@@ -34,11 +34,8 @@ export const StoreFooter = () => {
   return (
     <footer className="storefront__footer">
       <Container className="storefront__footer-inner">
-        <span className="storefront__brand storefront__brand--footer">
-          <span className="storefront__brand-mark">
-            <Icons typeIcon="tent" iconSize={18} fill="#ffffff" />
-          </span>
-          Plataforma de Inscrições
+        <span className="storefront__footer-mark">
+          <Icons typeIcon="tent" iconSize={26} fill="#ffffff" />
         </span>
 
         <div className="storefront__footer-credits">
