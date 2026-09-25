@@ -29,16 +29,37 @@ StoreNav.propTypes = {
   onLanding: PropTypes.bool,
 };
 
-export const StoreFooter = () => (
-  <footer className="storefront__footer">
-    <Container className="storefront__footer-inner">
-      <span className="storefront__brand storefront__brand--footer">
-        <span className="storefront__brand-mark">
-          <Icons typeIcon="tent" iconSize={18} fill="#ffffff" />
+export const StoreFooter = () => {
+  const currentYear = new Date().getFullYear();
+  return (
+    <footer className="storefront__footer">
+      <Container className="storefront__footer-inner">
+        <span className="storefront__brand storefront__brand--footer">
+          <span className="storefront__brand-mark">
+            <Icons typeIcon="tent" iconSize={18} fill="#ffffff" />
+          </span>
+          Plataforma de Inscrições
         </span>
-        Plataforma de Inscrições
-      </span>
-      <span className="storefront__footer-note">Inscrições, pagamentos e gestão para eventos da sua igreja.</span>
-    </Container>
-  </footer>
-);
+
+        <div className="storefront__footer-credits">
+          <p className="storefront__footer-powered">
+            <a
+              href="https://wa.me/5581993727854?text=Ol%C3%A1!%20Queria%20informa%C3%A7%C3%B5es%20acerca%20do%20sistema%20de%20inscri%C3%A7%C3%B5es%20feito%20pelo%20Blessed%20Bytes%20Team."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Powered by Blessed Bytes Team
+            </a>
+            <span className="storefront__footer-sep"> • </span>
+            <em>
+              <b>1 Coríntios 15:58</b>
+            </em>
+          </p>
+          <p className="storefront__footer-copyright">
+            © {currentYear} Plataforma de Inscrições • Todos os direitos reservados
+          </p>
+        </div>
+      </Container>
+    </footer>
+  );
+};
