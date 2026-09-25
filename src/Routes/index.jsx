@@ -80,6 +80,7 @@ const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
 const Platform = lazy(() => import('@/Pages/Platform'));
+const OwnerLogin = lazy(() => import('@/Pages/OwnerLogin'));
 const Storefront = lazy(() => import('@/Pages/Storefront'));
 const Unavailable = lazy(() => import('@/Pages/Unavailable'));
 
@@ -533,6 +534,7 @@ const FormRoutes = () => {
             <Route path="/" element={<Landing />} />
             <Route path="/catalogo" element={<EventCatalog />} />
 
+            <Route path="/painel-interno" element={<OwnerLogin />} />
             <Route path="/platform" element={<Platform />} />
             <Route path="/comprar" element={<Storefront />} />
             <Route path="/ajuda" element={<AdminManual publicMode />} />

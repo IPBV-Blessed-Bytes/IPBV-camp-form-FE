@@ -27,7 +27,7 @@ export const StoreNav = ({ onLanding }) => {
             <div className="storefront__nav-account">
               {firstName && <span className="storefront__nav-hi">Olá, {firstName}</span>}
               <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
-                Meu painel
+                Meu Painel
               </button>
             </div>
           ) : (

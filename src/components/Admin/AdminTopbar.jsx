@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
 import { eventPath, getEventSlug, setSelectedEvent } from '@/config/eventScope';
-import { listEvents } from '@/services/events';
-import { getPlatformMe } from '@/services/platform';
+import { listMyEvents } from '@/services/events';
 
 const getInitials = (name) => {
   if (!name) return '?';
@@ -21,7 +20,6 @@ const AdminTopbar = ({ username, logout }) => {
   const navigate = useNavigate();
 
   const [events, setEvents] = useState([]);
-  const [isOwner, setIsOwner] = useState(false);
   const currentSlug = getEventSlug();
 
   useEffect(() => {
@@ -35,15 +33,9 @@ const AdminTopbar = ({ username, logout }) => {
   }, []);
 
   useEffect(() => {
-    listEvents()
+    listMyEvents()
       .then((list) => setEvents(Array.isArray(list) ? list : list?.events || []))
       .catch(() => setEvents([]));
-  }, []);
-
-  useEffect(() => {
-    getPlatformMe()
-      .then((data) => setIsOwner(Boolean(data?.owner)))
-      .catch(() => setIsOwner(false));
   }, []);
 
   const handleEventChange = (slug) => {
@@ -109,19 +101,6 @@ const AdminTopbar = ({ username, logout }) => {
               <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
               <span>Voltar ao formulário</span>
             </button>
-            {isOwner && (
-              <button
-                type="button"
-                className="admin-topbar__menu-item"
-                onClick={() => {
-                  setOpen(false);
-                  navigate('/platform');
-                }}
-              >
-                <Icons typeIcon="settings" iconSize={18} fill="#555050" />
-                <span>Painel da Plataforma</span>
-              </button>
-            )}
             <button
               type="button"
               className="admin-topbar__menu-item"

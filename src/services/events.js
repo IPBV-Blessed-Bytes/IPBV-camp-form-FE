@@ -9,6 +9,11 @@ export const listEvents = async () => {
   return data?.events || [];
 };
 
+export const listMyEvents = async () => {
+  const { data } = await authFetcher.get('/events/mine');
+  return data?.events || [];
+};
+
 export const getEvent = async (slug) => {
   const { data } = await fetcher.get(`/events/${slug}`);
   return data;
