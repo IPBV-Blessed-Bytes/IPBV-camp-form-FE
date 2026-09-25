@@ -182,9 +182,13 @@ const Landing = () => {
             </Col>
           </Row>
           <p className="storefront__plans-footnote">
-            <Icons typeIcon="simple-info" iconSize={20} fill="#7f7878" /> O teste grátis de 14 dias vale só para{' '}
-            <b>eventos gratuitos</b>. <b>Eventos pagos já cobram os 5%</b> por inscrição desde a primeira venda, mesmo
-            durante o teste.
+            <div className="d-flex align-items-center gap-2">
+              <Icons typeIcon="simple-info" iconSize={100} fill="#7f7878" />
+              <div className="storefront__plans-footnote__content">
+                O teste grátis de 14 dias vale só para <b>eventos gratuitos</b>. <b>Eventos pagos já cobram os 5%</b>{' '}
+                por inscrição desde a primeira venda, mesmo durante o teste.
+              </div>
+            </div>
           </p>
         </section>
 
