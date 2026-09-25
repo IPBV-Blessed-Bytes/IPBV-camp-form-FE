@@ -274,19 +274,16 @@
   }
 
   &__plans-footnote {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.4rem;
-    justify-content: center;
     text-align: center;
     color: $alternate-dark-gray;
     font-size: 0.85rem;
-    margin: 1.5rem auto 0;
-    max-width: 640px;
+    line-height: 1.5;
+    margin: 1.75rem auto 0;
+    max-width: 620px;
 
     svg {
-      flex-shrink: 0;
-      margin-top: 2px;
+      vertical-align: middle;
+      margin-right: 0.35rem;
     }
   }
 
