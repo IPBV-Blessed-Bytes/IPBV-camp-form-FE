@@ -46,13 +46,20 @@ StoreNav.propTypes = {
 };
 
 export const StoreFooter = () => {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   return (
     <footer className="storefront__footer">
       <Container className="storefront__footer-inner">
-        <span className="storefront__footer-mark">
+        <button
+          type="button"
+          className="storefront__footer-mark"
+          onClick={() => navigate('/painel-interno')}
+          aria-label="Painel interno"
+          title="Painel interno"
+        >
           <Icons typeIcon="tent" iconSize={26} fill="#ffffff" />
-        </span>
+        </button>
 
         <div className="storefront__footer-credits">
           <p className="storefront__footer-powered">
