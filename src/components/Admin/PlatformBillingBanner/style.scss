@@ -1,0 +1,111 @@
+@use '../../../styles/Variables.scss' as *;
+
+.platform-billing {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 10px;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &--info {
+    background: $newborn-blue;
+    border: 1px solid #bcdcf0;
+    border-left: 5px solid $primary;
+  }
+
+  &--warn {
+    background: #fff6e5;
+    border: 1px solid #f0c98a;
+    border-left: 5px solid #e0a800;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+
+    strong {
+      color: $dark-gray;
+    }
+
+    span {
+      color: $alternate-dark-gray;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__btn {
+    flex-shrink: 0;
+  }
+
+  &__plans {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  &__plan {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.85rem;
+    border: 2px solid $alternate-light-gray;
+    border-radius: 12px;
+    background: $white;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &.is-active {
+      border-color: $primary;
+      background: $newborn-blue;
+    }
+  }
+
+  &__plan-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: $primary;
+  }
+
+  &__plan-name {
+    font-size: 0.82rem;
+    color: $alternate-dark-gray;
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  &__result-note {
+    font-size: 0.9rem;
+    color: $alternate-dark-gray;
+    margin: 0;
+  }
+
+  &__pix img {
+    width: 210px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .platform-billing {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .platform-billing__btn {
+    align-self: stretch;
+  }
+}

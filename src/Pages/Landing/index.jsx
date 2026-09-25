@@ -65,8 +65,8 @@ const Landing = () => {
           <span className="storefront__eyebrow">Feito para igrejas e ministérios</span>
           <h1 className="storefront__hero-title">Crie o sistema de inscrições da sua igreja em minutos</h1>
           <p className="storefront__hero-subtitle">
-            Formulário personalizado, pagamentos online e gestão completa de acampamentos, retiros e eventos — tudo em
-            um só lugar.
+            Formulário personalizado, pagamentos online e gestão completa de acampamentos, retiros, congressos e eventos
+            — tudo em um só lugar.
           </p>
           <div className="storefront__hero-actions">
             <button type="button" className="storefront__hero-cta" onClick={goToSignup}>
@@ -105,7 +105,8 @@ const Landing = () => {
           <div className="storefront__section-head">
             <h2 className="storefront__section-title">Preços simples, sem mensalidade</h2>
             <p className="storefront__plans-lede">
-              Criar a conta é grátis. Você só paga quando cria um evento — e no evento pago, só sobre o que vende.
+              Criar a conta é grátis. Você só paga quando cria um evento — e no evento pago, só sobre o que vende. Você
+              recebe o dinheiro arrecadado direto na sua conta bancária cadastrada.
             </p>
           </div>
           <Row className="g-4">
@@ -179,6 +180,11 @@ const Landing = () => {
               </div>
             </Col>
           </Row>
+          <p className="storefront__plans-footnote">
+            <Icons typeIcon="simple-info" iconSize={16} fill="#7f7878" /> O teste grátis de 14 dias vale só para{' '}
+            <b>eventos gratuitos</b>. <b>Eventos pagos já cobram os 5%</b> por inscrição desde a primeira venda, mesmo
+            durante o teste.
+          </p>
         </section>
 
         <section className="storefront__cta-band">

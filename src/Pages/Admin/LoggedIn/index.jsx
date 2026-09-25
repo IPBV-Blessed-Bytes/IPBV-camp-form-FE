@@ -7,6 +7,7 @@ import './style.scss';
 import { getNonPayingChildren, getCrewBus } from '@/services/stats';
 import { getPlanTier } from '@/services/planTier';
 import { getRecipientOnboardingStatus } from '@/services/recipientOnboarding';
+import PlatformBillingBanner from '@/components/Admin/PlatformBillingBanner';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
@@ -405,6 +406,7 @@ const AdminLoggedIn = ({
         </div>
       ) : (
       <div className="admin-home__content">
+        <PlatformBillingBanner canManage={settingsButtonPermissions} />
         {needsRecebimento && (
           <div className="admin-home__recebimento-alert" role="alert">
             <Icons typeIcon="money" iconSize={30} fill="#8a5300" />

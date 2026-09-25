@@ -36,6 +36,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'uploads',
   'plan-tier',
   'recipient-onboarding',
+  'platform-billing',
 ]);
 
 export const getEventSlugFromPath = (pathname = window.location.pathname) => {

@@ -273,6 +273,23 @@
     margin: 0 auto 2rem;
   }
 
+  &__plans-footnote {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    justify-content: center;
+    text-align: center;
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    margin: 1.5rem auto 0;
+    max-width: 640px;
+
+    svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  }
+
   &__plan {
     position: relative;
     display: flex;
