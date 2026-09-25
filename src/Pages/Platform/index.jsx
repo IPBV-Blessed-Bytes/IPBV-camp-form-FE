@@ -355,18 +355,25 @@ const Platform = () => {
   return (
     <div className="platform">
       <header className="platform__header">
-        <div>
-          <h1 className="platform__title">Painel da Plataforma</h1>
-          <p className="platform__subtitle">Gestão de clientes (tenants)</p>
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <Button variant="outline-teal-blue" onClick={() => navigate('/admin/manual')}>
-            Manual
-          </Button>
-          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            Nova organização&nbsp;&nbsp;
-            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
-          </Button>
+        <div className="platform__header-inner">
+          <div className="platform__brand">
+            <span className="platform__brand-mark">
+              <Icons typeIcon="settings" iconSize={24} fill="#ffffff" />
+            </span>
+            <div>
+              <h1 className="platform__title">Painel da Plataforma</h1>
+              <p className="platform__subtitle">Gestão de clientes, cobrança e preços</p>
+            </div>
+          </div>
+          <div className="platform__header-actions">
+            <Button variant="light" className="platform__btn-ghost" onClick={() => navigate('/admin/manual')}>
+              Manual
+            </Button>
+            <Button className="platform__btn-cta d-flex align-items-center" onClick={openCreate}>
+              Nova organização&nbsp;&nbsp;
+              <Icons typeIcon="plus" iconSize={16} fill="#007185" />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -376,7 +383,12 @@ const Platform = () => {
         {overview && (
           <section className="platform__billing">
             <div className="platform__billing-head">
-              <h2 className="platform__billing-title">Cobrança &amp; inadimplência</h2>
+              <div className="platform__section-title-row">
+                <span className="platform__section-icon platform__section-icon--warn">
+                  <Icons typeIcon="cash" iconSize={20} fill="#b9770a" />
+                </span>
+                <h2 className="platform__billing-title">Cobrança &amp; inadimplência</h2>
+              </div>
               <p className="platform__billing-subtitle">
                 Situação de cobrança das igrejas. {overview.trialsEndingSoon > 0
                   ? `${overview.trialsEndingSoon} trial(s) vencendo em até 7 dias.`
@@ -462,7 +474,12 @@ const Platform = () => {
         <section className="platform__pricing">
           <div className="platform__pricing-head">
             <div>
-              <h2 className="platform__pricing-title">Preços da plataforma</h2>
+              <div className="platform__section-title-row">
+                <span className="platform__section-icon platform__section-icon--teal">
+                  <Icons typeIcon="profits" iconSize={20} fill="#007185" />
+                </span>
+                <h2 className="platform__pricing-title">Preços da plataforma</h2>
+              </div>
               <p className="platform__pricing-subtitle">
                 Valores padrão aplicados a todas as igrejas. A taxa (%) pode ser sobrescrita por organização.
               </p>
@@ -553,13 +570,20 @@ const Platform = () => {
           </div>
         </section>
 
-        {loading ? (
-          <Loading loading />
-        ) : organizations.length === 0 ? (
-          <p className="platform__empty">Nenhuma organização cadastrada.</p>
-        ) : (
-          <div className="platform__table-wrap">
-            <Table hover responsive className="platform__table align-middle">
+        <section className="platform__orgs">
+          <div className="platform__section-title-row">
+            <span className="platform__section-icon platform__section-icon--blue">
+              <Icons typeIcon="couple" iconSize={20} fill="#2E5AAC" />
+            </span>
+            <h2 className="platform__orgs-title">Organizações (clientes)</h2>
+          </div>
+          {loading ? (
+            <Loading loading />
+          ) : organizations.length === 0 ? (
+            <p className="platform__empty">Nenhuma organização cadastrada.</p>
+          ) : (
+            <div className="platform__table-wrap">
+              <Table hover responsive className="platform__table align-middle">
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -611,15 +635,21 @@ const Platform = () => {
                     </tr>
                   );
                 })}
-              </tbody>
-            </Table>
-          </div>
-        )}
+                </tbody>
+              </Table>
+            </div>
+          )}
+        </section>
 
         <section className="platform__faqs">
           <div className="platform__faqs-header">
             <div>
-              <h2 className="platform__faqs-title">Perguntas frequentes da loja</h2>
+              <div className="platform__section-title-row">
+                <span className="platform__section-icon platform__section-icon--blue">
+                  <Icons typeIcon="question" iconSize={20} fill="#2E5AAC" />
+                </span>
+                <h2 className="platform__faqs-title">Perguntas frequentes da loja</h2>
+              </div>
               <p className="platform__faqs-subtitle">Exibidas na página pública de vendas.</p>
             </div>
             <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreateFaq}>
