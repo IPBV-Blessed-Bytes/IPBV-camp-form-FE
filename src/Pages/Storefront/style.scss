@@ -27,6 +27,13 @@
     font-weight: 800;
     color: $dark-gray;
     letter-spacing: -0.01em;
+
+    &--btn {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
   }
 
   &__brand-mark {
@@ -141,8 +148,10 @@
     color: $primary;
     font-weight: 800;
     padding: 0.85rem 1.75rem;
+    border: 0;
     border-radius: 999px;
     text-decoration: none;
+    cursor: pointer;
     box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 
@@ -345,6 +354,57 @@
       font-size: 0.88rem;
       font-weight: 600;
       color: $dark-gray;
+    }
+  }
+
+  &__cta-band {
+    margin-top: 4rem;
+  }
+
+  &__cta-band-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    background: linear-gradient(135deg, $primary, $blue);
+    color: $white;
+    border-radius: 20px;
+    padding: 2.25rem 2.5rem;
+    box-shadow: 0 18px 44px rgba(0, 113, 133, 0.24);
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 0 0.35rem;
+    }
+
+    p {
+      margin: 0;
+      opacity: 0.92;
+      max-width: 460px;
+    }
+  }
+
+  &__form-page {
+    max-width: 760px;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: $primary;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 

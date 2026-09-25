@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
@@ -29,6 +29,7 @@ import CpfData from '../Pages/CpfReview/CpfData';
 import Login from '../Pages/Admin/Login';
 import Maintenance from '@/Pages/Maintenance';
 import EventCatalog from '@/Pages/EventCatalog';
+import Landing from '@/Pages/Landing';
 import Institutional from '@/Pages/Institutional';
 
 import WaitingForCamp from '../Pages/WaitingForCamp';
@@ -529,7 +530,7 @@ const FormRoutes = () => {
               element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
             />
 
-            <Route path="/" element={<Navigate to="/comprar" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/catalogo" element={<EventCatalog />} />
 
             <Route path="/platform" element={<Platform />} />
