@@ -300,6 +300,11 @@
     overflow: hidden;
   }
 
+  .table-responsive {
+    height: auto;
+    max-height: calc(100vh - 230px);
+  }
+
   &__table {
     margin: 0;
 
