@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Container, Card, Badge, Button, Spinner } from 'react-bootstrap';
+import { Container, Card, Badge, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getMyEventRegistrations } from '@/services/me';
 import Header from '@/components/Global/Header';
 import Footer from '@/components/Global/Footer';
 import Icons from '@/components/Global/Icons';
+import Loading from '@/components/Global/Loading';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 
 const PAYMENT = {
@@ -51,9 +52,7 @@ const MyEventRegistrations = () => {
         <h2 className="mb-4">Minhas inscrições</h2>
 
         {loading ? (
-          <div className="text-center py-5">
-            <Spinner animation="border" />
-          </div>
+          <Loading loading />
         ) : orders.length === 0 ? (
           <p className="text-secondary">Você ainda não tem inscrições.</p>
         ) : (

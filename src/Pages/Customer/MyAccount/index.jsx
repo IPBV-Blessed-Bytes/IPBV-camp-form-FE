@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Table, Badge, Spinner, Row, Col, Form, Alert } from 'react-bootstrap';
+import { Button, Table, Badge, Row, Col, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { eventPath } from '@/config/eventScope';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import './style.scss';
 import useAuth from '@/hooks/useAuth';
 import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
+import Loading from '@/components/Global/Loading';
 import CustomModal from '@/components/Global/CustomModal';
 import ChangePasswordModal from '@/components/Global/ChangePasswordModal';
 import DatePicker from 'react-datepicker';
@@ -210,9 +211,7 @@ const MyAccount = () => {
 
         <div className="account-card">
           {loading ? (
-            <div className="d-flex align-items-center justify-content-center gap-2 text-secondary account-empty">
-              <Spinner animation="border" size="sm" /> Carregando...
-            </div>
+            <Loading loading />
           ) : registrations.length === 0 ? (
             <div className="account-empty">
               <p className="mb-3">Você ainda não tem inscrições.</p>
