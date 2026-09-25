@@ -36,6 +36,16 @@ export const getPlatformLogs = async () => {
   return data?.logs || [];
 };
 
+export const getPlatformConfig = async () => {
+  const { data } = await authFetcher.get('/platform/config');
+  return data;
+};
+
+export const downloadPlatformExport = async () => {
+  const response = await authFetcher.get('/platform/export', { responseType: 'blob' });
+  return response.data;
+};
+
 export const getPlatformGrowth = async () => {
   const { data } = await authFetcher.get('/platform/growth');
   return data?.growth || [];

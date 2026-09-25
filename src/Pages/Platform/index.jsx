@@ -21,6 +21,8 @@ import {
   getPlatformLogs,
   sendPlatformBroadcast,
   getPlatformGrowth,
+  getPlatformConfig,
+  downloadPlatformExport,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getOrganizationCatalog } from '@/services/events';
@@ -112,6 +114,7 @@ const NAV = [
   { key: 'usuarios', label: 'Usuários', icon: 'add-person', perm: 'USERS_MANAGE' },
   { key: 'permissoes', label: 'Papéis e permissões', icon: 'roles', perm: 'USERS_MANAGE' },
   { key: 'logs', label: 'Logs', icon: 'logs', perm: 'LOGS_VIEW' },
+  { key: 'config', label: 'Configuração', icon: 'settings', perm: 'USERS_MANAGE' },
   { key: 'sistema', label: 'Sistema', icon: 'refresh', perm: 'SYSTEM_MANAGE' },
 ];
 
@@ -226,6 +229,8 @@ const Platform = () => {
   const [impersonateLoading, setImpersonateLoading] = useState(false);
   const [broadcast, setBroadcast] = useState({ audience: 'all', subject: '', message: '' });
   const [sendingBroadcast, setSendingBroadcast] = useState(false);
+  const [config, setConfig] = useState(null);
+  const [exporting, setExporting] = useState(false);
 
   const loadData = async (ownerFlag = owner, permsList = perms) => {
     const has = (permission) => ownerFlag || permsList.includes(permission);
@@ -262,14 +267,16 @@ const Platform = () => {
         });
       }
       if (has('USERS_MANAGE')) {
-        const [rolesData, usersData, permsData] = await Promise.all([
+        const [rolesData, usersData, permsData, configData] = await Promise.all([
           getPlatformRoles().catch(() => []),
           getPlatformUsers().catch(() => []),
           getPlatformPermissions().catch(() => []),
+          getPlatformConfig().catch(() => null),
         ]);
         setRoles(rolesData);
         setPlatformUsers(usersData);
         setPermCatalog(permsData);
+        setConfig(configData);
       }
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao carregar dados da plataforma.');
@@ -299,6 +306,25 @@ const Platform = () => {
       toast.error(getApiErrorMessage(error) || 'Não foi possível atualizar o estágio do sistema.');
     } finally {
       setSavingSys(false);
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const blob = await downloadPlatformExport();
+      const url = window.URL.createObjectURL(new Blob([blob], { type: 'text/csv' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'tenants.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível exportar.');
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -1357,6 +1383,56 @@ const Platform = () => {
                 ))}
               </div>
             )}
+          </section>
+          )}
+
+          {section === 'config' && (
+          <section className="platform__orgs">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--blue">
+                <Icons typeIcon="settings" iconSize={20} fill="#2E5AAC" />
+              </span>
+              <h2 className="platform__orgs-title">Configuração & backup</h2>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Status da configuração da plataforma (somente leitura) e exportação dos dados dos clientes.
+            </p>
+
+            <div className="platform__fin-tiles">
+              <div className="platform__fin-tile">
+                <span className="platform__fin-value" style={{ fontSize: '1.1rem' }}>{config?.ownerCount ?? '—'}</span>
+                <span className="platform__fin-label">Super-admins (allowlist)</span>
+              </div>
+              <div className="platform__fin-tile">
+                <Badge bg={config?.webhookConfigured ? 'success' : 'secondary'}>
+                  {config?.webhookConfigured ? 'Configurado' : 'Não configurado'}
+                </Badge>
+                <span className="platform__fin-label">Webhook de cobrança</span>
+              </div>
+              <div className="platform__fin-tile">
+                <Badge bg={config?.marketplaceConfigured ? 'success' : 'secondary'}>
+                  {config?.marketplaceConfigured ? 'Ativo' : 'Inativo'}
+                </Badge>
+                <span className="platform__fin-label">Marketplace PagarMe (split)</span>
+              </div>
+              <div className="platform__fin-tile">
+                <span className="platform__fin-value" style={{ fontSize: '0.95rem', wordBreak: 'break-all' }}>
+                  {config?.frontendUrl || '—'}
+                </span>
+                <span className="platform__fin-label">URL do frontend</span>
+              </div>
+            </div>
+            <p className="platform__fin-note">
+              <Icons typeIcon="simple-info" iconSize={15} fill="#7f7878" /> Chaves sensíveis (e-mails de owner, segredo
+              do webhook, chave PagarMe) ficam <b>só nas variáveis de ambiente</b> por segurança — não são editáveis por
+              aqui.
+            </p>
+
+            <div className="platform__pricing-tier-title">Backup / exportação</div>
+            <p className="platform__pricing-subtitle">Baixe um CSV com todos os clientes (nome, plano, cobrança, eventos).</p>
+            <Button variant="teal-blue" onClick={handleExport} disabled={exporting}>
+              {exporting ? 'Exportando...' : 'Exportar clientes (CSV)'}
+            </Button>
           </section>
           )}
 
