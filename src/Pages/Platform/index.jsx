@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'react-toastify';
 
 import {
@@ -75,6 +76,24 @@ const SITUATION_BADGE = {
 
 const SITUATION_ORDER = ['healthy', 'trial', 'warning', 'form_blocked', 'admin_blocked', 'canceled'];
 
+const SITUATION_COLOR = {
+  healthy: '#1f8a4c',
+  trial: '#2e6fb0',
+  warning: '#d99a00',
+  form_blocked: '#d1512b',
+  admin_blocked: '#8a1c1c',
+  canceled: '#6b7280',
+};
+
+const NAV = [
+  { key: 'overview', label: 'Visão geral', icon: 'chart' },
+  { key: 'clientes', label: 'Clientes', icon: 'couple' },
+  { key: 'cobranca', label: 'Cobrança', icon: 'cash' },
+  { key: 'precos', label: 'Preços', icon: 'profits' },
+  { key: 'faq', label: 'FAQ da loja', icon: 'question' },
+];
+
+
 const formatDateBR = (iso) => {
   if (!iso) return '—';
   const [y, m, d] = iso.split('-');
@@ -113,6 +132,7 @@ const EMPTY_FAQ = {
 
 const Platform = () => {
   const navigate = useNavigate();
+  const [section, setSection] = useState('overview');
   const [checking, setChecking] = useState(true);
   const [owner, setOwner] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -346,11 +366,19 @@ const Platform = () => {
   }
 
   const statItems = [
-    { label: 'Organizações', value: stats?.organizations ?? 0 },
+    { label: 'Clientes (igrejas)', value: stats?.organizations ?? 0 },
     { label: 'Eventos', value: stats?.events ?? 0, tone: 'info' },
     { label: 'Inscrições', value: stats?.registrations ?? 0, tone: 'free' },
     { label: 'Usuários', value: stats?.users ?? 0, tone: 'accent' },
   ];
+
+  const situationData = SITUATION_ORDER
+    .map((key) => ({ key, name: SITUATION_BADGE[key]?.label || key, value: overview?.bySituation?.[key] || 0 }))
+    .filter((item) => item.value > 0);
+
+  const activeClients = organizations.filter((o) => o.billingStatus === 'active').length;
+  const trialClients = organizations.filter((o) => o.billingStatus === 'trial').length;
+  const pastDueClients = organizations.filter((o) => o.billingStatus === 'past_due').length;
 
   return (
     <div className="platform">
@@ -369,18 +397,110 @@ const Platform = () => {
             <Button variant="light" className="platform__btn-ghost" onClick={() => navigate('/admin/manual')}>
               Manual
             </Button>
-            <Button className="platform__btn-cta d-flex align-items-center" onClick={openCreate}>
-              Nova organização&nbsp;&nbsp;
-              <Icons typeIcon="plus" iconSize={16} fill="#007185" />
-            </Button>
           </div>
         </div>
       </header>
 
-      <div className="platform__content">
-        {stats && <StatCards items={statItems} />}
+      <div className="platform__layout">
+        <aside className="platform__nav">
+          {NAV.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={`platform__nav-item ${section === item.key ? 'is-active' : ''}`}
+              onClick={() => setSection(item.key)}
+            >
+              <Icons typeIcon={item.icon} iconSize={18} fill={section === item.key ? '#007185' : '#7f7878'} />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </aside>
 
-        {overview && (
+        <main className="platform__main">
+          {section === 'overview' && (
+            <div className="platform__overview">
+              {stats && <StatCards items={statItems} />}
+
+              <section className="platform__orgs">
+                <div className="platform__section-title-row">
+                  <span className="platform__section-icon platform__section-icon--teal">
+                    <Icons typeIcon="cash" iconSize={20} fill="#007185" />
+                  </span>
+                  <h2 className="platform__orgs-title">Financeiro</h2>
+                </div>
+                <div className="platform__fin-tiles">
+                  <div className="platform__fin-tile">
+                    <span className="platform__fin-value">{activeClients}</span>
+                    <span className="platform__fin-label">Clientes pagantes (ativos)</span>
+                  </div>
+                  <div className="platform__fin-tile">
+                    <span className="platform__fin-value">{trialClients}</span>
+                    <span className="platform__fin-label">Em teste (trial)</span>
+                  </div>
+                  <div className="platform__fin-tile">
+                    <span className="platform__fin-value platform__fin-value--warn">{pastDueClients}</span>
+                    <span className="platform__fin-label">Inadimplentes</span>
+                  </div>
+                  <div className="platform__fin-tile platform__fin-tile--muted">
+                    <span className="platform__fin-value">—</span>
+                    <span className="platform__fin-label">Receita da plataforma (em breve)</span>
+                  </div>
+                </div>
+                <p className="platform__fin-note">
+                  <Icons typeIcon="simple-info" iconSize={15} fill="#7f7878" /> O controle financeiro detalhado
+                  (repasses, saldo, extrato) fica no <b>PagarMe</b>. Aqui você acompanha os indicadores da plataforma; a
+                  <b> receita</b> aparece quando o pagamento real entrar no ar (Fase 1b).
+                </p>
+              </section>
+
+              <section className="platform__orgs">
+                <div className="platform__section-title-row">
+                  <span className="platform__section-icon platform__section-icon--blue">
+                    <Icons typeIcon="chart" iconSize={20} fill="#2E5AAC" />
+                  </span>
+                  <h2 className="platform__orgs-title">Clientes por situação de cobrança</h2>
+                </div>
+                {situationData.length > 0 ? (
+                  <div className="platform__chart">
+                    <div className="platform__chart-canvas">
+                      <ResponsiveContainer width="100%" height={220}>
+                        <PieChart>
+                          <Pie
+                            data={situationData}
+                            dataKey="value"
+                            nameKey="name"
+                            innerRadius={58}
+                            outerRadius={90}
+                            paddingAngle={2}
+                            stroke="#fcfcfb"
+                            strokeWidth={2}
+                          >
+                            {situationData.map((entry) => (
+                              <Cell key={entry.key} fill={SITUATION_COLOR[entry.key] || '#8a94a3'} />
+                            ))}
+                          </Pie>
+                          <Tooltip formatter={(value, name) => [`${value} igreja(s)`, name]} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <ul className="platform__chart-legend">
+                      {situationData.map((entry) => (
+                        <li key={entry.key}>
+                          <span className="platform__chart-dot" style={{ background: SITUATION_COLOR[entry.key] }} />
+                          <span className="platform__chart-legend-label">{entry.name}</span>
+                          <b>{entry.value}</b>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="platform__billing-empty">Sem dados de cobrança ainda.</p>
+                )}
+              </section>
+            </div>
+          )}
+
+          {section === 'cobranca' && overview && (
           <section className="platform__billing">
             <div className="platform__billing-head">
               <div className="platform__section-title-row">
@@ -469,9 +589,10 @@ const Platform = () => {
               <p className="platform__billing-empty">Nenhuma igreja precisa de atenção no momento.</p>
             )}
           </section>
-        )}
+          )}
 
-        <section className="platform__pricing">
+          {section === 'precos' && (
+          <section className="platform__pricing">
           <div className="platform__pricing-head">
             <div>
               <div className="platform__section-title-row">
@@ -569,13 +690,21 @@ const Platform = () => {
             </Button>
           </div>
         </section>
+          )}
 
-        <section className="platform__orgs">
-          <div className="platform__section-title-row">
-            <span className="platform__section-icon platform__section-icon--blue">
-              <Icons typeIcon="couple" iconSize={20} fill="#2E5AAC" />
-            </span>
-            <h2 className="platform__orgs-title">Organizações (clientes)</h2>
+          {section === 'clientes' && (
+          <section className="platform__orgs">
+          <div className="platform__orgs-head">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--blue">
+                <Icons typeIcon="couple" iconSize={20} fill="#2E5AAC" />
+              </span>
+              <h2 className="platform__orgs-title">Organizações (clientes)</h2>
+            </div>
+            <Button className="platform__btn-cta-solid d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
+              Nova organização&nbsp;&nbsp;
+              <Icons typeIcon="plus" iconSize={16} fill="#fff" />
+            </Button>
           </div>
           {loading ? (
             <Loading loading />
@@ -640,8 +769,10 @@ const Platform = () => {
             </div>
           )}
         </section>
+          )}
 
-        <section className="platform__faqs">
+          {section === 'faq' && (
+          <section className="platform__faqs">
           <div className="platform__faqs-header">
             <div>
               <div className="platform__section-title-row">
@@ -681,6 +812,8 @@ const Platform = () => {
             </Accordion>
           )}
         </section>
+          )}
+        </main>
       </div>
 
       <CustomModal
