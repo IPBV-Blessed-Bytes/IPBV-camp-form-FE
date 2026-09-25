@@ -46,6 +46,11 @@ export const downloadPlatformExport = async () => {
   return response.data;
 };
 
+export const getPlatformRevenue = async () => {
+  const { data } = await authFetcher.get('/platform/revenue');
+  return data;
+};
+
 export const getPlatformGrowth = async () => {
   const { data } = await authFetcher.get('/platform/growth');
   return data?.growth || [];

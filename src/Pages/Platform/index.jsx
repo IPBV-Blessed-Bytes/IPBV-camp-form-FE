@@ -21,6 +21,7 @@ import {
   getPlatformLogs,
   sendPlatformBroadcast,
   getPlatformGrowth,
+  getPlatformRevenue,
   getPlatformConfig,
   downloadPlatformExport,
 } from '@/services/platform';
@@ -131,6 +132,9 @@ const formatDateBR = (iso) => {
   return d && m && y ? `${d}/${m}/${y}` : iso;
 };
 
+const formatBRL = (cents) =>
+  ((cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
+
 const MONTHS_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 
 const monthTick = (ym) => {
@@ -216,6 +220,7 @@ const Platform = () => {
   const [savingSys, setSavingSys] = useState(false);
   const [logs, setLogs] = useState([]);
   const [growth, setGrowth] = useState([]);
+  const [revenue, setRevenue] = useState(null);
   const [roles, setRoles] = useState([]);
   const [platformUsers, setPlatformUsers] = useState([]);
   const [permCatalog, setPermCatalog] = useState([]);
@@ -236,7 +241,8 @@ const Platform = () => {
     const has = (permission) => ownerFlag || permsList.includes(permission);
     setLoading(true);
     try {
-      const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData, growthData] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData, growthData, revenueData] =
+        await Promise.all([
         has('CLIENTS_VIEW') ? getPlatformStats().catch(() => null) : Promise.resolve(null),
         has('CLIENTS_VIEW') ? listPlatformOrganizations().catch(() => []) : Promise.resolve([]),
         listPlatformFaqs().catch(() => []),
@@ -245,11 +251,13 @@ const Platform = () => {
         getSystemStage().catch(() => null),
         has('LOGS_VIEW') ? getPlatformLogs().catch(() => []) : Promise.resolve([]),
         has('CLIENTS_VIEW') ? getPlatformGrowth().catch(() => []) : Promise.resolve([]),
+        has('CLIENTS_VIEW') ? getPlatformRevenue().catch(() => null) : Promise.resolve(null),
       ]);
       setStats(statsData);
       setOverview(overviewData);
       setLogs(Array.isArray(logsData) ? logsData : []);
       setGrowth(Array.isArray(growthData) ? growthData : []);
+      setRevenue(revenueData);
       if (sysData) {
         setSysStage(sysData.stage || 'on');
         setSysMessage(sysData.message || '');
@@ -715,15 +723,49 @@ const Platform = () => {
                     <span className="platform__fin-value platform__fin-value--warn">{pastDueClients}</span>
                     <span className="platform__fin-label">Inadimplentes</span>
                   </div>
-                  <div className="platform__fin-tile platform__fin-tile--muted">
-                    <span className="platform__fin-value">—</span>
-                    <span className="platform__fin-label">Receita da plataforma (em breve)</span>
+                  <div className="platform__fin-tile">
+                    <span className="platform__fin-value" style={{ color: '#1f8a4c' }}>
+                      {formatBRL(revenue?.totalCents || 0)}
+                    </span>
+                    <span className="platform__fin-label">Receita da plataforma (total)</span>
+                  </div>
+                  <div className="platform__fin-tile">
+                    <span className="platform__fin-value">{formatBRL(revenue?.thisMonthCents || 0)}</span>
+                    <span className="platform__fin-label">Receita este mês</span>
                   </div>
                 </div>
+
+                {(revenue?.count || 0) > 0 && (
+                  <div className="platform__growth" style={{ marginTop: '1.1rem' }}>
+                    <div className="platform__growth-chart">
+                      <p className="platform__growth-title">Receita / mês</p>
+                      <ResponsiveContainer width="100%" height={180}>
+                        <BarChart data={revenue.byMonth} margin={{ top: 8, right: 8, left: -6, bottom: 0 }}>
+                          <CartesianGrid vertical={false} stroke="#eef1f6" />
+                          <XAxis dataKey="month" tickFormatter={monthTick} tick={{ fontSize: 12, fill: '#7f7878' }} axisLine={false} tickLine={false} />
+                          <Tooltip formatter={(value) => [formatBRL(value), 'Receita']} labelFormatter={monthTick} />
+                          <Bar dataKey="amountCents" fill="#1f8a4c" radius={[4, 4, 0, 0]} maxBarSize={34} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="platform__growth-chart">
+                      <p className="platform__growth-title">Top clientes por receita</p>
+                      <ul className="platform__chart-legend">
+                        {revenue.byTenant.map((t) => (
+                          <li key={t.organizationId}>
+                            <span className="platform__chart-legend-label">{t.name}</span>
+                            <b>{formatBRL(t.amountCents)}</b>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
                 <p className="platform__fin-note">
-                  <Icons typeIcon="simple-info" iconSize={15} fill="#7f7878" /> O controle financeiro detalhado
-                  (repasses, saldo, extrato) fica no <b>PagarMe</b>. Aqui você acompanha os indicadores da plataforma; a
-                  <b> receita</b> aparece quando o pagamento real entrar no ar (Fase 1b).
+                  <Icons typeIcon="simple-info" iconSize={15} fill="#7f7878" /> Receita = a <b>sua parte</b> (a taxa %
+                  do split das inscrições pagas + as taxas de evento gratuito). O extrato/repasse detalhado fica no{' '}
+                  <b>PagarMe</b>; começa a popular quando os pagamentos reais entrarem no ar.
                 </p>
               </section>
 
