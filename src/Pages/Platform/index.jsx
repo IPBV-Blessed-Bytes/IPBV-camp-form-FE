@@ -21,6 +21,8 @@ import {
   getPlatformLogs,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
+import { getOrganizationCatalog } from '@/services/events';
+import { setSelectedEvent } from '@/config/eventScope';
 import {
   getPlatformPermissions,
   getPlatformRoles,
@@ -207,6 +209,9 @@ const Platform = () => {
   const [savingRole, setSavingRole] = useState(false);
   const [grant, setGrant] = useState({ email: '', roleId: '' });
   const [savingGrant, setSavingGrant] = useState(false);
+  const [impersonate, setImpersonate] = useState(null);
+  const [impersonateEvents, setImpersonateEvents] = useState([]);
+  const [impersonateLoading, setImpersonateLoading] = useState(false);
 
   const loadData = async (ownerFlag = owner, permsList = perms) => {
     const has = (permission) => ownerFlag || permsList.includes(permission);
@@ -279,6 +284,25 @@ const Platform = () => {
     } finally {
       setSavingSys(false);
     }
+  };
+
+  const openImpersonate = async (org) => {
+    setImpersonate(org);
+    setImpersonateEvents([]);
+    setImpersonateLoading(true);
+    try {
+      const { events } = await getOrganizationCatalog(org.slug);
+      setImpersonateEvents(Array.isArray(events) ? events : []);
+    } catch {
+      setImpersonateEvents([]);
+    } finally {
+      setImpersonateLoading(false);
+    }
+  };
+
+  const enterAdminAs = (slug) => {
+    setSelectedEvent(slug);
+    window.location.assign('/admin');
   };
 
   const openCreateRole = () => {
@@ -962,9 +986,14 @@ const Platform = () => {
                       </td>
                       <td className="text-center">{org.eventCount ?? 0}</td>
                       <td className="text-end">
-                        <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(org)}>
-                          Editar
-                        </Button>
+                        <div className="d-flex justify-content-end gap-2">
+                          <Button size="sm" variant="outline-secondary" onClick={() => openImpersonate(org)}>
+                            Entrar
+                          </Button>
+                          <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(org)}>
+                            Editar
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1580,6 +1609,42 @@ const Platform = () => {
             ))}
           </div>
         </Form>
+      </CustomModal>
+
+      <CustomModal
+        show={Boolean(impersonate)}
+        onHide={() => setImpersonate(null)}
+        variant="info"
+        title={`Entrar no admin — ${impersonate?.name || ''}`}
+        icon="person"
+        footer={
+          <Button variant="outline-secondary" onClick={() => setImpersonate(null)}>
+            Fechar
+          </Button>
+        }
+      >
+        <p className="platform__pricing-subtitle">
+          Escolha um evento desta igreja para abrir o painel administrativo dela (suporte). Você entra com acesso total.
+        </p>
+        {impersonateLoading ? (
+          <Loading loading />
+        ) : impersonateEvents.length === 0 ? (
+          <p className="platform__empty">Esta igreja não tem eventos ativos.</p>
+        ) : (
+          <div className="platform__impersonate-list">
+            {impersonateEvents.map((event) => (
+              <button
+                key={event.slug}
+                type="button"
+                className="platform__impersonate-item"
+                onClick={() => enterAdminAs(event.slug)}
+              >
+                <span>{event.name}</span>
+                <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
+              </button>
+            ))}
+          </div>
+        )}
       </CustomModal>
     </div>
   );
