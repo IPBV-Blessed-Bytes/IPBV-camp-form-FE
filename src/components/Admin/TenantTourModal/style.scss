@@ -1,0 +1,86 @@
+@use '../../../styles/Variables.scss' as *;
+
+.tenant-tour {
+  .modal-content {
+    border-radius: 18px;
+    border: 0;
+    overflow: hidden;
+  }
+
+  &__body {
+    text-align: center;
+    padding: 1.5rem 1rem 0.5rem;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 20px;
+    background: $heavy-baby-blue;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $dark-gray;
+    margin: 0 0 0.6rem;
+  }
+
+  &__text {
+    color: $alternate-dark-gray;
+    max-width: 420px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  &__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $medium-gray;
+
+    &.is-active {
+      background: $primary;
+      width: 22px;
+      border-radius: 4px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 0.5rem 0.25rem;
+    border-top: 1px solid $alternate-light-gray;
+    margin-top: 1rem;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__skip {
+    display: block;
+    margin: 0.5rem auto 0;
+    background: transparent;
+    border: 0;
+    color: $alternate-dark-gray;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

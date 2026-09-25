@@ -8,6 +8,7 @@ import { getNonPayingChildren, getCrewBus } from '@/services/stats';
 import { getPlanTier } from '@/services/planTier';
 import { getRecipientOnboardingStatus } from '@/services/recipientOnboarding';
 import PlatformBillingBanner from '@/components/Admin/PlatformBillingBanner';
+import TenantTourModal from '@/components/Admin/TenantTourModal';
 import { registerLog } from '@/services/logs';
 import { permissionsSections } from '@/fetchers/permissions';
 import scrollUp from '@/hooks/useScrollUp';
@@ -86,6 +87,7 @@ const AdminLoggedIn = ({
   const [tier, setTier] = useState('completo');
   const [needsRecebimento, setNeedsRecebimento] = useState(false);
   const [myEvents, setMyEvents] = useState([]);
+  const [showTour, setShowTour] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
@@ -129,6 +131,29 @@ const AdminLoggedIn = ({
       .then((list) => setMyEvents(Array.isArray(list) ? list : []))
       .catch(() => setMyEvents([]));
   }, []);
+
+  const tourKey = `tenant-tour-dismissed:${loggedInUsername || 'admin'}`;
+
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem(tourKey)) {
+        setShowTour(true);
+      }
+    } catch {
+      setShowTour(false);
+    }
+  }, [tourKey]);
+
+  const handleCloseTour = (dontShowAgain) => {
+    setShowTour(false);
+    if (dontShowAgain) {
+      try {
+        localStorage.setItem(tourKey, '1');
+      } catch {
+        /* ignore */
+      }
+    }
+  };
 
   const chooseEvent = (slug) => {
     setSelectedEvent(slug);
@@ -407,6 +432,7 @@ const AdminLoggedIn = ({
   return (
     <div className="admin-home">
       <AdminTopbar username={topbarName} logout={logout} />
+      <TenantTourModal show={showTour} onClose={handleCloseTour} />
 
       {!getEventSlug() ? (
         <div className="admin-home__content">
