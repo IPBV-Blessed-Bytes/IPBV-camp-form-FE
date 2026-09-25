@@ -83,6 +83,7 @@ const Platform = lazy(() => import('@/Pages/Platform'));
 const OwnerLogin = lazy(() => import('@/Pages/OwnerLogin'));
 const Storefront = lazy(() => import('@/Pages/Storefront'));
 const Unavailable = lazy(() => import('@/Pages/Unavailable'));
+const SystemDown = lazy(() => import('@/Pages/SystemDown'));
 
 const FormRoutes = () => {
   const [showInfoButton, setShowInfoButton] = useState(false);
@@ -540,6 +541,7 @@ const FormRoutes = () => {
             <Route path="/comprar" element={<Storefront />} />
             <Route path="/ajuda" element={<AdminManual publicMode />} />
             <Route path="/indisponivel" element={<Unavailable />} />
+            <Route path="/manutencao" element={<SystemDown />} />
 
             <Route path="/esqueci-senha" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />

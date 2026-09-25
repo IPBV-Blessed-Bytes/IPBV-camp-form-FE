@@ -1,0 +1,39 @@
+@use '../../styles/Variables.scss' as *;
+
+.system-down {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0c3a52, $blue);
+  padding: 2rem 1rem;
+
+  &__card {
+    max-width: 480px;
+    text-align: center;
+    color: $white;
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin: 1.25rem 0 0.6rem;
+    }
+
+    p {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+  }
+}

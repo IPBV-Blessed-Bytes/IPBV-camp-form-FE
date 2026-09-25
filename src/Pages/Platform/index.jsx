@@ -19,6 +19,7 @@ import {
   getPlatformBillingOverview,
   regularizePlatformOrganization,
 } from '@/services/platform';
+import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
@@ -91,6 +92,13 @@ const NAV = [
   { key: 'cobranca', label: 'Cobrança', icon: 'cash' },
   { key: 'precos', label: 'Preços', icon: 'profits' },
   { key: 'faq', label: 'FAQ da loja', icon: 'question' },
+  { key: 'sistema', label: 'Sistema', icon: 'refresh' },
+];
+
+const SYSTEM_STAGES = [
+  { value: 'on', label: 'No ar', desc: 'Tudo funcionando normalmente.', tone: 'good' },
+  { value: 'maintenance', label: 'Manutenção', desc: 'Fecha o sistema para todos (menos você) com aviso de manutenção.', tone: 'warn' },
+  { value: 'off', label: 'Fora do ar', desc: 'Fecha o sistema por completo para todos, menos você.', tone: 'danger' },
 ];
 
 
@@ -157,19 +165,27 @@ const Platform = () => {
     essencialFreeEventAnnual: '',
   });
   const [savingPricing, setSavingPricing] = useState(false);
+  const [sysStage, setSysStage] = useState('on');
+  const [sysMessage, setSysMessage] = useState('');
+  const [savingSys, setSavingSys] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsData, orgs, faqList, settingsData, overviewData] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData, overviewData, sysData] = await Promise.all([
         getPlatformStats(),
         listPlatformOrganizations(),
         listPlatformFaqs(),
         getPlatformSettings(),
         getPlatformBillingOverview(),
+        getSystemStage(),
       ]);
       setStats(statsData);
       setOverview(overviewData);
+      if (sysData) {
+        setSysStage(sysData.stage || 'on');
+        setSysMessage(sysData.message || '');
+      }
       setOrganizations(orgs);
       setFaqs(faqList);
       if (settingsData) {
@@ -196,6 +212,20 @@ const Platform = () => {
       await loadData();
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Não foi possível regularizar.');
+    }
+  };
+
+  const handleSaveSystemStage = async () => {
+    setSavingSys(true);
+    try {
+      const data = await updateSystemStage({ stage: sysStage, message: sysMessage.trim() || null });
+      setSysStage(data.stage || 'on');
+      setSysMessage(data.message || '');
+      toast.success('Estágio do sistema atualizado.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível atualizar o estágio do sistema.');
+    } finally {
+      setSavingSys(false);
     }
   };
 
@@ -842,6 +872,55 @@ const Platform = () => {
             </Accordion>
           )}
         </section>
+          )}
+
+          {section === 'sistema' && (
+          <section className="platform__system">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--warn">
+                <Icons typeIcon="refresh" iconSize={20} fill="#b9770a" />
+              </span>
+              <h2 className="platform__orgs-title">Estágio do sistema</h2>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Controle global da aplicação. Ao fechar, <b>todos os tenants e inscritos</b> veem a tela de manutenção —
+              só <b>você (owner)</b> continua acessando o painel para reabrir.
+            </p>
+
+            <div className="platform__stage-options">
+              {SYSTEM_STAGES.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`platform__stage-option is-${option.tone} ${sysStage === option.value ? 'is-active' : ''}`}
+                  onClick={() => setSysStage(option.value)}
+                >
+                  <span className="platform__stage-dot" />
+                  <span className="platform__stage-name">{option.label}</span>
+                  <span className="platform__stage-desc">{option.desc}</span>
+                </button>
+              ))}
+            </div>
+
+            <Form.Group className="mt-3">
+              <Form.Label>
+                <b>Mensagem exibida (opcional):</b>
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={2}
+                value={sysMessage}
+                onChange={(e) => setSysMessage(e.target.value)}
+                placeholder="Ex.: Voltamos às 14h. Estamos melhorando o sistema."
+              />
+            </Form.Group>
+
+            <div className="platform__pricing-actions">
+              <Button variant="teal-blue" onClick={handleSaveSystemStage} disabled={savingSys}>
+                {savingSys ? 'Salvando...' : 'Aplicar estágio'}
+              </Button>
+            </div>
+          </section>
           )}
         </main>
       </div>

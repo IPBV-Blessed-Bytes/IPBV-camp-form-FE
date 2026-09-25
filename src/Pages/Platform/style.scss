@@ -356,13 +356,69 @@
   &__billing,
   &__pricing,
   &__orgs,
-  &__faqs {
+  &__faqs,
+  &__system {
     background: #fff;
     border: 1px solid #e6e9f0;
     border-radius: 16px;
     padding: 1.4rem 1.5rem 1.6rem;
     box-shadow: 0 8px 24px rgba(20, 40, 80, 0.05);
     margin: 0;
+  }
+
+  &__stage-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin-top: 0.5rem;
+  }
+
+  &__stage-option {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'dot name' 'desc desc';
+    gap: 0.3rem 0.55rem;
+    text-align: left;
+    background: #fff;
+    border: 2px solid $alternate-light-gray;
+    border-radius: 13px;
+    padding: 1rem 1.15rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &.is-active {
+      background: #f6f8fb;
+    }
+    &.is-good.is-active { border-color: #1f8a4c; }
+    &.is-warn.is-active { border-color: #b9770a; }
+    &.is-danger.is-active { border-color: #c0392b; }
+  }
+
+  &__stage-dot {
+    grid-area: dot;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $medium-gray;
+    align-self: center;
+
+    .is-good & { background: #1f8a4c; }
+    .is-warn & { background: #b9770a; }
+    .is-danger & { background: #c0392b; }
+  }
+
+  &__stage-name {
+    grid-area: name;
+    font-weight: 800;
+    color: $dark-gray;
+    align-self: center;
+  }
+
+  &__stage-desc {
+    grid-area: desc;
+    font-size: 0.82rem;
+    color: $alternate-dark-gray;
+    line-height: 1.45;
   }
 
   &__billing-title,
@@ -503,6 +559,10 @@
     }
 
     &__chart {
+      grid-template-columns: 1fr;
+    }
+
+    &__stage-options {
       grid-template-columns: 1fr;
     }
   }

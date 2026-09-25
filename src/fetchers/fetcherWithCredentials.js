@@ -56,6 +56,15 @@ fetcherWithCredentials.interceptors.response.use(
       toast.error('Recurso disponível apenas no plano Completo.');
     }
 
+    if (
+      error?.response?.status === 503 &&
+      error.response.data?.system_stage &&
+      typeof window !== 'undefined' &&
+      !window.location.pathname.endsWith('/manutencao')
+    ) {
+      window.location.assign('/manutencao');
+    }
+
 	return Promise.reject(error)
   },
 );
