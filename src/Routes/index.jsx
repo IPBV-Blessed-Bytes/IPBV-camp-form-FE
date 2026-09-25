@@ -114,7 +114,10 @@ const FormRoutes = () => {
   const { legacyForm, loading: brandingLoading } = useEventBranding();
 
   return (
-    <div className="form">
+    <div className="form" id="main-content">
+      <a className="skip-to-content" href="#main-content">
+        Pular para o conteúdo
+      </a>
       {!adminPathname && formPath && (
         <div className="components-container">
           {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}
