@@ -366,6 +366,78 @@
     margin: 0;
   }
 
+  &__roles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  &__role-card {
+    border: 1px solid #e6e9f0;
+    border-radius: 13px;
+    padding: 1.1rem 1.2rem;
+    background: #fff;
+  }
+
+  &__role-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    h4 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: $dark-gray;
+    }
+  }
+
+  &__role-perms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  &__role-chip {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $primary;
+    background: #e2f1f3;
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
+  }
+
+  &__role-empty {
+    font-size: 0.85rem;
+    color: $alternate-dark-gray;
+    font-style: italic;
+  }
+
+  &__perm-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  &__perm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: $dark-gray;
+    cursor: pointer;
+    padding: 0.35rem 0;
+
+    input {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   &__stage-options {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -563,6 +635,11 @@
     }
 
     &__stage-options {
+      grid-template-columns: 1fr;
+    }
+
+    &__roles,
+    &__perm-list {
       grid-template-columns: 1fr;
     }
   }

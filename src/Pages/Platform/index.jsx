@@ -21,6 +21,17 @@ import {
   getPlatformLogs,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
+import {
+  getPlatformPermissions,
+  getPlatformRoles,
+  createPlatformRole,
+  updatePlatformRole,
+  deletePlatformRole,
+  getPlatformUsers,
+  grantPlatformAccess,
+  setPlatformUserRole,
+  revokePlatformUser,
+} from '@/services/platformAccess';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
@@ -88,13 +99,15 @@ const SITUATION_COLOR = {
 };
 
 const NAV = [
-  { key: 'overview', label: 'Visão geral', icon: 'chart' },
-  { key: 'clientes', label: 'Clientes', icon: 'couple' },
-  { key: 'cobranca', label: 'Cobrança', icon: 'cash' },
-  { key: 'precos', label: 'Preços', icon: 'profits' },
-  { key: 'faq', label: 'FAQ da loja', icon: 'question' },
-  { key: 'logs', label: 'Logs', icon: 'logs' },
-  { key: 'sistema', label: 'Sistema', icon: 'refresh' },
+  { key: 'overview', label: 'Visão geral', icon: 'chart', perm: null },
+  { key: 'clientes', label: 'Clientes', icon: 'couple', perm: 'CLIENTS_VIEW' },
+  { key: 'cobranca', label: 'Cobrança', icon: 'cash', perm: 'CLIENTS_VIEW' },
+  { key: 'precos', label: 'Preços', icon: 'profits', perm: 'PRICING_MANAGE' },
+  { key: 'faq', label: 'FAQ da loja', icon: 'question', perm: 'FAQ_MANAGE' },
+  { key: 'usuarios', label: 'Usuários', icon: 'add-person', perm: 'USERS_MANAGE' },
+  { key: 'permissoes', label: 'Papéis e permissões', icon: 'roles', perm: 'USERS_MANAGE' },
+  { key: 'logs', label: 'Logs', icon: 'logs', perm: 'LOGS_VIEW' },
+  { key: 'sistema', label: 'Sistema', icon: 'refresh', perm: 'SYSTEM_MANAGE' },
 ];
 
 const SYSTEM_STAGES = [
@@ -160,6 +173,8 @@ const Platform = () => {
   const [section, setSection] = useState('overview');
   const [checking, setChecking] = useState(true);
   const [owner, setOwner] = useState(false);
+  const [access, setAccess] = useState(false);
+  const [perms, setPerms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState(null);
@@ -184,18 +199,27 @@ const Platform = () => {
   const [sysMessage, setSysMessage] = useState('');
   const [savingSys, setSavingSys] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [platformUsers, setPlatformUsers] = useState([]);
+  const [permCatalog, setPermCatalog] = useState([]);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roleDraft, setRoleDraft] = useState({ id: null, name: '', permissions: [] });
+  const [savingRole, setSavingRole] = useState(false);
+  const [grant, setGrant] = useState({ email: '', roleId: '' });
+  const [savingGrant, setSavingGrant] = useState(false);
 
-  const loadData = async () => {
+  const loadData = async (ownerFlag = owner, permsList = perms) => {
+    const has = (permission) => ownerFlag || permsList.includes(permission);
     setLoading(true);
     try {
       const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData] = await Promise.all([
-        getPlatformStats(),
-        listPlatformOrganizations(),
-        listPlatformFaqs(),
-        getPlatformSettings(),
-        getPlatformBillingOverview(),
-        getSystemStage(),
-        getPlatformLogs(),
+        has('CLIENTS_VIEW') ? getPlatformStats().catch(() => null) : Promise.resolve(null),
+        has('CLIENTS_VIEW') ? listPlatformOrganizations().catch(() => []) : Promise.resolve([]),
+        listPlatformFaqs().catch(() => []),
+        getPlatformSettings().catch(() => null),
+        has('CLIENTS_VIEW') ? getPlatformBillingOverview().catch(() => null) : Promise.resolve(null),
+        getSystemStage().catch(() => null),
+        has('LOGS_VIEW') ? getPlatformLogs().catch(() => []) : Promise.resolve([]),
       ]);
       setStats(statsData);
       setOverview(overviewData);
@@ -215,6 +239,16 @@ const Platform = () => {
           essencialFreeEventFee: ((settingsData.essencialFreeEventFeeCents ?? 0) / 100).toString(),
           essencialFreeEventAnnual: ((settingsData.essencialFreeEventAnnualCents ?? 0) / 100).toString(),
         });
+      }
+      if (has('USERS_MANAGE')) {
+        const [rolesData, usersData, permsData] = await Promise.all([
+          getPlatformRoles().catch(() => []),
+          getPlatformUsers().catch(() => []),
+          getPlatformPermissions().catch(() => []),
+        ]);
+        setRoles(rolesData);
+        setPlatformUsers(usersData);
+        setPermCatalog(permsData);
       }
     } catch (error) {
       toast.error(getApiErrorMessage(error) || 'Erro ao carregar dados da plataforma.');
@@ -244,6 +278,95 @@ const Platform = () => {
       toast.error(getApiErrorMessage(error) || 'Não foi possível atualizar o estágio do sistema.');
     } finally {
       setSavingSys(false);
+    }
+  };
+
+  const openCreateRole = () => {
+    setRoleDraft({ id: null, name: '', permissions: [] });
+    setShowRoleModal(true);
+  };
+
+  const openEditRole = (role) => {
+    setRoleDraft({ id: role.id, name: role.name || '', permissions: role.permissions || [] });
+    setShowRoleModal(true);
+  };
+
+  const toggleRolePerm = (key) =>
+    setRoleDraft((prev) => ({
+      ...prev,
+      permissions: prev.permissions.includes(key)
+        ? prev.permissions.filter((p) => p !== key)
+        : [...prev.permissions, key],
+    }));
+
+  const handleSaveRole = async () => {
+    if (!roleDraft.name.trim()) {
+      toast.error('Informe o nome do papel.');
+      return;
+    }
+    setSavingRole(true);
+    try {
+      const payload = { name: roleDraft.name.trim(), permissions: roleDraft.permissions };
+      if (roleDraft.id) {
+        await updatePlatformRole(roleDraft.id, payload);
+        toast.success('Papel atualizado.');
+      } else {
+        await createPlatformRole(payload);
+        toast.success('Papel criado.');
+      }
+      setShowRoleModal(false);
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Erro ao salvar o papel.');
+    } finally {
+      setSavingRole(false);
+    }
+  };
+
+  const handleDeleteRole = async (id) => {
+    try {
+      await deletePlatformRole(id);
+      toast.success('Papel excluído.');
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível excluir o papel.');
+    }
+  };
+
+  const handleGrantAccess = async () => {
+    if (!grant.email.trim() || !grant.roleId) {
+      toast.error('Informe o e-mail e o papel.');
+      return;
+    }
+    setSavingGrant(true);
+    try {
+      await grantPlatformAccess({ email: grant.email.trim(), platformRoleId: Number(grant.roleId) });
+      toast.success('Acesso concedido.');
+      setGrant({ email: '', roleId: '' });
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível conceder o acesso.');
+    } finally {
+      setSavingGrant(false);
+    }
+  };
+
+  const handleUserRoleChange = async (userId, roleId) => {
+    try {
+      await setPlatformUserRole(userId, roleId ? Number(roleId) : null);
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível atualizar o papel.');
+    }
+  };
+
+  const handleRevokeUser = async (userId) => {
+    try {
+      await revokePlatformUser(userId);
+      toast.success('Acesso revogado.');
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível revogar o acesso.');
     }
   };
 
@@ -330,11 +453,15 @@ const Platform = () => {
     getPlatformMe()
       .then((data) => {
         setOwner(Boolean(data?.owner));
-        if (data?.owner) loadData();
+        setAccess(Boolean(data?.access));
+        setPerms(Array.isArray(data?.permissions) ? data.permissions : []);
+        if (data?.access) loadData(Boolean(data?.owner), data?.permissions || []);
       })
-      .catch(() => setOwner(false))
+      .catch(() => setAccess(false))
       .finally(() => setChecking(false));
   }, []);
+
+  const can = (permission) => owner || perms.includes(permission);
 
   const openCreate = () => {
     setDraft(EMPTY_ORG);
@@ -417,7 +544,7 @@ const Platform = () => {
 
   if (checking) return <Loading loading />;
 
-  if (!owner) {
+  if (!access) {
     return (
       <div className="platform">
         <div className="platform__denied">
@@ -466,7 +593,7 @@ const Platform = () => {
 
       <div className="platform__layout">
         <aside className="platform__nav">
-          {NAV.map((item) => (
+          {NAV.filter((item) => !item.perm || can(item.perm)).map((item) => (
             <button
               key={item.key}
               type="button"
@@ -933,6 +1060,140 @@ const Platform = () => {
           </section>
           )}
 
+          {section === 'usuarios' && (
+          <section className="platform__orgs">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--blue">
+                <Icons typeIcon="add-person" iconSize={20} fill="#2E5AAC" />
+              </span>
+              <h2 className="platform__orgs-title">Usuários da plataforma</h2>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Dê acesso ao painel do dono a outras pessoas, com um papel (conjunto de permissões). O usuário precisa já
+              ter uma conta no sistema. Você (super-admin) tem acesso total sempre.
+            </p>
+
+            <Row className="g-2 align-items-end">
+              <Col xs={12} md={5}>
+                <Form.Group>
+                  <Form.Label><b>E-mail do usuário:</b></Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={grant.email}
+                    onChange={(e) => setGrant((p) => ({ ...p, email: e.target.value }))}
+                    placeholder="pessoa@exemplo.com"
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={4}>
+                <Form.Group>
+                  <Form.Label><b>Papel:</b></Form.Label>
+                  <Form.Select value={grant.roleId} onChange={(e) => setGrant((p) => ({ ...p, roleId: e.target.value }))}>
+                    <option value="">Selecione um papel</option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>{role.name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={3}>
+                <Button variant="teal-blue" className="w-100" onClick={handleGrantAccess} disabled={savingGrant}>
+                  {savingGrant ? 'Concedendo...' : 'Conceder acesso'}
+                </Button>
+              </Col>
+            </Row>
+
+            {platformUsers.length === 0 ? (
+              <p className="platform__empty">Nenhum usuário com acesso ainda (além do super-admin).</p>
+            ) : (
+              <div className="platform__table-wrap mt-3">
+                <Table hover responsive className="platform__table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Usuário</th>
+                      <th>Papel</th>
+                      <th className="text-end">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {platformUsers.map((u) => (
+                      <tr key={u.id}>
+                        <td className="fw-semibold">{u.email}{u.displayName ? ` (${u.displayName})` : ''}</td>
+                        <td>
+                          <Form.Select
+                            size="sm"
+                            value={u.platformRoleId || ''}
+                            onChange={(e) => handleUserRoleChange(u.id, e.target.value)}
+                          >
+                            {roles.map((role) => (
+                              <option key={role.id} value={role.id}>{role.name}</option>
+                            ))}
+                          </Form.Select>
+                        </td>
+                        <td className="text-end">
+                          <Button size="sm" variant="outline-danger" onClick={() => handleRevokeUser(u.id)}>
+                            Revogar
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </section>
+          )}
+
+          {section === 'permissoes' && (
+          <section className="platform__orgs">
+            <div className="platform__orgs-head">
+              <div className="platform__section-title-row">
+                <span className="platform__section-icon platform__section-icon--blue">
+                  <Icons typeIcon="roles" iconSize={20} fill="#2E5AAC" />
+                </span>
+                <h2 className="platform__orgs-title">Papéis e permissões</h2>
+              </div>
+              <Button className="platform__btn-cta-solid d-flex align-items-center" variant="teal-blue" onClick={openCreateRole}>
+                Novo papel&nbsp;&nbsp;
+                <Icons typeIcon="plus" iconSize={16} fill="#fff" />
+              </Button>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Crie papéis com conjuntos de permissões e atribua aos usuários. O <b>super-admin</b> (você) tem tudo,
+              independentemente de papel.
+            </p>
+
+            {roles.length === 0 ? (
+              <p className="platform__empty">Nenhum papel criado. Clique em “Novo papel”.</p>
+            ) : (
+              <div className="platform__roles">
+                {roles.map((role) => (
+                  <div className="platform__role-card" key={role.id}>
+                    <div className="platform__role-head">
+                      <h4>{role.name}</h4>
+                      <div className="d-flex gap-2">
+                        <Button size="sm" variant="outline-teal-blue" onClick={() => openEditRole(role)}>Editar</Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => handleDeleteRole(role.id)}>Excluir</Button>
+                      </div>
+                    </div>
+                    <div className="platform__role-perms">
+                      {(role.permissions || []).length === 0 ? (
+                        <span className="platform__role-empty">Sem permissões</span>
+                      ) : (
+                        (role.permissions || []).map((key) => (
+                          <span className="platform__role-chip" key={key}>
+                            {permCatalog.find((p) => p.key === key)?.label || key}
+                          </span>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+          )}
+
           {section === 'sistema' && (
           <section className="platform__system">
             <div className="platform__section-title-row">
@@ -1276,6 +1537,48 @@ const Platform = () => {
               </Form.Group>
             </Col>
           </Row>
+        </Form>
+      </CustomModal>
+
+      <CustomModal
+        show={showRoleModal}
+        onHide={() => setShowRoleModal(false)}
+        variant="info"
+        title={roleDraft.id ? 'Editar papel' : 'Novo papel'}
+        icon={roleDraft.id ? 'edit-modal' : 'plus'}
+        footer={
+          <>
+            <Button variant="outline-secondary" onClick={() => setShowRoleModal(false)} disabled={savingRole}>
+              Cancelar
+            </Button>
+            <Button variant="teal-blue" onClick={handleSaveRole} disabled={savingRole}>
+              {savingRole ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </>
+        }
+      >
+        <Form className="platform__form">
+          <Form.Group className="mb-3">
+            <Form.Label><b>Nome do papel:</b></Form.Label>
+            <Form.Control
+              value={roleDraft.name}
+              onChange={(e) => setRoleDraft((prev) => ({ ...prev, name: e.target.value }))}
+              placeholder="Ex.: Suporte, Financeiro"
+            />
+          </Form.Group>
+          <Form.Label><b>Permissões:</b></Form.Label>
+          <div className="platform__perm-list">
+            {permCatalog.map((p) => (
+              <label className="platform__perm-item" key={p.key}>
+                <input
+                  type="checkbox"
+                  checked={roleDraft.permissions.includes(p.key)}
+                  onChange={() => toggleRolePerm(p.key)}
+                />
+                <span>{p.label}</span>
+              </label>
+            ))}
+          </div>
         </Form>
       </CustomModal>
     </div>

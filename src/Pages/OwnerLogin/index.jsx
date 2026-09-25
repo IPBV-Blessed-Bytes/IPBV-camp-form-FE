@@ -26,7 +26,7 @@ const OwnerLogin = () => {
     setChecking(true);
     getPlatformMe()
       .then((data) => {
-        if (data?.owner) {
+        if (data?.owner || data?.access) {
           navigate('/platform', { replace: true });
         } else {
           toast.error('Acesso restrito ao operador da plataforma.');
