@@ -371,6 +371,27 @@
     margin: 0;
   }
 
+  &__growth {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  &__growth-chart {
+    background: #f6f8fb;
+    border: 1px solid #e6e9f0;
+    border-radius: 12px;
+    padding: 0.9rem 1rem 0.5rem;
+  }
+
+  &__growth-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $dark-gray;
+    margin: 0 0 0.35rem;
+  }
+
   &__impersonate-list {
     display: flex;
     flex-direction: column;
@@ -672,7 +693,8 @@
     }
 
     &__roles,
-    &__perm-list {
+    &__perm-list,
+    &__growth {
       grid-template-columns: 1fr;
     }
   }

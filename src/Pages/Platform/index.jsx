@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, CartesianGrid } from 'recharts';
 import { toast } from 'react-toastify';
 
 import {
@@ -20,6 +20,7 @@ import {
   regularizePlatformOrganization,
   getPlatformLogs,
   sendPlatformBroadcast,
+  getPlatformGrowth,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getOrganizationCatalog } from '@/services/events';
@@ -127,6 +128,14 @@ const formatDateBR = (iso) => {
   return d && m && y ? `${d}/${m}/${y}` : iso;
 };
 
+const MONTHS_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+const monthTick = (ym) => {
+  if (!ym || typeof ym !== 'string') return ym;
+  const [year, month] = ym.split('-');
+  return `${MONTHS_PT[Number(month) - 1] || month}/${(year || '').slice(2)}`;
+};
+
 const formatDateTimeBR = (iso) => {
   if (!iso) return '—';
   const date = new Date(iso);
@@ -203,6 +212,7 @@ const Platform = () => {
   const [sysMessage, setSysMessage] = useState('');
   const [savingSys, setSavingSys] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [growth, setGrowth] = useState([]);
   const [roles, setRoles] = useState([]);
   const [platformUsers, setPlatformUsers] = useState([]);
   const [permCatalog, setPermCatalog] = useState([]);
@@ -221,7 +231,7 @@ const Platform = () => {
     const has = (permission) => ownerFlag || permsList.includes(permission);
     setLoading(true);
     try {
-      const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData, growthData] = await Promise.all([
         has('CLIENTS_VIEW') ? getPlatformStats().catch(() => null) : Promise.resolve(null),
         has('CLIENTS_VIEW') ? listPlatformOrganizations().catch(() => []) : Promise.resolve([]),
         listPlatformFaqs().catch(() => []),
@@ -229,10 +239,12 @@ const Platform = () => {
         has('CLIENTS_VIEW') ? getPlatformBillingOverview().catch(() => null) : Promise.resolve(null),
         getSystemStage().catch(() => null),
         has('LOGS_VIEW') ? getPlatformLogs().catch(() => []) : Promise.resolve([]),
+        has('CLIENTS_VIEW') ? getPlatformGrowth().catch(() => []) : Promise.resolve([]),
       ]);
       setStats(statsData);
       setOverview(overviewData);
       setLogs(Array.isArray(logsData) ? logsData : []);
+      setGrowth(Array.isArray(growthData) ? growthData : []);
       if (sysData) {
         setSysStage(sysData.stage || 'on');
         setSysMessage(sysData.message || '');
@@ -732,6 +744,43 @@ const Platform = () => {
                 ) : (
                   <p className="platform__billing-empty">Sem dados de cobrança ainda.</p>
                 )}
+              </section>
+
+              <section className="platform__orgs">
+                <div className="platform__section-title-row">
+                  <span className="platform__section-icon platform__section-icon--teal">
+                    <Icons typeIcon="chart" iconSize={20} fill="#007185" />
+                  </span>
+                  <h2 className="platform__orgs-title">Crescimento (últimos 6 meses)</h2>
+                </div>
+                <div className="platform__growth">
+                  <div className="platform__growth-chart">
+                    <p className="platform__growth-title">Novos clientes / mês</p>
+                    <ResponsiveContainer width="100%" height={180}>
+                      <BarChart data={growth} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                        <CartesianGrid vertical={false} stroke="#eef1f6" />
+                        <XAxis dataKey="month" tickFormatter={monthTick} tick={{ fontSize: 12, fill: '#7f7878' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(value) => [`${value} cliente(s)`, 'Novos']} labelFormatter={monthTick} />
+                        <Bar dataKey="tenants" fill="#007185" radius={[4, 4, 0, 0]} maxBarSize={34} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="platform__growth-chart">
+                    <p className="platform__growth-title">Inscrições / mês</p>
+                    <ResponsiveContainer width="100%" height={180}>
+                      <BarChart data={growth} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                        <CartesianGrid vertical={false} stroke="#eef1f6" />
+                        <XAxis dataKey="month" tickFormatter={monthTick} tick={{ fontSize: 12, fill: '#7f7878' }} axisLine={false} tickLine={false} />
+                        <Tooltip formatter={(value) => [`${value} inscrição(ões)`, 'Inscrições']} labelFormatter={monthTick} />
+                        <Bar dataKey="registrations" fill="#2E5AAC" radius={[4, 4, 0, 0]} maxBarSize={34} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                <p className="platform__fin-note">
+                  <Icons typeIcon="simple-info" iconSize={15} fill="#7f7878" /> Métricas de contagem. A{' '}
+                  <b>receita</b> (MRR, valores por tenant) entra quando o pagamento real estiver no ar.
+                </p>
               </section>
             </div>
           )}
