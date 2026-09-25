@@ -36,12 +36,22 @@ const FEATURES = [
 
 const HERO_CHIPS = ['PIX, cartão e boleto', 'Sem mensalidade', 'Pronto em minutos'];
 
+const DIFFERENTIALS = [
+  { icon: 'ride', title: 'Carona e transporte', text: 'Oferta e procura de vagas entre os inscritos e controle do ônibus da igreja.' },
+  { icon: 'rooms', title: 'Quartos', text: 'Aloque os inscritos por quarto, com acompanhantes, direto no painel.' },
+  { icon: 'team', title: 'Times e equipes', text: 'Organize os inscritos em times e equipes de serviço do evento.' },
+  { icon: 'checkin', title: 'Check-in e pulseiras', text: 'Presença por QR ou CPF, individual ou por família, e controle de pulseiras.' },
+  { icon: 'cart', title: 'Pacotes e lotes', text: 'Hospedagem, alimentação e transporte por categoria, com preço por idade e por lote.' },
+  { icon: 'calendar', title: 'Multi-evento', text: 'Acampamento, congresso e retiro na mesma conta, cada um com sua página e inscrições.' },
+];
+
 const Landing = () => {
   const navigate = useNavigate();
   const [settings, setSettings] = useState(null);
   const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
+    document.title = 'Sistema de Inscrição para Igrejas | Acampamentos, Retiros e Congressos';
     listPlatformFaqs()
       .then(setFaqs)
       .catch(() => setFaqs([]));
@@ -99,6 +109,41 @@ const Landing = () => {
               <p>{feature.text}</p>
             </div>
           ))}
+        </section>
+
+        <section className="storefront__differentials">
+          <div className="storefront__section-head">
+            <span className="storefront__eyebrow storefront__eyebrow--dark">O diferencial</span>
+            <h2 className="storefront__section-title">Feito para a realidade da igreja</h2>
+            <p className="storefront__plans-lede">
+              Vender ingresso e coletar formulário já tem de sobra. O que não existe é um sistema que também organiza a{' '}
+              <b>operação do evento da igreja</b> — carona, quartos, times, pulseiras e check-in — integrada ao
+              pagamento, num fluxo só.
+            </p>
+          </div>
+          <div className="storefront__diffgrid">
+            {DIFFERENTIALS.map((item) => (
+              <div className="storefront__diff" key={item.title}>
+                <span className="storefront__diff-icon">
+                  <Icons typeIcon={item.icon} iconSize={24} fill="#007185" />
+                </span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="storefront__vs">
+            <div className="storefront__vs-card">
+              <span className="storefront__vs-tag">vs. Google Forms</span>
+              <p>Aqui tem pagamento, pacotes, contas de usuário e a gestão do evento — não só coleta de respostas.</p>
+            </div>
+            <div className="storefront__vs-card">
+              <span className="storefront__vs-tag">vs. Sympla / venda de ingresso</span>
+              <p>O formulário é seu, editável campo a campo, com carona, quartos, times, pulseiras e check-in.</p>
+            </div>
+          </div>
         </section>
 
         <section className="storefront__plans" id="planos">

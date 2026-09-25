@@ -23,6 +23,18 @@
   color: var(--m-ink);
   padding-bottom: 60px;
 
+  &--public {
+    background: $background-gray;
+    min-height: 100vh;
+    padding-bottom: 0;
+
+    .manual__layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.75rem 1rem 3rem;
+    }
+  }
+
   &__head {
     display: flex;
     flex-direction: column;

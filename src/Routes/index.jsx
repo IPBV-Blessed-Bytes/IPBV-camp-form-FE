@@ -535,6 +535,7 @@ const FormRoutes = () => {
 
             <Route path="/platform" element={<Platform />} />
             <Route path="/comprar" element={<Storefront />} />
+            <Route path="/ajuda" element={<AdminManual publicMode />} />
             <Route path="/indisponivel" element={<Unavailable />} />
 
             <Route path="/esqueci-senha" element={<ForgotPassword />} />

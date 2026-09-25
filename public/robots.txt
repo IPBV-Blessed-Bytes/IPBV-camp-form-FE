@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /$
+Allow: /comprar
+Allow: /ajuda
+Disallow: /admin
+Disallow: /dev
+Disallow: /platform
+Disallow: /minha-conta
+Disallow: /minhas-inscricoes
+
+Sitemap: https://www.plataformadeinscricoes.com.br/sitemap.xml

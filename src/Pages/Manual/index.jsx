@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import { StoreNav, StoreFooter } from '@/components/Storefront/StorefrontChrome';
 import { getPlatformMe } from '@/services/platform';
 import './style.scss';
+import '../Storefront/style.scss';
 
 const AUDIENCES = [
   { key: 'cliente', label: 'Ajuda do cliente', ownerOnly: false },
@@ -47,19 +49,27 @@ const SECTIONS = {
   ],
 };
 
-const Manual = ({ loggedUsername }) => {
+const Manual = ({ loggedUsername, publicMode = false }) => {
   const [owner, setOwner] = useState(false);
   const [active, setActive] = useState('cliente');
   const [activeSection, setActiveSection] = useState('');
   const contentRef = useRef(null);
 
   useEffect(() => {
+    if (publicMode) {
+      setOwner(false);
+      document.title = 'Ajuda | Sistema de Inscrição para Igrejas';
+      return;
+    }
     getPlatformMe()
       .then((data) => setOwner(Boolean(data?.owner)))
       .catch(() => setOwner(false));
-  }, []);
+  }, [publicMode]);
 
-  const tabs = useMemo(() => AUDIENCES.filter((a) => !a.ownerOnly || owner), [owner]);
+  const tabs = useMemo(
+    () => (publicMode ? AUDIENCES.filter((a) => a.key === 'cliente') : AUDIENCES.filter((a) => !a.ownerOnly || owner)),
+    [owner, publicMode],
+  );
 
   useEffect(() => {
     if (!tabs.some((t) => t.key === active)) {
@@ -91,34 +101,40 @@ const Manual = ({ loggedUsername }) => {
   };
 
   return (
-    <div className="admin-subpage manual">
-      <AdminSubpageHeader
-        username={loggedUsername}
-        title="Manual da Plataforma"
-        subtitle="Documentação: uso pelo cliente, operação, arquitetura e vendas"
-        typeIcon="info"
-      />
+    <div className={publicMode ? 'manual manual--public' : 'admin-subpage manual'}>
+      {publicMode ? (
+        <StoreNav />
+      ) : (
+        <AdminSubpageHeader
+          username={loggedUsername}
+          title="Manual da Plataforma"
+          subtitle="Documentação: uso pelo cliente, operação, arquitetura e vendas"
+          typeIcon="info"
+        />
+      )}
 
-      <div className="manual__head">
-        <div className="manual__tabs" role="tablist">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              role="tab"
-              aria-selected={active === tab.key}
-              className={`manual__tab ${active === tab.key ? 'is-active' : ''}`}
-              onClick={() => {
-                setActive(tab.key);
-                window.scrollTo({ top: 0, behavior: 'auto' });
-              }}
-            >
-              <span className="manual__tab-dot" />
-              {tab.label}
-            </button>
-          ))}
+      {tabs.length > 1 && (
+        <div className="manual__head">
+          <div className="manual__tabs" role="tablist">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                role="tab"
+                aria-selected={active === tab.key}
+                className={`manual__tab ${active === tab.key ? 'is-active' : ''}`}
+                onClick={() => {
+                  setActive(tab.key);
+                  window.scrollTo({ top: 0, behavior: 'auto' });
+                }}
+              >
+                <span className="manual__tab-dot" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="manual__layout">
         <aside className="manual__subnav">
@@ -143,12 +159,16 @@ const Manual = ({ loggedUsername }) => {
           {active === 'tecnico' && <TecnicoDocs />}
           {active === 'vendas' && <VendasDocs />}
 
-          <div className="manual__footer">
-            Manual da Plataforma · documentação interna (cliente · dono · engenharia · vendas). Conteúdo em evolução
-            conforme o produto; valores de preço e a integração de pagamento em sandbox estão em definição.
-          </div>
+          {!publicMode && (
+            <div className="manual__footer">
+              Manual da Plataforma · documentação interna (cliente · dono · engenharia · vendas). Conteúdo em evolução
+              conforme o produto; valores de preço e a integração de pagamento em sandbox estão em definição.
+            </div>
+          )}
         </main>
       </div>
+
+      {publicMode && <StoreFooter />}
     </div>
   );
 };
@@ -612,6 +632,7 @@ const VendasDocs = () => (
 
 Manual.propTypes = {
   loggedUsername: PropTypes.string,
+  publicMode: PropTypes.bool,
 };
 
 export default Manual;

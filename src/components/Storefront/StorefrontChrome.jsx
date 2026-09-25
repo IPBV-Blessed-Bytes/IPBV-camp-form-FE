@@ -16,6 +16,9 @@ export const StoreNav = ({ onLanding }) => {
         </button>
         <nav className="storefront__nav-links">
           {onLanding && <a href="#planos">Preços</a>}
+          <button type="button" className="storefront__nav-linkbtn" onClick={() => navigate('/ajuda')}>
+            Ajuda
+          </button>
           <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
             Entrar
           </button>
