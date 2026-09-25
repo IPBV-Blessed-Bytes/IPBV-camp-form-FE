@@ -9,6 +9,7 @@ import useAuth from '@/hooks/useAuth';
 import Icons from '@/components/Global/Icons';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
 import CustomModal from '@/components/Global/CustomModal';
+import ChangePasswordModal from '@/components/Global/ChangePasswordModal';
 import DatePicker from 'react-datepicker';
 import { ptBR } from 'date-fns/locale';
 import { InputMask, format } from '@react-input/mask';
@@ -73,6 +74,7 @@ const MyAccount = () => {
   const [justificationError, setJustificationError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [qrTarget, setQrTarget] = useState(null);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [cancelTarget, setCancelTarget] = useState(null);
   const [canceling, setCanceling] = useState(false);
 
@@ -189,6 +191,9 @@ const MyAccount = () => {
           </Button>
           <Button variant="outline-teal-blue" onClick={goToForm}>
             Voltar ao formulário
+          </Button>
+          <Button variant="outline-teal-blue" onClick={() => setShowChangePassword(true)}>
+            Alterar senha
           </Button>
           <Button variant="outline-secondary" onClick={logout}>
             Sair
@@ -693,6 +698,8 @@ const MyAccount = () => {
           </Form.Group>
         </Form>
       </CustomModal>
+
+      <ChangePasswordModal show={showChangePassword} onHide={() => setShowChangePassword(false)} />
     </div>
   );
 };

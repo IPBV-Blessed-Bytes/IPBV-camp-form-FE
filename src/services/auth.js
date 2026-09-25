@@ -6,6 +6,11 @@ export const login = async ({ login, password }) => {
   return data;
 };
 
+export const changePassword = async ({ currentPassword, newPassword }) => {
+  const { data } = await authFetcher.post('/auth/change-password', { currentPassword, newPassword });
+  return data;
+};
+
 export const googleLogin = async (credential, options = {}) => {
   const { data } = await fetcher.post('/auth/google', { credential, area: options.area });
   return data;

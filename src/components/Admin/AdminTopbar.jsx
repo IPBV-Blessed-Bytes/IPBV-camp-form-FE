@@ -5,6 +5,7 @@ import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
 import { eventPath, getEventSlug, setSelectedEvent } from '@/config/eventScope';
 import { listMyEvents } from '@/services/events';
+import ChangePasswordModal from '@/components/Global/ChangePasswordModal';
 
 const getInitials = (name) => {
   if (!name) return '?';
@@ -20,6 +21,7 @@ const AdminTopbar = ({ username, logout }) => {
   const navigate = useNavigate();
 
   const [events, setEvents] = useState([]);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const currentSlug = getEventSlug();
 
   useEffect(() => {
@@ -112,6 +114,17 @@ const AdminTopbar = ({ username, logout }) => {
               <Icons typeIcon="info" iconSize={18} fill="#555050" />
               <span>Manual / Ajuda</span>
             </button>
+            <button
+              type="button"
+              className="admin-topbar__menu-item"
+              onClick={() => {
+                setOpen(false);
+                setShowChangePassword(true);
+              }}
+            >
+              <Icons typeIcon="roles" iconSize={18} fill="#555050" />
+              <span>Alterar senha</span>
+            </button>
             <div className="admin-topbar__menu-divider" />
             <button
               type="button"
@@ -127,6 +140,8 @@ const AdminTopbar = ({ username, logout }) => {
           </div>
         )}
       </div>
+
+      <ChangePasswordModal show={showChangePassword} onHide={() => setShowChangePassword(false)} />
     </header>
   );
 };
