@@ -164,7 +164,8 @@ const Landing = () => {
                   R$ 0<small> fixo</small>
                 </span>
                 <span className="storefront__plan-blurb">
-                  Nada de assinatura obrigatória que pese na igreja pequena. Você paga conforme usa.
+                  Nada de assinatura obrigatória que pese no orçamento mensal. Você paga conforme usa, escolhendo se a
+                  taxa é absorvida pela igreja ou pelo usuário do sistema.
                 </span>
                 <ul className="storefront__plan-list">
                   <li>
