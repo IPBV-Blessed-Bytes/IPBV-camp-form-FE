@@ -26,6 +26,11 @@ export const regularizePlatformOrganization = async (id, periodDays) => {
   return data;
 };
 
+export const sendPlatformBroadcast = async (payload) => {
+  const { data } = await authFetcher.post('/platform/broadcast', payload);
+  return data;
+};
+
 export const getPlatformLogs = async () => {
   const { data } = await authFetcher.get('/platform/logs');
   return data?.logs || [];

@@ -19,6 +19,7 @@ import {
   getPlatformBillingOverview,
   regularizePlatformOrganization,
   getPlatformLogs,
+  sendPlatformBroadcast,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getOrganizationCatalog } from '@/services/events';
@@ -106,6 +107,7 @@ const NAV = [
   { key: 'cobranca', label: 'Cobrança', icon: 'cash', perm: 'CLIENTS_VIEW' },
   { key: 'precos', label: 'Preços', icon: 'profits', perm: 'PRICING_MANAGE' },
   { key: 'faq', label: 'FAQ da loja', icon: 'question', perm: 'FAQ_MANAGE' },
+  { key: 'comunicados', label: 'Comunicados', icon: 'megaphone', perm: 'BROADCAST' },
   { key: 'usuarios', label: 'Usuários', icon: 'add-person', perm: 'USERS_MANAGE' },
   { key: 'permissoes', label: 'Papéis e permissões', icon: 'roles', perm: 'USERS_MANAGE' },
   { key: 'logs', label: 'Logs', icon: 'logs', perm: 'LOGS_VIEW' },
@@ -212,6 +214,8 @@ const Platform = () => {
   const [impersonate, setImpersonate] = useState(null);
   const [impersonateEvents, setImpersonateEvents] = useState([]);
   const [impersonateLoading, setImpersonateLoading] = useState(false);
+  const [broadcast, setBroadcast] = useState({ audience: 'all', subject: '', message: '' });
+  const [sendingBroadcast, setSendingBroadcast] = useState(false);
 
   const loadData = async (ownerFlag = owner, permsList = perms) => {
     const has = (permission) => ownerFlag || permsList.includes(permission);
@@ -283,6 +287,24 @@ const Platform = () => {
       toast.error(getApiErrorMessage(error) || 'Não foi possível atualizar o estágio do sistema.');
     } finally {
       setSavingSys(false);
+    }
+  };
+
+  const handleSendBroadcast = async () => {
+    if (!broadcast.subject.trim() || !broadcast.message.trim()) {
+      toast.error('Preencha o assunto e a mensagem.');
+      return;
+    }
+    setSendingBroadcast(true);
+    try {
+      const data = await sendPlatformBroadcast(broadcast);
+      toast.success(`Comunicado enviado para ${data.sent} igreja(s).`);
+      setBroadcast((prev) => ({ ...prev, subject: '', message: '' }));
+      await loadData();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível enviar o comunicado.');
+    } finally {
+      setSendingBroadcast(false);
     }
   };
 
@@ -1086,6 +1108,72 @@ const Platform = () => {
                 </Table>
               </div>
             )}
+          </section>
+          )}
+
+          {section === 'comunicados' && (
+          <section className="platform__orgs">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--warn">
+                <Icons typeIcon="megaphone" iconSize={20} fill="#b9770a" />
+              </span>
+              <h2 className="platform__orgs-title">Comunicados</h2>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Envie um e-mail para o contato das igrejas de uma vez. Escolha o público e escreva a mensagem.
+            </p>
+            <Row className="g-3">
+              <Col xs={12} md={5}>
+                <Form.Group>
+                  <Form.Label><b>Público:</b></Form.Label>
+                  <Form.Select
+                    value={broadcast.audience}
+                    onChange={(e) => setBroadcast((p) => ({ ...p, audience: e.target.value }))}
+                  >
+                    <option value="all">Todas as igrejas ({organizations.length})</option>
+                    <option value="active">
+                      Ativas ({organizations.filter((o) => o.billingStatus === 'active').length})
+                    </option>
+                    <option value="trial">
+                      Em teste ({organizations.filter((o) => o.billingStatus === 'trial').length})
+                    </option>
+                    <option value="past_due">
+                      Inadimplentes ({organizations.filter((o) => o.billingStatus === 'past_due').length})
+                    </option>
+                    <option value="canceled">
+                      Canceladas ({organizations.filter((o) => o.billingStatus === 'canceled').length})
+                    </option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label><b>Assunto:</b></Form.Label>
+                  <Form.Control
+                    value={broadcast.subject}
+                    onChange={(e) => setBroadcast((p) => ({ ...p, subject: e.target.value }))}
+                    placeholder="Ex.: Novidade na plataforma"
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label><b>Mensagem:</b></Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={6}
+                    value={broadcast.message}
+                    onChange={(e) => setBroadcast((p) => ({ ...p, message: e.target.value }))}
+                    placeholder="Escreva o comunicado. Quebras de linha são preservadas."
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <div className="platform__pricing-actions">
+              <Button variant="teal-blue" onClick={handleSendBroadcast} disabled={sendingBroadcast}>
+                {sendingBroadcast ? 'Enviando...' : 'Enviar comunicado'}
+              </Button>
+            </div>
           </section>
           )}
 
