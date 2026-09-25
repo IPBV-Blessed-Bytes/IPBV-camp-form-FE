@@ -1,10 +1,14 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/Global/Icons';
+import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 
 export const StoreNav = ({ onLanding }) => {
   const navigate = useNavigate();
+  const { isLoggedIn, displayName } = useContext(AuthContext);
+  const firstName = (displayName || '').trim().split(' ')[0];
   return (
     <header className="storefront__nav">
       <Container className="storefront__nav-inner">
@@ -19,9 +23,18 @@ export const StoreNav = ({ onLanding }) => {
           <button type="button" className="storefront__nav-linkbtn" onClick={() => navigate('/ajuda')}>
             Ajuda
           </button>
-          <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
-            Entrar
-          </button>
+          {isLoggedIn ? (
+            <div className="storefront__nav-account">
+              {firstName && <span className="storefront__nav-hi">Olá, {firstName}</span>}
+              <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
+                Meu painel
+              </button>
+            </div>
+          ) : (
+            <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
+              Entrar
+            </button>
+          )}
         </nav>
       </Container>
     </header>
