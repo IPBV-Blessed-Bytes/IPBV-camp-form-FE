@@ -18,6 +18,7 @@ import {
   updatePlatformSettings,
   getPlatformBillingOverview,
   regularizePlatformOrganization,
+  getPlatformLogs,
 } from '@/services/platform';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getApiErrorMessage } from '@/fetchers/helpers';
@@ -92,6 +93,7 @@ const NAV = [
   { key: 'cobranca', label: 'Cobrança', icon: 'cash' },
   { key: 'precos', label: 'Preços', icon: 'profits' },
   { key: 'faq', label: 'FAQ da loja', icon: 'question' },
+  { key: 'logs', label: 'Logs', icon: 'logs' },
   { key: 'sistema', label: 'Sistema', icon: 'refresh' },
 ];
 
@@ -106,6 +108,19 @@ const formatDateBR = (iso) => {
   if (!iso) return '—';
   const [y, m, d] = iso.split('-');
   return d && m && y ? `${d}/${m}/${y}` : iso;
+};
+
+const formatDateTimeBR = (iso) => {
+  if (!iso) return '—';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
 
 const slugify = (value) =>
@@ -168,20 +183,23 @@ const Platform = () => {
   const [sysStage, setSysStage] = useState('on');
   const [sysMessage, setSysMessage] = useState('');
   const [savingSys, setSavingSys] = useState(false);
+  const [logs, setLogs] = useState([]);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statsData, orgs, faqList, settingsData, overviewData, sysData] = await Promise.all([
+      const [statsData, orgs, faqList, settingsData, overviewData, sysData, logsData] = await Promise.all([
         getPlatformStats(),
         listPlatformOrganizations(),
         listPlatformFaqs(),
         getPlatformSettings(),
         getPlatformBillingOverview(),
         getSystemStage(),
+        getPlatformLogs(),
       ]);
       setStats(statsData);
       setOverview(overviewData);
+      setLogs(Array.isArray(logsData) ? logsData : []);
       if (sysData) {
         setSysStage(sysData.stage || 'on');
         setSysMessage(sysData.message || '');
@@ -872,6 +890,47 @@ const Platform = () => {
             </Accordion>
           )}
         </section>
+          )}
+
+          {section === 'logs' && (
+          <section className="platform__orgs">
+            <div className="platform__section-title-row">
+              <span className="platform__section-icon platform__section-icon--blue">
+                <Icons typeIcon="logs" iconSize={20} fill="#2E5AAC" />
+              </span>
+              <h2 className="platform__orgs-title">Logs da plataforma</h2>
+            </div>
+            <p className="platform__pricing-subtitle">
+              Registro das ações administrativas no painel do dono (criar/editar igreja, regularizar, preços, estágio do
+              sistema). Mostra os 200 mais recentes.
+            </p>
+            {logs.length === 0 ? (
+              <p className="platform__empty">Nenhuma ação registrada ainda.</p>
+            ) : (
+              <div className="platform__table-wrap">
+                <Table hover responsive className="platform__table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Data / hora</th>
+                      <th>Quem</th>
+                      <th>Ação</th>
+                      <th>Detalhe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {logs.map((entry) => (
+                      <tr key={entry.id}>
+                        <td className="text-nowrap">{formatDateTimeBR(entry.createdAt)}</td>
+                        <td>{entry.actor || '—'}</td>
+                        <td className="fw-semibold">{entry.action}</td>
+                        <td>{entry.detail || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </section>
           )}
 
           {section === 'sistema' && (
