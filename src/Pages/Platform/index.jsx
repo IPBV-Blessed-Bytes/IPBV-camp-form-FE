@@ -118,6 +118,8 @@ const EMPTY_ORG = {
   tier: 'completo',
   pagarmeRecipientId: '',
   platformFeePercent: '',
+  freeEventFee: '',
+  freeEventAnnual: '',
   billingStatus: 'active',
   dueDate: '',
   trialEndsAt: '',
@@ -299,6 +301,8 @@ const Platform = () => {
       tier: org.tier || 'completo',
       pagarmeRecipientId: org.pagarmeRecipientId || '',
       platformFeePercent: org.platformFeePercent ?? '',
+      freeEventFee: org.freeEventFeeCents != null ? (org.freeEventFeeCents / 100).toString() : '',
+      freeEventAnnual: org.freeEventAnnualCents != null ? (org.freeEventAnnualCents / 100).toString() : '',
       billingStatus: org.billingStatus || 'active',
       dueDate: org.dueDate || '',
       trialEndsAt: org.trialEndsAt || '',
@@ -328,6 +332,14 @@ const Platform = () => {
             draft.platformFeePercent === '' || draft.platformFeePercent === null
               ? null
               : Number(draft.platformFeePercent),
+          freeEventFeeCents:
+            draft.freeEventFee === '' || draft.freeEventFee === null
+              ? null
+              : Math.round(Number(draft.freeEventFee) * 100),
+          freeEventAnnualCents:
+            draft.freeEventAnnual === '' || draft.freeEventAnnual === null
+              ? null
+              : Math.round(Number(draft.freeEventAnnual) * 100),
           billingStatus: draft.billingStatus || null,
           dueDate: draft.dueDate || null,
           trialEndsAt: draft.trialEndsAt || null,
@@ -602,7 +614,8 @@ const Platform = () => {
                 <h2 className="platform__pricing-title">Preços da plataforma</h2>
               </div>
               <p className="platform__pricing-subtitle">
-                Valores padrão aplicados a todas as igrejas. A taxa (%) pode ser sobrescrita por organização.
+                Valores <b>padrão (fallback)</b> aplicados a todas as igrejas. Cada cliente pode ter os seus próprios
+                (taxa %, evento por evento e anual) na <b>edição da organização</b> — se lá estiver vazio, usa estes.
               </p>
             </div>
           </div>
@@ -963,6 +976,40 @@ const Platform = () => {
                       placeholder="padrão da plataforma"
                     />
                     <Form.Text className="text-muted">% retido por inscrição paga. Vazio = usa o padrão.</Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Evento gratuito — por evento (R$):</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={draft.freeEventFee}
+                      onChange={(e) => handleChange('freeEventFee')(e.target.value)}
+                      placeholder="padrão da plataforma"
+                    />
+                    <Form.Text className="text-muted">Vazio = usa o padrão global.</Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label>
+                      <b>Evento gratuito — anual ilimitado (R$):</b>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={draft.freeEventAnnual}
+                      onChange={(e) => handleChange('freeEventAnnual')(e.target.value)}
+                      placeholder="padrão da plataforma"
+                    />
+                    <Form.Text className="text-muted">Vazio = usa o padrão global.</Form.Text>
                   </Form.Group>
                 </Col>
 
