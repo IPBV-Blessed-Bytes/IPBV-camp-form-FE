@@ -47,7 +47,7 @@ const AdminLoggedOut = ({
               />
               <path d="M50 50 V80 M37 62 H63" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
             </svg>
-            <h4 className="login-admin-card__title">Painel Administrativo</h4>
+            <h4 className="login-admin-card__title">Painel Administrativo - Cliente</h4>
             <p className="login-admin-card__subtitle">Entre com suas credenciais para acessar</p>
           </header>
 

@@ -36,6 +36,29 @@ const FEATURES = [
 
 const HERO_CHIPS = ['PIX, cartão e boleto', 'Sem mensalidade', 'Pronto em minutos'];
 
+const VALUES = [
+  {
+    icon: 'couple',
+    title: 'Servir a igreja pequena',
+    text: 'A mesma ferramenta da igreja grande, acessível à congregação pequena — sem mensalidade que pese no orçamento.',
+  },
+  {
+    icon: 'money',
+    title: 'Mordomia e confiança',
+    text: 'O dinheiro é da igreja e cai direto na conta dela. Nós não custodiamos nada; você mantém o controle.',
+  },
+  {
+    icon: 'checked',
+    title: 'Cuidado com os dados',
+    text: 'Dados dos inscritos tratados com segurança e responsabilidade, seguindo a LGPD.',
+  },
+  {
+    icon: 'clock',
+    title: 'Simplicidade',
+    text: 'Pronto em minutos, sem depender de TI. Você monta, publica e recebe — e volta a cuidar das pessoas.',
+  },
+];
+
 const DIFFERENTIALS = [
   { icon: 'ride', title: 'Carona e transporte', text: 'Oferta e procura de vagas entre os inscritos e controle do ônibus da igreja.' },
   { icon: 'rooms', title: 'Quartos', text: 'Aloque os inscritos por quarto, com acompanhantes, direto no painel.' },
@@ -65,6 +88,9 @@ const Landing = () => {
   const feePercent = settings ? `${settings.defaultFeePercent}%` : '—';
   const freeEventFee = settings ? formatBRL(settings.freeEventFeeCents) : '—';
   const freeEventAnnual = settings ? formatBRL(settings.freeEventAnnualCents) : '—';
+  const essencialFeePercent = settings ? `${settings.essencialFeePercent}%` : '—';
+  const essencialFreeEventFee = settings ? formatBRL(settings.essencialFreeEventFeeCents) : '—';
+  const essencialFreeEventAnnual = settings ? formatBRL(settings.essencialFreeEventAnnualCents) : '—';
 
   return (
     <div className="storefront">
@@ -146,94 +172,97 @@ const Landing = () => {
           </div>
         </section>
 
-        <section className="storefront__plans" id="planos">
+        <section className="storefront__purpose">
           <div className="storefront__section-head">
-            <h2 className="storefront__section-title">Preços simples, sem mensalidade</h2>
+            <span className="storefront__eyebrow storefront__eyebrow--dark">Nosso propósito</span>
+            <h2 className="storefront__section-title">Tecnologia a serviço da sua igreja</h2>
             <p className="storefront__plans-lede">
-              Criar a conta é grátis. Você só paga quando cria um evento — e no evento pago, só sobre o que vende. Você
-              recebe o dinheiro arrecadado direto na sua conta bancária cadastrada.
+              Nascemos servindo o acampamento de uma igreja e crescemos com ela. Nossa missão é tirar o peso da
+              organização das costas da liderança, para a igreja focar no que importa: <b>as pessoas e o Reino</b>.
             </p>
           </div>
-          <Row className="g-4">
-            <Col xs={12} md={4}>
+          <div className="storefront__values">
+            {VALUES.map((value) => (
+              <div className="storefront__value" key={value.title}>
+                <span className="storefront__value-icon">
+                  <Icons typeIcon={value.icon} iconSize={24} fill="#007185" />
+                </span>
+                <h3>{value.title}</h3>
+                <p>{value.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="storefront__plans" id="planos">
+          <div className="storefront__section-head">
+            <h2 className="storefront__section-title">Dois planos, sem mensalidade</h2>
+            <p className="storefront__plans-lede">
+              Escolha o tamanho da sua igreja. Conta grátis; você só paga quando cria um evento — e no pago, só sobre o
+              que vende. O dinheiro cai direto na conta da igreja.
+            </p>
+          </div>
+          <Row className="g-4 justify-content-center">
+            <Col xs={12} md={6} lg={5}>
+              <div className="storefront__plan">
+                <span className="storefront__plan-name">Essencial</span>
+                <span className="storefront__plan-tagline">Formulário + inscrições. Pra quem só precisa inscrever e receber.</span>
+                <span className="storefront__plan-price">
+                  {essencialFeePercent}
+                  <small> por inscrição paga</small>
+                </span>
+                <span className="storefront__plan-blurb">
+                  Evento gratuito: {essencialFreeEventFee}/evento ou {essencialFreeEventAnnual}/ano ilimitado.
+                </span>
+                <ul className="storefront__plan-list">
+                  <li>
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Formulário 100% editável
+                  </li>
+                  <li>
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Pagamento (PIX, cartão e boleto)
+                  </li>
+                  <li>
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Inscritos, relatórios e Excel
+                  </li>
+                  <li>
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Página do evento e FAQ
+                  </li>
+                </ul>
+              </div>
+            </Col>
+            <Col xs={12} md={6} lg={5}>
               <div className="storefront__plan storefront__plan--feature">
                 <span className="storefront__plan-tag">Recomendado</span>
-                <span className="storefront__plan-name">Evento pago</span>
+                <span className="storefront__plan-name">Completo</span>
+                <span className="storefront__plan-tagline">Tudo do Essencial + a logística do evento. Pra quem organiza tudo.</span>
                 <span className="storefront__plan-price">
                   {feePercent}
-                  <small> por inscrição</small>
+                  <small> por inscrição paga</small>
                 </span>
                 <span className="storefront__plan-blurb">
-                  Taxa de serviço somada ao inscrito. O dinheiro cai na conta da sua igreja.
+                  Evento gratuito: {freeEventFee}/evento ou {freeEventAnnual}/ano ilimitado.
                 </span>
                 <ul className="storefront__plan-list">
                   <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> PIX, cartão e boleto
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Tudo do Essencial, e mais:
                   </li>
                   <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Repasse automático pra igreja
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Carona e ônibus da igreja
                   </li>
                   <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Sem custo fixo mensal
-                  </li>
-                </ul>
-              </div>
-            </Col>
-            <Col xs={12} md={4}>
-              <div className="storefront__plan">
-                <span className="storefront__plan-name">Evento gratuito</span>
-                <span className="storefront__plan-price">
-                  {freeEventFee}
-                  <small> por evento</small>
-                </span>
-                <span className="storefront__plan-blurb">
-                  Ou {freeEventAnnual}/ano para eventos ilimitados. 14 dias de teste grátis.
-                </span>
-                <ul className="storefront__plan-list">
-                  <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> 14 dias grátis pra experimentar
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Quartos e times/equipes
                   </li>
                   <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Eventos ilimitados no plano anual
-                  </li>
-                  <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Sem taxa por inscrição
-                  </li>
-                </ul>
-              </div>
-            </Col>
-            <Col xs={12} md={4}>
-              <div className="storefront__plan">
-                <span className="storefront__plan-name">Sem mensalidade</span>
-                <span className="storefront__plan-price">
-                  R$ 0<small> fixo</small>
-                </span>
-                <span className="storefront__plan-blurb">
-                  Nada de assinatura obrigatória que pese no orçamento mensal. Você paga conforme usa, escolhendo se a
-                  taxa é absorvida pela igreja ou pelo usuário do sistema.
-                </span>
-                <ul className="storefront__plan-list">
-                  <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Conta grátis pra sempre
-                  </li>
-                  <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Paga só quando usa
-                  </li>
-                  <li>
-                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Ideal pra igreja pequena
+                    <Icons typeIcon="checked" iconSize={16} fill="#057c05" /> Check-in por QR e pulseiras
                   </li>
                 </ul>
               </div>
             </Col>
           </Row>
           <p className="storefront__plans-footnote">
-            <div className="d-flex align-items-center gap-2">
-              <Icons typeIcon="simple-info" iconSize={100} fill="#7f7878" />
-              <div className="storefront__plans-footnote__content">
-                O teste grátis de 14 dias vale só para <b>eventos gratuitos</b>. <b>Eventos pagos já cobram os 5%</b>{' '}
-                por inscrição desde a primeira venda, mesmo durante o teste.
-              </div>
-            </div>
+            <Icons typeIcon="simple-info" iconSize={16} fill="#7f7878" /> Sem mensalidade — você paga conforme usa. O
+            teste grátis de 14 dias vale só para <b>eventos gratuitos</b>; <b>eventos pagos já cobram a taxa</b> por
+            inscrição desde a primeira venda.
           </p>
         </section>
 

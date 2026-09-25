@@ -435,9 +435,59 @@
   }
 
   &__plan-name {
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1.15rem;
+    font-weight: 800;
     color: $dark-gray;
+  }
+
+  &__plan-tagline {
+    font-size: 0.85rem;
+    color: $alternate-dark-gray;
+    line-height: 1.45;
+    min-height: 2.5em;
+  }
+
+  &__purpose {
+    margin-top: 4.5rem;
+  }
+
+  &__values {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  &__value {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 14px;
+    padding: 1.35rem 1.25rem;
+    box-shadow: 0 6px 18px rgba(20, 40, 80, 0.05);
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $dark-gray;
+      margin: 0.85rem 0 0.35rem;
+    }
+
+    p {
+      font-size: 0.88rem;
+      color: $alternate-dark-gray;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__value-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: $heavy-baby-blue;
   }
 
   &__plan-price {
@@ -800,6 +850,10 @@
     &__diffgrid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    &__values {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media (max-width: $sm) {
@@ -825,7 +879,8 @@
     }
 
     &__diffgrid,
-    &__vs {
+    &__vs,
+    &__values {
       grid-template-columns: 1fr;
     }
 

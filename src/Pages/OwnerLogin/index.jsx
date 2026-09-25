@@ -18,7 +18,7 @@ const OwnerLogin = () => {
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
-    document.title = 'Painel interno';
+    document.title = 'Painel Interno';
   }, []);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const OwnerLogin = () => {
           <span className="owner-login__mark">
             <Icons typeIcon="settings" iconSize={26} fill="#ffffff" />
           </span>
-          <h1>Painel interno</h1>
+          <h1>Painel Interno - Sistema</h1>
           <p className="owner-login__lede">Acesso restrito ao operador da plataforma.</p>
 
           <Form onSubmit={submit} className="owner-login__form">

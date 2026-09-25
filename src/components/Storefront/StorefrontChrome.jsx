@@ -55,8 +55,8 @@ export const StoreFooter = () => {
           type="button"
           className="storefront__footer-mark"
           onClick={() => navigate('/painel-interno')}
-          aria-label="Painel interno"
-          title="Painel interno"
+          aria-label="Painel Interno - Sistema"
+          title="Painel Interno - Sistema"
         >
           <Icons typeIcon="tent" iconSize={26} fill="#ffffff" />
         </button>

@@ -154,6 +154,7 @@ const Platform = () => {
     freeEventAnnual: '',
     essencialFeePercent: '',
     essencialFreeEventFee: '',
+    essencialFreeEventAnnual: '',
   });
   const [savingPricing, setSavingPricing] = useState(false);
 
@@ -178,6 +179,7 @@ const Platform = () => {
           freeEventAnnual: ((settingsData.freeEventAnnualCents ?? 0) / 100).toString(),
           essencialFeePercent: settingsData.essencialFeePercent ?? '',
           essencialFreeEventFee: ((settingsData.essencialFreeEventFeeCents ?? 0) / 100).toString(),
+          essencialFreeEventAnnual: ((settingsData.essencialFreeEventAnnualCents ?? 0) / 100).toString(),
         });
       }
     } catch (error) {
@@ -211,6 +213,7 @@ const Platform = () => {
         freeEventAnnualCents: Math.round(Number(pricing.freeEventAnnual || 0) * 100),
         essencialFeePercent: Math.round(Number(pricing.essencialFeePercent || 0)),
         essencialFreeEventFeeCents: Math.round(Number(pricing.essencialFreeEventFee || 0) * 100),
+        essencialFreeEventAnnualCents: Math.round(Number(pricing.essencialFreeEventAnnual || 0) * 100),
       });
       toast.success('Preços da plataforma atualizados.');
     } catch (error) {
@@ -692,6 +695,20 @@ const Platform = () => {
                   step="0.01"
                   value={pricing.essencialFreeEventFee}
                   onChange={(e) => setPricing((prev) => ({ ...prev, essencialFreeEventFee: e.target.value }))}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Essencial — anual ilimitado (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={pricing.essencialFreeEventAnnual}
+                  onChange={(e) => setPricing((prev) => ({ ...prev, essencialFreeEventAnnual: e.target.value }))}
                 />
               </Form.Group>
             </Col>
