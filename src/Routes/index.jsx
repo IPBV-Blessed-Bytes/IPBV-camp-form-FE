@@ -11,6 +11,7 @@ import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
 import ChatbotWidget from '@/components/Global/ChatbotWidget';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
+import RouteMeta from '@/components/Global/RouteMeta';
 
 import FormHome from '../Pages/Home';
 import FormPersonalData from '../Pages/PersonalData';
@@ -98,6 +99,7 @@ const FormRoutes = () => {
 
   return (
     <div className="form">
+      <RouteMeta />
       {!adminPathname && formPath && (
         <div className="components-container">
           {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}

@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dev
+Disallow: /login
+Disallow: /entrar
+Disallow: /criar-conta
+Disallow: /minha-conta
+Disallow: /confirmar-email
+Disallow: /esqueci-senha
+Disallow: /reset-password
+Disallow: /unlock
+Disallow: /verificacao
+Disallow: /unauthorized
+
+Sitemap: https://inscricaoipbv.com.br/sitemap.xml
