@@ -4,11 +4,21 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
-import { getAllProducts, createProduct, updateProduct, deleteProduct, setLotProductPrice } from '@/services/products';
+import {
+  getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  setLotProductPrice,
+  uploadProductImage,
+  deleteProductImage,
+  productImageUrl,
+} from '@/services/products';
 import { getAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
+import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
@@ -26,7 +36,26 @@ const CATEGORIES = [
 
 const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
 
-const emptyForm = { name: '', description: '', category: '', active: true };
+const PRODUCT_ICONS = [
+  'tent',
+  'camp',
+  'rooms',
+  'bus',
+  'ride',
+  'food',
+  'family',
+  'couple',
+  'person',
+  'music',
+  'bible',
+  'calendar',
+  'location-pin',
+  'wristband',
+  'cart',
+  'world',
+];
+
+const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '' };
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -43,6 +72,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [ageRules, setAgeRules] = useState([]);
   const [bracketDrafts, setBracketDrafts] = useState({});
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [removeImage, setRemoveImage] = useState(false);
 
   scrollUp();
 
@@ -71,10 +103,17 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   const priceForLot = (product, lotId) => product?.prices?.find((p) => String(p.lotId) === String(lotId));
 
+  const resetImageState = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setRemoveImage(false);
+  };
+
   const handleCreateClick = () => {
     setFormData(emptyForm);
     setLotPrices({});
     setEditingProduct(null);
+    resetImageState();
     setShowModal(true);
   };
 
@@ -84,7 +123,10 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       description: product.description || '',
       category: product.category,
       active: product.active,
+      iconKey: product.iconKey || '',
     });
+    resetImageState();
+    if (product.hasImage) setImagePreview(productImageUrl(product.id));
     const initial = {};
     lots.forEach((lot) => {
       const row = priceForLot(product, lot.id);
@@ -112,6 +154,30 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     return true;
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setRemoveImage(false);
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setRemoveImage(true);
+  };
+
+  const syncProductImage = async (productId, hadImage) => {
+    if (imageFile) {
+      await uploadProductImage(productId, imageFile);
+    } else if (removeImage && hadImage) {
+      await deleteProductImage(productId);
+    }
+  };
+
   const saveLotPrices = async (productId) => {
     const entries = Object.entries(lotPrices);
     for (const [lotId, values] of entries) {
@@ -132,6 +198,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       if (editingProduct) {
         await updateProduct(editingProduct.id, formData);
         await saveLotPrices(editingProduct.id);
+        await syncProductImage(editingProduct.id, editingProduct.hasImage);
         toast.success('Produto atualizado com sucesso');
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
@@ -140,6 +207,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         if (created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
         }
+        if (created?.id) await syncProductImage(created.id, false);
         toast.success('Produto criado com sucesso');
         registerLog(`Criou produto ${formData.name}`, loggedUsername);
       }
@@ -147,6 +215,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       setEditingProduct(null);
       setFormData(emptyForm);
       setLotPrices({});
+      resetImageState();
       await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao salvar produto');
@@ -559,6 +628,55 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
               />
             </Form.Group>
+
+            <div className="mt-3">
+              <Form.Label>
+                <b>Visual do card</b>
+              </Form.Label>
+              <p className="text-secondary small mb-2">
+                Escolha um ícone ou envie uma imagem. A imagem aparece no topo do card; o ícone aparece
+                centralizado abaixo do título. Se enviar uma imagem, ela tem prioridade sobre o ícone.
+              </p>
+              <div className="product-visual">
+                <div className="product-visual__icons">
+                  <button
+                    type="button"
+                    className={`product-visual__icon ${!formData.iconKey ? 'is-active' : ''}`}
+                    onClick={() => setFormData({ ...formData, iconKey: '' })}
+                    title="Sem ícone"
+                  >
+                    <span className="product-visual__none">—</span>
+                  </button>
+                  {PRODUCT_ICONS.map((key) => (
+                    <button
+                      type="button"
+                      key={key}
+                      className={`product-visual__icon ${formData.iconKey === key ? 'is-active' : ''}`}
+                      onClick={() => setFormData({ ...formData, iconKey: key })}
+                      title={key}
+                    >
+                      <Icons typeIcon={key} iconSize={24} fill="#007185" />
+                    </button>
+                  ))}
+                </div>
+                <div className="product-visual__image">
+                  {imagePreview ? (
+                    <div className="product-visual__preview">
+                      <img src={imagePreview} alt="Pré-visualização do produto" />
+                      <Button variant="outline-danger" size="sm" onClick={clearImage}>
+                        Remover imagem
+                      </Button>
+                    </div>
+                  ) : (
+                    <label className="product-visual__upload">
+                      <Icons typeIcon="upload" iconSize={20} fill="#007185" />
+                      <span>Enviar imagem</span>
+                      <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+                    </label>
+                  )}
+                </div>
+              </div>
+            </div>
 
             <hr />
             <h6 className="mt-3">

@@ -25,6 +25,8 @@ export const loadProducts = async () => {
       description: product.description,
       category: toCategoryLabel(product.category),
       vacancies: product.vacancies ?? null,
+      iconKey: product.iconKey || null,
+      hasImage: !!product.hasImage,
     }));
 
     return products;

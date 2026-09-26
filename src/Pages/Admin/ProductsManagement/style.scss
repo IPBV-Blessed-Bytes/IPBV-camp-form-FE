@@ -182,3 +182,77 @@
     }
   }
 }
+
+.product-visual {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+
+  &__icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
+    gap: 0.5rem;
+    flex: 1 1 18rem;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    border: 2px solid $alternate-gray;
+    border-radius: 0.5rem;
+    background: $white;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      border-color: $teal-blue;
+    }
+
+    &.is-active {
+      border-color: $teal-blue;
+      background: rgba(0, 113, 133, 0.08);
+    }
+  }
+
+  &__none {
+    color: $alternate-dark-gray;
+    font-weight: bold;
+  }
+
+  &__image {
+    flex: 1 1 12rem;
+  }
+
+  &__upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 7rem;
+    padding: 1rem;
+    border: 2px dashed $teal-blue;
+    border-radius: 0.5rem;
+    color: $teal-blue;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  &__preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    img {
+      max-width: 100%;
+      max-height: 9rem;
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+  }
+}

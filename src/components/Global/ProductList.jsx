@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import Icons from '@/components/Global/Icons';
+import { productImageUrl } from '@/services/products';
 import '../Style/ProductList.scss';
 
 const ProductList = forwardRef(({ age, cartKey, category, products, packageCount }, ref) => {
@@ -98,13 +99,23 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
             return (
               <div
                 key={product.id}
-                className={`product-card 
-    ${alreadySelected ? 'product-card-is-active' : ''} 
+                className={`product-card
+    ${alreadySelected ? 'product-card-is-active' : ''}
     ${!isAvailable ? 'product-card-unavailable' : ''}`}
               >
+                {product.hasImage && (
+                  <div className="product-card__image">
+                    <img src={productImageUrl(product.productId)} alt={product.name} loading="lazy" />
+                  </div>
+                )}
                 <div className="align-items-center mb-4">
                   <h3 className="product-title">{product.name}</h3>
                 </div>
+                {!product.hasImage && product.iconKey && (
+                  <div className="product-card__icon">
+                    <Icons typeIcon={product.iconKey} iconSize={42} fill="#007185" />
+                  </div>
+                )}
                 <p className="product-price mb-4">R$ {formatBRL(product.price)}</p>
                 {product.description && <p className="discount-description small mb-4">{product.description}</p>}
 
