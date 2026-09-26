@@ -98,7 +98,11 @@ const FormRoutes = () => {
   const adminPath = (segment) => `${effectiveFormStage === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
   return (
-    <div className="form">
+    <>
+      <a href="#main-content" className="skip-to-content">
+        Pular para o conteúdo
+      </a>
+      <div className="form" id="main-content" tabIndex={-1}>
       <RouteMeta />
       {!adminPathname && formPath && (
         <div className="components-container">
@@ -488,7 +492,8 @@ const FormRoutes = () => {
       </div>
 
       {!adminPathname && <ChatbotWidget />}
-    </div>
+      </div>
+    </>
   );
 };
 
