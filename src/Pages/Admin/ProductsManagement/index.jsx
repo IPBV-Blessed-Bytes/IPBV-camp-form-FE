@@ -16,6 +16,7 @@ import {
 } from '@/services/products';
 import { getAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
+import { getCategoriesAll, createCategory, updateCategory, deleteCategory } from '@/services/categories';
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Icons from '@/components/Global/Icons';
@@ -28,13 +29,6 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
-
-const CATEGORIES = [
-  { value: 'HOSPEDAGEM', label: 'Hospedagem' },
-  { value: 'TRANSPORTE', label: 'Transporte' },
-];
-
-const categoryLabel = (value) => CATEGORIES.find((c) => c.value === value)?.label || value;
 
 const PRODUCT_ICONS = [
   'tent',
@@ -75,21 +69,27 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [removeImage, setRemoveImage] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [categoryForm, setCategoryForm] = useState({ id: null, label: '', active: true });
+  const [categorySaving, setCategorySaving] = useState(false);
 
   scrollUp();
 
   const fetchAll = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const [productsData, lotsData, rulesData] = await Promise.all([
+      const [productsData, lotsData, rulesData, categoriesData] = await Promise.all([
         getAllProducts(),
         getLotsAuthenticated(),
         getAgePriceRules(),
+        getCategoriesAll(),
       ]);
       const list = Array.isArray(productsData?.products) ? productsData.products : [];
       setProducts(list.sort((a, b) => a.sortOrder - b.sortOrder));
       setLots(Array.isArray(lotsData?.lots) ? lotsData.lots : []);
       setAgeRules(Array.isArray(rulesData?.rules) ? rulesData.rules : []);
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos');
     } finally {
@@ -102,6 +102,59 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   }, []);
 
   const priceForLot = (product, lotId) => product?.prices?.find((p) => String(p.lotId) === String(lotId));
+
+  const categoryLabel = (value) => categories.find((c) => c.key === value)?.label || value;
+  const activeCategories = categories.filter((c) => c.active);
+
+  const openCategoryModal = () => {
+    setCategoryForm({ id: null, label: '', active: true });
+    setShowCategoryModal(true);
+  };
+
+  const editCategory = (cat) => {
+    setCategoryForm({ id: cat.id, label: cat.label, active: cat.active });
+    setShowCategoryModal(true);
+  };
+
+  const categoryError = (error) =>
+    error?.response?.data?.message ||
+    (typeof error?.response?.data === 'string' ? error.response.data : null);
+
+  const handleSaveCategory = async () => {
+    if (!categoryForm.label.trim()) {
+      toast.error('Informe o nome da categoria');
+      return;
+    }
+    setCategorySaving(true);
+    try {
+      if (categoryForm.id) {
+        await updateCategory(categoryForm.id, { label: categoryForm.label, active: categoryForm.active });
+        toast.success('Categoria atualizada');
+        registerLog(`Editou categoria ${categoryForm.label}`, loggedUsername);
+      } else {
+        await createCategory({ label: categoryForm.label, active: categoryForm.active });
+        toast.success('Categoria criada');
+        registerLog(`Criou categoria ${categoryForm.label}`, loggedUsername);
+      }
+      setShowCategoryModal(false);
+      await fetchAll(true);
+    } catch (error) {
+      toast.error(categoryError(error) || 'Erro ao salvar categoria');
+    } finally {
+      setCategorySaving(false);
+    }
+  };
+
+  const handleDeleteCategory = async (cat) => {
+    try {
+      await deleteCategory(cat.id);
+      toast.success('Categoria excluída');
+      registerLog(`Excluiu categoria ${cat.label}`, loggedUsername);
+      await fetchAll(true);
+    } catch (error) {
+      toast.error(categoryError(error) || 'Erro ao excluir categoria');
+    }
+  };
 
   const resetImageState = () => {
     setImageFile(null);
@@ -398,18 +451,18 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     { label: 'Produtos', value: products.length },
     { label: 'Ativos', value: activeCount, tone: 'free' },
     { label: 'Inativos', value: products.length - activeCount, tone: 'used' },
-    ...CATEGORIES.filter((c) => byCategory[c.value]).map((c) => ({
+    ...categories.filter((c) => byCategory[c.key]).map((c) => ({
       label: c.label,
-      value: byCategory[c.value],
-      tone: CATEGORY_TONES[c.value] || 'default',
+      value: byCategory[c.key],
+      tone: CATEGORY_TONES[c.key] || 'default',
     })),
   ];
   const categoryChips = [
     { value: 'all', label: 'Todas', count: products.length },
-    ...CATEGORIES.filter((c) => byCategory[c.value]).map((c) => ({
-      value: c.value,
+    ...categories.filter((c) => byCategory[c.key]).map((c) => ({
+      value: c.key,
       label: c.label,
-      count: byCategory[c.value],
+      count: byCategory[c.key],
     })),
   ];
   const term = search.trim().toLowerCase();
@@ -428,6 +481,15 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'cart',
+    },
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'manage-categories',
+      name: 'Gerenciar Categorias',
+      onClick: () => openCategoryModal(),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'filter',
     },
   ];
 
@@ -612,8 +674,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 <option value="" disabled>
                   Selecione uma opção
                 </option>
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
+                {activeCategories.map((c) => (
+                  <option key={c.key} value={c.key}>
                     {c.label}
                   </option>
                 ))}
@@ -749,6 +811,98 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         >
           Tem certeza que deseja excluir o produto <strong>{productToDelete?.name}</strong>? Se ele já foi escolhido em
           inscrições, prefira apenas inativá-lo.
+        </CustomModal>
+
+        <CustomModal
+          show={showCategoryModal}
+          onHide={() => setShowCategoryModal(false)}
+          size="lg"
+          variant="confirm"
+          icon="filter"
+          iconFill="#057c05"
+          title="Categorias de produtos"
+          centered={false}
+          footer={
+            <Button variant="secondary" onClick={() => setShowCategoryModal(false)}>
+              Fechar
+            </Button>
+          }
+        >
+          <p className="text-secondary small">
+            Crie e organize as categorias usadas nos produtos (ex.: Hospedagem, Transporte, Loja). Categorias
+            inativas não aparecem na criação de produtos. Não é possível excluir uma categoria com produtos.
+          </p>
+
+          <div className="category-manager">
+            <div className="category-manager__form">
+              <Form.Control
+                type="text"
+                placeholder="Nome da categoria (ex.: Loja)"
+                value={categoryForm.label}
+                onChange={(e) => setCategoryForm({ ...categoryForm, label: e.target.value })}
+              />
+              <Form.Check
+                type="switch"
+                id="category-active"
+                label="Ativa"
+                checked={categoryForm.active}
+                onChange={(e) => setCategoryForm({ ...categoryForm, active: e.target.checked })}
+              />
+              <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSaveCategory} loading={categorySaving}>
+                {categoryForm.id ? 'Salvar' : 'Adicionar'}
+              </SpinnerButton>
+              {categoryForm.id && (
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setCategoryForm({ id: null, label: '', active: true })}
+                >
+                  Cancelar edição
+                </Button>
+              )}
+            </div>
+
+            <Table striped bordered hover responsive className="custom-table mt-3">
+              <thead>
+                <tr>
+                  <th className="table-cells-header">Categoria:</th>
+                  <th className="table-cells-header">Chave:</th>
+                  <th className="table-cells-header">Produtos:</th>
+                  <th className="table-cells-header">Status:</th>
+                  <th className="table-cells-header">Ações:</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="text-start text-secondary p-4">
+                      Nenhuma categoria cadastrada
+                    </td>
+                  </tr>
+                ) : (
+                  categories.map((cat) => (
+                    <tr key={cat.id}>
+                      <td>{cat.label}</td>
+                      <td className="text-secondary small">{cat.key}</td>
+                      <td>{byCategory[cat.key] || 0}</td>
+                      <td>
+                        {cat.active ? <Badge bg="success">Ativa</Badge> : <Badge bg="secondary">Inativa</Badge>}
+                      </td>
+                      <td>
+                        <div className="table-action-cell">
+                          <ActionButton action="edit" label="Editar categoria" onClick={() => editCategory(cat)} />
+                          <ActionButton
+                            action="delete"
+                            label="Excluir categoria"
+                            onClick={() => handleDeleteCategory(cat)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
+          </div>
         </CustomModal>
 
         <Loading loading={loading} />
