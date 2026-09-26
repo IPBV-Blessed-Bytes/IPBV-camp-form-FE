@@ -13,7 +13,7 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
-import './style.scss';
+import StatCards from '@/components/Admin/StatCards';
 
 const emptyForm = { id: null, label: '', active: true };
 
@@ -23,6 +23,7 @@ const AdminCategories = ({ loggedUsername }) => {
   const [categories, setCategories] = useState([]);
   const [countByCategory, setCountByCategory] = useState({});
   const [form, setForm] = useState(emptyForm);
+  const [showModal, setShowModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   scrollUp();
@@ -53,6 +54,16 @@ const AdminCategories = ({ loggedUsername }) => {
     error?.response?.data?.message ||
     (typeof error?.response?.data === 'string' ? error.response.data : null);
 
+  const openCreate = () => {
+    setForm(emptyForm);
+    setShowModal(true);
+  };
+
+  const openEdit = (cat) => {
+    setForm({ id: cat.id, label: cat.label, active: cat.active });
+    setShowModal(true);
+  };
+
   const handleSave = async () => {
     if (!form.label.trim()) {
       toast.error('Informe o nome da categoria');
@@ -69,6 +80,7 @@ const AdminCategories = ({ loggedUsername }) => {
         toast.success('Categoria criada');
         registerLog(`Criou categoria ${form.label}`, loggedUsername);
       }
+      setShowModal(false);
       setForm(emptyForm);
       await fetchAll(true);
     } catch (error) {
@@ -95,14 +107,21 @@ const AdminCategories = ({ loggedUsername }) => {
   };
 
   const activeCount = categories.filter((c) => c.active).length;
+  const totalCategorizedProducts = Object.values(countByCategory).reduce((sum, n) => sum + n, 0);
+  const statItems = [
+    { label: 'Categorias', value: categories.length },
+    { label: 'Ativas', value: activeCount, tone: 'free' },
+    { label: 'Inativas', value: categories.length - activeCount, tone: 'used' },
+    { label: 'Produtos', value: totalCategorizedProducts, tone: 'accent' },
+  ];
 
   const toolsButtons = [
     {
       fill: '#007185',
       iconSize: 22,
       id: 'new-category',
-      name: 'Nova Categoria',
-      onClick: () => setForm(emptyForm),
+      name: 'Adicionar Categoria',
+      onClick: () => openCreate(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
     },
@@ -120,38 +139,12 @@ const AdminCategories = ({ loggedUsername }) => {
       <div className="admin-subpage__content">
         <AdminToolbar buttons={toolsButtons} />
 
-        <section className="admin-table-card categories-form">
-          <h6 className="categories-form__title">
-            <b>{form.id ? 'Editar categoria' : 'Nova categoria'}</b>
-          </h6>
-          <div className="categories-form__row">
-            <Form.Control
-              type="text"
-              placeholder="Nome da categoria (ex.: Loja)"
-              value={form.label}
-              onChange={(e) => setForm({ ...form, label: e.target.value })}
-            />
-            <Form.Check
-              type="switch"
-              id="category-active"
-              label="Ativa"
-              checked={form.active}
-              onChange={(e) => setForm({ ...form, active: e.target.checked })}
-            />
-            <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSave} loading={saving}>
-              {form.id ? 'Salvar' : 'Adicionar'}
-            </SpinnerButton>
-            {form.id && (
-              <Button variant="outline-secondary" onClick={() => setForm(emptyForm)}>
-                Cancelar edição
-              </Button>
-            )}
-          </div>
-          <p className="categories-form__hint text-secondary small">
-            Categorias inativas não aparecem na criação de produtos. Não é possível excluir uma categoria que tenha
-            produtos — reatribua-os ou desative a categoria.
-          </p>
-        </section>
+        <StatCards items={statItems} />
+
+        <p className="text-secondary small">
+          Categorias inativas não aparecem na criação de produtos. Não é possível excluir uma categoria que tenha
+          produtos — reatribua-os ou desative a categoria.
+        </p>
 
         <SectionHeader title="Categorias" count={categories.length} />
 
@@ -184,11 +177,7 @@ const AdminCategories = ({ loggedUsername }) => {
                     <td>{cat.active ? <Badge bg="success">Ativa</Badge> : <Badge bg="secondary">Inativa</Badge>}</td>
                     <td>
                       <div className="table-action-cell">
-                        <ActionButton
-                          action="edit"
-                          label="Editar categoria"
-                          onClick={() => setForm({ id: cat.id, label: cat.label, active: cat.active })}
-                        />
+                        <ActionButton action="edit" label="Editar categoria" onClick={() => openEdit(cat)} />
                         <ActionButton action="delete" label="Excluir categoria" onClick={() => setDeleteTarget(cat)} />
                       </div>
                     </td>
@@ -199,9 +188,50 @@ const AdminCategories = ({ loggedUsername }) => {
           </Table>
         </div>
 
-        <p className="text-secondary small">
-          {categories.length} categorias · {activeCount} ativas
-        </p>
+        <CustomModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          variant="confirm"
+          icon={form.id ? 'edit' : 'plus'}
+          iconFill={form.id ? '' : '#057c05'}
+          title={form.id ? 'Editar Categoria' : 'Adicionar Categoria'}
+          centered={false}
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Cancelar
+              </Button>
+              <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSave} loading={saving}>
+                {form.id ? 'Salvar Alterações' : 'Adicionar'}
+              </SpinnerButton>
+            </>
+          }
+        >
+          <Form>
+            <Form.Group controlId="categoryLabel">
+              <Form.Label>
+                <b>Nome:</b>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ex.: Loja"
+                value={form.label}
+                onChange={(e) => setForm({ ...form, label: e.target.value })}
+                size="lg"
+                autoFocus
+              />
+            </Form.Group>
+
+            <Form.Group controlId="categoryActive" className="mt-3">
+              <Form.Check
+                type="switch"
+                label="Categoria ativa (aparece na criação de produtos)"
+                checked={form.active}
+                onChange={(e) => setForm({ ...form, active: e.target.checked })}
+              />
+            </Form.Group>
+          </Form>
+        </CustomModal>
 
         <CustomModal
           show={!!deleteTarget}
