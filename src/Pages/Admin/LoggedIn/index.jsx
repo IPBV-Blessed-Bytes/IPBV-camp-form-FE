@@ -73,8 +73,8 @@ const AdminLoggedIn = ({
   const [settingsPage, setSettingsPage] = useState(0);
   const [showTour, setShowTour] = useState(false);
 
-  const tourKey = `admin-tour-dismissed:${loggedInUsername || user || 'admin'}`;
-  const tourSessionKey = `admin-tour-seen-session:${loggedInUsername || user || 'admin'}`;
+  const tourKey = 'admin-tour-dismissed';
+  const tourSessionKey = 'admin-tour-seen-session';
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
