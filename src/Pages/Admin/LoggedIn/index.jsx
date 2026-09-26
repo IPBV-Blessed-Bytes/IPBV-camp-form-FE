@@ -19,6 +19,9 @@ import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
 import AdminTourModal from '@/components/Admin/AdminTourModal';
+import { getAdminTourDismissed, setAdminTourDismissed } from '@/services/adminTour';
+
+const TOUR_SESSION_KEY = 'admin-tour-seen-session';
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -73,9 +76,6 @@ const AdminLoggedIn = ({
   const [settingsPage, setSettingsPage] = useState(0);
   const [showTour, setShowTour] = useState(false);
   const [tourDontShow, setTourDontShow] = useState(false);
-
-  const tourKey = 'admin-tour-dismissed';
-  const tourSessionKey = 'admin-tour-seen-session';
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
@@ -133,30 +133,35 @@ const AdminLoggedIn = ({
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
   useEffect(() => {
-    try {
-      const dismissed = localStorage.getItem(tourKey) === 'true';
-      setTourDontShow(dismissed);
-      const seenThisSession = sessionStorage.getItem(tourSessionKey) === 'true';
-      if (!dismissed && !seenThisSession) {
-        setShowTour(true);
-        sessionStorage.setItem(tourSessionKey, 'true');
-      }
-    } catch {
-      setShowTour(false);
-    }
-  }, [tourKey, tourSessionKey]);
+    let active = true;
+    getAdminTourDismissed()
+      .then((dismissed) => {
+        if (!active) return;
+        setTourDontShow(dismissed);
+        let seenThisSession = false;
+        try {
+          seenThisSession = sessionStorage.getItem(TOUR_SESSION_KEY) === 'true';
+        } catch {
+          seenThisSession = false;
+        }
+        if (!dismissed && !seenThisSession) {
+          setShowTour(true);
+          try {
+            sessionStorage.setItem(TOUR_SESSION_KEY, 'true');
+          } catch {
+            setShowTour(true);
+          }
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleTourDontShow = (checked) => {
     setTourDontShow(checked);
-    try {
-      if (checked) {
-        localStorage.setItem(tourKey, 'true');
-      } else {
-        localStorage.removeItem(tourKey);
-      }
-    } catch {
-      setTourDontShow(checked);
-    }
+    setAdminTourDismissed(checked).catch(() => {});
   };
 
   const handleCloseTour = () => setShowTour(false);
