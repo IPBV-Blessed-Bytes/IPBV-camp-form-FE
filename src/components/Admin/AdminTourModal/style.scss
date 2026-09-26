@@ -7,19 +7,27 @@
     text-align: center;
   }
 
-  &__close {
-    position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
-    border: none;
-    background: transparent;
-    padding: 0.35rem;
+  &__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 2px solid $teal-blue;
+    background: $white;
     line-height: 0;
     cursor: pointer;
-    border-radius: 0.5rem;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
+    &:hover:not(:disabled) {
+      background: rgba(0, 113, 133, 0.08);
+    }
+
+    &:disabled {
+      border-color: $medium-gray;
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
 
@@ -83,6 +91,7 @@
 
   &__nav {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
     margin-left: auto;
   }

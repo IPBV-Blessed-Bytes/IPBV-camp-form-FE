@@ -42,26 +42,29 @@ const STEPS = [
   },
 ];
 
-const AdminTourModal = ({ show, onClose }) => {
+const AdminTourModal = ({ show, onClose, dontShowAgain, onDontShowAgainChange }) => {
   const [step, setStep] = useState(0);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
 
   const isFirst = step === 0;
   const isLast = step === STEPS.length - 1;
   const current = STEPS[step];
 
   const handleClose = () => {
-    onClose(dontShowAgain);
+    onClose();
     setStep(0);
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg" className="admin-tour">
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      size="lg"
+      className="admin-tour"
+      backdrop="static"
+      keyboard={false}
+    >
       <Modal.Body className="admin-tour__body">
-        <button type="button" className="admin-tour__close" aria-label="Fechar tutorial" onClick={handleClose}>
-          <Icons typeIcon="close" iconSize={18} fill="#6c757d" />
-        </button>
-
         <div className="admin-tour__icon">
           <Icons typeIcon={current.icon} iconSize={54} fill="#007185" />
         </div>
@@ -81,22 +84,31 @@ const AdminTourModal = ({ show, onClose }) => {
             id="admin-tour-dont-show"
             label="Não mostrar novamente"
             checked={dontShowAgain}
-            onChange={(e) => setDontShowAgain(e.target.checked)}
+            onChange={(e) => onDontShowAgainChange(e.target.checked)}
           />
 
           <div className="admin-tour__nav">
-            {!isFirst && (
-              <Button variant="outline-secondary" onClick={() => setStep((s) => s - 1)}>
-                Voltar
-              </Button>
-            )}
-            {isLast ? (
-              <Button variant="teal-blue" onClick={handleClose}>
-                Concluir
-              </Button>
-            ) : (
-              <Button variant="teal-blue" onClick={() => setStep((s) => s + 1)}>
-                Próximo
+            <button
+              type="button"
+              className="admin-tour__arrow"
+              onClick={() => setStep((s) => s - 1)}
+              disabled={isFirst}
+              aria-label="Passo anterior"
+            >
+              <Icons typeIcon="arrow-left" iconSize={20} fill={isFirst ? '#adb5bd' : '#007185'} />
+            </button>
+            <button
+              type="button"
+              className="admin-tour__arrow"
+              onClick={() => setStep((s) => s + 1)}
+              disabled={isLast}
+              aria-label="Próximo passo"
+            >
+              <Icons typeIcon="arrow-right" iconSize={20} fill={isLast ? '#adb5bd' : '#007185'} />
+            </button>
+            {isLast && (
+              <Button variant="teal-blue" className="admin-tour__finish" onClick={handleClose}>
+                Fechar
               </Button>
             )}
           </div>
@@ -109,6 +121,8 @@ const AdminTourModal = ({ show, onClose }) => {
 AdminTourModal.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  dontShowAgain: PropTypes.bool.isRequired,
+  onDontShowAgainChange: PropTypes.func.isRequired,
 };
 
 export default AdminTourModal;

@@ -72,6 +72,7 @@ const AdminLoggedIn = ({
   const [carouselDirection, setCarouselDirection] = useState('forward');
   const [settingsPage, setSettingsPage] = useState(0);
   const [showTour, setShowTour] = useState(false);
+  const [tourDontShow, setTourDontShow] = useState(false);
 
   const tourKey = 'admin-tour-dismissed';
   const tourSessionKey = 'admin-tour-seen-session';
@@ -134,6 +135,7 @@ const AdminLoggedIn = ({
   useEffect(() => {
     try {
       const dismissed = localStorage.getItem(tourKey) === 'true';
+      setTourDontShow(dismissed);
       const seenThisSession = sessionStorage.getItem(tourSessionKey) === 'true';
       if (!dismissed && !seenThisSession) {
         setShowTour(true);
@@ -144,16 +146,20 @@ const AdminLoggedIn = ({
     }
   }, [tourKey, tourSessionKey]);
 
-  const handleCloseTour = (dontShowAgain) => {
-    setShowTour(false);
-    if (dontShowAgain) {
-      try {
+  const handleTourDontShow = (checked) => {
+    setTourDontShow(checked);
+    try {
+      if (checked) {
         localStorage.setItem(tourKey, 'true');
-      } catch {
-        setShowTour(false);
+      } else {
+        localStorage.removeItem(tourKey);
       }
+    } catch {
+      setTourDontShow(checked);
     }
   };
+
+  const handleCloseTour = () => setShowTour(false);
 
   const { validPackageCardsData, allPackageCardsData, totalCardsData } = useMemo(() => {
     const {
@@ -482,7 +488,12 @@ const AdminLoggedIn = ({
         )}
       </div>
 
-      <AdminTourModal show={showTour} onClose={handleCloseTour} />
+      <AdminTourModal
+        show={showTour}
+        onClose={handleCloseTour}
+        dontShowAgain={tourDontShow}
+        onDontShowAgainChange={handleTourDontShow}
+      />
     </div>
   );
 };
