@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ import {
 } from '@/services/products';
 import { getAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
-import { getCategoriesAll, createCategory, updateCategory, deleteCategory } from '@/services/categories';
+import { getCategoriesAll } from '@/services/categories';
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Icons from '@/components/Global/Icons';
@@ -70,9 +71,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [removeImage, setRemoveImage] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [categoryForm, setCategoryForm] = useState({ id: null, label: '', active: true });
-  const [categorySaving, setCategorySaving] = useState(false);
+
+  const navigate = useNavigate();
+  const categoriesPath = () => (window.location.pathname.startsWith('/dev') ? '/dev/categorias' : '/admin/categorias');
 
   scrollUp();
 
@@ -105,56 +106,6 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   const categoryLabel = (value) => categories.find((c) => c.key === value)?.label || value;
   const activeCategories = categories.filter((c) => c.active);
-
-  const openCategoryModal = () => {
-    setCategoryForm({ id: null, label: '', active: true });
-    setShowCategoryModal(true);
-  };
-
-  const editCategory = (cat) => {
-    setCategoryForm({ id: cat.id, label: cat.label, active: cat.active });
-    setShowCategoryModal(true);
-  };
-
-  const categoryError = (error) =>
-    error?.response?.data?.message ||
-    (typeof error?.response?.data === 'string' ? error.response.data : null);
-
-  const handleSaveCategory = async () => {
-    if (!categoryForm.label.trim()) {
-      toast.error('Informe o nome da categoria');
-      return;
-    }
-    setCategorySaving(true);
-    try {
-      if (categoryForm.id) {
-        await updateCategory(categoryForm.id, { label: categoryForm.label, active: categoryForm.active });
-        toast.success('Categoria atualizada');
-        registerLog(`Editou categoria ${categoryForm.label}`, loggedUsername);
-      } else {
-        await createCategory({ label: categoryForm.label, active: categoryForm.active });
-        toast.success('Categoria criada');
-        registerLog(`Criou categoria ${categoryForm.label}`, loggedUsername);
-      }
-      setShowCategoryModal(false);
-      await fetchAll(true);
-    } catch (error) {
-      toast.error(categoryError(error) || 'Erro ao salvar categoria');
-    } finally {
-      setCategorySaving(false);
-    }
-  };
-
-  const handleDeleteCategory = async (cat) => {
-    try {
-      await deleteCategory(cat.id);
-      toast.success('Categoria excluída');
-      registerLog(`Excluiu categoria ${cat.label}`, loggedUsername);
-      await fetchAll(true);
-    } catch (error) {
-      toast.error(categoryError(error) || 'Erro ao excluir categoria');
-    }
-  };
 
   const resetImageState = () => {
     setImageFile(null);
@@ -487,7 +438,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       iconSize: 22,
       id: 'manage-categories',
       name: 'Gerenciar Categorias',
-      onClick: () => openCategoryModal(),
+      onClick: () => navigate(categoriesPath()),
       typeButton: 'outline-teal-blue',
       typeIcon: 'filter',
     },
@@ -811,98 +762,6 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         >
           Tem certeza que deseja excluir o produto <strong>{productToDelete?.name}</strong>? Se ele já foi escolhido em
           inscrições, prefira apenas inativá-lo.
-        </CustomModal>
-
-        <CustomModal
-          show={showCategoryModal}
-          onHide={() => setShowCategoryModal(false)}
-          size="lg"
-          variant="confirm"
-          icon="filter"
-          iconFill="#057c05"
-          title="Categorias de produtos"
-          centered={false}
-          footer={
-            <Button variant="secondary" onClick={() => setShowCategoryModal(false)}>
-              Fechar
-            </Button>
-          }
-        >
-          <p className="text-secondary small">
-            Crie e organize as categorias usadas nos produtos (ex.: Hospedagem, Transporte, Loja). Categorias
-            inativas não aparecem na criação de produtos. Não é possível excluir uma categoria com produtos.
-          </p>
-
-          <div className="category-manager">
-            <div className="category-manager__form">
-              <Form.Control
-                type="text"
-                placeholder="Nome da categoria (ex.: Loja)"
-                value={categoryForm.label}
-                onChange={(e) => setCategoryForm({ ...categoryForm, label: e.target.value })}
-              />
-              <Form.Check
-                type="switch"
-                id="category-active"
-                label="Ativa"
-                checked={categoryForm.active}
-                onChange={(e) => setCategoryForm({ ...categoryForm, active: e.target.checked })}
-              />
-              <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSaveCategory} loading={categorySaving}>
-                {categoryForm.id ? 'Salvar' : 'Adicionar'}
-              </SpinnerButton>
-              {categoryForm.id && (
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => setCategoryForm({ id: null, label: '', active: true })}
-                >
-                  Cancelar edição
-                </Button>
-              )}
-            </div>
-
-            <Table striped bordered hover responsive className="custom-table mt-3">
-              <thead>
-                <tr>
-                  <th className="table-cells-header">Categoria:</th>
-                  <th className="table-cells-header">Chave:</th>
-                  <th className="table-cells-header">Produtos:</th>
-                  <th className="table-cells-header">Status:</th>
-                  <th className="table-cells-header">Ações:</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="text-start text-secondary p-4">
-                      Nenhuma categoria cadastrada
-                    </td>
-                  </tr>
-                ) : (
-                  categories.map((cat) => (
-                    <tr key={cat.id}>
-                      <td>{cat.label}</td>
-                      <td className="text-secondary small">{cat.key}</td>
-                      <td>{byCategory[cat.key] || 0}</td>
-                      <td>
-                        {cat.active ? <Badge bg="success">Ativa</Badge> : <Badge bg="secondary">Inativa</Badge>}
-                      </td>
-                      <td>
-                        <div className="table-action-cell">
-                          <ActionButton action="edit" label="Editar categoria" onClick={() => editCategory(cat)} />
-                          <ActionButton
-                            action="delete"
-                            label="Excluir categoria"
-                            onClick={() => handleDeleteCategory(cat)}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </Table>
-          </div>
         </CustomModal>
 
         <Loading loading={loading} />
