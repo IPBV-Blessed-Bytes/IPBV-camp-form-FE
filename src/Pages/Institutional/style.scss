@@ -754,3 +754,67 @@ $inst-tint: #f4f8f9;
   }
 }
 
+
+.inst-howto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  max-width: 68rem;
+  margin: 0 auto;
+
+  &__step {
+    position: relative;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 1rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1b3a4b;
+      margin: 0.75rem 0 0.4rem;
+    }
+
+    p {
+      margin: 0;
+      color: #5a5a5a;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+  }
+
+  &__num {
+    position: absolute;
+    top: -0.9rem;
+    left: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: #007185;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0, 113, 133, 0.4);
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    background: rgba(0, 113, 133, 0.1);
+  }
+
+  &__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+}

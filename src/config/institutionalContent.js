@@ -118,4 +118,38 @@ export const INSTITUTIONAL_NAV = [
   { id: 'avisos', label: 'Avisos' },
   { id: 'parceiros', label: 'Parceiros' },
   { id: 'como-chegar', label: 'Como chegar' },
+  { id: 'como-se-inscrever', label: 'Como se inscrever' },
+];
+
+export const HOW_TO_STEPS = [
+  {
+    icon: 'form',
+    title: 'Abra o formulário',
+    text: 'Clique em "Inscreva-se" no topo da página ou no botão "Fazer minha inscrição".',
+  },
+  {
+    icon: 'person',
+    title: 'Preencha seus dados',
+    text: 'Informe seus dados pessoais e de contato. Menores de idade precisam dos dados do responsável.',
+  },
+  {
+    icon: 'cart',
+    title: 'Escolha hospedagem e transporte',
+    text: 'Selecione a opção de hospedagem e, se precisar, o transporte. Os valores aparecem em cada card.',
+  },
+  {
+    icon: 'credit-card',
+    title: 'Revise e pague',
+    text: 'Confira o resumo e escolha a forma de pagamento: PIX, boleto ou cartão. Sua vaga é confirmada após o pagamento.',
+  },
+  {
+    icon: 'notebook',
+    title: 'Acompanhe sua inscrição',
+    text: 'Crie sua conta para acompanhar inscrições e boletos em "Minha conta", ou consulte pelo CPF na página de verificação.',
+  },
+  {
+    icon: 'question',
+    title: 'Ficou com dúvida?',
+    text: 'Veja a página de Perguntas Frequentes ou fale com a organização pelos canais de contato.',
+  },
 ];

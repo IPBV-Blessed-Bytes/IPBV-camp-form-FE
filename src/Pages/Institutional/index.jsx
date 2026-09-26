@@ -9,7 +9,7 @@ import { scrollTop } from '@/hooks/useScrollUp';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { getPublicSetting } from '@/services/settings';
-import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
+import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV, HOW_TO_STEPS } from '@/config/institutionalContent';
 import './style.scss';
 
 const Institutional = () => {
@@ -94,6 +94,7 @@ const Institutional = () => {
     avisos: noticeItems.length > 0,
     parceiros: partnerLogos.length > 0,
     'como-chegar': !!mapQuery,
+    'como-se-inscrever': true,
   };
 
   return (
@@ -326,6 +327,30 @@ const Institutional = () => {
           </div>
         </section>
       )}
+
+      <section className="inst-section" id="como-se-inscrever">
+        <div className="inst-section__head">
+          <h2>Como se inscrever</h2>
+          <p>Um passo a passo rápido para garantir a sua vaga no acampamento.</p>
+        </div>
+        <div className="inst-howto">
+          {HOW_TO_STEPS.map((step, i) => (
+            <div key={step.title} className="inst-howto__step">
+              <span className="inst-howto__num">{i + 1}</span>
+              <span className="inst-howto__icon">
+                <Icons typeIcon={step.icon} iconSize={26} fill="#007185" />
+              </span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="inst-howto__cta">
+          <Button type="button" className="inst-btn inst-btn--primary inst-btn--lg" onClick={goToForm}>
+            Começar minha inscrição
+          </Button>
+        </div>
+      </section>
 
       <section className="inst-final">
         <h2>Pronto para viver essa experiência?</h2>
