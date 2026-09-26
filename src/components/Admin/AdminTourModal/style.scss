@@ -1,0 +1,89 @@
+@use '../../../styles/Variables.scss' as *;
+
+.admin-tour {
+  &__body {
+    position: relative;
+    padding: 2.5rem 2rem 1.75rem;
+    text-align: center;
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    border: none;
+    background: transparent;
+    padding: 0.35rem;
+    line-height: 0;
+    cursor: pointer;
+    border-radius: 0.5rem;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &__icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 5.5rem;
+      height: 5.5rem;
+      border-radius: 50%;
+      background: rgba(0, 113, 133, 0.1);
+    }
+  }
+
+  &__title {
+    color: $primary;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
+
+  &__text {
+    color: $alternate-dark-gray;
+    font-size: 1rem;
+    line-height: 1.55;
+    max-width: 34rem;
+    margin: 0 auto 1.5rem;
+  }
+
+  &__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: $medium-gray;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &.is-active {
+      background: $teal-blue;
+      transform: scale(1.25);
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+}

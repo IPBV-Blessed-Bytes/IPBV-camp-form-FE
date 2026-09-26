@@ -18,6 +18,7 @@ import SessionCard from '@/components/Admin/SessionCard';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
+import AdminTourModal from '@/components/Admin/AdminTourModal';
 
 const PACKAGE_MAPPING = [
   { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
@@ -70,6 +71,9 @@ const AdminLoggedIn = ({
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
   const [settingsPage, setSettingsPage] = useState(0);
+  const [showTour, setShowTour] = useState(false);
+
+  const tourKey = `admin-tour-dismissed:${loggedInUsername || user || 'admin'}`;
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
@@ -125,6 +129,27 @@ const AdminLoggedIn = ({
       setSendLoggedMessage(false);
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(tourKey) !== 'true') {
+        setShowTour(true);
+      }
+    } catch {
+      setShowTour(true);
+    }
+  }, [tourKey]);
+
+  const handleCloseTour = (dontShowAgain) => {
+    setShowTour(false);
+    if (dontShowAgain) {
+      try {
+        localStorage.setItem(tourKey, 'true');
+      } catch {
+        setShowTour(false);
+      }
+    }
+  };
 
   const { validPackageCardsData, allPackageCardsData, totalCardsData } = useMemo(() => {
     const {
@@ -451,6 +476,8 @@ const AdminLoggedIn = ({
           </Row>
         )}
       </div>
+
+      <AdminTourModal show={showTour} onClose={handleCloseTour} />
     </div>
   );
 };
