@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -15,6 +15,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import ActionButton from '@/components/Global/ActionButton';
 import Loading from '@/components/Global/Loading';
+import SpinnerButton from '@/components/Global/SpinnerButton';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
@@ -129,19 +130,9 @@ const AdminInstitutional = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <div className="inst-admin__toolbar">
-          <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
-            <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
-            {saving && (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                style={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-0.5rem', marginLeft: '-0.5rem' }}
-              />
-            )}
-          </Button>
+          <SpinnerButton variant="teal-blue" size="lg" onClick={handleSave} loading={saving}>
+            Salvar alterações
+          </SpinnerButton>
         </div>
 
         <section className="inst-admin__card">
@@ -498,19 +489,9 @@ const AdminInstitutional = ({ loggedUsername }) => {
         </section>
 
         <div className="inst-admin__toolbar">
-          <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
-            <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
-            {saving && (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                style={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-0.5rem', marginLeft: '-0.5rem' }}
-              />
-            )}
-          </Button>
+          <SpinnerButton variant="teal-blue" size="lg" onClick={handleSave} loading={saving}>
+            Salvar alterações
+          </SpinnerButton>
         </div>
       </div>
     </div>
