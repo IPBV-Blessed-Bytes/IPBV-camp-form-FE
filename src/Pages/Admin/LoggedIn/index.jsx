@@ -333,6 +333,7 @@ const AdminLoggedIn = ({
     { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
     { path: 'taxas', title: 'Taxas de Pagamento', typeIcon: 'money', iconSize: 40, accent: '#d39e00' },
     { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 44, accent: '#2E5AAC' },
+    { path: 'manual', title: 'Manual do Admin', typeIcon: 'notebook', iconSize: 42, accent: '#007185' },
   ];
 
   const SETTINGS_PAGE_SIZE = 12;

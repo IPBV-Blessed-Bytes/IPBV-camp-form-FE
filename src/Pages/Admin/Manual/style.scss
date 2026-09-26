@@ -1,0 +1,62 @@
+@use '../../../styles/Variables.scss' as *;
+
+.admin-manual {
+  &__toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__toc-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid $medium-gray;
+    border-radius: 0.6rem;
+    background: $white;
+    color: $alternate-dark-gray !important;
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      border-color: $teal-blue;
+      background: rgba(0, 113, 133, 0.05);
+    }
+  }
+
+  &__section {
+    background: $white;
+    border: 1px solid $medium-gray;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: $primary;
+    font-weight: bold;
+    margin-bottom: 0.85rem;
+  }
+
+  &__list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.55;
+      color: $alternate-dark-gray;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
