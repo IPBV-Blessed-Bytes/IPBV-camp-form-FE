@@ -5,6 +5,9 @@
     position: relative;
     padding: 2.5rem 2rem 1.75rem;
     text-align: center;
+    min-height: 26rem;
+    display: flex;
+    flex-direction: column;
   }
 
   &__arrow {
@@ -58,6 +61,7 @@
     font-size: 1rem;
     line-height: 1.55;
     max-width: 34rem;
+    min-height: 6rem;
     margin: 0 auto 1.5rem;
   }
 
@@ -65,6 +69,7 @@
     display: flex;
     justify-content: center;
     gap: 0.4rem;
+    margin-top: auto;
     margin-bottom: 1.5rem;
   }
 
@@ -94,5 +99,10 @@
     align-items: center;
     gap: 0.5rem;
     margin-left: auto;
+  }
+
+  &__finish--hidden {
+    visibility: hidden;
+    pointer-events: none;
   }
 }

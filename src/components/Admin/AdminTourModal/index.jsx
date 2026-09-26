@@ -106,11 +106,15 @@ const AdminTourModal = ({ show, onClose, dontShowAgain, onDontShowAgainChange })
             >
               <Icons typeIcon="arrow-right" iconSize={20} fill={isLast ? '#adb5bd' : '#007185'} />
             </button>
-            {isLast && (
-              <Button variant="teal-blue" className="admin-tour__finish" onClick={handleClose}>
-                Fechar
-              </Button>
-            )}
+            <Button
+              variant="teal-blue"
+              className={`admin-tour__finish ${isLast ? '' : 'admin-tour__finish--hidden'}`}
+              onClick={handleClose}
+              tabIndex={isLast ? 0 : -1}
+              aria-hidden={!isLast}
+            >
+              Fechar
+            </Button>
           </div>
         </div>
       </Modal.Body>
