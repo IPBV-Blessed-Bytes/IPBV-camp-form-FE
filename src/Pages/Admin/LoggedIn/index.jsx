@@ -74,6 +74,7 @@ const AdminLoggedIn = ({
   const [showTour, setShowTour] = useState(false);
 
   const tourKey = `admin-tour-dismissed:${loggedInUsername || user || 'admin'}`;
+  const tourSessionKey = `admin-tour-seen-session:${loggedInUsername || user || 'admin'}`;
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
@@ -132,13 +133,16 @@ const AdminLoggedIn = ({
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(tourKey) !== 'true') {
+      const dismissed = localStorage.getItem(tourKey) === 'true';
+      const seenThisSession = sessionStorage.getItem(tourSessionKey) === 'true';
+      if (!dismissed && !seenThisSession) {
         setShowTour(true);
+        sessionStorage.setItem(tourSessionKey, 'true');
       }
     } catch {
-      setShowTour(true);
+      setShowTour(false);
     }
-  }, [tourKey]);
+  }, [tourKey, tourSessionKey]);
 
   const handleCloseTour = (dontShowAgain) => {
     setShowTour(false);
