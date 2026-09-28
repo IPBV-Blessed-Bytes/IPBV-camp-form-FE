@@ -337,7 +337,14 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
           const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
           const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
 
-          const extrasList = Array.isArray(form.package?.extras) ? form.package.extras : [];
+          const extrasRaw = Array.isArray(form.package?.extras) ? form.package.extras : [];
+          const extrasSeen = new Set();
+          const extrasList = extrasRaw.filter((e) => {
+            const key = `${e?.categoryKey || ''}:${e?.name || ''}`;
+            if (!e?.id || extrasSeen.has(key)) return false;
+            extrasSeen.add(key);
+            return true;
+          });
           const extrasDetailed = extrasList.map((e) => {
             const unit = Number(getProductPrice(e.id)) || 0;
             const qty = Number(e.quantity) || 1;

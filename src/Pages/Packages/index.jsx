@@ -12,10 +12,21 @@ import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import { findActiveLot } from '@/utils/activeLot';
 import { getLots } from '@/services/lots';
+import { getCategories } from '@/services/categories';
 import { useFormState } from '@/contexts/FormStateContext';
 import Loading from '@/components/Global/Loading';
 
 const FIXED_KEYS = ['HOSPEDAGEM', 'TRANSPORTE'];
+
+const dedupeCart = (arr) => {
+  const map = new Map();
+  arr.forEach((x) => {
+    if (!x?.categoryKey) return;
+    const key = FIXED_KEYS.includes(x.categoryKey) ? x.categoryKey : `${x.categoryKey}:${x.name}`;
+    map.set(key, x);
+  });
+  return Array.from(map.values());
+};
 
 const Packages = () => {
   const {
@@ -33,10 +44,11 @@ const Packages = () => {
     updateFormValues,
   } = useFormState();
   const updateForm = updateFormValues('package');
-  const { items, addItem } = useCart();
+  const { items, addItem, getItem } = useCart();
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
   const [activeLot, setActiveLot] = useState(null);
+  const [categoryLabels, setCategoryLabels] = useState({});
 
   useEffect(() => {
     const fetchLotsAndProducts = async () => {
@@ -44,8 +56,13 @@ const Packages = () => {
         const updatedProducts = await loadProducts();
         await loadAgePriceRules();
 
-        const data = await getLots();
+        const [data, categoriesData] = await Promise.all([getLots(), getCategories()]);
         const foundLot = findActiveLot(data?.lots);
+        const labels = {};
+        (Array.isArray(categoriesData) ? categoriesData : []).forEach((c) => {
+          labels[c.key] = c.label;
+        });
+        setCategoryLabels(labels);
 
         if (foundLot) {
           setActiveLot(foundLot);
@@ -68,15 +85,15 @@ const Packages = () => {
     if (cartIsEmpty && currentUser?.package) {
       const { accomodation, transportation, extras } = currentUser.package;
 
-      if (accomodation?.id) {
+      if (accomodation?.id && !getItem(accomodation.id)) {
         addItem({ ...accomodation, category: 'Hospedagem', categoryKey: 'HOSPEDAGEM' });
       }
-      if (transportation?.id) {
+      if (transportation?.id && !getItem(transportation.id)) {
         addItem({ ...transportation, category: 'Transporte', categoryKey: 'TRANSPORTE' });
       }
       if (Array.isArray(extras)) {
         extras.forEach((e) => {
-          if (e?.id) {
+          if (e?.id && !getItem(e.id)) {
             addItem(
               { id: e.id, name: e.name, price: Number(e.price) || 0, category: e.category, categoryKey: e.categoryKey },
               Number(e.quantity) || 1,
@@ -97,6 +114,7 @@ const Packages = () => {
   }, [hasDiscount, discount]);
 
   const discounted = getDiscountedProducts(age);
+  const cartItems = dedupeCart(items);
 
   const priceForItem = (item) => {
     const d = discounted.find((p) => p.id === item.id);
@@ -118,7 +136,7 @@ const Packages = () => {
       (p.stock === null || p.stock === undefined || p.stock > 0),
   );
 
-  const storeCartItems = items.filter((i) => i.categoryKey && !FIXED_KEYS.includes(i.categoryKey));
+  const storeCartItems = cartItems.filter((i) => i.categoryKey && !FIXED_KEYS.includes(i.categoryKey));
 
   const submitForm = () => {
     const missing = [];
@@ -139,25 +157,25 @@ const Packages = () => {
       discount: 0,
     };
 
-    items.forEach((item) => {
+    cartItems.forEach((item) => {
       if (item.categoryKey === 'HOSPEDAGEM') {
         newPackage.accomodation = { id: item.id, name: item.name, price: item.price };
       } else if (item.categoryKey === 'TRANSPORTE') {
         newPackage.transportation = { id: item.id, name: item.name, price: item.price };
-      } else {
+      } else if (item.categoryKey) {
         const unit = discounted.find((p) => p.id === item.id)?.price ?? item.price ?? 0;
         newPackage.extras.push({
           id: item.id,
           name: item.name,
-          category: item.category || '',
-          categoryKey: item.categoryKey || '',
+          category: categoryLabels[item.categoryKey] || item.category || '',
+          categoryKey: item.categoryKey,
           price: unit,
           quantity: Number(item.quantity) || 1,
         });
       }
     });
 
-    newPackage.price = items.reduce((sum, it) => sum + priceForItem(it), 0);
+    newPackage.price = cartItems.reduce((sum, it) => sum + priceForItem(it), 0);
     const discountNumeric = Number(discount) || 0;
     newPackage.finalPrice = Math.max(newPackage.price - discountNumeric, 0);
     newPackage.discount = discountNumeric;
@@ -171,11 +189,11 @@ const Packages = () => {
   const isChild = age < 9;
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
-  const totalBeforeDiscount = items.reduce((sum, it) => sum + priceForItem(it), 0);
+  const totalBeforeDiscount = cartItems.reduce((sum, it) => sum + priceForItem(it), 0);
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
 
-  const summaryFor = (key) => items.find((i) => i.categoryKey === key);
+  const summaryFor = (key) => cartItems.find((i) => i.categoryKey === key);
 
   return (
     <Container className="packages-page form__container__cart-height">

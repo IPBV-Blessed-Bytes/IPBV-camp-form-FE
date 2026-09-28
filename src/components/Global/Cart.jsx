@@ -24,8 +24,20 @@ const getDiscountedPrices = (user, age) => {
   };
 };
 
+const getExtrasList = (user, age) => {
+  const discounted = getDiscountedProducts(age);
+  return (user.package?.extras || []).map((e) => {
+    const unit = discounted.find((p) => p.id === e.id)?.price ?? Number(e.price) ?? 0;
+    const quantity = Number(e.quantity) || 1;
+    return { id: e.id, name: e.name, quantity, total: Number(unit) * quantity };
+  });
+};
+
+const getExtrasTotal = (user, age) => getExtrasList(user, age).reduce((sum, e) => sum + e.total, 0);
+
 const renderPackageDetails = (user, age) => {
   const { accomodation, transportation, food } = getDiscountedPrices(user, age);
+  const extras = getExtrasList(user, age);
 
   return (
     <div className="cart-item">
@@ -58,6 +70,20 @@ const renderPackageDetails = (user, age) => {
             <p>{user.package.food.name.split(' (')[0]}</p>
           </div>
         )}
+
+        {extras.map((extra) => (
+          <div className="item-store mb-3" key={extra.id}>
+            <div className="d-flex justify-content-between">
+              <h5>Loja:</h5>
+              <br />
+              <h5>R$ {formatBRL(extra.total)}</h5>
+            </div>
+            <p>
+              {extra.name}
+              {extra.quantity > 1 ? ` (x${extra.quantity})` : ''}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -66,9 +92,14 @@ const renderPackageDetails = (user, age) => {
 const renderUserTotalInfo = (user, age) => {
   const { accomodation, transportation, food } = getDiscountedPrices(user, age);
   const extraMeals = Number(user.extraMeals?.totalPrice || 0);
+  const extras = getExtrasTotal(user, age);
 
   const packageTotal =
-    Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
+    Number(accomodation) +
+    Number(transportation) +
+    Number(food) +
+    Number(extras) +
+    (user.package?.food?.id ? 0 : Number(extraMeals));
 
   const sumBeforeDiscount = Math.max(Number(packageTotal), 0);
 
@@ -108,12 +139,14 @@ const Cart = ({
     const age = calculateAge(new Date(user.personalInformation.birthday));
     const { accomodation, transportation, food } = getDiscountedPrices(user, age);
     const extraMeals = Number(user.extraMeals?.totalPrice || 0);
+    const extras = getExtrasTotal(user, age);
     const discount = Number(user.package?.discount || 0);
 
     const total = Math.max(
       Number(accomodation) +
         Number(transportation) +
         Number(food) +
+        Number(extras) +
         (user.package?.food?.id ? 0 : Number(extraMeals)) -
         Number(discount),
       0,
