@@ -4,6 +4,7 @@ const CATEGORY_LABEL = {
   HOSPEDAGEM: 'Hospedagem',
   TRANSPORTE: 'Transporte',
   ALIMENTACAO: 'Alimentação',
+  LOJA: 'Loja',
 };
 
 export const toCategoryLabel = (category) => CATEGORY_LABEL[category] || category;

@@ -360,7 +360,8 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
             Number(extrasPrice);
 
           const rawDiscount = Number(discountList[index] || 0);
-          const appliedDiscount = Math.min(subtotal, rawDiscount);
+          const discountableBase = Math.max(subtotal - Number(extrasPrice), 0);
+          const appliedDiscount = Math.min(discountableBase, rawDiscount);
           const totalPrice = subtotal - appliedDiscount;
 
           return {

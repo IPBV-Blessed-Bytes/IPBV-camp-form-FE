@@ -70,7 +70,6 @@ const AdminUtilitySettings = lazy(() => import('@/Pages/Admin/UtilitySettings'))
 const AdminBackup = lazy(() => import('@/Pages/Admin/Backup'));
 const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
 const AdminManual = lazy(() => import('@/Pages/Admin/Manual'));
-const AdminCategories = lazy(() => import('@/Pages/Admin/Categories'));
 const AdminStoreOrders = lazy(() => import('@/Pages/Admin/StoreOrders'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 
@@ -426,18 +425,6 @@ const FormRoutes = () => {
                   requiredPermission="PRODUCTS_WRITE"
                 >
                   <AdminProductsManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/categorias')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="PRODUCTS_WRITE"
-                >
-                  <AdminCategories loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

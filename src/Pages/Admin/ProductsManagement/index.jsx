@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -17,7 +16,6 @@ import {
 } from '@/services/products';
 import { getAgePriceRules, createAgePriceRule, deleteAgePriceRule } from '@/services/agePriceRules';
 import { getLotsAuthenticated } from '@/services/lots';
-import { getCategoriesAll } from '@/services/categories';
 import scrollUp from '@/hooks/useScrollUp';
 import ActionButton from '@/components/Global/ActionButton';
 import Icons from '@/components/Global/Icons';
@@ -30,6 +28,14 @@ import SectionHeader from '@/components/Admin/SectionHeader';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
+
+const CATEGORIES = [
+  { key: 'HOSPEDAGEM', label: 'Hospedagem' },
+  { key: 'TRANSPORTE', label: 'Transporte' },
+  { key: 'LOJA', label: 'Loja' },
+];
+
+const STORE_KEY = 'LOJA';
 
 const PRODUCT_ICONS = [
   'tent',
@@ -74,27 +80,21 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [removeImage, setRemoveImage] = useState(false);
-  const [categories, setCategories] = useState([]);
-
-  const navigate = useNavigate();
-  const categoriesPath = () => (window.location.pathname.startsWith('/dev') ? '/dev/categorias' : '/admin/categorias');
 
   scrollUp();
 
   const fetchAll = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const [productsData, lotsData, rulesData, categoriesData] = await Promise.all([
+      const [productsData, lotsData, rulesData] = await Promise.all([
         getAllProducts(),
         getLotsAuthenticated(),
         getAgePriceRules(),
-        getCategoriesAll(),
       ]);
       const list = Array.isArray(productsData?.products) ? productsData.products : [];
       setProducts(list.sort((a, b) => a.sortOrder - b.sortOrder));
       setLots(Array.isArray(lotsData?.lots) ? lotsData.lots : []);
       setAgeRules(Array.isArray(rulesData?.rules) ? rulesData.rules : []);
-      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
       toast.error('Erro ao buscar produtos');
     } finally {
@@ -108,8 +108,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   const priceForLot = (product, lotId) => product?.prices?.find((p) => String(p.lotId) === String(lotId));
 
-  const categoryLabel = (value) => categories.find((c) => c.key === value)?.label || value;
-  const activeCategories = categories.filter((c) => c.active);
+  const categoryLabel = (value) => CATEGORIES.find((c) => c.key === value)?.label || value;
+  const activeCategories = CATEGORIES;
 
   const resetImageState = () => {
     setImageFile(null);
@@ -132,7 +132,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       category: product.category,
       active: product.active,
       iconKey: product.iconKey || '',
-      stock: product.stock ?? '',
+      stock: product.initialStock ?? '',
     });
     resetImageState();
     if (product.hasImage) setImagePreview(productImageUrl(product.id));
@@ -406,31 +406,30 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
   }, {});
-  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info' };
+  const CATEGORY_TONES = { HOSPEDAGEM: 'accent', TRANSPORTE: 'info', LOJA: 'free' };
   const statItems = [
     { label: 'Produtos', value: products.length },
     { label: 'Ativos', value: activeCount, tone: 'free' },
     { label: 'Inativos', value: products.length - activeCount, tone: 'used' },
-    ...categories.filter((c) => byCategory[c.key]).map((c) => ({
+    ...CATEGORIES.filter((c) => byCategory[c.key]).map((c) => ({
       label: c.label,
       value: byCategory[c.key],
       tone: CATEGORY_TONES[c.key] || 'default',
     })),
   ];
+  const mainCategories = CATEGORIES.filter((c) => c.key !== STORE_KEY);
   const categoryChips = [
-    { value: 'all', label: 'Todas', count: products.length },
-    ...categories.filter((c) => byCategory[c.key]).map((c) => ({
-      value: c.key,
-      label: c.label,
-      count: byCategory[c.key],
-    })),
+    { value: 'all', label: 'Todas', count: products.filter((p) => p.category !== STORE_KEY).length },
+    ...mainCategories
+      .filter((c) => byCategory[c.key])
+      .map((c) => ({ value: c.key, label: c.label, count: byCategory[c.key] })),
   ];
   const term = search.trim().toLowerCase();
+  const matchesTerm = (p) => !term || (p.name || '').toLowerCase().includes(term);
   const filteredProducts = products.filter(
-    (p) =>
-      (categoryFilter === 'all' || p.category === categoryFilter) &&
-      (!term || (p.name || '').toLowerCase().includes(term)),
+    (p) => p.category !== STORE_KEY && (categoryFilter === 'all' || p.category === categoryFilter) && matchesTerm(p),
   );
+  const storeProducts = products.filter((p) => p.category === STORE_KEY && matchesTerm(p));
 
   const toolsButtons = [
     {
@@ -441,15 +440,6 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'cart',
-    },
-    {
-      fill: '#007185',
-      iconSize: 22,
-      id: 'manage-categories',
-      name: 'Gerenciar Categorias',
-      onClick: () => navigate(categoriesPath()),
-      typeButton: 'outline-teal-blue',
-      typeIcon: 'filter',
     },
   ];
 
@@ -528,6 +518,77 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   </td>
                 </tr>
               ))
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        <SectionHeader title="Itens da Loja" count={storeProducts.length} />
+
+        <div className="admin-table-card">
+          <Table striped bordered hover responsive className="custom-table">
+            <thead>
+              <tr>
+                <th className="table-cells-header">Item:</th>
+                <th className="table-cells-header">Disponibilizado:</th>
+                <th className="table-cells-header">Disponível:</th>
+                <th className="table-cells-header">Status:</th>
+                <th className="table-cells-header">Preços por lote:</th>
+                <th className="table-cells-header">Ações:</th>
+              </tr>
+            </thead>
+            <tbody>
+              {storeProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-start text-secondary p-4">
+                    Nenhum item de loja registrado
+                  </td>
+                </tr>
+              ) : (
+                storeProducts.map((product) => (
+                  <tr key={product.id}>
+                    <td>
+                      <em>{product.name}</em>
+                      {product.description && <div className="text-secondary small">{product.description}</div>}
+                    </td>
+                    <td>
+                      {product.initialStock != null ? (
+                        product.initialStock
+                      ) : (
+                        <span className="text-secondary small">ilimitado</span>
+                      )}
+                    </td>
+                    <td>
+                      {product.stock != null ? (
+                        <Badge bg={product.stock > 0 ? 'teal-blue' : 'danger'}>{product.stock}</Badge>
+                      ) : (
+                        <span className="text-secondary small">ilimitado</span>
+                      )}
+                    </td>
+                    <td>
+                      {product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}
+                    </td>
+                    <td>
+                      <div className="lot-prices">
+                        {lots.map((lot) => {
+                          const row = priceForLot(product, lot.id);
+                          return (
+                            <div key={lot.id} className="lot-price-chip">
+                              <span className="lot-price-chip__name">{lot.name}</span>
+                              <span className="lot-price-chip__value">R$ {row?.price ?? 0}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="table-action-cell">
+                        <ActionButton action="edit" label="Editar item" onClick={() => handleEditClick(product)} />
+                        <ActionButton action="delete" label="Excluir item" onClick={() => handleDeleteClick(product)} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </Table>
@@ -656,7 +717,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
             <Form.Group controlId="formStock" className="mt-3">
               <Form.Label>
-                <b>Estoque (itens de loja):</b>
+                <b>Estoque disponibilizado (itens de loja):</b>
               </Form.Label>
               <Form.Control
                 type="number"
@@ -666,8 +727,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
               />
               <Form.Text className="text-secondary">
-                Quantidade disponível para venda na loja. A cada compra o estoque diminui; ao zerar, o item some do
-                formulário. Deixe em branco para Hospedagem/Transporte (sem controle de estoque).
+                Quantidade total disponibilizada para venda na loja. A cada compra o <b>disponível</b> diminui; ao
+                zerar, o item some do formulário. Deixe em branco para Hospedagem/Transporte (sem controle de estoque).
               </Form.Text>
             </Form.Group>
 

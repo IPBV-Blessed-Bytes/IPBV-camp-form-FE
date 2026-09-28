@@ -140,15 +140,10 @@ const Cart = ({
     const extras = getExtrasTotal(user, age);
     const discount = Number(user.package?.discount || 0);
 
-    const total = Math.max(
-      Number(accomodation) +
-        Number(transportation) +
-        Number(food) +
-        Number(extras) +
-        (user.package?.food?.id ? 0 : Number(extraMeals)) -
-        Number(discount),
-      0,
-    );
+    const nonStore =
+      Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
+    const appliedDiscount = Math.min(Math.max(nonStore, 0), Number(discount));
+    const total = Math.max(nonStore + Number(extras) - appliedDiscount, 0);
     return acc + total;
   }, 0);
 

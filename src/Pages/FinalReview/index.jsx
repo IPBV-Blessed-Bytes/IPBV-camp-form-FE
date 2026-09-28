@@ -87,7 +87,8 @@ const FinalReview = () => {
   const discountNumeric = Number(formValues.package?.discount || 0);
 
   const totalBeforeDiscount = packageOriginalPrice + extraMealsPrice;
-  const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
+  const discountableBase = Math.max(totalBeforeDiscount - extrasPrice, 0);
+  const finalTotal = Math.max(totalBeforeDiscount - Math.min(discountableBase, discountNumeric), 0);
 
   return (
     <>

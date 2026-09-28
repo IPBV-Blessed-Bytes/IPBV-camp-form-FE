@@ -12,11 +12,11 @@ import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import { findActiveLot } from '@/utils/activeLot';
 import { getLots } from '@/services/lots';
-import { getCategories } from '@/services/categories';
 import { useFormState } from '@/contexts/FormStateContext';
 import Loading from '@/components/Global/Loading';
 
 const FIXED_KEYS = ['HOSPEDAGEM', 'TRANSPORTE'];
+const CATEGORY_LABELS = { HOSPEDAGEM: 'Hospedagem', TRANSPORTE: 'Transporte', LOJA: 'Loja' };
 
 const dedupeCart = (arr) => {
   const map = new Map();
@@ -48,7 +48,6 @@ const Packages = () => {
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
   const [activeLot, setActiveLot] = useState(null);
-  const [categoryLabels, setCategoryLabels] = useState({});
 
   useEffect(() => {
     const fetchLotsAndProducts = async () => {
@@ -56,13 +55,8 @@ const Packages = () => {
         const updatedProducts = await loadProducts();
         await loadAgePriceRules();
 
-        const [data, categoriesData] = await Promise.all([getLots(), getCategories()]);
+        const data = await getLots();
         const foundLot = findActiveLot(data?.lots);
-        const labels = {};
-        (Array.isArray(categoriesData) ? categoriesData : []).forEach((c) => {
-          labels[c.key] = c.label;
-        });
-        setCategoryLabels(labels);
 
         if (foundLot) {
           setActiveLot(foundLot);
@@ -167,7 +161,7 @@ const Packages = () => {
         newPackage.extras.push({
           id: item.id,
           name: item.name,
-          category: categoryLabels[item.categoryKey] || item.category || '',
+          category: CATEGORY_LABELS[item.categoryKey] || item.category || '',
           categoryKey: item.categoryKey,
           price: unit,
           quantity: Number(item.quantity) || 1,
@@ -176,8 +170,14 @@ const Packages = () => {
     });
 
     newPackage.price = cartItems.reduce((sum, it) => sum + priceForItem(it), 0);
+    const extrasTotalSubmit = newPackage.extras.reduce(
+      (sum, e) => sum + Number(e.price) * Number(e.quantity || 1),
+      0,
+    );
     const discountNumeric = Number(discount) || 0;
-    newPackage.finalPrice = Math.max(newPackage.price - discountNumeric, 0);
+    const discountableBase = Math.max(newPackage.price - extrasTotalSubmit, 0);
+    const appliedDiscount = Math.min(discountableBase, discountNumeric);
+    newPackage.finalPrice = Math.max(newPackage.price - appliedDiscount, 0);
     newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
@@ -190,8 +190,10 @@ const Packages = () => {
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
   const totalBeforeDiscount = cartItems.reduce((sum, it) => sum + priceForItem(it), 0);
+  const storeTotal = storeCartItems.reduce((sum, it) => sum + priceForItem(it), 0);
   const discountNumeric = Number(discount) || 0;
-  const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
+  const discountableTotal = Math.max(totalBeforeDiscount - storeTotal, 0);
+  const finalTotal = Math.max(totalBeforeDiscount - Math.min(discountableTotal, discountNumeric), 0);
 
   const summaryFor = (key) => cartItems.find((i) => i.categoryKey === key);
 
@@ -247,7 +249,7 @@ const Packages = () => {
                   <Card.Body>
                     <Card.Title>Loja</Card.Title>
                     <Card.Text>
-                      Itens extras da loja (opcional). Escolha a quantidade de cada item, conforme a disponibilidade.
+                      Itens extras da loja IPBV (opcional). Escolha a quantidade de cada item, conforme a disponibilidade.
                     </Card.Text>
                     <StoreItemList products={productsState} discounted={discounted} />
                   </Card.Body>

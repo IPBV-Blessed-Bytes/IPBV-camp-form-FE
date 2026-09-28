@@ -338,7 +338,6 @@ const AdminLoggedIn = ({
     { path: 'utilitarios', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 40, accent: '#cc6d00' },
     { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#d32f2f' },
     { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
-    { path: 'categorias', title: 'Categorias', typeIcon: 'filter', iconSize: 42, accent: '#FF7F50' },
     { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#0c9183' },
     { path: 'loja', title: 'Pedidos da Loja', typeIcon: 'cart', iconSize: 42, accent: '#0066cc' },
     { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },

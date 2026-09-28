@@ -101,6 +101,7 @@ const BeforePayment = () => {
 
   const getSummaryValues = (formValuesToSummarize) => {
     let totalFinal = 0;
+    let totalDiscount = 0;
     const userTotals = [];
 
     formValuesToSummarize.forEach((user) => {
@@ -128,14 +129,16 @@ const BeforePayment = () => {
         Number(extras) +
         (user.package?.food?.id ? 0 : Number(extraMeals));
 
-      const appliedDiscount = Math.min(packageTotal, discount);
+      const discountableBase = Math.max(packageTotal - Number(extras), 0);
+      const appliedDiscount = Math.min(discountableBase, discount);
       const finalPrice = packageTotal - appliedDiscount;
 
       totalFinal += finalPrice;
+      totalDiscount += appliedDiscount;
       userTotals.push({ name: user.personalInformation?.name?.trim() || 'Acampante', total: finalPrice });
     });
 
-    return { totalFinal, userTotals };
+    return { totalFinal, totalDiscount, userTotals };
   };
 
   useEffect(() => {
@@ -158,7 +161,7 @@ const BeforePayment = () => {
     fetchProducts();
   }, [validFormValues]);
 
-  const { totalFinal, userTotals } = getSummaryValues(validFormValues);
+  const { totalFinal, totalDiscount, userTotals } = getSummaryValues(validFormValues);
 
   const totalGeral = totalFinal;
   const totalWithDonation = totalGeral + donationValue;
@@ -207,6 +210,13 @@ const BeforePayment = () => {
                   <div className="summary-total-package">
                     <h5 className="summary-total-package-label">Doação:</h5>
                     <h5 className="summary-total-package-value">R$ {formatBRL(donationValue)}</h5>
+                  </div>
+                )}
+
+                {totalDiscount > 0 && (
+                  <div className="summary-total-package">
+                    <h5 className="summary-total-package-label">Desconto:</h5>
+                    <h5 className="summary-total-package-value summary-discount-value">-R$ {formatBRL(totalDiscount)}</h5>
                   </div>
                 )}
 
