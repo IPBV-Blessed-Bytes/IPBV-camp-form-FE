@@ -83,6 +83,13 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
       { name: 'Beatriz Souza', role: 'Ministério infantil', imageId: null },
     ],
   },
+  speakers: {
+    title: 'Palestrantes',
+    subtitle: 'Quem vai ministrar nesta edição.',
+    members: [
+      { name: 'Pr. Convidado', role: 'Tema da palestra', imageId: null },
+    ],
+  },
   gallery: {
     title: 'Momentos que ficam',
     subtitle: 'Um pouco das edições anteriores.',
@@ -113,11 +120,13 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
 export const INSTITUTIONAL_NAV = [
   { id: 'sobre', label: 'Sobre' },
   { id: 'programacao', label: 'Programação' },
+  { id: 'palestrantes', label: 'Palestrantes' },
   { id: 'equipe', label: 'Equipe' },
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
   { id: 'parceiros', label: 'Parceiros' },
   { id: 'como-chegar', label: 'Como chegar' },
+  { id: 'contato', label: 'Contato' },
   { id: 'como-se-inscrever', label: 'Como se inscrever' },
 ];
 

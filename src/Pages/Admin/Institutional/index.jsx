@@ -115,6 +115,7 @@ const AdminInstitutional = ({ loggedUsername }) => {
   const about = form.about || {};
   const schedule = form.schedule || {};
   const team = form.team || {};
+  const speakers = form.speakers || {};
   const gallery = form.gallery || {};
   const notices = form.notices || {};
   const partners = form.partners || {};
@@ -311,6 +312,49 @@ const AdminInstitutional = ({ loggedUsername }) => {
               </Button>
             </div>
           ))}
+        </section>
+
+        <section className="inst-admin__card">
+          <h5>Palestrantes</h5>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label><b>Título:</b></Form.Label>
+                <Form.Control value={speakers.title || ''} onChange={(e) => patch((n) => { (n.speakers ||= {}).title = e.target.value; })} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label><b>Subtítulo:</b></Form.Label>
+                <Form.Control value={speakers.subtitle || ''} onChange={(e) => patch((n) => { (n.speakers ||= {}).subtitle = e.target.value; })} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="inst-admin__card-head">
+            <h6>Palestrantes</h6>
+            <Button variant="outline-teal-blue" size="sm" onClick={() => patch((n) => { ((n.speakers ||= {}).members ||= []).push({ name: '', role: '', imageId: null }); })}>
+              + Adicionar palestrante
+            </Button>
+          </div>
+          <div className="inst-admin__grid">
+            {(speakers.members || []).map((m, i) => (
+              <div key={i} className="inst-admin__subcard">
+                <div className="d-flex justify-content-end">
+                  <ActionButton action="delete" title="Remover" onClick={() => patch((n) => { n.speakers.members.splice(i, 1); })} />
+                </div>
+                <ImageField
+                  imageId={m.imageId}
+                  shape="avatar"
+                  label={m.name}
+                  onChange={(id) => patch((n) => { n.speakers.members[i].imageId = id; })}
+                />
+                <Form.Label className="mt-2">Nome</Form.Label>
+                <Form.Control value={m.name || ''} onChange={(e) => patch((n) => { n.speakers.members[i].name = e.target.value; })} />
+                <Form.Label className="mt-2">Tema / Palestra</Form.Label>
+                <Form.Control value={m.role || ''} onChange={(e) => patch((n) => { n.speakers.members[i].role = e.target.value; })} />
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="inst-admin__card">

@@ -16,8 +16,11 @@ const Institutional = () => {
   const navigate = useNavigate();
   const { handleAdminClick } = useFormState();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [content, setContent] = useState(null);
   const [mapQuery, setMapQuery] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
   const [visits, setVisits] = useState(null);
   const [galleryModal, setGalleryModal] = useState(null);
   const [lightbox, setLightbox] = useState(null);
@@ -40,6 +43,19 @@ const Institutional = () => {
   useEffect(() => {
     getPublicSetting('event_map')
       .then((value) => setMapQuery(value || ''))
+      .catch(() => {});
+    getPublicSetting('contact_phone')
+      .then((value) => setContactPhone(value || ''))
+      .catch(() => {});
+    getPublicSetting('social_links')
+      .then((value) => {
+        try {
+          const parsed = JSON.parse(value);
+          setContactEmail(parsed?.email || '');
+        } catch {
+          setContactEmail('');
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -75,6 +91,10 @@ const Institutional = () => {
   const members = (team.members || []).filter(
     (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
   );
+  const speakers = content.speakers || {};
+  const speakerMembers = (speakers.members || []).filter(
+    (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
+  );
   const gallery = content.gallery || {};
   const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
   const notices = content.notices || {};
@@ -89,13 +109,18 @@ const Institutional = () => {
   const sectionVisible = {
     sobre: !!(about.title || about.text || highlights.length > 0),
     programacao: true,
+    palestrantes: speakerMembers.length > 0,
     equipe: members.length > 0,
     galeria: photos.length > 0,
     avisos: noticeItems.length > 0,
     parceiros: partnerLogos.length > 0,
     'como-chegar': !!mapQuery,
+    contato: !!(contactPhone || contactEmail),
     'como-se-inscrever': true,
   };
+
+  const waDigits = contactPhone.replace(/\D/g, '');
+  const waNumber = waDigits.startsWith('55') ? waDigits : `55${waDigits}`;
 
   return (
     <div className="institutional">
@@ -107,13 +132,31 @@ const Institutional = () => {
             </span>
             {brand}
           </button>
-          <nav className="inst-nav__links">
+          <nav className={`inst-nav__links${menuOpen ? ' is-open' : ''}`}>
             {INSTITUTIONAL_NAV.filter((n) => sectionVisible[n.id] !== false).map((n) => (
-              <button key={n.id} type="button" onClick={() => scrollTo(n.id)}>
+              <button
+                key={n.id}
+                type="button"
+                onClick={() => {
+                  scrollTo(n.id);
+                  setMenuOpen(false);
+                }}
+              >
                 {n.label}
               </button>
             ))}
           </nav>
+          <button
+            type="button"
+            className={`inst-nav__toggle${menuOpen ? ' is-open' : ''}`}
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
           <div className="inst-nav__actions">
             <Button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
               Minha conta
@@ -214,8 +257,32 @@ const Institutional = () => {
         )}
       </section>
 
+      {speakerMembers.length > 0 && (
+        <section className="inst-section" id="palestrantes">
+          <div className="inst-section__head">
+            <h2>{speakers.title || 'Palestrantes'}</h2>
+            {speakers.subtitle && <p>{speakers.subtitle}</p>}
+          </div>
+          <div className="inst-cards inst-cards--4">
+            {speakerMembers.map((m, i) => (
+              <div key={`${m.name}-${i}`} className="inst-team">
+                <div className="inst-team__avatar">
+                  {m.imageId ? (
+                    <img src={institutionalImageUrl(m.imageId)} alt={m.name} />
+                  ) : (
+                    <Icons typeIcon="person" iconSize={34} fill="#007185" />
+                  )}
+                </div>
+                <h3>{m.name}</h3>
+                <span>{m.role}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {members.length > 0 && (
-        <section className="inst-section" id="equipe">
+        <section className="inst-section inst-section--tinted" id="equipe">
           <div className="inst-section__head">
             <h2>{team.title || 'Equipe'}</h2>
             {team.subtitle && <p>{team.subtitle}</p>}
@@ -324,6 +391,44 @@ const Institutional = () => {
               loading="lazy"
               allowFullScreen
             />
+          </div>
+        </section>
+      )}
+
+      {(contactPhone || contactEmail) && (
+        <section className="inst-section" id="contato">
+          <div className="inst-section__head">
+            <h2>Fale com a organização</h2>
+            <p>Ficou com alguma dúvida? Entre em contato com a gente.</p>
+          </div>
+          <div className="inst-contact">
+            {contactPhone && (
+              <a
+                className="inst-contact__card"
+                href={`https://wa.me/${waNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="inst-contact__icon">
+                  <Icons typeIcon="whatsapp" iconSize={28} fill="#007185" />
+                </span>
+                <div className="inst-contact__info">
+                  <strong>WhatsApp</strong>
+                  <span>{contactPhone}</span>
+                </div>
+              </a>
+            )}
+            {contactEmail && (
+              <a className="inst-contact__card" href={`mailto:${contactEmail}`}>
+                <span className="inst-contact__icon">
+                  <Icons typeIcon="email" iconSize={26} fill="#007185" />
+                </span>
+                <div className="inst-contact__info">
+                  <strong>E-mail</strong>
+                  <span>{contactEmail}</span>
+                </div>
+              </a>
+            )}
           </div>
         </section>
       )}
