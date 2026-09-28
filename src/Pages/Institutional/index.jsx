@@ -10,11 +10,20 @@ import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { getPublicSetting } from '@/services/settings';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV, HOW_TO_STEPS } from '@/config/institutionalContent';
+
+const REGISTRATION_STATUS = {
+  'form-on': { label: 'Inscrições Abertas', tone: 'open' },
+  'google-forms': { label: 'Inscrições Abertas', tone: 'open' },
+  'form-waiting': { label: 'Inscrições Encerradas', tone: 'closed' },
+  'form-off': { label: 'Inscrições Encerradas', tone: 'closed' },
+  'form-closed': { label: 'Inscrições Encerradas', tone: 'closed' },
+  maintenance: { label: 'Em Manutenção', tone: 'closed' },
+};
 import './style.scss';
 
 const Institutional = () => {
   const navigate = useNavigate();
-  const { handleAdminClick } = useFormState();
+  const { handleAdminClick, formStage } = useFormState();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [content, setContent] = useState(null);
@@ -73,7 +82,31 @@ const Institutional = () => {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!el) return;
+    const scroller = document.scrollingElement || document.documentElement;
+    const nav = document.querySelector('.inst-nav');
+    const offset = nav ? nav.offsetHeight : 0;
+    const startY = scroller.scrollTop;
+    const maxY = scroller.scrollHeight - window.innerHeight;
+    const rawTarget = el.getBoundingClientRect().top + startY - offset;
+    const targetY = Math.max(0, Math.min(rawTarget, maxY));
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 2) return;
+    const prevBehavior = scroller.style.scrollBehavior;
+    scroller.style.scrollBehavior = 'auto';
+    const duration = Math.min(1600, Math.max(800, Math.abs(distance) * 0.7));
+    const startTime = performance.now();
+    const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      scroller.scrollTop = startY + distance * easeInOutCubic(progress);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        scroller.style.scrollBehavior = prevBehavior;
+      }
+    };
+    window.requestAnimationFrame(step);
   };
 
   if (!content) {
@@ -82,6 +115,7 @@ const Institutional = () => {
 
   const brand = content.brand || 'Inscrições';
   const hero = content.hero || {};
+  const registrationStatus = REGISTRATION_STATUS[formStage];
   const stats = content.stats || [];
   const about = content.about || {};
   const highlights = about.highlights || [];
@@ -145,7 +179,37 @@ const Institutional = () => {
                 {n.label}
               </button>
             ))}
+            <div className="inst-nav__menu-actions">
+              <Button
+                type="button"
+                className="inst-btn inst-btn--ghost"
+                onClick={() => {
+                  goToAccount();
+                  setMenuOpen(false);
+                }}
+              >
+                Minha conta
+              </Button>
+              <Button
+                type="button"
+                className="inst-btn inst-btn--primary"
+                onClick={() => {
+                  goToForm();
+                  setMenuOpen(false);
+                }}
+              >
+                Inscreva-se
+              </Button>
+            </div>
           </nav>
+          <div className="inst-nav__actions">
+            <Button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
+              Minha conta
+            </Button>
+            <Button type="button" className="inst-btn inst-btn--primary" onClick={goToForm}>
+              Inscreva-se
+            </Button>
+          </div>
           <button
             type="button"
             className={`inst-nav__toggle${menuOpen ? ' is-open' : ''}`}
@@ -157,21 +221,23 @@ const Institutional = () => {
             <span />
             <span />
           </button>
-          <div className="inst-nav__actions">
-            <Button type="button" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
-              Minha conta
-            </Button>
-            <Button type="button" className="inst-btn inst-btn--primary" onClick={goToForm}>
-              Inscreva-se
-            </Button>
-          </div>
         </div>
       </header>
 
       <section className={`inst-hero${heroStyle ? ' inst-hero--image' : ''}`} id="topo" style={heroStyle}>
         <div className="inst-hero__overlay" />
         <div className="inst-hero__content">
-          {hero.tagline && <span className="inst-hero__tag">{hero.tagline}</span>}
+          {(registrationStatus || hero.tagline) && (
+            <div className="inst-hero__badges">
+              {registrationStatus && (
+                <span className={`inst-status inst-status--${registrationStatus.tone}`}>
+                  <span className="inst-status__dot" />
+                  {registrationStatus.label}
+                </span>
+              )}
+              {hero.tagline && <span className="inst-hero__tag">{hero.tagline}</span>}
+            </div>
+          )}
           {hero.title && <h1 className="inst-hero__title">{hero.title}</h1>}
           {hero.subtitle && <p className="inst-hero__subtitle">{hero.subtitle}</p>}
           {(hero.dateLabel || hero.locationLabel) && (
@@ -190,10 +256,10 @@ const Institutional = () => {
           )}
           <div className="inst-hero__cta">
             <Button type="button" className="inst-btn inst-btn--yellow inst-btn--lg" onClick={goToForm}>
-              Fazer minha inscrição
+              Fazer Minha Inscrição
             </Button>
             <Button type="button" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
-              Saiba mais
+              Saiba Mais
             </Button>
           </div>
         </div>
@@ -398,7 +464,7 @@ const Institutional = () => {
       {(contactPhone || contactEmail) && (
         <section className="inst-section" id="contato">
           <div className="inst-section__head">
-            <h2>Fale com a organização</h2>
+            <h2>Fale com a Organização</h2>
             <p>Ficou com alguma dúvida? Entre em contato com a gente.</p>
           </div>
           <div className="inst-contact">
