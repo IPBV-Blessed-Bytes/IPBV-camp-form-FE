@@ -13,11 +13,17 @@ import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from 
 import { eventPath } from '@/config/eventScope';
 import './style.scss';
 
+const REGISTRATION_STATUS = {
+  open: { label: 'Inscrições abertas', tone: 'open' },
+  closed: { label: 'Inscrições encerradas', tone: 'closed' },
+};
+
 const Institutional = () => {
   const navigate = useNavigate();
   const { handleAdminClick } = useFormState();
-  const { name: eventName, mapQuery } = useEventBranding();
+  const { name: eventName, mapQuery, contact, contactMessage, socialLinks, registrationsOpen } = useEventBranding();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [content, setContent] = useState(null);
   const [visits, setVisits] = useState(null);
   const [galleryModal, setGalleryModal] = useState(null);
@@ -52,7 +58,31 @@ const Institutional = () => {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!el) return;
+    const scroller = document.scrollingElement || document.documentElement;
+    const nav = document.querySelector('.inst-nav');
+    const offset = nav ? nav.offsetHeight : 0;
+    const startY = scroller.scrollTop;
+    const maxY = scroller.scrollHeight - window.innerHeight;
+    const rawTarget = el.getBoundingClientRect().top + startY - offset;
+    const targetY = Math.max(0, Math.min(rawTarget, maxY));
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 2) return;
+    const prevBehavior = scroller.style.scrollBehavior;
+    scroller.style.scrollBehavior = 'auto';
+    const duration = Math.min(1600, Math.max(800, Math.abs(distance) * 0.7));
+    const startTime = performance.now();
+    const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      scroller.scrollTop = startY + distance * easeInOutCubic(progress);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        scroller.style.scrollBehavior = prevBehavior;
+      }
+    };
+    window.requestAnimationFrame(step);
   };
 
   if (!content) {
@@ -72,6 +102,10 @@ const Institutional = () => {
   const members = (team.members || []).filter(
     (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
   );
+  const speakers = content.speakers || {};
+  const speakerMembers = (speakers.members || []).filter(
+    (m) => m && ((m.name && m.name.trim()) || (m.role && m.role.trim()) || m.imageId),
+  );
   const gallery = content.gallery || {};
   const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
   const notices = content.notices || {};
@@ -83,14 +117,28 @@ const Institutional = () => {
     ? { backgroundImage: `url(${institutionalImageUrl(hero.backgroundImageId)})` }
     : undefined;
 
+  const registrationStatus = REGISTRATION_STATUS[registrationsOpen ? 'open' : 'closed'];
+
+  const waDigits = (contact || '').replace(/\D/g, '');
+  const waNumber = waDigits ? (waDigits.length <= 11 ? `55${waDigits}` : waDigits) : '';
+  let contactEmail = '';
+  try {
+    const parsed = socialLinks ? JSON.parse(socialLinks) : {};
+    contactEmail = (parsed && parsed.email) || '';
+  } catch {
+    contactEmail = '';
+  }
+
   const sectionVisible = {
     sobre: !!(about.title || about.text || highlights.length > 0),
     programacao: true,
+    palestrantes: speakerMembers.length > 0,
     equipe: members.length > 0,
     galeria: photos.length > 0,
     avisos: noticeItems.length > 0,
     parceiros: partnerLogos.length > 0,
     'como-chegar': !!mapQuery,
+    contato: !!(waNumber || contactEmail),
   };
 
   return (
@@ -103,12 +151,43 @@ const Institutional = () => {
             </span>
             {brand}
           </button>
-          <nav className="inst-nav__links">
+          <nav className={`inst-nav__links${menuOpen ? ' is-open' : ''}`}>
             {INSTITUTIONAL_NAV.filter((n) => sectionVisible[n.id] !== false).map((n) => (
-              <button key={n.id} type="button" onClick={() => scrollTo(n.id)}>
+              <button
+                key={n.id}
+                type="button"
+                onClick={() => {
+                  scrollTo(n.id);
+                  setMenuOpen(false);
+                }}
+              >
                 {n.label}
               </button>
             ))}
+            <div className="inst-nav__menu-actions">
+              <Button
+                type="button"
+                variant=""
+                className="inst-btn inst-btn--ghost"
+                onClick={() => {
+                  goToAccount();
+                  setMenuOpen(false);
+                }}
+              >
+                Minha conta
+              </Button>
+              <Button
+                type="button"
+                variant=""
+                className="inst-btn inst-btn--primary"
+                onClick={() => {
+                  goToForm();
+                  setMenuOpen(false);
+                }}
+              >
+                Inscreva-se
+              </Button>
+            </div>
           </nav>
           <div className="inst-nav__actions">
             <Button type="button" variant="" className="inst-btn inst-btn--ghost" onClick={goToAccount}>
@@ -118,13 +197,34 @@ const Institutional = () => {
               Inscreva-se
             </Button>
           </div>
+          <button
+            type="button"
+            className={`inst-nav__toggle${menuOpen ? ' is-open' : ''}`}
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
       </header>
 
       <section className={`inst-hero${heroStyle ? ' inst-hero--image' : ''}`} id="topo" style={heroStyle}>
         <div className="inst-hero__overlay" />
         <div className="inst-hero__content">
-          {hero.tagline && <span className="inst-hero__tag">{hero.tagline}</span>}
+          {(registrationStatus || hero.tagline) && (
+            <div className="inst-hero__badges">
+              {registrationStatus && (
+                <span className={`inst-status inst-status--${registrationStatus.tone}`}>
+                  <span className="inst-status__dot" />
+                  {registrationStatus.label}
+                </span>
+              )}
+              {hero.tagline && <span className="inst-hero__tag">{hero.tagline}</span>}
+            </div>
+          )}
           {hero.title && <h1 className="inst-hero__title">{hero.title}</h1>}
           {hero.subtitle && <p className="inst-hero__subtitle">{hero.subtitle}</p>}
           {(hero.dateLabel || hero.locationLabel) && (
@@ -209,6 +309,30 @@ const Institutional = () => {
           <p className="inst-schedule__empty">A programação completa será divulgada em breve.</p>
         )}
       </section>
+
+      {speakerMembers.length > 0 && (
+        <section className="inst-section" id="palestrantes">
+          <div className="inst-section__head">
+            <h2>{speakers.title || 'Palestrantes'}</h2>
+            {speakers.subtitle && <p>{speakers.subtitle}</p>}
+          </div>
+          <div className="inst-cards inst-cards--4">
+            {speakerMembers.map((m, i) => (
+              <div key={`${m.name}-${i}`} className="inst-team">
+                <div className="inst-team__avatar">
+                  {m.imageId ? (
+                    <img src={institutionalImageUrl(m.imageId)} alt={m.name} />
+                  ) : (
+                    <Icons typeIcon="person" iconSize={34} fill={accent} />
+                  )}
+                </div>
+                <h3>{m.name}</h3>
+                <span>{m.role}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {members.length > 0 && (
         <section className="inst-section" id="equipe">
@@ -320,6 +444,44 @@ const Institutional = () => {
               loading="lazy"
               allowFullScreen
             />
+          </div>
+        </section>
+      )}
+
+      {(waNumber || contactEmail) && (
+        <section className="inst-section" id="contato">
+          <div className="inst-section__head">
+            <h2>Fale com a Organização</h2>
+            <p>{contactMessage || 'Ficou com alguma dúvida? Entre em contato com a gente.'}</p>
+          </div>
+          <div className="inst-contact">
+            {waNumber && (
+              <a
+                className="inst-contact__card"
+                href={`https://wa.me/${waNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="inst-contact__icon">
+                  <Icons typeIcon="whatsapp" iconSize={28} fill={accent} />
+                </span>
+                <div className="inst-contact__info">
+                  <strong>WhatsApp</strong>
+                  <span>{contact}</span>
+                </div>
+              </a>
+            )}
+            {contactEmail && (
+              <a className="inst-contact__card" href={`mailto:${contactEmail}`}>
+                <span className="inst-contact__icon">
+                  <Icons typeIcon="email" iconSize={26} fill={accent} />
+                </span>
+                <div className="inst-contact__info">
+                  <strong>E-mail</strong>
+                  <span>{contactEmail}</span>
+                </div>
+              </a>
+            )}
           </div>
         </section>
       )}
