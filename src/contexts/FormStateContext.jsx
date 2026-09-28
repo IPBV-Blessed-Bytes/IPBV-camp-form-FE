@@ -337,11 +337,20 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
           const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
           const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
 
+          const extrasList = Array.isArray(form.package?.extras) ? form.package.extras : [];
+          const extrasDetailed = extrasList.map((e) => {
+            const unit = Number(getProductPrice(e.id)) || 0;
+            const qty = Number(e.quantity) || 1;
+            return { id: e.id, name: e.name, category: e.category || '', price: String(unit), quantity: qty };
+          });
+          const extrasPrice = extrasDetailed.reduce((sum, e) => sum + Number(e.price) * e.quantity, 0);
+
           const subtotal =
             Number(accomodationPrice) +
             Number(transportationPrice) +
             Number(foodPrice) +
-            Number(extraMealsPrice);
+            Number(extraMealsPrice) +
+            Number(extrasPrice);
 
           const rawDiscount = Number(discountList[index] || 0);
           const appliedDiscount = Math.min(subtotal, rawDiscount);
@@ -365,6 +374,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
                 price: foodPrice,
               },
               foodName: form.package?.food?.name || '',
+              extras: extrasDetailed,
               price: subtotal,
               finalPrice: totalPrice,
             },

@@ -76,7 +76,13 @@ const FinalReview = () => {
   const transportationPrice = getProductPrice(formValues.package.transportation.id);
   const foodPrice = formValues.package.food?.id ? getProductPrice(formValues.package.food.id) : 0;
 
-  const packageOriginalPrice = accomodationPrice + transportationPrice + foodPrice;
+  const extrasList = Array.isArray(formValues.package.extras) ? formValues.package.extras : [];
+  const extrasPrice = extrasList.reduce(
+    (sum, e) => sum + (Number(getProductPrice(e.id)) || 0) * (Number(e.quantity) || 1),
+    0,
+  );
+
+  const packageOriginalPrice = accomodationPrice + transportationPrice + foodPrice + extrasPrice;
   const extraMealsPrice = Number(formValues.extraMeals?.totalPrice || 0);
   const discountNumeric = Number(formValues.package?.discount || 0);
 
@@ -139,6 +145,16 @@ const FinalReview = () => {
                             {!formValues.extraMeals?.totalPrice && <span className="packages-horizontal-line" />}
                           </>
                         )}
+                        {extrasList.map((extra) => (
+                          <span key={extra.id}>
+                            <span className="packages-horizontal-line" />
+                            {extra.category ? `${extra.category} = ` : ''}
+                            {extra.name}
+                            {Number(extra.quantity) > 1 ? ` (x${extra.quantity})` : ''}
+                            <br />
+                            Preço = R$ {formatBRL((Number(getProductPrice(extra.id)) || 0) * (Number(extra.quantity) || 1))}
+                          </span>
+                        ))}
                       </Card.Text>
                     </Col>
                     <Col md={4} className="fw-bold">

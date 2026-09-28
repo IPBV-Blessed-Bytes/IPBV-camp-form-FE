@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { formatBRL } from '@/utils/formatBRL';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -7,12 +7,15 @@ import { loadProducts } from './utils/products';
 import { loadAgePriceRules } from './utils/ageRules';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
+import StoreItemList from '@/components/Global/StoreItemList';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import { findActiveLot } from '@/utils/activeLot';
 import { getLots } from '@/services/lots';
 import { useFormState } from '@/contexts/FormStateContext';
 import Loading from '@/components/Global/Loading';
+
+const FIXED_KEYS = ['HOSPEDAGEM', 'TRANSPORTE'];
 
 const Packages = () => {
   const {
@@ -30,7 +33,6 @@ const Packages = () => {
     updateFormValues,
   } = useFormState();
   const updateForm = updateFormValues('package');
-  const productListRef = useRef();
   const { items, addItem } = useCart();
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
@@ -47,7 +49,6 @@ const Packages = () => {
 
         if (foundLot) {
           setActiveLot(foundLot);
-
           setProductsState(updatedProducts);
         }
       } catch (error) {
@@ -65,13 +66,23 @@ const Packages = () => {
     const cartIsEmpty = items.length === 0;
 
     if (cartIsEmpty && currentUser?.package) {
-      const { accomodation, transportation } = currentUser.package;
+      const { accomodation, transportation, extras } = currentUser.package;
 
       if (accomodation?.id) {
-        addItem({ ...accomodation, category: 'Hospedagem' });
+        addItem({ ...accomodation, category: 'Hospedagem', categoryKey: 'HOSPEDAGEM' });
       }
       if (transportation?.id) {
-        addItem({ ...transportation, category: 'Transporte' });
+        addItem({ ...transportation, category: 'Transporte', categoryKey: 'TRANSPORTE' });
+      }
+      if (Array.isArray(extras)) {
+        extras.forEach((e) => {
+          if (e?.id) {
+            addItem(
+              { id: e.id, name: e.name, price: Number(e.price) || 0, category: e.category, categoryKey: e.categoryKey },
+              Number(e.quantity) || 1,
+            );
+          }
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,42 +96,74 @@ const Packages = () => {
     }
   }, [hasDiscount, discount]);
 
-  const submitForm = () => {
-    const isValid = productListRef.current?.checkRequiredPackages();
+  const discounted = getDiscountedProducts(age);
 
-    if (!isValid) return;
+  const priceForItem = (item) => {
+    const d = discounted.find((p) => p.id === item.id);
+    return Number(d?.price ?? item.price ?? 0) * Number(item.quantity || 1);
+  };
+
+  const getCategoryDiscountDescription = (key) => {
+    const descriptions = discounted
+      .filter((p) => p.categoryKey === key && p.discountDescription && p.discountDescription.trim() !== '')
+      .map((p) => `${p.discountDescription} quando opção for ${p.name}`);
+    return descriptions.length > 0 ? ` ${descriptions.join(' | ')}` : '';
+  };
+
+  const hasStoreItems = discounted.some(
+    (p) =>
+      p.categoryKey &&
+      !FIXED_KEYS.includes(p.categoryKey) &&
+      productsState.find((prod) => prod.id === p.id) &&
+      (p.stock === null || p.stock === undefined || p.stock > 0),
+  );
+
+  const storeCartItems = items.filter((i) => i.categoryKey && !FIXED_KEYS.includes(i.categoryKey));
+
+  const submitForm = () => {
+    const missing = [];
+    if (!items.some((i) => i.categoryKey === 'HOSPEDAGEM')) missing.push('Hospedagem');
+    if (!items.some((i) => i.categoryKey === 'TRANSPORTE')) missing.push('Transporte');
+    if (missing.length > 0) {
+      toast.error(`Selecione uma opção para: ${missing.join(', ')}`);
+      return;
+    }
 
     const newPackage = {
       accomodation: { id: '', name: '', price: '' },
       transportation: { id: '', name: '', price: '' },
       food: { id: '', name: '', price: '' },
+      extras: [],
       price: '',
       finalPrice: '',
       discount: 0,
     };
 
     items.forEach((item) => {
-      if (item.category === 'Hospedagem') {
+      if (item.categoryKey === 'HOSPEDAGEM') {
         newPackage.accomodation = { id: item.id, name: item.name, price: item.price };
-      }
-      if (item.category === 'Transporte') {
+      } else if (item.categoryKey === 'TRANSPORTE') {
         newPackage.transportation = { id: item.id, name: item.name, price: item.price };
+      } else {
+        const unit = discounted.find((p) => p.id === item.id)?.price ?? item.price ?? 0;
+        newPackage.extras.push({
+          id: item.id,
+          name: item.name,
+          category: item.category || '',
+          categoryKey: item.categoryKey || '',
+          price: unit,
+          quantity: Number(item.quantity) || 1,
+        });
       }
     });
 
-    newPackage.price =
-      Number(newPackage.accomodation.price || 0) +
-      Number(newPackage.transportation.price || 0) +
-      Number(newPackage.food.price || 0);
-
+    newPackage.price = items.reduce((sum, it) => sum + priceForItem(it), 0);
     const discountNumeric = Number(discount) || 0;
     newPackage.finalPrice = Math.max(newPackage.price - discountNumeric, 0);
     newPackage.discount = discountNumeric;
 
     updateForm(newPackage, () => {
-      const hasFood = true;
-      const skipToReview = hasFood;
-      nextStep(skipToReview);
+      nextStep(true);
     });
   };
 
@@ -128,31 +171,11 @@ const Packages = () => {
   const isChild = age < 9;
   const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
 
-  const discounted = getDiscountedProducts(age);
-
-  const getCategoryDiscountDescription = (category) => {
-    const productsInCategory = discounted.filter((p) => p.category === category);
-    const descriptions = productsInCategory
-      .filter((p) => p.discountDescription && p.discountDescription.trim() !== '')
-      .map((p) => `${p.discountDescription} quando opção for ${p.name}`);
-
-    return descriptions.length > 0 ? ` ${descriptions.join(' | ')}` : '';
-  };
-
-  const getDiscountedPrice = (category) => {
-    const item = items.find((i) => i.category === category);
-    if (!item) return 0;
-
-    const discountedItem = discounted.find((d) => d.id === item.id);
-    return discountedItem?.price ?? item.price ?? 0;
-  };
-
-  const accomodationPrice = getDiscountedPrice('Hospedagem');
-  const transportationPrice = getDiscountedPrice('Transporte');
-
-  const totalBeforeDiscount = accomodationPrice + transportationPrice;
+  const totalBeforeDiscount = items.reduce((sum, it) => sum + priceForItem(it), 0);
   const discountNumeric = Number(discount) || 0;
   const finalTotal = Math.max(totalBeforeDiscount - discountNumeric, 0);
+
+  const summaryFor = (key) => items.find((i) => i.categoryKey === key);
 
   return (
     <Container className="packages-page form__container__cart-height">
@@ -168,15 +191,14 @@ const Packages = () => {
                     Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>. A
                     hospedagem já contempla alimentação completa!
                     <em className="discount-description text-success small">
-                      {getCategoryDiscountDescription('Hospedagem')}
+                      {getCategoryDiscountDescription('HOSPEDAGEM')}
                     </em>
                   </Card.Text>
                   <ProductList
                     age={age}
                     cartKey={cartKey}
-                    category="Hospedagem"
+                    categoryKey="HOSPEDAGEM"
                     products={productsState}
-                    ref={productListRef}
                     packageCount={packageCount}
                   />
                 </Card.Body>
@@ -186,22 +208,33 @@ const Packages = () => {
                 <Card.Body>
                   <Card.Title>Transporte</Card.Title>
                   <Card.Text>
-                    Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdate total com transporte
+                    Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdade total com transporte
                     próprio. A escolha do transporte é <strong>obrigatória</strong>.
                     <em className="discount-description text-success small">
-                      {getCategoryDiscountDescription('Transporte')}
+                      {getCategoryDiscountDescription('TRANSPORTE')}
                     </em>
                   </Card.Text>
                   <ProductList
                     age={age}
                     cartKey={cartKey}
-                    category="Transporte"
+                    categoryKey="TRANSPORTE"
                     products={productsState}
-                    ref={productListRef}
                     packageCount={packageCount}
                   />
                 </Card.Body>
               </Card>
+
+              {hasStoreItems && (
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Loja</Card.Title>
+                    <Card.Text>
+                      Itens extras da loja (opcional). Escolha a quantidade de cada item, conforme a disponibilidade.
+                    </Card.Text>
+                    <StoreItemList products={productsState} discounted={discounted} />
+                  </Card.Body>
+                </Card>
+              )}
             </>
           ) : (
             <div className="registration-closed-message">
@@ -219,43 +252,44 @@ const Packages = () => {
               <Card.Body>
                 <Card.Title>Resumo do Pacote</Card.Title>
                 <div className="summary">
-                  <div className="summary__accomodation">
-                    <div className="summary__accomodation__label">Hospedagem:</div>
-                    <div
-                      className={`summary__accomodation__content ${
-                        items.find((i) => i.category === 'Hospedagem') ? 'with-border' : 'no-border'
-                      }`}
-                    >
-                      {items.find((i) => i.category === 'Hospedagem') ? (
-                        <div>{items.find((i) => i.category === 'Hospedagem')?.name}</div>
-                      ) : (
-                        <small className="text-secondary">Não selecionado</small>
-                      )}
-                      {items.find((i) => i.category === 'Hospedagem') && (
-                        <div className="summary__accomodation__value">R$ {formatBRL(accomodationPrice)}</div>
-                      )}
-                    </div>
-                    <div className="packages-horizontal-line-cart"></div>
-                  </div>
+                  {['HOSPEDAGEM', 'TRANSPORTE'].map((key) => {
+                    const item = summaryFor(key);
+                    const label = key === 'HOSPEDAGEM' ? 'Hospedagem' : 'Transporte';
+                    return (
+                      <div className="summary__accomodation" key={key}>
+                        <div className="summary__accomodation__label">{label}:</div>
+                        <div className={`summary__accomodation__content ${item ? 'with-border' : 'no-border'}`}>
+                          {item ? (
+                            <>
+                              <div>{item.name}</div>
+                              <div className="summary__accomodation__value">R$ {formatBRL(priceForItem(item))}</div>
+                            </>
+                          ) : (
+                            <small className="text-secondary">Não selecionado</small>
+                          )}
+                        </div>
+                        <div className="packages-horizontal-line-cart"></div>
+                      </div>
+                    );
+                  })}
 
-                  <div className="summary__transportation">
-                    <div className="summary__accomodation__label">Transporte:</div>
-                    <div
-                      className={`summary__accomodation__content ${
-                        items.find((i) => i.category === 'Transporte') ? 'with-border' : 'no-border'
-                      }`}
-                    >
-                      {items.find((i) => i.category === 'Transporte') ? (
-                        <div>{items.find((i) => i.category === 'Transporte')?.name}</div>
-                      ) : (
-                        <small className="text-secondary">Não selecionado</small>
-                      )}
-                      {items.find((i) => i.category === 'Transporte') && (
-                        <div className="summary__accomodation__value">R$ {formatBRL(transportationPrice)}</div>
-                      )}
+                  {storeCartItems.length > 0 && (
+                    <div className="summary__accomodation">
+                      <div className="summary__accomodation__label">Loja:</div>
+                      <div className="summary__accomodation__content with-border">
+                        {storeCartItems.map((item) => (
+                          <div key={item.id} className="d-flex justify-content-between">
+                            <div>
+                              {item.name}
+                              {Number(item.quantity) > 1 ? ` (x${item.quantity})` : ''}
+                            </div>
+                            <div className="summary__accomodation__value">R$ {formatBRL(priceForItem(item))}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="packages-horizontal-line-cart"></div>
                     </div>
-                    <div className="packages-horizontal-line-cart"></div>
-                  </div>
+                  )}
 
                   {hasDiscount && discountNumeric > 0 && (
                     <div className="summary__discount">

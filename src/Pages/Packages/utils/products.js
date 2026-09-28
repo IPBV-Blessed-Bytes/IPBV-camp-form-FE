@@ -24,7 +24,9 @@ export const loadProducts = async () => {
       foodPrice: Number(product.foodPrice ?? 0),
       description: product.description,
       category: toCategoryLabel(product.category),
+      categoryKey: product.category,
       vacancies: product.vacancies ?? null,
+      stock: product.stock ?? null,
       iconKey: product.iconKey || null,
       hasImage: !!product.hasImage,
     }));

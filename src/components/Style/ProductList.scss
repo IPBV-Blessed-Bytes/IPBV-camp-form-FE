@@ -156,3 +156,49 @@
 .discount-description {
   color: $alternate-dark-gray;
 }
+
+.store-stock {
+  color: #007185;
+  font-weight: 600;
+}
+
+.store-qty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: auto;
+
+  &__btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 2px solid #007185;
+    background: #fff;
+    color: #007185;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      background: rgba(0, 113, 133, 0.08);
+    }
+
+    &:disabled {
+      border-color: #cccccc;
+      color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+
+  &__value {
+    min-width: 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+}

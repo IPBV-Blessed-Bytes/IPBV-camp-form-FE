@@ -1,14 +1,13 @@
-import { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { formatBRL } from '@/utils/formatBRL';
 import { useCart } from 'react-use-cart';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import Icons from '@/components/Global/Icons';
 import { productImageUrl } from '@/services/products';
 import '../Style/ProductList.scss';
 
-const ProductList = forwardRef(({ age, cartKey, category, products, packageCount }, ref) => {
+const ProductList = ({ age, cartKey, categoryKey, selectionRule = 'SINGLE', products, packageCount }) => {
   const { addItem, getItem, removeItem, items } = useCart();
   const [productsState, setProductsState] = useState(products || []);
   const hasRestoredCart = useRef(false);
@@ -26,7 +25,7 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
       try {
         const parsed = JSON.parse(savedCart);
         parsed.forEach((item) => {
-          if (!getItem(item.id)) addItem(item);
+          if (!getItem(item.id)) addItem(item, Number(item.quantity) || 1);
         });
       } catch (e) {
         console.error('[ProductList] Erro ao restaurar carrinho:', e);
@@ -50,28 +49,12 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     return Number(product.vacancies) > used;
   };
 
-  const checkRequiredPackages = () => {
-    const requiredCategories = ['Hospedagem', 'Transporte'];
-    const missingCategories = requiredCategories.filter(
-      (cat) => !productsState.some((p) => p.category === cat && getItem(p.id)),
-    );
-
-    if (missingCategories.length > 0) {
-      toast.error(`Selecione uma opção para: ${missingCategories.join(', ')}`);
-      return false;
-    }
-
-    return true;
-  };
-
-  useImperativeHandle(ref, () => ({
-    checkRequiredPackages,
-  }));
-
   const handleSelect = (product, filtered) => {
-    filtered.forEach((p) => {
-      if (getItem(p.id)) removeItem(p.id);
-    });
+    if (selectionRule !== 'MULTIPLE') {
+      filtered.forEach((p) => {
+        if (getItem(p.id)) removeItem(p.id);
+      });
+    }
     addItem(product);
   };
 
@@ -84,69 +67,64 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
     }
   };
 
-  const renderSection = (categoryKey) => {
-    const filtered = getDiscountedProducts(age).filter(
-      (p) => p.category === categoryKey && productsState.find((prod) => prod.id === p.id),
-    );
+  const filtered = getDiscountedProducts(age).filter(
+    (p) => p.categoryKey === categoryKey && productsState.find((prod) => prod.id === p.id),
+  );
 
-    return (
-      <div className="product-section">
-        <div className="product-grid">
-          {filtered.map((product) => {
-            const alreadySelected = !!getItem(product.id);
-            const isAvailable = getAvailability(product, packageCount?.usedValidPackages);
+  return (
+    <div className="product-section">
+      <div className="product-grid">
+        {filtered.map((product) => {
+          const alreadySelected = !!getItem(product.id);
+          const isAvailable = getAvailability(product, packageCount?.usedValidPackages);
 
-            return (
-              <div
-                key={product.id}
-                className={`product-card
+          return (
+            <div
+              key={product.id}
+              className={`product-card
     ${alreadySelected ? 'product-card-is-active' : ''}
     ${!isAvailable ? 'product-card-unavailable' : ''}`}
-              >
-                {product.hasImage && (
-                  <div className="product-card__image">
-                    <img src={productImageUrl(product.productId)} alt={product.name} loading="lazy" />
-                  </div>
-                )}
-                <div className="align-items-center mb-4">
-                  <h3 className="product-title">{product.name}</h3>
+            >
+              {product.hasImage && (
+                <div className="product-card__image">
+                  <img src={productImageUrl(product.productId)} alt={product.name} loading="lazy" />
                 </div>
-                {!product.hasImage && product.iconKey && (
-                  <div className="product-card__icon">
-                    <Icons typeIcon={product.iconKey} iconSize={42} fill="#007185" />
-                  </div>
-                )}
-                <p className="product-price mb-4">R$ {formatBRL(product.price)}</p>
-                {product.description && <p className="discount-description small mb-4">{product.description}</p>}
-
-                {!isAvailable ? (
-                  <span className="product-card__badge">Indisponível</span>
-                ) : (
-                  <button
-                    className={`product-button ${alreadySelected ? 'selected' : ''}`}
-                    onClick={() => handlePackageButton(product, filtered)}
-                  >
-                    {alreadySelected && <Icons typeIcon="checked" iconSize={18} fill="#fff" />}
-                    {alreadySelected ? 'Selecionado' : 'Selecionar'}
-                  </button>
-                )}
+              )}
+              <div className="align-items-center mb-4">
+                <h3 className="product-title">{product.name}</h3>
               </div>
-            );
-          })}
-        </div>
+              {!product.hasImage && product.iconKey && (
+                <div className="product-card__icon">
+                  <Icons typeIcon={product.iconKey} iconSize={42} fill="#007185" />
+                </div>
+              )}
+              <p className="product-price mb-4">R$ {formatBRL(product.price)}</p>
+              {product.description && <p className="discount-description small mb-4">{product.description}</p>}
+
+              {!isAvailable ? (
+                <span className="product-card__badge">Indisponível</span>
+              ) : (
+                <button
+                  className={`product-button ${alreadySelected ? 'selected' : ''}`}
+                  onClick={() => handlePackageButton(product, filtered)}
+                >
+                  {alreadySelected && <Icons typeIcon="checked" iconSize={18} fill="#fff" />}
+                  {alreadySelected ? 'Selecionado' : 'Selecionar'}
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
-    );
-  };
-
-  return <>{renderSection(category)}</>;
-});
-
-ProductList.displayName = 'ProductList';
+    </div>
+  );
+};
 
 ProductList.propTypes = {
   age: PropTypes.number.isRequired,
   cartKey: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
+  categoryKey: PropTypes.string.isRequired,
+  selectionRule: PropTypes.string,
   packageCount: PropTypes.object,
   products: PropTypes.array.isRequired,
 };

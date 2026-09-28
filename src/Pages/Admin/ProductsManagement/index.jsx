@@ -50,7 +50,7 @@ const PRODUCT_ICONS = [
   'world',
 ];
 
-const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '' };
+const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '', stock: '' };
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -128,6 +128,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       category: product.category,
       active: product.active,
       iconKey: product.iconKey || '',
+      stock: product.stock ?? '',
     });
     resetImageState();
     if (product.hasImage) setImagePreview(productImageUrl(product.id));
@@ -199,14 +200,18 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
     setSaving(true);
     try {
+      const payload = {
+        ...formData,
+        stock: formData.stock === '' || formData.stock === null ? null : Number(formData.stock),
+      };
       if (editingProduct) {
-        await updateProduct(editingProduct.id, formData);
+        await updateProduct(editingProduct.id, payload);
         await saveLotPrices(editingProduct.id);
         await syncProductImage(editingProduct.id, editingProduct.hasImage);
         toast.success('Produto atualizado com sucesso');
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
-        const created = await createProduct(formData);
+        const created = await createProduct(payload);
 
         if (created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
@@ -489,6 +494,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   <td>
                     <em>{product.name}</em>
                     {product.description && <div className="text-secondary small">{product.description}</div>}
+                    {product.stock != null && (
+                      <div className="text-secondary small">Estoque: {product.stock}</div>
+                    )}
                   </td>
                   <td>{categoryLabel(product.category)}</td>
                   <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
@@ -640,6 +648,23 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
               />
+            </Form.Group>
+
+            <Form.Group controlId="formStock" className="mt-3">
+              <Form.Label>
+                <b>Estoque (itens de loja):</b>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                placeholder="Deixe em branco para ilimitado"
+                value={formData.stock}
+                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              />
+              <Form.Text className="text-secondary">
+                Quantidade disponível para venda na loja. A cada compra o estoque diminui; ao zerar, o item some do
+                formulário. Deixe em branco para Hospedagem/Transporte (sem controle de estoque).
+              </Form.Text>
             </Form.Group>
 
             <div className="mt-3">

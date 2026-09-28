@@ -71,12 +71,13 @@ const AdminCategories = ({ loggedUsername }) => {
     }
     setSaving(true);
     try {
+      const payload = { label: form.label, active: form.active };
       if (form.id) {
-        await updateCategory(form.id, { label: form.label, active: form.active });
+        await updateCategory(form.id, payload);
         toast.success('Categoria atualizada');
         registerLog(`Editou categoria ${form.label}`, loggedUsername);
       } else {
-        await createCategory({ label: form.label, active: form.active });
+        await createCategory(payload);
         toast.success('Categoria criada');
         registerLog(`Criou categoria ${form.label}`, loggedUsername);
       }
@@ -202,7 +203,7 @@ const AdminCategories = ({ loggedUsername }) => {
                 Cancelar
               </Button>
               <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSave} loading={saving}>
-                {form.id ? 'Salvar Alterações' : 'Adicionar'}
+                {form.id ? 'Salvar' : 'Adicionar'}
               </SpinnerButton>
             </>
           }
