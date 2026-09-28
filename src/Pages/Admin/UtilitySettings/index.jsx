@@ -30,6 +30,7 @@ const EVENT_MAP_KEY = 'event_map';
 const SOCIAL_LINKS_KEY = 'social_links';
 const DECLARATION_TEMPLATE_KEY = 'guardian_declaration_template_id';
 const WHATSAPP_GROUP_KEY = 'whatsapp_group_link';
+const SHOW_LGPD_KEY = 'show_lgpd_modal';
 
 const SOCIAL_NETWORKS = [
   { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/suaigreja' },
@@ -74,6 +75,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [social, setSocial] = useState({});
   const [templateId, setTemplateId] = useState('');
   const [whatsappGroup, setWhatsappGroup] = useState('');
+  const [showLgpd, setShowLgpd] = useState(true);
   const [uploadingTemplate, setUploadingTemplate] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -97,6 +99,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         templateValue,
         whatsappValue,
         baseDateData,
+        showLgpdValue,
       ] = await Promise.all([
         getSetting(CONTACT_KEY),
         getSetting(SPREADSHEET_KEY),
@@ -110,6 +113,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         getSetting(DECLARATION_TEMPLATE_KEY),
         getSetting(WHATSAPP_GROUP_KEY),
         getBaseDate(),
+        getSetting(SHOW_LGPD_KEY),
       ]);
       setContact(contactValue);
       setSpreadsheet(spreadsheetValue);
@@ -122,6 +126,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setSocial(parseSocial(socialValue));
       setTemplateId(templateValue || '');
       setWhatsappGroup(whatsappValue || '');
+      setShowLgpd(showLgpdValue !== 'false');
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
         setBaseDateExists(true);
@@ -170,6 +175,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         updateSetting(EVENT_MAP_KEY, eventMap.trim()),
         updateSetting(SOCIAL_LINKS_KEY, JSON.stringify(cleanSocial)),
         updateSetting(WHATSAPP_GROUP_KEY, whatsappGroup.trim()),
+        updateSetting(SHOW_LGPD_KEY, showLgpd ? 'true' : 'false'),
       ]);
       setContact(contactValue || '');
       setSpreadsheet(spreadsheetValue || '');
@@ -514,6 +520,32 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     <Form.Text className="text-muted-italic">
                       Link de convite do grupo do evento. O botão e o QR code só aparecem quando este link está
                       preenchido; o QR é gerado automaticamente a partir dele.
+                    </Form.Text>
+                  </Form.Group>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="roles" iconSize={20} stroke="#007185" fill="none" />
+                  </span>
+                  <span>Modal de LGPD</span>
+                </div>
+                <div className="utility-card__body">
+                  <Form.Group className='oi'>
+                    <Form.Check
+                      type="switch"
+                      id="show-lgpd-modal"
+                      label="Exibir o modal de LGPD ao abrir o formulário"
+                      checked={showLgpd}
+                      onChange={(e) => setShowLgpd(e.target.checked)}
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Quando desligado, o aviso de conformidade com a LGPD não aparece na abertura do formulário de
+                      inscrição.
                     </Form.Text>
                   </Form.Group>
                 </div>

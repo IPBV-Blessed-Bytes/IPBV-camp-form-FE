@@ -27,6 +27,11 @@ const loadGoogleScript = () =>
 
 const GoogleSignInButton = ({ onCredential }) => {
   const buttonRef = useRef(null);
+  const onCredentialRef = useRef(onCredential);
+
+  useEffect(() => {
+    onCredentialRef.current = onCredential;
+  }, [onCredential]);
 
   useEffect(() => {
     if (!CLIENT_ID) return undefined;
@@ -38,7 +43,7 @@ const GoogleSignInButton = ({ onCredential }) => {
         if (cancelled || !window.google?.accounts?.id || !buttonRef.current) return;
         window.google.accounts.id.initialize({
           client_id: CLIENT_ID,
-          callback: (response) => onCredential(response.credential),
+          callback: (response) => onCredentialRef.current(response.credential),
         });
         window.google.accounts.id.renderButton(buttonRef.current, {
           theme: 'outline',
@@ -55,7 +60,7 @@ const GoogleSignInButton = ({ onCredential }) => {
     return () => {
       cancelled = true;
     };
-  }, [onCredential]);
+  }, []);
 
   if (!CLIENT_ID) return null;
 

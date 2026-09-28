@@ -60,9 +60,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     if (!silent) setLoading(true);
     try {
       const data = await listUsers();
-      const sortedUsers = [...data].sort((a, b) =>
-        (a.displayName || a.email || a.login || '').localeCompare(b.displayName || b.email || b.login || ''),
-      );
+      const sortedUsers = [...data].sort((a, b) => {
+        const adminA = a.role === 'admin' ? 0 : 1;
+        const adminB = b.role === 'admin' ? 0 : 1;
+        if (adminA !== adminB) return adminA - adminB;
+        return (a.displayName || a.email || a.login || '').localeCompare(b.displayName || b.email || b.login || '');
+      });
       setUsers(sortedUsers);
     } catch (error) {
       toast.error('Erro ao buscar usuários');

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { toast } from 'react-toastify';
 import { getHomeInfo } from '@/services/homeInfo';
+import { getPublicSetting } from '@/services/settings';
 import { useFormState } from '@/contexts/FormStateContext';
 import './style.scss';
 import Icons from '@/components/Global/Icons';
@@ -63,7 +64,11 @@ const FormHome = ({ onLgpdClose }) => {
   };
 
   useEffect(() => {
-    setShowLgpdModal(true);
+    getPublicSetting('show_lgpd_modal')
+      .then((value) => {
+        if (value !== 'false') setShowLgpdModal(true);
+      })
+      .catch(() => setShowLgpdModal(true));
     fetchHomepageInfo();
   }, []);
 
