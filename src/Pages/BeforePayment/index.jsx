@@ -113,6 +113,11 @@ const BeforePayment = () => {
       const transportation = getPrice(user.package?.transportation?.id, user.package?.transportation?.price);
       const food = getPrice(user.package?.food?.id, user.package?.food?.price);
 
+      const extras = (user.package?.extras || []).reduce(
+        (sum, e) => sum + (Number(getPrice(e.id, e.price)) || 0) * (Number(e.quantity) || 1),
+        0,
+      );
+
       const extraMeals = Number(user.extraMeals?.totalPrice || 0);
       const discount = Number(user.package?.discount || 0);
 
@@ -120,6 +125,7 @@ const BeforePayment = () => {
         Number(accomodation) +
         Number(transportation) +
         Number(food) +
+        Number(extras) +
         (user.package?.food?.id ? 0 : Number(extraMeals));
 
       const appliedDiscount = Math.min(packageTotal, discount);
