@@ -2088,6 +2088,30 @@ const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {
           <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
         </svg>
       )}
+
+      {typeIcon === 'shirt' && (
+        <svg className={'form-icons ' + className} onClick={onClick} height={iconSize ? iconSize + 'px' : '30px'} width={iconSize ? iconSize + 'px' : '30px'} viewBox="0 0 24 24" fill={fill || '#000000'} xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
+        </svg>
+      )}
+
+      {typeIcon === 'cap' && (
+        <svg className={'form-icons ' + className} onClick={onClick} height={iconSize ? iconSize + 'px' : '30px'} width={iconSize ? iconSize + 'px' : '30px'} viewBox="0 0 24 24" fill={fill || '#000000'} xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3c-4.42 0-8 3.58-8 8h16c0-4.42-3.58-8-8-8zm-9 9a1 1 0 0 0-1 1v.5a1 1 0 0 0 1 1h10.2l6.5-1.63A1 1 0 0 0 20.5 12H3z" />
+        </svg>
+      )}
+
+      {typeIcon === 'mug' && (
+        <svg className={'form-icons ' + className} onClick={onClick} height={iconSize ? iconSize + 'px' : '30px'} width={iconSize ? iconSize + 'px' : '30px'} viewBox="0 0 24 24" fill={fill || '#000000'} xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 3h11v10a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V3zm11 3v5h1a2.5 2.5 0 0 0 0-5h-1zM5 19h9a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z" />
+        </svg>
+      )}
+
+      {typeIcon === 'sticker' && (
+        <svg className={'form-icons ' + className} onClick={onClick} height={iconSize ? iconSize + 'px' : '30px'} width={iconSize ? iconSize + 'px' : '30px'} viewBox="0 0 24 24" fill={fill || '#000000'} xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 3h9l6 6v7a3 3 0 0 1-3 3H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm9 1.5V8a2 2 0 0 0 2 2h3.5L14 4.5z" />
+        </svg>
+      )}
     </>
   );
 };

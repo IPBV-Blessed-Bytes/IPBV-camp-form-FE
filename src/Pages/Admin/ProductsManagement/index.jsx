@@ -48,6 +48,10 @@ const PRODUCT_ICONS = [
   'wristband',
   'cart',
   'world',
+  'shirt',
+  'cap',
+  'mug',
+  'sticker',
 ];
 
 const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '', stock: '' };

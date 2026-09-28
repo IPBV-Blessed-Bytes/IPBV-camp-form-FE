@@ -43,47 +43,45 @@ const renderPackageDetails = (user, age) => {
     <div className="cart-item">
       <div className="item-info">
         <div className="item-accomodation mb-3">
+          <h5 className="mb-2">Hospedagem:</h5>
           <div className="d-flex justify-content-between">
-            <h5>Hospedagem:</h5>
-            <br />
-            <h5>R$ {formatBRL(accomodation)}</h5>
+            <p className="mb-1">{user.package?.accomodation.name}</p>
+            <p className="mb-1 cart-item__value">R$ {formatBRL(accomodation)}</p>
           </div>
-          <p>{user.package?.accomodation.name}</p>
         </div>
 
         <div className="item-transportation mb-3">
+          <h5 className="mb-2">Transporte:</h5>
           <div className="d-flex justify-content-between">
-            <h5>Transporte:</h5>
-            <br />
-            <h5>R$ {formatBRL(transportation)}</h5>
+            <p className="mb-1">{user.package?.transportation.name}</p>
+            <p className="mb-1 cart-item__value">R$ {formatBRL(transportation)}</p>
           </div>
-          <p>{user.package?.transportation.name}</p>
         </div>
 
         {user.package?.food?.name && (
           <div className="item-food mb-3">
+            <h5 className="mb-2">Alimentação:</h5>
             <div className="d-flex justify-content-between">
-              <h5>Alimentação:</h5>
-              <br />
-              <h5>R$ {formatBRL(food)}</h5>
+              <p className="mb-1">{user.package.food.name.split(' (')[0]}</p>
+              <p className="mb-1 cart-item__value">R$ {formatBRL(food)}</p>
             </div>
-            <p>{user.package.food.name.split(' (')[0]}</p>
           </div>
         )}
 
-        {extras.map((extra) => (
-          <div className="item-store mb-3" key={extra.id}>
-            <div className="d-flex justify-content-between">
-              <h5>Loja:</h5>
-              <br />
-              <h5>R$ {formatBRL(extra.total)}</h5>
-            </div>
-            <p>
-              {extra.name}
-              {extra.quantity > 1 ? ` (x${extra.quantity})` : ''}
-            </p>
+        {extras.length > 0 && (
+          <div className="item-store mb-3">
+            <h5 className="mb-2">Loja:</h5>
+            {extras.map((extra) => (
+              <div className="d-flex justify-content-between" key={extra.id}>
+                <p className="mb-1">
+                  {extra.name}
+                  {extra.quantity > 1 ? ` (x${extra.quantity})` : ''}
+                </p>
+                <p className="mb-1 cart-item__value">R$ {formatBRL(extra.total)}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
