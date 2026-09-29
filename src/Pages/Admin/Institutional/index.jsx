@@ -26,6 +26,25 @@ import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
+const SECTIONS = [
+  'Modelo',
+  'Visitas',
+  'Topo',
+  'Números',
+  'Sobre',
+  'Programação',
+  'Palestrantes',
+  'Equipe',
+  'Galeria',
+  'Avisos',
+  'Parceiros',
+];
+
+const scrollToCard = (index) => {
+  const cards = document.querySelectorAll('.inst-admin__card');
+  if (cards[index]) cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 const ImageField = ({ imageId, onChange, label, shape }) => {
   const inputRef = useRef(null);
   const [busy, setBusy] = useState(false);
@@ -136,6 +155,13 @@ const AdminInstitutional = ({ loggedUsername }) => {
 
       <div className="admin-subpage__content">
         <div className="inst-admin__toolbar">
+          <nav className="inst-admin__nav">
+            {SECTIONS.map((label, i) => (
+              <button type="button" key={label} onClick={() => scrollToCard(i)}>
+                {label}
+              </button>
+            ))}
+          </nav>
           <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
             <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
             {saving && (
@@ -582,7 +608,7 @@ const AdminInstitutional = ({ loggedUsername }) => {
           </div>
         </section>
 
-        <div className="inst-admin__toolbar">
+        <div className="inst-admin__toolbar inst-admin__toolbar--bottom">
           <Button variant="teal-blue" size="lg" onClick={handleSave} disabled={saving} style={{ position: 'relative' }}>
             <span style={{ visibility: saving ? 'hidden' : 'visible' }}>Salvar alterações</span>
             {saving && (
