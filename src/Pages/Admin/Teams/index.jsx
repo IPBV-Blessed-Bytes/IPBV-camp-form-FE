@@ -11,6 +11,7 @@ import {
   deleteTeam,
   assignCamperToTeam,
   removeCamperFromTeam,
+  randomAssignTeams,
 } from '@/services/teams';
 import { useWristbandsList } from '@/hooks/useWristbandsList';
 import { useCampersList } from '@/hooks/useCampersList';
@@ -35,6 +36,9 @@ const AdminTeams = ({ loggedUsername }) => {
   const [showRemoveCamperModal, setShowRemoveCamperModal] = useState(false);
   const [showAddCamperModal, setShowAddCamperModal] = useState(false);
   const [showRemoveTeamModal, setShowRemoveTeamModal] = useState(false);
+  const [randomOpen, setRandomOpen] = useState(false);
+  const [randomizing, setRandomizing] = useState(false);
+  const [randomMode, setRandomMode] = useState('all');
   const [selectedCampersIds, setSelectedCampersIds] = useState([]);
   const [selectedCamperId, setSelectedCamperId] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -278,6 +282,35 @@ const AdminTeams = ({ loggedUsername }) => {
     downloadMultiSheet({ filename: 'times.xlsx', sheets });
   };
 
+  const openRandomModal = (mode) => {
+    setRandomMode(mode);
+    setRandomOpen(true);
+  };
+
+  const handleRandomAssign = async () => {
+    const onlyUnassigned = randomMode === 'remaining';
+    setRandomizing(true);
+    try {
+      const result = await randomAssignTeams(onlyUnassigned);
+      registerLog(
+        onlyUnassigned ? 'Alocou os acampantes sem time' : 'Sorteou os times aleatoriamente',
+        loggedUsername,
+      );
+      toast.success(
+        onlyUnassigned
+          ? `${result.assigned} acampante(s) sem time distribuído(s) em ${result.teams} time(s).`
+          : `Times sorteados: ${result.assigned} acampante(s) distribuído(s) em ${result.teams} time(s).`,
+      );
+      setRandomOpen(false);
+      await fetchTeams(true);
+      refetchCampers();
+    } catch (error) {
+      toast.error('Não foi possível sortear os times.');
+    } finally {
+      setRandomizing(false);
+    }
+  };
+
   const term = search.trim().toLowerCase();
   const filteredTeams = term
     ? teams.filter(
@@ -310,6 +343,24 @@ const AdminTeams = ({ loggedUsername }) => {
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
+    },
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'team-random',
+      name: 'Sortear Times',
+      onClick: () => openRandomModal('all'),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'team',
+    },
+    {
+      fill: '#007185',
+      iconSize: 22,
+      id: 'team-random-remaining',
+      name: 'Sortear os que Faltam',
+      onClick: () => openRandomModal('remaining'),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'team',
     },
     {
       fill: '#fff',
@@ -614,6 +665,36 @@ const AdminTeams = ({ loggedUsername }) => {
         <p>
           Deseja realmente remover o time <b>{selectedTeamToRemove?.name}</b>?
         </p>
+      </CustomModal>
+
+      <CustomModal
+        show={randomOpen}
+        onHide={() => setRandomOpen(false)}
+        variant="confirm"
+        title={randomMode === 'remaining' ? 'Sortear os Que Faltam' : 'Sortear Times'}
+        centered={false}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setRandomOpen(false)} disabled={randomizing}>
+              Cancelar
+            </Button>
+            <SpinnerButton variant="primary" className="btn-confirm" onClick={handleRandomAssign} loading={randomizing}>
+              {randomMode === 'remaining' ? 'Sortear' : 'Sortear Todos'}
+            </SpinnerButton>
+          </>
+        }
+      >
+        {randomMode === 'remaining' ? (
+          <p>
+            Sorteia <b>apenas os acampantes sem time</b> e os distribui de forma equilibrada entre os {teams.length}{' '}
+            time(s) existentes. Quem já está em um time <b>não é alterado</b>.
+          </p>
+        ) : (
+          <p>
+            Isso <b>refaz todos os times</b>: os acampantes são <b>redistribuídos aleatoriamente</b> e de forma
+            equilibrada entre os {teams.length} time(s) existentes. As alocações manuais atuais serão substituídas.
+          </p>
+        )}
       </CustomModal>
 
         <Loading loading={loadingTeams} />
