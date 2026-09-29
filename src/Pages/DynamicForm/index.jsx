@@ -11,7 +11,7 @@ import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValid
 import DynamicField from '@/form/dynamic/DynamicField';
 import PackageStep from '@/form/dynamic/PackageStep';
 import RideStep from '@/form/dynamic/RideStep';
-import { computeAge, packageTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
+import { computeAge, packageTotal, packageFullTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
 import { createGenericCheckout } from '@/services/checkout';
 import { getPublicHomeInfo } from '@/services/homeInfo';
@@ -84,7 +84,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -206,9 +206,27 @@ const DynamicForm = () => {
     () => people.reduce((sum, person) => sum + personPackageTotal(person), 0),
     [people, personPackageTotal],
   );
+  const packagesDiscountTotal = useMemo(
+    () =>
+      people.reduce(
+        (sum, person) => sum + (packageFullTotal(person.__package, packageProducts) - personPackageTotal(person)),
+        0,
+      ),
+    [people, packageProducts, personPackageTotal],
+  );
   const grandTotal = useMemo(
     () => people.reduce((sum, person) => sum + personTotal(person), 0),
     [people, personTotal],
+  );
+  const groupDiscountAmount = useMemo(() => {
+    const threshold = (Number(groupDiscountThresholdCents) || 0) / 100;
+    const percent = Math.min(Number(groupDiscountPercent) || 0, 100);
+    if (percent <= 0 || threshold <= 0 || packagesTotal < threshold) return 0;
+    return packagesTotal * (percent / 100);
+  }, [packagesTotal, groupDiscountThresholdCents, groupDiscountPercent]);
+  const netGrandTotal = useMemo(
+    () => Math.max(0, grandTotal - groupDiscountAmount),
+    [grandTotal, groupDiscountAmount],
   );
 
   const setValue = (key, value) => {
@@ -947,10 +965,22 @@ const DynamicForm = () => {
                             <h5 className="summary-total-package-label mb-0">Total do Pacote:</h5>
                             <h5 className="mb-0">{formatPrice(packagesTotal)}</h5>
                           </div>
+                          {packagesDiscountTotal > 0 && (
+                            <div className="summary-total-package">
+                              <h5 className="summary-total-package-label mb-0">Desconto:</h5>
+                              <h5 className="mb-0 summary-discount-value">-{formatPrice(packagesDiscountTotal)}</h5>
+                            </div>
+                          )}
+                          {groupDiscountAmount > 0 && (
+                            <div className="summary-total-package">
+                              <h5 className="summary-total-package-label mb-0">Desconto de grupo ({groupDiscountPercent}%):</h5>
+                              <h5 className="mb-0 summary-discount-value">-{formatPrice(groupDiscountAmount)}</h5>
+                            </div>
+                          )}
                           <div className="packages-horizontal-line-cart"></div>
                           <div className="summary-total-geral mb-3">
                             <h5 className="fw-bold mb-0">Total:</h5>
-                            <h5 className="fw-bold mb-0">{formatPrice(grandTotal)}</h5>
+                            <h5 className="fw-bold mb-0">{formatPrice(netGrandTotal)}</h5>
                           </div>
                           <div className="summary-buttons d-grid gap-3">
                             {people.length > 0 && (
@@ -972,7 +1002,7 @@ const DynamicForm = () => {
                 <PaymentSimulatorModal
                   show={showSimulator}
                   onHide={() => setShowSimulator(false)}
-                  base={grandTotal}
+                  base={netGrandTotal}
                   fees={DEFAULT_FEES}
                   maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
                 />
@@ -1069,7 +1099,7 @@ const DynamicForm = () => {
                   <p className="text-muted mt-4">
                     {people.length} inscrição(ões)
                     {Number(donation) > 0 && ` + doação ${formatPrice(Number(donation))}`} · Total{' '}
-                    <b>{formatPrice(grandTotal + (Number(donation) || 0))}</b>
+                    <b>{formatPrice(netGrandTotal + (Number(donation) || 0))}</b>
                   </p>
                 </div>
               </FormStepLayout>

@@ -50,6 +50,8 @@ const EMPTY_EVENT = {
   faviconUrl: '',
   mapQuery: '',
   social: {},
+  groupDiscountThreshold: '',
+  groupDiscountPercent: '',
 };
 
 const SOCIAL_NETWORKS = [
@@ -147,6 +149,9 @@ const AdminEvents = ({ loggedUsername }) => {
       faviconUrl: event.faviconUrl || '',
       mapQuery: event.mapQuery || '',
       social: parseSocial(event.socialLinks),
+      groupDiscountThreshold:
+        event.groupDiscountThresholdCents != null ? (event.groupDiscountThresholdCents / 100).toString() : '',
+      groupDiscountPercent: event.groupDiscountPercent != null ? event.groupDiscountPercent.toString() : '',
     });
     setHasImage(false);
     setImageVersion(Date.now());
@@ -242,6 +247,14 @@ const AdminEvents = ({ loggedUsername }) => {
       faviconUrl: draft.faviconUrl.trim() || null,
       mapQuery: draft.mapQuery.trim() || null,
       socialLinks: buildSocial(draft.social),
+      groupDiscountThresholdCents:
+        draft.groupDiscountThreshold === '' || draft.groupDiscountThreshold == null
+          ? null
+          : Math.round(Number(draft.groupDiscountThreshold) * 100),
+      groupDiscountPercent:
+        draft.groupDiscountPercent === '' || draft.groupDiscountPercent == null
+          ? null
+          : Math.round(Number(draft.groupDiscountPercent)),
     };
 
     try {
@@ -705,6 +718,46 @@ const AdminEvents = ({ loggedUsername }) => {
                 <Form.Text className="text-muted-italic">
                   Mostra um mapa do local na home do evento. Deixe em branco para ocultar.
                 </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <hr className="my-4" />
+
+          <h6 className="fw-bold mb-2">Desconto de grupo</h6>
+          <Form.Text className="text-muted-italic d-block mb-3">
+            Quando o total dos pacotes do pedido atingir o valor mínimo, aplica a porcentagem de desconto sobre os
+            pacotes (não sobre a taxa de inscrição). Deixe em branco para desativar.
+          </Form.Text>
+          <Row className="g-3 mb-2">
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Valor mínimo do pedido (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={draft.groupDiscountThreshold}
+                  onChange={(e) => handleChange('groupDiscountThreshold')(e.target.value)}
+                  placeholder="ex.: 1000"
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>Desconto (%):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={draft.groupDiscountPercent}
+                  onChange={(e) => handleChange('groupDiscountPercent')(e.target.value)}
+                  placeholder="ex.: 10"
+                />
               </Form.Group>
             </Col>
           </Row>

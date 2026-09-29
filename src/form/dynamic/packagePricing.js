@@ -50,5 +50,17 @@ export const packageTotal = (selection, products, rules, age) => {
   return total;
 };
 
+export const packageFullTotal = (selection, products) => {
+  const byId = new Map((products || []).map((p) => [p.id, p]));
+  let total = 0;
+  Object.values(selection || {}).forEach((productIds) => {
+    (productIds || []).forEach((id) => {
+      const product = byId.get(id);
+      if (product) total += Number(product.price || 0);
+    });
+  });
+  return total;
+};
+
 export const formatPrice = (value) =>
   Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
