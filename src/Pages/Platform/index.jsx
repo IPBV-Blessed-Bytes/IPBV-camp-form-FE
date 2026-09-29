@@ -214,6 +214,7 @@ const Platform = () => {
     essencialFeePercent: '',
     essencialFreeEventFee: '',
     essencialFreeEventAnnual: '',
+    feeTiers: [],
   });
   const [savingPricing, setSavingPricing] = useState(false);
   const [sysStage, setSysStage] = useState('on');
@@ -273,6 +274,10 @@ const Platform = () => {
           essencialFeePercent: settingsData.essencialFeePercent ?? '',
           essencialFreeEventFee: ((settingsData.essencialFreeEventFeeCents ?? 0) / 100).toString(),
           essencialFreeEventAnnual: ((settingsData.essencialFreeEventAnnualCents ?? 0) / 100).toString(),
+          feeTiers: (settingsData.defaultFeeTiers || []).map((t) => ({
+            maxReais: t.maxCents == null ? '' : (t.maxCents / 100).toString(),
+            percent: t.percent == null ? '' : t.percent.toString(),
+          })),
         });
       }
       if (has('USERS_MANAGE')) {
@@ -478,6 +483,12 @@ const Platform = () => {
         essencialFeePercent: Math.round(Number(pricing.essencialFeePercent || 0)),
         essencialFreeEventFeeCents: Math.round(Number(pricing.essencialFreeEventFee || 0) * 100),
         essencialFreeEventAnnualCents: Math.round(Number(pricing.essencialFreeEventAnnual || 0) * 100),
+        defaultFeeTiers: (pricing.feeTiers || [])
+          .filter((t) => t.percent !== '' && t.percent != null)
+          .map((t) => ({
+            maxCents: t.maxReais === '' || t.maxReais == null ? null : Math.round(Number(t.maxReais) * 100),
+            percent: Math.round(Number(t.percent)),
+          })),
       });
       toast.success('Preços da plataforma atualizados.');
     } catch (error) {
@@ -1006,6 +1017,68 @@ const Platform = () => {
               </Form.Group>
             </Col>
           </Row>
+
+          <p className="platform__pricing-tier-title">Taxa progressiva por valor da inscrição (opcional)</p>
+          <p className="platform__pricing-subtitle">
+            Faixas por valor de <b>cada inscrição paga</b> — quando preenchidas, substituem a taxa fixa acima (que vira
+            fallback). Ex.: até R$100 → 9%, até R$200 → 7%, acima → 5%. Deixe o <b>valor da última faixa vazio</b> para
+            valer &quot;daqui pra cima&quot;. Não vale para organizações com taxa própria nem para o plano Essencial.
+          </p>
+          {(pricing.feeTiers || []).map((tier, i) => (
+            <Row className="g-2 align-items-end mb-2" key={i}>
+              <Col xs={6} md={4}>
+                <Form.Label className="mb-1">Inscrições até (R$):</Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  placeholder="vazio = acima disso"
+                  value={tier.maxReais}
+                  onChange={(e) =>
+                    setPricing((prev) => {
+                      const feeTiers = [...prev.feeTiers];
+                      feeTiers[i] = { ...feeTiers[i], maxReais: e.target.value };
+                      return { ...prev, feeTiers };
+                    })
+                  }
+                />
+              </Col>
+              <Col xs={4} md={3}>
+                <Form.Label className="mb-1">Taxa (%):</Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={tier.percent}
+                  onChange={(e) =>
+                    setPricing((prev) => {
+                      const feeTiers = [...prev.feeTiers];
+                      feeTiers[i] = { ...feeTiers[i], percent: e.target.value };
+                      return { ...prev, feeTiers };
+                    })
+                  }
+                />
+              </Col>
+              <Col xs={2} md={2}>
+                <Button
+                  variant="outline-danger"
+                  onClick={() =>
+                    setPricing((prev) => ({ ...prev, feeTiers: prev.feeTiers.filter((_, j) => j !== i) }))
+                  }
+                >
+                  Remover
+                </Button>
+              </Col>
+            </Row>
+          ))}
+          <Button
+            variant="outline-teal-blue"
+            size="sm"
+            className="mb-2"
+            onClick={() => setPricing((prev) => ({ ...prev, feeTiers: [...(prev.feeTiers || []), { maxReais: '', percent: '' }] }))}
+          >
+            + Adicionar faixa
+          </Button>
 
           <p className="platform__pricing-tier-title">Plano Essencial (form + inscritos)</p>
           <Row className="g-3 align-items-start">
