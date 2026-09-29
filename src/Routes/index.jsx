@@ -82,6 +82,7 @@ const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
 const Platform = lazy(() => import('@/Pages/Platform'));
 const OwnerLogin = lazy(() => import('@/Pages/OwnerLogin'));
 const Storefront = lazy(() => import('@/Pages/Storefront'));
+const Terms = lazy(() => import('@/Pages/Terms'));
 const Unavailable = lazy(() => import('@/Pages/Unavailable'));
 const SystemDown = lazy(() => import('@/Pages/SystemDown'));
 
@@ -542,6 +543,7 @@ const FormRoutes = () => {
             <Route path="/painel-interno" element={<OwnerLogin />} />
             <Route path="/platform" element={<Platform />} />
             <Route path="/comprar" element={<Storefront />} />
+            <Route path="/termos" element={<Terms />} />
             <Route path="/ajuda" element={<AdminManual publicMode />} />
             <Route path="/indisponivel" element={<Unavailable />} />
             <Route path="/manutencao" element={<SystemDown />} />

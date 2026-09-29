@@ -31,6 +31,7 @@ const Storefront = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     getPlatformSettings()
@@ -64,6 +65,10 @@ const Storefront = () => {
       toast.error('A senha deve ter ao menos 6 caracteres.');
       return;
     }
+    if (!termsAccepted) {
+      toast.error('É necessário ler e aceitar os Termos e Condições.');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -74,6 +79,7 @@ const Storefront = () => {
         adminEmail: adminEmail.trim(),
         adminPassword,
         plan: 'free',
+        termsAccepted: true,
       });
       setResult({ ...data, churchName: churchName.trim() });
     } catch (error) {
@@ -92,6 +98,10 @@ const Storefront = () => {
       toast.error('Informe um identificador (slug) antes de continuar com o Google.');
       return;
     }
+    if (!termsAccepted) {
+      toast.error('É necessário ler e aceitar os Termos e Condições antes de continuar com o Google.');
+      return;
+    }
     setLoading(true);
     try {
       const data = await platformSignupGoogle({
@@ -99,6 +109,7 @@ const Storefront = () => {
         slug: slug.trim() || undefined,
         credential,
         plan: 'free',
+        termsAccepted: true,
       });
       setResult({ ...data, churchName: churchName.trim(), google: true });
     } catch (error) {
@@ -247,6 +258,24 @@ const Storefront = () => {
                 </Form.Group>
               </Col>
             </Row>
+
+            <Form.Group className="storefront__terms mb-3">
+              <Form.Check
+                type="checkbox"
+                id="storefront-terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                label={
+                  <>
+                    Li e aceito os{' '}
+                    <a href="/termos" target="_blank" rel="noopener noreferrer">
+                      Termos e Condições
+                    </a>
+                    .
+                  </>
+                }
+              />
+            </Form.Group>
 
             <Button
               type="submit"
