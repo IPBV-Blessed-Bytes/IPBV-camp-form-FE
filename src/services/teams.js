@@ -29,3 +29,8 @@ export const removeCamperFromTeam = async (camperId) => {
   const { data } = await authFetcher.delete(`/team/camper/${camperId}`);
   return data;
 };
+
+export const randomAssignTeams = async (onlyUnassigned = false) => {
+  const { data } = await authFetcher.post(`/team/random-assign?onlyUnassigned=${onlyUnassigned}`);
+  return data;
+};
