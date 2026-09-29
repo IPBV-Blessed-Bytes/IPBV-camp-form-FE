@@ -1,0 +1,113 @@
+.admin-finance {
+  &__balance {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__balance-card {
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    box-shadow: 0 2px 10px rgba(15, 40, 50, 0.05);
+
+    &--available {
+      border-color: rgba(5, 124, 5, 0.35);
+      background: linear-gradient(180deg, #ffffff, #f2fbf3);
+    }
+  }
+
+  &__balance-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #5a6b73;
+    margin-bottom: 0.35rem;
+  }
+
+  &__balance-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #14343d;
+  }
+
+  &--available &__balance-value {
+    color: #057c05;
+  }
+
+  &__notice {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #fff7e6;
+    border: 1px solid #ffe0a3;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    color: #7c5300;
+    margin-bottom: 1.5rem;
+  }
+
+  &__methods {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__method {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+  }
+
+  &__method-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    flex-shrink: 0;
+    border-radius: 0.8rem;
+    background: rgba(0, 113, 133, 0.1);
+  }
+
+  &__method-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    strong {
+      color: #14343d;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: #5a6b73;
+    }
+  }
+
+  &__method-value {
+    margin-left: auto;
+    font-weight: 700;
+    color: #14343d;
+  }
+
+  &__footnote {
+    color: #7a8b93;
+    font-size: 0.88rem;
+    margin-top: 0.5rem;
+  }
+}

@@ -329,6 +329,14 @@ const AdminLoggedIn = ({
     },
     {
       permission: registeredButtonHomePermissions,
+      path: 'financeiro',
+      cardType: 'registered-card',
+      title: 'Financeiro',
+      typeIcon: 'money',
+      iconSize: 42,
+    },
+    {
+      permission: registeredButtonHomePermissions,
       path: 'lixeira',
       cardType: 'registered-card',
       title: 'Lixeira',
