@@ -156,6 +156,22 @@ $admin-accent-checkin: $slime-green;
   &--checkin-card {
     --session-accent: #{$admin-accent-checkin};
   }
+  &--boletos-card {
+    --session-accent: #d39e00;
+  }
+  &--donations-card {
+    --session-accent: #b5468a;
+  }
+
+  &--draggable {
+    cursor: grab;
+  }
+
+  &--dragging {
+    opacity: 0.45;
+    outline: 2px dashed var(--session-accent, #{$primary});
+    outline-offset: 2px;
+  }
 }
 
 .admin-notes {
@@ -363,6 +379,15 @@ $admin-accent-checkin: $slime-green;
 
 .session-carousel {
   overflow-x: hidden;
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: #7a8b93;
+    margin: 0 0 10px 4px;
+  }
 }
 
 .session-pane {

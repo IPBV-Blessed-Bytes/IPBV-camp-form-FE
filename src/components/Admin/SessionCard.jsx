@@ -15,14 +15,27 @@ const SessionCard = ({
   canEdit,
   onEdit,
   ctaText,
+  draggable,
+  dragging,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
 }) => (
   <>
     {permission && (
       <Col xs={12} sm={6} lg={4} xl={3} className="mb-3">
         <Card
-          className={`session-card session-card--${cardType}`}
+          className={`session-card session-card--${cardType}${dragging ? ' session-card--dragging' : ''}${
+            draggable ? ' session-card--draggable' : ''
+          }`}
           onClick={onClick}
           style={accentColor ? { '--session-accent': accentColor } : undefined}
+          draggable={draggable}
+          onDragStart={onDragStart}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onDragEnd={onDragEnd}
         >
           {canEdit && (
             <button
@@ -64,6 +77,12 @@ SessionCard.propTypes = {
   canEdit: PropTypes.bool,
   onEdit: PropTypes.func,
   ctaText: PropTypes.string,
+  draggable: PropTypes.bool,
+  dragging: PropTypes.bool,
+  onDragStart: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onDrop: PropTypes.func,
+  onDragEnd: PropTypes.func,
 };
 
 export default SessionCard;

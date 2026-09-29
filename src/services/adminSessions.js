@@ -9,3 +9,8 @@ export const updateAdminSession = async (sessionKey, payload) => {
   const { data } = await authFetcher.put(`/admin-sessions/${sessionKey}`, payload);
   return data;
 };
+
+export const reorderAdminSessions = async (orderedKeys) => {
+  const { data } = await authFetcher.post('/admin-sessions/reorder', orderedKeys);
+  return data;
+};

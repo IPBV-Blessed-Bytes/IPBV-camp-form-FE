@@ -24,7 +24,9 @@ import SessionEditModal from '@/components/Admin/SessionEditModal';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
+import { toast } from 'react-toastify';
 import { useAdminSessions } from '@/hooks/useAdminSessions';
+import { reorderAdminSessions } from '@/services/adminSessions';
 import { resolveSession } from '@/config/adminSessions';
 
 const ESSENCIAL_HIDDEN_PATHS = new Set([
@@ -95,6 +97,43 @@ const AdminLoggedIn = ({
 
   const { configs: sessionConfigs, refetch: refetchSessions } = useAdminSessions();
   const canEditSessions = userRole === 'admin';
+  const [dragKey, setDragKey] = useState(null);
+
+  const orderNavSessions = (sessions) => {
+    const index = {};
+    sessions.forEach((s, i) => {
+      index[s.path] = i;
+    });
+    return [...sessions].sort((a, b) => {
+      const ao = sessionConfigs[a.path]?.sortOrder;
+      const bo = sessionConfigs[b.path]?.sortOrder;
+      const av = ao == null ? index[a.path] + 1000 : ao;
+      const bv = bo == null ? index[b.path] + 1000 : bo;
+      return av - bv;
+    });
+  };
+
+  const handleReorderDrop = async (orderedSessions, targetPath) => {
+    if (!dragKey || dragKey === targetPath) {
+      setDragKey(null);
+      return;
+    }
+    const keys = orderedSessions.map((s) => s.path);
+    const from = keys.indexOf(dragKey);
+    const to = keys.indexOf(targetPath);
+    if (from === -1 || to === -1) {
+      setDragKey(null);
+      return;
+    }
+    keys.splice(to, 0, keys.splice(from, 1)[0]);
+    setDragKey(null);
+    try {
+      await reorderAdminSessions(keys);
+      await refetchSessions();
+    } catch (error) {
+      toast.error('Não foi possível salvar a nova ordem.');
+    }
+  };
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
@@ -304,46 +343,6 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
-      permission: registeredButtonHomePermissions,
-      path: 'boletos',
-      cardType: 'registered-card',
-      title: 'Boletos',
-      typeIcon: 'barcode',
-      iconSize: 40,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'reembolsos',
-      cardType: 'registered-card',
-      title: 'Reembolsos',
-      typeIcon: 'money',
-      iconSize: 40,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'doacoes',
-      cardType: 'registered-card',
-      title: 'Doações',
-      typeIcon: 'couple',
-      iconSize: 40,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'financeiro',
-      cardType: 'registered-card',
-      title: 'Financeiro',
-      typeIcon: 'money',
-      iconSize: 42,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'lixeira',
-      cardType: 'registered-card',
-      title: 'Lixeira',
-      typeIcon: 'delete',
-      iconSize: 40,
-    },
-    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
@@ -405,6 +404,46 @@ const AdminLoggedIn = ({
       cardType: 'checkin-card',
       title: 'Check-in inscrições',
       typeIcon: 'camera',
+      iconSize: 40,
+    },
+    {
+      permission: registeredButtonHomePermissions,
+      path: 'boletos',
+      cardType: 'boletos-card',
+      title: 'Boletos',
+      typeIcon: 'barcode',
+      iconSize: 40,
+    },
+    {
+      permission: registeredButtonHomePermissions,
+      path: 'doacoes',
+      cardType: 'donations-card',
+      title: 'Doações',
+      typeIcon: 'couple',
+      iconSize: 40,
+    },
+    {
+      permission: registeredButtonHomePermissions,
+      path: 'reembolsos',
+      cardType: 'registered-card',
+      title: 'Reembolsos',
+      typeIcon: 'money',
+      iconSize: 40,
+    },
+    {
+      permission: registeredButtonHomePermissions,
+      path: 'financeiro',
+      cardType: 'registered-card',
+      title: 'Financeiro',
+      typeIcon: 'money',
+      iconSize: 42,
+    },
+    {
+      permission: registeredButtonHomePermissions,
+      path: 'lixeira',
+      cardType: 'registered-card',
+      title: 'Lixeira',
+      typeIcon: 'delete',
       iconSize: 40,
     },
   ];
@@ -506,6 +545,12 @@ const AdminLoggedIn = ({
           </div>
         )}
         <div className="session-carousel">
+          {view === 'main' && canEditSessions && (
+            <p className="session-carousel__hint">
+              <Icons typeIcon="edit" iconSize={14} fill="none" /> Arraste os cards para reordenar. Use o lápis para
+              trocar a cor e o ícone.
+            </p>
+          )}
           {view === 'settings' && (
             <div className="settings-toolbar">
               <button type="button" className="settings-toolbar__back" onClick={openMainView}>
@@ -543,9 +588,11 @@ const AdminLoggedIn = ({
           >
             {view === 'main' ? (
               <>
-                {navigationSessions
-                  .filter((session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path))
-                  .map((session) => {
+                {orderNavSessions(
+                  navigationSessions.filter(
+                    (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
+                  ),
+                ).map((session, _i, ordered) => {
                   const resolved = resolveSession(session.path, sessionConfigs[session.path], {
                     title: session.title,
                     icon: session.typeIcon,
@@ -562,6 +609,12 @@ const AdminLoggedIn = ({
                       canEdit={canEditSessions}
                       onEdit={() => setEditingSession(session.path)}
                       onClick={() => navigate(`${routePrefix}/${session.path}`)}
+                      draggable={canEditSessions}
+                      dragging={dragKey === session.path}
+                      onDragStart={() => setDragKey(session.path)}
+                      onDragOver={(e) => canEditSessions && e.preventDefault()}
+                      onDrop={() => handleReorderDrop(ordered, session.path)}
+                      onDragEnd={() => setDragKey(null)}
                     />
                   );
                 })}
