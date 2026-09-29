@@ -6,14 +6,12 @@ import CustomModal from '@/components/Global/CustomModal';
 import Icons from '@/components/Global/Icons';
 import { updateAdminSession } from '@/services/adminSessions';
 import { iconsOptions } from '@/utils/constants';
-import { fallbackTitle, fallbackDescription, defaultIconFor } from '@/config/adminSessions';
+import { defaultIconFor } from '@/config/adminSessions';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const DEFAULT_COLOR = '#007185';
 
-const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon, config, onSaved }) => {
   const [useCustomColor, setUseCustomColor] = useState(false);
   const [color, setColor] = useState(DEFAULT_COLOR);
   const [icon, setIcon] = useState('');
@@ -21,8 +19,6 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
 
   useEffect(() => {
     if (!show) return;
-    setTitle(config?.title || '');
-    setDescription(config?.description || '');
     setUseCustomColor(Boolean(config?.color));
     setColor(config?.color || DEFAULT_COLOR);
     setIcon(config?.iconKey || '');
@@ -32,16 +28,16 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
     setSaving(true);
     try {
       await updateAdminSession(sessionKey, {
-        title: title.trim() || null,
-        description: description.trim() || null,
+        title: null,
+        description: null,
         color: useCustomColor ? color : null,
         iconKey: icon || null,
       });
-      toast.success('Sessão atualizada com sucesso.');
+      toast.success('Card atualizado com sucesso.');
       onSaved?.();
       onHide();
     } catch (error) {
-      toast.error('Não foi possível atualizar a sessão.');
+      toast.error('Não foi possível atualizar o card.');
     } finally {
       setSaving(false);
     }
@@ -54,7 +50,7 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
       variant="info"
       icon="edit"
       iconFill="none"
-      title="Editar Sessão"
+      title={sessionTitle ? `Personalizar: ${sessionTitle}` : 'Personalizar card'}
       footer={
         <>
           <Button variant="secondary" onClick={onHide}>
@@ -66,31 +62,9 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
     >
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label className="small fw-bold">Título</Form.Label>
-          <Form.Control
-            value={title}
-            placeholder={fallbackTitle(sessionKey)}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Form.Text className="text-muted">Aparece no card da home e no topo da sessão.</Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label className="small fw-bold">Descrição</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={2}
-            value={description}
-            placeholder={fallbackDescription(sessionKey)}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Form.Text className="text-muted">Aparece apenas dentro da sessão.</Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
           <Form.Label className="small fw-bold">Ícone</Form.Label>
           <div className="d-flex align-items-center gap-2">
-            <Icons typeIcon={icon || defaultIconFor(sessionKey)} iconSize={28} fill="#007185" />
+            <Icons typeIcon={icon || defaultIcon || defaultIconFor(sessionKey)} iconSize={28} fill="#007185" />
             <Form.Select value={icon} onChange={(e) => setIcon(e.target.value)}>
               <option value="">Ícone padrão</option>
               {iconsOptions.map((option) => (
@@ -100,7 +74,7 @@ const SessionEditModal = ({ show, onHide, sessionKey, config, onSaved }) => {
               ))}
             </Form.Select>
           </div>
-          <Form.Text className="text-muted">Aparece no card da home e dentro da sessão.</Form.Text>
+          <Form.Text className="text-muted">Aparece no card da home e no topo da sessão.</Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-2">
@@ -139,6 +113,8 @@ SessionEditModal.propTypes = {
   show: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
   sessionKey: PropTypes.string.isRequired,
+  sessionTitle: PropTypes.string,
+  defaultIcon: PropTypes.string,
   config: PropTypes.object,
   onSaved: PropTypes.func,
 };

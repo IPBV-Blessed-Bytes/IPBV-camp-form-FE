@@ -13,9 +13,11 @@ const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32
   const { configs } = useAdminSessions();
   const topbarName = authDisplayName || username || user || 'Usuário';
 
-  const resolved = sessionKey ? resolveSession(sessionKey, configs[sessionKey]) : null;
+  const resolved = sessionKey
+    ? resolveSession(sessionKey, configs[sessionKey], { title, description: subtitle, icon: typeIcon })
+    : null;
   const displayTitle = resolved?.title || title;
-  const displaySubtitle = resolved ? resolved.description : subtitle;
+  const displaySubtitle = resolved ? resolved.description || subtitle : subtitle;
   const displayIcon = resolved?.icon || typeIcon;
 
   return (

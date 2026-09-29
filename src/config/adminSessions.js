@@ -9,20 +9,12 @@ export const ADMIN_SESSIONS = [
   { key: 'checkin', cardType: 'checkin-card', defaultIcon: 'checkin' },
 ];
 
-const sessionIndex = (key) => {
-  const index = ADMIN_SESSIONS.findIndex((session) => session.key === key);
-  return index === -1 ? ADMIN_SESSIONS.length + 1 : index + 1;
-};
-
-export const fallbackTitle = (key) => `Título ${sessionIndex(key)}`;
-export const fallbackDescription = (key) => `Descrição ${sessionIndex(key)}`;
-
 export const defaultIconFor = (key) =>
   ADMIN_SESSIONS.find((session) => session.key === key)?.defaultIcon || 'info';
 
-export const resolveSession = (key, config) => ({
-  title: config?.title || fallbackTitle(key),
-  description: config?.description || fallbackDescription(key),
+export const resolveSession = (key, config, defaults = {}) => ({
+  title: defaults.title || key,
+  description: defaults.description || '',
   color: config?.color || null,
-  icon: config?.iconKey || defaultIconFor(key),
+  icon: config?.iconKey || defaults.icon || defaultIconFor(key),
 });

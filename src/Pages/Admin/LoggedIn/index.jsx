@@ -538,7 +538,10 @@ const AdminLoggedIn = ({
                 {navigationSessions
                   .filter((session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path))
                   .map((session) => {
-                  const resolved = resolveSession(session.path, sessionConfigs[session.path]);
+                  const resolved = resolveSession(session.path, sessionConfigs[session.path], {
+                    title: session.title,
+                    icon: session.typeIcon,
+                  });
                   return (
                     <SessionCard
                       key={session.path}
@@ -584,6 +587,8 @@ const AdminLoggedIn = ({
             show={Boolean(editingSession)}
             onHide={() => setEditingSession(null)}
             sessionKey={editingSession}
+            sessionTitle={navigationSessions.find((s) => s.path === editingSession)?.title}
+            defaultIcon={navigationSessions.find((s) => s.path === editingSession)?.typeIcon}
             config={sessionConfigs[editingSession]}
             onSaved={refetchSessions}
           />
