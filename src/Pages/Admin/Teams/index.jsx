@@ -351,7 +351,7 @@ const AdminTeams = ({ loggedUsername }) => {
       name: 'Sortear Times',
       onClick: () => openRandomModal('all'),
       typeButton: 'outline-teal-blue',
-      typeIcon: 'team',
+      typeIcon: 'person',
     },
     {
       fill: '#007185',
@@ -360,7 +360,7 @@ const AdminTeams = ({ loggedUsername }) => {
       name: 'Sortear os que Faltam',
       onClick: () => openRandomModal('remaining'),
       typeButton: 'outline-teal-blue',
-      typeIcon: 'team',
+      typeIcon: 'add-person',
     },
     {
       fill: '#fff',
