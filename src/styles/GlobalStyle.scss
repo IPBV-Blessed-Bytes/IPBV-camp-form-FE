@@ -246,11 +246,13 @@ body {
 .table thead tr:not(.filter) {
   position: sticky;
   top: -1px;
+  z-index: 2;
 }
 
 .table thead tr.filter {
   position: sticky;
   top: 35px;
+  z-index: 2;
 
   th {
     background-color: $medium-green;
