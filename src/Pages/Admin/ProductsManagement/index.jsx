@@ -3,6 +3,7 @@ import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
+import { formatBRL } from '@/utils/formatBRL';
 import { registerLog } from '@/services/logs';
 import {
   getAllProducts,
@@ -60,7 +61,7 @@ const PRODUCT_ICONS = [
   'sticker',
 ];
 
-const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '', stock: '' };
+const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '', stock: '', price: '' };
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -133,6 +134,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       active: product.active,
       iconKey: product.iconKey || '',
       stock: product.initialStock ?? '',
+      price: product.price ?? '',
     });
     resetImageState();
     if (product.hasImage) setImagePreview(productImageUrl(product.id));
@@ -203,21 +205,23 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     if (!validateForm()) return;
 
     setSaving(true);
+    const isStore = formData.category === STORE_KEY;
     try {
       const payload = {
         ...formData,
         stock: formData.stock === '' || formData.stock === null ? null : Number(formData.stock),
+        price: isStore && formData.price !== '' && formData.price !== null ? Number(formData.price) : null,
       };
       if (editingProduct) {
         await updateProduct(editingProduct.id, payload);
-        await saveLotPrices(editingProduct.id);
+        if (!isStore) await saveLotPrices(editingProduct.id);
         await syncProductImage(editingProduct.id, editingProduct.hasImage);
         toast.success('Produto atualizado com sucesso');
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
         const created = await createProduct(payload);
 
-        if (created?.id && Object.keys(lotPrices).length > 0) {
+        if (!isStore && created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
         }
         if (created?.id) await syncProductImage(created.id, false);
@@ -533,7 +537,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 <th className="table-cells-header">Disponibilizado:</th>
                 <th className="table-cells-header">Disponível:</th>
                 <th className="table-cells-header">Status:</th>
-                <th className="table-cells-header">Preços por lote:</th>
+                <th className="table-cells-header">Preço:</th>
                 <th className="table-cells-header">Ações:</th>
               </tr>
             </thead>
@@ -569,17 +573,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                       {product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}
                     </td>
                     <td>
-                      <div className="lot-prices">
-                        {lots.map((lot) => {
-                          const row = priceForLot(product, lot.id);
-                          return (
-                            <div key={lot.id} className="lot-price-chip">
-                              <span className="lot-price-chip__name">{lot.name}</span>
-                              <span className="lot-price-chip__value">R$ {row?.price ?? 0}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
+                      {product.price != null ? (
+                        <span className="fw-semibold">R$ {formatBRL(product.price)}</span>
+                      ) : (
+                        <span className="text-secondary small">—</span>
+                      )}
                     </td>
                     <td>
                       <div className="table-action-cell">
@@ -732,6 +730,25 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </Form.Text>
             </Form.Group>
 
+            {formData.category === STORE_KEY && (
+              <Form.Group controlId="formStorePrice" className="mt-3">
+                <Form.Label>
+                  <b>Preço (R$):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="Ex.: 50.00"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                />
+                <Form.Text className="text-secondary">
+                  Itens da loja têm um <b>preço único</b> (não variam por lote).
+                </Form.Text>
+              </Form.Group>
+            )}
+
             <div className="mt-3">
               <Form.Label>
                 <b>Visual do card</b>
@@ -781,6 +798,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </div>
             </div>
 
+            {formData.category !== STORE_KEY && (
+            <>
             <hr />
             <h6 className="mt-3">
               <b>Preço e vagas por lote</b>
@@ -830,6 +849,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 </div>
               ))}
             </div>
+            </>
+            )}
           </Form>
         </CustomModal>
 
