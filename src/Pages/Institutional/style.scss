@@ -1415,6 +1415,12 @@ $inst-tint: #f4f8f9;
     grid-template-columns: 1fr;
   }
 
+  &__card:only-child {
+    grid-column: 1 / -1;
+    max-width: 22rem;
+    margin: 0 auto;
+  }
+
   &__card {
     position: relative;
     display: flex;
