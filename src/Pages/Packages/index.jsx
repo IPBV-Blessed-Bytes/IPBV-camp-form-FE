@@ -170,10 +170,7 @@ const Packages = () => {
     });
 
     newPackage.price = cartItems.reduce((sum, it) => sum + priceForItem(it), 0);
-    const extrasTotalSubmit = newPackage.extras.reduce(
-      (sum, e) => sum + Number(e.price) * Number(e.quantity || 1),
-      0,
-    );
+    const extrasTotalSubmit = newPackage.extras.reduce((sum, e) => sum + Number(e.price) * Number(e.quantity || 1), 0);
     const discountNumeric = Number(discount) || 0;
     const discountableBase = Math.max(newPackage.price - extrasTotalSubmit, 0);
     const appliedDiscount = Math.min(discountableBase, discountNumeric);
@@ -249,7 +246,11 @@ const Packages = () => {
                   <Card.Body>
                     <Card.Title>Loja</Card.Title>
                     <Card.Text>
-                      Itens extras da loja IPBV (opcional). Escolha a quantidade de cada item, conforme a disponibilidade.
+                      Itens extras da loja IPBV (opcional). Escolha a quantidade de cada item, conforme a
+                      disponibilidade.{' '}
+                      <b>
+                        <em>Os itens serão entregues no ato do check-in durante o acampamento.</em>
+                      </b>
                     </Card.Text>
                     <StoreItemList products={productsState} discounted={discounted} />
                   </Card.Body>
