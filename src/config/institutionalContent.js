@@ -125,9 +125,9 @@ export const INSTITUTIONAL_NAV = [
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
   { id: 'parceiros', label: 'Parceiros' },
-  { id: 'como-chegar', label: 'Como chegar' },
+  { id: 'como-chegar', label: 'Como Chegar' },
   { id: 'contato', label: 'Contato' },
-  { id: 'como-se-inscrever', label: 'Como se inscrever' },
+  { id: 'como-se-inscrever', label: 'Como se Inscrever' },
 ];
 
 export const HOW_TO_STEPS = [
