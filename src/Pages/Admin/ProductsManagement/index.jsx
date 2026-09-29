@@ -31,7 +31,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
-const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '', stock: '' };
+const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '', stock: '', price: '' };
 
 const PRODUCT_ICONS = [
   'cart', 'tent', 'camp', 'food', 'bus', 'ride', 'bible', 'music', 'wristband',
@@ -201,6 +201,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       active: product.active,
       iconKey: product.iconKey || '',
       stock: product.initialStock ?? '',
+      price: product.price ?? '',
     });
     const initial = {};
     lots.forEach((lot) => {
@@ -237,6 +238,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     active: formData.active,
     iconKey: formData.iconKey || '',
     stock: formData.stock === '' ? null : Number(formData.stock),
+    price: formData.price === '' || formData.price === null ? null : Number(formData.price),
   });
 
   const saveLotPrices = async (productId) => {
@@ -595,6 +597,24 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 {editingProduct && editingProduct.stock != null && (
                   <> Disponível hoje: <b>{editingProduct.stock}</b> de {editingProduct.initialStock}.</>
                 )}
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="formSinglePrice" className="mt-3">
+              <Form.Label>
+                <b>Preço único (opcional):</b>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min={0}
+                step="0.01"
+                placeholder="Ex.: 50.00"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              />
+              <Form.Text className="text-muted">
+                Para itens de loja (não variam por lote). Quando preenchido, <b>substitui o preço por lote</b> abaixo.
+                Deixe em branco para produtos que usam preço por lote (hospedagem/transporte).
               </Form.Text>
             </Form.Group>
 
