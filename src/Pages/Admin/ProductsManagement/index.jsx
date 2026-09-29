@@ -31,7 +31,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
-const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '' };
+const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '', stock: '' };
 
 const PRODUCT_ICONS = [
   'cart', 'tent', 'camp', 'food', 'bus', 'ride', 'bible', 'music', 'wristband',
@@ -200,6 +200,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       packageCategoryId: product.packageCategoryId ?? '',
       active: product.active,
       iconKey: product.iconKey || '',
+      stock: product.initialStock ?? '',
     });
     const initial = {};
     lots.forEach((lot) => {
@@ -235,6 +236,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     packageCategoryId: Number(formData.packageCategoryId),
     active: formData.active,
     iconKey: formData.iconKey || '',
+    stock: formData.stock === '' ? null : Number(formData.stock),
   });
 
   const saveLotPrices = async (productId) => {
@@ -382,6 +384,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   <td>
                     <em>{product.name}</em>
                     {product.description && <div className="text-secondary small">{product.description}</div>}
+                    {product.initialStock != null && (
+                      <div className="small mt-1">
+                        <Badge bg={product.stock > 0 ? 'success' : 'danger'}>
+                          {product.stock} / {product.initialStock} em estoque
+                        </Badge>
+                      </div>
+                    )}
                   </td>
                   <td>{categoryName(product.packageCategoryId)}</td>
                   <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
@@ -568,6 +577,25 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   Nenhuma categoria criada. Crie categorias na tela de Pacote do evento.
                 </Form.Text>
               )}
+            </Form.Group>
+
+            <Form.Group controlId="formStock" className="mt-3">
+              <Form.Label>
+                <b>Estoque disponibilizado (opcional):</b>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min={0}
+                placeholder="Deixe em branco para não controlar estoque"
+                value={formData.stock}
+                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              />
+              <Form.Text className="text-muted">
+                Quantidade total disponibilizada (ex.: itens de loja). Baixa a cada compra e some do formulário ao zerar.
+                {editingProduct && editingProduct.stock != null && (
+                  <> Disponível hoje: <b>{editingProduct.stock}</b> de {editingProduct.initialStock}.</>
+                )}
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mt-3">
