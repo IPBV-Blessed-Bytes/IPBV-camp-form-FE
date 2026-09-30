@@ -8,6 +8,7 @@ import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { getEventSlug } from '@/config/eventScope';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import FormSection from '@/components/Admin/FormSection';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
@@ -96,156 +97,163 @@ const AdminRecebimento = ({ loggedUsername }) => {
           </div>
         ) : (
           <>
-            <p className="recebimento__intro">
-              Cadastre a conta que vai <strong>receber os pagamentos das inscrições</strong>. Usamos os dados do
-              responsável (pessoa física) para criar o recebedor no provedor de pagamento (PagarMe).
-            </p>
+            <div className="recebimento__intro">
+              <span className="recebimento__intro-icon">
+                <Icons typeIcon="money" iconSize={22} fill="#007185" />
+              </span>
+              <p>
+                Cadastre a conta que vai <strong>receber os pagamentos das inscrições</strong>. Usamos os dados do
+                responsável (pessoa física) para criar o recebedor no provedor de pagamento (PagarMe).
+              </p>
+            </div>
             <Form onSubmit={handleSubmit} className="recebimento__form">
-              <h5 className="recebimento__section">Responsável</h5>
+              <FormSection title="Responsável">
               <Row className="g-3">
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Nome completo</Form.Label>
+                    <Form.Label>Nome completo</Form.Label>
                     <Form.Control value={form.name} onChange={set('name')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">CPF</Form.Label>
+                    <Form.Label>CPF</Form.Label>
                     <Form.Control value={form.document} onChange={set('document')} placeholder="000.000.000-00" required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">E-mail</Form.Label>
+                    <Form.Label>E-mail</Form.Label>
                     <Form.Control type="email" value={form.email} onChange={set('email')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Nome da mãe</Form.Label>
+                    <Form.Label>Nome da mãe</Form.Label>
                     <Form.Control value={form.motherName} onChange={set('motherName')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Nascimento</Form.Label>
+                    <Form.Label>Nascimento</Form.Label>
                     <Form.Control value={form.birthdate} onChange={set('birthdate')} placeholder="dd/mm/aaaa" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Renda mensal (R$)</Form.Label>
+                    <Form.Label>Renda mensal (R$)</Form.Label>
                     <Form.Control type="number" min={0} value={form.monthlyIncome} onChange={set('monthlyIncome')} />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Profissão</Form.Label>
+                    <Form.Label>Profissão</Form.Label>
                     <Form.Control value={form.professionalOccupation} onChange={set('professionalOccupation')} />
                   </Form.Group>
                 </Col>
               </Row>
+              </FormSection>
 
-              <h5 className="recebimento__section">Endereço</h5>
+              <FormSection title="Endereço">
               <Row className="g-3">
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Rua</Form.Label>
+                    <Form.Label>Rua</Form.Label>
                     <Form.Control value={form.street} onChange={set('street')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Número</Form.Label>
+                    <Form.Label>Número</Form.Label>
                     <Form.Control value={form.streetNumber} onChange={set('streetNumber')} />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={4}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Complemento</Form.Label>
+                    <Form.Label>Complemento</Form.Label>
                     <Form.Control value={form.complementary} onChange={set('complementary')} />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={5}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Bairro</Form.Label>
+                    <Form.Label>Bairro</Form.Label>
                     <Form.Control value={form.neighborhood} onChange={set('neighborhood')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={8} md={4}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Cidade</Form.Label>
+                    <Form.Label>Cidade</Form.Label>
                     <Form.Control value={form.city} onChange={set('city')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={4} md={1}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">UF</Form.Label>
+                    <Form.Label>UF</Form.Label>
                     <Form.Control value={form.state} onChange={set('state')} maxLength={2} placeholder="PE" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">CEP</Form.Label>
+                    <Form.Label>CEP</Form.Label>
                     <Form.Control value={form.zipCode} onChange={set('zipCode')} placeholder="00000-000" required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Ponto de referência</Form.Label>
+                    <Form.Label>Ponto de referência</Form.Label>
                     <Form.Control value={form.referencePoint} onChange={set('referencePoint')} />
                   </Form.Group>
                 </Col>
                 <Col xs={4} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">DDD</Form.Label>
+                    <Form.Label>DDD</Form.Label>
                     <Form.Control value={form.phoneDdd} onChange={set('phoneDdd')} placeholder="81" required />
                   </Form.Group>
                 </Col>
                 <Col xs={8} md={4}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Celular</Form.Label>
+                    <Form.Label>Celular</Form.Label>
                     <Form.Control value={form.phoneNumber} onChange={set('phoneNumber')} placeholder="99999-9999" required />
                   </Form.Group>
                 </Col>
               </Row>
+              </FormSection>
 
-              <h5 className="recebimento__section">Conta bancária</h5>
+              <FormSection title="Conta bancária">
               <Row className="g-3">
                 <Col xs={6} md={3}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Banco (código)</Form.Label>
+                    <Form.Label>Banco (código)</Form.Label>
                     <Form.Control value={form.bankCode} onChange={set('bankCode')} placeholder="341" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Agência</Form.Label>
+                    <Form.Label>Agência</Form.Label>
                     <Form.Control value={form.branchNumber} onChange={set('branchNumber')} placeholder="0001" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Díg. agência</Form.Label>
+                    <Form.Label>Díg. agência</Form.Label>
                     <Form.Control value={form.branchCheckDigit} onChange={set('branchCheckDigit')} />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Conta</Form.Label>
+                    <Form.Label>Conta</Form.Label>
                     <Form.Control value={form.accountNumber} onChange={set('accountNumber')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Díg. conta</Form.Label>
+                    <Form.Label>Díg. conta</Form.Label>
                     <Form.Control value={form.accountCheckDigit} onChange={set('accountCheckDigit')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
                   <Form.Group>
-                    <Form.Label className="fw-bold">Tipo</Form.Label>
+                    <Form.Label>Tipo</Form.Label>
                     <Form.Select value={form.accountType} onChange={set('accountType')}>
                       <option value="checking">Corrente</option>
                       <option value="savings">Poupança</option>
@@ -253,6 +261,7 @@ const AdminRecebimento = ({ loggedUsername }) => {
                   </Form.Group>
                 </Col>
               </Row>
+              </FormSection>
 
               <div className="recebimento__actions">
                 <SpinnerButton type="submit" variant="teal-blue" className="fw-bold" loading={saving}>

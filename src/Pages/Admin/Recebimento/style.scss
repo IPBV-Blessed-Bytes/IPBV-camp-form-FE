@@ -8,25 +8,36 @@
   }
 
   &__intro {
-    color: $dark-gray;
-    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    background: #eef7f9;
+    border: 1px solid #cfe6ea;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+
+    p {
+      margin: 0;
+      color: #38474d;
+      line-height: 1.55;
+    }
+  }
+
+  &__intro-icon {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.7rem;
+    background: #e3f1f4;
   }
 
   &__form {
-    background: $white;
-    border: 1px solid #e2e6ee;
-    border-radius: 14px;
-    padding: 1.5rem;
-  }
-
-  &__section {
-    font-weight: 700;
-    color: $primary;
-    margin: 1.5rem 0 0.25rem;
-
-    &:first-of-type {
-      margin-top: 0;
-    }
+    background: transparent;
+    border: none;
+    padding: 0;
   }
 
   &__actions {
