@@ -55,17 +55,33 @@ const VALUES = [
   {
     icon: 'clock',
     title: 'Simplicidade',
-    text: 'Pronto em minutos, sem depender de TI. Você monta, publica e recebe — e volta a cuidar das pessoas.',
+    text: 'Pronto em minutos, sem depender de TI. Você monta, publica e recebe — e volta a cuidar das pessoas. Qualquer dado pode ser editado por você mesmo a qualquer momento.',
   },
 ];
 
 const DIFFERENTIALS = [
-  { icon: 'ride', title: 'Carona e transporte', text: 'Oferta e procura de vagas entre os inscritos e controle do ônibus da igreja.' },
+  {
+    icon: 'ride',
+    title: 'Carona e transporte',
+    text: 'Oferta e procura de vagas entre os inscritos e controle do ônibus da igreja.',
+  },
   { icon: 'rooms', title: 'Quartos', text: 'Aloque os inscritos por quarto, com acompanhantes, direto no painel.' },
   { icon: 'team', title: 'Times e equipes', text: 'Organize os inscritos em times e equipes de serviço do evento.' },
-  { icon: 'checkin', title: 'Check-in e pulseiras', text: 'Presença por QR ou CPF, individual ou por família, e controle de pulseiras.' },
-  { icon: 'cart', title: 'Pacotes e lotes', text: 'Hospedagem, alimentação e transporte por categoria, com preço por idade e por lote.' },
-  { icon: 'calendar', title: 'Multi-evento', text: 'Acampamento, congresso e retiro na mesma conta, cada um com sua página e inscrições.' },
+  {
+    icon: 'checkin',
+    title: 'Check-in e pulseiras',
+    text: 'Presença por QR ou CPF, individual ou por família, e controle de pulseiras.',
+  },
+  {
+    icon: 'cart',
+    title: 'Pacotes e lotes',
+    text: 'Hospedagem, alimentação e transporte por categoria, com preço por idade e por lote.',
+  },
+  {
+    icon: 'calendar',
+    title: 'Multi-evento',
+    text: 'Acampamento, congresso e retiro na mesma conta, cada um com sua página e inscrições.',
+  },
 ];
 
 const Landing = () => {
@@ -166,8 +182,11 @@ const Landing = () => {
               <p>Aqui tem pagamento, pacotes, contas de usuário e a gestão do evento — não só coleta de respostas.</p>
             </div>
             <div className="storefront__vs-card">
-              <span className="storefront__vs-tag">vs. Sympla / venda de ingresso</span>
-              <p>O formulário é seu, editável campo a campo, com carona, quartos, times, pulseiras e check-in.</p>
+              <span className="storefront__vs-tag">vs. Plataformas genéricas de venda de ingresso</span>
+              <p>
+                O formulário é seu, editável campo a campo, com carona, quartos, times, pulseiras e check-in, pensado
+                100% pra sua igreja e/ou organização.
+              </p>
             </div>
           </div>
         </section>
@@ -177,7 +196,7 @@ const Landing = () => {
             <span className="storefront__eyebrow storefront__eyebrow--dark">Nosso propósito</span>
             <h2 className="storefront__section-title">Tecnologia a serviço da sua igreja</h2>
             <p className="storefront__plans-lede">
-              Nascemos servindo o acampamento de uma igreja e crescemos com ela. Nossa missão é tirar o peso da
+              Nascemos servindo o acampamento de uma igreja local e crescemos com ela. Nossa missão é tirar o peso da
               organização das costas da liderança, para a igreja focar no que importa: <b>as pessoas e o Reino</b>.
             </p>
           </div>
@@ -206,7 +225,9 @@ const Landing = () => {
             <Col xs={12} md={6} lg={5}>
               <div className="storefront__plan">
                 <span className="storefront__plan-name">Essencial</span>
-                <span className="storefront__plan-tagline">Formulário + inscrições. Pra quem só precisa inscrever e receber.</span>
+                <span className="storefront__plan-tagline">
+                  Formulário + inscrições. Pra quem só precisa inscrever e receber.
+                </span>
                 <span className="storefront__plan-price">
                   {essencialFeePercent}
                   <small> por inscrição paga</small>
@@ -234,7 +255,9 @@ const Landing = () => {
               <div className="storefront__plan storefront__plan--feature">
                 <span className="storefront__plan-tag">Recomendado</span>
                 <span className="storefront__plan-name">Completo</span>
-                <span className="storefront__plan-tagline">Tudo do Essencial + a logística do evento. Pra quem organiza tudo.</span>
+                <span className="storefront__plan-tagline">
+                  Tudo do Essencial + a logística do evento. Pra quem organiza tudo.
+                </span>
                 <span className="storefront__plan-price">
                   {feePercent}
                   <small> por inscrição paga</small>
