@@ -461,8 +461,10 @@ const AdminLoggedIn = ({
 
   const SETTINGS_PAGE_SIZE = 12;
   const settingsPages = [];
-  const visibleSettingsSessions = settingsSessions.filter(
-    (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
+  const visibleSettingsSessions = orderNavSessions(
+    settingsSessions.filter(
+      (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
+    ),
   );
   for (let i = 0; i < visibleSettingsSessions.length; i += SETTINGS_PAGE_SIZE) {
     settingsPages.push(visibleSettingsSessions.slice(i, i + SETTINGS_PAGE_SIZE));
@@ -621,17 +623,31 @@ const AdminLoggedIn = ({
                 />
               </>
             ) : (
-              settingsPages[currentSettingsPage].map((session) => (
-                <SessionCard
-                  key={session.path}
-                  permission={settingsButtonPermissions}
-                  title={session.title}
-                  typeIcon={session.typeIcon}
-                  iconSize={session.iconSize}
-                  accentColor={session.accent}
-                  onClick={() => navigate(`${routePrefix}/${session.path}`)}
-                />
-              ))
+              settingsPages[currentSettingsPage].map((session) => {
+                const resolved = resolveSession(session.path, sessionConfigs[session.path], {
+                  title: session.title,
+                  icon: session.typeIcon,
+                });
+                return (
+                  <SessionCard
+                    key={session.path}
+                    permission={settingsButtonPermissions}
+                    title={resolved.title}
+                    typeIcon={resolved.icon}
+                    iconSize={session.iconSize}
+                    accentColor={resolved.color || session.accent}
+                    canEdit={canEditSessions}
+                    onEdit={() => setEditingSession(session.path)}
+                    onClick={() => navigate(`${routePrefix}/${session.path}`)}
+                    draggable={canEditSessions}
+                    dragging={dragKey === session.path}
+                    onDragStart={() => setDragKey(session.path)}
+                    onDragOver={(e) => canEditSessions && e.preventDefault()}
+                    onDrop={() => handleReorderDrop(visibleSettingsSessions, session.path)}
+                    onDragEnd={() => setDragKey(null)}
+                  />
+                );
+              })
             )}
           </Row>
         </div>
@@ -641,8 +657,12 @@ const AdminLoggedIn = ({
             show={Boolean(editingSession)}
             onHide={() => setEditingSession(null)}
             sessionKey={editingSession}
-            sessionTitle={navigationSessions.find((s) => s.path === editingSession)?.title}
-            defaultIcon={navigationSessions.find((s) => s.path === editingSession)?.typeIcon}
+            sessionTitle={
+              [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.title
+            }
+            defaultIcon={
+              [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.typeIcon
+            }
             config={sessionConfigs[editingSession]}
             onSaved={refetchSessions}
           />
