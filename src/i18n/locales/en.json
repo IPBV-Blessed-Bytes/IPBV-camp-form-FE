@@ -1,0 +1,33 @@
+{
+  "common": {
+    "adminPanel": "Admin Panel",
+    "event": "Event:",
+    "selectEvent": "Select event",
+    "backToForm": "Back to form",
+    "manualHelp": "Manual / Help",
+    "changePassword": "Change password",
+    "logout": "Sign out",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "login": {
+    "title": "Admin Panel - Client",
+    "subtitle": "Enter your credentials to sign in",
+    "username": "Username",
+    "usernamePlaceholder": "Your username",
+    "password": "Password",
+    "passwordPlaceholder": "Your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "access": "Access Panel"
+  },
+  "language": {
+    "label": "Language",
+    "pt": "Portuguese",
+    "en": "English",
+    "es": "Spanish"
+  }
+}

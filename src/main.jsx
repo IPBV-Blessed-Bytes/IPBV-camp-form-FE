@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles/GlobalStyle.scss';
+import './i18n';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
 import { eventPath, getEventSlug, setSelectedEvent, setSelectedEventName } from '@/config/eventScope';
 import { listMyEvents } from '@/services/events';
 import ChangePasswordModal from '@/components/Global/ChangePasswordModal';
+import LanguageSwitcher from '@/components/Global/LanguageSwitcher';
 
 const getInitials = (name) => {
   if (!name) return '?';
@@ -16,6 +18,7 @@ const getInitials = (name) => {
 };
 
 const AdminTopbar = ({ username, logout }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -57,17 +60,17 @@ const AdminTopbar = ({ username, logout }) => {
     <header className="admin-topbar">
       <div className="admin-topbar__brand">
         <span className="admin-topbar__brand-dot" />
-        <h1 className="admin-topbar__brand-title">Painel Administrativo</h1>
+        <h1 className="admin-topbar__brand-title">{t('common.adminPanel')}</h1>
       </div>
 
       {events.length > 0 && (
         <div className="admin-topbar__event">
-          <span className="admin-topbar__event-label">Evento:</span>
+          <span className="admin-topbar__event-label">{t('common.event')}</span>
           <select
             className="admin-topbar__event-select"
             value={currentSlug || ''}
             onChange={(e) => handleEventChange(e.target.value)}
-            aria-label="Selecionar evento"
+            aria-label={t('common.selectEvent')}
           >
             {!currentSlug && (
               <option value="" disabled>
@@ -82,6 +85,8 @@ const AdminTopbar = ({ username, logout }) => {
           </select>
         </div>
       )}
+
+      <LanguageSwitcher />
 
       <div className="admin-topbar__actions" ref={menuRef}>
         <button
@@ -107,7 +112,7 @@ const AdminTopbar = ({ username, logout }) => {
               }}
             >
               <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
-              <span>Voltar ao formulário</span>
+              <span>{t('common.backToForm')}</span>
             </button>
             <button
               type="button"
@@ -118,7 +123,7 @@ const AdminTopbar = ({ username, logout }) => {
               }}
             >
               <Icons typeIcon="info" iconSize={18} fill="#555050" />
-              <span>Manual / Ajuda</span>
+              <span>{t('common.manualHelp')}</span>
             </button>
             <button
               type="button"
@@ -129,7 +134,7 @@ const AdminTopbar = ({ username, logout }) => {
               }}
             >
               <Icons typeIcon="roles" iconSize={18} fill="#555050" />
-              <span>Alterar senha</span>
+              <span>{t('common.changePassword')}</span>
             </button>
             <div className="admin-topbar__menu-divider" />
             <button
@@ -141,7 +146,7 @@ const AdminTopbar = ({ username, logout }) => {
               }}
             >
               <Icons typeIcon="logout" iconSize={18} fill="#d32f2f" />
-              <span>Desconectar</span>
+              <span>{t('common.logout')}</span>
             </button>
           </div>
         )}

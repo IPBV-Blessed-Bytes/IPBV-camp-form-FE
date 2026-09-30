@@ -1,0 +1,33 @@
+{
+  "common": {
+    "adminPanel": "Painel Administrativo",
+    "event": "Evento:",
+    "selectEvent": "Selecionar evento",
+    "backToForm": "Voltar ao formulário",
+    "manualHelp": "Manual / Ajuda",
+    "changePassword": "Alterar senha",
+    "logout": "Desconectar",
+    "back": "Voltar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar"
+  },
+  "login": {
+    "title": "Painel Administrativo - Cliente",
+    "subtitle": "Entre com suas credenciais para acessar",
+    "username": "Nome de Usuário",
+    "usernamePlaceholder": "Seu usuário",
+    "password": "Senha",
+    "passwordPlaceholder": "Sua senha",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
+    "access": "Acessar Painel"
+  },
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "Inglês",
+    "es": "Espanhol"
+  }
+}
