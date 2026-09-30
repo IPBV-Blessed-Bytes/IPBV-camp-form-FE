@@ -100,7 +100,7 @@ const AdminLoggedOut = ({
             <>
               <div className="d-flex align-items-center gap-2 my-3 text-secondary small">
                 <div className="flex-grow-1 border-top" />
-                <span>ou</span>
+                <span>{t('login.or')}</span>
                 <div className="flex-grow-1 border-top" />
               </div>
               <GoogleSignInButton onCredential={onGoogleCredential} />
@@ -108,11 +108,11 @@ const AdminLoggedOut = ({
           )}
 
           <button type="button" className="btn-back-link" onClick={() => navigateTo('/esqueci-senha')}>
-            Esqueci minha senha
+            {t('login.forgotPassword')}
           </button>
 
           <button type="button" className="btn-back-link" onClick={() => navigateTo('/')}>
-            ← Voltar ao site público
+            {t('login.backToPublic')}
           </button>
         </Form>
       </div>

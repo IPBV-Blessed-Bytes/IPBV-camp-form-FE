@@ -22,7 +22,11 @@
     "passwordPlaceholder": "Your password",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "access": "Access Panel"
+    "access": "Access Panel",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "forgotPassword": "Forgot my password",
+    "backToPublic": "← Back to public site"
   },
   "language": {
     "label": "Language",

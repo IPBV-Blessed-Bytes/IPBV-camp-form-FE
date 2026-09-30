@@ -22,7 +22,11 @@
     "passwordPlaceholder": "Sua senha",
     "showPassword": "Mostrar senha",
     "hidePassword": "Ocultar senha",
-    "access": "Acessar Painel"
+    "access": "Acessar Painel",
+    "or": "ou",
+    "continueWithGoogle": "Continuar com o Google",
+    "forgotPassword": "Esqueci minha senha",
+    "backToPublic": "← Voltar ao site público"
   },
   "language": {
     "label": "Idioma",

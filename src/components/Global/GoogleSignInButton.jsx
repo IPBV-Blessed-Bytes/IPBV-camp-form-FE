@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+
+const GOOGLE_LOCALES = { pt: 'pt-BR', en: 'en', es: 'es' };
 
 const GOOGLE_SRC = 'https://accounts.google.com/gsi/client';
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -26,6 +29,8 @@ const loadGoogleScript = () =>
   });
 
 const GoogleSignInButton = ({ onCredential }) => {
+  const { i18n } = useTranslation();
+  const googleLocale = GOOGLE_LOCALES[i18n.resolvedLanguage] || 'pt-BR';
   const buttonRef = useRef(null);
   const onCredentialRef = useRef(onCredential);
   onCredentialRef.current = onCredential;
@@ -49,7 +54,7 @@ const GoogleSignInButton = ({ onCredential }) => {
           shape: 'pill',
           logo_alignment: 'center',
           width: 300,
-          locale: 'pt-BR',
+          locale: googleLocale,
         });
       })
       .catch(() => {});
@@ -57,7 +62,7 @@ const GoogleSignInButton = ({ onCredential }) => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [googleLocale]);
 
   if (!CLIENT_ID) return null;
 
