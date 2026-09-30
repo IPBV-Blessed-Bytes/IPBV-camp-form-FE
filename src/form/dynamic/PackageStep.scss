@@ -1,17 +1,18 @@
+@use '../../styles/Variables.scss' as *;
 .dynamic-package__nav {
   border-radius: 12px;
   margin-top: 1rem;
 }
 
 .package-step__lot-title {
-  color: var(--event-color, #007185);
+  color: var(--event-color, $primary);
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .package-summary {
   &__label {
-    color: var(--event-color, #007185);
+    color: var(--event-color, $primary);
     font-weight: 700;
     margin-bottom: 0.35rem;
   }
@@ -24,7 +25,7 @@
 
   &__content {
     &.is-selected {
-      border-left: 3px solid var(--event-color, #007185);
+      border-left: 3px solid var(--event-color, $primary);
       padding-left: 0.6rem;
     }
   }

@@ -1,3 +1,4 @@
+@use '../../../styles/Variables.scss' as *;
 .admin-fields {
   &__content {
     padding: 1.5rem 2rem 4rem;
@@ -8,7 +9,7 @@
   }
 
   &__hint {
-    color: #6c757d;
+    color: $gray-500;
     font-size: 0.95rem;
     margin: 0.5rem 0 1rem;
   }
@@ -21,7 +22,7 @@
 
   &__empty {
     text-align: center;
-    color: #6c757d;
+    color: $gray-500;
     padding: 2rem 0;
   }
 
@@ -38,8 +39,8 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #fff;
-    border: 1px solid #e3e3e3;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 8px;
     padding: 0.6rem 0.9rem;
   }
@@ -49,7 +50,7 @@
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: #f0f0f0;
+    background: $gray-100;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,7 +68,7 @@
 
   &__type {
     flex: 0 0 auto;
-    border: 1px solid #e3e3e3;
+    border: 1px solid $gray-200;
   }
 
   &__actions {

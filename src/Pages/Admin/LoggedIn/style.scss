@@ -3,14 +3,14 @@
 
 $admin-accent-registered: $primary;
 $admin-accent-ride: $orange;
-$admin-accent-discount: $intense-green;
+$admin-accent-discount: $emerald;
 $admin-accent-rooms: $secondary;
-$admin-accent-teams: $baby-blue;
-$admin-accent-feedback: $light-heavy-blue;
-$admin-accent-checkin: $slime-green;
+$admin-accent-teams: $sky-blue;
+$admin-accent-feedback: $royal-blue;
+$admin-accent-checkin: $teal;
 
 .admin {
-  background-color: $background-gray;
+  background-color: $gray-50;
   min-height: 100vh;
 }
 
@@ -31,7 +31,7 @@ $admin-accent-checkin: $slime-green;
 
 .session-card {
   background: $white;
-  border: 1px solid $medium-gray !important;
+  border: 1px solid $gray-300 !important;
   border-radius: 14px !important;
   cursor: pointer;
   overflow: hidden;
@@ -76,7 +76,7 @@ $admin-accent-checkin: $slime-green;
 
   &:hover {
     border-color: var(--session-accent, #{$primary}) !important;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba($black, 0.08);
     transform: translateY(-2px);
 
     &::before {
@@ -119,14 +119,14 @@ $admin-accent-checkin: $slime-green;
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
   }
 
   &__cta {
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-size: 0.8rem;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -139,7 +139,7 @@ $admin-accent-checkin: $slime-green;
     --session-accent: #{$admin-accent-ride};
   }
   &--bus-card {
-    --session-accent: #d8b4fe;
+    --session-accent: $lavender;
   }
   &--discount-card {
     --session-accent: #{$admin-accent-discount};
@@ -157,10 +157,10 @@ $admin-accent-checkin: $slime-green;
     --session-accent: #{$admin-accent-checkin};
   }
   &--boletos-card {
-    --session-accent: #d39e00;
+    --session-accent: $gold;
   }
   &--donations-card {
-    --session-accent: #b5468a;
+    --session-accent: $magenta;
   }
 
   &--draggable {
@@ -176,13 +176,13 @@ $admin-accent-checkin: $slime-green;
 
 .admin-notes {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 12px;
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -191,7 +191,7 @@ $admin-accent-checkin: $slime-green;
   }
 
   &__list {
-    color: $alternate-dark-dark-gray;
+    color: $gray-600-2;
     font-size: 0.9rem;
     margin: 0;
     padding-left: 1.25rem;
@@ -201,7 +201,7 @@ $admin-accent-checkin: $slime-green;
     }
 
     strong {
-      color: $dark-gray;
+      color: $ink;
     }
   }
 }
@@ -217,7 +217,7 @@ $admin-accent-checkin: $slime-green;
   }
 
   p {
-    color: #6b6b6b;
+    color: $gray-600-2;
   }
 }
 
@@ -235,18 +235,18 @@ $admin-accent-checkin: $slime-green;
   }
 
   p {
-    color: #6b6b6b;
+    color: $gray-600-2;
     margin: 0;
   }
 }
 
 .admin-home__events-empty {
-  color: #6b6b6b;
+  color: $gray-600-2;
   margin-top: 1rem;
 }
 
 .admin-home__event-card {
-  --card-accent: #007185;
+  --card-accent: $primary;
   position: relative;
   width: 100%;
   min-height: 150px;
@@ -254,28 +254,28 @@ $admin-accent-checkin: $slime-green;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.35rem;
-  background: #fff;
-  border: 1px solid #e6e8ee;
+  background: $white;
+  border: 1px solid $gray-200;
   border-top: 4px solid var(--card-accent);
   border-radius: 14px;
   padding: 1.25rem;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(20, 40, 80, 0.06);
+  box-shadow: 0 6px 18px rgba($blue-800, 0.06);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 14px 32px rgba(20, 40, 80, 0.12);
+    box-shadow: 0 14px 32px rgba($blue-800, 0.12);
   }
 
   &--new {
     align-items: center;
     justify-content: center;
-    border: 2px dashed #c7ccd6;
-    border-top: 2px dashed #c7ccd6;
-    background: #fbfcfe;
-    color: #55606f;
+    border: 2px dashed $gray-300;
+    border-top: 2px dashed $gray-300;
+    background: $white;
+    color: $gray-600;
     text-align: center;
   }
 }
@@ -287,7 +287,7 @@ $admin-accent-checkin: $slime-green;
   width: 44px;
   height: 44px;
   border-radius: 11px;
-  background: color-mix(in srgb, var(--card-accent) 14%, #fff);
+  background: color-mix(in srgb, var(--card-accent) 14%, $white);
   color: var(--card-accent);
   font-weight: 800;
   font-size: 1.25rem;
@@ -301,7 +301,7 @@ $admin-accent-checkin: $slime-green;
 
 .admin-home__event-name {
   font-weight: 700;
-  color: #2b3240;
+  color: $blue-800-2;
 }
 
 .admin-home__event-cta {
@@ -315,7 +315,7 @@ $admin-accent-checkin: $slime-green;
   font-size: 2rem;
   font-weight: 300;
   line-height: 1;
-  color: #8a94a3;
+  color: $blue-400-2;
 }
 
 .admin-home__recebimento-alert {
@@ -324,9 +324,9 @@ $admin-accent-checkin: $slime-green;
   gap: 1rem;
   padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
-  background: #fff6e5;
-  border: 1px solid #f0c98a;
-  border-left: 5px solid #e0a800;
+  background: $cream;
+  border: 1px solid $orange-300;
+  border-left: 5px solid $gold-600-2;
   border-radius: 10px;
 
   svg {
@@ -341,11 +341,11 @@ $admin-accent-checkin: $slime-green;
   flex: 1;
 
   strong {
-    color: #7a4a00;
+    color: $orange-800;
   }
 
   span {
-    color: #6b5427;
+    color: $orange-700;
     font-size: 0.9rem;
   }
 }
@@ -353,8 +353,8 @@ $admin-accent-checkin: $slime-green;
 .admin-home__recebimento-alert-btn {
   flex-shrink: 0;
   border: none;
-  background: #e0a800;
-  color: #3d2b00;
+  background: $gold-600-2;
+  color: $gold-900;
   font-weight: 700;
   padding: 0.55rem 1.1rem;
   border-radius: 8px;
@@ -362,7 +362,7 @@ $admin-accent-checkin: $slime-green;
   transition: background 0.2s ease;
 
   &:hover {
-    background: #c9960a;
+    background: $gold-600;
   }
 }
 
@@ -385,7 +385,7 @@ $admin-accent-checkin: $slime-green;
     align-items: center;
     gap: 6px;
     font-size: 0.82rem;
-    color: #7a8b93;
+    color: $blue-500-2;
     margin: 0 0 10px 4px;
   }
 }
@@ -439,16 +439,16 @@ $admin-accent-checkin: $slime-green;
     align-items: center;
     gap: 0.4rem;
     background: $white;
-    border: 1px solid $border-gray;
+    border: 1px solid $gray-300;
     border-radius: 8px;
     padding: 0.45rem 0.9rem;
     font-weight: 600;
-    color: $dark-gray;
+    color: $ink;
     transition: all 0.15s ease;
 
     &:hover {
-      background: $hover-gray;
-      border-color: $alternate-dark-gray;
+      background: $gray-100;
+      border-color: $gray-500-2;
     }
   }
 
@@ -460,7 +460,7 @@ $admin-accent-checkin: $slime-green;
 
   &__page-btn {
     background: $white;
-    border: 1px solid $border-gray;
+    border: 1px solid $gray-300;
     border-radius: 8px;
     padding: 0.4rem 0.8rem;
     font-weight: 600;
@@ -468,7 +468,7 @@ $admin-accent-checkin: $slime-green;
     transition: all 0.15s ease;
 
     &:hover:not(:disabled) {
-      background: $hover-gray;
+      background: $gray-100;
     }
 
     &:disabled {
@@ -479,7 +479,7 @@ $admin-accent-checkin: $slime-green;
 
   &__page-info {
     font-size: 0.9rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-weight: 600;
   }
 }

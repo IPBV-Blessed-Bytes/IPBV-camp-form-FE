@@ -1,3 +1,4 @@
+@use '../../../styles/Variables.scss' as *;
 .admin-finance {
   &__balance {
     display: grid;
@@ -11,44 +12,44 @@
   }
 
   &__balance-card {
-    background: #fff;
-    border: 1px solid #e6ebef;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 14px;
     padding: 1.25rem 1.4rem;
-    box-shadow: 0 2px 10px rgba(15, 40, 50, 0.05);
+    box-shadow: 0 2px 10px rgba($gray-900, 0.05);
 
     &--available {
-      border-color: rgba(5, 124, 5, 0.35);
-      background: linear-gradient(180deg, #ffffff, #f2fbf3);
+      border-color: rgba($forest, 0.35);
+      background: linear-gradient(180deg, $white, $gray-50);
     }
   }
 
   &__balance-label {
     display: block;
     font-size: 0.85rem;
-    color: #5a6b73;
+    color: $gray-600;
     margin-bottom: 0.35rem;
   }
 
   &__balance-value {
     font-size: 1.6rem;
     font-weight: 800;
-    color: #14343d;
+    color: $primary-darkest;
   }
 
   &--available &__balance-value {
-    color: #057c05;
+    color: $forest;
   }
 
   &__notice {
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    background: #fff7e6;
-    border: 1px solid #ffe0a3;
+    background: $cream;
+    border: 1px solid $orange-200;
     border-radius: 12px;
     padding: 1rem 1.2rem;
-    color: #7c5300;
+    color: $orange-800;
     margin-bottom: 1.5rem;
   }
 
@@ -67,8 +68,8 @@
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    background: #fff;
-    border: 1px solid #e6ebef;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 1rem 1.2rem;
   }
@@ -81,7 +82,7 @@
     height: 2.6rem;
     flex-shrink: 0;
     border-radius: 0.8rem;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
   }
 
   &__method-info {
@@ -90,23 +91,23 @@
     min-width: 0;
 
     strong {
-      color: #14343d;
+      color: $primary-darkest;
     }
 
     span {
       font-size: 0.85rem;
-      color: #5a6b73;
+      color: $gray-600;
     }
   }
 
   &__method-value {
     margin-left: auto;
     font-weight: 700;
-    color: #14343d;
+    color: $primary-darkest;
   }
 
   &__footnote {
-    color: #7a8b93;
+    color: $blue-500-2;
     font-size: 0.88rem;
     margin-top: 0.5rem;
   }

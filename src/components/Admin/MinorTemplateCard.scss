@@ -1,11 +1,12 @@
+@use '../../styles/Variables.scss' as *;
 .minor-template-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  background: #f4f7fd;
-  border: 1px solid #d9e2f3;
+  background: $gray-50;
+  border: 1px solid $gray-200;
   border-radius: 10px;
   padding: 0.9rem 1.1rem;
   margin-bottom: 1rem;
@@ -24,7 +25,7 @@
 
   &__subtitle {
     margin: 0.15rem 0 0;
-    color: #55606f;
+    color: $gray-600;
     font-size: 0.9rem;
   }
 

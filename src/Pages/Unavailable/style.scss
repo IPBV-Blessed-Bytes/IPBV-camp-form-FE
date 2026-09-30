@@ -1,3 +1,4 @@
+@use '../../styles/Variables.scss' as *;
 .unavailable {
   min-height: 70vh;
   display: flex;
@@ -9,22 +10,22 @@
     max-width: 520px;
     width: 100%;
     text-align: center;
-    background: #fff;
-    border: 1px solid #e2e6ee;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 16px;
     padding: 2.5rem 2rem;
-    box-shadow: 0 1px 2px rgba(24, 33, 56, 0.06), 0 8px 24px -12px rgba(24, 33, 56, 0.18);
+    box-shadow: 0 1px 2px rgba($gray-900, 0.06), 0 8px 24px -12px rgba($gray-900, 0.18);
   }
 
   &__title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1e2530;
+    color: $gray-900;
     margin: 0 0 0.75rem;
   }
 
   &__text {
-    color: #55606f;
+    color: $gray-600;
     font-size: 1rem;
     margin: 0;
   }

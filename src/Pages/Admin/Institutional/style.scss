@@ -3,7 +3,7 @@
 .inst-admin {
   .form-label {
     font-size: 0.84rem;
-    color: #5a6b73;
+    color: $gray-600;
     margin-bottom: 4px;
 
     b {
@@ -27,15 +27,15 @@
     justify-content: space-between;
     padding: 12px 0;
     margin-bottom: 22px;
-    background: rgba(247, 249, 250, 0.94);
+    background: rgba($gray-50, 0.94);
     backdrop-filter: blur(6px);
-    border-bottom: 1px solid #e2e8ec;
+    border-bottom: 1px solid $gray-200;
 
     &--bottom {
       position: static;
       justify-content: flex-end;
       border-bottom: none;
-      border-top: 1px solid #e2e8ec;
+      border-top: 1px solid $gray-200;
       margin-top: 4px;
       margin-bottom: 0;
       backdrop-filter: none;
@@ -49,8 +49,8 @@
     gap: 6px;
 
     button {
-      border: 1px solid #d7e0e5;
-      background: #fff;
+      border: 1px solid $green-100;
+      background: $white;
       color: $primary;
       font-size: 0.8rem;
       font-weight: 600;
@@ -61,19 +61,19 @@
 
       &:hover {
         background: $primary;
-        color: #fff;
+        color: $white;
         border-color: $primary;
       }
     }
   }
 
   &__card {
-    background: #fff;
-    border: 1px solid #e6ebef;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 16px;
     padding: 22px 24px 24px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(15, 40, 50, 0.05);
+    box-shadow: 0 2px 12px rgba($gray-900, 0.05);
     scroll-margin-top: 84px;
 
     > h5 {
@@ -85,7 +85,7 @@
       font-size: 1.08rem;
       margin: 0 0 18px;
       padding-bottom: 12px;
-      border-bottom: 1px solid #eef2f4;
+      border-bottom: 1px solid $gray-100;
 
       &::before {
         content: '';
@@ -101,7 +101,7 @@
       font-weight: 700;
       font-size: 0.95rem;
       margin: 6px 0 12px;
-      color: #33474f;
+      color: $gray-800;
     }
   }
 
@@ -112,7 +112,7 @@
     gap: 12px;
     margin: 0 0 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #eef2f4;
+    border-bottom: 1px solid $gray-100;
     flex-wrap: wrap;
 
     h5 {
@@ -141,16 +141,16 @@
   }
 
   &__subcard {
-    background: #f7f9fa;
-    border: 1px solid #e6ebef;
+    background: $gray-50;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 12px;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
     &:hover {
-      border-color: #cfdbe1;
-      box-shadow: 0 4px 14px rgba(15, 40, 50, 0.06);
+      border-color: $gray-300;
+      box-shadow: 0 4px 14px rgba($gray-900, 0.06);
     }
   }
 
@@ -179,8 +179,8 @@
   flex-wrap: wrap;
 
   &__preview {
-    background: #eef2f4;
-    border: 1px dashed #c9d3d9;
+    background: $gray-100;
+    border: 1px dashed $gray-300;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -207,7 +207,7 @@
 
   &__empty {
     font-size: 0.75rem;
-    color: #90a1a9;
+    color: $gray-400;
     text-align: center;
     padding: 0 6px;
   }
@@ -239,8 +239,8 @@
 
   .inst-admin__template {
     text-align: left;
-    background: #fff;
-    border: 1px solid #e6ebef;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 14px 16px;
     cursor: pointer;
@@ -251,23 +251,23 @@
 
     strong {
       font-size: 1rem;
-      color: #1d2939;
+      color: $gray-900;
     }
 
     span {
       font-size: 0.85rem;
-      color: #667085;
+      color: $gray-500;
       line-height: 1.4;
     }
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 8px 20px rgba($black, 0.06);
     }
 
     &.is-selected {
-      border-color: #007185;
-      box-shadow: 0 0 0 2px rgba(0, 113, 133, 0.25);
+      border-color: $primary;
+      box-shadow: 0 0 0 2px rgba($primary, 0.25);
     }
   }
 }

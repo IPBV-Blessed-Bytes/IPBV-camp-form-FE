@@ -1,14 +1,14 @@
 @use '../../styles/Variables.scss' as *;
 
-$inst-ink: #1d2939;
-$inst-muted: #667085;
-$inst-line: #e6ebef;
-$inst-tint: #f4f8f9;
+$inst-ink: $gray-900;
+$inst-muted: $gray-500;
+$inst-line: $gray-200;
+$inst-tint: $gray-50;
 
 .institutional {
-  --inst-accent: #007185;
+  --inst-accent: $primary;
   color: $inst-ink;
-  background: #fff;
+  background: $white;
 
   * {
     box-sizing: border-box;
@@ -30,15 +30,15 @@ $inst-tint: #f4f8f9;
 
     &--primary {
       background: var(--inst-accent);
-      color: #fff;
+      color: $white;
       &:hover {
         filter: brightness(0.93);
       }
     }
 
     &--yellow {
-      background: $light-yellow;
-      color: #4a3b00;
+      background: $yellow;
+      color: $gold-900-2;
       &:hover {
         filter: brightness(0.96);
       }
@@ -48,16 +48,16 @@ $inst-tint: #f4f8f9;
       background: transparent;
       color: var(--inst-accent);
       &:hover {
-        background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
+        background: color-mix(in srgb, var(--inst-accent) 8%, $white);
       }
     }
 
     &--outline-light {
       background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255, 255, 255, 0.7);
+      color: $white;
+      border: 2px solid rgba($white, 0.7);
       &:hover {
-        background: rgba(255, 255, 255, 0.14);
+        background: rgba($white, 0.14);
       }
     }
 
@@ -72,14 +72,14 @@ $inst-tint: #f4f8f9;
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba($white, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
   &--scrolled {
     border-bottom-color: $inst-line;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 18px rgba($black, 0.06);
   }
 
   &__inner {
@@ -109,7 +109,7 @@ $inst-tint: #f4f8f9;
     height: 38px;
     align-items: center;
     justify-content: center;
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
     border-radius: 50%;
   }
 
@@ -129,7 +129,7 @@ $inst-tint: #f4f8f9;
       cursor: pointer;
       &:hover {
         color: var(--inst-accent);
-        background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+        background: color-mix(in srgb, var(--inst-accent) 7%, $white);
       }
     }
 
@@ -144,10 +144,10 @@ $inst-tint: #f4f8f9;
       gap: 4px;
       width: min(320px, calc(100vw - 24px));
       padding: 10px;
-      background: #fff;
+      background: $white;
       border: 1px solid $inst-line;
       border-radius: 16px;
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
+      box-shadow: 0 18px 44px rgba($black, 0.16);
       display: none;
 
       &.is-open {
@@ -246,9 +246,9 @@ $inst-tint: #f4f8f9;
 .inst-hero {
   position: relative;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, #000), var(--inst-accent)),
-    radial-gradient(circle at 80% 20%, rgba(255, 219, 88, 0.35), transparent 45%);
-  color: #fff;
+    linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, $black), var(--inst-accent)),
+    radial-gradient(circle at 80% 20%, rgba($yellow, 0.35), transparent 45%);
+  color: $white;
   padding: 72px 20px 0;
   overflow: hidden;
 
@@ -260,7 +260,7 @@ $inst-tint: #f4f8f9;
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(135deg, rgba(0, 60, 70, 0.86), rgba(0, 94, 110, 0.78));
+      background: linear-gradient(135deg, rgba($primary-darkest, 0.86), rgba($primary-dark, 0.78));
     }
   }
 
@@ -282,9 +282,9 @@ $inst-tint: #f4f8f9;
 
   &__tag {
     display: inline-block;
-    background: rgba(255, 219, 88, 0.22);
-    color: $light-yellow;
-    border: 1px solid rgba(255, 219, 88, 0.5);
+    background: rgba($yellow, 0.22);
+    color: $yellow;
+    border: 1px solid rgba($yellow, 0.5);
     padding: 6px 16px;
     border-radius: 999px;
     font-weight: 600;
@@ -303,7 +303,7 @@ $inst-tint: #f4f8f9;
 
   &__subtitle {
     font-size: clamp(1rem, 2vw, 1.2rem);
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba($white, 0.9);
     max-width: 640px;
     margin: 0 auto 22px;
   }
@@ -338,10 +338,10 @@ $inst-tint: #f4f8f9;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    background: #fff;
+    background: $white;
     border-radius: 18px 18px 0 0;
     padding: 26px 20px;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 -8px 30px rgba($black, 0.12);
 
     @media (max-width: $sm) {
       grid-template-columns: 1fr;
@@ -444,7 +444,7 @@ $inst-tint: #f4f8f9;
 }
 
 .inst-card {
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-radius: 16px;
   padding: 28px 24px;
@@ -452,7 +452,7 @@ $inst-tint: #f4f8f9;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba($black, 0.08);
   }
 
   &__icon {
@@ -461,7 +461,7 @@ $inst-tint: #f4f8f9;
     height: 56px;
     align-items: center;
     justify-content: center;
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
     border-radius: 14px;
     margin-bottom: 16px;
   }
@@ -489,7 +489,7 @@ $inst-tint: #f4f8f9;
   }
 
   &__day {
-    background: #fff;
+    background: $white;
     border: 1px solid $inst-line;
     border-radius: 16px;
     padding: 24px;
@@ -500,7 +500,7 @@ $inst-tint: #f4f8f9;
       color: var(--inst-accent);
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 2px solid color-mix(in srgb, var(--inst-accent) 22%, #fff);
+      border-bottom: 2px solid color-mix(in srgb, var(--inst-accent) 22%, $white);
     }
 
     ul {
@@ -534,7 +534,7 @@ $inst-tint: #f4f8f9;
 .inst-schedule__empty {
   text-align: center;
   color: $inst-muted;
-  background: #fff;
+  background: $white;
   border: 1px dashed $inst-line;
   border-radius: 16px;
   padding: 40px 24px;
@@ -546,7 +546,7 @@ $inst-tint: #f4f8f9;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid $inst-line;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 28px rgba($black, 0.08);
 
   iframe {
     display: block;
@@ -562,7 +562,7 @@ $inst-tint: #f4f8f9;
 
 .inst-team {
   text-align: center;
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-radius: 16px;
   padding: 26px 18px;
@@ -570,7 +570,7 @@ $inst-tint: #f4f8f9;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba($black, 0.08);
   }
 
   &__avatar {
@@ -578,7 +578,7 @@ $inst-tint: #f4f8f9;
     height: 76px;
     margin: 0 auto 14px;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -623,9 +623,9 @@ $inst-tint: #f4f8f9;
     display: flex;
     align-items: flex-end;
     padding: 16px;
-    color: #fff;
+    color: $white;
     font-weight: 600;
-    box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55);
+    box-shadow: inset 0 -60px 60px -30px rgba($black, 0.55);
 
     .inst-gallery__cover {
       position: absolute;
@@ -643,7 +643,7 @@ $inst-tint: #f4f8f9;
 
       &:hover {
         transform: translateY(-3px);
-        box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55), 0 12px 26px rgba(0, 0, 0, 0.18);
+        box-shadow: inset 0 -60px 60px -30px rgba($black, 0.55), 0 12px 26px rgba($black, 0.18);
       }
     }
 
@@ -659,7 +659,7 @@ $inst-tint: #f4f8f9;
       gap: 0;
       padding: 0;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba($black, 0.6);
       backdrop-filter: blur(2px);
       font-size: 0.8rem;
       font-weight: 700;
@@ -674,12 +674,12 @@ $inst-tint: #f4f8f9;
       gap: 8px;
     }
 
-    &--a { background: linear-gradient(135deg, #007185, #0c9183); }
-    &--b { background: linear-gradient(135deg, #0c9183, #49bd72); }
-    &--c { background: linear-gradient(135deg, #d39e00, #ffdb58); color: #4a3b00; }
-    &--d { background: linear-gradient(135deg, #005e6e, #007185); }
-    &--e { background: linear-gradient(135deg, #FF7F50, #F5B895); color: #5a2a12; }
-    &--f { background: linear-gradient(135deg, #49bd72, #89c96e); }
+    &--a { background: linear-gradient(135deg, $primary, $teal); }
+    &--b { background: linear-gradient(135deg, $teal, $emerald); }
+    &--c { background: linear-gradient(135deg, $gold, $yellow); color: $gold-900-2; }
+    &--d { background: linear-gradient(135deg, $primary-dark, $primary); }
+    &--e { background: linear-gradient(135deg, $orange, $peach); color: $dark-brown; }
+    &--f { background: linear-gradient(135deg, $emerald, $sage); }
   }
 }
 
@@ -723,7 +723,7 @@ $inst-tint: #f4f8f9;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba($black, 0.88);
   cursor: zoom-out;
 
   img {
@@ -731,7 +731,7 @@ $inst-tint: #f4f8f9;
     max-height: 95vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 60px rgba($black, 0.5);
     cursor: default;
   }
 
@@ -746,13 +746,13 @@ $inst-tint: #f4f8f9;
     justify-content: center;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: rgba($white, 0.15);
+    color: $white;
     cursor: pointer;
     transition: background 0.15s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.28);
+      background: rgba($white, 0.28);
     }
   }
 }
@@ -770,7 +770,7 @@ $inst-tint: #f4f8f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: $white;
     border: 1px solid $inst-line;
     border-radius: 14px;
     padding: 18px;
@@ -791,7 +791,7 @@ $inst-tint: #f4f8f9;
 .inst-notice {
   display: flex;
   gap: 16px;
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-left: 4px solid var(--inst-accent);
   border-radius: 12px;
@@ -802,7 +802,7 @@ $inst-tint: #f4f8f9;
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -824,8 +824,8 @@ $inst-tint: #f4f8f9;
 .inst-final {
   text-align: center;
   padding: 76px 20px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, #000), var(--inst-accent));
-  color: #fff;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 72%, $black), var(--inst-accent));
+  color: $white;
 
   h2 {
     font-size: clamp(1.6rem, 3vw, 2.3rem);
@@ -834,7 +834,7 @@ $inst-tint: #f4f8f9;
   }
 
   p {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba($white, 0.9);
     font-size: 1.1rem;
     margin-bottom: 26px;
   }
@@ -845,7 +845,7 @@ $inst-tint: #f4f8f9;
     justify-content: center;
     gap: 8px;
     margin-top: 26px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba($white, 0.8);
     font-size: 0.9rem;
     font-weight: 500;
   }
@@ -864,32 +864,32 @@ $inst-tint: #f4f8f9;
     padding: 9px 22px;
     &:hover {
       filter: none;
-      background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
+      background: color-mix(in srgb, var(--inst-accent) 8%, $white);
     }
   }
 
   .inst-btn--outline-light {
     color: $inst-ink;
-    border-color: color-mix(in srgb, var(--inst-accent) 45%, #fff);
+    border-color: color-mix(in srgb, var(--inst-accent) 45%, $white);
     &:hover {
-      background: color-mix(in srgb, var(--inst-accent) 8%, #fff);
+      background: color-mix(in srgb, var(--inst-accent) 8%, $white);
     }
   }
 
   .inst-hero {
-    background: color-mix(in srgb, var(--inst-accent) 6%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 6%, $white);
     color: $inst-ink;
     padding-top: 92px;
 
     &--image .inst-hero__overlay {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
+      background: linear-gradient(135deg, rgba($white, 0.92), rgba($white, 0.82));
     }
   }
 
   .inst-hero__tag {
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
     color: var(--inst-accent);
-    border: 1px solid color-mix(in srgb, var(--inst-accent) 30%, #fff);
+    border: 1px solid color-mix(in srgb, var(--inst-accent) 30%, $white);
     text-transform: uppercase;
     letter-spacing: 0.12em;
   }
@@ -910,7 +910,7 @@ $inst-tint: #f4f8f9;
   }
 
   .inst-hero__stats {
-    background: #fff;
+    background: $white;
     border: 1px solid $inst-line;
     border-bottom: none;
     box-shadow: none;
@@ -940,7 +940,7 @@ $inst-tint: #f4f8f9;
     &:hover {
       transform: none;
       box-shadow: none;
-      border-color: color-mix(in srgb, var(--inst-accent) 40%, #fff);
+      border-color: color-mix(in srgb, var(--inst-accent) 40%, $white);
     }
   }
 
@@ -952,7 +952,7 @@ $inst-tint: #f4f8f9;
   .inst-team:hover {
     transform: none;
     box-shadow: none;
-    border-color: color-mix(in srgb, var(--inst-accent) 40%, #fff);
+    border-color: color-mix(in srgb, var(--inst-accent) 40%, $white);
   }
 
   .inst-map {
@@ -965,7 +965,7 @@ $inst-tint: #f4f8f9;
   }
 
   .inst-final {
-    background: color-mix(in srgb, var(--inst-accent) 6%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 6%, $white);
     color: $inst-ink;
 
     h2 {
@@ -981,88 +981,88 @@ $inst-tint: #f4f8f9;
 }
 
 .institutional--template-3 {
-  background: #0f1720;
-  color: #e4e9ef;
+  background: $blue-900;
+  color: $gray-200;
 
   .inst-btn--ghost {
-    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+    color: color-mix(in srgb, var(--inst-accent) 55%, $white);
     &:hover {
-      background: color-mix(in srgb, var(--inst-accent) 22%, #0f1720);
+      background: color-mix(in srgb, var(--inst-accent) 22%, $blue-900);
     }
   }
 
   .inst-btn--outline-light {
-    color: #e4e9ef;
-    border-color: rgba(255, 255, 255, 0.4);
+    color: $gray-200;
+    border-color: rgba($white, 0.4);
   }
 
   .inst-nav {
-    background: rgba(15, 23, 32, 0.85);
+    background: rgba($blue-900, 0.85);
     border-bottom-color: transparent;
 
     &--scrolled {
-      border-bottom-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      border-bottom-color: rgba($white, 0.08);
+      box-shadow: 0 4px 18px rgba($black, 0.4);
     }
   }
 
   .inst-nav__brand {
-    color: color-mix(in srgb, var(--inst-accent) 60%, #fff);
+    color: color-mix(in srgb, var(--inst-accent) 60%, $white);
   }
 
   .inst-nav__logo {
-    background: color-mix(in srgb, var(--inst-accent) 28%, #0f1720);
+    background: color-mix(in srgb, var(--inst-accent) 28%, $blue-900);
   }
 
   .inst-nav__links button {
-    color: #c3cdd8;
+    color: $gray-300;
     &:hover {
-      color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
-      background: rgba(255, 255, 255, 0.06);
+      color: color-mix(in srgb, var(--inst-accent) 55%, $white);
+      background: rgba($white, 0.06);
     }
   }
 
   .inst-hero {
     background:
       radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--inst-accent) 55%, transparent), transparent 46%),
-      linear-gradient(135deg, #0b131c, #131c26);
+      linear-gradient(135deg, $blue-900, $blue-900-2);
   }
 
   .inst-hero__title {
-    color: #f4f7fa;
+    color: $gray-50;
   }
 
   .inst-hero__stats {
-    background: #1b2530;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
+    background: $gray-900;
+    box-shadow: 0 -8px 30px rgba($black, 0.5);
   }
 
   .inst-stat {
-    color: #e4e9ef;
+    color: $gray-200;
     strong {
-      color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+      color: color-mix(in srgb, var(--inst-accent) 55%, $white);
     }
     span {
-      color: #9aa7b4;
+      color: $gray-400;
     }
     & + & {
-      border-left-color: rgba(255, 255, 255, 0.1);
+      border-left-color: rgba($white, 0.1);
       @media (max-width: $sm) {
-        border-top-color: rgba(255, 255, 255, 0.1);
+        border-top-color: rgba($white, 0.1);
       }
     }
   }
 
   .inst-section--tinted {
-    background: #131c26;
+    background: $blue-900-2;
   }
 
   .inst-section__head {
     h2 {
-      color: #f4f7fa;
+      color: $gray-50;
     }
     p {
-      color: #9aa7b4;
+      color: $gray-400;
     }
   }
 
@@ -1070,59 +1070,59 @@ $inst-tint: #f4f8f9;
   .inst-schedule__day,
   .inst-team,
   .inst-notice {
-    background: #1b2530;
-    border-color: rgba(255, 255, 255, 0.08);
-    color: #e4e9ef;
+    background: $gray-900;
+    border-color: rgba($white, 0.08);
+    color: $gray-200;
   }
 
   .inst-card h3,
   .inst-team h3,
   .inst-notice h3 {
-    color: #f4f7fa;
+    color: $gray-50;
   }
 
   .inst-card p,
   .inst-notice p,
   .inst-team span,
   .inst-schedule__title {
-    color: #9aa7b4;
+    color: $gray-400;
   }
 
   .inst-card:hover,
   .inst-team:hover {
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 12px 28px rgba($black, 0.45);
   }
 
   .inst-card__icon,
   .inst-notice__mark,
   .inst-team__avatar,
   .inst-nav__logo {
-    background: color-mix(in srgb, var(--inst-accent) 24%, #0f1720);
+    background: color-mix(in srgb, var(--inst-accent) 24%, $blue-900);
   }
 
   .inst-schedule__day h3 {
-    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
-    border-bottom-color: rgba(255, 255, 255, 0.12);
+    color: color-mix(in srgb, var(--inst-accent) 55%, $white);
+    border-bottom-color: rgba($white, 0.12);
   }
 
   .inst-schedule__time {
-    color: color-mix(in srgb, var(--inst-accent) 55%, #fff);
+    color: color-mix(in srgb, var(--inst-accent) 55%, $white);
   }
 
   .inst-schedule__empty {
-    background: #1b2530;
-    border-color: rgba(255, 255, 255, 0.14);
-    color: #9aa7b4;
+    background: $gray-900;
+    border-color: rgba($white, 0.14);
+    color: $gray-400;
   }
 
   .inst-partners__item {
-    background: #1b2530;
-    border-color: rgba(255, 255, 255, 0.08);
+    background: $gray-900;
+    border-color: rgba($white, 0.08);
   }
 
   .inst-map {
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    border-color: rgba($white, 0.1);
+    box-shadow: 0 12px 28px rgba($black, 0.45);
   }
 }
 
@@ -1206,7 +1206,7 @@ $inst-tint: #f4f8f9;
     &:hover {
       transform: none;
       box-shadow: none;
-      border-color: color-mix(in srgb, var(--inst-accent) 35%, #fff);
+      border-color: color-mix(in srgb, var(--inst-accent) 35%, $white);
     }
   }
 
@@ -1248,8 +1248,8 @@ $inst-tint: #f4f8f9;
   .inst-hero {
     padding-top: 84px;
     background:
-      linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, #000), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 60%, #fff)),
-      radial-gradient(circle at 82% 18%, rgba(255, 219, 88, 0.5), transparent 46%);
+      linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, $black), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 60%, $white)),
+      radial-gradient(circle at 82% 18%, rgba($yellow, 0.5), transparent 46%);
   }
 
   .inst-hero__title {
@@ -1259,16 +1259,16 @@ $inst-tint: #f4f8f9;
 
   .inst-hero__stats {
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 -10px 40px rgba($black, 0.18);
   }
 
   .inst-section--tinted {
-    background: color-mix(in srgb, var(--inst-accent) 10%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 10%, $white);
   }
 
   .inst-section__head h2 {
     font-weight: 900;
-    color: color-mix(in srgb, var(--inst-accent) 55%, #000);
+    color: color-mix(in srgb, var(--inst-accent) 55%, $black);
   }
 
   .inst-cards,
@@ -1288,7 +1288,7 @@ $inst-tint: #f4f8f9;
   .inst-card {
     border: none;
     border-left: 6px solid var(--inst-accent);
-    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 7%, $white);
     box-shadow: 0 12px 28px color-mix(in srgb, var(--inst-accent) 12%, transparent);
 
     &:hover {
@@ -1298,14 +1298,14 @@ $inst-tint: #f4f8f9;
 
     &--highlight {
       background: var(--inst-accent);
-      border-left-color: color-mix(in srgb, var(--inst-accent) 60%, #000);
-      color: #fff;
+      border-left-color: color-mix(in srgb, var(--inst-accent) 60%, $black);
+      color: $white;
       h3,
       p {
-        color: #fff;
+        color: $white;
       }
       .inst-card__icon {
-        background: rgba(255, 255, 255, 0.22);
+        background: rgba($white, 0.22);
       }
     }
   }
@@ -1313,7 +1313,7 @@ $inst-tint: #f4f8f9;
   .inst-card__icon,
   .inst-notice__mark {
     border-radius: 16px;
-    background: color-mix(in srgb, var(--inst-accent) 16%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 16%, $white);
   }
 
   .inst-schedule__day {
@@ -1323,7 +1323,7 @@ $inst-tint: #f4f8f9;
 
   .inst-team {
     border: none;
-    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 7%, $white);
     &:hover {
       transform: translateY(-5px);
       box-shadow: 0 18px 36px color-mix(in srgb, var(--inst-accent) 18%, transparent);
@@ -1331,13 +1331,13 @@ $inst-tint: #f4f8f9;
   }
 
   .inst-team__avatar {
-    background: color-mix(in srgb, var(--inst-accent) 16%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 16%, $white);
   }
 
   .inst-notice {
     border: none;
     border-left: 6px solid var(--inst-accent);
-    background: color-mix(in srgb, var(--inst-accent) 7%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 7%, $white);
     box-shadow: 0 8px 20px color-mix(in srgb, var(--inst-accent) 10%, transparent);
   }
 
@@ -1354,7 +1354,7 @@ $inst-tint: #f4f8f9;
   }
 
   .inst-final {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, #000), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 62%, #fff));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--inst-accent) 82%, $black), var(--inst-accent) 55%, color-mix(in srgb, var(--inst-accent) 62%, $white));
   }
 }
 
@@ -1367,9 +1367,9 @@ $inst-tint: #f4f8f9;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  background: rgba(255, 255, 255, 0.94);
-  color: #14343d;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  background: rgba($white, 0.94);
+  color: $primary-darkest;
+  box-shadow: 0 6px 18px rgba($black, 0.12);
 
   &__dot {
     width: 0.6rem;
@@ -1379,26 +1379,26 @@ $inst-tint: #f4f8f9;
   }
 
   &--open {
-    color: #14532d;
+    color: $green-800;
     .inst-status__dot {
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+      background: $green-500;
+      box-shadow: 0 0 0 4px rgba($green-500, 0.25);
     }
   }
 
   &--soon {
-    color: #7c4a03;
+    color: $orange-800;
     .inst-status__dot {
-      background: #f59e0b;
-      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+      background: $warning;
+      box-shadow: 0 0 0 4px rgba($warning, 0.25);
     }
   }
 
   &--closed {
-    color: #7f1d1d;
+    color: $red-700;
     .inst-status__dot {
-      background: #ef4444;
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25);
+      background: $red-400;
+      box-shadow: 0 0 0 4px rgba($red-400, 0.25);
     }
   }
 }
@@ -1426,9 +1426,9 @@ $inst-tint: #f4f8f9;
     align-items: center;
     gap: 1rem;
     padding: 1.35rem 1.5rem;
-    border: 1px solid color-mix(in srgb, var(--inst-accent) 16%, #fff);
+    border: 1px solid color-mix(in srgb, var(--inst-accent) 16%, $white);
     border-radius: 1.15rem;
-    background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--inst-accent) 4%, #fff));
+    background: linear-gradient(180deg, $white, color-mix(in srgb, var(--inst-accent) 4%, $white));
     text-decoration: none;
     color: $inst-ink;
     box-shadow: 0 10px 30px color-mix(in srgb, var(--inst-accent) 10%, transparent);
@@ -1449,7 +1449,7 @@ $inst-tint: #f4f8f9;
 
     &:hover {
       transform: translateY(-3px);
-      border-color: color-mix(in srgb, var(--inst-accent) 40%, #fff);
+      border-color: color-mix(in srgb, var(--inst-accent) 40%, $white);
       box-shadow: 0 16px 36px color-mix(in srgb, var(--inst-accent) 20%, transparent);
 
       &::before {
@@ -1460,7 +1460,7 @@ $inst-tint: #f4f8f9;
         background: var(--inst-accent);
 
         svg path {
-          fill: #fff !important;
+          fill: $white !important;
         }
       }
     }
@@ -1474,7 +1474,7 @@ $inst-tint: #f4f8f9;
     height: 3.25rem;
     flex-shrink: 0;
     border-radius: 0.95rem;
-    background: color-mix(in srgb, var(--inst-accent) 12%, #fff);
+    background: color-mix(in srgb, var(--inst-accent) 12%, $white);
     transition: background 0.18s ease;
   }
 
@@ -1493,7 +1493,7 @@ $inst-tint: #f4f8f9;
     }
 
     span {
-      color: #22343b;
+      color: $gray-900;
       font-size: 1.02rem;
       font-weight: 600;
       word-break: break-word;

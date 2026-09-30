@@ -9,9 +9,9 @@
 .filter-chip {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 999px;
-  color: $alternate-dark-gray;
+  color: $gray-500-2;
   cursor: pointer;
   display: inline-flex;
   font-size: 0.85rem;
@@ -34,13 +34,13 @@
   }
 
   &__count {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba($black, 0.08);
     border-radius: 999px;
     font-size: 0.72rem;
     padding: 0 0.4rem;
   }
 
   &.is-active &__count {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba($white, 0.25);
   }
 }

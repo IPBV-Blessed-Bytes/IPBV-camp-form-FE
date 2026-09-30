@@ -1,3 +1,4 @@
+@use '../../../styles/Variables.scss' as *;
 .backup-page {
   &__content {
     max-width: 900px;
@@ -23,7 +24,7 @@
       width: 62px;
       height: 62px;
       border-radius: 50%;
-      background: rgba(0, 113, 133, 0.08);
+      background: rgba($primary, 0.08);
       margin-bottom: 0.75rem;
     }
 

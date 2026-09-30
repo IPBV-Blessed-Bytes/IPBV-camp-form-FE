@@ -1,9 +1,10 @@
+@use '../../styles/Variables.scss' as *;
 .event-catalog {
   min-height: 100vh;
   padding: 4rem 1rem 5rem;
   background:
-    radial-gradient(1200px 480px at 50% -10%, rgba(0, 113, 133, 0.10), transparent 70%),
-    linear-gradient(180deg, #f7fafb 0%, #eef2f4 100%);
+    radial-gradient(1200px 480px at 50% -10%, rgba($primary, 0.10), transparent 70%),
+    linear-gradient(180deg, $gray-50 0%, $gray-100 100%);
 
   &__hero {
     text-align: center;
@@ -17,8 +18,8 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #007185;
-    background: rgba(0, 113, 133, 0.10);
+    color: $primary;
+    background: rgba($primary, 0.10);
     padding: 0.35rem 0.85rem;
     border-radius: 999px;
     margin-bottom: 1.1rem;
@@ -27,25 +28,25 @@
   &__title {
     font-weight: 800;
     font-size: clamp(2rem, 4vw, 2.75rem);
-    color: #0f172a;
+    color: $blue-900;
     margin-bottom: 0.6rem;
     letter-spacing: -0.02em;
   }
 
   &__subtitle {
-    color: #64748b;
+    color: $gray-500;
     font-size: 1.05rem;
     margin: 0;
   }
 
   &__empty {
-    color: #64748b;
+    color: $gray-500;
     margin: 2rem 0;
   }
 }
 
 .event-card {
-  --card-accent: #007185;
+  --card-accent: $primary;
 
   position: relative;
   width: 100%;
@@ -57,10 +58,10 @@
   text-align: center;
   gap: 0.35rem;
   padding: 1.75rem 1.5rem 1.4rem;
-  background: #fff;
-  border: 1px solid #e6eaee;
+  background: $white;
+  border: 1px solid $gray-200;
   border-radius: 20px;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 4px 18px rgba($blue-900, 0.05);
   overflow: hidden;
   cursor: pointer;
   transition:
@@ -80,8 +81,8 @@
   &:hover,
   &:focus-visible {
     transform: translateY(-6px);
-    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
-    border-color: color-mix(in srgb, var(--card-accent) 40%, #e6eaee);
+    box-shadow: 0 16px 34px rgba($blue-900, 0.12);
+    border-color: color-mix(in srgb, var(--card-accent) 40%, $gray-200);
     outline: none;
   }
 
@@ -103,7 +104,7 @@
     border-radius: 16px;
     margin-bottom: 0.9rem;
     color: var(--card-accent);
-    background: color-mix(in srgb, var(--card-accent) 12%, #fff);
+    background: color-mix(in srgb, var(--card-accent) 12%, $white);
 
     svg {
       display: block;
@@ -128,7 +129,7 @@
   &__name {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #0f172a;
+    color: $blue-900;
     line-height: 1.25;
     margin-bottom: 0.4rem;
   }
@@ -138,8 +139,8 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #64748b;
-    background: #eef2f4;
+    color: $gray-500;
+    background: $gray-100;
     border-radius: 999px;
     padding: 0.25rem 0.7rem;
     margin-bottom: 0.2rem;

@@ -12,7 +12,7 @@
 .team-wristband-chip {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 999px;
   display: inline-flex;
   font-size: 0.85rem;
@@ -20,7 +20,7 @@
   padding: 0.15rem 0.7rem 0.15rem 0.5rem;
 
   &__dot {
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba($black, 0.15);
     border-radius: 0.25rem;
     flex-shrink: 0;
     height: 16px;
@@ -29,7 +29,7 @@
 }
 
 .camper-checklist {
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 10px;
   margin-top: 0.5rem;
   max-height: 300px;
@@ -48,7 +48,7 @@
   transition: background 0.15s ease;
 
   & + & {
-    border-top: 1px solid $alternate-light-gray;
+    border-top: 1px solid $gray-100;
   }
 
   &:hover {
@@ -77,12 +77,12 @@
   }
 
   &__name {
-    color: $dark-gray;
+    color: $ink;
     font-weight: 600;
   }
 
   &__cpf {
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-size: 0.8rem;
   }
 }

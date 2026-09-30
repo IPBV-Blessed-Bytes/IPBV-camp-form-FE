@@ -1,3 +1,4 @@
+@use '../../../styles/Variables.scss' as *;
 .chatbot {
   position: fixed;
   right: 20px;
@@ -13,12 +14,12 @@
     height: 56px;
     border-radius: 50%;
     border: none;
-    background: var(--event-color, #007185);
-    color: #fff;
+    background: var(--event-color, $primary);
+    color: $white;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 6px 18px rgba($black, 0.22);
     cursor: pointer;
     transition: transform 0.12s ease, filter 0.15s ease;
 
@@ -36,17 +37,17 @@
     max-width: calc(100vw - 40px);
     height: 460px;
     max-height: calc(100vh - 120px);
-    background: #fff;
+    background: $white;
     border-radius: 14px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 32px rgba($black, 0.25);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
   &__header {
-    background: var(--event-color, #007185);
-    color: #fff;
+    background: var(--event-color, $primary);
+    color: $white;
     padding: 12px 14px;
     display: flex;
     align-items: center;
@@ -61,7 +62,7 @@
   &__close {
     background: none;
     border: none;
-    color: #fff;
+    color: $white;
     font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
@@ -75,7 +76,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: #f7f9fa;
+    background: $gray-50;
   }
 
   &__msg {
@@ -89,19 +90,19 @@
 
     &--assistant {
       align-self: flex-start;
-      background: #fff;
-      border: 1px solid #e3e8ec;
-      color: #1d2939;
+      background: $white;
+      border: 1px solid $gray-200;
+      color: $gray-900;
     }
 
     &--user {
       align-self: flex-end;
-      background: var(--event-color, #007185);
-      color: #fff;
+      background: var(--event-color, $primary);
+      color: $white;
     }
 
     &--typing {
-      color: #667085;
+      color: $gray-500;
       font-style: italic;
     }
   }
@@ -110,27 +111,27 @@
     display: flex;
     gap: 8px;
     padding: 10px;
-    border-top: 1px solid #eaecf0;
-    background: #fff;
+    border-top: 1px solid $gray-100;
+    background: $white;
 
     input {
       flex: 1;
-      border: 1px solid #d0d5dd;
+      border: 1px solid $gray-300;
       border-radius: 8px;
       padding: 8px 10px;
       font-size: 0.9rem;
 
       &:focus {
         outline: none;
-        border-color: var(--event-color, #007185);
-        box-shadow: 0 0 0 3px rgba(0, 113, 133, 0.15);
+        border-color: var(--event-color, $primary);
+        box-shadow: 0 0 0 3px rgba($primary, 0.15);
       }
     }
 
     button {
       border: none;
-      background: var(--event-color, #007185);
-      color: #fff;
+      background: var(--event-color, $primary);
+      color: $white;
       border-radius: 8px;
       padding: 0 14px;
       font-size: 0.9rem;

@@ -3,11 +3,11 @@
 .platform {
   min-height: 100vh;
   background:
-    radial-gradient(1200px 260px at 50% -80px, rgba(0, 113, 133, 0.1), transparent 70%),
-    $background-gray;
+    radial-gradient(1200px 260px at 50% -80px, rgba($primary, 0.1), transparent 70%),
+    $gray-50;
 
   &__header {
-    background: linear-gradient(120deg, #0c3a52 0%, $primary 55%, $blue 100%);
+    background: linear-gradient(120deg, $primary-darkest 0%, $primary 55%, $blue 100%);
     color: $white;
     padding: 1.5rem 1.5rem 2.75rem;
   }
@@ -35,8 +35,8 @@
     width: 46px;
     height: 46px;
     border-radius: 13px;
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba($white, 0.16);
+    border: 1px solid rgba($white, 0.28);
     flex-shrink: 0;
   }
 
@@ -51,7 +51,7 @@
   &__subtitle {
     margin: 0;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba($white, 0.82);
   }
 
   &__header-actions {
@@ -61,16 +61,16 @@
   }
 
   &__btn-ghost {
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba($white, 0.14);
+    border: 1px solid rgba($white, 0.35);
     color: $white;
     font-weight: 600;
 
     &:hover,
     &:focus {
-      background: rgba(255, 255, 255, 0.24);
+      background: rgba($white, 0.24);
       color: $white;
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba($white, 0.5);
     }
   }
 
@@ -82,7 +82,7 @@
 
     &:hover,
     &:focus {
-      background: #eef7f8;
+      background: $blue-100;
       color: $primary;
     }
   }
@@ -114,11 +114,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    background: #fff;
-    border: 1px solid #e6e9f0;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 16px;
     padding: 0.6rem;
-    box-shadow: 0 8px 24px rgba(20, 40, 80, 0.05);
+    box-shadow: 0 8px 24px rgba($blue-800, 0.05);
   }
 
   &__nav-item {
@@ -131,19 +131,19 @@
     border: 0;
     border-radius: 10px;
     padding: 0.7rem 0.85rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-weight: 600;
     font-size: 0.92rem;
     cursor: pointer;
     transition: background 0.12s ease, color 0.12s ease;
 
     &:hover {
-      background: #f4f6f9;
-      color: $dark-gray;
+      background: $gray-50;
+      color: $ink;
     }
 
     &.is-active {
-      background: #e2f1f3;
+      background: $cyan-50;
       color: $primary;
     }
   }
@@ -168,8 +168,8 @@
   }
 
   &__fin-tile {
-    background: #f6f8fb;
-    border: 1px solid #e6e9f0;
+    background: $gray-50;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 1rem 1.15rem;
     display: flex;
@@ -177,7 +177,7 @@
     gap: 0.2rem;
 
     &--muted {
-      background: #fafbfc;
+      background: $white;
       border-style: dashed;
     }
   }
@@ -185,17 +185,17 @@
   &__fin-value {
     font-size: 1.7rem;
     font-weight: 800;
-    color: #1e2530;
+    color: $gray-900;
     line-height: 1;
 
     &--warn {
-      color: #b9770a;
+      color: $orange-600;
     }
   }
 
   &__fin-label {
     font-size: 0.82rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
   }
 
   &__fin-note {
@@ -204,7 +204,7 @@
     gap: 0.4rem;
     margin: 1rem 0 0;
     font-size: 0.85rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
 
     svg {
       flex-shrink: 0;
@@ -241,7 +241,7 @@
       align-items: center;
       gap: 0.6rem;
       font-size: 0.9rem;
-      color: $dark-gray;
+      color: $ink;
 
       b {
         margin-left: auto;
@@ -270,32 +270,32 @@
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: #eef2fa;
+    background: $blue-100;
     flex-shrink: 0;
 
     &--teal {
-      background: #e2f1f3;
+      background: $cyan-50;
     }
 
     &--warn {
-      background: #f8eddb;
+      background: $danger-light;
     }
 
     &--blue {
-      background: #e7edfb;
+      background: $blue-100;
     }
   }
 
   &__empty {
     text-align: center;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     padding: 3rem 0;
     margin: 0;
   }
 
   &__table-wrap {
     background: $white;
-    border: 1px solid #e6e9f0;
+    border: 1px solid $gray-200;
     border-radius: 14px;
     overflow: hidden;
   }
@@ -313,9 +313,9 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
       font-weight: 700;
-      color: $alternate-dark-gray;
-      background: #f6f8fb;
-      border-bottom: 1px solid #e6e9f0;
+      color: $gray-500-2;
+      background: $gray-50;
+      border-bottom: 1px solid $gray-200;
       padding-top: 0.85rem;
       padding-bottom: 0.85rem;
     }
@@ -331,7 +331,7 @@
 
     code {
       color: $primary;
-      background: #eef7f8;
+      background: $blue-100;
       padding: 0.1rem 0.4rem;
       border-radius: 6px;
       font-size: 0.82rem;
@@ -339,7 +339,7 @@
   }
 
   &__form-readonly {
-    color: $dark-gray;
+    color: $ink;
     font-weight: 600;
   }
 
@@ -350,7 +350,7 @@
     gap: 0.75rem;
     padding: 4rem 1.5rem;
     text-align: center;
-    color: $dark-gray;
+    color: $ink;
 
     p {
       margin: 0;
@@ -363,11 +363,11 @@
   &__orgs,
   &__faqs,
   &__system {
-    background: #fff;
-    border: 1px solid #e6e9f0;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 16px;
     padding: 1.4rem 1.5rem 1.6rem;
-    box-shadow: 0 8px 24px rgba(20, 40, 80, 0.05);
+    box-shadow: 0 8px 24px rgba($blue-800, 0.05);
     margin: 0;
   }
 
@@ -379,8 +379,8 @@
   }
 
   &__growth-chart {
-    background: #f6f8fb;
-    border: 1px solid #e6e9f0;
+    background: $gray-50;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 0.9rem 1rem 0.5rem;
   }
@@ -388,7 +388,7 @@
   &__growth-title {
     font-size: 0.85rem;
     font-weight: 700;
-    color: $dark-gray;
+    color: $ink;
     margin: 0 0 0.35rem;
   }
 
@@ -405,18 +405,18 @@
     gap: 0.75rem;
     width: 100%;
     text-align: left;
-    background: #fff;
-    border: 1px solid #e6e9f0;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 11px;
     padding: 0.85rem 1rem;
     font-weight: 600;
-    color: $dark-gray;
+    color: $ink;
     cursor: pointer;
     transition: border-color 0.15s ease, background 0.15s ease;
 
     &:hover {
       border-color: $primary;
-      background: #f6f8fb;
+      background: $gray-50;
     }
   }
 
@@ -428,10 +428,10 @@
   }
 
   &__role-card {
-    border: 1px solid #e6e9f0;
+    border: 1px solid $gray-200;
     border-radius: 13px;
     padding: 1.1rem 1.2rem;
-    background: #fff;
+    background: $white;
   }
 
   &__role-head {
@@ -445,7 +445,7 @@
       margin: 0;
       font-weight: 800;
       font-size: 1.05rem;
-      color: $dark-gray;
+      color: $ink;
     }
   }
 
@@ -459,14 +459,14 @@
     font-size: 0.78rem;
     font-weight: 600;
     color: $primary;
-    background: #e2f1f3;
+    background: $cyan-50;
     border-radius: 999px;
     padding: 0.25rem 0.65rem;
   }
 
   &__role-empty {
     font-size: 0.85rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-style: italic;
   }
 
@@ -482,7 +482,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: $dark-gray;
+    color: $ink;
     cursor: pointer;
     padding: 0.35rem 0;
 
@@ -505,19 +505,19 @@
     grid-template-areas: 'dot name' 'desc desc';
     gap: 0.3rem 0.55rem;
     text-align: left;
-    background: #fff;
-    border: 2px solid $alternate-light-gray;
+    background: $white;
+    border: 2px solid $gray-100;
     border-radius: 13px;
     padding: 1rem 1.15rem;
     cursor: pointer;
     transition: border-color 0.15s ease, background 0.15s ease;
 
     &.is-active {
-      background: #f6f8fb;
+      background: $gray-50;
     }
-    &.is-good.is-active { border-color: #1f8a4c; }
-    &.is-warn.is-active { border-color: #b9770a; }
-    &.is-danger.is-active { border-color: #c0392b; }
+    &.is-good.is-active { border-color: $whatsapp; }
+    &.is-warn.is-active { border-color: $orange-600; }
+    &.is-danger.is-active { border-color: $red-500; }
   }
 
   &__stage-dot {
@@ -525,25 +525,25 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: $medium-gray;
+    background: $gray-300;
     align-self: center;
 
-    .is-good & { background: #1f8a4c; }
-    .is-warn & { background: #b9770a; }
-    .is-danger & { background: #c0392b; }
+    .is-good & { background: $whatsapp; }
+    .is-warn & { background: $orange-600; }
+    .is-danger & { background: $red-500; }
   }
 
   &__stage-name {
     grid-area: name;
     font-weight: 800;
-    color: $dark-gray;
+    color: $ink;
     align-self: center;
   }
 
   &__stage-desc {
     grid-area: desc;
     font-size: 0.82rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     line-height: 1.45;
   }
 
@@ -554,14 +554,14 @@
     margin: 0;
     font-size: 1.15rem;
     font-weight: 800;
-    color: $dark-gray;
+    color: $ink;
   }
 
   &__billing-subtitle,
   &__pricing-subtitle,
   &__faqs-subtitle {
     margin: 0.5rem 0 1.1rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     font-size: 0.9rem;
   }
 
@@ -580,8 +580,8 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    background: #f6f8fb;
-    border: 1px solid #e6e9f0;
+    background: $gray-50;
+    border: 1px solid $gray-200;
     border-radius: 12px;
     padding: 0.6rem 1rem;
   }
@@ -589,12 +589,12 @@
   &__billing-tile-value {
     font-size: 1.4rem;
     font-weight: 800;
-    color: #1e2530;
+    color: $gray-900;
     line-height: 1;
   }
 
   &__billing-empty {
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     padding: 0.5rem 0;
     margin: 0;
   }
@@ -612,8 +612,8 @@
     margin: 1.5rem 0 0.75rem;
     font-weight: 700;
     font-size: 0.95rem;
-    color: $dark-gray;
-    border-top: 1px dashed #d9e2f3;
+    color: $ink;
+    border-top: 1px dashed $gray-200;
     padding-top: 1.1rem;
   }
 
@@ -634,7 +634,7 @@
 
   &__faqs-list {
     .accordion-item {
-      border: 1px solid #e6e9f0;
+      border: 1px solid $gray-200;
       border-radius: 12px !important;
       margin-bottom: 0.6rem;
       overflow: hidden;
@@ -642,10 +642,10 @@
 
     .accordion-button {
       font-weight: 600;
-      color: $dark-gray;
+      color: $ink;
 
       &:not(.collapsed) {
-        background: #eef7f8;
+        background: $blue-100;
         color: $primary;
         box-shadow: none;
       }

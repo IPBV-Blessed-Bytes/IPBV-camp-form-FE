@@ -2,29 +2,29 @@
 
 .manual {
   --m-accent: #{$primary};
-  --m-accent-strong: #005c6b;
-  --m-accent-soft: #e2f1f3;
+  --m-accent-strong: $primary-dark;
+  --m-accent-soft: $cyan-50;
   --m-blue: #{$blue};
-  --m-ink: #1e2530;
-  --m-muted: #5b6674;
-  --m-faint: #8a94a3;
-  --m-border: #e2e6ee;
-  --m-border-strong: #cdd4e0;
-  --m-surface: #fff;
-  --m-surface-2: #f1f4f8;
-  --m-good: #1f8a4c;
-  --m-good-soft: #e2f2e8;
-  --m-warn: #b9770a;
-  --m-warn-soft: #f8eddb;
-  --m-danger: #c0392b;
-  --m-danger-soft: #f8e4e1;
-  --m-shadow: 0 1px 2px rgba(24, 33, 56, .06), 0 8px 24px -12px rgba(24, 33, 56, .18);
+  --m-ink: $gray-900;
+  --m-muted: $gray-600;
+  --m-faint: $blue-400-2;
+  --m-border: $gray-200;
+  --m-border-strong: $gray-300;
+  --m-surface: $white;
+  --m-surface-2: $blue-100;
+  --m-good: $whatsapp;
+  --m-good-soft: $mint-50;
+  --m-warn: $orange-600;
+  --m-warn-soft: $danger-light;
+  --m-danger: $red-500;
+  --m-danger-soft: $danger-light;
+  --m-shadow: 0 1px 2px rgba($gray-900, .06), 0 8px 24px -12px rgba($gray-900, .18);
 
   color: var(--m-ink);
   padding-bottom: 60px;
 
   &--public {
-    background: $background-gray;
+    background: $gray-50;
     min-height: 100vh;
     padding-bottom: 0;
 
@@ -73,8 +73,8 @@
     &:hover { color: var(--m-ink); }
     &.is-active {
       color: var(--m-accent-strong);
-      background: #fff;
-      box-shadow: 0 1px 3px rgba(24, 33, 56, .12);
+      background: $white;
+      box-shadow: 0 1px 3px rgba($gray-900, .12);
     }
   }
 
@@ -129,11 +129,11 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(120deg, var(--m-accent-strong) 0%, var(--m-accent) 45%, var(--m-blue) 100%);
-    color: #fff;
+    color: $white;
     border: 0;
     border-radius: 20px;
     padding: 34px 36px;
-    box-shadow: 0 14px 34px -14px rgba(0, 92, 107, 0.55);
+    box-shadow: 0 14px 34px -14px rgba($primary-dark, 0.55);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -142,26 +142,26 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(520px 180px at 88% -40%, rgba(255, 255, 255, 0.18), transparent 70%);
+      background: radial-gradient(520px 180px at 88% -40%, rgba($white, 0.18), transparent 70%);
       pointer-events: none;
     }
   }
   &__eyebrow {
     position: relative;
     align-self: flex-start;
-    color: #fff;
+    color: $white;
     font-weight: 700;
     font-size: 12px;
     letter-spacing: .08em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba($white, 0.16);
+    border: 1px solid rgba($white, 0.28);
     padding: 4px 12px;
     border-radius: 999px;
   }
-  &__hero h1 { position: relative; font-size: clamp(24px, 4vw, 34px); margin: 0; letter-spacing: -.02em; line-height: 1.14; color: #fff; }
-  &__lede { position: relative; font-size: 17px; color: rgba(255, 255, 255, 0.92); max-width: 68ch; margin: 0; }
-  &__lede strong { color: #fff; font-weight: 700; }
+  &__hero h1 { position: relative; font-size: clamp(24px, 4vw, 34px); margin: 0; letter-spacing: -.02em; line-height: 1.14; color: $white; }
+  &__lede { position: relative; font-size: 17px; color: rgba($white, 0.92); max-width: 68ch; margin: 0; }
+  &__lede strong { color: $white; font-weight: 700; }
 
   section.manual__doc { scroll-margin-top: 16px; }
   &__doc h2 {
@@ -197,14 +197,14 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    box-shadow: 0 1px 2px rgba(24, 33, 56, .04);
+    box-shadow: 0 1px 2px rgba($gray-900, .04);
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
     h4 { margin: 0; font-size: 15px; font-weight: 700; }
     p { margin: 0; font-size: 13.5px; color: var(--m-muted); max-width: none; line-height: 1.5; }
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 26px -14px rgba(24, 33, 56, .35);
+      box-shadow: 0 10px 26px -14px rgba($gray-900, .35);
       border-color: var(--m-border-strong);
     }
   }

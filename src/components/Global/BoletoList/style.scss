@@ -6,7 +6,7 @@
   }
 
   &__progress-track {
-    background: $alternate-light-gray;
+    background: $gray-100;
     border-radius: 999px;
     height: 10px;
     overflow: hidden;
@@ -36,25 +36,25 @@
 
 .boleto-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-left: 5px solid $primary;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   padding: 1.15rem 1.25rem;
 
   &.is-paid {
-    border-left-color: #2e7d32;
+    border-left-color: $success-dark;
   }
 
   &.is-overdue {
-    border-left-color: #c62828;
+    border-left-color: $danger-dark;
   }
 
   &.is-canceled {
-    border-left-color: #6c757d;
+    border-left-color: $gray-500;
   }
 
   &__top {
@@ -64,7 +64,7 @@
   }
 
   &__seq {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.05rem;
     font-weight: 700;
   }
@@ -76,28 +76,28 @@
     padding: 0.2rem 0.7rem;
 
     &.is-pending {
-      background: rgba(#f0ad4e, 0.18);
-      color: #9a6a00;
+      background: rgba($amber, 0.18);
+      color: $orange-700-2;
     }
 
     &.is-paid {
-      background: rgba(#2e7d32, 0.15);
-      color: #2e7d32;
+      background: rgba($success-dark, 0.15);
+      color: $success-dark;
     }
 
     &.is-overdue {
-      background: rgba(#c62828, 0.15);
-      color: #c62828;
+      background: rgba($danger-dark, 0.15);
+      color: $danger-dark;
     }
 
     &.is-canceled {
-      background: rgba(#6c757d, 0.15);
-      color: #6c757d;
+      background: rgba($gray-500, 0.15);
+      color: $gray-500;
     }
   }
 
   &__amount {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.6rem;
     font-weight: 800;
     line-height: 1;
@@ -105,7 +105,7 @@
 
   &__due {
     align-items: center;
-    color: #6c757d;
+    color: $gray-500;
     display: flex;
     font-size: 0.9rem;
     gap: 0.4rem;
@@ -131,7 +131,7 @@
   }
 
   &__line-text {
-    color: $dark-gray;
+    color: $ink;
     font-family: 'Courier New', monospace;
     font-size: 0.78rem;
     overflow: hidden;
@@ -200,7 +200,7 @@
   background: rgba($primary, 0.06);
   border: 1px solid rgba($primary, 0.3);
   border-radius: 10px;
-  color: $dark-gray;
+  color: $ink;
   display: flex;
   font-size: 0.88rem;
   gap: 0.5rem;

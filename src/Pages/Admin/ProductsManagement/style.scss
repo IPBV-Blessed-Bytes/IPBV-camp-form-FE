@@ -26,10 +26,10 @@
     gap: 2px;
     min-width: 96px;
     padding: 6px 10px;
-    border: 1px solid #d9e2e6;
-    border-left: 3px solid #007185;
+    border: 1px solid $green-100;
+    border-left: 3px solid $primary;
     border-radius: 8px;
-    background: #f6fafb;
+    background: $gray-50;
     line-height: 1.2;
 
     &__name {
@@ -37,24 +37,24 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.02em;
-      color: #6c757d;
+      color: $gray-500;
     }
 
     &__value {
       font-size: 0.95rem;
       font-weight: 700;
-      color: #007185;
+      color: $primary;
     }
 
     &__vacancies {
       font-size: 0.72rem;
-      color: #6c757d;
+      color: $gray-500;
     }
   }
 }
 
 .age-rules__hint {
-  color: #6c757d;
+  color: $gray-500;
   font-size: 0.85rem;
   margin: 0.25rem 0 1rem;
 }
@@ -66,10 +66,10 @@
   margin-bottom: 1.5rem;
 
   &__product {
-    border: 1px solid #d9e2e6;
-    border-left: 3px solid #007185;
+    border: 1px solid $green-100;
+    border-left: 3px solid $primary;
     border-radius: 10px;
-    background: #f6fafb;
+    background: $gray-50;
     padding: 12px 14px;
   }
 
@@ -83,11 +83,11 @@
 
   &__product-name {
     font-weight: 700;
-    color: #33484f;
+    color: $gray-800;
   }
 
   &__product-cat {
-    border: 1px solid #d9e2e6;
+    border: 1px solid $green-100;
     font-size: 0.68rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -95,7 +95,7 @@
   }
 
   &__empty {
-    color: #99a4a8;
+    color: $gray-400;
     font-size: 0.82rem;
     font-style: italic;
     margin-bottom: 10px;
@@ -107,7 +107,7 @@
     gap: 8px;
     justify-content: space-between;
     padding: 5px 0;
-    border-bottom: 1px dashed #dbe4e7;
+    border-bottom: 1px dashed $gray-200;
 
     &:last-of-type {
       border-bottom: none;
@@ -115,7 +115,7 @@
   }
 
   &__label {
-    color: #33484f;
+    color: $gray-800;
     font-size: 0.9rem;
   }
 
@@ -157,16 +157,16 @@
     padding: 2px;
 
     .lot-price-card {
-      border: 1px solid #d9e2e6;
-      border-left: 3px solid #007185;
+      border: 1px solid $green-100;
+      border-left: 3px solid $primary;
       border-radius: 8px;
       padding: 10px 12px;
-      background: #f6fafb;
+      background: $gray-50;
 
       &__name {
         font-weight: 600;
         margin-bottom: 8px;
-        color: #33484f;
+        color: $gray-800;
       }
 
       &__fields {
@@ -195,16 +195,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
-    border: 2px solid #e6e8ee;
+    background: $white;
+    border: 2px solid $gray-200;
     border-radius: 10px;
     cursor: pointer;
-    color: #555050;
+    color: $ink;
     font-weight: 700;
     transition: border-color 0.12s ease, background 0.12s ease;
 
-    &:hover { border-color: #b9c2d0; }
-    &.is-active { border-color: #007185; background: #e2f1f3; }
+    &:hover { border-color: $blue-200; }
+    &.is-active { border-color: $primary; background: $cyan-50; }
   }
 }
 
@@ -219,7 +219,7 @@
     height: 100px;
     object-fit: cover;
     border-radius: 10px;
-    border: 1px solid #e6e8ee;
+    border: 1px solid $gray-200;
   }
 
   &__actions {

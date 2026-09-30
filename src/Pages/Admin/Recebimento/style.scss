@@ -11,15 +11,15 @@
     display: flex;
     align-items: flex-start;
     gap: 0.9rem;
-    background: #eef7f9;
-    border: 1px solid #cfe6ea;
+    background: $blue-50;
+    border: 1px solid $teal-100;
     border-radius: 12px;
     padding: 1rem 1.2rem;
     margin-bottom: 1.5rem;
 
     p {
       margin: 0;
-      color: #38474d;
+      color: $gray-800;
       line-height: 1.55;
     }
   }
@@ -31,7 +31,7 @@
     display: grid;
     place-items: center;
     border-radius: 0.7rem;
-    background: #e3f1f4;
+    background: $cyan-50;
   }
 
   &__form {
@@ -51,7 +51,7 @@
     max-width: 520px;
     margin: 1rem auto;
     background: $white;
-    border: 1px solid #e2e6ee;
+    border: 1px solid $gray-200;
     border-radius: 14px;
     padding: 2.5rem 2rem;
 
@@ -61,7 +61,7 @@
     }
 
     p {
-      color: $dark-gray;
+      color: $ink;
       margin: 0;
     }
   }

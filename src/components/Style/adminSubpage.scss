@@ -23,7 +23,7 @@ $admin-accents: (
 .admin-subpage {
   --admin-accent: #{$primary};
 
-  background: $background-gray;
+  background: $gray-50;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -73,7 +73,7 @@ $admin-accents: (
     align-items: center;
     background: var(--admin-accent);
     border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 16px rgba($black, 0.12);
     display: flex;
     flex-shrink: 0;
     height: 60px;
@@ -94,7 +94,7 @@ $admin-accents: (
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.45rem;
     font-weight: 700;
     margin: 0;
@@ -105,7 +105,7 @@ $admin-accents: (
   }
 
   &__subtitle {
-    color: #455a64;
+    color: $gray-700;
     font-size: 0.9rem;
     margin: 0;
   }
@@ -113,9 +113,9 @@ $admin-accents: (
   &__back {
     align-items: center;
     background: $white;
-    border: 1px solid $alternate-light-gray;
+    border: 1px solid $gray-100;
     border-radius: 999px;
-    color: $dark-gray;
+    color: $ink;
     cursor: pointer;
     display: inline-flex;
     flex-shrink: 0;
@@ -126,8 +126,8 @@ $admin-accents: (
     transition: all 0.2s ease;
 
     &:hover {
-      background: $hover-gray;
-      border-color: $border-gray;
+      background: $gray-100;
+      border-color: $gray-300;
       transform: translateX(-2px);
     }
   }
@@ -166,21 +166,21 @@ $admin-accents: (
 
 .admin-table-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   overflow: hidden;
 }
 
 .admin-panel {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   padding: 1.5rem;
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1rem;
     font-weight: 700;
     margin: 0 0 1rem;
@@ -194,7 +194,7 @@ $admin-accents: (
   }
 
   .custom-table {
-    --bs-border-color: #{$alternate-gray};
+    --bs-border-color: #{$gray-200};
     margin-bottom: 0;
   }
 
@@ -204,6 +204,6 @@ $admin-accents: (
   }
 
   .custom-table > :not(caption) > * > * {
-    border-color: $alternate-gray;
+    border-color: $gray-200;
   }
 }

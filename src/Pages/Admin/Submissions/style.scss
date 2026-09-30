@@ -1,3 +1,4 @@
+@use '../../../styles/Variables.scss' as *;
 .admin-submissions {
   &__actions {
     align-items: center;
@@ -23,19 +24,19 @@
   }
 
   &__count {
-    color: #6c757d;
+    color: $gray-500;
     font-weight: 600;
   }
 
   &__empty {
     text-align: left;
-    color: #495057;
+    color: $ink;
     padding: 2rem 0;
   }
 
   &__table-wrap {
     overflow-x: auto;
-    background: #fff;
+    background: $white;
     border-radius: 10px;
   }
 
@@ -48,7 +49,7 @@
   }
 
   &__admin-col {
-    background-color: #f4f2fb;
+    background-color: $blue-100;
   }
 
   &__admin-tag {
@@ -56,8 +57,8 @@
     margin-left: 0.35rem;
     padding: 0 0.4rem;
     border-radius: 10px;
-    background: #ede9f8;
-    color: #5c6bc0;
+    background: $blue-100;
+    color: $blue-400;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -67,12 +68,12 @@
   &__admin-section {
     margin-top: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px dashed #cdc7e6;
+    border-top: 1px dashed $indigo-200;
   }
 
   &__admin-section-title {
     margin: 0 0 0.75rem;
     font-weight: 700;
-    color: #5c6bc0;
+    color: $blue-400;
   }
 }

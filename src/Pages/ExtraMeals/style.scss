@@ -2,11 +2,11 @@
 
 .checkbox-error {
   input {
-    border-color: $red;
+    border-color: $danger;
   }
 
   label {
-    color: $red;
+    color: $danger;
   }
 }
 
@@ -15,5 +15,5 @@
 }
 
 .text-success-custom {
-  color: $dark-green !important;
+  color: $olive !important;
 }

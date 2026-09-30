@@ -9,44 +9,44 @@
 
 .stat-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-left: 4px solid $primary;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba($black, 0.04);
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   padding: 0.85rem 1rem;
 
   &__value {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
   }
 
   &__label {
-    color: #455a64;
+    color: $gray-700;
     font-size: 0.78rem;
   }
 
   &--used {
-    border-left-color: #f0ad4e;
+    border-left-color: $amber;
   }
 
   &--free {
-    border-left-color: #28a745;
+    border-left-color: $success;
   }
 
   &--danger {
-    border-left-color: #dc3545;
+    border-left-color: $danger;
   }
 
   &--info {
-    border-left-color: #0dcaf0;
+    border-left-color: $info;
   }
 
   &--accent {
-    border-left-color: #6f42c1;
+    border-left-color: $purple;
   }
 }

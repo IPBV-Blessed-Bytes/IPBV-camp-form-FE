@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0c3a52, $blue);
+  background: linear-gradient(135deg, $primary-darkest, $blue);
   padding: 2rem 1rem;
 
   &__card {
@@ -33,7 +33,7 @@
     width: 76px;
     height: 76px;
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba($white, 0.15);
+    border: 1px solid rgba($white, 0.28);
   }
 }

@@ -13,15 +13,15 @@
   }
 
   &--info {
-    background: $newborn-blue;
-    border: 1px solid #bcdcf0;
+    background: $blue-50;
+    border: 1px solid $blue-200-2;
     border-left: 5px solid $primary;
   }
 
   &--warn {
-    background: #fff6e5;
-    border: 1px solid #f0c98a;
-    border-left: 5px solid #e0a800;
+    background: $cream;
+    border: 1px solid $orange-300;
+    border-left: 5px solid $gold-600-2;
   }
 
   &__text {
@@ -31,11 +31,11 @@
     flex: 1;
 
     strong {
-      color: $dark-gray;
+      color: $ink;
     }
 
     span {
-      color: $alternate-dark-gray;
+      color: $gray-500-2;
       font-size: 0.9rem;
     }
   }
@@ -56,7 +56,7 @@
     flex-direction: column;
     gap: 0.15rem;
     padding: 0.85rem;
-    border: 2px solid $alternate-light-gray;
+    border: 2px solid $gray-100;
     border-radius: 12px;
     background: $white;
     cursor: pointer;
@@ -64,7 +64,7 @@
 
     &.is-active {
       border-color: $primary;
-      background: $newborn-blue;
+      background: $blue-50;
     }
   }
 
@@ -76,7 +76,7 @@
 
   &__plan-name {
     font-size: 0.82rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
   }
 
   &__result {
@@ -88,7 +88,7 @@
 
   &__result-note {
     font-size: 0.9rem;
-    color: $alternate-dark-gray;
+    color: $gray-500-2;
     margin: 0;
   }
 

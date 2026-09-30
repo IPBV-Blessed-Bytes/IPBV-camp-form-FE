@@ -3,7 +3,7 @@
 .search-box {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 10px;
   display: flex;
   gap: 0.5rem;
@@ -13,7 +13,7 @@
   input {
     background: transparent;
     border: none;
-    color: $dark-gray;
+    color: $ink;
     outline: none;
     width: 100%;
   }
