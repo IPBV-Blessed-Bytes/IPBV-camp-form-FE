@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Badge, Form, InputGroup } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@/services/submissions';
 import { parseCheckoutQr } from '@/utils/checkinQr';
 import { registerLog } from '@/services/logs';
+import { formatValue } from '@/form/dynamic/formatAnswer';
 import useEventSchema from '@/hooks/useEventSchema';
 import scrollUp from '@/hooks/useScrollUp';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -18,6 +19,21 @@ import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import QrScannerModal from '@/components/Global/QrScannerModal';
 import CheckinReviewModal from '@/components/Global/CheckinReviewModal';
+import '@/Pages/Admin/Checkin/style.scss';
+
+const PAYMENT_STATUS_LABEL = { paid: 'Pago', pending: 'Pendente', refunded: 'Reembolsado', cancelled: 'Cancelado' };
+const PAYMENT_METHOD_LABEL = {
+  credit_card: 'Cartão de Crédito',
+  creditCard: 'Cartão de Crédito',
+  pix: 'PIX',
+  boleto: 'Boleto',
+  ticket: 'Boleto',
+};
+
+const formatBrl = (cents) =>
+  cents == null ? '-' : (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const onlyDigits = (value) => String(value || '').replace(/\D/g, '');
 
 const mapPerson = (submission) => ({
   id: submission.id,
@@ -37,7 +53,10 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
   const { fields } = useEventSchema();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [orderInput, setOrderInput] = useState('');
+  const [term, setTerm] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [updating, setUpdating] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [reviewOrder, setReviewOrder] = useState(null);
   const [reviewPeople, setReviewPeople] = useState([]);
@@ -46,7 +65,6 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
   scrollUp();
 
   const load = async () => {
-    setLoading(true);
     try {
       setSubmissions(await listSubmissions());
     } catch {
@@ -63,12 +81,57 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
   const statItems = useMemo(() => {
     const total = submissions.length;
     const done = submissions.filter((s) => s.checkin).length;
+    const percent = total ? Math.round((done / total) * 100) : 0;
     return [
-      { label: 'Inscrições', value: total, tone: 'accent' },
-      { label: 'Check-in feito', value: done, tone: 'used' },
-      { label: 'Pendentes', value: total - done, tone: 'available' },
+      { label: 'Total de inscritos', value: total },
+      { label: 'Com check-in', value: done, tone: 'free' },
+      { label: 'Pendentes', value: total - done, tone: 'used' },
+      { label: '% concluído', value: `${percent}%`, tone: 'info' },
     ];
   }, [submissions]);
+
+  const matches = useMemo(() => {
+    const q = term.trim().toLowerCase();
+    if (q.length < 2) return [];
+    const qDigits = onlyDigits(q);
+    return submissions
+      .filter((s) => {
+        const name = String(s.answers?.nome || '').toLowerCase();
+        const cpf = onlyDigits(s.answers?.cpf);
+        return name.includes(q) || (qDigits && cpf.includes(qDigits));
+      })
+      .slice(0, 12);
+  }, [term, submissions]);
+
+  const selectPerson = (submission) => {
+    setSelected(mapPerson(submission));
+    setTerm(submission.answers?.nome || submission.answers?.cpf || '');
+    setShowSuggestions(false);
+  };
+
+  const clearSearch = () => {
+    setTerm('');
+    setSelected(null);
+    setShowSuggestions(false);
+  };
+
+  const toggleSelectedCheckin = async () => {
+    if (!selected) return;
+    setUpdating(true);
+    try {
+      const next = !selected.checkin;
+      await checkinSubmission(selected.id, next);
+      registerLog(`${next ? 'Fez' : 'Desfez'} check-in de ${selected.name || selected.cpf}`, loggedUsername);
+      const fresh = await listSubmissions();
+      setSubmissions(fresh);
+      const updated = fresh.find((s) => s.id === selected.id);
+      if (updated) setSelected(mapPerson(updated));
+    } catch {
+      toast.error('Erro ao atualizar o check-in.');
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const openReview = async (orderNumber) => {
     if (!orderNumber) return;
@@ -140,24 +203,14 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
     }
   };
 
-  const toggleRow = async (submission) => {
-    try {
-      await checkinSubmission(submission.id, !submission.checkin);
-      const name = submission.answers?.nome || submission.answers?.cpf || `#${submission.id}`;
-      registerLog(`${submission.checkin ? 'Desfez' : 'Fez'} check-in de ${name}`, loggedUsername);
-      await load();
-    } catch {
-      toast.error('Erro ao atualizar o check-in.');
-    }
-  };
-
   return (
     <div className="admin-subpage admin-subpage--checkin">
       <AdminSubpageHeader
+        sessionKey="checkin"
         username={loggedUsername}
         title="Check-in"
-        subtitle="Escaneie o QR do pedido (família) ou faça check-in individual pela lista."
-        typeIcon="camera"
+        subtitle="Busque o inscrito por nome/CPF ou escaneie o QR do pedido (família)."
+        typeIcon="checkin"
       />
 
       <div className="admin-subpage__content">
@@ -167,71 +220,124 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
           <>
             <StatCards items={statItems} />
 
-            <div className="d-flex flex-wrap gap-2 align-items-end mb-3">
-              <Button variant="teal-blue" onClick={() => setShowScanner(true)}>
-                <Icons typeIcon="camera" iconSize={18} fill="#fff" /> Escanear QR do pedido
-              </Button>
-              <Form.Group>
-                <Form.Label className="small mb-1">Ou informe o nº do pedido</Form.Label>
-                <InputGroup>
+            <div className="admin-panel checkin-search">
+              <Form.Group controlId="checkin-search">
+                <Form.Label>
+                  <b>Buscar inscrito (nome ou CPF):</b>
+                </Form.Label>
+                <div className="cpf-input-wrapper">
                   <Form.Control
-                    value={orderInput}
-                    onChange={(e) => setOrderInput(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Nº do pedido"
+                    autoComplete="off"
+                    type="text"
+                    placeholder="Digite o nome ou CPF"
+                    value={term}
+                    size="lg"
+                    onChange={(e) => {
+                      setTerm(e.target.value);
+                      setSelected(null);
+                      setShowSuggestions(true);
+                    }}
                   />
-                  <Button variant="outline-teal-blue" onClick={() => openReview(orderInput)}>
-                    Buscar
-                  </Button>
-                </InputGroup>
+                  {term && (
+                    <button aria-label="Limpar" className="cpf-clear-button" type="button" onClick={clearSearch}>
+                      <Icons typeIcon="close" iconSize={30} fill="#6c757d" />
+                    </button>
+                  )}
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline-teal-blue"
+                  className="w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
+                  onClick={() => setShowScanner(true)}
+                >
+                  <Icons typeIcon="camera" iconSize={20} fill="#007185" />
+                  Escanear QR do pedido (família)
+                </Button>
+
+                {showSuggestions && !selected && term.trim().length >= 2 && (
+                  <div className="cpf-suggestions">
+                    {matches.length > 0 ? (
+                      matches.map((s) => (
+                        <div key={s.id} className="cpf-suggestions-item" onClick={() => selectPerson(s)}>
+                          <strong>{s.answers?.nome || 'Sem nome'}</strong>
+                          <span>{s.answers?.cpf || '—'}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="cpf-suggestions-empty">Nenhum inscrito encontrado</div>
+                    )}
+                  </div>
+                )}
               </Form.Group>
             </div>
 
-            <div className="admin-table-card">
-              <Table striped bordered hover responsive className="custom-table">
-                <thead>
-                  <tr>
-                    <th className="table-cells-header">Inscrito:</th>
-                    <th className="table-cells-header">CPF:</th>
-                    <th className="table-cells-header">Pedido:</th>
-                    <th className="table-cells-header">Check-in:</th>
-                    <th className="table-cells-header">Ação:</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {submissions.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-start text-secondary p-4">
-                        Nenhuma inscrição
-                      </td>
-                    </tr>
-                  ) : (
-                    submissions.map((submission) => (
-                      <tr key={submission.id}>
-                        <td>{submission.answers?.nome || '—'}</td>
-                        <td>{submission.answers?.cpf || '—'}</td>
-                        <td>{submission.orderNumber || '—'}</td>
-                        <td>
-                          {submission.checkin ? (
-                            <Badge bg="success">Presente</Badge>
-                          ) : (
-                            <Badge bg="secondary">Pendente</Badge>
-                          )}
-                        </td>
-                        <td>
-                          <Button
-                            size="sm"
-                            variant={submission.checkin ? 'outline-secondary' : 'outline-teal-blue'}
-                            onClick={() => toggleRow(submission)}
-                          >
-                            {submission.checkin ? 'Desfazer' : 'Check-in'}
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </Table>
-            </div>
+            {selected && (
+              <div className="admin-panel checkin-user">
+                <div className="checkin-user__head">
+                  <div className="checkin-user__identity">
+                    <span className="checkin-user__eyebrow">Inscrito</span>
+                    <h2 className="checkin-user__name">{selected.name || 'Sem nome'}</h2>
+                  </div>
+                  <span className={`checkin-status-badge checkin-status-badge--${selected.checkin ? 'in' : 'out'}`}>
+                    <Icons
+                      typeIcon={selected.checkin ? 'checked' : 'close'}
+                      iconSize={16}
+                      fill={selected.checkin ? '#0c9183' : '#d32f2f'}
+                    />
+                    {selected.checkin ? 'Check-in feito' : 'Sem check-in'}
+                  </span>
+                </div>
+
+                <div className="checkin-info">
+                  {fields.map((field) => (
+                    <div className="checkin-info__item" key={field.key}>
+                      <span className="checkin-info__label">{field.label}</span>
+                      <span className="checkin-info__value">
+                        {formatValue(field, selected.answers?.[field.key]) || '-'}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="checkin-info__item">
+                    <span className="checkin-info__label">Pedido</span>
+                    <span className="checkin-info__value">{selected.orderNumber || '-'}</span>
+                  </div>
+                  <div className="checkin-info__item">
+                    <span className="checkin-info__label">Pagamento</span>
+                    <span className="checkin-info__value">
+                      {PAYMENT_STATUS_LABEL[selected.paymentStatus] || selected.paymentStatus || '-'}
+                    </span>
+                  </div>
+                  <div className="checkin-info__item">
+                    <span className="checkin-info__label">Forma de pagamento</span>
+                    <span className="checkin-info__value">
+                      {PAYMENT_METHOD_LABEL[selected.paymentMethod] || selected.paymentMethod || '-'}
+                    </span>
+                  </div>
+                  <div className="checkin-info__item">
+                    <span className="checkin-info__label">Valor</span>
+                    <span className="checkin-info__value">{formatBrl(selected.totalCents)}</span>
+                  </div>
+                </div>
+
+                <div className="checkin-user__action">
+                  <Button
+                    variant={selected.checkin ? 'outline-danger' : 'teal-blue'}
+                    onClick={toggleSelectedCheckin}
+                    size="lg"
+                    disabled={updating}
+                    className="checkin-user__submit"
+                  >
+                    <Icons
+                      typeIcon={selected.checkin ? 'close' : 'checked'}
+                      iconSize={20}
+                      fill={selected.checkin ? '#d32f2f' : '#fff'}
+                    />
+                    <span>&nbsp;{selected.checkin ? 'Desfazer check-in' : 'Confirmar check-in'}</span>
+                  </Button>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

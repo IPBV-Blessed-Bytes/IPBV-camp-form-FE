@@ -399,14 +399,6 @@ const AdminLoggedIn = ({
       iconSize: 50,
     },
     {
-      permission: checkinPermissions,
-      path: 'checkin-inscricoes',
-      cardType: 'checkin-card',
-      title: 'Check-in inscrições',
-      typeIcon: 'camera',
-      iconSize: 40,
-    },
-    {
       permission: registeredButtonHomePermissions,
       path: 'boletos',
       cardType: 'boletos-card',

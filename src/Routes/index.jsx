@@ -43,7 +43,6 @@ const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
 const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
 const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
-const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
 const AdminCheckinSubmissions = lazy(() => import('@/Pages/Admin/CheckinSubmissions'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
@@ -320,14 +319,6 @@ const FormRoutes = () => {
             />
             <Route
               path={adminPath('/checkin')}
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
-                  <AdminCheckin formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/checkin-inscricoes')}
               element={
                 <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
                   <AdminCheckinSubmissions loggedUsername={loggedUsername} />
