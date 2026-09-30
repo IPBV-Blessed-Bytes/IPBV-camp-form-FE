@@ -10,9 +10,9 @@
 
   &-card {
     background: $white;
-    border: 1px solid $medium-gray;
+    border: 1px solid $gray-300;
     border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 16px rgba($black, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -24,8 +24,8 @@
       border-color 0.2s ease;
 
     &:hover {
-      border-color: $medium-gray;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09);
+      border-color: $gray-300;
+      box-shadow: 0 10px 24px rgba($black, 0.09);
       transform: translateY(-3px);
     }
 
@@ -50,13 +50,13 @@
     }
 
     &-is-active {
-      border-color: $intense-green;
+      border-color: $emerald;
       box-shadow:
-        0 0 0 2px rgba($intense-green, 0.25),
-        0 8px 20px rgba(0, 0, 0, 0.07);
+        0 0 0 2px rgba($emerald, 0.25),
+        0 8px 20px rgba($black, 0.07);
 
       &:hover {
-        border-color: $intense-green;
+        border-color: $emerald;
       }
     }
 
@@ -65,7 +65,7 @@
       opacity: 0.65;
 
       &:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 16px rgba($black, 0.05);
         cursor: not-allowed;
         transform: none;
       }
@@ -81,7 +81,7 @@
       }
 
       &-title {
-        color: $dark-gray;
+        color: $ink;
         display: -webkit-box;
         font-size: 1.15rem;
         font-weight: 700;
@@ -127,10 +127,10 @@
         }
 
         &.selected {
-          background: $intense-green;
+          background: $emerald;
 
           &:hover {
-            background: color.adjust($intense-green, $lightness: -6%);
+            background: color.adjust($emerald, $lightness: -6%);
           }
         }
       }
@@ -139,10 +139,10 @@
 
   &-card__badge {
     align-items: center;
-    background: $light-red;
+    background: $pink-red;
     border: none;
     border-radius: 10px;
-    color: $medium-red;
+    color: $rose;
     display: inline-flex;
     font-weight: 700;
     gap: 0.3rem;
@@ -154,11 +154,11 @@
 }
 
 .discount-description {
-  color: $alternate-dark-gray;
+  color: $gray-500;
 }
 
 .store-stock {
-  color: #007185;
+  color: $primary;
   font-weight: 600;
 }
 
@@ -173,9 +173,9 @@
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    border: 2px solid #007185;
-    background: #fff;
-    color: #007185;
+    border: 2px solid $primary;
+    background: $white;
+    color: $primary;
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1;
@@ -185,12 +185,12 @@
     justify-content: center;
 
     &:hover:not(:disabled) {
-      background: rgba(0, 113, 133, 0.08);
+      background: rgba($primary, 0.08);
     }
 
     &:disabled {
-      border-color: #cccccc;
-      color: #cccccc;
+      border-color: $gray-300;
+      color: $gray-300;
       cursor: not-allowed;
     }
   }

@@ -3,18 +3,18 @@
 
 $admin-accent-registered: $primary;
 $admin-accent-ride: $orange;
-$admin-accent-bus: $purple;
-$admin-accent-discount: $intense-green;
+$admin-accent-bus: $lavender;
+$admin-accent-discount: $emerald;
 $admin-accent-rooms: $secondary;
-$admin-accent-teams: $baby-blue;
-$admin-accent-feedback: $light-heavy-blue;
-$admin-accent-checkin: $slime-green;
-$admin-accent-boletos: $orange-brown;
-$admin-accent-fees: $alternate-dark-gray;
-$admin-accent-donations: $violet;
+$admin-accent-teams: $sky-blue;
+$admin-accent-feedback: $royal-blue;
+$admin-accent-checkin: $teal;
+$admin-accent-boletos: $gold;
+$admin-accent-fees: $gray-500;
+$admin-accent-donations: $magenta;
 
 .admin {
-  background-color: $background-gray;
+  background-color: $gray-50;
   min-height: 100vh;
 }
 
@@ -35,7 +35,7 @@ $admin-accent-donations: $violet;
 
 .session-card {
   background: $white;
-  border: 1px solid $medium-gray !important;
+  border: 1px solid $gray-300 !important;
   border-radius: 14px !important;
   cursor: pointer;
   overflow: hidden;
@@ -60,7 +60,7 @@ $admin-accent-donations: $violet;
 
   &:hover {
     border-color: var(--session-accent, #{$primary}) !important;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba($black, 0.08);
     transform: translateY(-2px);
 
     &::before {
@@ -103,14 +103,14 @@ $admin-accent-donations: $violet;
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
   }
 
   &__cta {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.8rem;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -153,13 +153,13 @@ $admin-accent-donations: $violet;
 
 .admin-notes {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 12px;
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -168,7 +168,7 @@ $admin-accent-donations: $violet;
   }
 
   &__list {
-    color: $alternate-dark-dark-gray;
+    color: $gray-600;
     font-size: 0.9rem;
     margin: 0;
     padding-left: 1.25rem;
@@ -178,7 +178,7 @@ $admin-accent-donations: $violet;
     }
 
     strong {
-      color: $dark-gray;
+      color: $ink;
     }
   }
 }
@@ -232,16 +232,16 @@ $admin-accent-donations: $violet;
     align-items: center;
     gap: 0.4rem;
     background: $white;
-    border: 1px solid $border-gray;
+    border: 1px solid $gray-300;
     border-radius: 8px;
     padding: 0.45rem 0.9rem;
     font-weight: 600;
-    color: $dark-gray;
+    color: $ink;
     transition: all 0.15s ease;
 
     &:hover {
-      background: $hover-gray;
-      border-color: $alternate-dark-gray;
+      background: $gray-100;
+      border-color: $gray-500;
     }
   }
 
@@ -253,7 +253,7 @@ $admin-accent-donations: $violet;
 
   &__page-btn {
     background: $white;
-    border: 1px solid $border-gray;
+    border: 1px solid $gray-300;
     border-radius: 8px;
     padding: 0.4rem 0.8rem;
     font-weight: 600;
@@ -261,7 +261,7 @@ $admin-accent-donations: $violet;
     transition: all 0.15s ease;
 
     &:hover:not(:disabled) {
-      background: $hover-gray;
+      background: $gray-100;
     }
 
     &:disabled {
@@ -272,7 +272,7 @@ $admin-accent-donations: $violet;
 
   &__page-info {
     font-size: 0.9rem;
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-weight: 600;
   }
 }

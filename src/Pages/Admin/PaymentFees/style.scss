@@ -10,15 +10,15 @@
 
 .fees-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   overflow: hidden;
 
   &__header {
     align-items: center;
     background: rgba($primary, 0.08);
-    border-bottom: 1px solid $alternate-light-gray;
+    border-bottom: 1px solid $gray-100;
     color: $primary;
     display: flex;
     font-size: 1.05rem;

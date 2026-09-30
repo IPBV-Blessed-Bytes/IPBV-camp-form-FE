@@ -1,12 +1,12 @@
 @use '../../styles/Variables.scss' as *;
 
 .admin-form-section {
-  background: #fff;
-  border: 1px solid #e6ebef;
+  background: $white;
+  border: 1px solid $gray-200;
   border-radius: 16px;
   padding: 22px 24px 24px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(15, 40, 50, 0.05);
+  box-shadow: 0 2px 12px rgba($gray-900, 0.05);
 
   &__title {
     display: flex;
@@ -17,7 +17,7 @@
     font-size: 1.08rem;
     margin: 0 0 4px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #eef2f4;
+    border-bottom: 1px solid $gray-100;
 
     &::before {
       content: '';
@@ -31,7 +31,7 @@
 
   &__desc {
     font-size: 0.88rem;
-    color: #5a6b73;
+    color: $gray-600;
     margin: 12px 0 16px;
   }
 
@@ -45,7 +45,7 @@
 
   .form-label {
     font-size: 0.84rem;
-    color: #5a6b73;
+    color: $gray-600;
     margin-bottom: 4px;
     font-weight: 600;
   }

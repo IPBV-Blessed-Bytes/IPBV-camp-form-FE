@@ -7,7 +7,7 @@
   margin: 2rem 0 1rem;
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 1.2px;
@@ -16,16 +16,16 @@
   }
 
   &__count {
-    background: $alternate-light-gray;
+    background: $gray-100;
     border-radius: 999px;
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.15rem 0.6rem;
   }
 
   &__line {
-    background: $alternate-light-gray;
+    background: $gray-100;
     flex: 1;
     height: 1px;
   }

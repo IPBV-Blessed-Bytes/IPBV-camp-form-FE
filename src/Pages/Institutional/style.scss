@@ -1,13 +1,13 @@
 @use '../../styles/Variables.scss' as *;
 
-$inst-ink: #1d2939;
-$inst-muted: #667085;
-$inst-line: #e6ebef;
-$inst-tint: #f4f8f9;
+$inst-ink: $gray-900;
+$inst-muted: $gray-500;
+$inst-line: $gray-200;
+$inst-tint: $gray-50;
 
 .institutional {
   color: $inst-ink;
-  background: #fff;
+  background: $white;
 
   * {
     box-sizing: border-box;
@@ -29,15 +29,15 @@ $inst-tint: #f4f8f9;
 
     &--primary {
       background: $primary;
-      color: #fff;
+      color: $white;
       &:hover {
         filter: brightness(0.93);
       }
     }
 
     &--yellow {
-      background: $light-yellow;
-      color: #4a3b00;
+      background: $yellow;
+      color: $dark-brown;
       &:hover {
         filter: brightness(0.96);
       }
@@ -47,16 +47,16 @@ $inst-tint: #f4f8f9;
       background: transparent;
       color: $primary;
       &:hover {
-        background: rgba(0, 113, 133, 0.08);
+        background: rgba($primary, 0.08);
       }
     }
 
     &--outline-light {
       background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255, 255, 255, 0.7);
+      color: $white;
+      border: 2px solid rgba($white, 0.7);
       &:hover {
-        background: rgba(255, 255, 255, 0.14);
+        background: rgba($white, 0.14);
       }
     }
 
@@ -71,14 +71,14 @@ $inst-tint: #f4f8f9;
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba($white, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
   &--scrolled {
     border-bottom-color: $inst-line;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 18px rgba($black, 0.06);
   }
 
   &__inner {
@@ -108,7 +108,7 @@ $inst-tint: #f4f8f9;
     height: 38px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
     border-radius: 50%;
   }
 
@@ -128,7 +128,7 @@ $inst-tint: #f4f8f9;
       cursor: pointer;
       &:hover {
         color: $primary;
-        background: rgba(0, 113, 133, 0.07);
+        background: rgba($primary, 0.07);
       }
     }
 
@@ -143,10 +143,10 @@ $inst-tint: #f4f8f9;
       gap: 3px;
       margin-left: 0;
       padding: 10px;
-      background: #fff;
+      background: $white;
       border: 1px solid $inst-line;
       border-radius: 16px;
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 18px 44px rgba($black, 0.18);
 
       &.is-open {
         display: flex;
@@ -163,7 +163,7 @@ $inst-tint: #f4f8f9;
 
         &:hover {
           color: $primary;
-          background: rgba(0, 113, 133, 0.08);
+          background: rgba($primary, 0.08);
         }
       }
     }
@@ -251,9 +251,9 @@ $inst-tint: #f4f8f9;
 .inst-hero {
   position: relative;
   background:
-    linear-gradient(135deg, rgba(0, 94, 110, 0.96), rgba(0, 113, 133, 0.9)),
-    radial-gradient(circle at 80% 20%, rgba(255, 219, 88, 0.35), transparent 45%);
-  color: #fff;
+    linear-gradient(135deg, rgba($primary-dark, 0.96), rgba($primary, 0.9)),
+    radial-gradient(circle at 80% 20%, rgba($yellow, 0.35), transparent 45%);
+  color: $white;
   padding: 72px 20px 0;
   overflow: hidden;
 
@@ -265,7 +265,7 @@ $inst-tint: #f4f8f9;
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(135deg, rgba(0, 60, 70, 0.86), rgba(0, 94, 110, 0.78));
+      background: linear-gradient(135deg, rgba($primary-darkest, 0.86), rgba($primary-dark, 0.78));
     }
   }
 
@@ -287,9 +287,9 @@ $inst-tint: #f4f8f9;
 
   &__tag {
     display: inline-block;
-    background: rgba(255, 219, 88, 0.22);
-    color: $light-yellow;
-    border: 1px solid rgba(255, 219, 88, 0.5);
+    background: rgba($yellow, 0.22);
+    color: $yellow;
+    border: 1px solid rgba($yellow, 0.5);
     padding: 6px 16px;
     border-radius: 999px;
     font-weight: 600;
@@ -308,7 +308,7 @@ $inst-tint: #f4f8f9;
 
   &__subtitle {
     font-size: clamp(1rem, 2vw, 1.2rem);
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba($white, 0.9);
     max-width: 640px;
     margin: 0 auto 22px;
   }
@@ -342,10 +342,10 @@ $inst-tint: #f4f8f9;
     margin: 56px auto 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    background: #fff;
+    background: $white;
     border-radius: 18px 18px 0 0;
     padding: 26px 20px;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 -8px 30px rgba($black, 0.12);
 
     @media (max-width: $sm) {
       grid-template-columns: 1fr;
@@ -448,7 +448,7 @@ $inst-tint: #f4f8f9;
 }
 
 .inst-card {
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-radius: 16px;
   padding: 28px 24px;
@@ -456,7 +456,7 @@ $inst-tint: #f4f8f9;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba($black, 0.08);
   }
 
   &__icon {
@@ -465,7 +465,7 @@ $inst-tint: #f4f8f9;
     height: 56px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
     border-radius: 14px;
     margin-bottom: 16px;
   }
@@ -493,7 +493,7 @@ $inst-tint: #f4f8f9;
   }
 
   &__day {
-    background: #fff;
+    background: $white;
     border: 1px solid $inst-line;
     border-radius: 16px;
     padding: 24px;
@@ -504,7 +504,7 @@ $inst-tint: #f4f8f9;
       color: $primary;
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 2px solid rgba(0, 113, 133, 0.12);
+      border-bottom: 2px solid rgba($primary, 0.12);
     }
 
     ul {
@@ -538,7 +538,7 @@ $inst-tint: #f4f8f9;
 .inst-schedule__empty {
   text-align: center;
   color: $inst-muted;
-  background: #fff;
+  background: $white;
   border: 1px dashed $inst-line;
   border-radius: 16px;
   padding: 40px 24px;
@@ -550,7 +550,7 @@ $inst-tint: #f4f8f9;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid $inst-line;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 28px rgba($black, 0.08);
 
   iframe {
     display: block;
@@ -566,7 +566,7 @@ $inst-tint: #f4f8f9;
 
 .inst-team {
   text-align: center;
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-radius: 16px;
   padding: 26px 18px;
@@ -574,7 +574,7 @@ $inst-tint: #f4f8f9;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba($black, 0.08);
   }
 
   &__avatar {
@@ -582,7 +582,7 @@ $inst-tint: #f4f8f9;
     height: 130px;
     margin: 0 auto 14px;
     border-radius: 50%;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -627,9 +627,9 @@ $inst-tint: #f4f8f9;
     display: flex;
     align-items: flex-end;
     padding: 16px;
-    color: #fff;
+    color: $white;
     font-weight: 600;
-    box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55);
+    box-shadow: inset 0 -60px 60px -30px rgba($black, 0.55);
 
     .inst-gallery__cover {
       position: absolute;
@@ -647,7 +647,7 @@ $inst-tint: #f4f8f9;
 
       &:hover {
         transform: translateY(-3px);
-        box-shadow: inset 0 -60px 60px -30px rgba(0, 0, 0, 0.55), 0 12px 26px rgba(0, 0, 0, 0.18);
+        box-shadow: inset 0 -60px 60px -30px rgba($black, 0.55), 0 12px 26px rgba($black, 0.18);
       }
     }
 
@@ -663,7 +663,7 @@ $inst-tint: #f4f8f9;
       gap: 0;
       padding: 0;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba($black, 0.6);
       backdrop-filter: blur(2px);
       font-size: 0.8rem;
       font-weight: 700;
@@ -678,12 +678,12 @@ $inst-tint: #f4f8f9;
       gap: 8px;
     }
 
-    &--a { background: linear-gradient(135deg, #007185, #0c9183); }
-    &--b { background: linear-gradient(135deg, #0c9183, #49bd72); }
-    &--c { background: linear-gradient(135deg, #d39e00, #ffdb58); color: #4a3b00; }
-    &--d { background: linear-gradient(135deg, #005e6e, #007185); }
-    &--e { background: linear-gradient(135deg, #FF7F50, #F5B895); color: #5a2a12; }
-    &--f { background: linear-gradient(135deg, #49bd72, #89c96e); }
+    &--a { background: linear-gradient(135deg, $primary, $teal); }
+    &--b { background: linear-gradient(135deg, $teal, $emerald); }
+    &--c { background: linear-gradient(135deg, $gold, $yellow); color: $dark-brown; }
+    &--d { background: linear-gradient(135deg, $primary-dark, $primary); }
+    &--e { background: linear-gradient(135deg, $orange, $peach); color: $dark-brown; }
+    &--f { background: linear-gradient(135deg, $emerald, $sage); }
   }
 }
 
@@ -727,7 +727,7 @@ $inst-tint: #f4f8f9;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba($black, 0.88);
   cursor: zoom-out;
 
   img {
@@ -735,7 +735,7 @@ $inst-tint: #f4f8f9;
     max-height: 95vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 60px rgba($black, 0.5);
     cursor: default;
   }
 
@@ -750,13 +750,13 @@ $inst-tint: #f4f8f9;
     justify-content: center;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: rgba($white, 0.15);
+    color: $white;
     cursor: pointer;
     transition: background 0.15s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.28);
+      background: rgba($white, 0.28);
     }
   }
 }
@@ -774,7 +774,7 @@ $inst-tint: #f4f8f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: $white;
     border: 1px solid $inst-line;
     border-radius: 14px;
     padding: 18px;
@@ -795,7 +795,7 @@ $inst-tint: #f4f8f9;
 .inst-notice {
   display: flex;
   gap: 16px;
-  background: #fff;
+  background: $white;
   border: 1px solid $inst-line;
   border-left: 4px solid $primary;
   border-radius: 12px;
@@ -806,7 +806,7 @@ $inst-tint: #f4f8f9;
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -828,8 +828,8 @@ $inst-tint: #f4f8f9;
 .inst-final {
   text-align: center;
   padding: 76px 20px;
-  background: linear-gradient(135deg, #005e6e, #007185);
-  color: #fff;
+  background: linear-gradient(135deg, $primary-dark, $primary);
+  color: $white;
 
   h2 {
     font-size: clamp(1.6rem, 3vw, 2.3rem);
@@ -838,7 +838,7 @@ $inst-tint: #f4f8f9;
   }
 
   p {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba($white, 0.9);
     font-size: 1.1rem;
     margin-bottom: 26px;
   }
@@ -849,7 +849,7 @@ $inst-tint: #f4f8f9;
     justify-content: center;
     gap: 8px;
     margin-top: 26px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba($white, 0.8);
     font-size: 0.9rem;
     font-weight: 500;
   }
@@ -865,22 +865,22 @@ $inst-tint: #f4f8f9;
 
   &__step {
     position: relative;
-    background: #fff;
-    border: 1px solid #e6e6e6;
+    background: $white;
+    border: 1px solid $gray-200;
     border-radius: 1rem;
     padding: 1.5rem 1.25rem 1.25rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 18px rgba($black, 0.05);
 
     h3 {
       font-size: 1.05rem;
       font-weight: 700;
-      color: #1b3a4b;
+      color: $primary-darkest;
       margin: 0.75rem 0 0.4rem;
     }
 
     p {
       margin: 0;
-      color: #5a5a5a;
+      color: $ink;
       font-size: 0.94rem;
       line-height: 1.5;
     }
@@ -896,11 +896,11 @@ $inst-tint: #f4f8f9;
     width: 1.9rem;
     height: 1.9rem;
     border-radius: 50%;
-    background: #007185;
-    color: #fff;
+    background: $primary;
+    color: $white;
     font-weight: 700;
     font-size: 0.95rem;
-    box-shadow: 0 2px 6px rgba(0, 113, 133, 0.4);
+    box-shadow: 0 2px 6px rgba($primary, 0.4);
   }
 
   &__icon {
@@ -910,7 +910,7 @@ $inst-tint: #f4f8f9;
     width: 3rem;
     height: 3rem;
     border-radius: 0.75rem;
-    background: rgba(0, 113, 133, 0.1);
+    background: rgba($primary, 0.1);
   }
 
   &__cta {
@@ -943,12 +943,12 @@ $inst-tint: #f4f8f9;
     align-items: center;
     gap: 1rem;
     padding: 1.35rem 1.5rem;
-    border: 1px solid rgba(0, 113, 133, 0.14);
+    border: 1px solid rgba($primary, 0.14);
     border-radius: 1.15rem;
-    background: linear-gradient(180deg, #ffffff, #f7fbfc);
+    background: linear-gradient(180deg, $white, $gray-50);
     text-decoration: none;
-    color: #0f3d47;
-    box-shadow: 0 10px 30px rgba(0, 94, 110, 0.08);
+    color: $primary-darkest;
+    box-shadow: 0 10px 30px rgba($primary-dark, 0.08);
     overflow: hidden;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 
@@ -959,25 +959,25 @@ $inst-tint: #f4f8f9;
       top: 0;
       bottom: 0;
       width: 4px;
-      background: linear-gradient(180deg, #007185, #005e6e);
+      background: linear-gradient(180deg, $primary, $primary-dark);
       opacity: 0;
       transition: opacity 0.18s ease;
     }
 
     &:hover {
       transform: translateY(-3px);
-      border-color: rgba(0, 113, 133, 0.4);
-      box-shadow: 0 16px 36px rgba(0, 94, 110, 0.16);
+      border-color: rgba($primary, 0.4);
+      box-shadow: 0 16px 36px rgba($primary-dark, 0.16);
 
       &::before {
         opacity: 1;
       }
 
       .inst-contact__icon {
-        background: #007185;
+        background: $primary;
 
         svg path {
-          fill: #fff !important;
+          fill: $white !important;
         }
       }
     }
@@ -991,7 +991,7 @@ $inst-tint: #f4f8f9;
     height: 3.25rem;
     flex-shrink: 0;
     border-radius: 0.95rem;
-    background: rgba(0, 113, 133, 0.12);
+    background: rgba($primary, 0.12);
     transition: background 0.18s ease;
   }
 
@@ -1006,11 +1006,11 @@ $inst-tint: #f4f8f9;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: #007185;
+      color: $primary;
     }
 
     span {
-      color: #22343b;
+      color: $gray-900;
       font-size: 1.02rem;
       font-weight: 600;
       word-break: break-word;
@@ -1027,8 +1027,8 @@ $inst-tint: #f4f8f9;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  background: rgba($white, 0.95);
+  box-shadow: 0 2px 10px rgba($black, 0.12);
 
   &__dot {
     width: 0.6rem;
@@ -1037,29 +1037,29 @@ $inst-tint: #f4f8f9;
   }
 
   &--open {
-    color: #057c05;
+    color: $forest;
 
     .inst-status__dot {
-      background: #22c55e;
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+      background: $emerald;
+      box-shadow: 0 0 0 3px rgba($emerald, 0.25);
     }
   }
 
   &--soon {
-    color: #b45309;
+    color: $warning-dark;
 
     .inst-status__dot {
-      background: #f59e0b;
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+      background: $warning;
+      box-shadow: 0 0 0 3px rgba($warning, 0.25);
     }
   }
 
   &--closed {
-    color: #b91c1c;
+    color: $danger-dark;
 
     .inst-status__dot {
-      background: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+      background: $danger;
+      box-shadow: 0 0 0 3px rgba($danger, 0.25);
     }
   }
 }

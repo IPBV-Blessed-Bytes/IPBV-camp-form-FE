@@ -10,15 +10,15 @@
 
 .utility-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   overflow: hidden;
 
   &__header {
     align-items: center;
     background: rgba($primary, 0.08);
-    border-bottom: 1px solid $alternate-light-gray;
+    border-bottom: 1px solid $gray-100;
     color: $primary;
     display: flex;
     font-size: 1.05rem;
@@ -59,9 +59,9 @@
   font-size: 0.9rem;
   cursor: pointer;
   text-decoration: none;
-  color: #fff;
-  background: $teal-blue;
-  border: 1px solid $teal-blue;
+  color: $white;
+  background: $primary;
+  border: 1px solid $primary;
   transition: background 0.15s ease, border-color 0.15s ease;
 
   svg {
@@ -69,19 +69,19 @@
   }
 
   &:hover {
-    background: #005e6e;
-    border-color: #005e6e;
-    color: #fff;
+    background: $primary-dark;
+    border-color: $primary-dark;
+    color: $white;
   }
 
   &--ghost {
-    color: $teal-blue;
-    background: rgba(0, 113, 133, 0.08);
-    border-color: rgba(0, 113, 133, 0.35);
+    color: $primary;
+    background: rgba($primary, 0.08);
+    border-color: rgba($primary, 0.35);
 
     &:hover {
-      background: rgba(0, 113, 133, 0.16);
-      color: $teal-blue;
+      background: rgba($primary, 0.16);
+      color: $primary;
     }
   }
 }

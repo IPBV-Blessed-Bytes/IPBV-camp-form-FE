@@ -32,27 +32,27 @@
 }
 
 .guardian-upload-btn {
-    color: #fff;
-    background: $teal-blue;
-    border: 1px solid $teal-blue;
+    color: $white;
+    background: $primary;
+    border: 1px solid $primary;
 
     &:hover {
-        background: #005e6e;
-        border-color: #005e6e;
+        background: $primary-dark;
+        border-color: $primary-dark;
     }
 
     &--invalid {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.2);
+        border-color: $danger;
+        box-shadow: 0 0 0 0.15rem rgba($danger, 0.2);
     }
 }
 
 .guardian-template-btn {
-    color: $teal-blue;
-    background: rgba(0, 113, 133, 0.08);
-    border: 1px solid rgba(0, 113, 133, 0.35);
+    color: $primary;
+    background: rgba($primary, 0.08);
+    border: 1px solid rgba($primary, 0.35);
 
     &:hover {
-        background: rgba(0, 113, 133, 0.16);
+        background: rgba($primary, 0.16);
     }
 }

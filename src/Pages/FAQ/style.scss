@@ -2,14 +2,14 @@
 
 .faq {
   .card-title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
   }
 
   .card-text {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     margin-bottom: 1.5rem;
   }
 
@@ -21,16 +21,16 @@
 
   .accordion-item {
     background: $white;
-    border: 1px solid $alternate-light-gray;
+    border: 1px solid $gray-100;
     border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba($black, 0.04);
     overflow: hidden;
   }
 
   .accordion-button {
     background: $white;
     border-radius: 12px;
-    color: $dark-gray;
+    color: $ink;
     font-weight: 600;
     padding: 1rem 1.15rem;
 
@@ -51,7 +51,7 @@
   }
 
   .accordion-body {
-    color: $dark-gray;
+    color: $ink;
     line-height: 1.65;
     padding: 0.35rem 1.15rem 1.15rem;
   }

@@ -2,7 +2,7 @@
 
 .auth-shell {
   align-items: center;
-  background: $background-gray;
+  background: $gray-50;
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -10,9 +10,9 @@
 
   &__card {
     background: $white;
-    border: 1px solid $alternate-light-gray;
+    border: 1px solid $gray-100;
     border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 40px rgba($black, 0.08);
     max-width: 440px;
     padding: 2.25rem 2rem;
     width: 100%;
@@ -31,7 +31,7 @@
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
@@ -39,7 +39,7 @@
   }
 
   &__subtitle {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.92rem;
     margin: 0.35rem 0 0;
     text-align: center;

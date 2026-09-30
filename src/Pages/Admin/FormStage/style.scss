@@ -1,18 +1,18 @@
 @use '../../../styles/Variables.scss' as *;
 
-$stage-success: #28a745;
-$stage-secondary: #6c757d;
-$stage-warning: #f0ad4e;
-$stage-danger: #dc3545;
-$stage-info: #0dcaf0;
+$stage-success: $success;
+$stage-secondary: $gray-500;
+$stage-warning: $amber;
+$stage-danger: $danger;
+$stage-info: $info;
 
 .stage-current {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-left: 5px solid $primary;
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba($black, 0.05);
   display: flex;
   gap: 1rem;
   margin-bottom: 1.75rem;
@@ -36,14 +36,14 @@ $stage-info: #0dcaf0;
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.35rem;
     font-weight: 700;
     margin: 0.25rem 0 0;
   }
 
   &__desc {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.9rem;
     margin: 0;
   }
@@ -81,7 +81,7 @@ $stage-info: #0dcaf0;
 }
 
 .stage-heading {
-  color: $dark-gray;
+  color: $ink;
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 1px;
@@ -97,9 +97,9 @@ $stage-info: #0dcaf0;
 
 .stage-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba($black, 0.04);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -114,7 +114,7 @@ $stage-info: #0dcaf0;
 
   &:hover:not(:disabled) {
     border-color: $primary;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba($black, 0.08);
     transform: translateY(-1px);
   }
 
@@ -134,13 +134,13 @@ $stage-info: #0dcaf0;
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.05rem;
     font-weight: 700;
   }
 
   &__desc {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.83rem;
     line-height: 1.4;
   }
@@ -164,13 +164,13 @@ $stage-info: #0dcaf0;
     border-color: $primary;
 
     .stage-card__icon {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba($white, 0.2);
     }
     .stage-card__title {
       color: $white;
     }
     .stage-card__desc {
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba($white, 0.85);
     }
   }
 }

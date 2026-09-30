@@ -2,7 +2,7 @@
 
 .admin-card {
   background: $white;
-  border: 1px solid $medium-gray !important;
+  border: 1px solid $gray-300 !important;
   border-radius: 12px !important;
   height: 100%;
   transition:
@@ -12,7 +12,7 @@
 
   &:hover {
     border-color: var(--admin-card-accent, #{$primary}) !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 16px rgba($black, 0.06);
     transform: translateY(-1px);
   }
 
@@ -24,7 +24,7 @@
   }
 
   &__title {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.4px;
@@ -45,13 +45,13 @@
   }
 
   &__total {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.95rem;
     font-weight: 500;
   }
 
   &__progress {
-    background-color: $alternate-light-gray !important;
+    background-color: $gray-100 !important;
     border-radius: 999px !important;
     height: 6px !important;
     margin-top: 0.25rem;
@@ -64,13 +64,13 @@
   }
 
   &__footer {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     display: flex;
     font-size: 0.78rem;
     justify-content: space-between;
 
     strong {
-      color: $dark-gray;
+      color: $ink;
       font-weight: 700;
     }
   }
@@ -79,9 +79,9 @@
     --admin-card-accent: #{$primary};
   }
   &--all-package-card {
-    --admin-card-accent: #{$intense-green};
+    --admin-card-accent: #{$emerald};
   }
   &--total-card {
-    --admin-card-accent: #{$medium-brown};
+    --admin-card-accent: #{$bronze};
   }
 }

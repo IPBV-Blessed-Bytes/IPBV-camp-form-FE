@@ -35,7 +35,7 @@
   z-index: 9999;
 
   button {
-    background-color: $light-yellow;
+    background-color: $yellow;
     border: none;
     border-radius: 5px;
     color: $black;
@@ -66,6 +66,6 @@
 }
 
 .verify-registration-button:hover {
-  background-color: $light-yellow;
+  background-color: $yellow;
   color: $black;
 }

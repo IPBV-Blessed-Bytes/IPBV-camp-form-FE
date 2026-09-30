@@ -1,54 +1,86 @@
 // Colors
+// Brand
 $primary: #007185;
+$primary-dark: #005e6e;
+$primary-darkest: #0f3d47;
+$teal: #0c9183;
+
+// Yellows & warning
 $secondary: #ffc107;
-$light-yellow: #ffdb58;
-$light-orange: #F5B895;
-$red: #dc3545;
-$medium-red: #d32f2f;
-$light-red: #ffcccc;
-$turquoise: #cfe2ff;
-$teal-blue: #007185;
+$gold: #d39e00;
+$amber: #f0ad4e;
+$warning: #f59e0b;
+$warning-dark: #b45309;
+$yellow: #ffdb58;
+
+// Success
+$success: #28a745;
+$success-dark: #1e7e34;
+$success-light: #d4edda;
+
+// Danger
+$danger: #dc3545;
+$danger-dark: #c62828;
+$danger-light: #fdecec;
+$rose: #d32f2f;
+$pink-red: #ffcccc;
+
+// Info
+$info: #0dcaf0;
+
+// Blues
 $blue: #204691;
-$medium-blue: #0066cc;
-$light-medium-blue: #155a9b;
-$baby-blue: #3498db;
-$newborn-blue: #f0f8ff;
-$light-heavy-blue: #2E5AAC;
-$alternate-blue: #89A7E0;
-$light-blue: #f0f9ff;
-$heavy-baby-blue: #e0f7fa;
-$minimum-blue: #EEF2FA;
+$royal-blue: #2e5aac;
+$bright-blue: #0066cc;
+$ocean-blue: #155a9b;
+$sky-blue: #3498db;
+$soft-blue: #89a7e0;
+$focus-blue: #86b7fe;
+$blue-50: #f0f8ff;
+$blue-100: #eef2fa;
+$turquoise: #cfe2ff;
+$cyan-50: #e0f7fa;
+
+// Greens
 $green: #4caf50;
-$dark-green: #65a300;
-$medium-green: #89c96e;
-$light-green: #b2dfb2;
-$minimum-green: #dce8dc;
-$pastel-green: #e6f0e6;
-$intense-green: #49bd72;
-$intense-medium-green: #5fa75f;
-$intense-green-light: #79c879;
-$militar-green: #057c05;
-$whatsapp-green: #1a8a45;
-$slime-green: #0c9183;
-$purple: #D8B4FE;
+$emerald: #49bd72;
+$mint: #79c879;
+$sage: #89c96e;
+$olive: #65a300;
+$forest: #057c05;
+$whatsapp: #1a8a45;
+$green-50: #e6f0e6;
+$green-100: #dce8dc;
+$green-200: #b2dfb2;
+$mint-50: #e4f5e9;
+
+// Oranges & browns
+$orange: #ff7f50;
+$peach: #f5b895;
+$bronze: #cc6d00;
 $brown: #994c00;
-$medium-brown: #cc6d00;
-$orange: #FF7F50;
-$orange-brown: #d39e00;
-$violet: #b5468a;
-$light-brown: #fffbf0;
-$black: #000;
-$white: #fff;
-$dark-gray: #555050;
-$alternate-dark-dark-gray: #666;
-$alternate-dark-gray: #7f7878;
-$alternate-gray: #dee2e6;
-$medium-gray: #ced4da;
-$light-gray: #f3f3f3;
-$alternate-light-gray: #eee;
-$hover-gray: #f2f2f2;
-$border-gray: #ccc;
-$background-gray: #f8f9fa;
+$dark-brown: #5a2a12;
+$cream: #fffbf0;
+
+// Purple
+$lavender: #d8b4fe;
+$magenta: #b5468a;
+$purple: #6f42c1;
+
+// Neutrals
+$white: #ffffff;
+$black: #000000;
+$ink: #555050;
+$gray-50: #f5f7f8;
+$gray-100: #eef2f4;
+$gray-200: #e2e8ec;
+$gray-300: #ccd3d9;
+$gray-400: #98a2b3;
+$gray-500: #6c757d;
+$gray-600: #5a6b73;
+$gray-700: #455a64;
+$gray-800: #344054;
+$gray-900: #1d2939;
 
 // Screen size
 $xs: 0;

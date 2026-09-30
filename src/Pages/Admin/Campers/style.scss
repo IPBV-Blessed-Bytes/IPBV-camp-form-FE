@@ -2,10 +2,10 @@
 
 .scroll-to-top {
   align-items: center;
-  background-color: $light-yellow;
+  background-color: $yellow;
   border-radius: 50%;
   bottom: 1.25rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 1);
+  box-shadow: 0 0.25rem 0.5rem rgba($black, 1);
   cursor: pointer;
   display: flex;
   font-size: 1.5rem;
@@ -28,14 +28,14 @@
 }
 
 .filter-btn {
-  background-color: $alternate-dark-gray;
-  border-color: $alternate-dark-gray;
+  background-color: $gray-500;
+  border-color: $gray-500;
 
   &:hover,
   &:active,
   &:focus-visible {
-    background-color: $dark-gray;
-    border-color: $dark-gray;
+    background-color: $ink;
+    border-color: $ink;
   }
 }
 
@@ -50,7 +50,7 @@
   width: 100%;
 
   &__info {
-    color: var(--c-text-muted, #6c757d);
+    color: var(--c-text-muted, $gray-500);
     font-size: 0.9rem;
     white-space: nowrap;
   }
@@ -64,7 +64,7 @@
   &__btn {
     align-items: center;
     background-color: transparent;
-    border: 1px solid #007185;
+    border: 1px solid $primary;
     border-radius: 0.375rem;
     cursor: pointer;
     display: inline-flex;
@@ -73,7 +73,7 @@
     transition: background-color 0.15s ease, opacity 0.15s ease;
 
     &:hover:not(:disabled) {
-      background-color: rgba(0, 113, 133, 0.1);
+      background-color: rgba($primary, 0.1);
     }
 
     &:disabled {

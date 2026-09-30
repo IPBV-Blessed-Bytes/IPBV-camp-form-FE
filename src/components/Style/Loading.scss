@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba($white, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
 }
 
 .loading-blank {
-  background-color: #fff;
+  background-color: $white;
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -22,14 +22,14 @@
 
 .spinner-container {
   align-items: center;
-  color: $alternate-dark-gray;
+  color: $gray-500;
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
   justify-content: center;
 
   .spinner-border {
-    color: $baby-blue;
+    color: $sky-blue;
   }
 }
 

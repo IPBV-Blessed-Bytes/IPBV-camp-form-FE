@@ -1,7 +1,7 @@
 @use '../../../styles/Variables.scss' as *;
 
 .my-account {
-  background: $background-gray;
+  background: $gray-50;
   min-height: 100vh;
   padding-bottom: 4rem;
 
@@ -37,7 +37,7 @@
     align-items: center;
     background: $primary;
     border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 16px rgba($black, 0.12);
     display: flex;
     flex-shrink: 0;
     height: 60px;
@@ -53,7 +53,7 @@
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.45rem;
     font-weight: 700;
     margin: 0;
@@ -64,7 +64,7 @@
   }
 
   &__subtitle {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.9rem;
     margin: 0;
     overflow: hidden;
@@ -129,7 +129,7 @@
     margin: 2rem 0 1rem;
 
     &__title {
-      color: $dark-gray;
+      color: $ink;
       font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 1.2px;
@@ -138,16 +138,16 @@
     }
 
     &__count {
-      background: $alternate-light-gray;
+      background: $gray-100;
       border-radius: 999px;
-      color: $alternate-dark-gray;
+      color: $gray-500;
       font-size: 0.75rem;
       font-weight: 600;
       padding: 0.15rem 0.6rem;
     }
 
     &__line {
-      background: $alternate-light-gray;
+      background: $gray-100;
       flex: 1;
       height: 1px;
     }
@@ -161,7 +161,7 @@
     background: $white;
     border: 1px solid $turquoise;
     border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 16px rgba($black, 0.05);
     overflow: hidden;
   }
 
@@ -179,13 +179,13 @@
     }
 
     &__title {
-      color: $dark-gray;
+      color: $ink;
       font-weight: 700;
       margin: 0 0 0.5rem;
     }
 
     &__text {
-      color: $dark-gray;
+      color: $ink;
       font-size: 0.9rem;
       margin: 0;
     }
@@ -207,7 +207,7 @@
   .account-order-header {
     align-items: center;
     background: rgba($primary, 0.08);
-    border-bottom: 1px solid $alternate-light-gray;
+    border-bottom: 1px solid $gray-100;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -234,7 +234,7 @@
 
     th,
     td {
-      border-right: 1px solid $alternate-light-gray;
+      border-right: 1px solid $gray-100;
       min-width: 275px;
       padding: 0.85rem 1.1rem;
       vertical-align: middle;
@@ -247,7 +247,7 @@
 
     thead th {
       background: $primary;
-      border-right-color: rgba(255, 255, 255, 0.2);
+      border-right-color: rgba($white, 0.2);
       border-bottom: none;
       color: $white;
       font-weight: 600;
@@ -255,7 +255,7 @@
     }
 
     tbody td {
-      border-bottom: 1px solid $alternate-light-gray;
+      border-bottom: 1px solid $gray-100;
     }
 
     tbody tr:last-child td {
@@ -264,14 +264,14 @@
   }
 
   .account-empty {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     text-align: center;
     padding: 1rem 0;
   }
 }
 
 .account-edit__section {
-  border-bottom: 1px solid $alternate-light-gray;
+  border-bottom: 1px solid $gray-100;
   color: $primary;
   font-size: 0.8rem;
   font-weight: 700;
@@ -286,7 +286,7 @@
 }
 
 .account-boletos {
-  border-top: 1px solid $alternate-light-gray;
+  border-top: 1px solid $gray-100;
   padding: 0.875rem;
 
   @media (max-width: $sm) {

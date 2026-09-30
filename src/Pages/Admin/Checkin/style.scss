@@ -18,7 +18,7 @@
   }
 
   &__eyebrow {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 1px;
@@ -26,7 +26,7 @@
   }
 
   &__name {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
@@ -34,7 +34,7 @@
 
   &__action {
     align-items: flex-end;
-    border-top: 1px solid $alternate-light-gray;
+    border-top: 1px solid $gray-100;
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
@@ -69,13 +69,13 @@
   padding: 0.4rem 0.85rem;
 
   &--in {
-    background: rgba($slime-green, 0.12);
-    color: $slime-green;
+    background: rgba($teal, 0.12);
+    color: $teal;
   }
 
   &--out {
-    background: $light-red;
-    color: $medium-red;
+    background: $pink-red;
+    color: $rose;
   }
 }
 
@@ -92,8 +92,8 @@
 
   &__item {
     align-items: center;
-    background: $background-gray;
-    border: 1px solid $alternate-light-gray;
+    background: $gray-50;
+    border: 1px solid $gray-100;
     border-radius: 10px;
     display: flex;
     gap: 0.6rem;
@@ -105,7 +105,7 @@
   }
 
   &__label {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.85rem;
     font-weight: 600;
 
@@ -115,7 +115,7 @@
   }
 
   &__swatch {
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba($black, 0.15);
     border-radius: 5px;
     display: inline-block;
     height: 1.25rem;
@@ -123,7 +123,7 @@
   }
 
   &__name {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.85rem;
     font-weight: 700;
   }
@@ -149,7 +149,7 @@
   }
 
   &__label {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.3px;
@@ -157,7 +157,7 @@
   }
 
   &__value {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1rem;
     font-weight: 500;
   }
@@ -165,9 +165,9 @@
 
 .cpf-suggestions {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 6px 18px rgba($black, 0.07);
   margin-top: 0.5rem;
   max-height: 17rem;
   overflow-y: auto;
@@ -175,7 +175,7 @@
   z-index: 10;
 
   &-item {
-    border-bottom: 1px solid $alternate-light-gray;
+    border-bottom: 1px solid $gray-100;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -186,14 +186,14 @@
     }
 
     &:hover {
-      background-color: $hover-gray;
+      background-color: $gray-100;
     }
   }
 
   &-empty {
-    background: $background-gray;
+    background: $gray-50;
     border-radius: 4px;
-    color: $alternate-dark-dark-gray;
+    color: $gray-600;
     font-style: italic;
     padding: 12px;
     text-align: center;
@@ -201,7 +201,7 @@
 
   &-loading {
     padding: 12px;
-    background: $newborn-blue;
+    background: $blue-50;
     text-align: center;
   }
 }
@@ -221,7 +221,7 @@
     top: 0.4rem;
     width: 0.3rem;
     height: 0.3rem;
-    background: #007185;
+    background: $primary;
     border-radius: 50%;
     animation: dotTyping 1.4s infinite ease-in-out both;
   }

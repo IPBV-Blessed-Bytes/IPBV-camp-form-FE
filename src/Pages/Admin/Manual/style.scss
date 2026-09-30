@@ -13,23 +13,23 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 0.85rem;
-    border: 1px solid $medium-gray;
+    border: 1px solid $gray-300;
     border-radius: 0.6rem;
     background: $white;
-    color: $alternate-dark-gray !important;
+    color: $gray-500 !important;
     text-decoration: none;
     font-size: 0.92rem;
     transition: border-color 0.15s ease, background 0.15s ease;
 
     &:hover {
-      border-color: $teal-blue;
-      background: rgba(0, 113, 133, 0.05);
+      border-color: $primary;
+      background: rgba($primary, 0.05);
     }
   }
 
   &__section {
     background: $white;
-    border: 1px solid $medium-gray;
+    border: 1px solid $gray-300;
     border-radius: 0.75rem;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1rem;
@@ -52,7 +52,7 @@
     li {
       margin-bottom: 0.5rem;
       line-height: 1.55;
-      color: $alternate-dark-gray;
+      color: $gray-500;
 
       &:last-child {
         margin-bottom: 0;

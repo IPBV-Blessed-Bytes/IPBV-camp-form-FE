@@ -49,7 +49,7 @@
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.6rem;
     font-weight: 700;
     margin: 0;
@@ -60,19 +60,19 @@
   }
 
   &__message {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 1rem;
     margin: 0.5rem 0 0;
   }
 
   &__contact {
-    color: $dark-gray;
+    color: $ink;
     line-height: 1.6;
     margin: 1.25rem 0 0;
   }
 
   &__church {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.85rem;
     font-style: italic;
     margin-top: 0.75rem;

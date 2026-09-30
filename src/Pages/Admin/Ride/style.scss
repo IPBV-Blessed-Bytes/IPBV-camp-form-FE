@@ -17,41 +17,41 @@
 
 .ride-stat {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-left: 4px solid $primary;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba($black, 0.04);
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   padding: 0.85rem 1rem;
 
   &__value {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
   }
 
   &__label {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.78rem;
   }
 
   &--used {
-    border-left-color: #f0ad4e;
+    border-left-color: $amber;
   }
 
   &--free {
-    border-left-color: #28a745;
+    border-left-color: $success;
   }
 
   &--waiting {
-    border-left-color: #dc3545;
+    border-left-color: $danger;
   }
 
   &--pct {
-    border-left-color: #6f42c1;
+    border-left-color: $purple;
   }
 }
 
@@ -81,7 +81,7 @@
 
 .ride-contact {
   align-items: center;
-  color: $dark-gray;
+  color: $ink;
   display: inline-flex;
   gap: 0.35rem;
   text-decoration: none;
@@ -92,7 +92,7 @@
 }
 
 .ride-seats__count {
-  color: $alternate-dark-gray;
+  color: $gray-500;
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -109,7 +109,7 @@
 .ride-search {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 10px;
   display: flex;
   gap: 0.5rem;
@@ -131,7 +131,7 @@
   margin: 1.75rem 0 1rem;
 
   h4 {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -140,23 +140,23 @@
   }
 
   &__count {
-    background: $alternate-light-gray;
+    background: $gray-100;
     border-radius: 999px;
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.1rem 0.55rem;
   }
 
   &__line {
-    background: $alternate-light-gray;
+    background: $gray-100;
     flex: 1;
     height: 1px;
   }
 }
 
 .ride-empty {
-  color: $alternate-dark-gray;
+  color: $gray-500;
   padding: 0.5rem 0;
 }
 
@@ -168,9 +168,9 @@
 
 .ride-car {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 14px rgba($black, 0.05);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -201,15 +201,15 @@
   }
 
   &__name {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.05rem;
     font-weight: 700;
   }
 
   &__obs {
-    background: $background-gray;
+    background: $gray-50;
     border-radius: 8px;
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.85rem;
     margin: 0;
     padding: 0.4rem 0.6rem;
@@ -223,7 +223,7 @@
   }
 
   &__empty {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.85rem;
     font-style: italic;
   }
@@ -259,8 +259,8 @@
     width: 18px;
 
     &:hover {
-      background: #dc3545;
-      color: #fff;
+      background: $danger;
+      color: $white;
     }
   }
 }
@@ -274,9 +274,9 @@
 .ride-need {
   align-items: center;
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba($black, 0.04);
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -292,12 +292,12 @@
   }
 
   &__name {
-    color: $dark-gray;
+    color: $ink;
     font-weight: 600;
   }
 
   &__obs {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.85rem;
     font-style: italic;
   }
@@ -324,9 +324,9 @@
 
 .ride-filter-chip {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 999px;
-  color: $alternate-dark-gray;
+  color: $gray-500;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;

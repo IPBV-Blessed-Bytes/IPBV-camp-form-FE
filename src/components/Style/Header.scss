@@ -47,7 +47,7 @@
     transition: background 0.15s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba($white, 0.14);
       text-decoration: underline;
     }
 

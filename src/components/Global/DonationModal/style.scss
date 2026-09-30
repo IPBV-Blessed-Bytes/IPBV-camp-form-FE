@@ -2,18 +2,18 @@
 
 .donation-modal {
   &__desc {
-    color: $dark-gray;
+    color: $ink;
     font-size: 0.95rem;
   }
 
   &__label {
-    color: $dark-gray;
+    color: $ink;
     margin-bottom: 0.35rem;
   }
 
   &__hint {
     align-items: center;
-    color: $alternate-dark-gray;
+    color: $gray-500;
     display: flex;
     font-size: 0.85rem;
     gap: 0.4rem;

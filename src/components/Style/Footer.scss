@@ -2,7 +2,7 @@
 
 .form__footer {
   align-items: center;
-  border-top: 1px solid $alternate-light-gray;
+  border-top: 1px solid $gray-100;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -33,7 +33,7 @@
   }
 
   &__credits {
-    color: $alternate-dark-gray;
+    color: $gray-500;
   }
 
   &__powered {
@@ -41,7 +41,7 @@
     margin: 0 0 0.15rem;
 
     .mail-to {
-      color: $dark-gray;
+      color: $ink;
       font-weight: 600;
       text-decoration: none;
 

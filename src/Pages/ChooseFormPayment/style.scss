@@ -18,9 +18,9 @@
 
 .payment-card {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba($black, 0.04);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@
 
   &:hover {
     border-color: $primary;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba($black, 0.08);
     transform: translateY(-1px);
   }
 
@@ -50,13 +50,13 @@
   }
 
   &__title {
-    color: $dark-gray;
+    color: $ink;
     font-size: 1.05rem;
     font-weight: 700;
   }
 
   &__desc {
-    color: $alternate-dark-gray;
+    color: $gray-500;
     font-size: 0.83rem;
     line-height: 1.4;
   }
@@ -80,13 +80,13 @@
     border-color: $primary;
 
     .payment-card__icon {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba($white, 0.2);
     }
     .payment-card__title {
       color: $white;
     }
     .payment-card__desc {
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba($white, 0.85);
     }
   }
 }
@@ -99,9 +99,9 @@
 
 .installment-chip {
   background: $white;
-  border: 1px solid $alternate-light-gray;
+  border: 1px solid $gray-100;
   border-radius: 999px;
-  color: $dark-gray;
+  color: $ink;
   cursor: pointer;
   font-weight: 700;
   min-width: 52px;
