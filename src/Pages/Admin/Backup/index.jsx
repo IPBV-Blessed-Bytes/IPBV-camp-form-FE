@@ -9,6 +9,7 @@ import { getEventSlug } from '@/config/eventScope';
 import scrollUp from '@/hooks/useScrollUp';
 import Icons from '@/components/Global/Icons';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import FormSection from '@/components/Admin/FormSection';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
@@ -142,15 +143,12 @@ const AdminBackup = ({ loggedUsername }) => {
       />
 
       <div className="admin-subpage__content backup-page__content">
-        <Card className="backup-card">
-          <Card.Body>
-            <Card.Title>O que o backup inclui</Card.Title>
-            <p className="text-secondary mb-0">
-              Um arquivo JSON com a configuração do evento, o formulário (seções e campos), produtos, lotes e preços,
-              inscrições e pagamentos, além de quartos e caronas. Contém apenas os dados <b>deste evento</b>.
-            </p>
-          </Card.Body>
-        </Card>
+        <FormSection title="O que o backup inclui">
+          <p className="text-secondary mb-0">
+            Um arquivo JSON com a configuração do evento, o formulário (seções e campos), produtos, lotes e preços,
+            inscrições e pagamentos, além de quartos e caronas. Contém apenas os dados <b>deste evento</b>.
+          </p>
+        </FormSection>
 
         <div className="backup-actions">
           <Card className="backup-action">
@@ -176,9 +174,7 @@ const AdminBackup = ({ loggedUsername }) => {
           </Card>
         </div>
 
-        <Card className="backup-card mt-4">
-          <Card.Body>
-            <Card.Title>Backup automático</Card.Title>
+        <FormSection title="Backup automático">
             <p className="text-secondary">
               Envie o backup deste evento por e-mail automaticamente, na frequência escolhida.
             </p>
@@ -211,12 +207,9 @@ const AdminBackup = ({ loggedUsername }) => {
               </p>
             )}
             <SpinnerButton variant="teal-blue" onClick={handleSaveConfig} loading={savingConfig}>Salvar agendamento</SpinnerButton>
-          </Card.Body>
-        </Card>
+        </FormSection>
 
-        <Card className="backup-card mt-4">
-          <Card.Body>
-            <Card.Title>Restaurar backup</Card.Title>
+        <FormSection title="Restaurar backup">
             <p className="text-secondary">
               Cria um <b>novo evento</b> a partir de um arquivo de backup (configuração, formulário, produtos, lotes,
               inscrições e quartos). Não altera eventos existentes.
@@ -249,8 +242,7 @@ const AdminBackup = ({ loggedUsername }) => {
             <Button variant="teal-blue" onClick={handleRestore} disabled={restoring || !restore.snapshot}>
               {restoring ? 'Restaurando...' : 'Restaurar como novo evento'}
             </Button>
-          </Card.Body>
-        </Card>
+        </FormSection>
       </div>
     </div>
   );
