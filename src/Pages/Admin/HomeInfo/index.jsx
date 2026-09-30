@@ -19,6 +19,7 @@ import CustomEditor from '@/components/Global/CustomEditor';
 import { iconsOptions } from '@/utils/constants';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
+import FormSection from '@/components/Admin/FormSection';
 
 const sortedIconsOptions = [...iconsOptions].sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'));
 
@@ -344,14 +345,10 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
         <Row className="g-4">
         <Col xs={12} lg={5} xl={4}>
-          <Form className="admin-panel">
-            <h2 className="admin-panel__title">Informações Base</h2>
-
+          <FormSection title="Informações Base" description="Dados principais exibidos no topo da página inicial do formulário.">
             {Object.keys(formData.top).map((field) => (
               <Form.Group key={field} className="mt-2">
-                <Form.Label>
-                  <b>{topFieldsConfig[field].label}</b>
-                </Form.Label>
+                <Form.Label>{topFieldsConfig[field].label}</Form.Label>
                 <Form.Control
                   type="text"
                   value={formData.top[field]}
@@ -366,13 +363,13 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 {editing ? 'Salvar Alterações' : 'Criar Homepage'}
               </Button>
             </div>
-          </Form>
+          </FormSection>
         </Col>
 
         <Col xs={12} lg={7} xl={8}>
-          <Form className="admin-panel">
+          <FormSection>
             <div className="homeinfo-section-head">
-              <h2 className="admin-panel__title mb-0">Informações Importantes</h2>
+              <h2 className="admin-form-section__title homeinfo-section-head__title mb-0">Informações Importantes</h2>
               <div className="homeinfo-section-head__actions">
                 <Button
                   variant="outline-teal-blue"
@@ -396,9 +393,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
             {showNewBottomForm && (
               <div className="homeinfo-new-item">
                 <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Ícone:</b>
-                  </Form.Label>
+                  <Form.Label>Ícone:</Form.Label>
                   <div className="d-flex align-items-center gap-2">
                     <Form.Select
                       value={newBottomItem.icon}
@@ -423,9 +418,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Form.Group>
 
                 <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Título:</b>
-                  </Form.Label>
+                  <Form.Label>Título:</Form.Label>
                   <Form.Control
                     type="text"
                     value={newBottomItem.title}
@@ -434,9 +427,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Form.Group>
 
                 <Form.Group className="mt-2">
-                  <Form.Label>
-                    <b>Descrição:</b>
-                  </Form.Label>
+                  <Form.Label>Descrição:</Form.Label>
 
                   <CustomEditor
                     value={newBottomItem.description}
@@ -478,9 +469,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
                   <Accordion.Body>
                     <Form.Group className="mt-2">
-                      <Form.Label>
-                        <b>Ícone:</b>
-                      </Form.Label>
+                      <Form.Label>Ícone:</Form.Label>
 
                       <div className="d-flex align-items-center gap-2">
                         <Form.Select
@@ -507,9 +496,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-2">
-                      <Form.Label>
-                        <b>Título:</b>
-                      </Form.Label>
+                      <Form.Label>Título:</Form.Label>
                       <Form.Control
                         type="text"
                         value={item.title}
@@ -518,9 +505,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-2">
-                      <Form.Label>
-                        <b>Descrição:</b>
-                      </Form.Label>
+                      <Form.Label>Descrição:</Form.Label>
                       {openItems.includes(String(index)) && (
                         <CustomEditor
                           value={item.description}
@@ -542,7 +527,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Accordion.Item>
               ))}
             </Accordion>
-          </Form>
+          </FormSection>
         </Col>
       </Row>
 

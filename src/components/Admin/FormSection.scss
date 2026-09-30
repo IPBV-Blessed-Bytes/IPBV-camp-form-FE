@@ -1,0 +1,57 @@
+@use '../../styles/Variables.scss' as *;
+
+.admin-form-section {
+  background: #fff;
+  border: 1px solid #e6ebef;
+  border-radius: 16px;
+  padding: 22px 24px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(15, 40, 50, 0.05);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: $primary;
+    font-size: 1.08rem;
+    margin: 0 0 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eef2f4;
+
+    &::before {
+      content: '';
+      flex: none;
+      width: 4px;
+      height: 18px;
+      border-radius: 3px;
+      background: $primary;
+    }
+  }
+
+  &__desc {
+    font-size: 0.88rem;
+    color: #5a6b73;
+    margin: 12px 0 16px;
+  }
+
+  &__title + &__desc {
+    margin-top: 14px;
+  }
+
+  &__title {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    font-size: 0.84rem;
+    color: #5a6b73;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 10px;
+  }
+}

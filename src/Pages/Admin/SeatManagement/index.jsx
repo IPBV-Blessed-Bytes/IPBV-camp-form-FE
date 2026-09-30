@@ -9,6 +9,7 @@ import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
+import FormSection from '@/components/Admin/FormSection';
 
 const AdminSeatManagement = ({
   loading,
@@ -113,13 +114,9 @@ const AdminSeatManagement = ({
 
         <Row className="g-4">
           <Col xs={12} lg={7}>
-            <Form className="admin-panel">
-              <h2 className="admin-panel__title">Vagas e pacotes</h2>
-
+            <FormSection title="Vagas e pacotes">
               <Form.Group controlId="inputSeats" className="seat-total-field">
-                <Form.Label>
-                  <b>Vagas Totais Inscritos:</b>
-                </Form.Label>
+                <Form.Label>Vagas Totais Inscritos:</Form.Label>
                 <Form.Control
                   type="number"
                   min="1"
@@ -131,9 +128,7 @@ const AdminSeatManagement = ({
               <div className="seat-packages-grid">
                 {packageOrder.map((packageType) => (
                   <Form.Group controlId={`input-${packageType}`} key={packageType}>
-                    <Form.Label>
-                      <b>{packageLabels[packageType]}:</b>
-                    </Form.Label>
+                    <Form.Label>{packageLabels[packageType]}:</Form.Label>
                     <Form.Control
                       type="number"
                       min="0"
@@ -149,16 +144,13 @@ const AdminSeatManagement = ({
                   Ajustar Vagas Pacotes
                 </Button>
               </div>
-            </Form>
+            </FormSection>
           </Col>
 
           <Col xs={12} lg={5}>
-            <Form className="admin-panel">
-              <h2 className="admin-panel__title">Vagas de ônibus</h2>
+            <FormSection title="Vagas de ônibus">
               <Form.Group controlId="inputBus">
-                <Form.Label>
-                  <b>Vagas Totais no Ônibus:</b>
-                </Form.Label>
+                <Form.Label>Vagas Totais no Ônibus:</Form.Label>
                 <Form.Control
                   type="number"
                   min="1"
@@ -172,7 +164,7 @@ const AdminSeatManagement = ({
                   Ajustar Vagas Ônibus
                 </Button>
               </div>
-            </Form>
+            </FormSection>
           </Col>
         </Row>
         <Loading loading={loading || loadingContent} />
