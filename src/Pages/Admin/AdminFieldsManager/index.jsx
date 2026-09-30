@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { listAdminFields, createAdminField, updateAdminField, deleteAdminField } from '@/services/adminFields';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
@@ -51,7 +51,7 @@ const textToOptions = (text) =>
     .map((line) => ({ value: slugify(line) || line, label: line }));
 
 const AdminFieldsManager = ({ loggedUsername }) => {
-  const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -150,7 +150,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Campos administrativos"
-        subtitle={`Campos preenchidos só pelo admin — evento: ${slug}`}
+        subtitle={`Campos preenchidos só pelo admin — evento: ${eventName}`}
         typeIcon="edit"
       />
 

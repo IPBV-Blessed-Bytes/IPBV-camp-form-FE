@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { listFormFields, createFormField, updateFormField, deleteFormField } from '@/services/formFields';
 import { listFormSections, createFormSection, updateFormSection, deleteFormSection } from '@/services/formSections';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import { EVENT_TEMPLATES } from '@/config/eventTemplates';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
@@ -61,7 +61,7 @@ const emptyField = (sectionId) => ({
 });
 
 const AdminFormBuilder = ({ loggedUsername }) => {
-  const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const [sections, setSections] = useState([]);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -370,7 +370,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Construtor de Formulário"
-        subtitle={`Campos do evento: ${slug}`}
+        subtitle={`Campos do evento: ${eventName}`}
         typeIcon="form-context"
       />
 

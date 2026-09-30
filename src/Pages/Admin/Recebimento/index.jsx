@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { getRecipientStatus, onboardRecipient } from '@/services/recipientOnboarding';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import FormSection from '@/components/Admin/FormSection';
 import Loading from '@/components/Global/Loading';
@@ -41,7 +41,7 @@ const EMPTY = {
 };
 
 const AdminRecebimento = ({ loggedUsername }) => {
-  const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const [loading, setLoading] = useState(true);
   const [onboarded, setOnboarded] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -79,7 +79,7 @@ const AdminRecebimento = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Recebimento"
-        subtitle={`Conta que recebe as inscrições pagas — evento: ${slug}`}
+        subtitle={`Conta que recebe as inscrições pagas — evento: ${eventName}`}
         typeIcon="money"
       />
 

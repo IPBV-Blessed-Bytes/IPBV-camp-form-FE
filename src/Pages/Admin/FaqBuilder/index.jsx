@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { listFaqs, createFaq, updateFaq, deleteFaq } from '@/services/faqs';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
@@ -27,7 +27,7 @@ const hasAnswer = (answer) =>
   );
 
 const AdminFaqBuilder = ({ loggedUsername }) => {
-  const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -131,7 +131,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Perguntas Frequentes"
-        subtitle={`Perguntas do evento: ${slug}`}
+        subtitle={`Perguntas do evento: ${eventName}`}
         typeIcon="question"
       />
 

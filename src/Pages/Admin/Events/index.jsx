@@ -201,27 +201,27 @@ const AdminEvents = ({ loggedUsername }) => {
   const handleChange = (field) => (value) => setDraft((prev) => ({ ...prev, [field]: value }));
 
   const openFormBuilder = (event) => {
-    setSelectedEvent(event.slug);
+    setSelectedEvent(event.slug, event.name);
     navigate('/admin/formulario');
   };
 
   const openSubmissions = (event) => {
-    setSelectedEvent(event.slug);
+    setSelectedEvent(event.slug, event.name);
     navigate('/admin/inscricoes');
   };
 
   const openInfoHome = (event) => {
-    setSelectedEvent(event.slug);
+    setSelectedEvent(event.slug, event.name);
     navigate('/admin/info');
   };
 
   const openFaq = (event) => {
-    setSelectedEvent(event.slug);
+    setSelectedEvent(event.slug, event.name);
     navigate('/admin/faq');
   };
 
   const openPackage = (event) => {
-    setSelectedEvent(event.slug);
+    setSelectedEvent(event.slug, event.name);
     navigate('/admin/pacote');
   };
 

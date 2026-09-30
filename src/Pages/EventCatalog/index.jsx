@@ -92,7 +92,7 @@ const EventCatalog = () => {
               if (registrationsOpen) {
                 navigate(eventPath('/', event.slug));
               } else {
-                setSelectedEvent(event.slug);
+                setSelectedEvent(event.slug, event.name);
                 navigate('/entrar');
               }
             };

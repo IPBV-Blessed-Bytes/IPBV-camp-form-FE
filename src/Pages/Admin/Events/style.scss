@@ -1,8 +1,11 @@
 .admin-events {
   &__content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.5rem 1.5rem 3rem;
+    flex: 1;
+    padding: 1.5rem 2rem 4rem;
+
+    @media (max-width: 768px) {
+      padding: 1rem 1rem 4rem;
+    }
   }
 
   &__toolbar {

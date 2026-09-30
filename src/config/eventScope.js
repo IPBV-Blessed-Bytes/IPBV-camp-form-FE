@@ -1,4 +1,5 @@
 export const SELECTED_EVENT_KEY = 'selected-event';
+export const SELECTED_EVENT_NAME_KEY = 'selected-event-name';
 
 export const GLOBAL_ADMIN_SEGMENTS = new Set(['', 'eventos', 'usuarios', 'papeis', 'logs']);
 
@@ -47,13 +48,27 @@ export const getEventSlugFromPath = (pathname = window.location.pathname) => {
 
 export const getEventSlug = () => getEventSlugFromPath() || localStorage.getItem(SELECTED_EVENT_KEY) || null;
 
+export const setSelectedEventName = (name) => {
+  if (name) localStorage.setItem(SELECTED_EVENT_NAME_KEY, name);
+  else localStorage.removeItem(SELECTED_EVENT_NAME_KEY);
+};
+
+export const getEventName = () => {
+  const stored = localStorage.getItem(SELECTED_EVENT_NAME_KEY);
+  return stored || getEventSlug() || '';
+};
+
 export const adminSegmentFromPath = (pathname = window.location.pathname) => {
   const match = pathname.match(/^\/(?:admin|dev)(?:\/([^/?#]+))?/);
   return match ? { isAdmin: true, segment: match[1] || '' } : { isAdmin: false, segment: null };
 };
 
-export const setSelectedEvent = (slug) => {
-  if (slug) localStorage.setItem(SELECTED_EVENT_KEY, slug);
+export const setSelectedEvent = (slug, name) => {
+  if (!slug) return;
+  const previous = localStorage.getItem(SELECTED_EVENT_KEY);
+  localStorage.setItem(SELECTED_EVENT_KEY, slug);
+  if (name) localStorage.setItem(SELECTED_EVENT_NAME_KEY, name);
+  else if (previous !== slug) localStorage.removeItem(SELECTED_EVENT_NAME_KEY);
 };
 
 export const withEventScope = (url) => {

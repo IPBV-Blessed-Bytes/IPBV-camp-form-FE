@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import '../Style/AdminTopbar.scss';
-import { eventPath, getEventSlug, setSelectedEvent } from '@/config/eventScope';
+import { eventPath, getEventSlug, setSelectedEvent, setSelectedEventName } from '@/config/eventScope';
 import { listMyEvents } from '@/services/events';
 import ChangePasswordModal from '@/components/Global/ChangePasswordModal';
 
@@ -36,13 +36,19 @@ const AdminTopbar = ({ username, logout }) => {
 
   useEffect(() => {
     listMyEvents()
-      .then((list) => setEvents(Array.isArray(list) ? list : list?.events || []))
+      .then((list) => {
+        const arr = Array.isArray(list) ? list : list?.events || [];
+        setEvents(arr);
+        const current = arr.find((event) => event.slug === currentSlug);
+        if (current?.name) setSelectedEventName(current.name);
+      })
       .catch(() => setEvents([]));
-  }, []);
+  }, [currentSlug]);
 
   const handleEventChange = (slug) => {
     if (!slug || slug === currentSlug) return;
-    setSelectedEvent(slug);
+    const chosen = events.find((event) => event.slug === slug);
+    setSelectedEvent(slug, chosen?.name);
     // Re-scope the whole admin to the chosen event (fetchers read the selected slug).
     window.location.assign('/admin');
   };

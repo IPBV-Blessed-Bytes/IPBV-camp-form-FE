@@ -11,7 +11,7 @@ import {
 } from '@/services/packageCategories';
 import { getAllProducts, assignProductPackageCategory } from '@/services/products';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
 import CustomModal from '@/components/Global/CustomModal';
@@ -30,7 +30,7 @@ const ruleLabel = (rule) => SELECTION_RULES.find((r) => r.value === rule)?.label
 const EMPTY_CATEGORY = { id: null, name: '', description: '', selectionRule: 'single', required: true };
 
 const AdminPackageBuilder = ({ loggedUsername }) => {
-  const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -190,7 +190,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Pacote"
-        subtitle={`Categorias e produtos do evento: ${slug}`}
+        subtitle={`Categorias e produtos do evento: ${eventName}`}
         typeIcon="cart"
       />
 

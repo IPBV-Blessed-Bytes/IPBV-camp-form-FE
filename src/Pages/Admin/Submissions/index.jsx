@@ -9,6 +9,7 @@ import { listSubmissions, updateSubmission, deleteSubmission } from '@/services/
 import { listAdminFields, updateSubmissionAdminAnswers } from '@/services/adminFields';
 import { registrationFileUrl } from '@/services/uploads';
 import { getEventSlug } from '@/config/eventScope';
+import useEventName from '@/hooks/useEventName';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
@@ -104,6 +105,7 @@ EditField.propTypes = {
 
 const AdminSubmissions = ({ loggedUsername }) => {
   const slug = useMemo(() => getEventSlug(), []);
+  const eventName = useEventName();
   const { fields, loading: schemaLoading } = useEventSchema();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -247,7 +249,7 @@ const AdminSubmissions = ({ loggedUsername }) => {
       <AdminSubpageHeader
         username={loggedUsername}
         title="Inscrições"
-        subtitle={`Respostas do evento: ${slug}`}
+        subtitle={`Respostas do evento: ${eventName}`}
         typeIcon="add-person"
       />
 
