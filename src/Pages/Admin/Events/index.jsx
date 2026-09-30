@@ -52,6 +52,10 @@ const EMPTY_EVENT = {
   social: {},
   groupDiscountThreshold: '',
   groupDiscountPercent: '',
+  pagarmeDashboardUrl: '',
+  crewBusVacancies: '',
+  whatsappGroupLink: '',
+  showLgpdModal: true,
 };
 
 const SOCIAL_NETWORKS = [
@@ -152,6 +156,10 @@ const AdminEvents = ({ loggedUsername }) => {
       groupDiscountThreshold:
         event.groupDiscountThresholdCents != null ? (event.groupDiscountThresholdCents / 100).toString() : '',
       groupDiscountPercent: event.groupDiscountPercent != null ? event.groupDiscountPercent.toString() : '',
+      pagarmeDashboardUrl: event.pagarmeDashboardUrl ?? '',
+      crewBusVacancies: event.crewBusVacancies ?? '',
+      whatsappGroupLink: event.whatsappGroupLink ?? '',
+      showLgpdModal: event.showLgpdModal !== false,
     });
     setHasImage(false);
     setImageVersion(Date.now());
@@ -255,6 +263,11 @@ const AdminEvents = ({ loggedUsername }) => {
         draft.groupDiscountPercent === '' || draft.groupDiscountPercent == null
           ? null
           : Math.round(Number(draft.groupDiscountPercent)),
+      pagarmeDashboardUrl: draft.pagarmeDashboardUrl?.trim() || null,
+      crewBusVacancies:
+        draft.crewBusVacancies === '' || draft.crewBusVacancies == null ? null : Number(draft.crewBusVacancies),
+      whatsappGroupLink: draft.whatsappGroupLink?.trim() || null,
+      showLgpdModal: draft.showLgpdModal !== false,
     };
 
     try {

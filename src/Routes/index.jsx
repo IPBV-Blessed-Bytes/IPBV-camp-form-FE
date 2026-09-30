@@ -63,6 +63,7 @@ const AdminFormStage = lazy(() => import('@/Pages/Admin/FormStage'));
 const AdminLotManagement = lazy(() => import('@/Pages/Admin/LotManagement'));
 const AdminWristbandsManagement = lazy(() => import('@/Pages/Admin/WristbandsManagement'));
 const AdminHomepageInfoManagement = lazy(() => import('@/Pages/Admin/HomeInfo'));
+const AdminUtilitySettings = lazy(() => import('@/Pages/Admin/UtilitySettings'));
 const AdminEvents = lazy(() => import('@/Pages/Admin/Events'));
 const AdminBackup = lazy(() => import('@/Pages/Admin/Backup'));
 const AdminBoletos = lazy(() => import('@/Pages/Admin/Boletos'));
@@ -512,6 +513,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminHomepageInfoManagement formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/utilitarias')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminUtilitySettings loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
