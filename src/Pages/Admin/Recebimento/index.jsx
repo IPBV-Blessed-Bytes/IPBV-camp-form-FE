@@ -110,43 +110,43 @@ const AdminRecebimento = ({ loggedUsername }) => {
               <FormSection title="Responsável">
               <Row className="g-3">
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-1">
                     <Form.Label>Nome completo</Form.Label>
                     <Form.Control value={form.name} onChange={set('name')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-2">
                     <Form.Label>CPF</Form.Label>
                     <Form.Control value={form.document} onChange={set('document')} placeholder="000.000.000-00" required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-3">
                     <Form.Label>E-mail</Form.Label>
                     <Form.Control type="email" value={form.email} onChange={set('email')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-4">
                     <Form.Label>Nome da mãe</Form.Label>
                     <Form.Control value={form.motherName} onChange={set('motherName')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-5">
                     <Form.Label>Nascimento</Form.Label>
                     <Form.Control value={form.birthdate} onChange={set('birthdate')} placeholder="dd/mm/aaaa" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-6">
                     <Form.Label>Renda mensal (R$)</Form.Label>
                     <Form.Control type="number" min={0} value={form.monthlyIncome} onChange={set('monthlyIncome')} />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-7">
                     <Form.Label>Profissão</Form.Label>
                     <Form.Control value={form.professionalOccupation} onChange={set('professionalOccupation')} />
                   </Form.Group>
@@ -157,61 +157,61 @@ const AdminRecebimento = ({ loggedUsername }) => {
               <FormSection title="Endereço">
               <Row className="g-3">
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-8">
                     <Form.Label>Rua</Form.Label>
                     <Form.Control value={form.street} onChange={set('street')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-9">
                     <Form.Label>Número</Form.Label>
                     <Form.Control value={form.streetNumber} onChange={set('streetNumber')} />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={4}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-10">
                     <Form.Label>Complemento</Form.Label>
                     <Form.Control value={form.complementary} onChange={set('complementary')} />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={5}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-11">
                     <Form.Label>Bairro</Form.Label>
                     <Form.Control value={form.neighborhood} onChange={set('neighborhood')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={8} md={4}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-12">
                     <Form.Label>Cidade</Form.Label>
                     <Form.Control value={form.city} onChange={set('city')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={4} md={1}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-13">
                     <Form.Label>UF</Form.Label>
                     <Form.Control value={form.state} onChange={set('state')} maxLength={2} placeholder="PE" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-14">
                     <Form.Label>CEP</Form.Label>
                     <Form.Control value={form.zipCode} onChange={set('zipCode')} placeholder="00000-000" required />
                   </Form.Group>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-15">
                     <Form.Label>Ponto de referência</Form.Label>
                     <Form.Control value={form.referencePoint} onChange={set('referencePoint')} />
                   </Form.Group>
                 </Col>
                 <Col xs={4} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-16">
                     <Form.Label>DDD</Form.Label>
                     <Form.Control value={form.phoneDdd} onChange={set('phoneDdd')} placeholder="81" required />
                   </Form.Group>
                 </Col>
                 <Col xs={8} md={4}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-17">
                     <Form.Label>Celular</Form.Label>
                     <Form.Control value={form.phoneNumber} onChange={set('phoneNumber')} placeholder="99999-9999" required />
                   </Form.Group>
@@ -222,37 +222,37 @@ const AdminRecebimento = ({ loggedUsername }) => {
               <FormSection title="Conta bancária">
               <Row className="g-3">
                 <Col xs={6} md={3}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-18">
                     <Form.Label>Banco (código)</Form.Label>
                     <Form.Control value={form.bankCode} onChange={set('bankCode')} placeholder="341" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-19">
                     <Form.Label>Agência</Form.Label>
                     <Form.Control value={form.branchNumber} onChange={set('branchNumber')} placeholder="0001" required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-20">
                     <Form.Label>Díg. agência</Form.Label>
                     <Form.Control value={form.branchCheckDigit} onChange={set('branchCheckDigit')} />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-21">
                     <Form.Label>Conta</Form.Label>
                     <Form.Control value={form.accountNumber} onChange={set('accountNumber')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={2}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-22">
                     <Form.Label>Díg. conta</Form.Label>
                     <Form.Control value={form.accountCheckDigit} onChange={set('accountCheckDigit')} required />
                   </Form.Group>
                 </Col>
                 <Col xs={6} md={3}>
-                  <Form.Group>
+                  <Form.Group controlId="rcb-23">
                     <Form.Label>Tipo</Form.Label>
                     <Form.Select value={form.accountType} onChange={set('accountType')}>
                       <option value="checking">Corrente</option>
