@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { InputMask, format as formatMask } from '@react-input/mask';
@@ -22,6 +23,7 @@ import { CPF_MASK } from '@/utils/masks';
 import { useFormik } from 'formik';
 
 const CpfReview = () => {
+  useDocumentTitle('Verificação de Inscrição');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { handlePersonData } = useFormState();

@@ -6,6 +6,7 @@ import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
 import CustomModal from '@/components/Global/CustomModal';
 import { scrollTop } from '@/hooks/useScrollUp';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { getPublicSetting } from '@/services/settings';
@@ -22,6 +23,7 @@ const REGISTRATION_STATUS = {
 import './style.scss';
 
 const Institutional = () => {
+  useDocumentTitle();
   const navigate = useNavigate();
   const { handleAdminClick, formStage } = useFormState();
   const [scrolled, setScrolled] = useState(false);

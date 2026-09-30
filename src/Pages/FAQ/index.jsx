@@ -2,6 +2,7 @@ import { Accordion, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import scrollUp from '@/hooks/useScrollUp';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
@@ -11,6 +12,7 @@ import { listFaqs } from '@/services/faqs';
 import useContactPhone from '@/hooks/useContactPhone';
 
 const FAQ = () => {
+  useDocumentTitle('Perguntas Frequentes');
   const navigate = useNavigate();
   const contact = useContactPhone();
 
