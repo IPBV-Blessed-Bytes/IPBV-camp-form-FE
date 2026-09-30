@@ -4,10 +4,13 @@
 $admin-accent-registered: $primary;
 $admin-accent-ride: $orange;
 $admin-accent-discount: $emerald;
+$admin-accent-bus: $lavender;
 $admin-accent-rooms: $secondary;
 $admin-accent-teams: $sky-blue;
 $admin-accent-feedback: $royal-blue;
 $admin-accent-checkin: $teal;
+$admin-accent-boletos: $gold;
+$admin-accent-donations: $magenta;
 
 .admin {
   background-color: $gray-50;
@@ -139,7 +142,7 @@ $admin-accent-checkin: $teal;
     --session-accent: #{$admin-accent-ride};
   }
   &--bus-card {
-    --session-accent: $lavender;
+    --session-accent: #{$admin-accent-bus};
   }
   &--discount-card {
     --session-accent: #{$admin-accent-discount};
@@ -157,10 +160,10 @@ $admin-accent-checkin: $teal;
     --session-accent: #{$admin-accent-checkin};
   }
   &--boletos-card {
-    --session-accent: $gold;
+    --session-accent: #{$admin-accent-boletos};
   }
   &--donations-card {
-    --session-accent: $magenta;
+    --session-accent: #{$admin-accent-donations};
   }
 
   &--draggable {
@@ -262,7 +265,9 @@ $admin-accent-checkin: $teal;
   text-align: left;
   cursor: pointer;
   box-shadow: 0 6px 18px rgba($blue-800, 0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 
   &:hover {
     transform: translateY(-3px);
