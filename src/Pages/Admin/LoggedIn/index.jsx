@@ -336,7 +336,7 @@ const AdminLoggedIn = ({
   const navigationSessions = [
     {
       permission: registeredButtonHomePermissions,
-      path: 'acampantes',
+      path: 'inscricoes',
       cardType: 'registered-card',
       title: 'Inscrições',
       typeIcon: 'person',
