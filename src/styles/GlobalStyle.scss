@@ -834,14 +834,14 @@ body {
   *,
   *::before,
   *::after {
-    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
 
-  *:not([class*='Toastify__progress-bar']),
+  *:not([class*='Toastify__progress-bar']):not(.tent-spinner):not(.spinner-border),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

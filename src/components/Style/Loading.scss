@@ -35,7 +35,7 @@
 
 .tent-spinner {
   display: inline-flex;
-  animation: tent-spin 1s steps(4) infinite;
+  animation: tent-spin 1s linear infinite;
 }
 
 @keyframes tent-spin {
