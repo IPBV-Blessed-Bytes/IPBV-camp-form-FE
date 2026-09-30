@@ -133,7 +133,7 @@ const AdminTopbar = ({ username, logout }) => {
                 setShowChangePassword(true);
               }}
             >
-              <Icons typeIcon="roles" iconSize={18} fill="#555050" />
+              <Icons typeIcon="refresh" iconSize={18} fill="#555050" />
               <span>{t('common.changePassword')}</span>
             </button>
             <div className="admin-topbar__menu-divider" />

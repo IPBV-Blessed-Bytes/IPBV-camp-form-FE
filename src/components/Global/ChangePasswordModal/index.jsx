@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { changePassword } from '@/services/auth';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import Icons from '@/components/Global/Icons';
+import CustomModal from '@/components/Global/CustomModal';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
@@ -25,7 +26,7 @@ const ChangePasswordModal = ({ show, onHide }) => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event?.preventDefault();
     if (!form.current) {
       toast.error('Informe sua senha atual.');
       return;
@@ -51,12 +52,24 @@ const ChangePasswordModal = ({ show, onHide }) => {
   };
 
   return (
-    <Modal show={show} onHide={close} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Alterar senha</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit} className="change-password">
+    <CustomModal
+      show={show}
+      onHide={close}
+      variant="info"
+      icon="refresh"
+      title="Alterar senha"
+      footer={
+        <>
+          <Button variant="outline-secondary" onClick={close} disabled={saving}>
+            Cancelar
+          </Button>
+          <SpinnerButton variant="teal-blue" className="fw-bold" loading={saving} onClick={handleSubmit}>
+            Alterar senha
+          </SpinnerButton>
+        </>
+      }
+    >
+      <Form onSubmit={handleSubmit} className="change-password">
           <Form.Group>
             <Form.Label className="fw-bold">Senha atual</Form.Label>
             <div className="change-password__field">
@@ -98,15 +111,11 @@ const ChangePasswordModal = ({ show, onHide }) => {
             />
           </Form.Group>
 
-          <div className="change-password__actions">
-            <Button variant="outline-secondary" onClick={close} disabled={saving}>
-              Cancelar
-            </Button>
-            <SpinnerButton type="submit" variant="teal-blue" className="fw-bold" loading={saving}>Alterar senha</SpinnerButton>
-          </div>
+          <button type="submit" className="visually-hidden" aria-hidden="true" tabIndex={-1}>
+            Alterar senha
+          </button>
         </Form>
-      </Modal.Body>
-    </Modal>
+    </CustomModal>
   );
 };
 
