@@ -8,6 +8,10 @@
       "myPanel": "My Dashboard",
       "login": "Sign in"
     },
+    "pageTitles": {
+      "cpfReview": "Registration Lookup",
+      "faq": "FAQ"
+    },
     "footer": {
       "panelTitle": "Internal Panel - System",
       "poweredBy": "Made by Enrolla",

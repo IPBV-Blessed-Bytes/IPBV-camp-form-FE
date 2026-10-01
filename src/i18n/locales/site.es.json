@@ -8,6 +8,10 @@
       "myPanel": "Mi Panel",
       "login": "Entrar"
     },
+    "pageTitles": {
+      "cpfReview": "Verificación de Inscripción",
+      "faq": "Preguntas Frecuentes"
+    },
     "footer": {
       "panelTitle": "Panel Interno - Sistema",
       "poweredBy": "Hecho por Enrolla",

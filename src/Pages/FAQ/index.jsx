@@ -2,6 +2,7 @@ import { Accordion, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import scrollUp from '@/hooks/useScrollUp';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 import './style.scss';
 import InfoButton from '@/components/Global/InfoButton';
 import Header from '@/components/Global/Header';
@@ -12,6 +13,7 @@ import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { listFaqs } from '@/services/faqs';
 
 const FAQ = () => {
+  useDocumentTitle('site.pageTitles.faq');
   const navigate = useNavigate();
   const { contact, legacyForm } = useEventBranding();
   const phone = contact;

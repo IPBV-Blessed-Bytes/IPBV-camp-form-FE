@@ -6,6 +6,7 @@ import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
 import CustomModal from '@/components/Global/CustomModal';
 import { scrollTop } from '@/hooks/useScrollUp';
+import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useFormState } from '@/contexts/FormStateContext';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
@@ -19,6 +20,7 @@ const REGISTRATION_STATUS = {
 };
 
 const Institutional = () => {
+  useDocumentTitle();
   const navigate = useNavigate();
   const { handleAdminClick } = useFormState();
   const { name: eventName, mapQuery, contact, contactMessage, socialLinks, registrationsOpen } = useEventBranding();
