@@ -28,6 +28,7 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'package-count',
   'non-paying-children',
   'crew-bus',
+  'registration-metrics',
   'donations',
   'deleted-registrations',
   'chatbot',
