@@ -4,6 +4,7 @@ import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
+import LanguageSwitcher from '@/components/Global/LanguageSwitcher';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 
 export const StoreNav = ({ onLanding }) => {
@@ -21,6 +22,7 @@ export const StoreNav = ({ onLanding }) => {
           {t('site.nav.brand')}
         </button>
         <nav className="storefront__nav-links">
+          <LanguageSwitcher />
           {onLanding && <a href="#planos" className='storefront__nav-link-plans'>{t('site.nav.prices')}</a>}
           <button type="button" className="storefront__nav-link-btn" onClick={() => navigate('/ajuda')}>
             {t('site.nav.help')}
