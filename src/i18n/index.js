@@ -11,6 +11,9 @@ import siteEs from './locales/site.es.json';
 import manualPt from './locales/manual.pt.json';
 import manualEn from './locales/manual.en.json';
 import manualEs from './locales/manual.es.json';
+import adminPt from './locales/admin.pt.json';
+import adminEn from './locales/admin.en.json';
+import adminEs from './locales/admin.es.json';
 
 export const SUPPORTED_LANGUAGES = ['pt', 'en', 'es'];
 
@@ -19,9 +22,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      pt: { translation: { ...pt, ...sitePt, ...manualPt } },
-      en: { translation: { ...en, ...siteEn, ...manualEn } },
-      es: { translation: { ...es, ...siteEs, ...manualEs } },
+      pt: { translation: { ...pt, ...sitePt, ...manualPt, ...adminPt } },
+      en: { translation: { ...en, ...siteEn, ...manualEn, ...adminEn } },
+      es: { translation: { ...es, ...siteEs, ...manualEs, ...adminEs } },
     },
     fallbackLng: 'pt',
     supportedLngs: SUPPORTED_LANGUAGES,

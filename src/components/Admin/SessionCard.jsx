@@ -17,6 +17,7 @@ const SessionCard = ({
   ctaText,
   locked,
   lockHint,
+  lockCta,
   draggable,
   dragging,
   onDragStart,
@@ -68,7 +69,7 @@ const SessionCard = ({
             </div>
             <div className="session-card__content">
               <h5 className="session-card__title">{title}</h5>
-              <span className="session-card__cta">{locked ? 'Desbloquear →' : ctaText || 'Acessar →'}</span>
+              <span className="session-card__cta">{locked ? lockCta || 'Desbloquear →' : ctaText || 'Acessar →'}</span>
             </div>
           </Card.Body>
         </Card>
@@ -91,6 +92,7 @@ SessionCard.propTypes = {
   ctaText: PropTypes.string,
   locked: PropTypes.bool,
   lockHint: PropTypes.string,
+  lockCta: PropTypes.string,
   draggable: PropTypes.bool,
   dragging: PropTypes.bool,
   onDragStart: PropTypes.func,

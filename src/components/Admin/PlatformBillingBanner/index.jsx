@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 
 import { getPlatformBillingStatus, createPlatformCharge } from '@/services/platformBilling';
 import { getApiErrorMessage } from '@/fetchers/helpers';
@@ -13,6 +14,7 @@ const formatBRL = (cents) =>
   ((cents || 0) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 });
 
 const PlatformBillingBanner = ({ canManage }) => {
+  const { t } = useTranslation();
   const [status, setStatus] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [kind, setKind] = useState('per_event');
@@ -110,15 +112,14 @@ const PlatformBillingBanner = ({ canManage }) => {
         <div className="platform-billing platform-billing--warn" role="alert">
           <Icons typeIcon="warn" iconSize={28} fill="#8a5300" />
           <div className="platform-billing__text">
-            <strong>Evento gratuito · nível básico.</strong>
+            <strong>{t('admin.billing.basicTitle')}</strong>
             <span>
-              Formulário, inscrições e check-in liberados. Para usar <b>logística, loja, recebimento e doações</b>,
-              desbloqueie este evento por {perEvent} ou assine {annual}/ano para eventos ilimitados.
+              <Trans i18nKey="admin.billing.basicText" values={{ perEvent, annual }} components={{ b: <b /> }} />
             </span>
           </div>
           {canManage && (
             <Button variant="warning" className="fw-bold platform-billing__btn" onClick={() => setShowModal(true)}>
-              Desbloquear evento
+              {t('admin.billing.unlockEvent')}
             </Button>
           )}
         </div>

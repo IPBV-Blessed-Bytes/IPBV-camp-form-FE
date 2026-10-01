@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "billing": {
+      "basicTitle": "Evento gratuito · nível básico.",
+      "basicText": "Formulário, inscrições e check-in liberados. Para usar <b>logística, loja, recebimento e doações</b>, desbloqueie este evento por {{perEvent}} ou assine {{annual}}/ano para eventos ilimitados.",
+      "unlockEvent": "Desbloquear evento",
+      "lockedToast": "Desbloqueie este evento gratuito (nível básico) para usar este recurso."
+    },
+    "card": {
+      "unlock": "Desbloquear →",
+      "lockHint": "Desbloqueie este evento para usar este recurso"
+    }
+  }
+}

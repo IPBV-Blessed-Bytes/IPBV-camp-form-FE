@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -131,6 +132,7 @@ const AdminLoggedIn = ({
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
 
   const openSettingsView = () => {
@@ -385,7 +387,7 @@ const AdminLoggedIn = ({
   const isLocked = (path) => freeEventAccess === 'BASIC' && BASIC_HIDDEN_PATHS.has(path);
 
   const handleLockedClick = () => {
-    toast.info('Desbloqueie este evento gratuito (nível básico) para usar este recurso.');
+    toast.info(t('admin.billing.lockedToast'));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -527,6 +529,8 @@ const AdminLoggedIn = ({
                       typeIcon={resolved.icon}
                       accentColor={resolved.color}
                       locked={isLocked(session.path)}
+                      lockHint={t('admin.card.lockHint')}
+                      lockCta={t('admin.card.unlock')}
                       canEdit={canEditSessions && !isLocked(session.path)}
                       onEdit={() => setEditingSession(session.path)}
                       onClick={() =>
@@ -565,6 +569,8 @@ const AdminLoggedIn = ({
                     iconSize={session.iconSize}
                     accentColor={resolved.color || session.accent}
                     locked={isLocked(session.path)}
+                    lockHint={t('admin.card.lockHint')}
+                    lockCta={t('admin.card.unlock')}
                     canEdit={canEditSessions && !isLocked(session.path)}
                     onEdit={() => setEditingSession(session.path)}
                     onClick={() =>

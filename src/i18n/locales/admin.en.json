@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "billing": {
+      "basicTitle": "Free event · basic tier.",
+      "basicText": "Form, registrations and check-in are available. To use <b>logistics, store, payouts and donations</b>, unlock this event for {{perEvent}} or subscribe for {{annual}}/year for unlimited events.",
+      "unlockEvent": "Unlock event",
+      "lockedToast": "Unlock this free event (basic tier) to use this feature."
+    },
+    "card": {
+      "unlock": "Unlock →",
+      "lockHint": "Unlock this event to use this feature"
+    }
+  }
+}
