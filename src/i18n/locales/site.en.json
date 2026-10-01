@@ -1,7 +1,7 @@
 {
   "site": {
     "nav": {
-      "brand": "Registration Platform",
+      "brand": "Enrolla",
       "prices": "Pricing",
       "help": "Help",
       "hi": "Hi, {{name}}",
@@ -10,12 +10,12 @@
     },
     "footer": {
       "panelTitle": "Internal Panel - System",
-      "poweredBy": "Powered by Blessed Bytes Team",
+      "poweredBy": "Made by Enrolla",
       "verse": "1 Corinthians 15:58",
-      "copyright": "© {{year}} Registration Platform • All rights reserved"
+      "copyright": "© {{year}} Enrolla • All rights reserved"
     },
     "landing": {
-      "documentTitle": "Registration System for Churches | Camps, Retreats and Conferences",
+      "documentTitle": "Enrolla — Registrations for Your Church and Ministry | Camps, Retreats and Conferences",
       "hero": {
         "eyebrow": "Built for churches and ministries",
         "title": "Create your church's registration system in minutes",

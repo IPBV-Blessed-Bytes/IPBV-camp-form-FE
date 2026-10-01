@@ -1,7 +1,7 @@
 {
   "site": {
     "nav": {
-      "brand": "Plataforma de Inscrições",
+      "brand": "Enrolla",
       "prices": "Preços",
       "help": "Ajuda",
       "hi": "Olá, {{name}}",
@@ -10,12 +10,12 @@
     },
     "footer": {
       "panelTitle": "Painel Interno - Sistema",
-      "poweredBy": "Powered by Blessed Bytes Team",
+      "poweredBy": "Feito pela Enrolla",
       "verse": "1 Coríntios 15:58",
-      "copyright": "© {{year}} Plataforma de Inscrições • Todos os direitos reservados"
+      "copyright": "© {{year}} Enrolla • Todos os direitos reservados"
     },
     "landing": {
-      "documentTitle": "Sistema de Inscrição para Igrejas | Acampamentos, Retiros e Congressos",
+      "documentTitle": "Enrolla — Inscrições para a sua Igreja e ministério | Acampamentos, Retiros e Congressos",
       "hero": {
         "eyebrow": "Feito para igrejas e ministérios",
         "title": "Crie o sistema de inscrições da sua igreja em minutos",
