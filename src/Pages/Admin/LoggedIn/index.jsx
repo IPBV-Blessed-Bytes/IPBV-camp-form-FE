@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { getRegistrationMetrics } from '@/services/stats';
 import { getPlanTier } from '@/services/planTier';
+import { getPlatformBillingStatus } from '@/services/platformBilling';
 import { getRecipientOnboardingStatus } from '@/services/recipientOnboarding';
 import PlatformBillingBanner from '@/components/Admin/PlatformBillingBanner';
 import TenantTourModal from '@/components/Admin/TenantTourModal';
@@ -39,6 +40,20 @@ const ESSENCIAL_HIDDEN_PATHS = new Set([
   'checkin-inscricoes',
 ]);
 
+const BASIC_HIDDEN_PATHS = new Set([
+  'carona',
+  'onibus',
+  'quartos',
+  'times',
+  'pulseiras',
+  'produtos',
+  'lotes',
+  'vagas',
+  'recebimento',
+  'financeiro',
+  'doacoes',
+]);
+
 const AdminLoggedIn = ({
   loggedInUsername,
   logout,
@@ -64,6 +79,7 @@ const AdminLoggedIn = ({
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tier, setTier] = useState('completo');
+  const [freeEventAccess, setFreeEventAccess] = useState('FULL');
   const [needsRecebimento, setNeedsRecebimento] = useState(false);
   const [myEvents, setMyEvents] = useState([]);
   const [showTour, setShowTour] = useState(false);
@@ -139,6 +155,12 @@ const AdminLoggedIn = ({
     getPlanTier()
       .then(setTier)
       .catch(() => setTier('completo'));
+  }, []);
+
+  useEffect(() => {
+    getPlatformBillingStatus()
+      .then((data) => setFreeEventAccess(data?.freeEventAccess || 'FULL'))
+      .catch(() => setFreeEventAccess('FULL'));
   }, []);
 
   useEffect(() => {
@@ -358,11 +380,13 @@ const AdminLoggedIn = ({
   ];
 
   const SETTINGS_PAGE_SIZE = 12;
+  const isSessionAllowed = (path) =>
+    (tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(path)) &&
+    !(freeEventAccess === 'BASIC' && BASIC_HIDDEN_PATHS.has(path));
+
   const settingsPages = [];
   const visibleSettingsSessions = orderNavSessions(
-    settingsSessions.filter(
-      (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
-    ),
+    settingsSessions.filter((session) => isSessionAllowed(session.path)),
   );
   for (let i = 0; i < visibleSettingsSessions.length; i += SETTINGS_PAGE_SIZE) {
     settingsPages.push(visibleSettingsSessions.slice(i, i + SETTINGS_PAGE_SIZE));
@@ -482,9 +506,7 @@ const AdminLoggedIn = ({
             {view === 'main' ? (
               <>
                 {orderNavSessions(
-                  navigationSessions.filter(
-                    (session) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(session.path),
-                  ),
+                  navigationSessions.filter((session) => isSessionAllowed(session.path)),
                 ).map((session, _i, ordered) => {
                   const resolved = resolveSession(session.path, sessionConfigs[session.path], {
                     title: session.title,

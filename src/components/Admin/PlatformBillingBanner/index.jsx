@@ -34,9 +34,15 @@ const PlatformBillingBanner = ({ canManage }) => {
   const perEvent = status ? formatBRL(status.perEventCents) : '—';
   const annual = status ? formatBRL(status.annualCents) : '—';
 
+  const basic = status && status.freeEventAccess === 'BASIC';
+
   const uncovered = useMemo(
-    () => status && !status.covered && (status.reason === 'trial_ended' || status.reason === 'past_due'),
-    [status],
+    () =>
+      status &&
+      !basic &&
+      !status.covered &&
+      (status.reason === 'trial_ended' || status.reason === 'past_due'),
+    [status, basic],
   );
 
   const handleSubmit = async (e) => {
@@ -97,6 +103,24 @@ const PlatformBillingBanner = ({ canManage }) => {
               no teste.
             </span>
           </div>
+        </div>
+      )}
+
+      {basic && (
+        <div className="platform-billing platform-billing--warn" role="alert">
+          <Icons typeIcon="warn" iconSize={28} fill="#8a5300" />
+          <div className="platform-billing__text">
+            <strong>Evento gratuito · nível básico.</strong>
+            <span>
+              Formulário, inscrições e check-in liberados. Para usar <b>logística, loja, recebimento e doações</b>,
+              desbloqueie este evento por {perEvent} ou assine {annual}/ano para eventos ilimitados.
+            </span>
+          </div>
+          {canManage && (
+            <Button variant="warning" className="fw-bold platform-billing__btn" onClick={() => setShowModal(true)}>
+              Desbloquear evento
+            </Button>
+          )}
         </div>
       )}
 
