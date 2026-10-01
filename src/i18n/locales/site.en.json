@@ -23,9 +23,9 @@
         "ctaStart": "Get Started",
         "seePrices": "See Pricing",
         "chips": {
-          "pix": "PIX, card and bank slip",
-          "noMonthly": "No monthly fee",
-          "readyMinutes": "Ready in minutes"
+          "pix": "PIX, Credit card and Bank slip",
+          "noMonthly": "No Monthly Fee",
+          "readyMinutes": "Ready in Minutes"
         }
       },
       "features": {

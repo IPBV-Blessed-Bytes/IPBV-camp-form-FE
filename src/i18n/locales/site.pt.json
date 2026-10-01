@@ -23,9 +23,9 @@
         "ctaStart": "Começar Agora",
         "seePrices": "Ver Preços",
         "chips": {
-          "pix": "PIX, cartão e boleto",
-          "noMonthly": "Sem mensalidade",
-          "readyMinutes": "Pronto em minutos"
+          "pix": "PIX, Cartão de Crédito e Boleto",
+          "noMonthly": "Sem Mensalidade",
+          "readyMinutes": "Pronto em Minutos"
         }
       },
       "features": {
