@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import { getNonPayingChildren, getCrewBus } from '@/services/stats';
+import { getRegistrationMetrics } from '@/services/stats';
 import { getPlanTier } from '@/services/planTier';
 import { getRecipientOnboardingStatus } from '@/services/recipientOnboarding';
 import PlatformBillingBanner from '@/components/Admin/PlatformBillingBanner';
@@ -17,13 +17,12 @@ import { listMyEvents } from '@/services/events';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
-import PackageCard from '@/components/Admin/PackageCard';
+import StatCards from '@/components/Admin/StatCards';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SessionEditModal from '@/components/Admin/SessionEditModal';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
-import AdminCharts from '@/components/Admin/AdminCharts';
 import { toast } from 'react-toastify';
 import { useAdminSessions } from '@/hooks/useAdminSessions';
 import { reorderAdminSessions } from '@/services/adminSessions';
@@ -39,24 +38,12 @@ const ESSENCIAL_HIDDEN_PATHS = new Set([
   'checkin-inscricoes',
 ]);
 
-const PACKAGE_MAPPING = [
-  { key: 'host-college-collective', totalKey: 'schoolIndividual', title: 'Colégio Coletivo' },
-  { key: 'host-college-family', totalKey: 'schoolFamily', title: 'Colégio Família' },
-  { key: 'host-college-camping', totalKey: 'schoolCamping', title: 'Colégio Camping' },
-  { key: 'host-seminario', totalKey: 'seminary', title: 'Seminário' },
-  { key: 'host-external', totalKey: 'other', title: 'Hospedagem Externa' },
-];
-
 const AdminLoggedIn = ({
-  availablePackages,
   loggedInUsername,
   logout,
   sendLoggedMessage,
   setSendLoggedMessage,
   spinnerLoading,
-  totalBusVacancies,
-  totalRegistrations,
-  totalSeats,
   user,
   userRole,
 }) => {
@@ -71,20 +58,9 @@ const AdminLoggedIn = ({
     packagesAndTotalCardsPermissions,
     utilitiesLinksPermissions,
     checkinPermissions,
-    vacanciesProgressionPermissions,
-    checkinBalancePermissions,
-    filledVacanciesChartPermissions,
-    allInfoChartPermissions,
   } = permissionsSections(userRole);
 
-  const hasChartsPermission =
-    vacanciesProgressionPermissions ||
-    checkinBalancePermissions ||
-    filledVacanciesChartPermissions ||
-    allInfoChartPermissions;
-
-  const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
-  const [crewBusUsers, setCrewBusUsers] = useState(0);
+  const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tier, setTier] = useState('completo');
   const [needsRecebimento, setNeedsRecebimento] = useState(false);
@@ -214,12 +190,10 @@ const AdminLoggedIn = ({
       setLoading(true);
 
       try {
-        const [nonPayingChildren, crewBus] = await Promise.all([getNonPayingChildren(), getCrewBus()]);
-
-        setFilteredCountNonPayingChildren(nonPayingChildren?.quantity || 0);
-        setCrewBusUsers(crewBus?.quantity || 0);
+        const data = await getRegistrationMetrics();
+        setMetrics(data);
       } catch (error) {
-        console.error('Erro ao buscar contadores do admin:', error);
+        console.error('Erro ao buscar métricas do admin:', error);
       } finally {
         setLoading(false);
       }
@@ -236,102 +210,25 @@ const AdminLoggedIn = ({
     }
   }, [sendLoggedMessage, setSendLoggedMessage, user]);
 
-  const { validPackageCardsData, allPackageCardsData, totalCardsData } = useMemo(() => {
-    const {
-      totalRegistrations: totalGlobal,
-      totalValidRegistrations,
-      totalChildren,
-      totalAdultsNonPaid,
-    } = totalRegistrations;
-    const {
-      usedPackages = {},
-      usedValidPackages = {},
-      pendingPackages = {},
-      totalPackages = {},
-    } = availablePackages || {};
-
-    // Só inscritos pagos contam como vaga preenchida; pendentes (boleto não pago)
-    // apenas reservam a vaga (descontam de "restantes"), nunca entram no total.
-    const calculatePackages = (dataSource) =>
-      PACKAGE_MAPPING.map(({ key, totalKey, title }) => {
-        const confirmed = Number(dataSource[key] || 0);
-        const pending = Number(pendingPackages[key] || 0);
-        const total = totalPackages[totalKey] || 0;
-        return {
-          title,
-          filledVacancies: confirmed,
-          remainingVacancies: Math.max(total - confirmed - pending, 0),
-          showRemainingVacancies: true,
-        };
-      });
-
-    const busYesConfirmed = Number(usedValidPackages['bus-yes'] || 0);
-    const busYesPending = Number(pendingPackages['bus-yes'] || 0);
-
-    return {
-      validPackageCardsData: calculatePackages(usedValidPackages),
-      allPackageCardsData: calculatePackages(usedPackages),
-      totalCardsData: [
-        {
-          title: 'Total de Crianças Pagantes',
-          filledVacancies: Math.max(totalChildren - filteredCountNonPayingChildren, 0),
-        },
-        {
-          title: 'Total de Crianças Não Pagantes',
-          filledVacancies: Number(filteredCountNonPayingChildren),
-        },
-        {
-          title: 'Total de Crianças',
-          filledVacancies: Number(totalChildren),
-        },
-        {
-          title: 'Total de Adultos Pagantes',
-          filledVacancies: totalValidRegistrations - totalAdultsNonPaid,
-        },
-        {
-          title: 'Total de Adultos Não Pagantes',
-          filledVacancies: Number(totalAdultsNonPaid),
-        },
-        {
-          title: 'Total de Adultos',
-          filledVacancies: Number(totalValidRegistrations),
-          remainingVacancies: Math.max(totalSeats - totalValidRegistrations, 0),
-          showRemainingVacancies: true,
-        },
-        {
-          title: 'Total de Inscritos Geral',
-          filledVacancies: Number(totalGlobal),
-        },
-        {
-          title: 'Ônibus Geral',
-          filledVacancies: busYesConfirmed,
-          remainingVacancies: Math.max(totalBusVacancies - busYesConfirmed - busYesPending, 0),
-          showRemainingVacancies: true,
-        },
-        {
-          title: 'Ônibus Equipe',
-          filledVacancies: Number(crewBusUsers),
-          remainingVacancies: Math.max(22 - crewBusUsers, 0),
-          showRemainingVacancies: true,
-        },
-        {
-          title: 'Total com Alimentação',
-          filledVacancies: Number(usedPackages['food-complete'] || 0),
-        },
-        {
-          title: 'Total sem Alimentação',
-          filledVacancies: Number(usedPackages['no-food'] || 0),
-        },
-      ],
-    };
-  }, [
-    availablePackages,
-    totalRegistrations,
-    filteredCountNonPayingChildren,
-    crewBusUsers,
-    totalSeats,
-    totalBusVacancies,
-  ]);
+  const metricsCards = useMemo(() => {
+    const m = metrics || {};
+    const n = (v) => Number(v || 0);
+    const revenue = (n(m.revenueCents) / 100).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    const cards = [
+      { label: 'Inscritos', value: n(m.total) },
+      { label: 'Confirmados', value: n(m.confirmed), tone: 'free' },
+      { label: 'Aguardando pagamento', value: n(m.pending), tone: 'used' },
+      { label: 'Check-in realizado', value: n(m.checkedIn), tone: 'info' },
+      { label: 'Receita confirmada', value: revenue, tone: 'accent' },
+    ];
+    if (n(m.refunded) > 0) {
+      cards.push({ label: 'Reembolsados', value: n(m.refunded), tone: 'danger' });
+    }
+    return cards;
+  }, [metrics]);
 
   const navigationSessions = [
     {
@@ -668,57 +565,10 @@ const AdminLoggedIn = ({
           />
         )}
 
-        {packagesAndTotalCardsPermissions && (
+        {packagesAndTotalCardsPermissions && !spinnerLoading && !loading && (
           <>
-            {!spinnerLoading && !loading && (
-              <>
-                <SectionHeader title="Pacotes válidos" count={validPackageCardsData.length} />
-                <Row className="gx-3">
-                  {validPackageCardsData.map((card) => (
-                    <PackageCard key={card.title} {...card} cardType="valid-package-card" />
-                  ))}
-                </Row>
-
-                <SectionHeader title="Pacotes (todos)" count={allPackageCardsData.length} />
-                <Row className="gx-3">
-                  {allPackageCardsData.map((card) => (
-                    <PackageCard key={card.title} {...card} cardType="all-package-card" />
-                  ))}
-                </Row>
-
-                <SectionHeader title="Totais gerais" count={totalCardsData.length} />
-                <Row className="gx-3">
-                  {totalCardsData.map((card) => (
-                    <PackageCard key={card.title} {...card} cardType="total-card" />
-                  ))}
-                </Row>
-              </>
-            )}
-
-            <div className="admin-notes">
-              <h5 className="admin-notes__title">Notas</h5>
-              <ul className="admin-notes__list">
-                <li>
-                  <strong>Total de Inscritos Geral:</strong> contagem de adultos e crianças
-                </li>
-                <li>
-                  <strong>Total de Adultos:</strong> contagem de adultos
-                </li>
-                <li>
-                  <strong>Total de Crianças:</strong> contagem de crianças
-                </li>
-                <li>
-                  <strong>Total de Inscritos Com Ônibus:</strong> contagem de pessoas válidas que irão de ônibus
-                </li>
-              </ul>
-            </div>
-          </>
-        )}
-
-        {hasChartsPermission && !spinnerLoading && !loading && (
-          <>
-            <SectionHeader title="Visão geral" />
-            <AdminCharts availablePackages={availablePackages} userRole={userRole} />
+            <SectionHeader title="Visão geral" count={metricsCards.length} />
+            <StatCards items={metricsCards} />
           </>
         )}
 
@@ -736,33 +586,12 @@ const AdminLoggedIn = ({
 };
 
 AdminLoggedIn.propTypes = {
-  availablePackages: PropTypes.shape({
-    usedPackages: PropTypes.object,
-    usedValidPackages: PropTypes.object,
-    totalPackages: PropTypes.shape({
-      schoolIndividual: PropTypes.number,
-      schoolFamily: PropTypes.number,
-      schoolCamping: PropTypes.number,
-      seminary: PropTypes.number,
-      other: PropTypes.number,
-    }),
-  }),
   loggedInUsername: PropTypes.string.isRequired,
   logout: PropTypes.func.isRequired,
   user: PropTypes.string,
-  totalValidWithBus: PropTypes.number,
-  totalRegistrations: PropTypes.shape({
-    totalRegistrations: PropTypes.number,
-    totalChildren: PropTypes.number,
-    totalFilledVacancies: PropTypes.number,
-    totalValidRegistrations: PropTypes.number,
-    totalAdultsNonPaid: PropTypes.number,
-  }).isRequired,
   sendLoggedMessage: PropTypes.bool,
   setSendLoggedMessage: PropTypes.func,
   spinnerLoading: PropTypes.bool,
-  totalBusVacancies: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-  totalSeats: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   userRole: PropTypes.string,
 };
 
