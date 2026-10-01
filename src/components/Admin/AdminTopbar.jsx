@@ -85,71 +85,74 @@ const AdminTopbar = ({ username, logout }) => {
           </select>
         </div>
       )}
+      <div className="d-flex gap-3">
+        <LanguageSwitcher />
 
-      <LanguageSwitcher />
+        <div className="admin-topbar__actions" ref={menuRef}>
+          <button
+            type="button"
+            className="admin-topbar__user"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-haspopup="menu"
+            aria-expanded={open}
+          >
+            <span className="admin-topbar__avatar">{getInitials(username)}</span>
+            <span className="admin-topbar__user-name">
+              {username?.includes('@') ? username.split('@')[0] : username}
+            </span>
+            <span className={`admin-topbar__chevron ${open ? 'is-open' : ''}`}>▾</span>
+          </button>
 
-      <div className="admin-topbar__actions" ref={menuRef}>
-        <button
-          type="button"
-          className="admin-topbar__user"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-haspopup="menu"
-          aria-expanded={open}
-        >
-          <span className="admin-topbar__avatar">{getInitials(username)}</span>
-          <span className="admin-topbar__user-name">{username?.includes('@') ? username.split('@')[0] : username}</span>
-          <span className={`admin-topbar__chevron ${open ? 'is-open' : ''}`}>▾</span>
-        </button>
-
-        {open && (
-          <div className="admin-topbar__menu" role="menu">
-            <button
-              type="button"
-              className="admin-topbar__menu-item"
-              onClick={() => {
-                setOpen(false);
-                navigate(eventPath('/'));
-              }}
-            >
-              <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
-              <span>{t('common.backToForm')}</span>
-            </button>
-            <button
-              type="button"
-              className="admin-topbar__menu-item"
-              onClick={() => {
-                setOpen(false);
-                navigate('/admin/manual');
-              }}
-            >
-              <Icons typeIcon="info" iconSize={18} fill="#555050" />
-              <span>{t('common.manualHelp')}</span>
-            </button>
-            <button
-              type="button"
-              className="admin-topbar__menu-item"
-              onClick={() => {
-                setOpen(false);
-                setShowChangePassword(true);
-              }}
-            >
-              <Icons typeIcon="refresh" iconSize={18} fill="#555050" />
-              <span>{t('common.changePassword')}</span>
-            </button>
-            <div className="admin-topbar__menu-divider" />
-            <button
-              type="button"
-              className="admin-topbar__menu-item admin-topbar__menu-item--danger"
-              onClick={() => {
-                setOpen(false);
-                logout();
-              }}
-            >
-              <Icons typeIcon="logout" iconSize={18} fill="#d32f2f" />
-              <span>{t('common.logout')}</span>
-            </button>
-          </div>
-        )}
+          {open && (
+            <div className="admin-topbar__menu" role="menu">
+              <button
+                type="button"
+                className="admin-topbar__menu-item"
+                onClick={() => {
+                  setOpen(false);
+                  navigate(eventPath('/'));
+                }}
+              >
+                <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
+                <span>{t('common.backToForm')}</span>
+              </button>
+              <button
+                type="button"
+                className="admin-topbar__menu-item"
+                onClick={() => {
+                  setOpen(false);
+                  navigate('/admin/manual');
+                }}
+              >
+                <Icons typeIcon="info" iconSize={18} fill="#555050" />
+                <span>{t('common.manualHelp')}</span>
+              </button>
+              <button
+                type="button"
+                className="admin-topbar__menu-item"
+                onClick={() => {
+                  setOpen(false);
+                  setShowChangePassword(true);
+                }}
+              >
+                <Icons typeIcon="refresh" iconSize={18} fill="#555050" />
+                <span>{t('common.changePassword')}</span>
+              </button>
+              <div className="admin-topbar__menu-divider" />
+              <button
+                type="button"
+                className="admin-topbar__menu-item admin-topbar__menu-item--danger"
+                onClick={() => {
+                  setOpen(false);
+                  logout();
+                }}
+              >
+                <Icons typeIcon="logout" iconSize={18} fill="#d32f2f" />
+                <span>{t('common.logout')}</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <ChangePasswordModal show={showChangePassword} onHide={() => setShowChangePassword(false)} />
