@@ -226,13 +226,18 @@ const Landing = () => {
               </div>
             </Col>
           </Row>
-          <p className="storefront__plans-footnote d-flex">
+          <div className="storefront__plans-footnote d-flex">
             <Icons typeIcon="simple-info" iconSize={50} fill="#7f7878" />
 
             <div>
-              <Trans i18nKey="site.landing.plans.footnote" components={{ b: <b /> }} />
+              <p className="mb-2">
+                <Trans i18nKey="site.landing.plans.footnote" components={{ b: <b /> }} />
+              </p>
+              <p className="mb-0">
+                <Trans i18nKey="site.landing.plans.freeEventFootnote" components={{ b: <b /> }} />
+              </p>
             </div>
-          </p>
+          </div>
         </section>
 
         <section className="storefront__cta-band">
