@@ -380,9 +380,14 @@ const AdminLoggedIn = ({
   ];
 
   const SETTINGS_PAGE_SIZE = 12;
-  const isSessionAllowed = (path) =>
-    (tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(path)) &&
-    !(freeEventAccess === 'BASIC' && BASIC_HIDDEN_PATHS.has(path));
+  const isSessionAllowed = (path) => tier !== 'essencial' || !ESSENCIAL_HIDDEN_PATHS.has(path);
+
+  const isLocked = (path) => freeEventAccess === 'BASIC' && BASIC_HIDDEN_PATHS.has(path);
+
+  const handleLockedClick = () => {
+    toast.info('Desbloqueie este evento gratuito (nível básico) para usar este recurso.');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const settingsPages = [];
   const visibleSettingsSessions = orderNavSessions(
@@ -521,10 +526,13 @@ const AdminLoggedIn = ({
                       title={resolved.title}
                       typeIcon={resolved.icon}
                       accentColor={resolved.color}
-                      canEdit={canEditSessions}
+                      locked={isLocked(session.path)}
+                      canEdit={canEditSessions && !isLocked(session.path)}
                       onEdit={() => setEditingSession(session.path)}
-                      onClick={() => navigate(`${routePrefix}/${session.path}`)}
-                      draggable={canEditSessions}
+                      onClick={() =>
+                        isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
+                      }
+                      draggable={canEditSessions && !isLocked(session.path)}
                       dragging={dragKey === session.path}
                       onDragStart={() => setDragKey(session.path)}
                       onDragOver={(e) => canEditSessions && e.preventDefault()}
@@ -556,10 +564,13 @@ const AdminLoggedIn = ({
                     typeIcon={resolved.icon}
                     iconSize={session.iconSize}
                     accentColor={resolved.color || session.accent}
-                    canEdit={canEditSessions}
+                    locked={isLocked(session.path)}
+                    canEdit={canEditSessions && !isLocked(session.path)}
                     onEdit={() => setEditingSession(session.path)}
-                    onClick={() => navigate(`${routePrefix}/${session.path}`)}
-                    draggable={canEditSessions}
+                    onClick={() =>
+                      isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
+                    }
+                    draggable={canEditSessions && !isLocked(session.path)}
                     dragging={dragKey === session.path}
                     onDragStart={() => setDragKey(session.path)}
                     onDragOver={(e) => canEditSessions && e.preventDefault()}

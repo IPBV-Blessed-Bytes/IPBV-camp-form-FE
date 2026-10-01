@@ -78,6 +78,41 @@ $admin-accent-donations: $magenta;
     }
   }
 
+  &__lock {
+    align-items: center;
+    background: $amber;
+    border-radius: 50%;
+    color: $white;
+    display: flex;
+    height: 28px;
+    justify-content: center;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 28px;
+    z-index: 2;
+  }
+
+  &--locked {
+    .session-card__icon-wrapper {
+      background: $gray-400;
+      filter: grayscale(1);
+    }
+
+    .session-card__title,
+    .session-card__cta {
+      color: $gray-600;
+    }
+
+    .session-card__cta {
+      font-weight: 600;
+    }
+
+    &::before {
+      background: $amber;
+    }
+  }
+
   &:hover {
     border-color: var(--session-accent, #{$primary}) !important;
     box-shadow: 0 8px 20px rgba($black, 0.08);
