@@ -54,9 +54,10 @@ $admin-accent-donations: $magenta;
 
   &__edit {
     align-items: center;
-    background: var(--session-accent, #{$primary});
+    background: $primary;
     border: none;
     border-radius: 50%;
+    color: $white;
     cursor: pointer;
     display: flex;
     height: 28px;
