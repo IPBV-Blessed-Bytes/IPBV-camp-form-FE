@@ -18,6 +18,7 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import StatCards from '@/components/Admin/StatCards';
+import DashboardCharts from '@/components/Admin/DashboardCharts';
 import ExternalLinkRow from '@/components/Admin/ExternalLinkRow';
 import SessionCard from '@/components/Admin/SessionCard';
 import SessionEditModal from '@/components/Admin/SessionEditModal';
@@ -569,6 +570,7 @@ const AdminLoggedIn = ({
           <>
             <SectionHeader title="Visão geral" count={metricsCards.length} />
             <StatCards items={metricsCards} />
+            <DashboardCharts metrics={metrics} />
           </>
         )}
 

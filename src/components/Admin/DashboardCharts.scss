@@ -1,0 +1,38 @@
+@use '../../styles/Variables.scss' as *;
+
+.dashboard-charts {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 1.5rem;
+
+  &--empty {
+    display: block;
+    border: 1px dashed $gray-200;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: $gray-700;
+    font-size: 0.9rem;
+  }
+
+  &__card {
+    background: $white;
+    border: 1px solid $gray-100;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba($black, 0.04);
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  &__title {
+    color: $ink;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+  }
+
+  &__plot {
+    width: 100%;
+    height: 240px;
+  }
+}
