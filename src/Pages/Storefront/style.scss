@@ -42,8 +42,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     background: linear-gradient(135deg, $primary, $blue);
     box-shadow: 0 4px 12px rgba($primary, 0.28);
@@ -73,7 +73,7 @@
     font-weight: 600;
 
     &:hover {
-      color: $primary;
+      color: $blue-700;
     }
   }
 
@@ -90,16 +90,16 @@
   }
 
   &__nav-login {
-    border: 1.5px solid $primary;
+    border: 1.5px solid $blue-700;
     background: transparent;
-    color: $primary;
+    color: $blue-700;
     font-weight: 700;
     padding: 0.4rem 1.1rem;
     border-radius: 999px;
     transition: all 0.18s ease;
 
     &:hover {
-      background: $primary;
+      background: $blue-700;
       color: $white;
     }
   }
@@ -171,7 +171,7 @@
     align-items: center;
     gap: 0.5rem;
     background: $white;
-    color: $primary;
+    color: $blue;
     font-weight: 800;
     padding: 0.85rem 1.75rem;
     border: 0;
@@ -179,16 +179,18 @@
     text-decoration: none;
     cursor: pointer;
     box-shadow: 0 10px 26px rgba($black, 0.18);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
 
     svg path {
-      fill: $primary;
+      fill: $blue;
     }
 
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 14px 32px rgba($black, 0.24);
-      color: $primary;
+      color: $blue;
     }
   }
 
@@ -243,7 +245,9 @@
     border-radius: 16px;
     padding: 1.5rem 1.25rem;
     box-shadow: 0 10px 30px rgba($blue-800, 0.07);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
 
     h3 {
       font-size: 1.02rem;
@@ -406,7 +410,9 @@
     border-radius: 18px;
     padding: 1.75rem 1.5rem;
     box-shadow: 0 6px 18px rgba($blue-800, 0.05);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
 
     &:hover {
       transform: translateY(-4px);
@@ -792,7 +798,9 @@
     background: rgba($white, 0.14);
     border: 1px solid rgba($white, 0.28);
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.15s ease;
+    transition:
+      background 0.15s ease,
+      transform 0.15s ease;
     position: absolute;
     left: var(--bs-gutter-x, 0.75rem);
     top: 50%;

@@ -14,7 +14,7 @@ export const StoreNav = ({ onLanding }) => {
       <Container className="storefront__nav-inner">
         <button type="button" className="storefront__brand storefront__brand--btn" onClick={() => navigate('/')}>
           <span className="storefront__brand-mark">
-            <Icons typeIcon="tent" iconSize={20} fill="#ffffff" />
+            <Icons typeIcon="tent" iconSize={36} fill="#ffffff" />
           </span>
           Plataforma de Inscrições
         </button>

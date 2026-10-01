@@ -14,17 +14,17 @@ const formatBRL = (cents) =>
 const FEATURES = [
   {
     icon: 'form-context',
-    title: 'Formulário do seu jeito',
+    title: 'Formulário do Seu Jeito',
     text: 'Monte campos, seções e pacotes sem programar. Cada evento com a cara da sua igreja.',
   },
   {
     icon: 'credit-card',
-    title: 'Pagamento online',
+    title: 'Pagamento Online',
     text: 'PIX, cartão e boleto. O valor cai direto na conta da igreja, com repasse automático.',
   },
   {
     icon: 'chart',
-    title: 'Gestão completa',
+    title: 'Gestão Completa',
     text: 'Inscritos, vagas, quartos, ônibus e relatórios reunidos em um painel só.',
   },
   {
@@ -39,17 +39,17 @@ const HERO_CHIPS = ['PIX, cartão e boleto', 'Sem mensalidade', 'Pronto em minut
 const VALUES = [
   {
     icon: 'couple',
-    title: 'Servir a igreja pequena',
+    title: 'Servir a Igreja Pequena',
     text: 'A mesma ferramenta da igreja grande, acessível à congregação pequena — sem mensalidade que pese no orçamento.',
   },
   {
     icon: 'money',
-    title: 'Mordomia e confiança',
+    title: 'Mordomia e Confiança',
     text: 'O dinheiro é da igreja e cai direto na conta dela. Nós não custodiamos nada; você mantém o controle.',
   },
   {
     icon: 'checked',
-    title: 'Cuidado com os dados',
+    title: 'Cuidado com os Dados',
     text: 'Dados dos inscritos tratados com segurança e responsabilidade, seguindo a LGPD.',
   },
   {
@@ -62,19 +62,19 @@ const VALUES = [
 const DIFFERENTIALS = [
   {
     icon: 'ride',
-    title: 'Carona e transporte',
+    title: 'Carona e Transporte',
     text: 'Oferta e procura de vagas entre os inscritos e controle do ônibus da igreja.',
   },
   { icon: 'rooms', title: 'Quartos', text: 'Aloque os inscritos por quarto, com acompanhantes, direto no painel.' },
-  { icon: 'team', title: 'Times e equipes', text: 'Organize os inscritos em times e equipes de serviço do evento.' },
+  { icon: 'team', title: 'Times e Equipes', text: 'Organize os inscritos em times e equipes de serviço do evento.' },
   {
     icon: 'checkin',
-    title: 'Check-in e pulseiras',
+    title: 'Check-in e Pulseiras',
     text: 'Presença por QR ou CPF, individual ou por família, e controle de pulseiras.',
   },
   {
     icon: 'cart',
-    title: 'Pacotes e lotes',
+    title: 'Pacotes e Lotes',
     text: 'Hospedagem, alimentação e transporte por categoria, com preço por idade e por lote.',
   },
   {
@@ -122,11 +122,11 @@ const Landing = () => {
           </p>
           <div className="storefront__hero-actions">
             <button type="button" className="storefront__hero-cta" onClick={goToSignup}>
-              Começar agora
+              Começar Agora
               <Icons typeIcon="arrow-right" iconSize={18} fill="#ffffff" />
             </button>
             <a href="#planos" className="storefront__hero-link">
-              Ver preços
+              Ver Preços
             </a>
           </div>
           <ul className="storefront__hero-chips">
@@ -156,7 +156,7 @@ const Landing = () => {
         <section className="storefront__differentials">
           <div className="storefront__section-head">
             <span className="storefront__eyebrow storefront__eyebrow--dark">O diferencial</span>
-            <h2 className="storefront__section-title">Feito para a realidade da igreja</h2>
+            <h2 className="storefront__section-title">Feito para a Realidade da Igreja</h2>
             <p className="storefront__plans-lede">
               Vender ingresso e coletar formulário já tem de sobra. O que não existe é um sistema que também organiza a{' '}
               <b>operação do evento da igreja</b> — carona, quartos, times, pulseiras e check-in — integrada ao
@@ -194,7 +194,7 @@ const Landing = () => {
         <section className="storefront__purpose">
           <div className="storefront__section-head">
             <span className="storefront__eyebrow storefront__eyebrow--dark">Nosso propósito</span>
-            <h2 className="storefront__section-title">Tecnologia a serviço da sua igreja</h2>
+            <h2 className="storefront__section-title">Tecnologia a Serviço da Sua Igreja</h2>
             <p className="storefront__plans-lede">
               Nascemos servindo o acampamento de uma igreja local e crescemos com ela. Nossa missão é tirar o peso da
               organização das costas da liderança, para a igreja focar no que importa: <b>as pessoas e o Reino</b>.
@@ -215,7 +215,7 @@ const Landing = () => {
 
         <section className="storefront__plans" id="planos">
           <div className="storefront__section-head">
-            <h2 className="storefront__section-title">Dois planos, sem mensalidade</h2>
+            <h2 className="storefront__section-title">Dois Planos, sem Mensalidade</h2>
             <p className="storefront__plans-lede">
               Escolha o tamanho da sua igreja. Conta grátis; você só paga quando cria um evento — e no pago, só sobre o
               que vende. O dinheiro cai direto na conta da igreja.
@@ -226,7 +226,7 @@ const Landing = () => {
               <div className="storefront__plan">
                 <span className="storefront__plan-name">Essencial</span>
                 <span className="storefront__plan-tagline">
-                  Formulário + inscrições. Pra quem só precisa inscrever e receber.
+                  Formulário + inscrições + check-in. Pra quem só precisa inscrever, receber e controlar entrada.
                 </span>
                 <span className="storefront__plan-price">
                   {essencialFeePercent}
@@ -282,21 +282,24 @@ const Landing = () => {
               </div>
             </Col>
           </Row>
-          <p className="storefront__plans-footnote">
-            <Icons typeIcon="simple-info" iconSize={16} fill="#7f7878" /> Sem mensalidade — você paga conforme usa. O
-            teste grátis de 14 dias vale só para <b>eventos gratuitos</b>; <b>eventos pagos já cobram a taxa</b> por
-            inscrição desde a primeira venda.
+          <p className="storefront__plans-footnote d-flex">
+            <Icons typeIcon="simple-info" iconSize={50} fill="#7f7878" />
+
+            <div>
+              Sem mensalidade — você paga conforme usa. O teste grátis de 14 dias vale só para <b>eventos gratuitos</b>;{' '}
+              <b>eventos pagos já cobram a taxa</b> por inscrição desde a primeira venda.
+            </div>
           </p>
         </section>
 
         <section className="storefront__cta-band">
           <div className="storefront__cta-band-inner">
             <div>
-              <h2>Pronto para começar?</h2>
+              <h2>Pronto Para Começar?</h2>
               <p>Crie o sistema da sua igreja agora — leva menos de um minuto e a conta é grátis.</p>
             </div>
             <button type="button" className="storefront__hero-cta" onClick={goToSignup}>
-              Criar meu sistema
+              Criar meu Sistema
               <Icons typeIcon="arrow-right" iconSize={18} fill="#ffffff" />
             </button>
           </div>

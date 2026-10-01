@@ -284,7 +284,7 @@ const Storefront = () => {
               className="storefront__submit fw-bold"
               disabled={loading}
             >
-              Criar meu sistema
+              Criar meu Sistema
             </Button>
             <p className="storefront__form-reassurance">
               <Icons typeIcon="checked" iconSize={15} fill="#057c05" /> Sem taxa pra criar a conta. Você só paga quando
