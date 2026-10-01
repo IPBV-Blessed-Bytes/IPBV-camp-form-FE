@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import { useParticipantsList } from '@/hooks/useParticipantsList';
@@ -13,6 +14,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 
 const AdminExtraMeals = () => {
+  const { t } = useTranslation();
   scrollUp();
 
   const { campers, isLoading: loading, isError } = useParticipantsList();
@@ -21,7 +23,8 @@ const AdminExtraMeals = () => {
   const usersWithExtraMeals = useMemo(() => campers.filter((user) => user.extraMeals?.someFood), [campers]);
 
   useEffect(() => {
-    if (isError) toast.error('Erro ao buscar usuários com refeições extras');
+    if (isError) toast.error(t('admin.extraMeals.fetchError'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
   const generateExcel = () => {
@@ -38,8 +41,8 @@ const AdminExtraMeals = () => {
     0,
   );
   const statItems = [
-    { label: 'Inscritos', value: usersWithExtraMeals.length },
-    { label: 'Total de dias', value: totalDays, tone: 'info' },
+    { label: t('admin.extraMeals.statRegistered'), value: usersWithExtraMeals.length },
+    { label: t('admin.extraMeals.statDays'), value: totalDays, tone: 'info' },
   ];
   const term = search.trim().toLowerCase();
   const filteredUsers = usersWithExtraMeals.filter(
@@ -51,7 +54,7 @@ const AdminExtraMeals = () => {
       fill: '#007185',
       iconSize: 22,
       id: 'extra-meals-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.extraMeals.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -61,8 +64,8 @@ const AdminExtraMeals = () => {
   return (
     <div className="admin-subpage admin-subpage--meals">
       <AdminSubpageHeader
-        title="Usuários com Refeições Extras"
-        subtitle="Inscritos que solicitaram refeições adicionais"
+        title={t('admin.extraMeals.title')}
+        subtitle={t('admin.extraMeals.subtitle')}
         typeIcon="food"
       />
 
@@ -72,24 +75,24 @@ const AdminExtraMeals = () => {
         <StatCards items={statItems} />
 
         <div className="meals-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por inscrito..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.extraMeals.searchPlaceholder')} />
         </div>
 
-        <SectionHeader title="Refeições extras" count={filteredUsers.length} />
+        <SectionHeader title={t('admin.extraMeals.sectionTitle')} count={filteredUsers.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
           <tr>
-            <th className="table-cells-header">Inscrito:</th>
-            <th className="table-cells-header">Refeições Extras (Dias):</th>
+            <th className="table-cells-header">{t('admin.extraMeals.colName')}</th>
+            <th className="table-cells-header">{t('admin.extraMeals.colMeals')}</th>
           </tr>
         </thead>
         <tbody>
           {filteredUsers.length === 0 ? (
             <tr>
               <td colSpan={2} className="text-start text-secondary p-4">
-                Nenhum inscrito com refeições extras registrado
+                {t('admin.extraMeals.empty')}
               </td>
             </tr>
           ) : (
@@ -106,7 +109,7 @@ const AdminExtraMeals = () => {
                     ))}
                   </span>
                 ) : (
-                  <span className="text-secondary small">Nenhum dia</span>
+                  <span className="text-secondary small">{t('admin.extraMeals.noDays')}</span>
                 )}
               </td>
             </tr>

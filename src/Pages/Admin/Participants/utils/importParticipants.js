@@ -116,7 +116,7 @@ const isFilledDate = (value) => /^\d{2}\/\d{2}\/\d{4}$/.test(String(value).trim(
 
 // Reads an .xlsx/.csv file and maps each row to the flat payload the BE expects.
 // Returns { rows, errors } where errors flag rows missing required fields.
-export const parseCampersFile = async (file) => {
+export const parseCampersFile = async (file, t) => {
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: 'array' });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -138,11 +138,19 @@ export const parseCampersFile = async (file) => {
     const rowNumber = index + 2; // +1 header, +1 to 1-index
     const missing = REQUIRED_FIELDS.filter(({ field }) => !String(mapped[field] || '').trim()).map((r) => r.header);
     if (missing.length) {
-      errors.push({ row: rowNumber, name: mapped.name || '(sem nome)', message: `Faltando: ${missing.join(', ')}` });
+      errors.push({
+        row: rowNumber,
+        name: mapped.name || t('admin.participantsTable.parseNoName'),
+        message: t('admin.participantsTable.parseMissing', { fields: missing.join(', ') }),
+      });
       return;
     }
     if (!isFilledDate(mapped.birthday)) {
-      errors.push({ row: rowNumber, name: mapped.name, message: `Data de nascimento inválida (use dd/mm/aaaa): "${mapped.birthday}"` });
+      errors.push({
+        row: rowNumber,
+        name: mapped.name,
+        message: t('admin.participantsTable.parseInvalidDate', { value: mapped.birthday }),
+      });
       return;
     }
 

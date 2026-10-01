@@ -2,8 +2,10 @@ import React from 'react';
 import Icons from '@/components/Global/Icons';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, showFilters, selectedRows }) => {
+  const { t } = useTranslation();
   return (
     <div className="table-responsive">
       <Table striped bordered hover {...getTableProps()} className="custom-table">
@@ -45,7 +47,7 @@ const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepa
                 colSpan={headerGroups[headerGroups.length - 1]?.headers.length || 1}
                 className="text-start text-secondary p-4"
               >
-                Nenhum inscrito registrado
+                {t('admin.participantsTable.emptyTable')}
               </td>
             </tr>
           )}

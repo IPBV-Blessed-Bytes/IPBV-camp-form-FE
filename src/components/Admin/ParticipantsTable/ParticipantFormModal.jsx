@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import CustomModal from '@/components/Global/CustomModal';
 import SpinnerButton from '@/components/Global/SpinnerButton';
@@ -22,6 +23,7 @@ const ParticipantFormModal = ({
   onSubmit,
   submitting,
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState(initialData || {});
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
@@ -50,7 +52,7 @@ const ParticipantFormModal = ({
       footer={
         <>
           <Button variant="secondary" onClick={onHide}>
-            Cancelar
+            {t('admin.participantsTable.cancel')}
           </Button>
           <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={submitting}>
             {submitLabel}
@@ -73,14 +75,12 @@ const ParticipantFormModal = ({
       {isEdit && cpfDigits && (
         <div className="camper-form-qr mt-3">
           <h6 className="mb-2">
-            <b>QR de Check-in:</b>
+            <b>{t('admin.participantsTable.qrTitle')}</b>
           </h6>
           <Button variant="outline-teal-blue" size="sm" onClick={() => setQrOpen(true)}>
-            Ver QR de Check-in
+            {t('admin.participantsTable.qrButton')}
           </Button>
-          <p className="text-secondary small mt-1 mb-0">
-            Contém o CPF do inscrito, usado no check-in. Também enviado por e-mail na inscrição.
-          </p>
+          <p className="text-secondary small mt-1 mb-0">{t('admin.participantsTable.qrHint')}</p>
         </div>
       )}
       <CheckinQrModal

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
@@ -77,6 +77,7 @@ const AdminLoggedIn = ({
     checkinPermissions,
   } = permissionsSections(userRole);
 
+  const { t } = useTranslation();
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tier, setTier] = useState('completo');
@@ -125,14 +126,13 @@ const AdminLoggedIn = ({
       await reorderAdminSessions(keys);
       await refetchSessions();
     } catch (error) {
-      toast.error('Não foi possível salvar a nova ordem.');
+      toast.error(t('admin.shell.reorderError'));
     }
   };
 
   const { formStage, displayName } = useContext(AuthContext);
   const topbarName = displayName || loggedInUsername;
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const routePrefix = formStage === 'maintenance' ? '/dev' : '/admin';
 
   const openSettingsView = () => {
@@ -243,17 +243,17 @@ const AdminLoggedIn = ({
       currency: 'BRL',
     });
     const cards = [
-      { label: 'Inscritos', value: n(m.total) },
-      { label: 'Confirmados', value: n(m.confirmed), tone: 'free' },
-      { label: 'Aguardando pagamento', value: n(m.pending), tone: 'used' },
-      { label: 'Check-in realizado', value: n(m.checkedIn), tone: 'info' },
-      { label: 'Receita confirmada', value: revenue, tone: 'accent' },
+      { label: t('admin.shell.metrics.total'), value: n(m.total) },
+      { label: t('admin.shell.metrics.confirmed'), value: n(m.confirmed), tone: 'free' },
+      { label: t('admin.shell.metrics.pending'), value: n(m.pending), tone: 'used' },
+      { label: t('admin.shell.metrics.checkedIn'), value: n(m.checkedIn), tone: 'info' },
+      { label: t('admin.shell.metrics.revenue'), value: revenue, tone: 'accent' },
     ];
     if (n(m.refunded) > 0) {
-      cards.push({ label: 'Reembolsados', value: n(m.refunded), tone: 'danger' });
+      cards.push({ label: t('admin.shell.metrics.refunded'), value: n(m.refunded), tone: 'danger' });
     }
     return cards;
-  }, [metrics]);
+  }, [metrics, t]);
 
   const navigationSessions = [
     {
@@ -409,8 +409,8 @@ const AdminLoggedIn = ({
         <div className="admin-home__content">
           <div className="admin-home__events">
             <div className="admin-home__events-head">
-              <h4>Meus eventos</h4>
-              <p>Escolha um evento para administrá-lo ou crie um novo.</p>
+              <h4>{t('admin.shell.myEventsTitle')}</h4>
+              <p>{t('admin.shell.myEventsSubtitle')}</p>
             </div>
             <Row className="gx-3 gy-3">
               {myEvents.map((event) => (
@@ -424,7 +424,7 @@ const AdminLoggedIn = ({
                     <span className="admin-home__event-initial">{(event.name || '?').charAt(0).toUpperCase()}</span>
                     {event.year && <span className="admin-home__event-year">{event.year}</span>}
                     <span className="admin-home__event-name">{event.name}</span>
-                    <span className="admin-home__event-cta">Administrar →</span>
+                    <span className="admin-home__event-cta">{t('admin.shell.eventAdminCta')}</span>
                   </button>
                 </Col>
               ))}
@@ -435,13 +435,13 @@ const AdminLoggedIn = ({
                   onClick={() => navigate(`${routePrefix}/eventos`)}
                 >
                   <span className="admin-home__event-plus">+</span>
-                  <span className="admin-home__event-name">Criar novo evento</span>
+                  <span className="admin-home__event-name">{t('admin.shell.createEvent')}</span>
                 </button>
               </Col>
             </Row>
             {myEvents.length === 0 && (
               <p className="admin-home__events-empty">
-                Você ainda não tem eventos. Clique em <b>Criar novo evento</b> para começar.
+                <Trans i18nKey="admin.shell.noEvents" components={{ b: <b /> }} />
               </p>
             )}
           </div>
@@ -453,33 +453,29 @@ const AdminLoggedIn = ({
           <div className="admin-home__recebimento-alert" role="alert">
             <Icons typeIcon="money" iconSize={30} fill="#8a5300" />
             <div className="admin-home__recebimento-alert-text">
-              <strong>Configure o Recebimento antes de habilitar pagamentos.</strong>
-              <span>
-                Enquanto a conta que recebe as inscrições não estiver configurada, o checkout de eventos pagos fica
-                bloqueado e os inscritos não conseguem pagar.
-              </span>
+              <strong>{t('admin.shell.recebimentoAlertTitle')}</strong>
+              <span>{t('admin.shell.recebimentoAlertText')}</span>
             </div>
             <button
               type="button"
               className="admin-home__recebimento-alert-btn"
               onClick={() => navigate(`${routePrefix}/recebimento`)}
             >
-              Configurar Recebimento
+              {t('admin.shell.recebimentoAlertBtn')}
             </button>
           </div>
         )}
         <div className="session-carousel">
           {view === 'main' && canEditSessions && (
             <p className="session-carousel__hint">
-              <Icons typeIcon="edit" iconSize={14} fill="none" /> Arraste os cards para reordenar. Use o lápis para
-              trocar a cor e o ícone.
+              <Icons typeIcon="edit" iconSize={14} fill="none" /> {t('admin.shell.reorderHint')}
             </p>
           )}
           {view === 'settings' && (
             <div className="settings-toolbar">
               <button type="button" className="settings-toolbar__back" onClick={openMainView}>
                 <Icons typeIcon="arrow-left" iconSize={18} fill="#495057" />
-                Botões principais
+                {t('admin.shell.mainButtons')}
               </button>
               {settingsPages.length > 1 && (
                 <div className="settings-toolbar__pager">
@@ -489,10 +485,10 @@ const AdminLoggedIn = ({
                     disabled={currentSettingsPage === 0}
                     onClick={() => goToSettingsPage(currentSettingsPage - 1, 'back')}
                   >
-                    ← Anterior
+                    {t('admin.shell.prev')}
                   </button>
                   <span className="settings-toolbar__page-info">
-                    Página {currentSettingsPage + 1} de {settingsPages.length}
+                    {t('admin.shell.pageInfo', { current: currentSettingsPage + 1, total: settingsPages.length })}
                   </span>
                   <button
                     type="button"
@@ -500,7 +496,7 @@ const AdminLoggedIn = ({
                     disabled={currentSettingsPage === settingsPages.length - 1}
                     onClick={() => goToSettingsPage(currentSettingsPage + 1, 'forward')}
                   >
-                    Próxima →
+                    {t('admin.shell.next')}
                   </button>
                 </div>
               )}
@@ -516,7 +512,7 @@ const AdminLoggedIn = ({
                   navigationSessions.filter((session) => isSessionAllowed(session.path)),
                 ).map((session, _i, ordered) => {
                   const resolved = resolveSession(session.path, sessionConfigs[session.path], {
-                    title: session.title,
+                    title: t(`admin.shell.sessions.${session.path}`),
                     icon: session.typeIcon,
                   });
                   return (
@@ -547,7 +543,7 @@ const AdminLoggedIn = ({
                 })}
                 <SessionCard
                   permission={settingsButtonPermissions}
-                  title="Configurações"
+                  title={t('admin.shell.settings')}
                   typeIcon="settings"
                   iconSize={42}
                   accentColor="#37474f"
@@ -557,7 +553,7 @@ const AdminLoggedIn = ({
             ) : (
               settingsPages[currentSettingsPage].map((session) => {
                 const resolved = resolveSession(session.path, sessionConfigs[session.path], {
-                  title: session.title,
+                  title: t(`admin.shell.sessions.${session.path}`),
                   icon: session.typeIcon,
                 });
                 return (
@@ -595,7 +591,9 @@ const AdminLoggedIn = ({
             onHide={() => setEditingSession(null)}
             sessionKey={editingSession}
             sessionTitle={
-              [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.title
+              [...navigationSessions, ...settingsSessions].some((s) => s.path === editingSession)
+                ? t(`admin.shell.sessions.${editingSession}`)
+                : undefined
             }
             defaultIcon={
               [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.typeIcon
@@ -607,7 +605,7 @@ const AdminLoggedIn = ({
 
         {packagesAndTotalCardsPermissions && !spinnerLoading && !loading && (
           <>
-            <SectionHeader title="Visão geral" count={metricsCards.length} />
+            <SectionHeader title={t('admin.shell.overview')} count={metricsCards.length} />
             <StatCards items={metricsCards} />
             <DashboardCharts metrics={metrics} />
           </>

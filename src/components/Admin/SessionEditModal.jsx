@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
 import Icons from '@/components/Global/Icons';
@@ -12,6 +13,7 @@ import SpinnerButton from '@/components/Global/SpinnerButton';
 const DEFAULT_COLOR = '#007185';
 
 const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon, config, onSaved }) => {
+  const { t } = useTranslation();
   const [useCustomColor, setUseCustomColor] = useState(false);
   const [color, setColor] = useState(DEFAULT_COLOR);
   const [icon, setIcon] = useState('');
@@ -33,11 +35,11 @@ const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon,
         color: useCustomColor ? color : null,
         iconKey: icon || null,
       });
-      toast.success('Card atualizado com sucesso.');
+      toast.success(t('admin.ui.sessionEdit.cardUpdated'));
       onSaved?.();
       onHide();
     } catch (error) {
-      toast.error('Não foi possível atualizar o card.');
+      toast.error(t('admin.ui.sessionEdit.cardUpdateError'));
     } finally {
       setSaving(false);
     }
@@ -50,23 +52,23 @@ const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon,
       variant="info"
       icon="edit"
       iconFill="none"
-      title={sessionTitle ? `Personalizar: ${sessionTitle}` : 'Personalizar card'}
+      title={sessionTitle ? t('admin.ui.sessionEdit.customizeTitle', { title: sessionTitle }) : t('admin.ui.sessionEdit.customizeTitleDefault')}
       footer={
         <>
           <Button variant="secondary" onClick={onHide}>
-            Cancelar
+            {t('admin.ui.sessionEdit.cancel')}
           </Button>
-          <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
+          <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>{t('admin.ui.sessionEdit.save')}</SpinnerButton>
         </>
       }
     >
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label className="small fw-bold">Ícone</Form.Label>
+          <Form.Label className="small fw-bold">{t('admin.ui.sessionEdit.iconLabel')}</Form.Label>
           <div className="d-flex align-items-center gap-2">
             <Icons typeIcon={icon || defaultIcon || defaultIconFor(sessionKey)} iconSize={28} fill="#007185" />
             <Form.Select value={icon} onChange={(e) => setIcon(e.target.value)}>
-              <option value="">Ícone padrão</option>
+              <option value="">{t('admin.ui.sessionEdit.defaultIcon')}</option>
               {iconsOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -74,15 +76,15 @@ const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon,
               ))}
             </Form.Select>
           </div>
-          <Form.Text className="text-muted">Aparece no card da home e no topo da sessão.</Form.Text>
+          <Form.Text className="text-muted">{t('admin.ui.sessionEdit.iconHint')}</Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-2">
-          <Form.Label className="small fw-bold">Cor do card</Form.Label>
+          <Form.Label className="small fw-bold">{t('admin.ui.sessionEdit.cardColorLabel')}</Form.Label>
           <Form.Check
             type="checkbox"
             id="session-custom-color"
-            label="Usar cor personalizada"
+            label={t('admin.ui.sessionEdit.useCustomColor')}
             checked={useCustomColor}
             onChange={(e) => setUseCustomColor(e.target.checked)}
             className="mb-2"
@@ -102,7 +104,7 @@ const SessionEditModal = ({ show, onHide, sessionKey, sessionTitle, defaultIcon,
               />
             </div>
           )}
-          <Form.Text className="text-muted">Aparece apenas no card da home.</Form.Text>
+          <Form.Text className="text-muted">{t('admin.ui.sessionEdit.colorHint')}</Form.Text>
         </Form.Group>
       </Form>
     </CustomModal>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Badge, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import { listFormFields, createFormField, updateFormField, deleteFormField } from '@/services/formFields';
@@ -18,23 +19,21 @@ import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const FIELD_TYPES = [
-  { value: 'text', label: 'Texto curto' },
-  { value: 'textarea', label: 'Texto longo' },
-  { value: 'number', label: 'Número' },
-  { value: 'date', label: 'Data' },
-  { value: 'select', label: 'Lista suspensa' },
-  { value: 'radio', label: 'Escolha única' },
-  { value: 'checkbox', label: 'Múltipla escolha' },
-  { value: 'email', label: 'E-mail' },
-  { value: 'phone', label: 'Telefone' },
-  { value: 'cpf', label: 'CPF (inscrição única)' },
-  { value: 'consent', label: 'Consentimento (LGPD)' },
-  { value: 'file', label: 'Arquivo (upload)' },
+  { value: 'text' },
+  { value: 'textarea' },
+  { value: 'number' },
+  { value: 'date' },
+  { value: 'select' },
+  { value: 'radio' },
+  { value: 'checkbox' },
+  { value: 'email' },
+  { value: 'phone' },
+  { value: 'cpf' },
+  { value: 'consent' },
+  { value: 'file' },
 ];
 
 const OPTION_TYPES = ['select', 'radio', 'checkbox'];
-
-const typeLabel = (type) => FIELD_TYPES.find((t) => t.value === type)?.label || type;
 
 const slugifyKey = (value) =>
   value
@@ -61,7 +60,9 @@ const emptyField = (sectionId) => ({
 });
 
 const AdminFormBuilder = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const eventName = useEventName();
+  const typeLabel = (type) => (FIELD_TYPES.some((ft) => ft.value === type) ? t(`admin.formBuilder.types.${type}`) : type);
   const [sections, setSections] = useState([]);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       setSections(sectionsData);
       setFields(fieldsData);
     } catch {
-      toast.error('Erro ao carregar o formulário.');
+      toast.error(t('admin.formBuilder.loadError'));
     } finally {
       setLoading(false);
     }
@@ -115,7 +116,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
   const saveSection = async () => {
     if (!sectionDraft.name.trim()) {
-      toast.error('Informe o nome da seção.');
+      toast.error(t('admin.formBuilder.sectionNameRequired'));
       return;
     }
     setSaving(true);
@@ -128,7 +129,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       setShowSectionModal(false);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar a seção.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.sectionSaveError'));
     } finally {
       setSaving(false);
     }
@@ -138,7 +139,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
   const applyTemplate = async (template) => {
     if (sections.length > 0) {
-      toast.error('Aplique um modelo apenas em um formulário vazio.');
+      toast.error(t('admin.formBuilder.templateOnlyEmpty'));
       return;
     }
     setApplyingTemplate(template.key);
@@ -170,19 +171,19 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         });
       });
       await Promise.all(fieldPayloads.map((payload) => createFormField(payload)));
-      toast.success(`Modelo "${template.label}" aplicado.`);
+      toast.success(t('admin.formBuilder.templateApplied', { label: template.label }));
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao aplicar o modelo.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.templateApplyError'));
       await load();
     } finally {
       setApplyingTemplate(null);
     }
   };
 
-  const createModule = async (type, name) => {
+  const createModule = async (type, name, displayName) => {
     if (hasModule(type)) {
-      toast.error(`Já existe um módulo de ${name.toLowerCase()} neste formulário.`);
+      toast.error(t('admin.formBuilder.moduleExists', { name: displayName }));
       return;
     }
     setSaving(true);
@@ -190,7 +191,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       await createFormSection({ name, order: sections.length, moduleType: type });
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || `Erro ao adicionar o módulo de ${name.toLowerCase()}.`);
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.moduleAddError', { name: displayName }));
     } finally {
       setSaving(false);
     }
@@ -206,7 +207,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       await Promise.all(reordered.map((section, i) => updateFormSection(section.id, { name: section.name, order: i })));
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.reorderError'));
     } finally {
       setSaving(false);
     }
@@ -218,7 +219,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       await updateFormSection(section.id, { name: section.name, order: section.order, columns });
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao atualizar as colunas.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.columnsError'));
     } finally {
       setSaving(false);
     }
@@ -285,12 +286,12 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   });
 
   const validateField = () => {
-    if (!fieldDraft.sectionId) return 'Selecione uma seção.';
-    if (!fieldDraft.label.trim()) return 'O rótulo do campo é obrigatório.';
-    if (!fieldDraft.key.trim()) return 'O identificador do campo é obrigatório.';
+    if (!fieldDraft.sectionId) return t('admin.formBuilder.selectSection');
+    if (!fieldDraft.label.trim()) return t('admin.formBuilder.labelRequired');
+    if (!fieldDraft.key.trim()) return t('admin.formBuilder.keyRequired');
     if (isOptionType && !fieldDraft.source && !fieldDraft.options.some((opt) => opt.label.trim()))
-      return 'Adicione ao menos uma opção.';
-    if (isConsent && !fieldDraft.consentText.trim()) return 'Informe o texto do consentimento.';
+      return t('admin.formBuilder.addOneOption');
+    if (isConsent && !fieldDraft.consentText.trim()) return t('admin.formBuilder.consentTextRequired');
     return null;
   };
 
@@ -311,7 +312,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       setShowFieldModal(false);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar o campo.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.fieldSaveError'));
     } finally {
       setSaving(false);
     }
@@ -330,7 +331,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       ]);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.reorderError'));
     } finally {
       setSaving(false);
     }
@@ -352,7 +353,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
       setToDelete(null);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao excluir.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -360,17 +361,17 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
   const requiredCount = fields.filter((field) => field.required).length;
   const statItems = [
-    { label: 'Seções', value: sections.length },
-    { label: 'Campos', value: fields.length, tone: 'accent' },
-    { label: 'Obrigatórios', value: requiredCount, tone: 'info' },
+    { label: t('admin.formBuilder.statSections'), value: sections.length },
+    { label: t('admin.formBuilder.statFields'), value: fields.length, tone: 'accent' },
+    { label: t('admin.formBuilder.statRequired'), value: requiredCount, tone: 'info' },
   ];
 
   return (
     <div className="admin-subpage form-builder ">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Construtor de Formulário"
-        subtitle={`Campos do evento: ${eventName}`}
+        title={t('admin.formBuilder.title')}
+        subtitle={t('admin.formBuilder.subtitle', { eventName })}
         typeIcon="form-context"
       />
 
@@ -381,17 +382,17 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
         <div className="form-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreateSection}>
-            Nova Seção&nbsp;&nbsp;
+            {t('admin.formBuilder.newSection')}&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
           {!hasModule('package') && (
             <Button
               className="d-flex align-items-center"
               variant="outline-teal-blue"
-              onClick={() => createModule('package', 'Pacote')}
+              onClick={() => createModule('package', 'Pacote', t('admin.formBuilder.moduleNamePackage'))}
               disabled={saving}
             >
-              Módulo: Pacote&nbsp;&nbsp;
+              {t('admin.formBuilder.btnModulePackage')}&nbsp;&nbsp;
               <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
             </Button>
           )}
@@ -399,10 +400,10 @@ const AdminFormBuilder = ({ loggedUsername }) => {
             <Button
               className="d-flex align-items-center"
               variant="outline-teal-blue"
-              onClick={() => createModule('ride', 'Carona')}
+              onClick={() => createModule('ride', 'Carona', t('admin.formBuilder.moduleNameRide'))}
               disabled={saving}
             >
-              Módulo: Carona&nbsp;&nbsp;
+              {t('admin.formBuilder.btnModuleRide')}&nbsp;&nbsp;
               <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
             </Button>
           )}
@@ -412,10 +413,9 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           <Loading loading />
         ) : sections.length === 0 ? (
           <div className="form-builder__templates">
-            <p className="form-builder__templates-title">Comece com um modelo pronto</p>
+            <p className="form-builder__templates-title">{t('admin.formBuilder.templatesTitle')}</p>
             <p className="form-builder__templates-hint">
-              Cria as seções e campos base para o tipo de evento. Você ajusta tudo depois. Disponível apenas com o
-              formulário vazio.
+              {t('admin.formBuilder.templatesHint')}
             </p>
             <div className="form-builder__templates-grid">
               {EVENT_TEMPLATES.map((tpl) => (
@@ -429,12 +429,12 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                   <span className="form-builder__template-name">{tpl.label}</span>
                   <span className="form-builder__template-desc">{tpl.description}</span>
                   {applyingTemplate === tpl.key && (
-                    <span className="form-builder__template-status">Aplicando...</span>
+                    <span className="form-builder__template-status">{t('admin.formBuilder.applying')}</span>
                   )}
                 </button>
               ))}
             </div>
-            <p className="form-builder__empty">Ou crie uma seção manualmente acima.</p>
+            <p className="form-builder__empty">{t('admin.formBuilder.emptyManual')}</p>
           </div>
         ) : (
           <div className="form-builder__sections">
@@ -448,7 +448,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                       className="form-builder__move form-builder__move--up"
                       disabled={sectionIndex === 0 || saving}
                       onClick={() => moveSection(sectionIndex, -1)}
-                      aria-label="Mover seção para cima"
+                      aria-label={t('admin.formBuilder.moveSectionUp')}
                     >
                       <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                     </button>
@@ -457,7 +457,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                       className="form-builder__move form-builder__move--down"
                       disabled={sectionIndex === sections.length - 1 || saving}
                       onClick={() => moveSection(sectionIndex, 1)}
-                      aria-label="Mover seção para baixo"
+                      aria-label={t('admin.formBuilder.moveSectionDown')}
                     >
                       <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                     </button>
@@ -471,16 +471,16 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                         value={section.columns || 1}
                         onChange={(e) => changeSectionColumns(section, Number(e.target.value))}
                         disabled={saving}
-                        aria-label="Colunas por linha da seção"
-                        title="Quantos campos por linha nesta seção"
+                        aria-label={t('admin.formBuilder.columnsAria')}
+                        title={t('admin.formBuilder.columnsTitle')}
                       >
-                        <option value={1}>1 coluna</option>
-                        <option value={2}>2 colunas</option>
-                        <option value={3}>3 colunas</option>
+                        <option value={1}>{t('admin.formBuilder.col1')}</option>
+                        <option value={2}>{t('admin.formBuilder.col2')}</option>
+                        <option value={3}>{t('admin.formBuilder.col3')}</option>
                       </Form.Select>
                     )}
                     <Button size="sm" variant="teal-blue" onClick={() => openEditSection(section)}>
-                      Renomear
+                      {t('admin.formBuilder.rename')}
                     </Button>
                     {section.fields.length > 0 ? (
                       <Button
@@ -488,7 +488,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                         variant="danger"
                         onClick={() => setToDelete({ kind: 'section-all', item: section })}
                       >
-                        Excluir tudo
+                        {t('admin.formBuilder.deleteAll')}
                       </Button>
                     ) : (
                       <Button
@@ -496,7 +496,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                         variant="danger"
                         onClick={() => setToDelete({ kind: 'section', item: section })}
                       >
-                        Excluir
+                        {t('admin.formBuilder.delete')}
                       </Button>
                     )}
                   </div>
@@ -505,22 +505,20 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 {section.moduleType ? (
                   <p className="form-builder__section-empty">
                     {section.moduleType === 'package' ? (
-                      <>
-                        <b>Módulo: Pacote</b> — seleção de produtos/lote com preço por idade. As opções vêm das telas de
-                        Produtos, Lotes e Categorias.
-                      </>
+                      <Trans i18nKey="admin.formBuilder.modulePackageDesc" components={{ b: <b /> }} />
                     ) : section.moduleType === 'ride' ? (
-                      <>
-                        <b>Módulo: Carona</b> — oferta/pedido de carona por inscrição (vagas, contato e observação). As
-                        respostas alimentam a tela de Caronas.
-                      </>
+                      <Trans i18nKey="admin.formBuilder.moduleRideDesc" components={{ b: <b /> }} />
                     ) : (
-                      <b>Módulo: {section.moduleType}</b>
+                      <Trans
+                        i18nKey="admin.formBuilder.moduleGenericDesc"
+                        components={{ b: <b /> }}
+                        values={{ type: section.moduleType }}
+                      />
                     )}{' '}
-                    Esta seção define a <b>posição</b> do módulo no formulário.
+                    <Trans i18nKey="admin.formBuilder.modulePositionNote" components={{ b: <b /> }} />
                   </p>
                 ) : section.fields.length === 0 ? (
-                  <p className="form-builder__section-empty">Nenhum campo nesta seção.</p>
+                  <p className="form-builder__section-empty">{t('admin.formBuilder.sectionEmpty')}</p>
                 ) : (
                   <ul className="form-builder__list">
                     {section.fields.map((field, index) => (
@@ -532,7 +530,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                             className="form-builder__move form-builder__move--up"
                             disabled={index === 0 || saving}
                             onClick={() => moveField(section.fields, index, -1)}
-                            aria-label="Mover para cima"
+                            aria-label={t('admin.formBuilder.moveUp')}
                           >
                             <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                           </button>
@@ -541,7 +539,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                             className="form-builder__move form-builder__move--down"
                             disabled={index === section.fields.length - 1 || saving}
                             onClick={() => moveField(section.fields, index, 1)}
-                            aria-label="Mover para baixo"
+                            aria-label={t('admin.formBuilder.moveDown')}
                           >
                             <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                           </button>
@@ -560,14 +558,14 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                         </div>
                         <div className="form-builder__item-actions">
                           <Button size="sm" variant="outline-teal-blue" onClick={() => openEditField(field)}>
-                            Editar
+                            {t('admin.formBuilder.edit')}
                           </Button>
                           <Button
                             size="sm"
                             variant="outline-danger"
                             onClick={() => setToDelete({ kind: 'field', item: field })}
                           >
-                            Excluir
+                            {t('admin.formBuilder.delete')}
                           </Button>
                         </div>
                       </li>
@@ -577,7 +575,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
                 {!section.moduleType && (
                   <Button size="sm" variant="teal-blue" className="mt-2" onClick={() => openCreateField(section.id)}>
-                    + Adicionar campo
+                    {t('admin.formBuilder.addField')}
                   </Button>
                 )}
               </div>
@@ -590,25 +588,25 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={showSectionModal}
         onHide={() => setShowSectionModal(false)}
         variant="info"
-        title={sectionDraft.id ? 'Renomear Seção' : 'Nova Seção'}
+        title={sectionDraft.id ? t('admin.formBuilder.sectionModalEditTitle') : t('admin.formBuilder.sectionModalNewTitle')}
         icon={sectionDraft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowSectionModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.formBuilder.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={saveSection} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={saveSection} loading={saving}>{t('admin.formBuilder.save')}</SpinnerButton>
           </>
         }
       >
         <Form.Group>
           <Form.Label>
-            <b>Nome da Seção:</b>
+            <b>{t('admin.formBuilder.sectionNameLabel')}</b>
           </Form.Label>
           <Form.Control
             value={sectionDraft.name}
             onChange={(e) => setSectionDraft((prev) => ({ ...prev, name: e.target.value }))}
-            placeholder="Ex.: Dados pessoais"
+            placeholder={t('admin.formBuilder.sectionNamePlaceholder')}
           />
         </Form.Group>
       </CustomModal>
@@ -617,25 +615,25 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         show={showFieldModal}
         onHide={() => setShowFieldModal(false)}
         variant="info"
-        title={fieldDraft.id ? 'Editar Campo' : 'Novo Campo'}
+        title={fieldDraft.id ? t('admin.formBuilder.fieldModalEditTitle') : t('admin.formBuilder.fieldModalNewTitle')}
         icon={fieldDraft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowFieldModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.formBuilder.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={saveField} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={saveField} loading={saving}>{t('admin.formBuilder.save')}</SpinnerButton>
           </>
         }
       >
         <Form className="form-builder__form">
           <Form.Group className="mb-3">
-            <Form.Label>Seção</Form.Label>
+            <Form.Label>{t('admin.formBuilder.fieldSectionLabel')}</Form.Label>
             <Form.Select
               value={fieldDraft.sectionId || ''}
               onChange={(e) => patchField({ sectionId: Number(e.target.value) })}
             >
-              <option value="">Selecione...</option>
+              <option value="">{t('admin.formBuilder.selectEllipsis')}</option>
               {sections.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
@@ -645,59 +643,58 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Tipo</Form.Label>
+            <Form.Label>{t('admin.formBuilder.fieldTypeLabel')}</Form.Label>
             <Form.Select value={fieldDraft.type} onChange={(e) => patchField({ type: e.target.value })}>
-              {FIELD_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
+              {FIELD_TYPES.map((ft) => (
+                <option key={ft.value} value={ft.value}>
+                  {t(`admin.formBuilder.types.${ft.value}`)}
                 </option>
               ))}
             </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Rótulo</Form.Label>
+            <Form.Label>{t('admin.formBuilder.fieldLabelLabel')}</Form.Label>
             <Form.Control
               value={fieldDraft.label}
               onChange={(e) => setFieldLabel(e.target.value)}
-              placeholder="Ex.: Tamanho da camiseta"
+              placeholder={t('admin.formBuilder.fieldLabelPlaceholder')}
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Identificador</Form.Label>
+            <Form.Label>{t('admin.formBuilder.fieldKeyLabel')}</Form.Label>
             <Form.Control
               value={fieldDraft.key}
               onChange={(e) => patchField({ key: slugifyKey(e.target.value), keyTouched: true })}
-              placeholder="tamanho_camiseta"
+              placeholder={t('admin.formBuilder.fieldKeyPlaceholder')}
             />
-            <Form.Text className="text-muted">Usado como chave da resposta. Único por evento.</Form.Text>
+            <Form.Text className="text-muted">{t('admin.formBuilder.fieldKeyHelp')}</Form.Text>
           </Form.Group>
 
           {!isOptionType && !isConsent && (
             <Form.Group className="mb-3">
-              <Form.Label>Placeholder</Form.Label>
+              <Form.Label>{t('admin.formBuilder.placeholderLabel')}</Form.Label>
               <Form.Control
                 value={fieldDraft.placeholder}
                 onChange={(e) => patchField({ placeholder: e.target.value })}
-                placeholder="Texto de exemplo dentro do campo"
+                placeholder={t('admin.formBuilder.placeholderPlaceholder')}
               />
             </Form.Group>
           )}
 
           {isOptionType && (
             <Form.Group className="mb-3">
-              <Form.Label>Origem das opções</Form.Label>
+              <Form.Label>{t('admin.formBuilder.optionSourceLabel')}</Form.Label>
               <Form.Select value={fieldDraft.source} onChange={(e) => patchField({ source: e.target.value })}>
-                <option value="">Digitar manualmente</option>
-                <option value="products">Produtos do evento</option>
-                <option value="lots">Lotes do evento</option>
-                <option value="package_categories">Categorias de pacote</option>
+                <option value="">{t('admin.formBuilder.sourceManual')}</option>
+                <option value="products">{t('admin.formBuilder.sourceProducts')}</option>
+                <option value="lots">{t('admin.formBuilder.sourceLots')}</option>
+                <option value="package_categories">{t('admin.formBuilder.sourcePackageCategories')}</option>
               </Form.Select>
               {fieldDraft.source && (
                 <Form.Text className="text-muted-italic">
-                  As opções vêm automaticamente da fonte selecionada e se atualizam sozinhas quando você editar os dados
-                  do evento.
+                  {t('admin.formBuilder.sourceHelp')}
                 </Form.Text>
               )}
             </Form.Group>
@@ -705,7 +702,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
 
           {isOptionType && !fieldDraft.source && (
             <Form.Group className="mb-3">
-              <Form.Label>Opções</Form.Label>
+              <Form.Label>{t('admin.formBuilder.optionsLabel')}</Form.Label>
               {fieldDraft.options.map((opt, index) => (
                 <div key={index} className="form-builder__option-row">
                   <Form.Control
@@ -716,12 +713,12 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                         value: opt.valueTouched ? opt.value : slugifyKey(e.target.value),
                       })
                     }
-                    placeholder="Rótulo da opção"
+                    placeholder={t('admin.formBuilder.optionLabelPlaceholder')}
                   />
                   <Form.Control
                     value={opt.value}
                     onChange={(e) => updateOption(index, { value: e.target.value, valueTouched: true })}
-                    placeholder="valor"
+                    placeholder={t('admin.formBuilder.optionValuePlaceholder')}
                   />
                   <Button variant="outline-danger" size="sm" onClick={() => removeOption(index)}>
                     ×
@@ -729,7 +726,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
                 </div>
               ))}
               <Button variant="outline-teal-blue" size="sm" onClick={addOption} className="mt-2">
-                + Opção
+                {t('admin.formBuilder.addOption')}
               </Button>
             </Form.Group>
           )}
@@ -737,39 +734,39 @@ const AdminFormBuilder = ({ loggedUsername }) => {
           {isConsent && (
             <>
               <Form.Group className="mb-3">
-                <Form.Label>Texto do consentimento</Form.Label>
+                <Form.Label>{t('admin.formBuilder.consentTextLabel')}</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
                   value={fieldDraft.consentText}
                   onChange={(e) => patchField({ consentText: e.target.value })}
-                  placeholder="Declaro que li e concordo com..."
+                  placeholder={t('admin.formBuilder.consentTextPlaceholder')}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Link (opcional)</Form.Label>
+                <Form.Label>{t('admin.formBuilder.consentLinkLabel')}</Form.Label>
                 <Form.Control
                   value={fieldDraft.consentLink}
                   onChange={(e) => patchField({ consentLink: e.target.value })}
-                  placeholder="https://..."
+                  placeholder={t('admin.formBuilder.consentLinkPlaceholder')}
                 />
               </Form.Group>
             </>
           )}
 
           <Form.Group className="mb-3">
-            <Form.Label>Texto de ajuda (opcional)</Form.Label>
+            <Form.Label>{t('admin.formBuilder.helpTextLabel')}</Form.Label>
             <Form.Control
               value={fieldDraft.helpText}
               onChange={(e) => patchField({ helpText: e.target.value })}
-              placeholder="Instrução exibida abaixo do campo"
+              placeholder={t('admin.formBuilder.helpTextPlaceholder')}
             />
           </Form.Group>
 
           <Form.Check
             type="switch"
             id="field-required-switch"
-            label="Campo obrigatório"
+            label={t('admin.formBuilder.requiredSwitch')}
             checked={fieldDraft.required}
             onChange={(e) => patchField({ required: e.target.checked })}
           />
@@ -782,25 +779,31 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         variant="cancel"
         title={
           toDelete?.kind === 'section-all'
-            ? 'Excluir Seção e Campos'
+            ? t('admin.formBuilder.deleteSectionAllTitle')
             : toDelete?.kind === 'section'
-              ? 'Excluir Seção'
-              : 'Excluir Campo'
+              ? t('admin.formBuilder.deleteSectionTitle')
+              : t('admin.formBuilder.deleteFieldTitle')
         }
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
-              Cancelar
+              {t('admin.formBuilder.cancel')}
             </Button>
-            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>{t('admin.formBuilder.delete')}</SpinnerButton>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir <b>{toDelete?.item?.name || toDelete?.item?.label}</b>?
-          {toDelete?.kind === 'section' && ' A seção precisa estar sem campos.'}
+          <Trans
+            i18nKey="admin.formBuilder.deleteConfirmQuestion"
+            components={{ b: <b /> }}
+            values={{ name: toDelete?.item?.name || toDelete?.item?.label }}
+          />
+          {toDelete?.kind === 'section' && t('admin.formBuilder.deleteSectionSuffix')}
           {toDelete?.kind === 'section-all' &&
-            ` Isso vai excluir a seção e todos os ${fields.filter((f) => f.sectionId === toDelete.item.id).length} campo(s) dentro dela. Esta ação não pode ser desfeita.`}
+            t('admin.formBuilder.deleteSectionAllSuffix', {
+              count: fields.filter((f) => f.sectionId === toDelete.item.id).length,
+            })}
         </p>
       </CustomModal>
     </div>

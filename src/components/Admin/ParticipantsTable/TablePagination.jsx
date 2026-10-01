@@ -1,5 +1,6 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useTranslation, Trans } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
 
 const TablePagination = ({
@@ -15,6 +16,7 @@ const TablePagination = ({
   setPageSize,
   pageSizeOptions,
 }) => {
+  const { t } = useTranslation();
   if (totalRows === 0) return null;
 
   const firstRow = pageIndex * pageSize + 1;
@@ -23,7 +25,7 @@ const TablePagination = ({
   return (
     <div className="table-pagination">
       <span className="table-pagination__info">
-        {firstRow}–{lastRow} de {totalRows}
+        {t('admin.participantsTable.paginationInfo', { first: firstRow, last: lastRow, total: totalRows })}
       </span>
 
       <div className="table-pagination__controls">
@@ -32,7 +34,7 @@ const TablePagination = ({
           className="table-pagination__btn"
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}
-          aria-label="Primeira página"
+          aria-label={t('admin.participantsTable.ariaFirst')}
         >
           <Icons typeIcon="arrow-left" iconSize={16} fill="#007185" />
           <Icons typeIcon="arrow-left" iconSize={16} fill="#007185" />
@@ -42,13 +44,17 @@ const TablePagination = ({
           className="table-pagination__btn"
           onClick={previousPage}
           disabled={!canPreviousPage}
-          aria-label="Página anterior"
+          aria-label={t('admin.participantsTable.ariaPrevious')}
         >
           <Icons typeIcon="arrow-left" iconSize={16} fill="#007185" />
         </button>
 
         <span className="table-pagination__page">
-          Página <strong>{pageIndex + 1}</strong> de <strong>{pageCount || 1}</strong>
+          <Trans
+            i18nKey="admin.participantsTable.paginationPage"
+            values={{ current: pageIndex + 1, total: pageCount || 1 }}
+            components={[<strong key="0" />, <strong key="1" />]}
+          />
         </span>
 
         <button
@@ -56,7 +62,7 @@ const TablePagination = ({
           className="table-pagination__btn"
           onClick={nextPage}
           disabled={!canNextPage}
-          aria-label="Próxima página"
+          aria-label={t('admin.participantsTable.ariaNext')}
         >
           <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
         </button>
@@ -65,7 +71,7 @@ const TablePagination = ({
           className="table-pagination__btn"
           onClick={() => gotoPage(pageCount - 1)}
           disabled={!canNextPage}
-          aria-label="Última página"
+          aria-label={t('admin.participantsTable.ariaLast')}
         >
           <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
           <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
@@ -76,11 +82,11 @@ const TablePagination = ({
         className="table-pagination__size"
         value={pageSize}
         onChange={(e) => setPageSize(Number(e.target.value))}
-        aria-label="Itens por página"
+        aria-label={t('admin.participantsTable.ariaItemsPerPage')}
       >
         {pageSizeOptions.map((size) => (
           <option key={size} value={size}>
-            {size} por página
+            {t('admin.participantsTable.pageSizeOption', { size })}
           </option>
         ))}
       </Form.Select>

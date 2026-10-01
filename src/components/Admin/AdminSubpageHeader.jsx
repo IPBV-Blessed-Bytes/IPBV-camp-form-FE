@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import useAuth from '@/hooks/useAuth';
 import Icons from '@/components/Global/Icons';
@@ -9,9 +10,10 @@ import '../Style/adminSubpage.scss';
 
 const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32, sessionKey }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { logout, user, displayName: authDisplayName } = useAuth();
   const { configs } = useAdminSessions();
-  const topbarName = authDisplayName || username || user || 'Usuário';
+  const topbarName = authDisplayName || username || user || t('admin.ui.userFallback');
 
   const resolved = sessionKey
     ? resolveSession(sessionKey, configs[sessionKey], { title, description: subtitle, icon: typeIcon })
@@ -39,7 +41,7 @@ const AdminSubpageHeader = ({ username, title, subtitle, typeIcon, iconSize = 32
 
         <button type="button" className="admin-subpage__back" onClick={() => navigate(-1)}>
           <Icons typeIcon="arrow-left" iconSize={18} fill="#555050" />
-          <span>Voltar</span>
+          <span>{t('admin.ui.back')}</span>
         </button>
       </div>
     </>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import {
@@ -29,6 +30,7 @@ const iconColorProps = (icon) =>
   STROKE_ICONS.includes(icon) ? { stroke: '#007185', fill: 'none' } : { fill: '#007185' };
 
 const AdminHomeInfoManagement = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [loadingContent, setLoadingContent] = useState(false);
   const [showNewBottomForm, setShowNewBottomForm] = useState(false);
@@ -80,7 +82,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao buscar informações da home');
+      toast.error(t('admin.homeInfo.loadError'));
     } finally {
       setLoading(false);
     }
@@ -115,7 +117,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
   const handleCreateBottomItem = async () => {
     if (!newBottomItem.icon || !newBottomItem.title) {
-      toast.error('Preencha pelo menos ícone e título');
+      toast.error(t('admin.homeInfo.iconTitleRequired'));
       return;
     }
 
@@ -133,7 +135,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
       await createHomeInfo(payload);
 
-      toast.success('Item adicionado com sucesso');
+      toast.success(t('admin.homeInfo.itemAdded'));
       registerLog('Adicionou item bottom', loggedUsername);
 
       setNewBottomItem({
@@ -148,7 +150,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       fetchHomepageInfo();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao salvar item');
+      toast.error(t('admin.homeInfo.itemSaveError'));
     } finally {
       setLoadingContent(false);
     }
@@ -173,14 +175,14 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
       await deleteOnDemandHomeInfo(payload);
 
-      toast.success('Item removido com sucesso');
+      toast.success(t('admin.homeInfo.itemRemoved'));
       registerLog('Removeu item bottom', loggedUsername);
 
       const updatedBottom = formData.bottom.filter((_, i) => i !== index);
       setFormData((prev) => ({ ...prev, bottom: updatedBottom }));
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao remover item');
+      toast.error(t('admin.homeInfo.itemRemoveError'));
     } finally {
       setLoadingContent(false);
     }
@@ -204,13 +206,13 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       };
       await updateHomeInfo(payload);
 
-      toast.success('Item atualizado com sucesso');
+      toast.success(t('admin.homeInfo.itemUpdated'));
       registerLog('Editou item bottom', loggedUsername);
 
       fetchHomepageInfo();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao atualizar item');
+      toast.error(t('admin.homeInfo.itemUpdateError'));
     } finally {
       setLoadingContent(false);
     }
@@ -250,18 +252,18 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
           })),
         };
         await updateHomeInfo(payload);
-        toast.success('Homepage atualizada com sucesso');
+        toast.success(t('admin.homeInfo.homeUpdated'));
         registerLog('Editou informações da homepage', loggedUsername);
       } else {
         await createHomeInfo(formData);
-        toast.success('Homepage criada com sucesso');
+        toast.success(t('admin.homeInfo.homeCreated'));
         registerLog('Criou informações da homepage', loggedUsername);
       }
 
       fetchHomepageInfo();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao salvar informações');
+      toast.error(t('admin.homeInfo.saveError'));
     } finally {
       setLoadingContent(false);
     }
@@ -272,7 +274,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       setLoadingContent(true);
 
       await deleteHomeInfo();
-      toast.success('Informações removidas com sucesso');
+      toast.success(t('admin.homeInfo.infoRemoved'));
       registerLog('Removeu informações da homepage', loggedUsername);
 
       setFormData({
@@ -290,7 +292,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
       setEditing(false);
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao remover informações');
+      toast.error(t('admin.homeInfo.infoRemoveError'));
     } finally {
       setLoadingContent(false);
     }
@@ -298,39 +300,39 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
   const topFieldsConfig = {
     title: {
-      label: 'Título:',
-      placeholder: 'Ex: Acampamento no Período de Carnaval 2000',
+      label: t('admin.homeInfo.fields.title.label'),
+      placeholder: t('admin.homeInfo.fields.title.placeholder'),
     },
     subtitle: {
-      label: 'Subtítulo:',
-      placeholder: 'Ex: Unidos pela palavra da Verdade',
+      label: t('admin.homeInfo.fields.subtitle.label'),
+      placeholder: t('admin.homeInfo.fields.subtitle.placeholder'),
     },
     locationAndDate: {
-      label: 'Local e Data:',
-      placeholder: 'Ex: IP de Boa Viagem • 01 a 04 de fevereiro • Garanhuns',
+      label: t('admin.homeInfo.fields.locationAndDate.label'),
+      placeholder: t('admin.homeInfo.fields.locationAndDate.placeholder'),
     },
     place: {
-      label: 'Local do Evento:',
-      placeholder: 'Ex: Colégio XV de Novembro',
+      label: t('admin.homeInfo.fields.place.label'),
+      placeholder: t('admin.homeInfo.fields.place.placeholder'),
     },
     speaker: {
-      label: 'Preletor:',
-      placeholder: 'Ex: Victor Ximenes',
+      label: t('admin.homeInfo.fields.speaker.label'),
+      placeholder: t('admin.homeInfo.fields.speaker.placeholder'),
     },
     registrationsDeadline: {
-      label: 'Prazo para Inscrição:',
-      placeholder: 'Ex: 01 de Fevereiro',
+      label: t('admin.homeInfo.fields.registrationsDeadline.label'),
+      placeholder: t('admin.homeInfo.fields.registrationsDeadline.placeholder'),
     },
   };
 
   const topFieldKeys = Object.keys(formData.top);
   const filledTopCount = topFieldKeys.filter((field) => String(formData.top[field] ?? '').trim()).length;
   const statItems = [
-    { label: 'Campos base preenchidos', value: `${filledTopCount}/${topFieldKeys.length}` },
-    { label: 'Informações importantes', value: formData.bottom.length, tone: 'info' },
+    { label: t('admin.homeInfo.statBaseFilled'), value: `${filledTopCount}/${topFieldKeys.length}` },
+    { label: t('admin.homeInfo.statImportantInfo'), value: formData.bottom.length, tone: 'info' },
     {
-      label: 'Status',
-      value: editing ? 'Publicada' : 'Não criada',
+      label: t('admin.homeInfo.statStatus'),
+      value: editing ? t('admin.homeInfo.statusPublished') : t('admin.homeInfo.statusNotCreated'),
       tone: editing ? 'free' : 'used',
     },
   ];
@@ -339,8 +341,8 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Informações Iniciais Formulário"
-        subtitle="Conteúdo exibido na página inicial do formulário"
+        title={t('admin.homeInfo.title')}
+        subtitle={t('admin.homeInfo.subtitle')}
         typeIcon="simple-info"
       />
 
@@ -349,7 +351,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
         <Row className="g-4">
         <Col xs={12} lg={5} xl={4}>
-          <FormSection title="Informações Base" description="Dados principais exibidos no topo da página inicial do formulário.">
+          <FormSection title={t('admin.homeInfo.baseInfoTitle')} description={t('admin.homeInfo.baseInfoDesc')}>
             {Object.keys(formData.top).map((field) => (
               <Form.Group key={field} className="mt-2">
                 <Form.Label>{topFieldsConfig[field].label}</Form.Label>
@@ -364,7 +366,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
             <div className="d-flex mt-3 justify-content-end gap-2">
               <Button type="button" variant="teal-blue" onClick={handleSubmit}>
-                {editing ? 'Salvar Alterações' : 'Criar Homepage'}
+                {editing ? t('admin.homeInfo.saveChanges') : t('admin.homeInfo.createHomepage')}
               </Button>
             </div>
           </FormSection>
@@ -373,7 +375,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         <Col xs={12} lg={7} xl={8}>
           <FormSection>
             <div className="homeinfo-section-head">
-              <h2 className="admin-form-section__title homeinfo-section-head__title mb-0">Informações Importantes</h2>
+              <h2 className="admin-form-section__title homeinfo-section-head__title mb-0">{t('admin.homeInfo.importantTitle')}</h2>
               <div className="homeinfo-section-head__actions">
                 <Button
                   variant="outline-teal-blue"
@@ -381,7 +383,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                   onClick={() => setShowNewBottomForm(true)}
                 >
                   <Icons typeIcon="plus" iconSize={16} fill="#007185" />
-                  &nbsp;Adicionar
+                  &nbsp;{t('admin.homeInfo.add')}
                 </Button>
                 <Button
                   variant="danger"
@@ -389,7 +391,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                   onClick={() => setShowDeleteAllModal(true)}
                 >
                   <Icons typeIcon="danger" iconSize={16} fill="#fff" />
-                  &nbsp;Limpar Campos
+                  &nbsp;{t('admin.homeInfo.clearFields')}
                 </Button>
               </div>
             </div>
@@ -397,14 +399,14 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
             {showNewBottomForm && (
               <div className="homeinfo-new-item">
                 <Form.Group className="mt-2">
-                  <Form.Label>Ícone:</Form.Label>
+                  <Form.Label>{t('admin.homeInfo.iconLabel')}</Form.Label>
                   <div className="d-flex align-items-center gap-2">
                     <Form.Select
                       value={newBottomItem.icon}
                       onChange={(e) => setNewBottomItem({ ...newBottomItem, icon: e.target.value })}
                     >
                       <option value="" disabled>
-                        Selecione um Ícone
+                        {t('admin.homeInfo.selectIcon')}
                       </option>
                       {sortedIconsOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -422,7 +424,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Form.Group>
 
                 <Form.Group className="mt-2">
-                  <Form.Label>Título:</Form.Label>
+                  <Form.Label>{t('admin.homeInfo.titleLabel')}</Form.Label>
                   <Form.Control
                     type="text"
                     value={newBottomItem.title}
@@ -431,7 +433,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                 </Form.Group>
 
                 <Form.Group className="mt-2">
-                  <Form.Label>Descrição:</Form.Label>
+                  <Form.Label>{t('admin.homeInfo.descriptionLabel')}</Form.Label>
 
                   <CustomEditor
                     value={newBottomItem.description}
@@ -446,11 +448,11 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
                 <div className="d-flex justify-content-end gap-2 mt-3">
                   <Button variant="secondary" onClick={() => setShowNewBottomForm(false)}>
-                    Cancelar
+                    {t('admin.homeInfo.cancel')}
                   </Button>
 
                   <Button variant="teal-blue" onClick={handleCreateBottomItem}>
-                    Salvar Item
+                    {t('admin.homeInfo.saveItem')}
                   </Button>
                 </div>
               </div>
@@ -467,13 +469,13 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                   <Accordion.Header>
                     <div className="d-flex align-items-center gap-2">
                       {item.icon && <Icons typeIcon={item.icon} iconSize={18} {...iconColorProps(item.icon)} />}
-                      <span>{item.title || `Item ${index + 1}`}</span>
+                      <span>{item.title || t('admin.homeInfo.itemFallback', { num: index + 1 })}</span>
                     </div>
                   </Accordion.Header>
 
                   <Accordion.Body>
                     <Form.Group className="mt-2">
-                      <Form.Label>Ícone:</Form.Label>
+                      <Form.Label>{t('admin.homeInfo.iconLabel')}</Form.Label>
 
                       <div className="d-flex align-items-center gap-2">
                         <Form.Select
@@ -481,7 +483,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                           onChange={(e) => handleBottomChange(index, 'icon', e.target.value)}
                         >
                           <option value="" disabled>
-                            Selecione um Ícone
+                            {t('admin.homeInfo.selectIcon')}
                           </option>
 
                           {sortedIconsOptions.map((option) => (
@@ -500,7 +502,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-2">
-                      <Form.Label>Título:</Form.Label>
+                      <Form.Label>{t('admin.homeInfo.titleLabel')}</Form.Label>
                       <Form.Control
                         type="text"
                         value={item.title}
@@ -509,7 +511,7 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-2">
-                      <Form.Label>Descrição:</Form.Label>
+                      <Form.Label>{t('admin.homeInfo.descriptionLabel')}</Form.Label>
                       {openItems.includes(String(index)) && (
                         <CustomEditor
                           value={item.description}
@@ -520,11 +522,11 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
 
                     <div className="d-flex justify-content-end gap-2 mt-3">
                       <Button variant="outline-danger" size="sm" onClick={() => confirmRemoveBottomItem(index)}>
-                        Remover
+                        {t('admin.homeInfo.remove')}
                       </Button>
 
                       <Button variant="teal-blue" size="sm" onClick={() => handleUpdateBottomItem(index)}>
-                        Salvar
+                        {t('admin.homeInfo.save')}
                       </Button>
                     </div>
                   </Accordion.Body>
@@ -539,38 +541,38 @@ const AdminHomeInfoManagement = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.homeInfo.deleteItemTitle')}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
+              {t('admin.homeInfo.cancel')}
             </Button>
             <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteItem}>
-              Remover
+              {t('admin.homeInfo.remove')}
             </Button>
           </>
         }
       >
-        Tem certeza que deseja remover este item?
+        {t('admin.homeInfo.deleteItemConfirm')}
       </CustomModal>
 
       <CustomModal
         show={showDeleteAllModal}
         onHide={() => setShowDeleteAllModal(false)}
         variant="cancel"
-        title="Remover todas as informações"
+        title={t('admin.homeInfo.deleteAllTitle')}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteAllModal(false)}>
-              Cancelar
+              {t('admin.homeInfo.cancel')}
             </Button>
             <Button className="btn-cancel" variant="danger" onClick={handleConfirmDeleteAll}>
-              Remover Tudo
+              {t('admin.homeInfo.removeAll')}
             </Button>
           </>
         }
       >
-        Essa ação removerá todas as informações da homepage. Deseja continuar?
+        {t('admin.homeInfo.deleteAllConfirm')}
       </CustomModal>
 
         <Loading loading={loading || loadingContent} />

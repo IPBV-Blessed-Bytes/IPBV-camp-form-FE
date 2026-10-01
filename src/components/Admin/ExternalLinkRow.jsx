@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col, Card, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import '../Style/ExternalLinkRow.scss';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 
@@ -12,6 +13,7 @@ const toAbsoluteUrl = (url) => {
 };
 
 const ExternalLinkRow = () => {
+  const { t } = useTranslation();
   const { oldSpreadsheetUrl } = useEventBranding();
   const spreadsheetHref = toAbsoluteUrl(oldSpreadsheetUrl);
 
@@ -20,15 +22,15 @@ const ExternalLinkRow = () => {
       <Col xs={12} className="text-center ps-5-custom">
         <Card>
           <Card.Body>
-            <Card.Title className="fw-bold text-teal-blue">Utilitários</Card.Title>
-            <Card.Text>Clique no botão abaixo para acessar a planilha das inscrições do ano anterior e Pagar.me</Card.Text>
+            <Card.Title className="fw-bold text-teal-blue">{t('admin.ui.externalLinks.title')}</Card.Title>
+            <Card.Text>{t('admin.ui.externalLinks.text')}</Card.Text>
             <div className="btn-wrapper">
               <Button className='pagarme-btn' variant="outline-teal-blue" href={PAGARME} target="_blank" rel="noopener noreferrer">
-                <strong>PAGAR.ME</strong>
+                <strong>{t('admin.ui.externalLinks.pagarme')}</strong>
               </Button>
               {spreadsheetHref && (
                 <Button variant="teal-blue" href={spreadsheetHref} target="_blank" rel="noopener noreferrer">
-                  <strong>PLANILHA ANTIGA</strong>
+                  <strong>{t('admin.ui.externalLinks.oldSpreadsheet')}</strong>
                 </Button>
               )}
             </div>

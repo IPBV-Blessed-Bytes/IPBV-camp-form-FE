@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Form, Button, Badge } from 'react-bootstrap';
+import { useTranslation, Trans } from 'react-i18next';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,6 +43,7 @@ const WhatsAppLink = ({ phone }) => {
 WhatsAppLink.propTypes = { phone: PropTypes.string };
 
 const SeatIndicator = ({ total, used }) => {
+  const { t } = useTranslation();
   const seatCount = Number(total) || 0;
   const usedCount = used || 0;
   const free = Math.max(seatCount - usedCount, 0);
@@ -56,11 +58,9 @@ const SeatIndicator = ({ total, used }) => {
         {usedCount}/{seatCount}
       </span>
       {free > 0 ? (
-        <Badge bg="teal-blue">
-          {free} livre{free === 1 ? '' : 's'}
-        </Badge>
+        <Badge bg="teal-blue">{t('admin.ride.freeSeats', { count: free })}</Badge>
       ) : (
-        <Badge bg="danger">Lotado</Badge>
+        <Badge bg="danger">{t('admin.ride.full')}</Badge>
       )}
     </div>
   );
@@ -76,6 +76,7 @@ const RideStat = ({ label, value, tone }) => (
 RideStat.propTypes = { label: PropTypes.string, value: PropTypes.node, tone: PropTypes.string };
 
 const AdminRide = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [rideData, setRideData] = useState({ offerRide: [], needRide: [] });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -110,13 +111,13 @@ const AdminRide = ({ loggedUsername }) => {
       const result = await autoLinkRides();
       registerLog('Vinculou caronas automaticamente', loggedUsername);
       toast.success(
-        `Caronas vinculadas: ${result.linked} passageiro(s) alocado(s), ${result.unmatched} sem vaga.`,
+        t('admin.ride.toast.autoLinkResult', { linked: result.linked, unmatched: result.unmatched }),
       );
       setAutoLinkOpen(false);
       await reload();
     } catch (error) {
       console.error('Erro ao vincular automaticamente:', error);
-      toast.error('Não foi possível vincular as caronas automaticamente.');
+      toast.error(t('admin.ride.toast.autoLinkError'));
     } finally {
       setAutoLinking(false);
     }
@@ -148,7 +149,7 @@ const AdminRide = ({ loggedUsername }) => {
             : offer,
         );
         const updatedNeedRide = prevData.needRide.filter((ride) => ride.id !== needRideId);
-        toast.success('Carona vinculada com sucesso');
+        toast.success(t('admin.ride.toast.rideLinked'));
 
         if (needRide && offerRide) {
           registerLog(
@@ -161,7 +162,7 @@ const AdminRide = ({ loggedUsername }) => {
       });
     } catch (error) {
       console.error('Erro ao criar relacionamento:', error);
-      toast.error('Erro ao vincular carona');
+      toast.error(t('admin.ride.toast.rideLinkError'));
     }
   };
 
@@ -194,7 +195,7 @@ const AdminRide = ({ loggedUsername }) => {
         }));
         const updatedNeedRide = removedNeedRide ? [...prevData.needRide, removedNeedRide] : prevData.needRide;
 
-        toast.success('Carona desvinculada com sucesso');
+        toast.success(t('admin.ride.toast.rideUnlinked'));
         handleCloseDeleteRelationshipModal();
 
         if (offerWithRelationship && removedNeedRide) {
@@ -281,7 +282,7 @@ const AdminRide = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'rides-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.ride.toolbar.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -290,7 +291,7 @@ const AdminRide = ({ loggedUsername }) => {
       fill: '#fff',
       iconSize: 20,
       id: 'rides-autolink',
-      name: 'Vincular automaticamente',
+      name: t('admin.ride.toolbar.autoLink'),
       onClick: () => setAutoLinkOpen(true),
       typeButton: 'teal-blue',
       typeIcon: 'ride',
@@ -302,19 +303,19 @@ const AdminRide = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="carona"
         username={loggedUsername}
-        title="Caronas"
-        subtitle="Ofertas e pedidos de carona dos inscritos"
+        title={t('admin.ride.title')}
+        subtitle={t('admin.ride.subtitle')}
         typeIcon="ride"
       />
 
       <div className="admin-subpage__content">
         <div className="ride-stats">
-          <RideStat label="Carros" value={stats.cars} />
-          <RideStat label="Vagas totais" value={stats.totalSeats} />
-          <RideStat label="Ocupadas" value={stats.usedSeats} tone="used" />
-          <RideStat label="Livres" value={stats.freeSeats} tone="free" />
-          <RideStat label="Aguardando carona" value={stats.waiting} tone="waiting" />
-          <RideStat label="Alocados" value={`${stats.matchedPct}%`} tone="pct" />
+          <RideStat label={t('admin.ride.stats.cars')} value={stats.cars} />
+          <RideStat label={t('admin.ride.stats.totalSeats')} value={stats.totalSeats} />
+          <RideStat label={t('admin.ride.stats.used')} value={stats.usedSeats} tone="used" />
+          <RideStat label={t('admin.ride.stats.free')} value={stats.freeSeats} tone="free" />
+          <RideStat label={t('admin.ride.stats.waiting')} value={stats.waiting} tone="waiting" />
+          <RideStat label={t('admin.ride.stats.allocated')} value={`${stats.matchedPct}%`} tone="pct" />
         </div>
 
         <div className="ride-toolbar">
@@ -322,7 +323,7 @@ const AdminRide = ({ loggedUsername }) => {
             <Icons typeIcon="m-glass" iconSize={18} fill="#8a8a8a" />
             <input
               type="text"
-              placeholder="Buscar por nome..."
+              placeholder={t('admin.ride.searchPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -331,7 +332,7 @@ const AdminRide = ({ loggedUsername }) => {
         </div>
 
         <div className="ride-section-title">
-          <h4>Carros</h4>
+          <h4>{t('admin.ride.carsTitle')}</h4>
           <span className="ride-section-title__count">{filteredOffers.length}</span>
           <div className="ride-section-title__line" />
         </div>
@@ -343,31 +344,31 @@ const AdminRide = ({ loggedUsername }) => {
               className={`ride-filter-chip ${carFilter === 'all' ? 'is-active' : ''}`}
               onClick={() => setCarFilter('all')}
             >
-              Todos
+              {t('admin.ride.filterAll')}
             </button>
             <button
               type="button"
               className={`ride-filter-chip ${carFilter === 'free' ? 'is-active' : ''}`}
               onClick={() => setCarFilter('free')}
             >
-              Com vaga
+              {t('admin.ride.filterWithSeats')}
             </button>
             <button
               type="button"
               className={`ride-filter-chip ${carFilter === 'full' ? 'is-active' : ''}`}
               onClick={() => setCarFilter('full')}
             >
-              Lotados
+              {t('admin.ride.filterFull')}
             </button>
           </div>
           <Form.Select size="sm" className="ride-sort" value={carSort} onChange={(e) => setCarSort(e.target.value)}>
-            <option value="free">Ordenar por: vagas livres</option>
-            <option value="name">Ordenar por: nome (A→Z)</option>
+            <option value="free">{t('admin.ride.sortFree')}</option>
+            <option value="name">{t('admin.ride.sortName')}</option>
           </Form.Select>
         </div>
 
         {filteredOffers.length === 0 ? (
-          <p className="ride-empty">Nenhum carro para exibir.</p>
+          <p className="ride-empty">{t('admin.ride.noCars')}</p>
         ) : (
           <div className="ride-cards">
             {filteredOffers.map((offer) => {
@@ -386,7 +387,7 @@ const AdminRide = ({ loggedUsername }) => {
                     <Form.Check
                       type="checkbox"
                       className="ride-car__mark"
-                      title="Marcar carona"
+                      title={t('admin.ride.markRide')}
                       checked={Boolean(offer.checked)}
                       onChange={(e) => handleCheckboxChange('offerRide', offer.id, e.target.checked)}
                     />
@@ -398,7 +399,7 @@ const AdminRide = ({ loggedUsername }) => {
 
                   <div className="ride-car__passengers">
                     {used === 0 ? (
-                      <span className="ride-car__empty">Nenhum passageiro ainda</span>
+                      <span className="ride-car__empty">{t('admin.ride.noPassengers')}</span>
                     ) : (
                       offer.relationship.map((p) => (
                         <span key={p.id} className="ride-chip">
@@ -406,7 +407,7 @@ const AdminRide = ({ loggedUsername }) => {
                           <button
                             type="button"
                             className="ride-chip__remove"
-                            title="Remover passageiro"
+                            title={t('admin.ride.removePassenger')}
                             onClick={() => handleShowDeleteRelationshipModal(p.id)}
                           >
                             ×
@@ -423,7 +424,7 @@ const AdminRide = ({ loggedUsername }) => {
                       value=""
                       onChange={(e) => e.target.value && handleCreateRelationship(offer.id, e.target.value)}
                     >
-                      <option value="">+ Adicionar passageiro...</option>
+                      <option value="">{t('admin.ride.addPassenger')}</option>
                       {rideData.needRide.map((need) => (
                         <option key={need.id} value={need.id}>
                           {need.name}
@@ -438,13 +439,13 @@ const AdminRide = ({ loggedUsername }) => {
         )}
 
         <div className="ride-section-title">
-          <h4>Aguardando carona</h4>
+          <h4>{t('admin.ride.waitingTitle')}</h4>
           <span className="ride-section-title__count">{filteredNeeds.length}</span>
           <div className="ride-section-title__line" />
         </div>
 
         {filteredNeeds.length === 0 ? (
-          <p className="ride-empty">Ninguém aguardando carona. 🎉</p>
+          <p className="ride-empty">{t('admin.ride.nobodyWaiting')}</p>
         ) : (
           <div className="ride-pool">
             {filteredNeeds.map((need) => (
@@ -453,7 +454,7 @@ const AdminRide = ({ loggedUsername }) => {
                   <Form.Check
                     type="checkbox"
                     className="ride-need__mark"
-                    title="Marcar carona"
+                    title={t('admin.ride.markRide')}
                     checked={Boolean(need.checked)}
                     onChange={(e) => handleCheckboxChange('needRide', need.id, e.target.checked)}
                   />
@@ -469,11 +470,11 @@ const AdminRide = ({ loggedUsername }) => {
                   onChange={(e) => e.target.value && handleCreateRelationship(e.target.value, need.id)}
                 >
                   <option value="">
-                    {carsWithFreeSeats.length === 0 ? 'Sem vagas disponíveis' : 'Atribuir a um carro...'}
+                    {carsWithFreeSeats.length === 0 ? t('admin.ride.noSeatsAvailable') : t('admin.ride.assignToCar')}
                   </option>
                   {carsWithFreeSeats.map((car) => (
                     <option key={car.id} value={car.id}>
-                      {car.name} — {car.free} vaga{car.free === 1 ? '' : 's'}
+                      {t('admin.ride.carOption', { name: car.name, count: car.free })}
                     </option>
                   ))}
                 </Form.Select>
@@ -486,45 +487,44 @@ const AdminRide = ({ loggedUsername }) => {
           show={showDeleteRelationshipModal}
           onHide={handleCloseDeleteRelationshipModal}
           variant="cancel"
-          title="Confirmar Exclusão"
+          title={t('admin.ride.confirmDeleteTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={handleCloseDeleteRelationshipModal}>
-                Cancelar
+                {t('admin.ride.cancel')}
               </Button>
               <Button variant="danger" className="btn-cancel" onClick={() => handleDeleteRelationship(camperToDelete)}>
-                Excluir
+                {t('admin.ride.delete')}
               </Button>
             </>
           }
         >
-          Tem certeza de que deseja remover esse passageiro dessa carona?
+          {t('admin.ride.removePassengerConfirm')}
         </CustomModal>
 
         <CustomModal
           show={autoLinkOpen}
           onHide={() => setAutoLinkOpen(false)}
           variant="confirm"
-          title="Vincular caronas automaticamente"
+          title={t('admin.ride.autoLinkTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setAutoLinkOpen(false)} disabled={autoLinking}>
-                Cancelar
+                {t('admin.ride.cancel')}
               </Button>
               <Button variant="teal-blue" onClick={handleAutoLink} disabled={autoLinking}>
-                {autoLinking ? 'Vinculando...' : 'Vincular todos'}
+                {autoLinking ? t('admin.ride.linking') : t('admin.ride.linkAll')}
               </Button>
             </>
           }
         >
           <p>
-            Isso <b>refaz todos os vínculos</b> de carona: os passageiros são realocados nos carros por ordem de
-            solicitação, preenchendo as vagas de cada carro. Quem sobrar (sem vaga) fica aguardando.
+            <Trans i18nKey="admin.ride.autoLinkBody1" components={{ b: <b /> }} />
           </p>
           <p className="text-secondary small mb-0">
-            Você pode clicar de novo depois — se surgirem novas vagas, tudo é reposicionado seguindo a mesma ordem.
+            {t('admin.ride.autoLinkBody2')}
           </p>
         </CustomModal>
 

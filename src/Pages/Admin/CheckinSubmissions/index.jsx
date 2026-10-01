@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import {
   listSubmissions,
   getSubmissionsByOrder,
@@ -21,13 +22,18 @@ import QrScannerModal from '@/components/Global/QrScannerModal';
 import CheckinReviewModal from '@/components/Global/CheckinReviewModal';
 import '@/Pages/Admin/Checkin/style.scss';
 
-const PAYMENT_STATUS_LABEL = { paid: 'Pago', pending: 'Pendente', refunded: 'Reembolsado', cancelled: 'Cancelado' };
-const PAYMENT_METHOD_LABEL = {
-  credit_card: 'Cartão de Crédito',
-  creditCard: 'Cartão de Crédito',
-  pix: 'PIX',
-  boleto: 'Boleto',
-  ticket: 'Boleto',
+const PAYMENT_STATUS_KEY = {
+  paid: 'statusPaid',
+  pending: 'statusPending',
+  refunded: 'statusRefunded',
+  cancelled: 'statusCancelled',
+};
+const PAYMENT_METHOD_KEY = {
+  credit_card: 'methodCreditCard',
+  creditCard: 'methodCreditCard',
+  pix: 'methodPix',
+  boleto: 'methodBoleto',
+  ticket: 'methodBoleto',
 };
 
 const formatBrl = (cents) =>
@@ -50,6 +56,9 @@ const mapPerson = (submission) => ({
 });
 
 const AdminCheckinSubmissions = ({ loggedUsername }) => {
+  const { t } = useTranslation();
+  const statusLabel = (value) => (PAYMENT_STATUS_KEY[value] ? t(`admin.checkin.${PAYMENT_STATUS_KEY[value]}`) : null);
+  const methodLabel = (value) => (PAYMENT_METHOD_KEY[value] ? t(`admin.checkin.${PAYMENT_METHOD_KEY[value]}`) : null);
   const { fields } = useEventSchema();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +77,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
     try {
       setSubmissions(await listSubmissions());
     } catch {
-      toast.error('Erro ao carregar as inscrições.');
+      toast.error(t('admin.checkin.toastLoadError'));
     } finally {
       setLoading(false);
     }
@@ -83,11 +92,12 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
     const done = submissions.filter((s) => s.checkin).length;
     const percent = total ? Math.round((done / total) * 100) : 0;
     return [
-      { label: 'Total de inscritos', value: total },
-      { label: 'Com check-in', value: done, tone: 'free' },
-      { label: 'Pendentes', value: total - done, tone: 'used' },
-      { label: '% concluído', value: `${percent}%`, tone: 'info' },
+      { label: t('admin.checkin.statTotal'), value: total },
+      { label: t('admin.checkin.statDone'), value: done, tone: 'free' },
+      { label: t('admin.checkin.statPending'), value: total - done, tone: 'used' },
+      { label: t('admin.checkin.statPercent'), value: `${percent}%`, tone: 'info' },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submissions]);
 
   const matches = useMemo(() => {
@@ -127,7 +137,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       const updated = fresh.find((s) => s.id === selected.id);
       if (updated) setSelected(mapPerson(updated));
     } catch {
-      toast.error('Erro ao atualizar o check-in.');
+      toast.error(t('admin.checkin.toastUpdateError'));
     } finally {
       setUpdating(false);
     }
@@ -138,13 +148,13 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
     try {
       const people = await getSubmissionsByOrder(orderNumber);
       if (!people.length) {
-        toast.error(`Nenhuma inscrição encontrada para o pedido ${orderNumber}.`);
+        toast.error(t('admin.checkin.toastOrderNotFound', { order: orderNumber }));
         return;
       }
       setReviewOrder(orderNumber);
       setReviewPeople(people.map(mapPerson));
     } catch {
-      toast.error('Erro ao buscar o pedido.');
+      toast.error(t('admin.checkin.toastOrderError'));
     }
   };
 
@@ -152,7 +162,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
     setShowScanner(false);
     const orderNumber = parseCheckoutQr(text);
     if (!orderNumber) {
-      toast.error('QR inválido para check-in.');
+      toast.error(t('admin.checkin.toastInvalidQr'));
       return;
     }
     openReview(orderNumber);
@@ -171,7 +181,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       registerLog(`Fez check-in de ${person.name || person.cpf} (pedido ${reviewOrder})`, loggedUsername);
       await refreshReview(reviewOrder);
     } catch {
-      toast.error('Erro ao fazer check-in.');
+      toast.error(t('admin.checkin.toastCheckinError'));
     } finally {
       setApproving(false);
     }
@@ -184,7 +194,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       registerLog(`Desfez check-in de ${person.name || person.cpf} (pedido ${reviewOrder})`, loggedUsername);
       await refreshReview(reviewOrder);
     } catch {
-      toast.error('Erro ao desfazer o check-in.');
+      toast.error(t('admin.checkin.toastUndoError'));
     } finally {
       setApproving(false);
     }
@@ -197,7 +207,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       registerLog(`Fez check-in de todo o pedido ${reviewOrder}`, loggedUsername);
       await refreshReview(reviewOrder);
     } catch {
-      toast.error('Erro ao fazer check-in do pedido.');
+      toast.error(t('admin.checkin.toastOrderCheckinError'));
     } finally {
       setApproving(false);
     }
@@ -208,8 +218,8 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="checkin"
         username={loggedUsername}
-        title="Check-in"
-        subtitle="Busque o inscrito por nome/CPF ou escaneie o QR do pedido (família)."
+        title={t('admin.checkin.title')}
+        subtitle={t('admin.checkin.subtitle')}
         typeIcon="checkin"
       />
 
@@ -223,13 +233,13 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
             <div className="admin-panel checkin-search">
               <Form.Group controlId="checkin-search">
                 <Form.Label>
-                  <b>Buscar inscrito (nome ou CPF):</b>
+                  <b>{t('admin.checkin.searchLabel')}</b>
                 </Form.Label>
                 <div className="cpf-input-wrapper">
                   <Form.Control
                     autoComplete="off"
                     type="text"
-                    placeholder="Digite o nome ou CPF"
+                    placeholder={t('admin.checkin.searchPlaceholder')}
                     value={term}
                     size="lg"
                     onChange={(e) => {
@@ -239,7 +249,12 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                     }}
                   />
                   {term && (
-                    <button aria-label="Limpar" className="cpf-clear-button" type="button" onClick={clearSearch}>
+                    <button
+                      aria-label={t('admin.checkin.clear')}
+                      className="cpf-clear-button"
+                      type="button"
+                      onClick={clearSearch}
+                    >
                       <Icons typeIcon="close" iconSize={30} fill="#6c757d" />
                     </button>
                   )}
@@ -252,7 +267,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                   onClick={() => setShowScanner(true)}
                 >
                   <Icons typeIcon="camera" iconSize={20} fill="#007185" />
-                  Escanear QR do pedido (família)
+                  {t('admin.checkin.scanQr')}
                 </Button>
 
                 {showSuggestions && !selected && term.trim().length >= 2 && (
@@ -260,12 +275,12 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                     {matches.length > 0 ? (
                       matches.map((s) => (
                         <div key={s.id} className="cpf-suggestions-item" onClick={() => selectPerson(s)}>
-                          <strong>{s.answers?.nome || 'Sem nome'}</strong>
+                          <strong>{s.answers?.nome || t('admin.checkin.noName')}</strong>
                           <span>{s.answers?.cpf || '—'}</span>
                         </div>
                       ))
                     ) : (
-                      <div className="cpf-suggestions-empty">Nenhum inscrito encontrado</div>
+                      <div className="cpf-suggestions-empty">{t('admin.checkin.noMatches')}</div>
                     )}
                   </div>
                 )}
@@ -276,8 +291,8 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
               <div className="admin-panel checkin-user">
                 <div className="checkin-user__head">
                   <div className="checkin-user__identity">
-                    <span className="checkin-user__eyebrow">Inscrito</span>
-                    <h2 className="checkin-user__name">{selected.name || 'Sem nome'}</h2>
+                    <span className="checkin-user__eyebrow">{t('admin.checkin.participant')}</span>
+                    <h2 className="checkin-user__name">{selected.name || t('admin.checkin.noName')}</h2>
                   </div>
                   <span className={`checkin-status-badge checkin-status-badge--${selected.checkin ? 'in' : 'out'}`}>
                     <Icons
@@ -285,7 +300,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                       iconSize={16}
                       fill={selected.checkin ? '#0c9183' : '#d32f2f'}
                     />
-                    {selected.checkin ? 'Check-in feito' : 'Sem check-in'}
+                    {selected.checkin ? t('admin.checkin.badgeCheckedIn') : t('admin.checkin.badgeNotCheckedIn')}
                   </span>
                 </div>
 
@@ -299,23 +314,23 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                     </div>
                   ))}
                   <div className="checkin-info__item">
-                    <span className="checkin-info__label">Pedido</span>
+                    <span className="checkin-info__label">{t('admin.checkin.order')}</span>
                     <span className="checkin-info__value">{selected.orderNumber || '-'}</span>
                   </div>
                   <div className="checkin-info__item">
-                    <span className="checkin-info__label">Pagamento</span>
+                    <span className="checkin-info__label">{t('admin.checkin.payment')}</span>
                     <span className="checkin-info__value">
-                      {PAYMENT_STATUS_LABEL[selected.paymentStatus] || selected.paymentStatus || '-'}
+                      {statusLabel(selected.paymentStatus) || selected.paymentStatus || '-'}
                     </span>
                   </div>
                   <div className="checkin-info__item">
-                    <span className="checkin-info__label">Forma de pagamento</span>
+                    <span className="checkin-info__label">{t('admin.checkin.paymentMethod')}</span>
                     <span className="checkin-info__value">
-                      {PAYMENT_METHOD_LABEL[selected.paymentMethod] || selected.paymentMethod || '-'}
+                      {methodLabel(selected.paymentMethod) || selected.paymentMethod || '-'}
                     </span>
                   </div>
                   <div className="checkin-info__item">
-                    <span className="checkin-info__label">Valor</span>
+                    <span className="checkin-info__label">{t('admin.checkin.amount')}</span>
                     <span className="checkin-info__value">{formatBrl(selected.totalCents)}</span>
                   </div>
                 </div>
@@ -333,7 +348,7 @@ const AdminCheckinSubmissions = ({ loggedUsername }) => {
                       iconSize={20}
                       fill={selected.checkin ? '#d32f2f' : '#fff'}
                     />
-                    <span>&nbsp;{selected.checkin ? 'Desfazer check-in' : 'Confirmar check-in'}</span>
+                    <span>&nbsp;{selected.checkin ? t('admin.checkin.undoCheckin') : t('admin.checkin.confirmCheckin')}</span>
                   </Button>
                 </div>
               </div>

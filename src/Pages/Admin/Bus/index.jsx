@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Badge, Button, Form, Table } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 
@@ -24,15 +25,16 @@ const goesByBus = (camper) => BUS_TRANSPORTATIONS.includes(camper?.package?.tran
 const isTeamBus = (camper) => (camper?.package?.transportationName || '').toLowerCase().includes('equipe');
 
 const EDIT_FIELDS = [
-  { key: 'name', label: 'Nome', path: 'personalInformation' },
-  { key: 'cpf', label: 'CPF', path: 'personalInformation' },
-  { key: 'rg', label: 'RG', path: 'personalInformation' },
-  { key: 'rgShipper', label: 'Órgão Expedidor', path: 'personalInformation' },
-  { key: 'cellPhone', label: 'Telefone', path: 'contact' },
-  { key: 'birthday', label: 'Data de Nascimento', path: 'personalInformation' },
+  { key: 'name', labelKey: 'admin.bus.fields.name', path: 'personalInformation' },
+  { key: 'cpf', labelKey: 'admin.bus.fields.cpf', path: 'personalInformation' },
+  { key: 'rg', labelKey: 'admin.bus.fields.rg', path: 'personalInformation' },
+  { key: 'rgShipper', labelKey: 'admin.bus.fields.rgShipper', path: 'personalInformation' },
+  { key: 'cellPhone', labelKey: 'admin.bus.fields.cellPhone', path: 'contact' },
+  { key: 'birthday', labelKey: 'admin.bus.fields.birthday', path: 'personalInformation' },
 ];
 
 const AdminBus = ({ loggedUsername, userRole }) => {
+  const { t } = useTranslation();
   scrollUp();
 
   const { data, loading, saveEdit } = useParticipantsData({ loggedUsername });
@@ -80,19 +82,19 @@ const AdminBus = ({ loggedUsername, userRole }) => {
   }, [data, search, busFilter, sortAsc]);
 
   const busChips = [
-    { value: 'all', label: 'Todos', count: allBus.length },
-    { value: 'normal', label: 'Ônibus normal', count: normalCount },
-    { value: 'equipe', label: 'Ônibus Equipe', count: equipeCount },
+    { value: 'all', label: t('admin.bus.chips.all'), count: allBus.length },
+    { value: 'normal', label: t('admin.bus.chips.normal'), count: normalCount },
+    { value: 'equipe', label: t('admin.bus.chips.equipe'), count: equipeCount },
   ];
 
   const statItems = [
-    { label: 'Passageiros no ônibus', value: allBus.length, tone: 'info' },
-    { label: 'Ônibus normal', value: normalCount, tone: 'accent' },
-    { label: 'Ônibus Equipe', value: equipeCount, tone: 'used' },
+    { label: t('admin.bus.stats.passengers'), value: allBus.length, tone: 'info' },
+    { label: t('admin.bus.stats.normal'), value: normalCount, tone: 'accent' },
+    { label: t('admin.bus.stats.equipe'), value: equipeCount, tone: 'used' },
   ];
 
   const toggleSort = () => setSortAsc((prev) => !prev);
-  const sortLabel = sortAsc ? 'Nome (A → Z)' : 'Nome (Z → A)';
+  const sortLabel = sortAsc ? t('admin.bus.sortAsc') : t('admin.bus.sortDesc');
 
   const openEdit = ({ camper, originalIndex }) => {
     setEditing({ camper, originalIndex });
@@ -136,8 +138,8 @@ const AdminBus = ({ loggedUsername, userRole }) => {
       <AdminSubpageHeader
         sessionKey="onibus"
         username={loggedUsername}
-        title="Ônibus"
-        subtitle="Passageiros que marcaram ir de ônibus"
+        title={t('admin.bus.title')}
+        subtitle={t('admin.bus.subtitle')}
         typeIcon="bus"
       />
 
@@ -145,7 +147,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
         <StatCards items={statItems} />
 
         <div className="bus-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou CPF..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.bus.searchPlaceholder')} />
           <div className="d-flex flex-grow-1 align-items-center gap-2 flex-wrap">
             <FilterChips options={busChips} value={busFilter} onChange={setBusFilter} />
             <Button variant="outline-teal-blue" className="bus-toolbar__sort ms-auto" onClick={toggleSort}>
@@ -155,20 +157,20 @@ const AdminBus = ({ loggedUsername, userRole }) => {
           </div>
         </div>
 
-        <SectionHeader title="Passageiros" count={busCampers.length} />
+        <SectionHeader title={t('admin.bus.sectionTitle')} count={busCampers.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Nome:</th>
-                <th className="table-cells-header">Transporte:</th>
-                <th className="table-cells-header">CPF:</th>
-                <th className="table-cells-header">RG:</th>
-                <th className="table-cells-header">Órgão Expedidor:</th>
-                <th className="table-cells-header">Telefone:</th>
-                <th className="table-cells-header">Data de Nascimento:</th>
-                {canEdit && <th className="table-cells-header">Ações:</th>}
+                <th className="table-cells-header">{t('admin.bus.columns.name')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.transport')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.cpf')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.rg')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.rgShipper')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.phone')}</th>
+                <th className="table-cells-header">{t('admin.bus.columns.birthday')}</th>
+                {canEdit && <th className="table-cells-header">{t('admin.bus.columns.actions')}</th>}
               </tr>
             </thead>
             <tbody>
@@ -177,7 +179,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
                   <td>{camper.personalInformation?.name || '-'}</td>
                   <td>
                     <Badge bg={isTeamBus(camper) ? 'warning' : 'primary'} text={isTeamBus(camper) ? 'dark' : undefined}>
-                      {isTeamBus(camper) ? 'Ônibus Equipe' : 'Ônibus normal'}
+                      {isTeamBus(camper) ? t('admin.bus.teamBus') : t('admin.bus.normalBus')}
                     </Badge>
                   </td>
                   <td>{camper.personalInformation?.cpf || '-'}</td>
@@ -191,7 +193,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
                         <ActionButton
                           action="edit"
                           iconSize={22}
-                          label="Editar passageiro"
+                          label={t('admin.bus.editPassenger')}
                           onClick={() => openEdit({ camper, originalIndex })}
                         />
                       </div>
@@ -202,7 +204,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
               {busCampers.length === 0 && (
                 <tr>
                   <td colSpan={canEdit ? 8 : 7} className="text-start text-secondary p-4">
-                    Nenhum passageiro de ônibus encontrado
+                    {t('admin.bus.empty')}
                   </td>
                 </tr>
               )}
@@ -216,14 +218,14 @@ const AdminBus = ({ loggedUsername, userRole }) => {
           variant="confirm"
           icon="edit"
           iconFill='none'
-          title="Editar Passageiro do Ônibus"
+          title={t('admin.bus.modalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowEditModal(false)} disabled={saving}>
-                Cancelar
+                {t('admin.bus.cancel')}
               </Button>
-              <SpinnerButton variant="confirm" onClick={handleSave} loading={saving}>Salvar alterações</SpinnerButton>
+              <SpinnerButton variant="confirm" onClick={handleSave} loading={saving}>{t('admin.bus.saveChanges')}</SpinnerButton>
             </>
           }
         >
@@ -231,7 +233,7 @@ const AdminBus = ({ loggedUsername, userRole }) => {
             {EDIT_FIELDS.map((field) => (
               <Form.Group key={field.key} className="mb-3">
                 <Form.Label>
-                  <b>{field.label}:</b>
+                  <b>{t(field.labelKey)}:</b>
                 </Form.Label>
                 <Form.Control
                   type="text"

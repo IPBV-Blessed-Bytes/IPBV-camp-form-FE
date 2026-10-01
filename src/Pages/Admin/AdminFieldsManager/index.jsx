@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Badge, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import { listAdminFields, createAdminField, updateAdminField, deleteAdminField } from '@/services/adminFields';
@@ -16,14 +17,14 @@ import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const FIELD_TYPES = [
-  { value: 'text', label: 'Texto' },
-  { value: 'textarea', label: 'Texto longo' },
-  { value: 'number', label: 'Número' },
-  { value: 'date', label: 'Data' },
-  { value: 'select', label: 'Seleção (lista)' },
-  { value: 'radio', label: 'Escolha única' },
-  { value: 'checkbox', label: 'Múltipla escolha' },
-  { value: 'consent', label: 'Sim / Não' },
+  { value: 'text' },
+  { value: 'textarea' },
+  { value: 'number' },
+  { value: 'date' },
+  { value: 'select' },
+  { value: 'radio' },
+  { value: 'checkbox' },
+  { value: 'consent' },
 ];
 
 const HAS_OPTIONS = ['select', 'radio', 'checkbox'];
@@ -38,8 +39,6 @@ const slugify = (value) =>
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/(^_|_$)/g, '');
 
-const typeLabel = (type) => FIELD_TYPES.find((t) => t.value === type)?.label || type;
-
 const optionsToText = (options) =>
   Array.isArray(options) ? options.map((option) => option.label ?? option.value ?? '').join('\n') : '';
 
@@ -51,7 +50,9 @@ const textToOptions = (text) =>
     .map((line) => ({ value: slugify(line) || line, label: line }));
 
 const AdminFieldsManager = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const eventName = useEventName();
+  const typeLabel = (type) => (FIELD_TYPES.some((ft) => ft.value === type) ? t(`admin.adminFields.types.${type}`) : type);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -64,7 +65,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
     try {
       setFields(await listAdminFields());
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao carregar os campos.');
+      toast.error(getApiErrorMessage(err) || t('admin.adminFields.loadError'));
     } finally {
       setLoading(false);
     }
@@ -98,27 +99,27 @@ const AdminFieldsManager = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     if (!draft.label.trim()) {
-      toast.error('O rótulo do campo é obrigatório.');
+      toast.error(t('admin.adminFields.labelRequired'));
       return;
     }
     if (HAS_OPTIONS.includes(draft.type) && textToOptions(draft.optionsText).length === 0) {
-      toast.error('Adicione ao menos uma opção.');
+      toast.error(t('admin.adminFields.addOneOption'));
       return;
     }
     setSaving(true);
     try {
       if (draft.id) {
         await updateAdminField(draft.id, buildPayload(fields.findIndex((f) => f.id === draft.id)));
-        toast.success('Campo atualizado.');
+        toast.success(t('admin.adminFields.updated'));
       } else {
         await createAdminField(buildPayload(fields.length));
-        toast.success('Campo criado.');
+        toast.success(t('admin.adminFields.created'));
       }
       registerLog(draft.id ? 'Editou um campo administrativo' : 'Criou um campo administrativo', loggedUsername);
       setShowModal(false);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar o campo.');
+      toast.error(getApiErrorMessage(err) || t('admin.adminFields.saveError'));
     } finally {
       setSaving(false);
     }
@@ -133,7 +134,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
       setToDelete(null);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao excluir.');
+      toast.error(getApiErrorMessage(err) || t('admin.adminFields.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -141,30 +142,27 @@ const AdminFieldsManager = ({ loggedUsername }) => {
 
   const withOptions = useMemo(() => fields.filter((f) => HAS_OPTIONS.includes(f.type)).length, [fields]);
   const statItems = [
-    { label: 'Campos administrativos', value: fields.length },
-    { label: 'Com opções', value: withOptions, tone: 'info' },
+    { label: t('admin.adminFields.statFields'), value: fields.length },
+    { label: t('admin.adminFields.statWithOptions'), value: withOptions, tone: 'info' },
   ];
 
   return (
     <div className="admin-subpage admin-fields">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Campos administrativos"
-        subtitle={`Campos preenchidos só pelo admin — evento: ${eventName}`}
+        title={t('admin.adminFields.title')}
+        subtitle={t('admin.adminFields.subtitle', { eventName })}
         typeIcon="edit"
       />
 
       <div className="admin-fields__content">
         <StatCards items={statItems} />
 
-        <p className="admin-fields__hint">
-          Colunas extras na tabela de inscritos que apenas a administração preenche após a inscrição, separadas do
-          formulário público.
-        </p>
+        <p className="admin-fields__hint">{t('admin.adminFields.hint')}</p>
 
         <div className="admin-fields__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            Novo campo&nbsp;&nbsp;
+            {t('admin.adminFields.newField')}&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
@@ -172,7 +170,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : fields.length === 0 ? (
-          <p className="admin-fields__empty">Nenhum campo administrativo cadastrado. Crie o primeiro acima.</p>
+          <p className="admin-fields__empty">{t('admin.adminFields.empty')}</p>
         ) : (
           <ul className="admin-fields__list">
             {fields.map((field, index) => (
@@ -184,7 +182,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
                 </Badge>
                 <div className="admin-fields__actions">
                   <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(field)}>
-                    Editar
+                    {t('admin.adminFields.edit')}
                   </Button>
                   <Button size="sm" variant="outline-danger" onClick={() => setToDelete(field)}>
                     <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
@@ -200,31 +198,31 @@ const AdminFieldsManager = ({ loggedUsername }) => {
         show={showModal}
         onHide={() => setShowModal(false)}
         variant="info"
-        title={draft.id ? 'Editar campo' : 'Novo campo'}
+        title={draft.id ? t('admin.adminFields.editTitle') : t('admin.adminFields.newTitle')}
         icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.adminFields.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>{t('admin.adminFields.save')}</SpinnerButton>
           </>
         }
       >
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>Rótulo:</b>
+              <b>{t('admin.adminFields.labelLabel')}</b>
             </Form.Label>
             <Form.Control
               value={draft.label}
               onChange={(e) => setDraft((prev) => ({ ...prev, label: e.target.value }))}
-              placeholder="Ex.: Equipe, Observações internas..."
+              placeholder={t('admin.adminFields.labelPlaceholder')}
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>Tipo:</b>
+              <b>{t('admin.adminFields.typeLabel')}</b>
             </Form.Label>
             <Form.Select
               value={draft.type}
@@ -232,7 +230,7 @@ const AdminFieldsManager = ({ loggedUsername }) => {
             >
               {FIELD_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>
-                  {type.label}
+                  {t(`admin.adminFields.types.${type.value}`)}
                 </option>
               ))}
             </Form.Select>
@@ -240,16 +238,16 @@ const AdminFieldsManager = ({ loggedUsername }) => {
           {HAS_OPTIONS.includes(draft.type) && (
             <Form.Group>
               <Form.Label>
-                <b>Opções:</b>
+                <b>{t('admin.adminFields.optionsLabel')}</b>
               </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}
                 value={draft.optionsText}
                 onChange={(e) => setDraft((prev) => ({ ...prev, optionsText: e.target.value }))}
-                placeholder="Uma opção por linha"
+                placeholder={t('admin.adminFields.optionsPlaceholder')}
               />
-              <Form.Text className="text-muted">Uma opção por linha.</Form.Text>
+              <Form.Text className="text-muted">{t('admin.adminFields.optionsHelp')}</Form.Text>
             </Form.Group>
           )}
         </Form>
@@ -259,19 +257,22 @@ const AdminFieldsManager = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title="Excluir campo"
+        title={t('admin.adminFields.deleteTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
-              Cancelar
+              {t('admin.adminFields.cancel')}
             </Button>
-            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>{t('admin.adminFields.delete')}</SpinnerButton>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir o campo <b>{toDelete?.label}</b>? Os valores já preenchidos nas inscrições
-          serão perdidos.
+          <Trans
+            i18nKey="admin.adminFields.deleteConfirm"
+            components={{ b: <b /> }}
+            values={{ label: toDelete?.label }}
+          />
         </p>
       </CustomModal>
     </div>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -23,12 +24,12 @@ import './style.scss';
 registerLocale('ptBR', ptBR);
 
 const SOCIAL_NETWORKS = [
-  { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/suaigreja' },
-  { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/suaigreja' },
-  { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@suaigreja' },
-  { key: 'spotify', label: 'Spotify', placeholder: 'https://open.spotify.com/...' },
-  { key: 'twitter', label: 'Twitter / X', placeholder: 'https://x.com/suaigreja' },
-  { key: 'email', label: 'E-mail', placeholder: 'contato@suaigreja.com' },
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'facebook', label: 'Facebook' },
+  { key: 'youtube', label: 'YouTube' },
+  { key: 'spotify', label: 'Spotify' },
+  { key: 'twitter', label: 'Twitter / X' },
+  { key: 'email', label: 'E-mail' },
 ];
 
 const parseSocial = (value) => {
@@ -52,6 +53,7 @@ const formatDate = (date) => {
 };
 
 const AdminUtilitySettings = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const slug = useMemo(() => getEventSlug(), []);
   const [event, setEvent] = useState(null);
   const [contact, setContact] = useState('');
@@ -98,7 +100,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       }
       setTemplateExists(Boolean(templateExistsData));
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao carregar as informações utilitárias.');
+      toast.error(getApiErrorMessage(error) || t('admin.utility.loadError'));
     } finally {
       setLoading(false);
     }
@@ -143,9 +145,9 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       }
 
       registerLog('Atualizou as informações utilitárias', loggedUsername);
-      toast.success('Informações utilitárias atualizadas.');
+      toast.success(t('admin.utility.saveSuccess'));
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao salvar as informações utilitárias.');
+      toast.error(getApiErrorMessage(error) || t('admin.utility.saveError'));
     } finally {
       setSaving(false);
     }
@@ -159,9 +161,9 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       await uploadMinorTemplate(file);
       setTemplateExists(true);
       registerLog('Atualizou o modelo da declaração de responsabilidade', loggedUsername);
-      toast.success('Modelo da declaração atualizado.');
+      toast.success(t('admin.utility.templateUpdated'));
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Não foi possível enviar o modelo.');
+      toast.error(getApiErrorMessage(error) || t('admin.utility.templateUploadError'));
     } finally {
       setUploadingTemplate(false);
       e.target.value = '';
@@ -172,8 +174,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings utility-settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Informações Utilitárias"
-        subtitle="Contato, data do evento, parcelamento do boleto, mapa, redes sociais e mais."
+        title={t('admin.utility.title')}
+        subtitle={t('admin.utility.subtitle')}
         typeIcon="settings"
       />
 
@@ -184,39 +186,39 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
           <>
             <Row className="g-4">
               <Col xs={12} lg={6}>
-                <FormSection title="Contato & Divulgação">
+                <FormSection title={t('admin.utility.contactSectionTitle')}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Telefone de Contato (WhatsApp)</Form.Label>
-                    <Form.Control value={contact} onChange={(e) => setContact(e.target.value)} placeholder="(81) 99999-9999" />
+                    <Form.Label>{t('admin.utility.contactLabel')}</Form.Label>
+                    <Form.Control value={contact} onChange={(e) => setContact(e.target.value)} placeholder={t('admin.utility.contactPlaceholder')} />
                     <Form.Text className="text-muted">
-                      Usado onde o contato da organização é divulgado (WhatsApp, FAQ, telas de espera).
+                      {t('admin.utility.contactHelp')}
                     </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label>Link da Planilha Antiga</Form.Label>
-                    <Form.Control value={spreadsheet} onChange={(e) => setSpreadsheet(e.target.value)} placeholder="https://drive.google.com/..." />
-                    <Form.Text className="text-muted">Botão &quot;Planilha Antiga&quot; na home do admin. Em branco = oculto.</Form.Text>
+                    <Form.Label>{t('admin.utility.spreadsheetLabel')}</Form.Label>
+                    <Form.Control value={spreadsheet} onChange={(e) => setSpreadsheet(e.target.value)} placeholder={t('admin.utility.spreadsheetPlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.spreadsheetHelp')}</Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-0">
-                    <Form.Label>Link do Painel PagarMe (pedidos)</Form.Label>
-                    <Form.Control value={pagarmeDash} onChange={(e) => setPagarmeDash(e.target.value)} placeholder="https://dash.pagar.me/.../orders/" />
-                    <Form.Text className="text-muted">Prefixo do link &quot;ver pedido&quot;; o número do pedido é anexado ao final.</Form.Text>
+                    <Form.Label>{t('admin.utility.pagarmeLabel')}</Form.Label>
+                    <Form.Control value={pagarmeDash} onChange={(e) => setPagarmeDash(e.target.value)} placeholder={t('admin.utility.pagarmePlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.pagarmeHelp')}</Form.Text>
                   </Form.Group>
                 </FormSection>
               </Col>
 
               <Col xs={12} lg={6}>
-                <FormSection title="Evento & Parcelamento do Boleto">
+                <FormSection title={t('admin.utility.eventSectionTitle')}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Data do Evento</Form.Label>
+                    <Form.Label>{t('admin.utility.eventDateLabel')}</Form.Label>
                     <div>
                       <DatePicker
                         selected={parseDate(baseDate)}
                         onChange={(date) => setBaseDate(formatDate(date))}
                         className="form-control mb-1"
-                        placeholderText="dd/mm/aaaa"
+                        placeholderText={t('admin.utility.datePlaceholder')}
                         dateFormat="dd/MM/yyyy"
                         locale="ptBR"
                         dropdownMode="select"
@@ -225,96 +227,96 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                       />
                     </div>
                     <Form.Text className="text-muted">
-                      Início do evento. Referência para cálculo de idades/pacotes e para as parcelas do boleto.
+                      {t('admin.utility.eventDateHelp')}
                     </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label>Máximo de Parcelas no Boleto</Form.Label>
-                    <Form.Control type="number" min="1" max="12" value={boletoMax} onChange={(e) => setBoletoMax(e.target.value)} placeholder="5" />
-                    <Form.Text className="text-muted">Teto de parcelas do boleto, respeitando os meses até o evento.</Form.Text>
+                    <Form.Label>{t('admin.utility.boletoMaxLabel')}</Form.Label>
+                    <Form.Control type="number" min="1" max="12" value={boletoMax} onChange={(e) => setBoletoMax(e.target.value)} placeholder={t('admin.utility.boletoMaxPlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.boletoMaxHelp')}</Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label>Vencimento do Último Boleto (dias antes do evento)</Form.Label>
-                    <Form.Control type="number" min="1" value={boletoMinDays} onChange={(e) => setBoletoMinDays(e.target.value)} placeholder="10" />
+                    <Form.Label>{t('admin.utility.boletoMinLabel')}</Form.Label>
+                    <Form.Control type="number" min="1" value={boletoMinDays} onChange={(e) => setBoletoMinDays(e.target.value)} placeholder={t('admin.utility.boletoMinPlaceholder')} />
                     <Form.Text className="text-muted">
-                      Trava o vencimento do último boleto para no mínimo esta folga (dias) antes do evento. Em branco usa o padrão.
+                      {t('admin.utility.boletoMinHelp')}
                     </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="mb-0">
-                    <Form.Label>Vagas do Ônibus da Equipe</Form.Label>
-                    <Form.Control type="number" min="0" value={crewBus} onChange={(e) => setCrewBus(e.target.value)} placeholder="22" />
-                    <Form.Text className="text-muted">Total de vagas no ônibus reservado para a equipe/crew.</Form.Text>
+                    <Form.Label>{t('admin.utility.crewBusLabel')}</Form.Label>
+                    <Form.Control type="number" min="0" value={crewBus} onChange={(e) => setCrewBus(e.target.value)} placeholder={t('admin.utility.crewBusPlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.crewBusHelp')}</Form.Text>
                   </Form.Group>
                 </FormSection>
               </Col>
 
               <Col xs={12} lg={6}>
-                <FormSection title="Local do evento (mapa)">
+                <FormSection title={t('admin.utility.mapSectionTitle')}>
                   <Form.Group className="mb-0">
-                    <Form.Label>Endereço ou link do Google Maps</Form.Label>
-                    <Form.Control value={eventMap} onChange={(e) => setEventMap(e.target.value)} placeholder="Rua Exemplo, 123 - Bairro, Cidade - UF" />
-                    <Form.Text className="text-muted">Mostra um mapa do local na home do evento. Em branco = oculto.</Form.Text>
+                    <Form.Label>{t('admin.utility.mapLabel')}</Form.Label>
+                    <Form.Control value={eventMap} onChange={(e) => setEventMap(e.target.value)} placeholder={t('admin.utility.mapPlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.mapHelp')}</Form.Text>
                   </Form.Group>
                 </FormSection>
 
-                <FormSection title="Grupo do WhatsApp">
+                <FormSection title={t('admin.utility.whatsappSectionTitle')}>
                   <Form.Group className="mb-0">
-                    <Form.Label>Link do grupo</Form.Label>
-                    <Form.Control value={whatsappGroup} onChange={(e) => setWhatsappGroup(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
-                    <Form.Text className="text-muted">O botão e o QR code só aparecem quando este link está preenchido.</Form.Text>
+                    <Form.Label>{t('admin.utility.whatsappLabel')}</Form.Label>
+                    <Form.Control value={whatsappGroup} onChange={(e) => setWhatsappGroup(e.target.value)} placeholder={t('admin.utility.whatsappPlaceholder')} />
+                    <Form.Text className="text-muted">{t('admin.utility.whatsappHelp')}</Form.Text>
                   </Form.Group>
                 </FormSection>
 
-                <FormSection title="Modal de LGPD">
+                <FormSection title={t('admin.utility.lgpdSectionTitle')}>
                   <Form.Check
                     type="switch"
                     id="show-lgpd-modal"
-                    label="Exibir o modal de LGPD ao abrir o formulário"
+                    label={t('admin.utility.lgpdSwitch')}
                     checked={showLgpd}
                     onChange={(e) => setShowLgpd(e.target.checked)}
                   />
                   <Form.Text className="text-muted">
-                    Quando desligado, o aviso de conformidade com a LGPD não aparece na abertura do formulário.
+                    {t('admin.utility.lgpdHelp')}
                   </Form.Text>
                 </FormSection>
               </Col>
 
               <Col xs={12} lg={6}>
-                <FormSection title="Redes sociais (rodapé)">
+                <FormSection title={t('admin.utility.socialSectionTitle')}>
                   {SOCIAL_NETWORKS.map((network) => (
                     <Form.Group className="mb-3" key={network.key}>
                       <Form.Label>{network.label}</Form.Label>
                       <Form.Control
                         value={social[network.key] || ''}
                         onChange={(e) => setSocial((prev) => ({ ...prev, [network.key]: e.target.value }))}
-                        placeholder={network.placeholder}
+                        placeholder={t(`admin.utility.social.${network.key}.placeholder`)}
                       />
                     </Form.Group>
                   ))}
-                  <Form.Text className="text-muted">Cada ícone só aparece no rodapé quando o link é preenchido.</Form.Text>
+                  <Form.Text className="text-muted">{t('admin.utility.socialHelp')}</Form.Text>
                 </FormSection>
 
-                <FormSection title="Modelo da Declaração (menor de idade)">
+                <FormSection title={t('admin.utility.templateSectionTitle')}>
                   <Form.Group className="mb-0">
-                    <Form.Label>Declaração de responsabilidade (PDF)</Form.Label>
+                    <Form.Label>{t('admin.utility.templateLabel')}</Form.Label>
                     <div className="utility-template-actions">
                       <label className="utility-template-btn">
                         <Icons typeIcon="upload" iconSize={18} />
-                        <span>{templateExists ? 'Trocar Modelo' : 'Enviar Modelo'}</span>
+                        <span>{templateExists ? t('admin.utility.changeTemplate') : t('admin.utility.sendTemplate')}</span>
                         <input type="file" accept="application/pdf" disabled={uploadingTemplate} onChange={handleTemplateChange} hidden />
                       </label>
                       {templateExists && (
                         <a className="utility-template-btn utility-template-btn--ghost" href={minorTemplateDownloadUrl()} target="_blank" rel="noopener noreferrer">
                           <Icons typeIcon="download" iconSize={18} />
-                          <span>Ver Atual</span>
+                          <span>{t('admin.utility.viewCurrent')}</span>
                         </a>
                       )}
                     </div>
                     <Form.Text className="text-muted">
-                      PDF que o inscrito menor de idade baixa, assina e reenvia. Substitua aqui quando o termo mudar.
+                      {t('admin.utility.templateHelp')}
                     </Form.Text>
                   </Form.Group>
                 </FormSection>
@@ -323,7 +325,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
 
             <div className="utility-settings__actions">
               <SpinnerButton variant="teal-blue" className="fw-bold" onClick={handleSave} loading={saving}>
-                Salvar alterações
+                {t('admin.utility.saveChanges')}
               </SpinnerButton>
             </div>
           </>

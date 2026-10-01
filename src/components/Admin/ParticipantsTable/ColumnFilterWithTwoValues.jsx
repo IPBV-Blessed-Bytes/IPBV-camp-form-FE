@@ -1,10 +1,12 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
 import '../../Style/ColumnFilter.scss';
 
 const ColumnFilterWithTwoValues = ({ column, options }) => {
+  const { t } = useTranslation();
   const [localFilterValue, setLocalFilterValue] = useState(column?.filterValue || '');
   const setFilter = column?.setFilter || (() => {});
 
@@ -28,7 +30,7 @@ const ColumnFilterWithTwoValues = ({ column, options }) => {
         onChange={handleChange}
         size="lg"
       >
-        <option value="">Todos</option>
+        <option value="">{t('admin.participantsTable.filterAll')}</option>
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}

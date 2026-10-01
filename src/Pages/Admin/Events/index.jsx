@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
@@ -9,9 +10,9 @@ import EventIcons, { EVENT_ICONS } from '@/components/Global/EventIcons';
 const ICON_KEYS = new Set(EVENT_ICONS.map((icon) => icon.key));
 
 const STAGE_BADGE = (event) => {
-  if (!event.active) return { bg: 'secondary', text: undefined, label: 'Inativo' };
-  if (event.registrationsOpen === false) return { bg: 'warning', text: 'dark', label: 'Aguardando evento' };
-  return { bg: 'success', text: undefined, label: 'Inscrições Abertas' };
+  if (!event.active) return { bg: 'secondary', text: undefined, labelKey: 'inactive' };
+  if (event.registrationsOpen === false) return { bg: 'warning', text: 'dark', labelKey: 'waiting' };
+  return { bg: 'success', text: undefined, labelKey: 'open' };
 };
 
 import { listAllEvents, createEvent, updateEvent, deleteEvent, uploadEventImage, deleteEventImage, eventImageUrl } from '@/services/events';
@@ -59,12 +60,12 @@ const EMPTY_EVENT = {
 };
 
 const SOCIAL_NETWORKS = [
-  { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/seuevento' },
-  { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/seuevento' },
-  { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@seuevento' },
-  { key: 'spotify', label: 'Spotify', placeholder: 'https://open.spotify.com/...' },
-  { key: 'twitter', label: 'Twitter / X', placeholder: 'https://x.com/seuevento' },
-  { key: 'email', label: 'E-mail', placeholder: 'contato@seuevento.com' },
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'facebook', label: 'Facebook' },
+  { key: 'youtube', label: 'YouTube' },
+  { key: 'spotify', label: 'Spotify' },
+  { key: 'twitter', label: 'Twitter / X' },
+  { key: 'email', label: 'E-mail' },
 ];
 
 const parseSocial = (value) => {
@@ -94,6 +95,7 @@ const slugify = (value) =>
     .replace(/(^-|-$)/g, '');
 
 const AdminEvents = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +115,7 @@ const AdminEvents = ({ loggedUsername }) => {
     try {
       setEvents(await listAllEvents());
     } catch {
-      toast.error('Erro ao carregar eventos.');
+      toast.error(t('admin.events.loadError'));
     } finally {
       setLoading(false);
     }
@@ -175,9 +177,9 @@ const AdminEvents = ({ loggedUsername }) => {
       await uploadEventImage(draft.id, file);
       setImageVersion(Date.now());
       setHasImage(true);
-      toast.success('Imagem do card atualizada.');
+      toast.success(t('admin.events.imageUpdated'));
     } catch {
-      toast.error('Não foi possível enviar a imagem.');
+      toast.error(t('admin.events.imageUploadError'));
     } finally {
       setImageBusy(false);
     }
@@ -190,9 +192,9 @@ const AdminEvents = ({ loggedUsername }) => {
       await deleteEventImage(draft.id);
       setHasImage(false);
       setImageVersion(Date.now());
-      toast.success('Imagem do card removida.');
+      toast.success(t('admin.events.imageRemoved'));
     } catch {
-      toast.error('Não foi possível remover a imagem.');
+      toast.error(t('admin.events.imageRemoveError'));
     } finally {
       setImageBusy(false);
     }
@@ -227,7 +229,7 @@ const AdminEvents = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     if (!draft.name.trim() || !draft.slug.trim()) {
-      toast.error('Nome e identificador (slug) são obrigatórios.');
+      toast.error(t('admin.events.nameSlugRequired'));
       return;
     }
 
@@ -273,15 +275,15 @@ const AdminEvents = ({ loggedUsername }) => {
     try {
       if (draft.id) {
         await updateEvent(draft.id, payload);
-        toast.success('Evento atualizado com sucesso.');
+        toast.success(t('admin.events.eventUpdated'));
       } else {
         await createEvent(payload);
-        toast.success('Evento criado com sucesso.');
+        toast.success(t('admin.events.eventCreated'));
       }
       setShowFormModal(false);
       await loadEvents();
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao salvar o evento.');
+      toast.error(getApiErrorMessage(error) || t('admin.events.saveError'));
     } finally {
       setSaving(false);
     }
@@ -292,12 +294,12 @@ const AdminEvents = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteEvent(selected.id);
-      toast.success('Evento excluído com sucesso.');
+      toast.success(t('admin.events.eventDeleted'));
       setShowDeleteModal(false);
       setSelected(null);
       await loadEvents();
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao excluir o evento.');
+      toast.error(getApiErrorMessage(error) || t('admin.events.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -307,10 +309,10 @@ const AdminEvents = ({ loggedUsername }) => {
   const waitingCount = events.filter((event) => event.active && event.registrationsOpen === false).length;
   const inactiveCount = events.filter((event) => !event.active).length;
   const statItems = [
-    { label: 'Eventos', value: events.length },
-    { label: 'Inscrições abertas', value: openCount, tone: 'free' },
-    { label: 'Aguardando', value: waitingCount, tone: 'info' },
-    { label: 'Inativos', value: inactiveCount, tone: 'used' },
+    { label: t('admin.events.statEvents'), value: events.length },
+    { label: t('admin.events.statOpen'), value: openCount, tone: 'free' },
+    { label: t('admin.events.statWaiting'), value: waitingCount, tone: 'info' },
+    { label: t('admin.events.statInactive'), value: inactiveCount, tone: 'used' },
   ];
 
   const term = search.trim().toLowerCase();
@@ -322,8 +324,8 @@ const AdminEvents = ({ loggedUsername }) => {
     <div className="admin-subpage admin-events">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Eventos"
-        subtitle="Crie e configure os eventos disponíveis para inscrição."
+        title={t('admin.events.title')}
+        subtitle={t('admin.events.subtitle')}
         typeIcon="calendar"
       />
 
@@ -332,10 +334,10 @@ const AdminEvents = ({ loggedUsername }) => {
 
         <div className="admin-events__toolbar">
           {events.length > 0 && (
-            <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou slug..." />
+            <SearchBox value={search} onChange={setSearch} placeholder={t('admin.events.searchPlaceholder')} />
           )}
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            Novo Evento&nbsp;&nbsp;
+            {t('admin.events.newEvent')}&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
@@ -343,9 +345,9 @@ const AdminEvents = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : events.length === 0 ? (
-          <p className="admin-events__empty">Nenhum evento cadastrado.</p>
+          <p className="admin-events__empty">{t('admin.events.emptyNone')}</p>
         ) : filteredEvents.length === 0 ? (
-          <p className="admin-events__empty">Nenhum evento encontrado.</p>
+          <p className="admin-events__empty">{t('admin.events.emptyFiltered')}</p>
         ) : (
           <div className="event-admin-grid">
             {filteredEvents.map((event) => {
@@ -371,42 +373,42 @@ const AdminEvents = ({ loggedUsername }) => {
 
                   <div className="event-admin-card__meta">
                     <Badge bg={badge.bg} text={badge.text}>
-                      {badge.label}
+                      {t(`admin.events.badge.${badge.labelKey}`)}
                     </Badge>
                     {event.paymentEnabled && (
                       <Badge bg="light" text="dark" className="event-admin-card__tag">
-                        Pagamento
+                        {t('admin.events.paymentTag')}
                       </Badge>
                     )}
                   </div>
 
                   <div className="event-admin-card__config">
                     <Button size="sm" variant="outline-teal-blue" onClick={() => openFormBuilder(event)}>
-                      Campos
+                      {t('admin.events.cardFields')}
                     </Button>
                     <Button size="sm" variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
-                      Inscrições
+                      {t('admin.events.cardSubmissions')}
                     </Button>
                     <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
-                      Info Home
+                      {t('admin.events.cardInfoHome')}
                     </Button>
                     <Button size="sm" variant="outline-teal-blue" onClick={() => openFaq(event)}>
-                      FAQ
+                      {t('admin.events.cardFaq')}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline-teal-blue"
                       disabled={!event.paymentEnabled}
-                      title={event.paymentEnabled ? '' : 'Habilite o pagamento para configurar o pacote'}
+                      title={event.paymentEnabled ? '' : t('admin.events.packageDisabledTitle')}
                       onClick={() => openPackage(event)}
                     >
-                      Pacote
+                      {t('admin.events.cardPackage')}
                     </Button>
                   </div>
 
                   <div className="event-admin-card__footer">
                     <Button size="sm" variant="teal-blue" onClick={() => openEdit(event)}>
-                      Editar
+                      {t('admin.events.edit')}
                     </Button>
                     <Button
                       size="sm"
@@ -416,7 +418,7 @@ const AdminEvents = ({ loggedUsername }) => {
                         setShowDeleteModal(true);
                       }}
                     >
-                      Excluir
+                      {t('admin.events.delete')}
                     </Button>
                   </div>
                 </div>
@@ -431,14 +433,14 @@ const AdminEvents = ({ loggedUsername }) => {
         onHide={() => setShowFormModal(false)}
         variant="info"
         size="lg"
-        title={draft.id ? 'Editar Evento' : 'Novo Evento'}
+        title={draft.id ? t('admin.events.editTitle') : t('admin.events.newTitle')}
         icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowFormModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.events.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>{t('admin.events.save')}</SpinnerButton>
           </>
         }
       >
@@ -447,7 +449,7 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Nome:</b>
+                  <b>{t('admin.events.nameLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.name}
@@ -459,7 +461,7 @@ const AdminEvents = ({ loggedUsername }) => {
                       slug: prev.id ? prev.slug : slugify(name),
                     }));
                   }}
-                  placeholder="Ex.: Acampamento IPBV"
+                  placeholder={t('admin.events.namePlaceholder')}
                 />
               </Form.Group>
             </Col>
@@ -467,28 +469,28 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Identificador (slug):</b>
+                  <b>{t('admin.events.slugLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.slug}
                   onChange={(e) => handleChange('slug')(slugify(e.target.value))}
-                  placeholder="acampamento-ipbv"
+                  placeholder={t('admin.events.slugPlaceholder')}
                 />
-                <Form.Text className="text-muted-italic">Usado na URL: /e/{draft.slug || 'slug'}</Form.Text>
+                <Form.Text className="text-muted-italic">{t('admin.events.slugHelp', { slug: draft.slug || 'slug' })}</Form.Text>
               </Form.Group>
             </Col>
 
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Cor Principal:</b>
+                  <b>{t('admin.events.colorLabel')}</b>
                 </Form.Label>
                 <div className="admin-events__color-row">
                   <Form.Control
                     type="color"
                     value={draft.color || '#007185'}
                     onChange={(e) => handleChange('color')(e.target.value)}
-                    title="Cor do evento"
+                    title={t('admin.events.colorTitle')}
                   />
                   <Form.Control
                     value={draft.color || ''}
@@ -502,14 +504,14 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Cor Secundária (botões):</b>
+                  <b>{t('admin.events.secondaryColorLabel')}</b>
                 </Form.Label>
                 <div className="admin-events__color-row">
                   <Form.Control
                     type="color"
                     value={draft.secondaryColor || '#ffc107'}
                     onChange={(e) => handleChange('secondaryColor')(e.target.value)}
-                    title="Cor secundária do evento"
+                    title={t('admin.events.secondaryColorTitle')}
                   />
                   <Form.Control
                     value={draft.secondaryColor || ''}
@@ -523,15 +525,15 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Telefone de Contato (WhatsApp):</b>
+                  <b>{t('admin.events.contactLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.contact}
                   onChange={(e) => handleChange('contact')(e.target.value)}
-                  placeholder="(81) 99999-9999"
+                  placeholder={t('admin.events.contactPlaceholder')}
                 />
                 <Form.Text className="text-muted-italic">
-                  Usado em todos os lugares que divulgam o contato do responsável pelo evento.
+                  {t('admin.events.contactHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -539,13 +541,13 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Ano:</b>
+                  <b>{t('admin.events.yearLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   type="number"
                   value={draft.year}
                   onChange={(e) => handleChange('year')(e.target.value)}
-                  placeholder="2027"
+                  placeholder={t('admin.events.yearPlaceholder')}
                 />
               </Form.Group>
             </Col>
@@ -553,12 +555,12 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Ícone do Card:</b>
+                  <b>{t('admin.events.iconLabel')}</b>
                 </Form.Label>
                 <div className="event-icon-field">
                   <Form.Select value={draft.iconKey} onChange={(e) => handleChange('iconKey')(e.target.value)}>
                     <option value="" disabled selected>
-                      Sem Ícone
+                      {t('admin.events.noIcon')}
                     </option>
                     {EVENT_ICONS.map((icon) => (
                       <option key={icon.key} value={icon.key}>
@@ -569,17 +571,17 @@ const AdminEvents = ({ loggedUsername }) => {
                   <div
                     className="event-icon-field__preview"
                     style={{ color: draft.color || '#007185' }}
-                    aria-label="Pré-visualização do ícone"
+                    aria-label={t('admin.events.iconPreviewAria')}
                   >
                     {draft.iconKey ? (
                       <EventIcons typeIcon={draft.iconKey} iconSize={40} />
                     ) : (
-                      <span className="event-icon-field__placeholder">sem ícone</span>
+                      <span className="event-icon-field__placeholder">{t('admin.events.noIconPlaceholder')}</span>
                     )}
                   </div>
                 </div>
                 <Form.Text className="text-muted-italic">
-                  Escolha um ícone para aparecer no card do evento na página inicial. Ele assume a cor principal.
+                  {t('admin.events.iconHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -587,14 +589,14 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Imagem do Card:</b>
+                  <b>{t('admin.events.imageLabel')}</b>
                 </Form.Label>
                 {draft.id ? (
                   <div className="event-image-field">
                     <img
                       className="event-image-field__preview"
                       src={`${eventImageUrl(draft.id)}?v=${imageVersion}`}
-                      alt="Imagem do card"
+                      alt={t('admin.events.imageAlt')}
                       style={hasImage ? undefined : { display: 'none' }}
                       onLoad={() => setHasImage(true)}
                       onError={() => setHasImage(false)}
@@ -607,22 +609,22 @@ const AdminEvents = ({ loggedUsername }) => {
                         disabled={imageBusy}
                         onClick={() => imageInputRef.current?.click()}
                       >
-                        {imageBusy ? 'Enviando...' : hasImage ? 'Trocar imagem' : 'Enviar imagem'}
+                        {imageBusy ? t('admin.events.sending') : hasImage ? t('admin.events.changeImage') : t('admin.events.sendImage')}
                       </Button>
                       {hasImage && (
                         <Button variant="outline-danger" size="sm" disabled={imageBusy} onClick={handleImageRemove}>
-                          Remover
+                          {t('admin.events.remove')}
                         </Button>
                       )}
                     </div>
                   </div>
                 ) : (
                   <Form.Text className="text-muted-italic d-block">
-                    Salve o evento primeiro para adicionar uma imagem ao card.
+                    {t('admin.events.imageSaveFirst')}
                   </Form.Text>
                 )}
                 <Form.Text className="text-muted-italic">
-                  Aparece no topo do card do evento no catálogo. Deixe sem imagem para usar só o ícone.
+                  {t('admin.events.imageHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -630,7 +632,7 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Estágio do Evento:</b>
+                  <b>{t('admin.events.stageLabel')}</b>
                 </Form.Label>
                 <Form.Select
                   value={draft.active ? (draft.registrationsOpen ? 'open' : 'waiting') : 'inactive'}
@@ -644,14 +646,13 @@ const AdminEvents = ({ loggedUsername }) => {
                   }}
                 >
                   <option value="open" selected disabled>
-                    Inscrições Abertas
+                    {t('admin.events.stageOpen')}
                   </option>
-                  <option value="waiting">Aguardando evento (só login/pós-venda)</option>
-                  <option value="inactive">Inativo (oculto no catálogo)</option>
+                  <option value="waiting">{t('admin.events.stageWaiting')}</option>
+                  <option value="inactive">{t('admin.events.stageInactive')}</option>
                 </Form.Select>
                 <Form.Text className="text-muted-italic">
-                  &quot;Aguardando evento&quot;: o card ainda aparece, mas o usuário só entra na conta, não se inscreve
-                  mais.
+                  {t('admin.events.stageHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -659,14 +660,14 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Mensagem &quot;Fale Conosco&quot; (WhatsApp):</b>
+                  <b>{t('admin.events.contactMsgLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
                   value={draft.contactMessage}
                   onChange={(e) => handleChange('contactMessage')(e.target.value)}
-                  placeholder="Mensagem pré-preenchida ao abrir a conversa (opcional)"
+                  placeholder={t('admin.events.contactMsgPlaceholder')}
                 />
               </Form.Group>
             </Col>
@@ -674,14 +675,14 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Mensagem &quot;Compartilhar&quot; (WhatsApp):</b>
+                  <b>{t('admin.events.shareMsgLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
                   value={draft.shareMessage}
                   onChange={(e) => handleChange('shareMessage')(e.target.value)}
-                  placeholder="Texto enviado ao compartilhar o evento (opcional)"
+                  placeholder={t('admin.events.shareMsgPlaceholder')}
                 />
               </Form.Group>
             </Col>
@@ -689,15 +690,15 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Link da Planilha Antiga:</b>
+                  <b>{t('admin.events.spreadsheetLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.oldSpreadsheetUrl}
                   onChange={(e) => handleChange('oldSpreadsheetUrl')(e.target.value)}
-                  placeholder="https://drive.google.com/..."
+                  placeholder={t('admin.events.spreadsheetPlaceholder')}
                 />
                 <Form.Text className="text-muted-italic">
-                  Botão &quot;Planilha Antiga&quot; na home do admin. Deixe em branco para ocultar.
+                  {t('admin.events.spreadsheetHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -705,15 +706,15 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Favicon (URL):</b>
+                  <b>{t('admin.events.faviconLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.faviconUrl}
                   onChange={(e) => handleChange('faviconUrl')(e.target.value)}
-                  placeholder="https://.../favicon.png"
+                  placeholder={t('admin.events.faviconPlaceholder')}
                 />
                 <Form.Text className="text-muted-italic">
-                  Ícone da aba do navegador nas páginas do evento. Deixe em branco para usar o padrão.
+                  {t('admin.events.faviconHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -721,15 +722,15 @@ const AdminEvents = ({ loggedUsername }) => {
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Local do evento (mapa):</b>
+                  <b>{t('admin.events.mapLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   value={draft.mapQuery}
                   onChange={(e) => handleChange('mapQuery')(e.target.value)}
-                  placeholder="Endereço ou link do Google Maps"
+                  placeholder={t('admin.events.mapPlaceholder')}
                 />
                 <Form.Text className="text-muted-italic">
-                  Mostra um mapa do local na home do evento. Deixe em branco para ocultar.
+                  {t('admin.events.mapHelp')}
                 </Form.Text>
               </Form.Group>
             </Col>
@@ -737,16 +738,15 @@ const AdminEvents = ({ loggedUsername }) => {
 
           <hr className="my-4" />
 
-          <h6 className="fw-bold mb-2">Desconto de grupo</h6>
+          <h6 className="fw-bold mb-2">{t('admin.events.groupDiscountTitle')}</h6>
           <Form.Text className="text-muted-italic d-block mb-3">
-            Quando o total dos pacotes do pedido atingir o valor mínimo, aplica a porcentagem de desconto sobre os
-            pacotes (não sobre a taxa de inscrição). Deixe em branco para desativar.
+            {t('admin.events.groupDiscountHelp')}
           </Form.Text>
           <Row className="g-3 mb-2">
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Valor mínimo do pedido (R$):</b>
+                  <b>{t('admin.events.groupMinLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   type="number"
@@ -754,14 +754,14 @@ const AdminEvents = ({ loggedUsername }) => {
                   step="0.01"
                   value={draft.groupDiscountThreshold}
                   onChange={(e) => handleChange('groupDiscountThreshold')(e.target.value)}
-                  placeholder="ex.: 1000"
+                  placeholder={t('admin.events.groupMinPlaceholder')}
                 />
               </Form.Group>
             </Col>
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label>
-                  <b>Desconto (%):</b>
+                  <b>{t('admin.events.groupPercentLabel')}</b>
                 </Form.Label>
                 <Form.Control
                   type="number"
@@ -769,7 +769,7 @@ const AdminEvents = ({ loggedUsername }) => {
                   max={100}
                   value={draft.groupDiscountPercent}
                   onChange={(e) => handleChange('groupDiscountPercent')(e.target.value)}
-                  placeholder="ex.: 10"
+                  placeholder={t('admin.events.groupPercentPlaceholder')}
                 />
               </Form.Group>
             </Col>
@@ -777,9 +777,9 @@ const AdminEvents = ({ loggedUsername }) => {
 
           <hr className="my-4" />
 
-          <h6 className="fw-bold mb-2">Redes sociais (rodapé)</h6>
+          <h6 className="fw-bold mb-2">{t('admin.events.socialTitle')}</h6>
           <Form.Text className="text-muted-italic d-block mb-3">
-            Cada ícone só aparece no rodapé do evento quando o link é preenchido.
+            {t('admin.events.socialHelp')}
           </Form.Text>
           <Row className="g-3">
             {SOCIAL_NETWORKS.map((network) => (
@@ -793,7 +793,7 @@ const AdminEvents = ({ loggedUsername }) => {
                     onChange={(e) =>
                       setDraft((prev) => ({ ...prev, social: { ...prev.social, [network.key]: e.target.value } }))
                     }
-                    placeholder={network.placeholder}
+                    placeholder={t(`admin.events.social.${network.key}.placeholder`)}
                   />
                 </Form.Group>
               </Col>
@@ -806,24 +806,24 @@ const AdminEvents = ({ loggedUsername }) => {
             type="switch"
             id="event-payment-switch"
             className="mt-2"
-            label="Habilitar pagamento (carrinho + PagarMe)"
+            label={t('admin.events.paymentSwitch')}
             checked={draft.paymentEnabled}
             onChange={(e) => handleChange('paymentEnabled')(e.target.checked)}
           />
           <Form.Text className="text-muted-italic">
-            Se desativado, o formulário é enviado sem carrinho nem cobrança.
+            {t('admin.events.paymentHelp')}
           </Form.Text>
 
           {draft.paymentEnabled && (
             <>
               <Form.Group className="mt-3">
-                <Form.Label className="fw-bold mb-1 d-block">Taxa da plataforma sobre a inscrição:</Form.Label>
+                <Form.Label className="fw-bold mb-1 d-block">{t('admin.events.feeModeLabel')}</Form.Label>
                 <Form.Select value={draft.feeMode} onChange={(e) => handleChange('feeMode')(e.target.value)}>
-                  <option value="passed">Repassar ao inscrito (somada ao valor no checkout)</option>
-                  <option value="absorbed">Absorver (descontada do valor que recebo)</option>
+                  <option value="passed">{t('admin.events.feePassed')}</option>
+                  <option value="absorbed">{t('admin.events.feeAbsorbed')}</option>
                 </Form.Select>
                 <Form.Text className="text-muted-italic">
-                  Define se a taxa da plataforma é somada ao que o inscrito paga ou descontada do valor da igreja.
+                  {t('admin.events.feeHelp')}
                 </Form.Text>
               </Form.Group>
 
@@ -831,41 +831,41 @@ const AdminEvents = ({ loggedUsername }) => {
                 type="switch"
                 id="event-age-pricing-switch"
                 className="mt-2"
-                label="Preço por idade (faixas configuráveis no Pacote)"
+                label={t('admin.events.agePricingSwitch')}
                 checked={draft.agePricingEnabled}
                 onChange={(e) => handleChange('agePricingEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                Adiciona um campo de nascimento e faixas de desconto por idade.
+                {t('admin.events.agePricingHelp')}
               </Form.Text>
 
               <Form.Check
                 type="switch"
                 id="event-registration-fee-switch"
                 className="mt-2"
-                label="Taxa de inscrição (somada a cada inscrito)"
+                label={t('admin.events.regFeeSwitch')}
                 checked={draft.registrationFeeEnabled}
                 onChange={(e) => handleChange('registrationFeeEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                Usa a taxa de inscrição do lote ativo, somando-a ao pacote de cada inscrito.
+                {t('admin.events.regFeeHelp')}
               </Form.Text>
 
               <Form.Check
                 type="switch"
                 id="event-boleto-switch"
                 className="mt-3"
-                label="Boleto parcelado"
+                label={t('admin.events.boletoSwitch')}
                 checked={draft.boletoEnabled}
                 onChange={(e) => handleChange('boletoEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                Permite pagar a inscrição em boletos mensais. O 1º boleto confirma a vaga.
+                {t('admin.events.boletoHelp')}
               </Form.Text>
               {draft.boletoEnabled && (
                 <>
                   <Form.Group className="mt-2" controlId="event-boleto-max">
-                    <Form.Label className="mb-1">Máximo de parcelas</Form.Label>
+                    <Form.Label className="mb-1">{t('admin.events.boletoMaxLabel')}</Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
@@ -875,18 +875,16 @@ const AdminEvents = ({ loggedUsername }) => {
                     />
                   </Form.Group>
                   <Form.Group className="mt-2" controlId="event-boleto-min-days">
-                    <Form.Label className="mb-1">Vencimento do último boleto (dias antes do evento)</Form.Label>
+                    <Form.Label className="mb-1">{t('admin.events.boletoMinLabel')}</Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
-                      placeholder="20"
+                      placeholder={t('admin.events.boletoMinPlaceholder')}
                       value={draft.boletoMinDaysBeforeEvent}
                       onChange={(e) => handleChange('boletoMinDaysBeforeEvent')(e.target.value)}
                     />
                     <Form.Text muted>
-                      O último boleto vence no máximo esse número de dias antes do evento, garantindo que o
-                      pagamento (que leva de 2 a 5 dias úteis para cair na conta) entre antes da data. Em branco
-                      usa o padrão (20 dias).
+                      {t('admin.events.boletoMinHelp')}
                     </Form.Text>
                   </Form.Group>
                 </>
@@ -900,19 +898,22 @@ const AdminEvents = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Excluir evento"
+        title={t('admin.events.deleteTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.events.cancel')}
             </Button>
-            <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>Excluir</SpinnerButton>
+            <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>{t('admin.events.delete')}</SpinnerButton>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir <b>{selected?.name}</b>? Eventos com inscrições vinculadas não podem ser
-          excluídos, desative-o.
+          <Trans
+            i18nKey="admin.events.deleteConfirm"
+            components={{ b: <b /> }}
+            values={{ name: selected?.name }}
+          />
         </p>
       </CustomModal>
     </div>

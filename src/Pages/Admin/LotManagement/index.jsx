@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Badge, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -37,6 +38,7 @@ const formatDate = (date) => {
 };
 
 const AdminLotManagement = ({ loading, loggedUsername }) => {
+  const { t } = useTranslation();
   const [loadingContent, setLoadingContent] = useState(false);
   const [saving, setSaving] = useState(false);
   const [lots, setLots] = useState([]);
@@ -60,7 +62,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       setLots(data?.lots || []);
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao carregar lotes');
+      toast.error(t('admin.lots.loadError'));
     } finally {
       if (!silent) setLoadingContent(false);
     }
@@ -89,7 +91,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
 
   const updateLot = async (lot) => {
     if (hasDateConflict(lot, lots)) {
-      toast.error('Datas em conflito com outro lote');
+      toast.error(t('admin.lots.dateConflict'));
       return;
     }
 
@@ -101,11 +103,11 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         endDate: lot.endDate,
         price: { registrationFee: lot.price?.registrationFee || '' },
       });
-      toast.success(`${lot.name} atualizado com sucesso`);
+      toast.success(t('admin.lots.updateSuccess', { name: lot.name }));
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao atualizar lote');
+      toast.error(t('admin.lots.updateError'));
     } finally {
       setLoadingContent(false);
     }
@@ -117,13 +119,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     try {
       setSaving(true);
       await deleteLot(selectedLot.id);
-      toast.success(`${selectedLot.name} deletado com sucesso`);
+      toast.success(t('admin.lots.deleteSuccess', { name: selectedLot.name }));
       registerLog(`Deletou o ${selectedLot.name}`, loggedUsername);
       setShowDeleteModal(false);
       await fetchLots(true);
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao deletar lote');
+      toast.error(t('admin.lots.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -149,7 +151,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
 
   const handleAddLot = async () => {
     if (hasDateConflict(newLot, lots)) {
-      toast.error('Datas em conflito com outro lote');
+      toast.error(t('admin.lots.dateConflict'));
       return;
     }
 
@@ -161,7 +163,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         endDate: newLot.endDate,
         price: { registrationFee: newLot.price.registrationFee || '' },
       });
-      toast.success(`${newLot.name} adicionado com sucesso`);
+      toast.success(t('admin.lots.addSuccess', { name: newLot.name }));
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
       setShowAddModal(false);
       setNewLot({
@@ -173,7 +175,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       await fetchLots(true);
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao adicionar lote');
+      toast.error(t('admin.lots.addError'));
     } finally {
       setSaving(false);
     }
@@ -192,10 +194,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   const upcomingCount = lots.filter((lot) => lotStatus(lot) === 'upcoming').length;
   const endedCount = lots.filter((lot) => lotStatus(lot) === 'ended').length;
   const statItems = [
-    { label: 'Total de lotes', value: lots.length },
-    { label: 'Vigente', value: currentCount, tone: 'free' },
-    { label: 'A iniciar', value: upcomingCount, tone: 'info' },
-    { label: 'Encerrados', value: endedCount, tone: 'used' },
+    { label: t('admin.lots.statTotal'), value: lots.length },
+    { label: t('admin.lots.statCurrent'), value: currentCount, tone: 'free' },
+    { label: t('admin.lots.statUpcoming'), value: upcomingCount, tone: 'info' },
+    { label: t('admin.lots.statEnded'), value: endedCount, tone: 'used' },
   ];
   const term = search.trim().toLowerCase();
   const filteredLots = lots.filter((lot) => !term || (lot.name || '').toLowerCase().includes(term));
@@ -205,7 +207,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-new-lot',
-      name: 'Adicionar Novo Lote',
+      name: t('admin.lots.addButton'),
       onClick: () => setShowAddModal(true),
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
@@ -216,8 +218,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     <div className="admin-subpage admin-subpage--lots">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Lotes"
-        subtitle="Lotes de preço do evento"
+        title={t('admin.lots.title')}
+        subtitle={t('admin.lots.subtitle')}
         typeIcon="calendar"
       />
 
@@ -227,10 +229,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="lots-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.lots.searchPlaceholder')} />
         </div>
 
-        <SectionHeader title="Lotes" count={filteredLots.length} />
+        <SectionHeader title={t('admin.lots.sectionLots')} count={filteredLots.length} />
 
         <Row className="justify-content-center">
           <Col>
@@ -247,10 +249,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       <Accordion.Header>
                         <div className="d-flex justify-content-between align-items-center w-100">
                           <span>
-                            <strong>{lot.name || `Lote ${index + 1}`}</strong>
+                            <strong>{lot.name || t('admin.lots.lotFallback', { number: index + 1 })}</strong>
                             {isCurrentLot && (
                               <Badge bg="success" className="ms-2">
-                                Atual
+                                {t('admin.lots.current')}
                               </Badge>
                             )}
                           </span>
@@ -262,14 +264,14 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       <Accordion.Body className={isCurrentLot ? 'accordion-body--highlight' : ''}>
                         <Form.Group className="mb-3">
                           <Form.Label>
-                            <strong>Nome do Lote:</strong>
+                            <strong>{t('admin.lots.formName')}</strong>
                           </Form.Label>
                           <Form.Control
                             type="text"
                             value={lot.name}
                             onChange={(e) => handleLotChange(lot.id, 'name', e.target.value)}
                             className="form-control-lg"
-                            placeholder="Nome do Lote"
+                            placeholder={t('admin.lots.namePlaceholder')}
                           />
                         </Form.Group>
 
@@ -277,13 +279,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           <Col xs={12} md={4} className="mb-3">
                             <Form.Group>
                               <Form.Label>
-                                <strong>Data Início:</strong>
+                                <strong>{t('admin.lots.startDate')}</strong>
                               </Form.Label>
                               <DatePicker
                                 selected={parseDate(lot.startDate)}
                                 onChange={(date) => handleLotChange(lot.id, 'startDate', formatDate(date))}
                                 className="form-control form-control-lg"
-                                placeholderText="dd/mm/aaaa"
+                                placeholderText={t('admin.lots.datePlaceholder')}
                                 dateFormat="dd/MM/yyyy"
                                 locale="ptBR"
                                 dropdownMode="select"
@@ -296,13 +298,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           <Col xs={12} md={4} className="mb-3">
                             <Form.Group>
                               <Form.Label>
-                                <strong>Data Fim:</strong>
+                                <strong>{t('admin.lots.endDate')}</strong>
                               </Form.Label>
                               <DatePicker
                                 selected={parseDate(lot.endDate)}
                                 onChange={(date) => handleLotChange(lot.id, 'endDate', formatDate(date))}
                                 className="form-control form-control-lg"
-                                placeholderText="dd/mm/aaaa"
+                                placeholderText={t('admin.lots.datePlaceholder')}
                                 dateFormat="dd/MM/yyyy"
                                 locale="ptBR"
                                 dropdownMode="select"
@@ -315,7 +317,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           <Col xs={12} md={4} className="mb-3">
                             <Form.Group>
                               <Form.Label>
-                                <strong>Preço Taxa Inscrição:</strong>
+                                <strong>{t('admin.lots.registrationFee')}</strong>
                               </Form.Label>
                               <Form.Control
                                 type="text"
@@ -336,11 +338,11 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                             }}
                           >
                             <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
-                            &nbsp; Deletar
+                            &nbsp; {t('admin.lots.delete')}
                           </Button>
                           <Button variant="teal-blue" onClick={() => updateLot(lot)}>
                             <Icons typeIcon="checked" iconSize={20} fill="#fff" />
-                            &nbsp; Salvar
+                            &nbsp; {t('admin.lots.save')}
                           </Button>
                         </div>
                       </Accordion.Body>
@@ -356,20 +358,20 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
           variant="cancel"
-          title="Confirmar Exclusão"
+          title={t('admin.lots.deleteModalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-                Cancelar
+                {t('admin.lots.cancel')}
               </Button>
               <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDeleteLot} loading={saving}>
-                Deletar
+                {t('admin.lots.delete')}
               </SpinnerButton>
             </>
           }
         >
-          Tem certeza que deseja excluir <b>{selectedLot?.name}</b>?
+          <Trans i18nKey="admin.lots.deleteConfirm" values={{ name: selectedLot?.name }} components={{ b: <b /> }} />
         </CustomModal>
 
         <CustomModal
@@ -378,15 +380,15 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
           onHide={() => setShowAddModal(false)}
           variant="confirm"
           icon="plus"
-          title="Adicionar Novo Lote"
+          title={t('admin.lots.addModalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-                Cancelar
+                {t('admin.lots.cancel')}
               </Button>
               <SpinnerButton variant="primary" className="btn-confirm" onClick={handleAddLot} loading={saving}>
-                Adicionar
+                {t('admin.lots.add')}
               </SpinnerButton>
             </>
           }
@@ -396,14 +398,14 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <strong>Nome:</strong>
+                    <strong>{t('admin.lots.formNameShort')}</strong>
                   </Form.Label>
                   <Form.Control
                     type="text"
                     value={newLot.name}
                     onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
                     className={`form-control-lg form-control-bg admin-field--even`}
-                    placeholder="Nome do Lote"
+                    placeholder={t('admin.lots.namePlaceholder')}
                   />
                 </Form.Group>
               </Col>
@@ -411,7 +413,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <strong>Preço Taxa Inscrição:</strong>
+                    <strong>{t('admin.lots.registrationFee')}</strong>
                   </Form.Label>
                   <Form.Control
                     type="number"
@@ -424,7 +426,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                       })
                     }
                     className="form-control-lg form-control-bg admin-field--odd"
-                    placeholder="Preço"
+                    placeholder={t('admin.lots.pricePlaceholder')}
                   />
                 </Form.Group>
               </Col>
@@ -432,13 +434,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <strong>Data Início:</strong>
+                    <strong>{t('admin.lots.startDate')}</strong>
                   </Form.Label>
                   <DatePicker
                     selected={parseDate(newLot.startDate)}
                     onChange={(date) => setNewLot({ ...newLot, startDate: formatDate(date) })}
                     className="form-control form-control-lg admin-field--even"
-                    placeholderText="dd/mm/aaaa"
+                    placeholderText={t('admin.lots.datePlaceholder')}
                     dateFormat="dd/MM/yyyy"
                     locale="ptBR"
                     dropdownMode="select"
@@ -451,13 +453,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
               <Col md={12} lg={6} className="mb-3">
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <strong>Data Fim:</strong>
+                    <strong>{t('admin.lots.endDate')}</strong>
                   </Form.Label>
                   <DatePicker
                     selected={parseDate(newLot.endDate)}
                     onChange={(date) => setNewLot({ ...newLot, endDate: formatDate(date) })}
                     className="form-control form-control-lg admin-field--even"
-                    placeholderText="dd/mm/aaaa"
+                    placeholderText={t('admin.lots.datePlaceholder')}
                     dateFormat="dd/MM/yyyy"
                     locale="ptBR"
                     dropdownMode="select"

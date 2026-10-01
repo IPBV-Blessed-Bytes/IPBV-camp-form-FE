@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -39,6 +40,7 @@ const PRODUCT_ICONS = [
 ];
 
 const AdminProductsManagement = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [imageBusy, setImageBusy] = useState(false);
@@ -48,11 +50,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setImageBusy(true);
     try {
       await uploadProductImage(editingProduct.id, file);
-      toast.success('Imagem enviada.');
+      toast.success(t('admin.products.imageSent'));
       setEditingProduct((prev) => ({ ...prev, hasImage: true }));
       await fetchAll(true);
     } catch {
-      toast.error('Não foi possível enviar a imagem.');
+      toast.error(t('admin.products.imageSendError'));
     } finally {
       setImageBusy(false);
     }
@@ -63,11 +65,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setImageBusy(true);
     try {
       await deleteProductImage(editingProduct.id);
-      toast.success('Imagem removida.');
+      toast.success(t('admin.products.imageRemoved'));
       setEditingProduct((prev) => ({ ...prev, hasImage: false }));
       await fetchAll(true);
     } catch {
-      toast.error('Não foi possível remover a imagem.');
+      toast.error(t('admin.products.imageRemoveError'));
     } finally {
       setImageBusy(false);
     }
@@ -103,7 +105,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       setPackageCategories(Array.isArray(categoriesData) ? categoriesData : []);
       setAgeRules(Array.isArray(rulesData) ? rulesData : []);
     } catch (error) {
-      toast.error('Erro ao buscar produtos');
+      toast.error(t('admin.products.fetchError'));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -124,23 +126,23 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     const discountAmount = Number(draft.discountAmount);
 
     if (draft.minAge === '' || draft.minAge == null || Number.isNaN(minAge)) {
-      toast.error('Informe a idade mínima');
+      toast.error(t('admin.products.minAgeRequired'));
       return;
     }
     if (draft.maxAge === '' || draft.maxAge == null || Number.isNaN(maxAge)) {
-      toast.error('Informe a idade máxima');
+      toast.error(t('admin.products.maxAgeRequired'));
       return;
     }
     if (maxAge < minAge) {
-      toast.error('A idade máxima não pode ser menor que a mínima');
+      toast.error(t('admin.products.maxAgeLessThanMin'));
       return;
     }
     if (Number.isNaN(discountAmount) || discountAmount <= 0) {
-      toast.error('Informe um desconto maior que zero');
+      toast.error(t('admin.products.discountGreaterZero'));
       return;
     }
     if (discountType === 'PERCENT' && discountAmount > 100) {
-      toast.error('O desconto percentual não pode passar de 100%');
+      toast.error(t('admin.products.percentMax100'));
       return;
     }
 
@@ -148,14 +150,14 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       (rule) => rule.productId === product.id && minAge <= rule.maxAge && rule.minAge <= maxAge,
     );
     if (overlaps) {
-      toast.error('Esta faixa de idade se sobrepõe a outra já cadastrada para o produto');
+      toast.error(t('admin.products.bracketOverlap'));
       return;
     }
 
     setLoading(true);
     try {
       await createAgePriceRule({ productId: product.id, minAge, maxAge, discountType, discountAmount });
-      toast.success('Faixa de desconto adicionada');
+      toast.success(t('admin.products.bracketAdded'));
       const label = discountType === 'VALUE' ? `R$ ${discountAmount}` : `${discountAmount}%`;
       registerLog(`Criou faixa de desconto ${minAge}-${maxAge} anos (${label}) em ${product.name}`, loggedUsername);
       setBracketDrafts((prev) => ({
@@ -164,7 +166,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       }));
       fetchAll();
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao adicionar faixa de desconto');
+      toast.error(getApiErrorMessage(error) || t('admin.products.bracketAddError'));
     } finally {
       setLoading(false);
     }
@@ -174,11 +176,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setLoading(true);
     try {
       await deleteAgePriceRule(rule.id);
-      toast.success('Faixa de desconto removida');
+      toast.success(t('admin.products.bracketRemoved'));
       registerLog(`Removeu faixa de desconto ${rule.minAge}-${rule.maxAge} anos em ${productName}`, loggedUsername);
       fetchAll();
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao remover faixa de desconto');
+      toast.error(getApiErrorMessage(error) || t('admin.products.bracketRemoveError'));
     } finally {
       setLoading(false);
     }
@@ -225,7 +227,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   const validateForm = () => {
     if (!formData.name || !formData.packageCategoryId) {
-      toast.error('Nome e categoria são obrigatórios');
+      toast.error(t('admin.products.nameCategoryRequired'));
       return false;
     }
     return true;
@@ -260,7 +262,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       if (editingProduct) {
         await updateProduct(editingProduct.id, buildPayload());
         await saveLotPrices(editingProduct.id);
-        toast.success('Produto atualizado com sucesso');
+        toast.success(t('admin.products.updateSuccess'));
         registerLog(`Editou produto ${formData.name}`, loggedUsername);
       } else {
         const created = await createProduct(buildPayload());
@@ -268,7 +270,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         if (created?.id && Object.keys(lotPrices).length > 0) {
           await saveLotPrices(created.id);
         }
-        toast.success('Produto criado com sucesso');
+        toast.success(t('admin.products.createSuccess'));
         registerLog(`Criou produto ${formData.name}`, loggedUsername);
       }
       setShowModal(false);
@@ -277,7 +279,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       setLotPrices({});
       await fetchAll(true);
     } catch (error) {
-      toast.error('Erro ao salvar produto');
+      toast.error(t('admin.products.saveError'));
     } finally {
       setSaving(false);
     }
@@ -287,12 +289,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteProduct(productToDelete.id);
-      toast.success('Produto excluído com sucesso');
+      toast.success(t('admin.products.deleteSuccess'));
       registerLog(`Excluiu produto ${productToDelete.name}`, loggedUsername);
       setShowDeleteModal(false);
       await fetchAll(true);
     } catch (error) {
-      toast.error('Erro ao excluir produto');
+      toast.error(t('admin.products.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -313,13 +315,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
   }, {});
   const categoriesPresent = packageCategories.filter((c) => byCategory[String(c.id)]);
   const statItems = [
-    { label: 'Total de produtos', value: products.length },
-    { label: 'Ativos', value: activeCount, tone: 'free' },
-    { label: 'Inativos', value: products.length - activeCount, tone: 'used' },
+    { label: t('admin.products.statTotal'), value: products.length },
+    { label: t('admin.products.statActive'), value: activeCount, tone: 'free' },
+    { label: t('admin.products.statInactive'), value: products.length - activeCount, tone: 'used' },
     ...categoriesPresent.map((c) => ({ label: c.name, value: byCategory[String(c.id)], tone: 'accent' })),
   ];
   const categoryChips = [
-    { value: 'all', label: 'Todas', count: products.length },
+    { value: 'all', label: t('admin.products.chipAll'), count: products.length },
     ...categoriesPresent.map((c) => ({ value: String(c.id), label: c.name, count: byCategory[String(c.id)] })),
   ];
   const term = search.trim().toLowerCase();
@@ -334,7 +336,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-new-product',
-      name: 'Criar Novo Produto',
+      name: t('admin.products.createButton'),
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'cart',
@@ -345,8 +347,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--products">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Produtos"
-        subtitle="Hospedagem, transporte e alimentação — com preço e vagas por lote"
+        title={t('admin.products.title')}
+        subtitle={t('admin.products.subtitle')}
         typeIcon="cart"
       />
 
@@ -356,28 +358,28 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="products-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.products.searchPlaceholder')} />
           <FilterChips options={categoryChips} value={categoryFilter} onChange={setCategoryFilter} />
         </div>
 
-        <SectionHeader title="Produtos" count={filteredProducts.length} />
+        <SectionHeader title={t('admin.products.sectionProducts')} count={filteredProducts.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Nome:</th>
-                <th className="table-cells-header">Categoria:</th>
-                <th className="table-cells-header">Status:</th>
-                <th className="table-cells-header">Preços por lote:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.products.colName')}</th>
+                <th className="table-cells-header">{t('admin.products.colCategory')}</th>
+                <th className="table-cells-header">{t('admin.products.colStatus')}</th>
+                <th className="table-cells-header">{t('admin.products.colLotPrices')}</th>
+                <th className="table-cells-header">{t('admin.products.colActions')}</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-start text-secondary p-4">
-                    Nenhum produto registrado
+                    {t('admin.products.emptyProducts')}
                   </td>
                 </tr>
               ) : (
@@ -389,13 +391,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     {product.initialStock != null && (
                       <div className="small mt-1">
                         <Badge bg={product.stock > 0 ? 'success' : 'danger'}>
-                          {product.stock} / {product.initialStock} em estoque
+                          {t('admin.products.stockBadge', { stock: product.stock, initial: product.initialStock })}
                         </Badge>
                       </div>
                     )}
                   </td>
                   <td>{categoryName(product.packageCategoryId)}</td>
-                  <td>{product.active ? <Badge bg="success">Ativo</Badge> : <Badge bg="secondary">Inativo</Badge>}</td>
+                  <td>{product.active ? <Badge bg="success">{t('admin.products.statusActive')}</Badge> : <Badge bg="secondary">{t('admin.products.statusInactive')}</Badge>}</td>
                   <td>
                     <div className="lot-prices">
                       {lots.map((lot) => {
@@ -405,7 +407,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                             <span className="lot-price-chip__name">{lot.name}</span>
                             <span className="lot-price-chip__value">R$ {row?.price ?? 0}</span>
                             {row?.vacancies != null && (
-                              <span className="lot-price-chip__vacancies">{row.vacancies} vagas</span>
+                              <span className="lot-price-chip__vacancies">{t('admin.products.vacancies', { count: row.vacancies })}</span>
                             )}
                           </div>
                         );
@@ -414,8 +416,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   </td>
                   <td>
                     <div className="table-action-cell">
-                      <ActionButton action="edit" label="Editar produto" onClick={() => handleEditClick(product)} />
-                      <ActionButton action="delete" label="Excluir produto" onClick={() => handleDeleteClick(product)} />
+                      <ActionButton action="edit" label={t('admin.products.editProduct')} onClick={() => handleEditClick(product)} />
+                      <ActionButton action="delete" label={t('admin.products.deleteProduct')} onClick={() => handleDeleteClick(product)} />
                     </div>
                   </td>
                 </tr>
@@ -425,9 +427,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
           </Table>
         </div>
 
-        <SectionHeader title="Faixas de idade (desconto)" count={ageRules.length} />
+        <SectionHeader title={t('admin.products.sectionAgeRules')} count={ageRules.length} />
         <p className="age-rules__hint">
-          As faixas abaixo são aplicadas automaticamente no formulário conforme a idade do inscrito, <b>por produto</b>.
+          <Trans i18nKey="admin.products.ageRulesHint" components={{ b: <b /> }} />
         </p>
 
         <div className="age-rules">
@@ -447,23 +449,25 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 </div>
 
                 {productRules.length === 0 ? (
-                  <div className="age-rules__empty">Sem faixas de desconto.</div>
+                  <div className="age-rules__empty">{t('admin.products.noBrackets')}</div>
                 ) : (
                   productRules.map((rule) => (
                     <div key={rule.id} className="age-rules__row">
                       <span className="age-rules__label">
-                        {rule.minAge}–{rule.maxAge} anos →{' '}
+                        {t('admin.products.bracketRange', { min: rule.minAge, max: rule.maxAge })}{' '}
                         <b>
                           {rule.discountType === 'VALUE'
-                            ? `R$ ${rule.discountAmount} off`
-                            : `${rule.discountAmount}% off`}
+                            ? t('admin.products.bracketValueOff', { amount: rule.discountAmount })
+                            : t('admin.products.bracketPercentOff', { amount: rule.discountAmount })}
                         </b>
-                        {rule.discountType === 'PERCENT' && Number(rule.discountAmount) >= 100 ? ' (grátis)' : ''}
+                        {rule.discountType === 'PERCENT' && Number(rule.discountAmount) >= 100
+                          ? t('admin.products.bracketFree')
+                          : ''}
                       </span>
                       <ActionButton
                         action="delete"
                         iconSize={17}
-                        label="Remover faixa"
+                        label={t('admin.products.removeBracket')}
                         onClick={() => handleRemoveBracket(rule, product.name)}
                       />
                     </div>
@@ -474,19 +478,19 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   <Form.Control
                     type="number"
                     min="0"
-                    placeholder="de"
+                    placeholder={t('admin.products.fromPlaceholder')}
                     value={draft.minAge ?? ''}
                     onChange={(e) => patchBracket(product.id, { minAge: e.target.value })}
                   />
                   <Form.Control
                     type="number"
                     min="0"
-                    placeholder="até"
+                    placeholder={t('admin.products.toPlaceholder')}
                     value={draft.maxAge ?? ''}
                     onChange={(e) => patchBracket(product.id, { maxAge: e.target.value })}
                   />
                   <Form.Select
-                    aria-label="Tipo de desconto"
+                    aria-label={t('admin.products.discountTypeAria')}
                     value={draft.discountType ?? 'PERCENT'}
                     onChange={(e) => patchBracket(product.id, { discountType: e.target.value })}
                   >
@@ -496,12 +500,16 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                   <Form.Control
                     type="number"
                     min="0"
-                    placeholder={(draft.discountType ?? 'PERCENT') === 'VALUE' ? 'R$ off' : '% off'}
+                    placeholder={
+                      (draft.discountType ?? 'PERCENT') === 'VALUE'
+                        ? t('admin.products.discountValuePlaceholder')
+                        : t('admin.products.discountPercentPlaceholder')
+                    }
                     value={draft.discountAmount ?? ''}
                     onChange={(e) => patchBracket(product.id, { discountAmount: e.target.value })}
                   />
                   <Button variant="outline-teal-blue" size="sm" onClick={() => handleAddBracket(product)}>
-                    Adicionar
+                    {t('admin.products.add')}
                   </Button>
                 </div>
               </div>
@@ -516,15 +524,15 @@ const AdminProductsManagement = ({ loggedUsername }) => {
           variant="confirm"
           icon={editingProduct ? 'edit' : 'plus'}
           iconFill={editingProduct ? '' : '#057c05'}
-          title={editingProduct ? 'Editar Produto' : 'Criar Produto'}
+          title={editingProduct ? t('admin.products.editModalTitle') : t('admin.products.createModalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancelar
+                {t('admin.products.cancel')}
               </Button>
               <SpinnerButton className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit} loading={saving}>
-                {editingProduct ? 'Salvar Alterações' : 'Criar Produto'}
+                {editingProduct ? t('admin.products.saveChanges') : t('admin.products.createProduct')}
               </SpinnerButton>
             </>
           }
@@ -532,11 +540,11 @@ const AdminProductsManagement = ({ loggedUsername }) => {
           <Form>
             <Form.Group controlId="formName">
               <Form.Label>
-                <b>Nome:</b>
+                <b>{t('admin.products.formName')}</b>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ex.: Alimentação Parcial"
+                placeholder={t('admin.products.namePlaceholder')}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 size="lg"
@@ -545,12 +553,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
             <Form.Group controlId="formDescription" className="mt-3">
               <Form.Label>
-                <b>Descrição:</b>
+                <b>{t('admin.products.formDescription')}</b>
               </Form.Label>
               <Form.Control
                 as="textarea"
                 rows={2}
-                placeholder="Descrição exibida ao inscrito"
+                placeholder={t('admin.products.descriptionPlaceholder')}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
@@ -558,7 +566,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
             <Form.Group controlId="formCategory" className="mt-3">
               <Form.Label>
-                <b>Categoria:</b>
+                <b>{t('admin.products.formCategory')}</b>
               </Form.Label>
               <Form.Select
                 value={formData.packageCategoryId}
@@ -566,7 +574,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 size="lg"
               >
                 <option value="" disabled>
-                  Selecione uma opção
+                  {t('admin.products.selectOption')}
                 </option>
                 {packageCategories.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -576,58 +584,61 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               </Form.Select>
               {packageCategories.length === 0 && (
                 <Form.Text className="text-muted">
-                  Nenhuma categoria criada. Crie categorias na tela de Pacote do evento.
+                  {t('admin.products.noCategoriesHint')}
                 </Form.Text>
               )}
             </Form.Group>
 
             <Form.Group controlId="formStock" className="mt-3">
               <Form.Label>
-                <b>Estoque disponibilizado (opcional):</b>
+                <b>{t('admin.products.formStock')}</b>
               </Form.Label>
               <Form.Control
                 type="number"
                 min={0}
-                placeholder="Deixe em branco para não controlar estoque"
+                placeholder={t('admin.products.stockPlaceholder')}
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
               />
               <Form.Text className="text-muted">
-                Quantidade total disponibilizada (ex.: itens de loja). Baixa a cada compra e some do formulário ao zerar.
+                {t('admin.products.stockHint')}
                 {editingProduct && editingProduct.stock != null && (
-                  <> Disponível hoje: <b>{editingProduct.stock}</b> de {editingProduct.initialStock}.</>
+                  <Trans
+                    i18nKey="admin.products.stockToday"
+                    values={{ stock: editingProduct.stock, initial: editingProduct.initialStock }}
+                    components={{ b: <b /> }}
+                  />
                 )}
               </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="formSinglePrice" className="mt-3">
               <Form.Label>
-                <b>Preço único (opcional):</b>
+                <b>{t('admin.products.formSinglePrice')}</b>
               </Form.Label>
               <Form.Control
                 type="number"
                 min={0}
                 step="0.01"
-                placeholder="Ex.: 50.00"
+                placeholder={t('admin.products.singlePricePlaceholder')}
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
               <Form.Text className="text-muted">
-                Para itens de loja (não variam por lote). Quando preenchido, <b>substitui o preço por lote</b> abaixo.
-                Deixe em branco para produtos que usam preço por lote (hospedagem/transporte).
+                <Trans i18nKey="admin.products.singlePriceHint" components={{ b: <b /> }} />
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mt-3">
               <Form.Label>
-                <b>Ícone do card (opcional):</b>
+                <b>{t('admin.products.formIcon')}</b>
               </Form.Label>
               <div className="product-icon-picker">
                 <button
                   type="button"
                   className={`product-icon-picker__item ${!formData.iconKey ? 'is-active' : ''}`}
                   onClick={() => setFormData({ ...formData, iconKey: '' })}
-                  title="Nenhum"
+                  title={t('admin.products.iconNone')}
                 >
                   —
                 </button>
@@ -644,13 +655,13 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                 ))}
               </div>
               <Form.Text className="text-muted">
-                O ícone aparece abaixo do título, centralizado. Ideal quando não há imagem.
+                {t('admin.products.iconHint')}
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mt-3">
               <Form.Label>
-                <b>Imagem do card (opcional):</b>
+                <b>{t('admin.products.formImage')}</b>
               </Form.Label>
               {editingProduct ? (
                 <div className="product-image-upload">
@@ -658,12 +669,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     <img
                       className="product-image-upload__preview"
                       src={`${productImageUrl(editingProduct.id)}?t=${Date.now()}`}
-                      alt="Imagem do produto"
+                      alt={t('admin.products.imageAlt')}
                     />
                   )}
                   <div className="product-image-upload__actions">
                     <label className="btn btn-outline-teal-blue btn-sm mb-0">
-                      {imageBusy ? 'Enviando...' : editingProduct.hasImage ? 'Trocar imagem' : 'Enviar imagem'}
+                      {imageBusy ? t('admin.products.uploading') : editingProduct.hasImage ? t('admin.products.changeImage') : t('admin.products.uploadImage')}
                       <input
                         type="file"
                         accept="image/*"
@@ -674,15 +685,15 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     </label>
                     {editingProduct.hasImage && (
                       <Button size="sm" variant="outline-danger" disabled={imageBusy} onClick={handleImageRemove}>
-                        Remover
+                        {t('admin.products.remove')}
                       </Button>
                     )}
                   </div>
-                  <Form.Text className="text-muted">A imagem aparece no topo do card (ideal p/ itens de loja).</Form.Text>
+                  <Form.Text className="text-muted">{t('admin.products.imageHint')}</Form.Text>
                 </div>
               ) : (
                 <Form.Text className="text-muted d-block">
-                  Salve o produto primeiro para poder enviar uma imagem.
+                  {t('admin.products.saveFirstForImage')}
                 </Form.Text>
               )}
             </Form.Group>
@@ -690,7 +701,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
             <Form.Group controlId="formActive" className="mt-3">
               <Form.Check
                 type="switch"
-                label="Produto ativo (visível no formulário de inscrição)"
+                label={t('admin.products.activeSwitch')}
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
               />
@@ -698,16 +709,18 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
             <hr />
             <h6 className="mt-3">
-              <b>Preço e vagas por lote</b>
+              <b>{t('admin.products.lotPricesTitle')}</b>
             </h6>
-            <p className="text-secondary small">Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas.</p>
+            <p className="text-secondary small">
+              <Trans i18nKey="admin.products.lotPricesHint" components={{ b: <b /> }} />
+            </p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (
                 <div key={lot.id} className="lot-price-card">
                   <div className="lot-price-card__name">{lot.name}</div>
                   <div className="lot-price-card__fields">
                     <Form.Group>
-                      <Form.Label className="small mb-0">Preço (R$)</Form.Label>
+                      <Form.Label className="small mb-0">{t('admin.products.priceLabel')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
@@ -716,7 +729,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                       />
                     </Form.Group>
                     <Form.Group>
-                      <Form.Label className="small mb-0">Vagas</Form.Label>
+                      <Form.Label className="small mb-0">{t('admin.products.vacanciesLabel')}</Form.Label>
                       <Form.Control
                         type="number"
                         min="0"
@@ -735,21 +748,24 @@ const AdminProductsManagement = ({ loggedUsername }) => {
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
           variant="cancel"
-          title="Confirmar Exclusão"
+          title={t('admin.products.deleteModalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-                Cancelar
+                {t('admin.products.cancel')}
               </Button>
               <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
-                Excluir
+                {t('admin.products.delete')}
               </SpinnerButton>
             </>
           }
         >
-          Tem certeza que deseja excluir o produto <strong>{productToDelete?.name}</strong>? Se ele já foi escolhido em
-          inscrições, prefira apenas inativá-lo.
+          <Trans
+            i18nKey="admin.products.deleteConfirm"
+            values={{ name: productToDelete?.name }}
+            components={{ strong: <strong /> }}
+          />
         </CustomModal>
 
         <Loading loading={loading} />

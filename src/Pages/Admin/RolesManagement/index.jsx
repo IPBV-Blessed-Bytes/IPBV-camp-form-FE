@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Table, Badge, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -20,6 +21,7 @@ import FilterChips from '@/components/Admin/FilterChips';
 const emptyForm = { name: '', label: '' };
 
 const AdminRolesManagement = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [roles, setRoles] = useState([]);
@@ -42,7 +44,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       setRoles(Array.isArray(rolesData) ? rolesData : []);
       setPermissions(Array.isArray(permsData) ? permsData.sort((a, b) => a.name.localeCompare(b.name)) : []);
     } catch (error) {
-      toast.error('Erro ao buscar papéis e permissões');
+      toast.error(t('admin.roles.fetchError'));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -82,7 +84,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
 
   const validateForm = () => {
     if (!editingRole && !formData.name) {
-      toast.error('O nome (identificador) do papel é obrigatório');
+      toast.error(t('admin.roles.nameRequired'));
       return false;
     }
     return true;
@@ -98,11 +100,11 @@ const AdminRolesManagement = ({ loggedUsername }) => {
     try {
       if (editingRole) {
         await updateRole(editingRole.id, { label: formData.label, permissions: permsPayload });
-        toast.success('Papel atualizado com sucesso');
+        toast.success(t('admin.roles.updateSuccess'));
         registerLog(`Editou papel ${editingRole.name}`, loggedUsername);
       } else {
         await createRole({ name: formData.name, label: formData.label, system: false, permissions: permsPayload });
-        toast.success('Papel criado com sucesso');
+        toast.success(t('admin.roles.createSuccess'));
         registerLog(`Criou papel ${formData.name}`, loggedUsername);
       }
       setShowModal(false);
@@ -111,7 +113,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       setSelectedPerms(new Set());
       await fetchAll(true);
     } catch (error) {
-      toast.error('Erro ao salvar papel');
+      toast.error(t('admin.roles.saveError'));
     } finally {
       setSaving(false);
     }
@@ -121,12 +123,12 @@ const AdminRolesManagement = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteRole(roleToDelete.id);
-      toast.success('Papel excluído com sucesso');
+      toast.success(t('admin.roles.deleteSuccess'));
       registerLog(`Excluiu papel ${roleToDelete.name}`, loggedUsername);
       setShowDeleteModal(false);
       await fetchAll(true);
     } catch (error) {
-      toast.error('Não foi possível excluir o papel (papéis de sistema não podem ser excluídos)');
+      toast.error(t('admin.roles.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -135,15 +137,15 @@ const AdminRolesManagement = ({ loggedUsername }) => {
   const systemCount = roles.filter((r) => r.system).length;
   const customCount = roles.length - systemCount;
   const statItems = [
-    { label: 'Total de papéis', value: roles.length },
-    { label: 'Permissões', value: permissions.length, tone: 'info' },
-    { label: 'De sistema', value: systemCount, tone: 'accent' },
-    { label: 'Personalizados', value: customCount, tone: 'free' },
+    { label: t('admin.roles.statTotal'), value: roles.length },
+    { label: t('admin.roles.statPermissions'), value: permissions.length, tone: 'info' },
+    { label: t('admin.roles.statSystem'), value: systemCount, tone: 'accent' },
+    { label: t('admin.roles.statCustom'), value: customCount, tone: 'free' },
   ];
   const kindChips = [
-    { value: 'all', label: 'Todos', count: roles.length },
-    { value: 'system', label: 'Sistema', count: systemCount },
-    { value: 'custom', label: 'Personalizados', count: customCount },
+    { value: 'all', label: t('admin.roles.chipAll'), count: roles.length },
+    { value: 'system', label: t('admin.roles.chipSystem'), count: systemCount },
+    { value: 'custom', label: t('admin.roles.chipCustom'), count: customCount },
   ];
   const term = search.trim().toLowerCase();
   const filteredRoles = roles.filter(
@@ -159,7 +161,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-new-role',
-      name: 'Criar Novo Papel',
+      name: t('admin.roles.createBtn'),
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'feedback',
@@ -170,8 +172,8 @@ const AdminRolesManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--roles">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Papéis e Permissões"
-        subtitle="Crie papéis e defina o que cada um pode acessar"
+        title={t('admin.roles.title')}
+        subtitle={t('admin.roles.subtitle')}
         typeIcon="feedback"
       />
 
@@ -181,27 +183,27 @@ const AdminRolesManagement = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="roles-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por papel ou identificador..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.roles.searchPlaceholder')} />
           <FilterChips options={kindChips} value={kindFilter} onChange={setKindFilter} />
         </div>
 
-        <SectionHeader title="Papéis" count={filteredRoles.length} />
+        <SectionHeader title={t('admin.roles.sectionTitle')} count={filteredRoles.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Papel:</th>
-                <th className="table-cells-header">Identificador:</th>
-                <th className="table-cells-header">Permissões:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.roles.colRole')}</th>
+                <th className="table-cells-header">{t('admin.roles.colIdentifier')}</th>
+                <th className="table-cells-header">{t('admin.roles.colPermissions')}</th>
+                <th className="table-cells-header">{t('admin.roles.colActions')}</th>
               </tr>
             </thead>
             <tbody>
               {filteredRoles.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="text-start text-secondary p-4">
-                    Nenhum papel registrado
+                    {t('admin.roles.noRoles')}
                   </td>
                 </tr>
               ) : (
@@ -211,7 +213,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
                     <em>{role.label || role.name}</em>
                     {role.system && (
                       <Badge bg="secondary" className="ms-2">
-                        Sistema
+                        {t('admin.roles.systemBadge')}
                       </Badge>
                     )}
                   </td>
@@ -220,18 +222,18 @@ const AdminRolesManagement = ({ loggedUsername }) => {
                   </td>
                   <td>
                     <Badge bg={(role.permissions || []).length ? 'info' : 'secondary'} text="dark">
-                      {(role.permissions || []).length} permissões
+                      {t('admin.roles.permissionsCount', { count: (role.permissions || []).length })}
                     </Badge>
                   </td>
                   <td>
                     <div className="table-action-cell">
-                      <ActionButton action="edit" label="Editar papel" onClick={() => handleEditClick(role)} />
+                      <ActionButton action="edit" label={t('admin.roles.editRole')} onClick={() => handleEditClick(role)} />
                       <ActionButton
                         action="delete"
-                        label="Excluir papel"
+                        label={t('admin.roles.deleteRole')}
                         onClick={() => handleDeleteClick(role)}
                         disabled={role.system}
-                        title={role.system ? 'Papel de sistema não pode ser excluído' : ''}
+                        title={role.system ? t('admin.roles.systemCannotDelete') : ''}
                       />
                     </div>
                   </td>
@@ -248,15 +250,15 @@ const AdminRolesManagement = ({ loggedUsername }) => {
           variant="confirm"
           icon={editingRole ? 'edit' : 'plus'}
           iconFill={editingRole ? '' : '#057c05'}
-          title={editingRole ? 'Editar Papel' : 'Criar Papel'}
+          title={editingRole ? t('admin.roles.modalEditTitle') : t('admin.roles.modalCreateTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancelar
+                {t('admin.roles.cancel')}
               </Button>
               <SpinnerButton className="btn-confirm" variant="primary" type="submit" onClick={handleSubmit} loading={saving}>
-                {editingRole ? 'Salvar Alterações' : 'Criar Papel'}
+                {editingRole ? t('admin.roles.saveChanges') : t('admin.roles.modalCreateTitle')}
               </SpinnerButton>
             </>
           }
@@ -264,11 +266,11 @@ const AdminRolesManagement = ({ loggedUsername }) => {
           <Form>
             <Form.Group controlId="formRoleName">
               <Form.Label>
-                <b>Identificador:</b> <span className="text-secondary small">(ex.: financeiro)</span>
+                <b>{t('admin.roles.identifierLabel')}</b> <span className="text-secondary small">{t('admin.roles.identifierHint')}</span>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nome interno do papel"
+                placeholder={t('admin.roles.identifierPlaceholder')}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 disabled={!!editingRole}
@@ -278,11 +280,11 @@ const AdminRolesManagement = ({ loggedUsername }) => {
 
             <Form.Group controlId="formRoleLabel" className="mt-3">
               <Form.Label>
-                <b>Nome exibido:</b>
+                <b>{t('admin.roles.displayNameLabel')}</b>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ex.: Equipe Financeira"
+                placeholder={t('admin.roles.displayNamePlaceholder')}
                 value={formData.label}
                 onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                 size="lg"
@@ -291,7 +293,7 @@ const AdminRolesManagement = ({ loggedUsername }) => {
 
             <hr />
             <h6 className="mt-3">
-              <b>Permissões</b>
+              <b>{t('admin.roles.permissionsHeading')}</b>
             </h6>
             <Row>
               {permissions.map((perm) => (
@@ -317,20 +319,24 @@ const AdminRolesManagement = ({ loggedUsername }) => {
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
           variant="cancel"
-          title="Confirmar Exclusão"
+          title={t('admin.roles.confirmDeleteTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-                Cancelar
+                {t('admin.roles.cancel')}
               </Button>
               <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
-                Excluir
+                {t('admin.roles.deleteBtn')}
               </SpinnerButton>
             </>
           }
         >
-          Tem certeza que deseja excluir o papel <strong>{roleToDelete?.label || roleToDelete?.name}</strong>?
+          <Trans
+            i18nKey="admin.roles.deleteConfirmText"
+            components={{ strong: <strong /> }}
+            values={{ name: roleToDelete?.label || roleToDelete?.name }}
+          />
         </CustomModal>
 
         <Loading loading={loading} />

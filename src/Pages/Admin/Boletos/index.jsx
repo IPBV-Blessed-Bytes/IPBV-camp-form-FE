@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Table, Badge, Button, Form, InputGroup, Accordion } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
@@ -42,13 +43,6 @@ const waLink = (phone) => {
   return `https://wa.me/${digits.startsWith('55') ? digits : `55${digits}`}`;
 };
 
-const STATUS = {
-  PENDING: { label: 'Pendente', bg: 'warning' },
-  PAID: { label: 'Pago', bg: 'success' },
-  OVERDUE: { label: 'Vencido', bg: 'danger' },
-  CANCELED: { label: 'Cancelado', bg: 'secondary' },
-};
-
 const ContactLinks = ({ cellPhone, email, whatsApp }) => (
   <div className="boleto-contact">
     {cellPhone &&
@@ -81,6 +75,13 @@ ContactLinks.propTypes = {
 const isEditable = (status) => status === 'PENDING' || status === 'OVERDUE';
 
 const AdminBoletos = ({ loggedUsername }) => {
+  const { t } = useTranslation();
+  const STATUS = {
+    PENDING: { label: t('admin.boletos.statusPending'), bg: 'warning' },
+    PAID: { label: t('admin.boletos.statusPaid'), bg: 'success' },
+    OVERDUE: { label: t('admin.boletos.statusOverdue'), bg: 'danger' },
+    CANCELED: { label: t('admin.boletos.statusCanceled'), bg: 'secondary' },
+  };
   const [boletos, setBoletos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dueTarget, setDueTarget] = useState(null);
@@ -104,7 +105,7 @@ const AdminBoletos = ({ loggedUsername }) => {
         });
         setBoletos(sorted);
       })
-      .catch(() => toast.error('Erro ao carregar boletos.'))
+      .catch(() => toast.error(t('admin.boletos.loadError')))
       .finally(() => {
         if (!silent) setLoading(false);
       });
@@ -129,11 +130,11 @@ const AdminBoletos = ({ loggedUsername }) => {
         `Alterou o vencimento do boleto ${dueTarget.installmentNumber}/${dueTarget.totalInstallments} do pedido ${dueTarget.orderNumber}`,
         loggedUsername,
       );
-      toast.success('Vencimento atualizado. O pagador foi notificado por e-mail.');
+      toast.success(t('admin.boletos.dueDateUpdated'));
       setDueTarget(null);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível atualizar o vencimento.');
+      toast.error(error?.response?.data || t('admin.boletos.dueDateError'));
     } finally {
       setSaving(false);
     }
@@ -148,11 +149,11 @@ const AdminBoletos = ({ loggedUsername }) => {
         `Cancelou o boleto ${cancelTarget.installmentNumber}/${cancelTarget.totalInstallments} do pedido ${cancelTarget.orderNumber}`,
         loggedUsername,
       );
-      toast.success('Boleto cancelado. O pagador foi notificado por e-mail.');
+      toast.success(t('admin.boletos.canceled'));
       setCancelTarget(null);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível cancelar o boleto.');
+      toast.error(error?.response?.data || t('admin.boletos.cancelError'));
     } finally {
       setSaving(false);
     }
@@ -175,11 +176,11 @@ const AdminBoletos = ({ loggedUsername }) => {
         `Gerou um novo boleto de R$ ${reissueAmount} para o pedido ${reissueTarget.orderNumber}`,
         loggedUsername,
       );
-      toast.success('Novo boleto gerado. O pagador foi notificado por e-mail.');
+      toast.success(t('admin.boletos.reissued'));
       setReissueTarget(null);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível gerar o novo boleto.');
+      toast.error(error?.response?.data || t('admin.boletos.reissueError'));
     } finally {
       setSaving(false);
     }
@@ -194,11 +195,11 @@ const AdminBoletos = ({ loggedUsername }) => {
         `Excluiu todos os boletos do pedido ${deleteOrderTarget.orderNumber} (pagador ${deleteOrderTarget.payerName})`,
         loggedUsername,
       );
-      toast.success('Boletos do pedido excluídos.');
+      toast.success(t('admin.boletos.orderDeleted'));
       setDeleteOrderTarget(null);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível excluir os boletos do pedido.');
+      toast.error(error?.response?.data || t('admin.boletos.orderDeleteError'));
     } finally {
       setSaving(false);
     }
@@ -221,12 +222,12 @@ const AdminBoletos = ({ loggedUsername }) => {
     const orders = new Set(boletos.map((boleto) => boleto.orderNumber || boleto.cpf));
     const unpaidOrders = [...orders].filter((key) => !validOrderKeys.has(key)).length;
     return [
-      { label: 'Pedidos parcelados', value: orders.size, tone: 'info' },
-      { label: 'Total de boletos', value: boletos.length, tone: 'accent' },
-      { label: 'Boletos pagos', value: paid, tone: 'used' },
-      { label: 'Boletos pendentes', value: pending, tone: 'available' },
-      { label: 'Parcelas em atraso', value: overdue, tone: 'danger' },
-      { label: 'Pedidos não pagos', value: unpaidOrders, tone: 'warning' },
+      { label: t('admin.boletos.statOrders'), value: orders.size, tone: 'info' },
+      { label: t('admin.boletos.statTotal'), value: boletos.length, tone: 'accent' },
+      { label: t('admin.boletos.statPaid'), value: paid, tone: 'used' },
+      { label: t('admin.boletos.statPending'), value: pending, tone: 'available' },
+      { label: t('admin.boletos.statOverdue'), value: overdue, tone: 'danger' },
+      { label: t('admin.boletos.statUnpaidOrders'), value: unpaidOrders, tone: 'warning' },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boletos, validOrderKeys]);
@@ -312,7 +313,7 @@ const AdminBoletos = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'boletos-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.boletos.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -323,8 +324,8 @@ const AdminBoletos = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--boletos">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Boletos"
-        subtitle="Parcelas de boleto por pedido."
+        title={t('admin.boletos.title')}
+        subtitle={t('admin.boletos.subtitle')}
         typeIcon="barcode"
       />
 
@@ -342,11 +343,16 @@ const AdminBoletos = ({ loggedUsername }) => {
                 </span>
                 <div>
                   <h5 className="inadimplentes-panel__title">
-                    Inadimplentes — {inadimplentes.length}{' '}
-                    {inadimplentes.length === 1 ? 'pedido com boleto vencido' : 'pedidos com boletos vencidos'}
+                    {t('admin.boletos.overdueHeading', {
+                      count: inadimplentes.length,
+                      orders:
+                        inadimplentes.length === 1
+                          ? t('admin.boletos.orderWordOne')
+                          : t('admin.boletos.orderWordOther'),
+                    })}
                   </h5>
                   <span className="inadimplentes-panel__subtitle">
-                    Boletos com vencimento já passado. Entre em contato para regularizar o pagamento.
+                    {t('admin.boletos.overdueSubtitle')}
                   </span>
                 </div>
               </div>
@@ -355,13 +361,13 @@ const AdminBoletos = ({ loggedUsername }) => {
                 <Table className="inadimplentes-table" responsive>
                   <thead>
                     <tr>
-                      <th>Pedido</th>
-                      <th>Pagador</th>
-                      <th>CPF</th>
-                      <th>Contato</th>
-                      <th>Parcelas vencidas</th>
-                      <th>Valor vencido</th>
-                      <th>Atraso</th>
+                      <th>{t('admin.boletos.colOrder')}</th>
+                      <th>{t('admin.boletos.colPayer')}</th>
+                      <th>{t('admin.boletos.colCpf')}</th>
+                      <th>{t('admin.boletos.colContact')}</th>
+                      <th>{t('admin.boletos.colOverdueInstallments')}</th>
+                      <th>{t('admin.boletos.colOverdueAmount')}</th>
+                      <th>{t('admin.boletos.colDelay')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -375,12 +381,15 @@ const AdminBoletos = ({ loggedUsername }) => {
                         </td>
                         <td>
                           <Badge bg="danger">
-                            {item.count} vencida{item.count > 1 ? 's' : ''}
+                            {item.count}{' '}
+                            {item.count > 1
+                              ? t('admin.boletos.overdueWordOther')
+                              : t('admin.boletos.overdueWordOne')}
                           </Badge>
                         </td>
                         <td className="fw-bold">R$ {formatBRL(item.totalAmount)}</td>
                         <td>
-                          {item.maxDays} {item.maxDays === 1 ? 'dia' : 'dias'}
+                          {item.maxDays} {item.maxDays === 1 ? t('admin.boletos.dayOne') : t('admin.boletos.dayOther')}
                         </td>
                       </tr>
                     ))}
@@ -392,7 +401,7 @@ const AdminBoletos = ({ loggedUsername }) => {
 
           <div className="admin-table-card">
             {boletos.length === 0 ? (
-              <div className="text-start text-secondary p-4">Nenhum boleto parcelado gerado</div>
+              <div className="text-start text-secondary p-4">{t('admin.boletos.emptyBoletos')}</div>
             ) : (
               <Accordion alwaysOpen className="boletos-accordion">
                 {groupedBoletos.map((group) => {
@@ -402,26 +411,30 @@ const AdminBoletos = ({ loggedUsername }) => {
                   let overallLabel;
                   if (!isValid) {
                     overallBg = 'dark';
-                    overallLabel = 'Não pago';
+                    overallLabel = t('admin.boletos.statusUnpaid');
                   } else if (group.hasOverdue) {
                     overallBg = 'danger';
-                    overallLabel = 'Com atraso';
+                    overallLabel = t('admin.boletos.statusWithDelay');
                   } else if (group.paidCount === total) {
                     overallBg = 'success';
-                    overallLabel = 'Quitado';
+                    overallLabel = t('admin.boletos.statusSettled');
                   } else {
                     overallBg = 'warning';
-                    overallLabel = `${group.paidCount}/${total} pagas`;
+                    overallLabel = t('admin.boletos.partialPaid', { paid: group.paidCount, total });
                   }
                   return (
                     <Accordion.Item eventKey={String(group.key)} key={group.key}>
                       <Accordion.Header>
                         <div className="boleto-group-head">
-                          <span className="boleto-group-head__order">Pedido #{group.orderNumber}</span>
+                          <span className="boleto-group-head__order">
+                            {t('admin.boletos.groupOrder', { order: group.orderNumber })}
+                          </span>
                           <span>·</span>
-                          <span className="boleto-group-head__payer">Pagador: {group.payerName}</span>
+                          <span className="boleto-group-head__payer">
+                            {t('admin.boletos.groupPayer', { name: group.payerName })}
+                          </span>
                           <span>·</span>
-                          <span className="boleto-group-head__cpf">CPF: {group.cpf}</span>
+                          <span className="boleto-group-head__cpf">{t('admin.boletos.groupCpf', { cpf: group.cpf })}</span>
                           <span>·</span>
                           <Badge bg={overallBg} className="boleto-group-head__status">
                             {overallLabel}
@@ -443,18 +456,18 @@ const AdminBoletos = ({ loggedUsername }) => {
                             onClick={() => setDeleteOrderTarget(group)}
                           >
                             <Icons typeIcon="delete" iconSize={16} fill={'#dc3545'} />
-                            Excluir todos os boletos do pedido
+                            {t('admin.boletos.deleteAllOrder')}
                           </Button>
                         </div>
                         <Table responsive className="boleto-installments-table">
                           <thead>
                             <tr>
-                              <th>Parcela</th>
-                              <th>Valor</th>
-                              <th>Vencimento</th>
-                              <th>Pago em</th>
-                              <th>Status</th>
-                              <th>Ações</th>
+                              <th>{t('admin.boletos.colInstallment')}</th>
+                              <th>{t('admin.boletos.colAmount')}</th>
+                              <th>{t('admin.boletos.colDueDate')}</th>
+                              <th>{t('admin.boletos.colPaidAt')}</th>
+                              <th>{t('admin.boletos.colStatus')}</th>
+                              <th>{t('admin.boletos.colActions')}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -464,7 +477,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                               if (boleto.status === 'PAID' || boleto.status === 'CANCELED') {
                                 status = STATUS[boleto.status];
                               } else if (!isValid) {
-                                status = { label: 'Não pago', bg: 'dark' };
+                                status = { label: t('admin.boletos.statusUnpaid'), bg: 'dark' };
                               } else {
                                 status = STATUS[boleto.status] || { label: boleto.status, bg: 'secondary' };
                               }
@@ -486,13 +499,13 @@ const AdminBoletos = ({ loggedUsername }) => {
                                           <ActionButton
                                             action="edit"
                                             iconSize={18}
-                                            title="Alterar vencimento"
+                                            title={t('admin.boletos.editDueDateTitle')}
                                             onClick={() => openDueDate(boleto)}
                                           />
                                           <ActionButton
                                             action="delete"
                                             iconSize={18}
-                                            title="Cancelar boleto"
+                                            title={t('admin.boletos.cancelTitle')}
                                             onClick={() => setCancelTarget(boleto)}
                                           />
                                         </>
@@ -500,7 +513,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                                       <ActionButton
                                         action="reissue"
                                         iconSize={18}
-                                        title="Gerar novo boleto"
+                                        title={t('admin.boletos.reissueTitle')}
                                         onClick={() => openReissue(boleto)}
                                       />
                                     </div>
@@ -524,16 +537,16 @@ const AdminBoletos = ({ loggedUsername }) => {
         show={Boolean(dueTarget)}
         onHide={() => setDueTarget(null)}
         variant="info"
-        title="Alterar Vencimento"
+        title={t('admin.boletos.dueModalTitle')}
         icon="calendar-alt"
         iconFill="#2E5AAC"
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setDueTarget(null)}>
-              Voltar
+              {t('admin.boletos.back')}
             </Button>
             <SpinnerButton variant="teal-blue" onClick={handleSaveDueDate} loading={saving}>
-              Salvar
+              {t('admin.boletos.save')}
             </SpinnerButton>
           </>
         }
@@ -541,16 +554,19 @@ const AdminBoletos = ({ loggedUsername }) => {
         {dueTarget && (
           <>
             <p className="mb-2">
-              Boleto{' '}
-              <b>
-                {dueTarget.installmentNumber}/{dueTarget.totalInstallments}
-              </b>{' '}
-              do pedido <b>{dueTarget.orderNumber}</b> — pagador <b>{dueTarget.payerName}</b>.
+              <Trans
+                i18nKey="admin.boletos.dueBody"
+                values={{
+                  installment: dueTarget.installmentNumber,
+                  total: dueTarget.totalInstallments,
+                  order: dueTarget.orderNumber,
+                  payer: dueTarget.payerName,
+                }}
+                components={{ b: <b /> }}
+              />
             </p>
-            <p className="text-secondary small mb-3">
-              O boleto é atualizado no PagarMe e o pagador recebe um e-mail com o novo vencimento.
-            </p>
-            <label className="fw-bold d-block mb-1">Novo vencimento:</label>
+            <p className="text-secondary small mb-3">{t('admin.boletos.dueNote')}</p>
+            <label className="fw-bold d-block mb-1">{t('admin.boletos.newDueDateLabel')}</label>
             <DatePicker
               selected={newDate}
               onChange={(date) => setNewDate(date)}
@@ -567,14 +583,14 @@ const AdminBoletos = ({ loggedUsername }) => {
         show={Boolean(cancelTarget)}
         onHide={() => setCancelTarget(null)}
         variant="cancel"
-        title="Cancelar Boleto"
+        title={t('admin.boletos.cancelModalTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setCancelTarget(null)}>
-              Voltar
+              {t('admin.boletos.back')}
             </Button>
             <SpinnerButton variant="danger" onClick={handleCancel} loading={saving}>
-              Cancelar Boleto
+              {t('admin.boletos.cancelBoletoBtn')}
             </SpinnerButton>
           </>
         }
@@ -582,16 +598,19 @@ const AdminBoletos = ({ loggedUsername }) => {
         {cancelTarget && (
           <>
             <p>
-              Deseja realmente <b>cancelar</b> o boleto{' '}
-              <b>
-                {cancelTarget.installmentNumber}/{cancelTarget.totalInstallments}
-              </b>{' '}
-              do pedido <b>{cancelTarget.orderNumber}</b> (pagador <b>{cancelTarget.payerName}</b>)?
+              <Trans
+                i18nKey="admin.boletos.cancelBody"
+                values={{
+                  installment: cancelTarget.installmentNumber,
+                  total: cancelTarget.totalInstallments,
+                  order: cancelTarget.orderNumber,
+                  payer: cancelTarget.payerName,
+                }}
+                components={{ b: <b /> }}
+              />
             </p>
             <p className="text-secondary small mb-0">
-              O boleto é marcado como cancelado e o pagador é avisado por e-mail para <b>não pagá-lo</b> (ele deixa de
-              ser cobrado e expira sozinho). Se ainda precisar receber, gere um <b>novo boleto</b> pelo botão de
-              reemissão.
+              <Trans i18nKey="admin.boletos.cancelNote" components={{ b: <b /> }} />
             </p>
           </>
         )}
@@ -601,14 +620,14 @@ const AdminBoletos = ({ loggedUsername }) => {
         show={Boolean(deleteOrderTarget)}
         onHide={() => setDeleteOrderTarget(null)}
         variant="cancel"
-        title="Excluir Boletos do Pedido"
+        title={t('admin.boletos.deleteOrderModalTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setDeleteOrderTarget(null)}>
-              Voltar
+              {t('admin.boletos.back')}
             </Button>
             <SpinnerButton variant="danger" onClick={handleDeleteOrder} loading={saving}>
-              Excluir Todos
+              {t('admin.boletos.deleteAll')}
             </SpinnerButton>
           </>
         }
@@ -616,13 +635,18 @@ const AdminBoletos = ({ loggedUsername }) => {
         {deleteOrderTarget && (
           <>
             <p>
-              Excluir <b>todos os {deleteOrderTarget.installments.length} boletos</b> do pedido{' '}
-              <b>#{deleteOrderTarget.orderNumber}</b> (pagador <b>{deleteOrderTarget.payerName}</b>)? O pedido some desta
-              lista.
+              <Trans
+                i18nKey="admin.boletos.deleteOrderBody"
+                values={{
+                  count: deleteOrderTarget.installments.length,
+                  order: deleteOrderTarget.orderNumber,
+                  payer: deleteOrderTarget.payerName,
+                }}
+                components={{ b: <b /> }}
+              />
             </p>
             <p className="text-secondary small mb-0">
-              Isso é uma <b>remoção administrativa</b>: apaga apenas os registros aqui. <b>Não reembolsa</b> nem cancela
-              nada no PagarMe — parcelas já pagas não devolvem valor, e boletos pendentes continuam existindo no gateway.
+              <Trans i18nKey="admin.boletos.deleteOrderNote" components={{ b: <b /> }} />
             </p>
           </>
         )}
@@ -632,16 +656,16 @@ const AdminBoletos = ({ loggedUsername }) => {
         show={Boolean(reissueTarget)}
         onHide={() => setReissueTarget(null)}
         variant="info"
-        title="Gerar Novo Boleto"
+        title={t('admin.boletos.reissueModalTitle')}
         icon="refresh"
         iconFill="#007185"
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setReissueTarget(null)}>
-              Voltar
+              {t('admin.boletos.back')}
             </Button>
             <SpinnerButton variant="teal-blue" onClick={handleReissue} loading={saving}>
-              Gerar Boleto
+              {t('admin.boletos.reissueBtn')}
             </SpinnerButton>
           </>
         }
@@ -649,12 +673,14 @@ const AdminBoletos = ({ loggedUsername }) => {
         {reissueTarget && (
           <>
             <p className="mb-2">
-              Novo boleto para o pedido <b>{reissueTarget.orderNumber}</b> — pagador <b>{reissueTarget.payerName}</b>.
+              <Trans
+                i18nKey="admin.boletos.reissueBody"
+                values={{ order: reissueTarget.orderNumber, payer: reissueTarget.payerName }}
+                components={{ b: <b /> }}
+              />
             </p>
-            <p className="text-secondary small mb-3">
-              Um boleto novo é gerado no PagarMe com o valor e vencimento abaixo, e o pagador recebe por e-mail.
-            </p>
-            <label className="fw-bold d-block mb-1">Valor (R$):</label>
+            <p className="text-secondary small mb-3">{t('admin.boletos.reissueNote')}</p>
+            <label className="fw-bold d-block mb-1">{t('admin.boletos.amountLabel')}</label>
             <InputGroup className="mb-3">
               <InputGroup.Text>R$</InputGroup.Text>
               <Form.Control
@@ -665,7 +691,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                 onChange={(e) => setReissueAmount(e.target.value.replace(/[^0-9]/g, ''))}
               />
             </InputGroup>
-            <label className="fw-bold d-block mb-1">Vencimento:</label>
+            <label className="fw-bold d-block mb-1">{t('admin.boletos.dueDateLabel')}</label>
             <DatePicker
               selected={reissueDate}
               onChange={(date) => setReissueDate(date)}

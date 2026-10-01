@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import { useTable, useFilters, useSortBy, usePagination } from 'react-table';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -36,6 +37,7 @@ const formatCurrentDate = () => {
 };
 
 const AdminParticipants = ({ loggedUsername, userRole }) => {
+  const { t } = useTranslation();
   scrollUp();
 
   const {
@@ -80,12 +82,13 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
     const paidCount = campers.filter((camper) => !isNonPaying(camper)).length;
     const checkedInCount = campers.filter((camper) => camper.checkin).length;
     return [
-      { label: 'Total de inscritos', value: campers.length },
-      { label: 'Pagantes', value: paidCount, tone: 'info' },
-      { label: 'Não pagantes', value: campers.length - paidCount, tone: 'used' },
-      { label: 'Check-in feito', value: checkedInCount, tone: 'free' },
-      { label: 'Aguardando check-in', value: campers.length - checkedInCount, tone: 'accent' },
+      { label: t('admin.participants.statTotal'), value: campers.length },
+      { label: t('admin.participants.statPaying'), value: paidCount, tone: 'info' },
+      { label: t('admin.participants.statNonPaying'), value: campers.length - paidCount, tone: 'used' },
+      { label: t('admin.participants.statCheckedIn'), value: checkedInCount, tone: 'free' },
+      { label: t('admin.participants.statAwaitingCheckin'), value: campers.length - checkedInCount, tone: 'accent' },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleEditClick = (index) => {
@@ -149,9 +152,10 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
         handleDeleteClick,
         adminTableEditDeletePermissions,
         catalog,
+        t,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, selectedRows, catalog],
+    [data, selectedRows, catalog, t],
   );
 
   const {
@@ -221,7 +225,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'filters',
-      name: showFilters ? 'Ocultar Filtros' : 'Filtrar',
+      name: showFilters ? t('admin.participants.hideFilters') : t('admin.participants.filter'),
       onClick: () => setShowFilters((prev) => !prev),
       typeButton: 'outline-teal-blue',
       typeIcon: 'filter',
@@ -231,7 +235,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: childrenFilter ? '#fff' : '#007185',
       iconSize: 22,
       id: 'children-filter',
-      name: childrenFilter ? 'Mostrar Todos' : 'Crianças (2–10 anos)',
+      name: childrenFilter ? t('admin.participants.showAll') : t('admin.participants.childrenFilter'),
       onClick: () => {
         const next = !childrenFilter;
         setChildrenFilter(next);
@@ -244,7 +248,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'campers-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.participants.downloadReport'),
       onClick: handleGenerateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -253,7 +257,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: '#dc3545',
       iconSize: 22,
       id: 'room-excel',
-      name: 'Deletar',
+      name: t('admin.participants.delete'),
       onClick: handleDeleteWithCheckbox,
       typeButton: 'outline-danger',
       typeIcon: 'delete',
@@ -263,7 +267,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'import-campers',
-      name: 'Importar Planilha',
+      name: t('admin.participants.importSpreadsheet'),
       onClick: () => setShowImportModal(true),
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -273,7 +277,7 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       fill: '#fff',
       iconSize: 22,
       id: 'add-camper',
-      name: 'Nova Inscrição',
+      name: t('admin.participants.newRegistration'),
       onClick: () => {
         setShowAddModal(true);
         setFormSubmitted(false);
@@ -290,8 +294,8 @@ const AdminParticipants = ({ loggedUsername, userRole }) => {
       <AdminSubpageHeader
         sessionKey="acampantes"
         username={loggedUsername}
-        title="Inscrições"
-        subtitle="Todos os inscritos inscritos"
+        title={t('admin.participants.title')}
+        subtitle={t('admin.participants.subtitle')}
         typeIcon="person"
       />
 

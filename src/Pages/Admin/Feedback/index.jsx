@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Badge } from 'react-bootstrap';
+import { useTranslation, Trans } from 'react-i18next';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -54,6 +55,7 @@ const RATING_TONE = {
 const HIGH_RECOMMENDATION = new Set(['Muito provável', 'Provável']);
 
 const AdminFeedback = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -81,13 +83,13 @@ const AdminFeedback = ({ loggedUsername }) => {
     try {
       await deleteAllFeedback();
 
-      toast.success('Todos os feedbacks foram deletados com sucesso');
+      toast.success(t('admin.feedback.toast.allDeleted'));
       registerLog(`Deletou todos os feedbacks`, loggedUsername);
       setShowDeleteModal(false);
       fetchFeedbacks();
     } catch (error) {
       console.error('Erro ao deletar feedbacks:', error);
-      toast.error('Erro ao deletar feedbacks');
+      toast.error(t('admin.feedback.toast.deleteError'));
     } finally {
       setLoading(false);
     }
@@ -95,7 +97,7 @@ const AdminFeedback = ({ loggedUsername }) => {
 
   const generateExcel = () => {
     if (!feedbacks || feedbacks.length === 0) {
-      toast.error('Nenhum feedback disponível para exportar');
+      toast.error(t('admin.feedback.toast.noFeedbackToExport'));
       return;
     }
 
@@ -136,16 +138,16 @@ const AdminFeedback = ({ loggedUsername }) => {
   const highRecommendation = feedbacks.filter((f) => HIGH_RECOMMENDATION.has(f.probability)).length;
 
   const statItems = [
-    { label: 'Total de respostas', value: feedbacks.length },
-    { label: 'Identificadas', value: namedCount, tone: 'accent' },
-    { label: 'Anônimas', value: anonCount, tone: 'used' },
-    { label: 'Recomendação alta', value: highRecommendation, tone: 'free' },
+    { label: t('admin.feedback.stats.total'), value: feedbacks.length },
+    { label: t('admin.feedback.stats.named'), value: namedCount, tone: 'accent' },
+    { label: t('admin.feedback.stats.anon'), value: anonCount, tone: 'used' },
+    { label: t('admin.feedback.stats.highRecommendation'), value: highRecommendation, tone: 'free' },
   ];
 
   const identityChips = [
-    { value: 'all', label: 'Todas', count: feedbacks.length },
-    { value: 'named', label: 'Identificadas', count: namedCount },
-    { value: 'anon', label: 'Anônimas', count: anonCount },
+    { value: 'all', label: t('admin.feedback.chips.all'), count: feedbacks.length },
+    { value: 'named', label: t('admin.feedback.chips.named'), count: namedCount },
+    { value: 'anon', label: t('admin.feedback.chips.anon'), count: anonCount },
   ];
 
   const term = search.trim().toLowerCase();
@@ -162,7 +164,7 @@ const AdminFeedback = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'export-feedbacks',
-      name: 'Baixar Relatório',
+      name: t('admin.feedback.toolbar.downloadReport'),
       onClick: () => generateExcel(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -171,7 +173,7 @@ const AdminFeedback = ({ loggedUsername }) => {
       fill: '#dc3545',
       iconSize: 22,
       id: 'delete-all',
-      name: 'Deletar Todos Feedbacks',
+      name: t('admin.feedback.toolbar.deleteAll'),
       onClick: () => setShowDeleteModal(true),
       typeButton: 'outline-danger',
       typeIcon: 'danger',
@@ -183,8 +185,8 @@ const AdminFeedback = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="opiniao"
         username={loggedUsername}
-        title="Feedbacks"
-        subtitle="Opiniões enviadas pelos participantes"
+        title={t('admin.feedback.title')}
+        subtitle={t('admin.feedback.subtitle')}
         typeIcon="feedback"
       />
 
@@ -194,11 +196,11 @@ const AdminFeedback = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="feedback-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.feedback.searchPlaceholder')} />
           <FilterChips options={identityChips} value={identityFilter} onChange={setIdentityFilter} />
         </div>
 
-        <SectionHeader title="Feedbacks" count={filteredFeedbacks.length} />
+        <SectionHeader title={t('admin.feedback.sectionTitle')} count={filteredFeedbacks.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
@@ -215,7 +217,7 @@ const AdminFeedback = ({ loggedUsername }) => {
               {filteredFeedbacks.length === 0 ? (
                 <tr>
                   <td colSpan={TABLE_HEADERS.length} className="text-start text-secondary p-4">
-                    Nenhuma opinião registrada
+                    {t('admin.feedback.empty')}
                   </td>
                 </tr>
               ) : (
@@ -249,23 +251,20 @@ const AdminFeedback = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.feedback.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
+              {t('admin.feedback.cancel')}
             </Button>
             <Button variant="danger" className="btn-cancel" onClick={handleDeleteFeedbacks}>
-              Deletar
+              {t('admin.feedback.delete')}
             </Button>
           </>
         }
       >
-        Tem certeza que deseja excluir todos os Feedbacks?{' '}
-        <em>
-          <b>Essa ação é irreversível!</b>
-        </em>
+        <Trans i18nKey="admin.feedback.deleteConfirm" components={{ em: <em />, b: <b /> }} />
       </CustomModal>
 
         <Loading loading={loading} />

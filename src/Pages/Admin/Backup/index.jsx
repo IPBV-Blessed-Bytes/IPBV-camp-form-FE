@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import { exportBackup, emailBackup, getBackupConfig, saveBackupConfig, restoreBackup } from '@/services/backup';
@@ -14,6 +15,7 @@ import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const AdminBackup = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [downloading, setDownloading] = useState(false);
   const [emailing, setEmailing] = useState(false);
   const [config, setConfig] = useState({ backupEmail: '', backupFrequency: 'off', lastBackupAt: null });
@@ -34,16 +36,16 @@ const AdminBackup = ({ loggedUsername }) => {
     setSavingConfig(true);
     try {
       if (config.backupFrequency !== 'off' && !config.backupEmail.trim()) {
-        toast.error('Informe um e-mail de destino para o agendamento.');
+        toast.error(t('admin.backup.scheduleEmailRequired'));
         setSavingConfig(false);
         return;
       }
       const data = await saveBackupConfig({ backupEmail: config.backupEmail.trim(), backupFrequency: config.backupFrequency });
       setConfig((prev) => ({ ...prev, ...data }));
-      toast.success('Agendamento de backup salvo.');
+      toast.success(t('admin.backup.scheduleSaved'));
       registerLog('Atualizou o agendamento de backup do evento', loggedUsername);
     } catch {
-      toast.error('Não foi possível salvar o agendamento.');
+      toast.error(t('admin.backup.scheduleSaveError'));
     } finally {
       setSavingConfig(false);
     }
@@ -62,10 +64,10 @@ const AdminBackup = ({ loggedUsername }) => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      toast.success('Backup baixado com sucesso.');
+      toast.success(t('admin.backup.downloadSuccess'));
       registerLog('Baixou o backup completo do evento', loggedUsername);
     } catch {
-      toast.error('Não foi possível gerar o backup.');
+      toast.error(t('admin.backup.downloadError'));
     } finally {
       setDownloading(false);
     }
@@ -76,13 +78,13 @@ const AdminBackup = ({ loggedUsername }) => {
     try {
       const res = await emailBackup();
       if (res?.status === 'success') {
-        toast.success(`Backup enviado para ${res.sentTo || 'seu e-mail'}.`);
+        toast.success(t('admin.backup.emailSuccess', { target: res.sentTo || t('admin.backup.emailTargetFallback') }));
         registerLog('Enviou o backup do evento por e-mail', loggedUsername);
       } else {
-        toast.error('O e-mail de backup não pôde ser enviado.');
+        toast.error(t('admin.backup.emailNotSent'));
       }
     } catch {
-      toast.error('Não foi possível enviar o backup por e-mail.');
+      toast.error(t('admin.backup.emailError'));
     } finally {
       setEmailing(false);
     }
@@ -96,12 +98,12 @@ const AdminBackup = ({ loggedUsername }) => {
       try {
         const parsed = JSON.parse(reader.result);
         if (!parsed?.tables) {
-          toast.error('Arquivo de backup inválido.');
+          toast.error(t('admin.backup.invalidFile'));
           return;
         }
         setRestore((prev) => ({ ...prev, snapshot: parsed, fileName: file.name }));
       } catch {
-        toast.error('Não foi possível ler o arquivo (JSON inválido).');
+        toast.error(t('admin.backup.readError'));
       }
     };
     reader.readAsText(file);
@@ -109,11 +111,11 @@ const AdminBackup = ({ loggedUsername }) => {
 
   const handleRestore = async () => {
     if (!restore.snapshot) {
-      toast.error('Selecione um arquivo de backup.');
+      toast.error(t('admin.backup.selectFile'));
       return;
     }
     if (!restore.newSlug.trim()) {
-      toast.error('Informe o slug do novo evento.');
+      toast.error(t('admin.backup.slugRequired'));
       return;
     }
     setRestoring(true);
@@ -123,11 +125,11 @@ const AdminBackup = ({ loggedUsername }) => {
         newName: restore.newName.trim(),
         snapshot: restore.snapshot,
       });
-      toast.success(`Evento restaurado em "${res.slug}" (${res.restoredRows} registros).`);
+      toast.success(t('admin.backup.restoreSuccess', { slug: res.slug, rows: res.restoredRows }));
       registerLog(`Restaurou um backup no evento ${res.slug}`, loggedUsername);
       setRestore({ snapshot: null, fileName: '', newSlug: '', newName: '' });
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Não foi possível restaurar o backup.');
+      toast.error(err?.response?.data?.message || t('admin.backup.restoreError'));
     } finally {
       setRestoring(false);
     }
@@ -137,16 +139,15 @@ const AdminBackup = ({ loggedUsername }) => {
     <div className="admin-subpage backup-page">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Backup"
-        subtitle="Exporte uma cópia completa e restaurável deste evento"
+        title={t('admin.backup.title')}
+        subtitle={t('admin.backup.subtitle')}
         typeIcon="excel"
       />
 
       <div className="admin-subpage__content backup-page__content">
-        <FormSection title="O que o backup inclui">
+        <FormSection title={t('admin.backup.includesTitle')}>
           <p className="text-secondary mb-0">
-            Um arquivo JSON com a configuração do evento, o formulário (seções e campos), produtos, lotes e preços,
-            inscrições e pagamentos, além de quartos e caronas. Contém apenas os dados <b>deste evento</b>.
+            <Trans i18nKey="admin.backup.includesText" components={{ b: <b /> }} />
           </p>
         </FormSection>
 
@@ -156,9 +157,9 @@ const AdminBackup = ({ loggedUsername }) => {
               <span className="backup-action__icon">
                 <Icons typeIcon="excel" iconSize={30} fill="#007185" />
               </span>
-              <Card.Title>Baixar backup</Card.Title>
-              <Card.Text className="text-secondary">Gera e baixa o arquivo JSON agora, no seu dispositivo.</Card.Text>
-              <SpinnerButton variant="teal-blue" onClick={handleDownload} loading={downloading}>Baixar backup (JSON)</SpinnerButton>
+              <Card.Title>{t('admin.backup.downloadCardTitle')}</Card.Title>
+              <Card.Text className="text-secondary">{t('admin.backup.downloadCardText')}</Card.Text>
+              <SpinnerButton variant="teal-blue" onClick={handleDownload} loading={downloading}>{t('admin.backup.downloadBtn')}</SpinnerButton>
             </Card.Body>
           </Card>
 
@@ -167,80 +168,79 @@ const AdminBackup = ({ loggedUsername }) => {
               <span className="backup-action__icon">
                 <Icons typeIcon="message" iconSize={30} fill="#007185" />
               </span>
-              <Card.Title>Enviar por e-mail</Card.Title>
-              <Card.Text className="text-secondary">Envia o backup em anexo para o seu e-mail de administrador.</Card.Text>
-              <SpinnerButton variant="outline-teal-blue" onClick={handleEmail} loading={emailing}>Enviar para meu e-mail</SpinnerButton>
+              <Card.Title>{t('admin.backup.emailCardTitle')}</Card.Title>
+              <Card.Text className="text-secondary">{t('admin.backup.emailCardText')}</Card.Text>
+              <SpinnerButton variant="outline-teal-blue" onClick={handleEmail} loading={emailing}>{t('admin.backup.emailBtn')}</SpinnerButton>
             </Card.Body>
           </Card>
         </div>
 
-        <FormSection title="Backup automático">
+        <FormSection title={t('admin.backup.autoTitle')}>
             <p className="text-secondary">
-              Envie o backup deste evento por e-mail automaticamente, na frequência escolhida.
+              {t('admin.backup.autoText')}
             </p>
             <Form.Group className="mb-3">
-              <Form.Label>Frequência</Form.Label>
+              <Form.Label>{t('admin.backup.frequency')}</Form.Label>
               <Form.Select
                 value={config.backupFrequency}
                 onChange={(e) => setConfig((prev) => ({ ...prev, backupFrequency: e.target.value }))}
                 style={{ maxWidth: 280 }}
               >
-                <option value="off">Desligado</option>
-                <option value="daily">Diário</option>
-                <option value="weekly">Semanal</option>
+                <option value="off">{t('admin.backup.freqOff')}</option>
+                <option value="daily">{t('admin.backup.freqDaily')}</option>
+                <option value="weekly">{t('admin.backup.freqWeekly')}</option>
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>E-mail de destino</Form.Label>
+              <Form.Label>{t('admin.backup.destinationEmail')}</Form.Label>
               <Form.Control
                 type="email"
                 value={config.backupEmail}
                 onChange={(e) => setConfig((prev) => ({ ...prev, backupEmail: e.target.value }))}
-                placeholder="backup@suaigreja.com"
+                placeholder={t('admin.backup.emailPlaceholder')}
                 disabled={config.backupFrequency === 'off'}
                 style={{ maxWidth: 420 }}
               />
             </Form.Group>
             {config.lastBackupAt && (
               <p className="text-secondary small mb-3">
-                Último backup automático: {String(config.lastBackupAt).slice(0, 16).replace('T', ' ')}
+                {t('admin.backup.lastAutoBackup', { date: String(config.lastBackupAt).slice(0, 16).replace('T', ' ') })}
               </p>
             )}
-            <SpinnerButton variant="teal-blue" onClick={handleSaveConfig} loading={savingConfig}>Salvar agendamento</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={handleSaveConfig} loading={savingConfig}>{t('admin.backup.saveSchedule')}</SpinnerButton>
         </FormSection>
 
-        <FormSection title="Restaurar backup">
+        <FormSection title={t('admin.backup.restoreTitle')}>
             <p className="text-secondary">
-              Cria um <b>novo evento</b> a partir de um arquivo de backup (configuração, formulário, produtos, lotes,
-              inscrições e quartos). Não altera eventos existentes.
+              <Trans i18nKey="admin.backup.restoreText" components={{ b: <b /> }} />
             </p>
             <Form.Group className="mb-3">
-              <Form.Label>Arquivo de backup (.json)</Form.Label>
+              <Form.Label>{t('admin.backup.fileLabel')}</Form.Label>
               <Form.Control type="file" accept="application/json,.json" onChange={handleFile} />
-              {restore.fileName && <Form.Text className="text-success">Selecionado: {restore.fileName}</Form.Text>}
+              {restore.fileName && <Form.Text className="text-success">{t('admin.backup.selectedFile', { name: restore.fileName })}</Form.Text>}
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Slug do novo evento</Form.Label>
+              <Form.Label>{t('admin.backup.newSlugLabel')}</Form.Label>
               <Form.Control
                 type="text"
                 value={restore.newSlug}
                 onChange={(e) => setRestore((prev) => ({ ...prev, newSlug: e.target.value }))}
-                placeholder="acampamento-2027"
+                placeholder={t('admin.backup.slugPlaceholder')}
                 style={{ maxWidth: 420 }}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Nome do novo evento (opcional)</Form.Label>
+              <Form.Label>{t('admin.backup.newNameLabel')}</Form.Label>
               <Form.Control
                 type="text"
                 value={restore.newName}
                 onChange={(e) => setRestore((prev) => ({ ...prev, newName: e.target.value }))}
-                placeholder="Acampamento 2027"
+                placeholder={t('admin.backup.namePlaceholder')}
                 style={{ maxWidth: 420 }}
               />
             </Form.Group>
             <Button variant="teal-blue" onClick={handleRestore} disabled={restoring || !restore.snapshot}>
-              {restoring ? 'Restaurando...' : 'Restaurar como novo evento'}
+              {restoring ? t('admin.backup.restoring') : t('admin.backup.restoreBtn')}
             </Button>
         </FormSection>
       </div>

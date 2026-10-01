@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { InputMask, format as formatMask } from '@react-input/mask';
 import Icons from '@/components/Global/Icons';
 import MaskedDateInput from '@/components/Global/MaskedDateInput';
@@ -28,6 +29,7 @@ const ColumnFields = ({
   errorMessage,
   required,
 }) => {
+  const { t } = useTranslation();
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
@@ -72,7 +74,7 @@ const ColumnFields = ({
             } admin-field${oddOrEven === 'odd' ? '--odd' : '--even'}`}
           >
             <option value="" disabled>
-              {addForm ? placeholder : 'Selecione uma opção'}
+              {addForm ? placeholder : t('admin.participantsTable.selectOption')}
             </option>
             {options.map((option, index) => (
               <option key={index} value={option.value}>

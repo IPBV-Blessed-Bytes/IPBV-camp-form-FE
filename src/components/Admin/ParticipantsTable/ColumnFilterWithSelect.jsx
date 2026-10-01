@@ -1,9 +1,11 @@
 import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
 import '../../Style/ColumnFilter.scss';
 
 const ColumnFilterWithSelect = ({ column, options }) => {
+  const { t } = useTranslation();
   const filterValue = column?.filterValue || '';
   const setFilter = column?.setFilter || (() => {});
 
@@ -20,7 +22,7 @@ const ColumnFilterWithSelect = ({ column, options }) => {
         onChange={handleChange}
         size="lg"
       >
-        <option value="all">Todos</option>
+        <option value="all">{t('admin.participantsTable.filterAll')}</option>
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -21,6 +22,7 @@ const Login = ({
 }) => {
   const isAdminPathname = window.location.pathname === '/admin' || window.location.pathname === '/dev';
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
   const navigateTo = useNavigate();
   const { login, loginWithGoogle, logout, user, isLoggedIn, loading } = useAuth();
   const [loginData, setLoginData] = useState({ login: '', password: '' });
@@ -62,7 +64,7 @@ const Login = ({
           {isLoggedIn && isPanelUser && (
             <AdminLoggedIn
               availablePackages={availablePackages}
-              loggedInUsername={user || 'Usuário não identificado'}
+              loggedInUsername={user || t('admin.shell.unknownUser')}
               logout={logout}
               sendLoggedMessage={sendLoggedMessage}
               setSendLoggedMessage={setSendLoggedMessage}

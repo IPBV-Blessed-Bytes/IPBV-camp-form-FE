@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -21,14 +22,15 @@ const AdminSeatManagement = ({
   totalPackages,
   totalSeats,
 }) => {
+  const { t } = useTranslation();
   const [loadingContent, setLoadingContent] = useState(false);
 
   const packageLabels = {
-    schoolIndividual: 'Colégio Individual',
-    schoolFamily: 'Colégio Família',
-    schoolCamping: 'Colégio Camping',
-    seminary: 'Seminário',
-    other: 'Outra Hospedagem Externa',
+    schoolIndividual: t('admin.seats.pkgSchoolIndividual'),
+    schoolFamily: t('admin.seats.pkgSchoolFamily'),
+    schoolCamping: t('admin.seats.pkgSchoolCamping'),
+    seminary: t('admin.seats.pkgSeminary'),
+    other: t('admin.seats.pkgOther'),
   };
 
   const packageOrder = ['schoolIndividual', 'schoolFamily', 'schoolCamping', 'seminary', 'other'];
@@ -39,9 +41,7 @@ const AdminSeatManagement = ({
     const currentTotalPackages = Object.values(totalPackages).reduce((acc, curr) => acc + curr, 0);
 
     if (totalSeats < currentTotalPackages) {
-      toast.error(
-        `A quantidade de vagas totais não pode ser inferior à soma das vagas por pacotes que é de ${currentTotalPackages}!`,
-      );
+      toast.error(t('admin.seats.seatsBelowSum', { sum: currentTotalPackages }));
       return;
     }
 
@@ -49,7 +49,7 @@ const AdminSeatManagement = ({
       setLoadingContent(true);
 
       await updatePackageCount({ totalSeats, totalPackages });
-      toast.success(`Quantidade de vagas totais e por pacote ajustadas com sucesso`);
+      toast.success(t('admin.seats.seatsUpdated'));
       registerLog(`Ajustou a quantidade de vagas totais e por pacote`, loggedUsername);
     } catch (error) {
       console.error(error);
@@ -61,7 +61,7 @@ const AdminSeatManagement = ({
 
   const updateBusVacancies = async () => {
     if (totalBusVacancies < 0) {
-      toast.error(`A quantidade de vagas de ônibus não pode ser menor que 0!`);
+      toast.error(t('admin.seats.busNegative'));
       return;
     }
 
@@ -69,7 +69,7 @@ const AdminSeatManagement = ({
       setLoadingContent(true);
 
       await updateTotalBusVacancies({ totalBusVacancies });
-      toast.success(`Quantidade de vagas totais do ônibus ajustadas com sucesso`);
+      toast.success(t('admin.seats.busUpdated'));
       registerLog(`Ajustou a quantidade de vagas totais do ônibus para ${totalBusVacancies}`, loggedUsername);
     } catch (error) {
       console.error(error);
@@ -90,22 +90,22 @@ const AdminSeatManagement = ({
   const undistributedSeats = Number(totalSeats || 0) - sumPackages;
 
   const seatStats = [
-    { label: 'Vagas totais', value: Number(totalSeats || 0) },
-    { label: 'Distribuídas em pacotes', value: sumPackages, tone: 'info' },
+    { label: t('admin.seats.statTotal'), value: Number(totalSeats || 0) },
+    { label: t('admin.seats.statDistributed'), value: sumPackages, tone: 'info' },
     {
-      label: 'Não distribuídas',
+      label: t('admin.seats.statUndistributed'),
       value: undistributedSeats,
       tone: undistributedSeats < 0 ? 'danger' : 'free',
     },
-    { label: 'Vagas no ônibus', value: Number(totalBusVacancies || 0), tone: 'accent' },
+    { label: t('admin.seats.statBus'), value: Number(totalBusVacancies || 0), tone: 'accent' },
   ];
 
   return (
     <div className="admin-subpage admin-subpage--seats">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Vagas"
-        subtitle="Vagas totais, por pacote e de ônibus"
+        title={t('admin.seats.title')}
+        subtitle={t('admin.seats.subtitle')}
         typeIcon="camp"
       />
 
@@ -114,9 +114,9 @@ const AdminSeatManagement = ({
 
         <Row className="g-4">
           <Col xs={12} lg={7}>
-            <FormSection title="Vagas e pacotes">
+            <FormSection title={t('admin.seats.sectionSeats')}>
               <Form.Group controlId="inputSeats" className="seat-total-field">
-                <Form.Label>Vagas Totais Inscritos:</Form.Label>
+                <Form.Label>{t('admin.seats.totalSeatsLabel')}</Form.Label>
                 <Form.Control
                   type="number"
                   min="1"
@@ -141,16 +141,16 @@ const AdminSeatManagement = ({
 
               <div className="d-flex mt-3 justify-content-end">
                 <Button variant="teal-blue" onClick={updateSeats}>
-                  Ajustar Vagas Pacotes
+                  {t('admin.seats.adjustSeats')}
                 </Button>
               </div>
             </FormSection>
           </Col>
 
           <Col xs={12} lg={5}>
-            <FormSection title="Vagas de ônibus">
+            <FormSection title={t('admin.seats.sectionBus')}>
               <Form.Group controlId="inputBus">
-                <Form.Label>Vagas Totais no Ônibus:</Form.Label>
+                <Form.Label>{t('admin.seats.totalBusLabel')}</Form.Label>
                 <Form.Control
                   type="number"
                   min="1"
@@ -161,7 +161,7 @@ const AdminSeatManagement = ({
 
               <div className="d-flex mt-3 justify-content-end">
                 <Button variant="teal-blue" onClick={updateBusVacancies}>
-                  Ajustar Vagas Ônibus
+                  {t('admin.seats.adjustBus')}
                 </Button>
               </div>
             </FormSection>

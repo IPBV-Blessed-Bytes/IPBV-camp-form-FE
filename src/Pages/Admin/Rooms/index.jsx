@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Table, Accordion, Button, Form, Badge } from 'react-bootstrap';
+import { useTranslation, Trans } from 'react-i18next';
 import { useTable, useSortBy } from 'react-table';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -28,6 +29,7 @@ import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 
 const AdminRooms = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [dropdownCampers, setDropdownCampers] = useState([]);
   const { rooms, refetch: refetchRooms } = useRoomsList();
   const [roomSortOrder, setRoomSortOrder] = useState('asc');
@@ -54,7 +56,7 @@ const AdminRooms = ({ loggedUsername }) => {
       const data = await listAggregates();
       setDropdownCampers(data);
     } catch (error) {
-      toast.error('Erro ao carregar usuários');
+      toast.error(t('admin.rooms.toast.loadUsersError'));
       console.error('Erro ao buscar usuários:', error);
     } finally {
       if (!silent) setLoading(false);
@@ -73,7 +75,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const createRoom = async () => {
     if (newRoomName.trim() === '') {
-      toast.error('Insira um nome para o quarto');
+      toast.error(t('admin.rooms.toast.roomNameRequired'));
       return;
     }
 
@@ -85,12 +87,12 @@ const AdminRooms = ({ loggedUsername }) => {
 
       if (data === 'Quarto criado com sucesso.') {
         refetchRooms();
-        toast.success('Quarto criado com sucesso');
+        toast.success(t('admin.rooms.toast.roomCreated'));
         registerLog(`Criou o quarto com nome ${newRoomName}`, loggedUsername);
         handleCloseModal();
       }
     } catch (error) {
-      toast.error('Erro ao criar quarto');
+      toast.error(t('admin.rooms.toast.roomCreateError'));
       console.error('Erro ao criar quarto:', error);
     } finally {
       setSaving(false);
@@ -119,7 +121,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const handleShowDeleteCamperFromRoomModal = (camper) => {
     if (!camper || !camper.id) {
-      toast.error('Erro: Inscrito não encontrado.');
+      toast.error(t('admin.rooms.toast.camperNotFound'));
       return;
     }
     setCamperToDelete(camper);
@@ -146,12 +148,12 @@ const AdminRooms = ({ loggedUsername }) => {
         if (data === 'Quarto removido com sucesso.') {
           refetchRooms();
           fetchUsers(true);
-          toast.success('Quarto excluido com sucesso');
+          toast.success(t('admin.rooms.toast.roomDeleted'));
           registerLog(`Excluiu o quarto com nome ${roomToDelete.name}`, loggedUsername);
           handleCloseDeleteModal();
         }
       } catch (error) {
-        toast.error('Erro ao excluir quarto');
+        toast.error(t('admin.rooms.toast.roomDeleteError'));
         console.error('Erro ao excluir quarto:', error);
       } finally {
         setSaving(false);
@@ -177,12 +179,12 @@ const AdminRooms = ({ loggedUsername }) => {
 
         if (data === 'Nome do quarto atualizado com sucesso.') {
           refetchRooms();
-          toast.success('Quarto renomeado com sucesso');
+          toast.success(t('admin.rooms.toast.roomRenamed'));
           registerLog(`Renomeou o quarto com nome ${roomToRename.name}`, loggedUsername);
           handleCloseEditModal();
         }
       } catch (error) {
-        toast.error('Erro ao renomear quarto');
+        toast.error(t('admin.rooms.toast.roomRenameError'));
         console.error('Erro ao renomear quarto:', error);
       } finally {
         setSaving(false);
@@ -215,17 +217,17 @@ const AdminRooms = ({ loggedUsername }) => {
         if (data === 'Quarto atualizado com sucesso.') {
           refetchRooms();
           fetchUsers();
-          toast.success('Inscrito adicionado ao quarto');
+          toast.success(t('admin.rooms.toast.camperAdded'));
           registerLog(`Adicionou usuário ${camper.personalInformation.name} ao quarto ${roomName}`, loggedUsername);
         }
       } catch (error) {
-        toast.error('Erro ao adicionar pessoa ao quarto');
+        toast.error(t('admin.rooms.toast.camperAddError'));
         console.error('Erro ao adicionar pessoa ao quarto:', error);
       } finally {
         setLoading(false);
       }
     } else {
-      toast.error('Quarto não encontrado');
+      toast.error(t('admin.rooms.toast.roomNotFound'));
       console.error('Room not found:', roomId);
     }
   };
@@ -239,19 +241,19 @@ const AdminRooms = ({ loggedUsername }) => {
       });
 
       if (!camper) {
-        toast.error('Usuário não encontrado na base de dados');
+        toast.error(t('admin.rooms.toast.camperNotInDb'));
         return;
       }
 
       addCamperToRoom(roomId, camper, roomName);
     } else {
-      toast.warn(`Selecione um usuário antes de adicionar ao quarto`);
+      toast.warn(t('admin.rooms.toast.selectCamperFirst'));
     }
   };
 
   const deleteCamperFromRoom = async (camperToDelete) => {
     if (!camperToDelete) {
-      toast.error('Erro: Nenhum inscrito selecionado.');
+      toast.error(t('admin.rooms.toast.noCamperSelected'));
       return;
     }
     setSaving(true);
@@ -260,13 +262,13 @@ const AdminRooms = ({ loggedUsername }) => {
       const data = await removeCamperFromRoom(camperToDelete.id);
 
       if (data === 'Acampante removido do quarto com sucesso.') {
-        toast.success('Inscrito removido do quarto com sucesso');
+        toast.success(t('admin.rooms.toast.camperRemoved'));
         refetchRooms();
         fetchUsers(true);
         handleCloseDeleteCamperFromRoomModal();
       }
     } catch (error) {
-      toast.error('Erro ao apagar inscrito do quarto');
+      toast.error(t('admin.rooms.toast.camperRemoveError'));
       console.error('Erro ao apagar acampante do quarto:', error);
     } finally {
       setSaving(false);
@@ -275,14 +277,14 @@ const AdminRooms = ({ loggedUsername }) => {
 
   const columns = useMemo(
     () => [
-      { Header: 'Usuário:', accessor: 'personalInformation.name' },
+      { Header: t('admin.rooms.columns.user'), accessor: 'personalInformation.name' },
       {
-        Header: 'Agregados:',
+        Header: t('admin.rooms.columns.aggregates'),
         accessor: 'contact.aggregate',
-        Cell: ({ value }) => (value ? value.split('|').join(', ') : 'Nenhum agregado'),
+        Cell: ({ value }) => (value ? value.split('|').join(', ') : t('admin.rooms.noAggregate')),
       },
     ],
-    [],
+    [t],
   );
 
   const handleRoomDragStart = (index) => (e) => {
@@ -314,7 +316,7 @@ const AdminRooms = ({ loggedUsername }) => {
       await reorderRooms(reordered.map((room) => room.id));
       refetchRooms();
     } catch (error) {
-      toast.error('Erro ao reordenar os quartos');
+      toast.error(t('admin.rooms.toast.reorderError'));
     }
   };
 
@@ -332,7 +334,7 @@ const AdminRooms = ({ loggedUsername }) => {
       await reorderRooms(orderedIds);
       refetchRooms();
     } catch (error) {
-      toast.error('Erro ao ordenar os quartos');
+      toast.error(t('admin.rooms.toast.sortError'));
     }
   };
 
@@ -374,19 +376,19 @@ const AdminRooms = ({ loggedUsername }) => {
     const average = totalRooms > 0 ? (totalCampers / totalRooms).toFixed(1) : '0';
 
     return [
-      { label: 'Quartos', value: totalRooms },
-      { label: 'Inscritos alocados', value: totalCampers, tone: 'accent' },
-      { label: 'Quartos vazios', value: emptyRooms, tone: emptyRooms > 0 ? 'danger' : 'free' },
-      { label: 'Média por quarto', value: average, tone: 'info' },
+      { label: t('admin.rooms.stats.rooms'), value: totalRooms },
+      { label: t('admin.rooms.stats.allocated'), value: totalCampers, tone: 'accent' },
+      { label: t('admin.rooms.stats.emptyRooms'), value: emptyRooms, tone: emptyRooms > 0 ? 'danger' : 'free' },
+      { label: t('admin.rooms.stats.avgPerRoom'), value: average, tone: 'info' },
     ];
-  }, [rooms]);
+  }, [rooms, t]);
 
   const toolsButtons = [
     {
       fill: '#007185',
       iconSize: 22,
       id: 'aggregate-excel',
-      name: 'Baixar Relatório Agregados',
+      name: t('admin.rooms.toolbar.downloadAggregateReport'),
       onClick: generateAggregateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -395,7 +397,7 @@ const AdminRooms = ({ loggedUsername }) => {
       fill: '#fff',
       iconSize: 22,
       id: 'room-excel',
-      name: 'Baixar Relatório Quartos',
+      name: t('admin.rooms.toolbar.downloadRoomReport'),
       onClick: generateRoomExcel,
       typeButton: 'teal-blue',
       typeIcon: 'excel',
@@ -407,8 +409,8 @@ const AdminRooms = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="quartos"
         username={loggedUsername}
-        title="Quartos"
-        subtitle="Distribuição de inscritos por quarto"
+        title={t('admin.rooms.title')}
+        subtitle={t('admin.rooms.subtitle')}
         typeIcon="rooms"
       />
 
@@ -419,7 +421,7 @@ const AdminRooms = ({ loggedUsername }) => {
 
         <Accordion className="mb-3">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Lista de Agregados</Accordion.Header>
+          <Accordion.Header>{t('admin.rooms.aggregatesList')}</Accordion.Header>
           <Accordion.Body>
             <Table striped bordered hover responsive className="custom-table mt-3" {...getTableProps()}>
               <thead>
@@ -450,7 +452,7 @@ const AdminRooms = ({ loggedUsername }) => {
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan="2" className="text-start text-secondary p-4">
-                      Nenhum usuário com agregados encontrado
+                      {t('admin.rooms.noUsersWithAggregates')}
                     </td>
                   </tr>
                 ) : (
@@ -480,14 +482,14 @@ const AdminRooms = ({ loggedUsername }) => {
       <div className="d-flex justify-content-end">
         <Button variant="teal-blue" onClick={handleOpenModal} className="mb-3 d-flex align-items-center" size="lg">
           <Icons typeIcon="plus" iconSize={20} fill="#fff" />
-          &nbsp;Adicionar Novo Quarto
+          &nbsp;{t('admin.rooms.addNewRoom')}
         </Button>
       </div>
 
       <div className="d-flex justify-content-end mb-3">
         <Button variant="outline-teal-blue" onClick={persistAlphabeticalOrder}>
           <Icons typeIcon="sort" iconSize={18} fill="#007185" />
-          &nbsp; Ordenar quartos ({roomSortOrder === 'asc' ? 'A ⭢ Z' : 'Z ⭢ A'})
+          &nbsp; {t('admin.rooms.sortRooms', { order: roomSortOrder === 'asc' ? 'A ⭢ Z' : 'Z ⭢ A' })}
         </Button>
       </div>
 
@@ -510,7 +512,7 @@ const AdminRooms = ({ loggedUsername }) => {
               <span
                 className="rooms-reorder"
                 draggable
-                title="Arraste para reordenar"
+                title={t('admin.rooms.dragToReorder')}
                 style={{ cursor: 'grab' }}
                 onClick={(e) => e.stopPropagation()}
                 onDragStart={handleRoomDragStart(index)}
@@ -527,16 +529,16 @@ const AdminRooms = ({ loggedUsername }) => {
                 <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                   <div className="d-flex align-items-center">
                     <Badge bg="teal-blue" className="px-3 py-2">
-                      {room.campers?.length || 0} membro{room.campers?.length === 1 ? '' : 's'}
+                      {t('admin.rooms.members', { count: room.campers?.length || 0 })}
                     </Badge>
                   </div>
 
                   <div className="table-action-cell">
                     <ActionButton action="edit" iconSize={18} onClick={() => handleShowEditModal(room)}>
-                      Renomear
+                      {t('admin.rooms.rename')}
                     </ActionButton>
                     <ActionButton action="delete" iconSize={18} onClick={() => handleShowDeleteModal(room)}>
-                      Excluir
+                      {t('admin.rooms.delete')}
                     </ActionButton>
                   </div>
                 </div>
@@ -546,14 +548,14 @@ const AdminRooms = ({ loggedUsername }) => {
                   defaultValue=""
                   onChange={(e) => setSelectedCamper((prev) => ({ ...prev, [room.id]: e.target.value }))}
                 >
-                  <option value="">Selecione um inscrito</option>
+                  <option value="">{t('admin.rooms.selectCamper')}</option>
                   {sortedDropdownCampers
                     .filter((camper) => !Object.values(selectedCamper).includes(camper.id))
                     .map((camper) => (
                       <option key={camper.id} value={camper.id}>
                         {camper.personalInformation.name}
                         {camper.contact?.hasAggregate && camper.contact?.aggregate
-                          ? ` | 🧑‍🤝‍🧑 Acompanhantes: ${camper.contact.aggregate}`
+                          ? t('admin.rooms.companionsSuffix', { aggregate: camper.contact.aggregate })
                           : ''}
                       </option>
                     ))}
@@ -566,7 +568,7 @@ const AdminRooms = ({ loggedUsername }) => {
                     onClick={() => handleAddCamperToRoom(room.id, room.name)}
                   >
                     <Icons typeIcon="add-person" iconSize={18} fill="#007185" />
-                    &nbsp;Adicionar ao Quarto
+                    &nbsp;{t('admin.rooms.addToRoom')}
                   </Button>
                 </div>
               </div>
@@ -584,7 +586,7 @@ const AdminRooms = ({ loggedUsername }) => {
                           <ActionButton
                             action="delete"
                             iconSize={16}
-                            label="Remover do quarto"
+                            label={t('admin.rooms.removeFromRoom')}
                             onClick={() => handleShowDeleteCamperFromRoomModal(camper)}
                           />
                         </div>
@@ -603,28 +605,28 @@ const AdminRooms = ({ loggedUsername }) => {
         onHide={handleCloseModal}
         variant="confirm"
         icon="plus"
-        title="Adicionar Novo Quarto"
+        title={t('admin.rooms.modalAddTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={handleCloseModal}>
-              Cancelar
+              {t('admin.rooms.cancel')}
             </Button>
             <SpinnerButton variant="primary" className="btn-confirm" onClick={createRoom} loading={saving}>
-              Criar Quarto
+              {t('admin.rooms.createRoom')}
             </SpinnerButton>
           </>
         }
       >
         <Form.Group controlId="newRoomName">
           <Form.Label>
-            <b>Nome do Quarto:</b>
+            <b>{t('admin.rooms.roomNameLabel')}</b>
           </Form.Label>
           <Form.Control
             type="text"
             value={newRoomName}
             onChange={(e) => setNewRoomName(e.target.value)}
-            placeholder="Nome do novo quarto"
+            placeholder={t('admin.rooms.roomNamePlaceholder')}
             size="lg"
           />
         </Form.Group>
@@ -634,20 +636,20 @@ const AdminRooms = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={handleCloseDeleteModal}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.rooms.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={handleCloseDeleteModal}>
-              Cancelar
+              {t('admin.rooms.cancel')}
             </Button>
             <SpinnerButton variant="danger" className="btn-cancel" onClick={confirmDeleteRoom} loading={saving}>
-              Excluir
+              {t('admin.rooms.delete')}
             </SpinnerButton>
           </>
         }
       >
-        Tem certeza que deseja excluir <b>{roomToDelete?.name}</b>?
+        <Trans i18nKey="admin.rooms.deleteRoomConfirm" components={{ b: <b /> }} values={{ name: roomToDelete?.name }} />
       </CustomModal>
 
       {roomToRename && (
@@ -656,22 +658,22 @@ const AdminRooms = ({ loggedUsername }) => {
           onHide={handleCloseEditModal}
           variant="confirm"
           icon="refresh"
-          title="Renomear Quarto"
+          title={t('admin.rooms.renameRoomTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={handleCloseEditModal}>
-                Cancelar
+                {t('admin.rooms.cancel')}
               </Button>
               <SpinnerButton variant="success" className="btn-confirm" onClick={renameRoom} loading={saving}>
-                Salvar
+                {t('admin.rooms.save')}
               </SpinnerButton>
             </>
           }
         >
           <Form.Group controlId="renameRoom">
             <Form.Label>
-              <b>Novo Nome do Quarto:</b>
+              <b>{t('admin.rooms.newRoomNameLabel')}</b>
             </Form.Label>
             <Form.Control
               type="text"
@@ -687,12 +689,12 @@ const AdminRooms = ({ loggedUsername }) => {
         show={showDeleteCamperFromRoomModal}
         onHide={handleCloseDeleteCamperFromRoomModal}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.rooms.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={handleCloseDeleteCamperFromRoomModal}>
-              Cancelar
+              {t('admin.rooms.cancel')}
             </Button>
             <SpinnerButton
               variant="danger"
@@ -700,12 +702,16 @@ const AdminRooms = ({ loggedUsername }) => {
               onClick={() => deleteCamperFromRoom(camperToDelete)}
               loading={saving}
             >
-              Excluir
+              {t('admin.rooms.delete')}
             </SpinnerButton>
           </>
         }
       >
-        Tem certeza que deseja excluir <b>{camperToDelete?.name}</b> do quarto?
+        <Trans
+          i18nKey="admin.rooms.deleteCamperConfirm"
+          components={{ b: <b /> }}
+          values={{ name: camperToDelete?.name }}
+        />
       </CustomModal>
 
         <Loading loading={loading} />

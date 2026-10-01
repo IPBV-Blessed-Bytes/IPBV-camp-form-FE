@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Accordion } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -15,6 +16,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 import CustomModal from '@/components/Global/CustomModal';
 
 const AdminUserLogs = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -41,7 +43,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
 
   const groupByUser = (logs) => {
     return logs.reduce((acc, log) => {
-      const username = log.user?.split('@')[0] || 'Desconhecido';
+      const username = log.user?.split('@')[0] || t('admin.logs.unknownUser');
       if (!acc[username]) {
         acc[username] = [];
       }
@@ -56,13 +58,13 @@ const AdminUserLogs = ({ loggedUsername }) => {
     try {
       await deleteAllLogs();
 
-      toast.success('Todos os logs foram deletados com sucesso');
+      toast.success(t('admin.logs.deleteSuccess'));
       registerLog(`Deletou todos os logs`, loggedUsername);
       setShowDeleteModal(false);
       setLogs([]);
     } catch (error) {
       console.error('Error adding data:', error);
-      toast.error('Erro ao deletar logs');
+      toast.error(t('admin.logs.deleteError'));
     } finally {
       setLoading(false);
     }
@@ -71,24 +73,24 @@ const AdminUserLogs = ({ loggedUsername }) => {
   const generateExcel = () => {
     const allGrouped = groupByUser(logs);
     if (Object.keys(allGrouped).length === 0) {
-      toast.error('Nenhum log disponível para exportar');
+      toast.error(t('admin.logs.noLogsToExport'));
       return;
     }
 
     const sheets = Object.entries(allGrouped).map(([username, userLogs]) => ({
       name: username,
       rows: userLogs.map((log, index) => ({
-        Nº: index + 1,
-        Usuário: username,
-        Ação: log.action,
-        Data: new Date(log.timestamp).toLocaleString('pt-BR', {
+        [t('admin.logs.colNumber')]: index + 1,
+        [t('admin.logs.colUser')]: username,
+        [t('admin.logs.colAction')]: log.action,
+        [t('admin.logs.colDate')]: new Date(log.timestamp).toLocaleString('pt-BR', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
         }),
-        IP: log.ip,
+        [t('admin.logs.colIp')]: log.ip,
       })),
     }));
 
@@ -104,9 +106,9 @@ const AdminUserLogs = ({ loggedUsername }) => {
   );
   const groupedLogs = groupByUser(filteredLogs);
   const statItems = [
-    { label: 'Total de logs', value: logs.length },
-    { label: 'Usuários', value: Object.keys(groupByUser(logs)).length, tone: 'accent' },
-    { label: 'Resultados', value: filteredLogs.length, tone: 'info' },
+    { label: t('admin.logs.statTotal'), value: logs.length },
+    { label: t('admin.logs.statUsers'), value: Object.keys(groupByUser(logs)).length, tone: 'accent' },
+    { label: t('admin.logs.statResults'), value: filteredLogs.length, tone: 'info' },
   ];
 
   const toolsButtons = [
@@ -114,7 +116,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'export-logs',
-      name: 'Baixar Relatório',
+      name: t('admin.logs.exportBtn'),
       onClick: () => generateExcel(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -123,7 +125,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
       fill: '#dc3545',
       iconSize: 22,
       id: 'delete-all-logs',
-      name: 'Deletar Todos Logs',
+      name: t('admin.logs.deleteAllBtn'),
       onClick: () => setShowDeleteModal(true),
       typeButton: 'outline-danger',
       typeIcon: 'danger',
@@ -134,8 +136,8 @@ const AdminUserLogs = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--logs">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Logs de Usuários"
-        subtitle="Histórico de ações por usuário"
+        title={t('admin.logs.title')}
+        subtitle={t('admin.logs.subtitle')}
         typeIcon="logs"
       />
 
@@ -145,10 +147,10 @@ const AdminUserLogs = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="logs-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por usuário ou ação..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.logs.searchPlaceholder')} />
         </div>
 
-        <SectionHeader title="Logs por usuário" count={Object.keys(groupedLogs).length} />
+        <SectionHeader title={t('admin.logs.sectionTitle')} count={Object.keys(groupedLogs).length} />
 
         <Accordion defaultActiveKey="0">
           {Object.entries(groupedLogs).map(([username, logs], index) => (
@@ -162,7 +164,7 @@ const AdminUserLogs = ({ loggedUsername }) => {
                         <em>{logIndex + 1}:&nbsp;</em>
                         {username}
                       </b>
-                      : {log.action} em{' '}
+                      : {log.action} {t('admin.logs.at')}{' '}
                       {new Date(log.timestamp).toLocaleString('pt-BR', {
                         day: '2-digit',
                         month: '2-digit',
@@ -183,23 +185,20 @@ const AdminUserLogs = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.logs.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
+              {t('admin.logs.cancel')}
             </Button>
             <Button variant="danger" className="btn-cancel" onClick={handleDeleteLogs}>
-              Deletar
+              {t('admin.logs.delete')}
             </Button>
           </>
         }
       >
-        Tem certeza que deseja excluir todos os Logs?{' '}
-        <em>
-          <b>Essa ação é irreversível!</b>
-        </em>
+        <Trans i18nKey="admin.logs.confirmDeleteText" components={{ em: <em />, b: <b /> }} />
       </CustomModal>
 
         <Loading loading={loading} />

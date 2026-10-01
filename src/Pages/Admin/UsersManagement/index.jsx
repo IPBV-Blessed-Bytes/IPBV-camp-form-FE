@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -40,6 +41,7 @@ const initialsOf = (name = '') =>
     .join('') || '?';
 
 const AdminUsersManagement = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [users, setUsers] = useState([]);
@@ -67,7 +69,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       });
       setUsers(sortedUsers);
     } catch (error) {
-      toast.error('Erro ao buscar usuários');
+      toast.error(t('admin.users.fetchError'));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -77,12 +79,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     const { password, role, email } = formData;
     if (!role || !email || (!editingUser && !password)) {
       toast.error(
-        editingUser ? 'Preencha papel e e-mail' : 'E-mail, senha e papel são obrigatórios',
+        editingUser ? t('admin.users.validateEditRequired') : t('admin.users.validateCreateRequired'),
       );
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error('Informe um e-mail válido');
+      toast.error(t('admin.users.invalidEmail'));
       return false;
     }
     return true;
@@ -98,7 +100,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     if (!editingUser) {
       const existingUser = users.find((user) => (user.email || '').toLowerCase() === formData.email.toLowerCase());
       if (existingUser) {
-        toast.error('Este e-mail já está em uso. Escolha outro');
+        toast.error(t('admin.users.emailInUse'));
         return;
       }
     }
@@ -108,11 +110,11 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     try {
       if (editingUser) {
         await updateUser(editingUser.id, formData);
-        toast.success('Usuário editado com sucesso');
+        toast.success(t('admin.users.editSuccess'));
         registerLog(`Editou usuário ${editingUser.displayName || editingUser.email}`, loggedUsername);
       } else {
         await createUser(formData);
-        toast.success('Usuário criado com sucesso');
+        toast.success(t('admin.users.createSuccess'));
         registerLog(`Criou usuário ${formData.displayName || formData.email}`, loggedUsername);
       }
       setFormData({ displayName: '', password: '', role: '', email: '' });
@@ -120,7 +122,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       setShowModal(false);
       await fetchUsers(true);
     } catch (error) {
-      toast.error('Erro ao salvar usuário');
+      toast.error(t('admin.users.saveError'));
     } finally {
       setSaving(false);
     }
@@ -130,13 +132,13 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteUser(userToDelete.id);
-      toast.success('Usuário deletado com sucesso');
+      toast.success(t('admin.users.deleteSuccess'));
       fetchUsers();
       registerLog(`Deletou usuário ${userToDelete.displayName || userToDelete.email}`, loggedUsername);
       setShowDeleteModal(false);
       await fetchUsers(true);
     } catch (error) {
-      toast.error(getApiErrorMessage(error) || 'Erro ao deletar usuário');
+      toast.error(getApiErrorMessage(error) || t('admin.users.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -181,11 +183,11 @@ const AdminUsersManagement = ({ loggedUsername }) => {
   }, {});
   const rolesPresent = [...new Set(users.map((u) => u.role))];
   const statItems = [
-    { label: 'Total de usuários', value: users.length },
+    { label: t('admin.users.statTotal'), value: users.length },
     ...rolesPresent.map((r) => ({ label: translateRole(r), value: byRole[r], tone: r === 'admin' ? 'danger' : 'default' })),
   ];
   const roleChips = [
-    { value: 'all', label: 'Todos', count: users.length },
+    { value: 'all', label: t('admin.users.chipAll'), count: users.length },
     ...rolesPresent.map((r) => ({ value: r, label: translateRole(r), count: byRole[r] })),
   ];
   const adminCount = users.filter((u) => u.role === 'admin').length;
@@ -203,7 +205,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-new-user',
-      name: 'Criar Novo Usuário',
+      name: t('admin.users.createBtn'),
       onClick: () => handleCreateClick(),
       typeButton: 'outline-teal-blue',
       typeIcon: 'add-person',
@@ -214,8 +216,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--users">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Usuários"
-        subtitle="Contas de acesso ao painel e suas permissões"
+        title={t('admin.users.title')}
+        subtitle={t('admin.users.subtitle')}
         typeIcon="add-person"
       />
 
@@ -225,27 +227,27 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="users-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome ou e-mail..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.users.searchPlaceholder')} />
           <FilterChips options={roleChips} value={roleFilter} onChange={setRoleFilter} />
         </div>
 
-        <SectionHeader title="Usuários" count={filteredUsers.length} />
+        <SectionHeader title={t('admin.users.sectionTitle')} count={filteredUsers.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Nome:</th>
-                <th className="table-cells-header">E-mail:</th>
-                <th className="table-cells-header">Função:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.users.colName')}</th>
+                <th className="table-cells-header">{t('admin.users.colEmail')}</th>
+                <th className="table-cells-header">{t('admin.users.colRole')}</th>
+                <th className="table-cells-header">{t('admin.users.colActions')}</th>
               </tr>
             </thead>
             <tbody>
               {filteredUsers.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="text-start text-secondary p-4">
-                    Nenhum usuário encontrado
+                    {t('admin.users.noUsers')}
                   </td>
                 </tr>
               ) : (
@@ -270,12 +272,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                     <div className="table-action-cell">
                       <ActionButton
                         action="edit"
-                        label="Editar usuário"
+                        label={t('admin.users.editUser')}
                         onClick={() => handleEditClick(user)}
                       />
                       <ActionButton
                         action="delete"
-                        label={isLastAdmin(user) ? 'Não é possível excluir o único administrador' : 'Excluir usuário'}
+                        label={isLastAdmin(user) ? t('admin.users.cannotDeleteLastAdmin') : t('admin.users.deleteUser')}
                         onClick={() => handleDeleteClick(user)}
                         disabled={isLastAdmin(user)}
                       />
@@ -294,12 +296,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         variant="confirm"
         icon={editingUser ? 'edit' : 'plus'}
         iconFill={editingUser ? '' : '#057c05'}
-        title={editingUser ? 'Editar Usuário' : 'Criar Usuário'}
+        title={editingUser ? t('admin.users.modalEditTitle') : t('admin.users.modalCreateTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancelar
+              {t('admin.users.cancel')}
             </Button>
             <SpinnerButton
               className="btn-confirm"
@@ -308,7 +310,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               onClick={handleSubmit}
               loading={saving}
             >
-              {editingUser ? 'Salvar Alterações' : 'Criar Usuário'}
+              {editingUser ? t('admin.users.saveChanges') : t('admin.users.modalCreateTitle')}
             </SpinnerButton>
           </>
         }
@@ -316,12 +318,12 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         <Form>
             <Form.Group controlId="formDisplayName">
               <Form.Label>
-                <b>Nome de exibição:</b>{' '}
-                <span className="text-secondary small">(opcional — em branco usa o e-mail)</span>
+                <b>{t('admin.users.displayNameLabel')}</b>{' '}
+                <span className="text-secondary small">{t('admin.users.displayNameHint')}</span>
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ex.: Alvinho Leal"
+                placeholder={t('admin.users.displayNamePlaceholder')}
                 value={formData.displayName}
                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 size="lg"
@@ -329,14 +331,14 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             </Form.Group>
             <Form.Group controlId="formEmail" className="mt-3">
               <Form.Label>
-                <b>E-mail:</b>{' '}
+                <b>{t('admin.users.emailLabel')}</b>{' '}
                 <span className="text-secondary small">
-                  {editingUser ? '(identidade de acesso — não editável)' : '(será o login de acesso)'}
+                  {editingUser ? t('admin.users.emailHintEdit') : t('admin.users.emailHintCreate')}
                 </span>
               </Form.Label>
               <Form.Control
                 type="email"
-                placeholder="email@exemplo.com"
+                placeholder={t('admin.users.emailPlaceholder')}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 size="lg"
@@ -348,16 +350,17 @@ const AdminUsersManagement = ({ loggedUsername }) => {
               <Form.Label>
                 {editingUser ? (
                   <b>
-                    Nova Senha: <span className="text-danger">* (Irá substituir a senha anterior)</span>
+                    {t('admin.users.newPasswordLabel')}{' '}
+                    <span className="text-danger">{t('admin.users.newPasswordHint')}</span>
                   </b>
                 ) : (
-                  <b>Senha:</b>
+                  <b>{t('admin.users.passwordLabel')}</b>
                 )}
               </Form.Label>
               <div className="password-wrapper">
                 <Form.Control
                   type={showPassword ? 'text' : 'password'}
-                  placeholder={editingUser ? 'Deixe em branco para manter a senha atual' : 'Digite a senha'}
+                  placeholder={editingUser ? t('admin.users.passwordPlaceholderEdit') : t('admin.users.passwordPlaceholderCreate')}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   size="lg"
@@ -367,7 +370,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-label={showPassword ? t('admin.users.hidePassword') : t('admin.users.showPassword')}
                 >
                   <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
                 </button>
@@ -375,7 +378,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
             </Form.Group>
             <Form.Group controlId="formRole" className="mt-3">
               <Form.Label>
-                <b>Função:</b>
+                <b>{t('admin.users.roleLabel')}</b>
               </Form.Label>
               <Form.Select
                 value={formData.role}
@@ -383,7 +386,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
                 size="lg"
               >
                 <option value="" disabled>
-                  Selecione uma opção
+                  {t('admin.users.selectOption')}
                 </option>
                 {roles.map((role) => (
                   <option key={role.id || role.name} value={role.name}>
@@ -399,20 +402,24 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.users.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
+              {t('admin.users.cancel')}
             </Button>
             <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
-              Deletar
+              {t('admin.logs.delete')}
             </SpinnerButton>
           </>
         }
       >
-        Tem certeza que deseja excluir o usuário <strong>{userToDelete?.displayName || userToDelete?.email}</strong>?
+        <Trans
+          i18nKey="admin.users.deleteConfirmText"
+          components={{ strong: <strong /> }}
+          values={{ name: userToDelete?.displayName || userToDelete?.email }}
+        />
       </CustomModal>
 
         <Loading loading={loading} />

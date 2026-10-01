@@ -1,9 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Col, Card, ProgressBar } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import '../Style/PackageCard.scss';
 
 const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, showRemainingVacancies }) => {
+  const { t } = useTranslation();
   const filled = Number(filledVacancies || 0);
   const remaining = Number(remainingVacancies || 0);
   const total = showRemainingVacancies ? filled + remaining : 0;
@@ -28,7 +30,7 @@ const PackageCard = ({ title, remainingVacancies, filledVacancies, cardType, sho
                 visuallyHidden
               />
               <div className="admin-card__footer">
-                <span>Restantes</span>
+                <span>{t('admin.ui.packageCard.remaining')}</span>
                 <strong>{remaining}</strong>
               </div>
             </>

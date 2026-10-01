@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { registerLog } from '@/services/logs';
@@ -15,13 +16,20 @@ import FilterChips from '@/components/Admin/FilterChips';
 import ReviewModal from './ReviewModal';
 import { buildChangeDiff } from './diff';
 
-const REQ_STATUS = {
-  PENDING: { label: 'Pendente', bg: 'warning' },
-  APPROVED: { label: 'Aprovada', bg: 'success' },
-  REJECTED: { label: 'Rejeitada', bg: 'danger' },
+const STATUS_BG = {
+  PENDING: 'warning',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+};
+
+const STATUS_KEY = {
+  PENDING: 'statusPending',
+  APPROVED: 'statusApproved',
+  REJECTED: 'statusRejected',
 };
 
 const AdminChangeRequests = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState([]);
   const [search, setSearch] = useState('');
@@ -36,7 +44,7 @@ const AdminChangeRequests = ({ loggedUsername }) => {
     try {
       setRequests(await getChangeRequests());
     } catch (error) {
-      toast.error('Erro ao buscar solicitações');
+      toast.error(t('admin.changeRequests.fetchError'));
     } finally {
       setLoading(false);
     }
@@ -51,12 +59,12 @@ const AdminChangeRequests = ({ loggedUsername }) => {
     setProcessing(true);
     try {
       await approveChangeRequest(reviewTarget.id, note);
-      toast.success('Solicitação aprovada');
+      toast.success(t('admin.changeRequests.approveSuccess'));
       registerLog(`Aprovou alteração da inscrição ${reviewTarget.camperName || reviewTarget.camperId}`, loggedUsername);
       setReviewTarget(null);
       fetchRequests();
     } catch (error) {
-      toast.error('Erro ao aprovar solicitação');
+      toast.error(t('admin.changeRequests.approveError'));
     } finally {
       setProcessing(false);
     }
@@ -67,12 +75,12 @@ const AdminChangeRequests = ({ loggedUsername }) => {
     setProcessing(true);
     try {
       await rejectChangeRequest(reviewTarget.id, note);
-      toast.success('Solicitação rejeitada');
+      toast.success(t('admin.changeRequests.rejectSuccess'));
       registerLog(`Rejeitou alteração da inscrição ${reviewTarget.camperName || reviewTarget.camperId}`, loggedUsername);
       setReviewTarget(null);
       fetchRequests();
     } catch (error) {
-      toast.error('Erro ao rejeitar solicitação');
+      toast.error(t('admin.changeRequests.rejectError'));
     } finally {
       setProcessing(false);
     }
@@ -80,7 +88,7 @@ const AdminChangeRequests = ({ loggedUsername }) => {
 
   const proposed = (request) =>
     buildChangeDiff(request)
-      .map((d) => `${d.label}: ${d.after || '(vazio)'}`)
+      .map((d) => `${d.label}: ${d.after || t('admin.changeRequests.empty')}`)
       .join(' · ');
 
   const statusOf = (request) => (request.status || 'PENDING').toUpperCase();
@@ -90,17 +98,17 @@ const AdminChangeRequests = ({ loggedUsername }) => {
   const rejectedCount = countBy('REJECTED');
 
   const statItems = [
-    { label: 'Total de solicitações', value: requests.length },
-    { label: 'Pendentes', value: pendingCount, tone: 'used' },
-    { label: 'Aprovadas', value: approvedCount, tone: 'free' },
-    { label: 'Rejeitadas', value: rejectedCount, tone: 'danger' },
+    { label: t('admin.changeRequests.statTotal'), value: requests.length },
+    { label: t('admin.changeRequests.statPending'), value: pendingCount, tone: 'used' },
+    { label: t('admin.changeRequests.statApproved'), value: approvedCount, tone: 'free' },
+    { label: t('admin.changeRequests.statRejected'), value: rejectedCount, tone: 'danger' },
   ];
 
   const statusChips = [
-    { value: 'all', label: 'Todas', count: requests.length },
-    { value: 'PENDING', label: 'Pendentes', count: pendingCount },
-    { value: 'APPROVED', label: 'Aprovadas', count: approvedCount },
-    { value: 'REJECTED', label: 'Rejeitadas', count: rejectedCount },
+    { value: 'all', label: t('admin.changeRequests.chipAll'), count: requests.length },
+    { value: 'PENDING', label: t('admin.changeRequests.chipPending'), count: pendingCount },
+    { value: 'APPROVED', label: t('admin.changeRequests.chipApproved'), count: approvedCount },
+    { value: 'REJECTED', label: t('admin.changeRequests.chipRejected'), count: rejectedCount },
   ];
 
   const term = search.trim().toLowerCase();
@@ -114,8 +122,8 @@ const AdminChangeRequests = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--change-requests">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Solicitações de Alteração"
-        subtitle="Aprove ou rejeite alterações solicitadas pelos usuários"
+        title={t('admin.changeRequests.title')}
+        subtitle={t('admin.changeRequests.subtitle')}
         typeIcon="refresh"
       />
 
@@ -123,34 +131,38 @@ const AdminChangeRequests = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="change-requests-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome do campista..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.changeRequests.searchPlaceholder')} />
           <FilterChips options={statusChips} value={statusFilter} onChange={setStatusFilter} />
         </div>
 
-        <SectionHeader title="Solicitações" count={filtered.length} />
+        <SectionHeader title={t('admin.changeRequests.sectionTitle')} count={filtered.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Campista:</th>
-                <th className="table-cells-header">Alterações solicitadas:</th>
-                <th className="table-cells-header">Enviada em:</th>
-                <th className="table-cells-header">Status:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.changeRequests.colCamper')}</th>
+                <th className="table-cells-header">{t('admin.changeRequests.colChanges')}</th>
+                <th className="table-cells-header">{t('admin.changeRequests.colSentAt')}</th>
+                <th className="table-cells-header">{t('admin.changeRequests.colStatus')}</th>
+                <th className="table-cells-header">{t('admin.changeRequests.colActions')}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-start text-secondary p-4">
-                    Nenhuma solicitação encontrada
+                    {t('admin.changeRequests.noRequests')}
                   </td>
                 </tr>
               ) : (
                 filtered.map((request) => {
-                  const status = REQ_STATUS[statusOf(request)] || { label: statusOf(request), bg: 'secondary' };
-                  const isPending = statusOf(request) === 'PENDING';
+                  const statusValue = statusOf(request);
+                  const status = {
+                    label: STATUS_KEY[statusValue] ? t(`admin.changeRequests.${STATUS_KEY[statusValue]}`) : statusValue,
+                    bg: STATUS_BG[statusValue] || 'secondary',
+                  };
+                  const isPending = statusValue === 'PENDING';
                   return (
                     <tr key={request.id}>
                       <td>
@@ -170,7 +182,7 @@ const AdminChangeRequests = ({ loggedUsername }) => {
                           variant={isPending ? 'outline-teal-blue' : 'outline-secondary'}
                           onClick={() => setReviewTarget(request)}
                         >
-                          {isPending ? 'Revisar' : 'Ver detalhes'}
+                          {isPending ? t('admin.changeRequests.review') : t('admin.changeRequests.viewDetails')}
                         </Button>
                       </td>
                     </tr>

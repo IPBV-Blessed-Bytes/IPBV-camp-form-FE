@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import { listFaqs, createFaq, updateFaq, deleteFaq } from '@/services/faqs';
@@ -27,6 +28,7 @@ const hasAnswer = (answer) =>
   );
 
 const AdminFaqBuilder = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const eventName = useEventName();
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     try {
       setFaqs(await listFaqs());
     } catch {
-      toast.error('Erro ao carregar as perguntas.');
+      toast.error(t('admin.faq.loadError'));
     } finally {
       setLoading(false);
     }
@@ -62,7 +64,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     if (!draft.question.trim()) {
-      toast.error('A pergunta é obrigatória.');
+      toast.error(t('admin.faq.questionRequired'));
       return;
     }
     setSaving(true);
@@ -70,16 +72,16 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     try {
       if (draft.id) {
         await updateFaq(draft.id, { ...payload, order: faqs.findIndex((f) => f.id === draft.id) });
-        toast.success('Pergunta atualizada.');
+        toast.success(t('admin.faq.updated'));
       } else {
         await createFaq({ ...payload, order: faqs.length });
-        toast.success('Pergunta criada.');
+        toast.success(t('admin.faq.created'));
       }
       registerLog(draft.id ? 'Editou uma pergunta do FAQ' : 'Criou uma pergunta no FAQ', loggedUsername);
       setShowModal(false);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar a pergunta.');
+      toast.error(getApiErrorMessage(err) || t('admin.faq.saveError'));
     } finally {
       setSaving(false);
     }
@@ -98,7 +100,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       registerLog('Reordenou as perguntas do FAQ', loggedUsername);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
+      toast.error(getApiErrorMessage(err) || t('admin.faq.reorderError'));
     } finally {
       setSaving(false);
     }
@@ -106,9 +108,9 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
 
   const answered = useMemo(() => faqs.filter((faq) => hasAnswer(faq.answer)).length, [faqs]);
   const statItems = [
-    { label: 'Perguntas', value: faqs.length },
-    { label: 'Com resposta', value: answered, tone: 'free' },
-    { label: 'Sem resposta', value: faqs.length - answered, tone: faqs.length - answered > 0 ? 'danger' : 'default' },
+    { label: t('admin.faq.statQuestions'), value: faqs.length },
+    { label: t('admin.faq.statAnswered'), value: answered, tone: 'free' },
+    { label: t('admin.faq.statUnanswered'), value: faqs.length - answered, tone: faqs.length - answered > 0 ? 'danger' : 'default' },
   ];
 
   const confirmDelete = async () => {
@@ -120,7 +122,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
       setToDelete(null);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao excluir.');
+      toast.error(getApiErrorMessage(err) || t('admin.faq.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -130,8 +132,8 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
     <div className="admin-subpage faq-builder">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Perguntas Frequentes"
-        subtitle={`Perguntas do evento: ${eventName}`}
+        title={t('admin.faq.title')}
+        subtitle={t('admin.faq.subtitle', { eventName })}
         typeIcon="question"
       />
 
@@ -140,7 +142,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
 
         <div className="faq-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            Nova Pergunta&nbsp;&nbsp;
+            {t('admin.faq.newQuestion')}&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
@@ -148,7 +150,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : faqs.length === 0 ? (
-          <p className="faq-builder__empty">Nenhuma pergunta cadastrada. Crie a primeira acima.</p>
+          <p className="faq-builder__empty">{t('admin.faq.empty')}</p>
         ) : (
           <ul className="faq-builder__list">
             {faqs.map((faq, index) => (
@@ -161,7 +163,7 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
                     className="faq-builder__icon-btn"
                     disabled={saving || index === 0}
                     onClick={() => move(index, -1)}
-                    title="Mover para cima"
+                    title={t('admin.faq.moveUp')}
                   >
                     <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                   </button>
@@ -170,12 +172,12 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
                     className="faq-builder__icon-btn faq-builder__icon-btn--down"
                     disabled={saving || index === faqs.length - 1}
                     onClick={() => move(index, 1)}
-                    title="Mover para baixo"
+                    title={t('admin.faq.moveDown')}
                   >
                     <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                   </button>
                   <Button size="sm" variant="outline-teal-blue" onClick={() => openEdit(faq)}>
-                    Editar
+                    {t('admin.faq.edit')}
                   </Button>
                   <Button size="sm" variant="outline-danger" onClick={() => setToDelete(faq)}>
                     <Icons typeIcon="delete" iconSize={20} fill="#dc3545" />
@@ -192,31 +194,31 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
         onHide={() => setShowModal(false)}
         variant="info"
         size="lg"
-        title={draft.id ? 'Editar Pergunta' : 'Nova Pergunta'}
+        title={draft.id ? t('admin.faq.editTitle') : t('admin.faq.newTitle')}
         icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.faq.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>{t('admin.faq.save')}</SpinnerButton>
           </>
         }
       >
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>Pergunta:</b>
+              <b>{t('admin.faq.questionLabel')}</b>
             </Form.Label>
             <Form.Control
               value={draft.question}
               onChange={(e) => setDraft((prev) => ({ ...prev, question: e.target.value }))}
-              placeholder="Ex.: Quando e onde será o evento?"
+              placeholder={t('admin.faq.questionPlaceholder')}
             />
           </Form.Group>
           <Form.Group>
             <Form.Label>
-              <b>Resposta:</b>
+              <b>{t('admin.faq.answerLabel')}</b>
             </Form.Label>
             <CustomEditor
               value={draft.answer}
@@ -230,18 +232,22 @@ const AdminFaqBuilder = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title="Excluir pergunta"
+        title={t('admin.faq.deleteTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
-              Cancelar
+              {t('admin.faq.cancel')}
             </Button>
-            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>{t('admin.faq.delete')}</SpinnerButton>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir a pergunta <b>{toDelete?.question}</b>?
+          <Trans
+            i18nKey="admin.faq.deleteConfirm"
+            components={{ b: <b /> }}
+            values={{ question: toDelete?.question }}
+          />
         </p>
       </CustomModal>
     </div>

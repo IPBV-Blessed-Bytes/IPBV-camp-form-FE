@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { listAllRefunds } from '@/services/refunds';
 import scrollUp from '@/hooks/useScrollUp';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -18,9 +19,13 @@ const formatDate = (iso) => {
   return Number.isNaN(date.getTime()) ? iso : date.toLocaleString('pt-BR');
 };
 
-const METHOD_LABEL = { boleto: 'Boleto', pix: 'Pix', cartão: 'Cartão' };
-
 const AdminRefunds = ({ loggedUsername }) => {
+  const { t } = useTranslation();
+  const METHOD_LABEL = {
+    boleto: t('admin.refunds.methodBoleto'),
+    pix: t('admin.refunds.methodPix'),
+    cartão: t('admin.refunds.methodCard'),
+  };
   const [refunds, setRefunds] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,18 +34,20 @@ const AdminRefunds = ({ loggedUsername }) => {
   useEffect(() => {
     listAllRefunds()
       .then(setRefunds)
-      .catch(() => toast.error('Erro ao carregar reembolsos.'))
+      .catch(() => toast.error(t('admin.refunds.loadError')))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const statItems = useMemo(() => {
     const total = refunds.reduce((acc, refund) => acc + Number(refund.amount || 0), 0);
     const deleted = refunds.filter((refund) => refund.deleted).length;
     return [
-      { label: 'Total reembolsado', value: formatBRL(total), tone: 'danger' },
-      { label: 'Reembolsos', value: refunds.length, tone: 'accent' },
-      { label: 'Com exclusão da inscrição', value: deleted, tone: 'used' },
+      { label: t('admin.refunds.statTotal'), value: formatBRL(total), tone: 'danger' },
+      { label: t('admin.refunds.statCount'), value: refunds.length, tone: 'accent' },
+      { label: t('admin.refunds.statDeleted'), value: deleted, tone: 'used' },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refunds]);
 
   const generateExcel = () => {
@@ -61,7 +68,7 @@ const AdminRefunds = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'refunds-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.refunds.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -72,8 +79,8 @@ const AdminRefunds = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--refunds">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Reembolsos"
-        subtitle="Histórico de reembolsos feitos pelo admin (cartão, pix e boleto)."
+        title={t('admin.refunds.title')}
+        subtitle={t('admin.refunds.subtitle')}
         typeIcon="money"
       />
 
@@ -90,20 +97,20 @@ const AdminRefunds = ({ loggedUsername }) => {
               <Table striped bordered hover responsive className="custom-table">
                 <thead>
                   <tr>
-                    <th className="table-cells-header">Data:</th>
-                    <th className="table-cells-header">Inscrito:</th>
-                    <th className="table-cells-header">CPF:</th>
-                    <th className="table-cells-header">Pedido:</th>
-                    <th className="table-cells-header">Forma:</th>
-                    <th className="table-cells-header">Valor:</th>
-                    <th className="table-cells-header">Inscrição excluída:</th>
+                    <th className="table-cells-header">{t('admin.refunds.colDate')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colName')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colCpf')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colOrder')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colMethod')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colAmount')}</th>
+                    <th className="table-cells-header">{t('admin.refunds.colDeleted')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {refunds.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="text-start text-secondary p-4">
-                        Nenhum reembolso registrado
+                        {t('admin.refunds.empty')}
                       </td>
                     </tr>
                   ) : (
@@ -116,7 +123,7 @@ const AdminRefunds = ({ loggedUsername }) => {
                         <td>{METHOD_LABEL[refund.paymentMethod] || refund.paymentMethod}</td>
                         <td className="fw-bold">{formatBRL(refund.amount)}</td>
                         <td>
-                          {refund.deleted ? <Badge bg="danger">Sim</Badge> : <Badge bg="secondary">Não</Badge>}
+                          {refund.deleted ? <Badge bg="danger">{t('admin.refunds.yes')}</Badge> : <Badge bg="secondary">{t('admin.refunds.no')}</Badge>}
                         </td>
                       </tr>
                     ))

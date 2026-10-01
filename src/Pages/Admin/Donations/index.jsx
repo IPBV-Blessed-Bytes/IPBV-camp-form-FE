@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Table, Badge, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import {
   listAllDonations,
   createManualDonation,
@@ -27,14 +28,14 @@ const formatDate = (iso) => {
   return Number.isNaN(date.getTime()) ? iso : date.toLocaleDateString('pt-BR');
 };
 
-const STATUS = {
-  PENDING: { label: 'Aguardando pagamento', bg: 'warning' },
-  CONFIRMED: { label: 'Confirmada', bg: 'success' },
-};
-
 const EMPTY_FORM = { payerName: '', cpf: '', packageTotal: '', amount: '', bankAccount: '' };
 
 const AdminDonations = ({ loggedUsername }) => {
+  const { t } = useTranslation();
+  const STATUS = {
+    PENDING: { label: t('admin.donations.statusPending'), bg: 'warning' },
+    CONFIRMED: { label: t('admin.donations.statusConfirmed'), bg: 'success' },
+  };
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showInsert, setShowInsert] = useState(false);
@@ -53,7 +54,7 @@ const AdminDonations = ({ loggedUsername }) => {
         const sorted = confirmedOnly.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
         setDonations(sorted);
       })
-      .catch(() => toast.error('Erro ao carregar doações.'))
+      .catch(() => toast.error(t('admin.donations.loadError')))
       .finally(() => {
         if (!silent) setLoading(false);
       });
@@ -66,9 +67,10 @@ const AdminDonations = ({ loggedUsername }) => {
   const statItems = useMemo(() => {
     const confirmedTotal = donations.reduce((acc, donation) => acc + Number(donation.amount || 0), 0);
     return [
-      { label: 'Total confirmado (para o social)', value: formatBRL(confirmedTotal), tone: 'used' },
-      { label: 'Doadores confirmados', value: donations.length, tone: 'accent' },
+      { label: t('admin.donations.statConfirmed'), value: formatBRL(confirmedTotal), tone: 'used' },
+      { label: t('admin.donations.statDonors'), value: donations.length, tone: 'accent' },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [donations]);
 
   const setField = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
@@ -93,12 +95,12 @@ const AdminDonations = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     if (!form.payerName.trim()) {
-      toast.error('Informe o nome do doador.');
+      toast.error(t('admin.donations.nameRequired'));
       return;
     }
     const amount = parseInt(form.amount, 10);
     if (!amount || amount <= 0) {
-      toast.error('Informe um valor de doação válido.');
+      toast.error(t('admin.donations.amountRequired'));
       return;
     }
     setSaving(true);
@@ -114,18 +116,18 @@ const AdminDonations = ({ loggedUsername }) => {
       if (editId) {
         await updateManualDonation(editId, payload);
         registerLog(`Editou a doação manual de ${payload.payerName} (R$ ${amount})`, loggedUsername);
-        toast.success('Doação atualizada.');
+        toast.success(t('admin.donations.updateSuccess'));
       } else {
         await createManualDonation(payload);
         registerLog(`Inseriu manualmente uma doação de R$ ${amount} (${payload.payerName})`, loggedUsername);
-        toast.success('Doação inserida.');
+        toast.success(t('admin.donations.insertSuccess'));
       }
       setShowInsert(false);
       setEditId(null);
       setForm(EMPTY_FORM);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível salvar a doação.');
+      toast.error(error?.response?.data || t('admin.donations.saveError'));
     } finally {
       setSaving(false);
     }
@@ -137,11 +139,11 @@ const AdminDonations = ({ loggedUsername }) => {
     try {
       await deleteManualDonation(deleteTarget.id);
       registerLog(`Excluiu a doação manual de ${deleteTarget.payerName}`, loggedUsername);
-      toast.success('Doação excluída.');
+      toast.success(t('admin.donations.deleteSuccess'));
       setDeleteTarget(null);
       await reload(true);
     } catch (error) {
-      toast.error(error?.response?.data || 'Não foi possível excluir a doação.');
+      toast.error(error?.response?.data || t('admin.donations.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -167,7 +169,7 @@ const AdminDonations = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'donations-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.donations.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -176,7 +178,7 @@ const AdminDonations = ({ loggedUsername }) => {
       fill: '#fff',
       iconSize: 22,
       id: 'donations-insert',
-      name: 'Inserir Doação',
+      name: t('admin.donations.insertButton'),
       onClick: openInsert,
       typeButton: 'teal-blue',
       typeIcon: 'plus',
@@ -187,8 +189,8 @@ const AdminDonations = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--donations">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Doações"
-        subtitle="Contribuições para ajuda a pessoas necessitadas feitas no carrinho, separadas do valor dos pacotes."
+        title={t('admin.donations.title')}
+        subtitle={t('admin.donations.subtitle')}
         typeIcon="couple"
       />
 
@@ -205,23 +207,23 @@ const AdminDonations = ({ loggedUsername }) => {
               <Table striped bordered hover responsive className="custom-table">
                 <thead>
                   <tr>
-                    <th className="table-cells-header">Pedido:</th>
-                    <th className="table-cells-header">Doador:</th>
-                    <th className="table-cells-header">CPF:</th>
-                    <th className="table-cells-header">Status:</th>
-                    <th className="table-cells-header">Valor do pacote:</th>
-                    <th className="table-cells-header">Doação:</th>
-                    <th className="table-cells-header">Data:</th>
-                    <th className="table-cells-header">Inserção Manual:</th>
-                    <th className="table-cells-header">Conta Bancária:</th>
-                    <th className="table-cells-header">Ações:</th>
+                    <th className="table-cells-header">{t('admin.donations.colOrder')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colDonor')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colCpf')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colStatus')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colPackage')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colDonation')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colDate')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colManual')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colBank')}</th>
+                    <th className="table-cells-header">{t('admin.donations.colActions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {donations.length === 0 ? (
                     <tr>
                       <td colSpan={10} className="text-start text-secondary p-4">
-                        Nenhuma doação registrada
+                        {t('admin.donations.empty')}
                       </td>
                     </tr>
                   ) : (
@@ -240,7 +242,7 @@ const AdminDonations = ({ loggedUsername }) => {
                           <td>{formatDate(donation.confirmedAt || donation.createdAt)}</td>
                           <td>
                             <Badge bg={donation.manualInsertion ? 'info' : 'secondary'}>
-                              {donation.manualInsertion ? 'Sim' : 'Não'}
+                              {donation.manualInsertion ? t('admin.donations.yes') : t('admin.donations.no')}
                             </Badge>
                           </td>
                           <td>{donation.bankAccount || '—'}</td>
@@ -250,13 +252,13 @@ const AdminDonations = ({ loggedUsername }) => {
                                 <ActionButton
                                   action="edit"
                                   iconSize={18}
-                                  title="Editar"
+                                  title={t('admin.donations.editTitle')}
                                   onClick={() => openEdit(donation)}
                                 />
                                 <ActionButton
                                   action="delete"
                                   iconSize={18}
-                                  title="Excluir"
+                                  title={t('admin.donations.deleteTitle')}
                                   onClick={() => setDeleteTarget(donation)}
                                 />
                               </div>
@@ -279,53 +281,52 @@ const AdminDonations = ({ loggedUsername }) => {
         show={showInsert}
         onHide={() => setShowInsert(false)}
         variant="confirm"
-        title={editId ? 'Editar Doação' : 'Inserir Doação'}
+        title={editId ? t('admin.donations.editModalTitle') : t('admin.donations.insertModalTitle')}
         icon={editId ? 'edit' : 'plus'}
         iconFill={editId ? '' : '#057c05'}
         footer={
           <>
             <SpinnerButton variant="outline-secondary" onClick={() => setShowInsert(false)}>
-              Voltar
+              {t('admin.donations.back')}
             </SpinnerButton>
             <SpinnerButton variant="teal-blue" onClick={handleSave} loading={saving}>
-              {editId ? 'Salvar' : 'Inserir'}
+              {editId ? t('admin.donations.save') : t('admin.donations.insert')}
             </SpinnerButton>
           </>
         }
       >
         {!editId && (
           <p className="text-secondary small mb-3">
-            Para doações feitas fora do fluxo padrão (inscritos manuais ou doações direto na conta da igreja). A doação
-            entra como <b>confirmada</b> com a data de agora.
+            <Trans i18nKey="admin.donations.insertHint" components={{ b: <b /> }} />
           </p>
         )}
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Nome do Doador:</b>
+            <b>{t('admin.donations.formName')}</b>
           </Form.Label>
           <Form.Control value={form.payerName} onChange={(e) => setField('payerName', e.target.value)} />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>CPF:</b>
+            <b>{t('admin.donations.formCpf')}</b>
           </Form.Label>
-          <Form.Control value={form.cpf} onChange={(e) => setField('cpf', e.target.value)} placeholder="Opcional" />
+          <Form.Control value={form.cpf} onChange={(e) => setField('cpf', e.target.value)} placeholder={t('admin.donations.optional')} />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Valor do Pacote (R$):</b>
+            <b>{t('admin.donations.formPackage')}</b>
           </Form.Label>
           <Form.Control
             type="number"
             min="0"
             value={form.packageTotal}
             onChange={(e) => setField('packageTotal', e.target.value)}
-            placeholder="Opcional"
+            placeholder={t('admin.donations.optional')}
           />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Valor da Doação (R$):</b>
+            <b>{t('admin.donations.formAmount')}</b>
           </Form.Label>
           <Form.Control
             type="number"
@@ -336,12 +337,12 @@ const AdminDonations = ({ loggedUsername }) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>
-            <b>Conta Bancária:</b>
+            <b>{t('admin.donations.formBank')}</b>
           </Form.Label>
           <Form.Control
             value={form.bankAccount}
             onChange={(e) => setField('bankAccount', e.target.value)}
-            placeholder="Conta em que a doação foi paga"
+            placeholder={t('admin.donations.bankPlaceholder')}
           />
         </Form.Group>
       </CustomModal>
@@ -350,22 +351,25 @@ const AdminDonations = ({ loggedUsername }) => {
         show={Boolean(deleteTarget)}
         onHide={() => setDeleteTarget(null)}
         variant="cancel"
-        title="Excluir Doação"
+        title={t('admin.donations.deleteModalTitle')}
         footer={
           <>
             <SpinnerButton variant="outline-secondary" onClick={() => setDeleteTarget(null)}>
-              Voltar
+              {t('admin.donations.back')}
             </SpinnerButton>
             <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>
-              Excluir
+              {t('admin.donations.delete')}
             </SpinnerButton>
           </>
         }
       >
         {deleteTarget && (
           <p>
-            Excluir a doação manual de <b>{deleteTarget.payerName}</b> (R$ {deleteTarget.amount})? Esta ação não pode
-            ser desfeita.
+            <Trans
+              i18nKey="admin.donations.deleteConfirm"
+              values={{ name: deleteTarget.payerName, amount: deleteTarget.amount }}
+              components={{ b: <b /> }}
+            />
           </p>
         )}
       </CustomModal>

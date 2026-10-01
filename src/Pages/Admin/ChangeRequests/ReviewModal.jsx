@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Badge, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
 import { buildChangeDiff } from './diff';
 
-const REQ_STATUS = {
-  PENDING: { label: 'Pendente', bg: 'warning' },
-  APPROVED: { label: 'Aprovada', bg: 'success' },
-  REJECTED: { label: 'Rejeitada', bg: 'danger' },
+const STATUS_BG = {
+  PENDING: 'warning',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+};
+
+const STATUS_KEY = {
+  PENDING: 'statusPending',
+  APPROVED: 'statusApproved',
+  REJECTED: 'statusRejected',
 };
 
 const ReviewModal = ({ show, onHide, request, onApprove, onReject, processing }) => {
+  const { t } = useTranslation();
   const [note, setNote] = useState('');
   const [noteError, setNoteError] = useState(false);
 
@@ -21,7 +29,10 @@ const ReviewModal = ({ show, onHide, request, onApprove, onReject, processing })
 
   if (!request) return null;
 
-  const status = REQ_STATUS[request.status] || { label: request.status, bg: 'secondary' };
+  const status = {
+    label: STATUS_KEY[request.status] ? t(`admin.changeRequests.${STATUS_KEY[request.status]}`) : request.status,
+    bg: STATUS_BG[request.status] || 'secondary',
+  };
   const isPending = request.status === 'PENDING';
   const diffs = buildChangeDiff(request);
 
@@ -41,58 +52,58 @@ const ReviewModal = ({ show, onHide, request, onApprove, onReject, processing })
       variant="info"
       icon="edit"
       iconFill="none"
-      title={`Revisar alteração — ${request.camperName || `#${request.camperId}`}`}
+      title={t('admin.changeRequests.modalTitle', { camper: request.camperName || `#${request.camperId}` })}
       size="lg"
       footer={
         isPending ? (
           <>
             <Button variant="secondary" onClick={onHide} disabled={processing}>
-              Fechar
+              {t('admin.changeRequests.close')}
             </Button>
             <Button variant="outline-danger" onClick={handleReject} disabled={processing}>
-              Rejeitar
+              {t('admin.changeRequests.reject')}
             </Button>
             <Button variant="teal-blue" onClick={handleApprove} disabled={processing}>
-              Aprovar
+              {t('admin.changeRequests.approve')}
             </Button>
           </>
         ) : (
           <Button variant="secondary" onClick={onHide}>
-            Fechar
+            {t('admin.changeRequests.close')}
           </Button>
         )
       }
     >
       <div className="d-flex align-items-center gap-2 mb-3">
-        <span className="text-secondary small">Status:</span>
+        <span className="text-secondary small">{t('admin.changeRequests.statusLabel')}</span>
         <Badge bg={status.bg} text={status.bg === 'warning' ? 'dark' : undefined}>
           {status.label}
         </Badge>
       </div>
 
       <h6 className="account-edit__section">
-        <b>Justificativa do usuário:</b>
+        <b>{t('admin.changeRequests.justificationHeading')}</b>
       </h6>
       <p className="mb-3">
         <em>
-          {request.justification ? request.justification : <span className="text-secondary">— (não informada)</span>}
+          {request.justification ? request.justification : <span className="text-secondary">{t('admin.changeRequests.noJustification')}</span>}
         </em>
       </p>
 
       <h6 className="account-edit__section mt-4">
-        <b>Alterações solicitadas:</b>
+        <b>{t('admin.changeRequests.changesHeading')}</b>
       </h6>
       {diffs.length === 0 ? (
-        <p className="text-secondary">Nenhuma alteração de campo detectada.</p>
+        <p className="text-secondary">{t('admin.changeRequests.noChanges')}</p>
       ) : (
         <div className="change-diff">
           {diffs.map((d) => (
             <div key={d.label} className="change-diff__row">
               <div className="change-diff__label">{d.label}</div>
               <div className="change-diff__values">
-                <span className="change-diff__before">{d.before || '(vazio)'}</span>
+                <span className="change-diff__before">{d.before || t('admin.changeRequests.empty')}</span>
                 <span className="change-diff__arrow"> → </span>
-                <span className="change-diff__after">{d.after || '(vazio)'}</span>
+                <span className="change-diff__after">{d.after || t('admin.changeRequests.empty')}</span>
               </div>
             </div>
           ))}
@@ -101,7 +112,7 @@ const ReviewModal = ({ show, onHide, request, onApprove, onReject, processing })
 
       {isPending ? (
         <>
-          <h6 className="account-edit__section mt-3">Resposta ao usuário</h6>
+          <h6 className="account-edit__section mt-3">{t('admin.changeRequests.responseHeading')}</h6>
           <Form.Group>
             <Form.Control
               as="textarea"
@@ -112,15 +123,15 @@ const ReviewModal = ({ show, onHide, request, onApprove, onReject, processing })
                 setNote(e.target.value);
                 if (e.target.value.trim()) setNoteError(false);
               }}
-              placeholder="Mensagem enviada ao usuário. Obrigatória ao rejeitar (ex.: motivo da recusa); opcional ao aprovar."
+              placeholder={t('admin.changeRequests.notePlaceholder')}
             />
-            <Form.Control.Feedback type="invalid">Informe o motivo da recusa para rejeitar.</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{t('admin.changeRequests.noteRequired')}</Form.Control.Feedback>
           </Form.Group>
         </>
       ) : (
         request.reviewNote && (
           <Alert variant="secondary" className="mt-3 mb-0 py-2 small">
-            <strong>Resposta enviada ao usuário:</strong> {request.reviewNote}
+            <strong>{t('admin.changeRequests.responseSentLabel')}</strong> {request.reviewNote}
           </Alert>
         )
       )}

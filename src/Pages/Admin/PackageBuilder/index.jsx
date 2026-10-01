@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Badge, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import {
@@ -20,16 +21,15 @@ import Icons from '@/components/Global/Icons';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
-const SELECTION_RULES = [
-  { value: 'single', label: 'Escolher uma' },
-  { value: 'multiple', label: 'Escolher várias' },
-];
-
-const ruleLabel = (rule) => SELECTION_RULES.find((r) => r.value === rule)?.label || rule;
-
 const EMPTY_CATEGORY = { id: null, name: '', description: '', selectionRule: 'single', required: true };
 
 const AdminPackageBuilder = ({ loggedUsername }) => {
+  const { t } = useTranslation();
+  const SELECTION_RULES = [
+    { value: 'single', label: t('admin.packages.ruleSingle') },
+    { value: 'multiple', label: t('admin.packages.ruleMultiple') },
+  ];
+  const ruleLabel = (rule) => SELECTION_RULES.find((r) => r.value === rule)?.label || rule;
   const eventName = useEventName();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -51,7 +51,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       setCategories(cats);
       setProducts(prodsData?.products || []);
     } catch {
-      toast.error('Erro ao carregar o pacote.');
+      toast.error(t('admin.packages.loadError'));
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
   const unassignedProducts = useMemo(() => products.filter((p) => !p.packageCategoryId), [products]);
 
   const priceLabel = (product) => {
-    if (!product.prices || product.prices.length === 0) return 'sem preço (defina em Produtos)';
+    if (!product.prices || product.prices.length === 0) return t('admin.packages.noPrice');
     const values = product.prices.map((pr) => Number(pr.price));
     const min = Math.min(...values);
     const max = Math.max(...values);
@@ -76,7 +76,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       setAssignProductId('');
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao associar produto.');
+      toast.error(getApiErrorMessage(err) || t('admin.packages.assignError'));
     } finally {
       setSaving(false);
     }
@@ -88,7 +88,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       await assignProductPackageCategory(productId, null);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao remover produto.');
+      toast.error(getApiErrorMessage(err) || t('admin.packages.unassignError'));
     } finally {
       setSaving(false);
     }
@@ -116,7 +116,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
 
   const save = async () => {
     if (!draft.name.trim()) {
-      toast.error('Informe o nome da categoria.');
+      toast.error(t('admin.packages.nameRequired'));
       return;
     }
     setSaving(true);
@@ -133,7 +133,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       setShowModal(false);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao salvar a categoria.');
+      toast.error(getApiErrorMessage(err) || t('admin.packages.saveError'));
     } finally {
       setSaving(false);
     }
@@ -158,7 +158,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       );
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao reordenar.');
+      toast.error(getApiErrorMessage(err) || t('admin.packages.reorderError'));
     } finally {
       setSaving(false);
     }
@@ -172,7 +172,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       setToDelete(null);
       await load();
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Erro ao excluir.');
+      toast.error(getApiErrorMessage(err) || t('admin.packages.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -180,17 +180,17 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
 
   const assignedCount = products.length - unassignedProducts.length;
   const statItems = [
-    { label: 'Categorias', value: categories.length },
-    { label: 'Produtos associados', value: assignedCount, tone: 'accent' },
-    { label: 'Sem categoria', value: unassignedProducts.length, tone: 'used' },
+    { label: t('admin.packages.statCategories'), value: categories.length },
+    { label: t('admin.packages.statAssigned'), value: assignedCount, tone: 'accent' },
+    { label: t('admin.packages.statUnassigned'), value: unassignedProducts.length, tone: 'used' },
   ];
 
   return (
     <div className="admin-subpage package-builder">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Pacote"
-        subtitle={`Categorias e produtos do evento: ${eventName}`}
+        title={t('admin.packages.title')}
+        subtitle={t('admin.packages.subtitle', { event: eventName })}
         typeIcon="cart"
       />
 
@@ -199,7 +199,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
 
         <div className="package-builder__toolbar">
           <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            Nova Categoria&nbsp;&nbsp;
+            {t('admin.packages.newCategory')}&nbsp;&nbsp;
             <Icons typeIcon="plus" iconSize={16} fill="#fff" />
           </Button>
         </div>
@@ -207,7 +207,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : categories.length === 0 ? (
-          <p className="package-builder__empty">Crie categorias para montar o pacote (ex.: Hospedagem, Transporte).</p>
+          <p className="package-builder__empty">{t('admin.packages.empty')}</p>
         ) : (
           <div className="package-builder__grid">
             {categories.map((category, index) => {
@@ -222,7 +222,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                         className="package-builder__move package-builder__move--up"
                         disabled={index === 0 || saving}
                         onClick={() => move(index, -1)}
-                        aria-label="Mover para cima"
+                        aria-label={t('admin.packages.moveUp')}
                       >
                         <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                       </button>
@@ -231,7 +231,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                         className="package-builder__move package-builder__move--down"
                         disabled={index === categories.length - 1 || saving}
                         onClick={() => move(index, 1)}
-                        aria-label="Mover para baixo"
+                        aria-label={t('admin.packages.moveDown')}
                       >
                         <Icons typeIcon="arrow-left" iconSize={16} fill="#555050" />
                       </button>
@@ -243,23 +243,23 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                           {ruleLabel(category.selectionRule)}
                         </Badge>
                         <Badge bg={category.required ? 'success' : 'secondary'}>
-                          {category.required ? 'Obrigatória' : 'Opcional'}
+                          {category.required ? t('admin.packages.required') : t('admin.packages.optional')}
                         </Badge>
                       </div>
                     </div>
                     <div className="package-builder__item-actions">
                       <Button size="sm" variant="teal-blue" onClick={() => openEdit(category)}>
-                        Editar
+                        {t('admin.packages.edit')}
                       </Button>
                       <Button size="sm" variant="danger" onClick={() => setToDelete(category)}>
-                        Excluir
+                        {t('admin.packages.delete')}
                       </Button>
                     </div>
                   </div>
 
                   <div className="package-builder__products">
                     {catProducts.length === 0 ? (
-                      <p className="package-builder__section-empty">Nenhum produto nesta categoria.</p>
+                      <p className="package-builder__section-empty">{t('admin.packages.noProducts')}</p>
                     ) : (
                       <ul className="package-builder__prod-list">
                         {catProducts.map((product) => (
@@ -273,7 +273,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                               disabled={saving}
                               onClick={() => unassignProduct(product.id)}
                             >
-                              Remover
+                              {t('admin.packages.remove')}
                             </Button>
                           </li>
                         ))}
@@ -286,7 +286,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                           value={assignProductId}
                           onChange={(e) => setAssignProductId(e.target.value)}
                         >
-                          <option value="">Selecione um produto...</option>
+                          <option value="">{t('admin.packages.selectProduct')}</option>
                           {unassignedProducts.map((p) => (
                             <option key={p.id} value={p.id}>
                               {p.name} · {priceLabel(p)}
@@ -294,10 +294,10 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                           ))}
                         </Form.Select>
                         <Button size="sm" variant="teal-blue" onClick={assignProduct} disabled={saving || !assignProductId}>
-                          Associar
+                          {t('admin.packages.assign')}
                         </Button>
                         <Button size="sm" variant="outline-secondary" onClick={() => setAssignFor(null)}>
-                          Cancelar
+                          {t('admin.packages.cancel')}
                         </Button>
                       </div>
                     ) : (
@@ -306,13 +306,13 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
                         variant="teal-blue"
                         className="mt-1 d-inline-flex align-items-center"
                         disabled={unassignedProducts.length === 0}
-                        title={unassignedProducts.length === 0 ? 'Crie produtos na tela de Produtos' : ''}
+                        title={unassignedProducts.length === 0 ? t('admin.packages.assignProductDisabledTitle') : ''}
                         onClick={() => {
                           setAssignFor(category);
                           setAssignProductId('');
                         }}
                       >
-                        Associar produto&nbsp;&nbsp;
+                        {t('admin.packages.assignProduct')}&nbsp;&nbsp;
                         <Icons typeIcon="plus" iconSize={14} fill="#fff" />
                       </Button>
                     )}
@@ -328,38 +328,38 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         show={showModal}
         onHide={() => setShowModal(false)}
         variant="info"
-        title={draft.id ? 'Editar Categoria' : 'Nova Categoria'}
+        title={draft.id ? t('admin.packages.editModalTitle') : t('admin.packages.newModalTitle')}
         icon={draft.id ? 'edit-modal' : 'plus'}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setShowModal(false)} disabled={saving}>
-              Cancelar
+              {t('admin.packages.cancel')}
             </Button>
-            <SpinnerButton variant="teal-blue" onClick={save} loading={saving}>Salvar</SpinnerButton>
+            <SpinnerButton variant="teal-blue" onClick={save} loading={saving}>{t('admin.packages.save')}</SpinnerButton>
           </>
         }
       >
         <Form>
           <Form.Group className="mb-3">
-            <Form.Label><b>Nome da Categoria:</b></Form.Label>
+            <Form.Label><b>{t('admin.packages.formName')}</b></Form.Label>
             <Form.Control
               value={draft.name}
               onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="Ex.: Hospedagem"
+              placeholder={t('admin.packages.namePlaceholder')}
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label><b>Descrição (opcional):</b></Form.Label>
+            <Form.Label><b>{t('admin.packages.formDescription')}</b></Form.Label>
             <Form.Control
               as="textarea"
               rows={2}
               value={draft.description}
               onChange={(e) => setDraft((prev) => ({ ...prev, description: e.target.value }))}
-              placeholder="Texto exibido acima das opções desta categoria"
+              placeholder={t('admin.packages.descriptionPlaceholder')}
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label><b>Regra de escolha:</b></Form.Label>
+            <Form.Label><b>{t('admin.packages.formRule')}</b></Form.Label>
             <Form.Select
               value={draft.selectionRule}
               onChange={(e) => setDraft((prev) => ({ ...prev, selectionRule: e.target.value }))}
@@ -374,7 +374,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
           <Form.Check
             type="switch"
             id="category-required-switch"
-            label="Categoria obrigatória"
+            label={t('admin.packages.requiredSwitch')}
             checked={draft.required}
             onChange={(e) => setDraft((prev) => ({ ...prev, required: e.target.checked }))}
           />
@@ -385,18 +385,18 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
         show={Boolean(toDelete)}
         onHide={() => setToDelete(null)}
         variant="cancel"
-        title="Excluir Categoria"
+        title={t('admin.packages.deleteModalTitle')}
         footer={
           <>
             <Button variant="outline-secondary" onClick={() => setToDelete(null)} disabled={saving}>
-              Cancelar
+              {t('admin.packages.cancel')}
             </Button>
-            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>Excluir</SpinnerButton>
+            <SpinnerButton variant="danger" onClick={confirmDelete} loading={saving}>{t('admin.packages.delete')}</SpinnerButton>
           </>
         }
       >
         <p>
-          Tem certeza que deseja excluir <b>{toDelete?.name}</b>?
+          <Trans i18nKey="admin.packages.deleteConfirm" values={{ name: toDelete?.name }} components={{ b: <b /> }} />
         </p>
       </CustomModal>
     </div>

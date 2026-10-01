@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form, Table, Accordion, Badge } from 'react-bootstrap';
+import { useTranslation, Trans } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { downloadMultiSheet } from '@/utils/excelExport';
 import PropTypes from 'prop-types';
@@ -27,6 +28,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 
 const AdminTeams = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [teams, setTeams] = useState([]);
   const [saving, setSaving] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
@@ -57,7 +59,7 @@ const AdminTeams = ({ loggedUsername }) => {
       const data = await listTeams();
       setTeams(data || []);
     } catch (error) {
-      toast.error('Erro ao carregar times');
+      toast.error(t('admin.teams.toast.loadError'));
       console.error(error);
     } finally {
       if (!silent) setLoadingTeams(false);
@@ -108,18 +110,18 @@ const AdminTeams = ({ loggedUsername }) => {
 
       if (editTeam) {
         await updateTeam(editTeam.id, payload);
-        toast.success('Time atualizado com sucesso');
+        toast.success(t('admin.teams.toast.teamUpdated'));
         registerLog(`Editou o time "${editTeam.name}"`, loggedUsername);
       } else {
         await createTeam(payload);
-        toast.success('Time criado com sucesso');
+        toast.success(t('admin.teams.toast.teamCreated'));
         registerLog(`Criou o time "${payload.name}"`, loggedUsername);
       }
 
       handleCloseModal();
       await fetchTeams(true);
     } catch (error) {
-      toast.error('Erro ao salvar time');
+      toast.error(t('admin.teams.toast.teamSaveError'));
       console.error(error);
     } finally {
       setSaving(false);
@@ -142,7 +144,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
       await assignCamperToTeam(payload);
 
-      toast.success('Inscritos adicionados ao time');
+      toast.success(t('admin.teams.toast.campersAdded'));
       registerLog(`Adicionou ${selectedCampersIds.length} inscritos ao time ${selectedTeam.name}`, loggedUsername);
 
       setSelectedCampersIds([]);
@@ -152,7 +154,7 @@ const AdminTeams = ({ loggedUsername }) => {
       await fetchTeams(true);
       refetchCampers();
     } catch (error) {
-      toast.error('Erro ao adicionar inscritos ao time');
+      toast.error(t('admin.teams.toast.campersAddError'));
       console.error(error);
     } finally {
       setSaving(false);
@@ -170,12 +172,12 @@ const AdminTeams = ({ loggedUsername }) => {
       await fetchTeams(true);
       refetchCampers();
 
-      toast.success('Inscrito removido do time');
+      toast.success(t('admin.teams.toast.camperRemoved'));
       registerLog(`Removeu o inscrito ${selectedCamperId} de um time`, loggedUsername);
 
       setShowRemoveCamperModal(false);
     } catch (error) {
-      toast.error('Erro ao remover inscrito do time');
+      toast.error(t('admin.teams.toast.camperRemoveError'));
       console.error(error);
     } finally {
       setSaving(false);
@@ -205,7 +207,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
       await deleteTeam(selectedTeamToRemove.id);
 
-      toast.success('Time removido com sucesso');
+      toast.success(t('admin.teams.toast.teamRemoved'));
       registerLog(`Removeu o time "${selectedTeamToRemove.name}"`, loggedUsername);
 
       await fetchTeams(true);
@@ -214,7 +216,7 @@ const AdminTeams = ({ loggedUsername }) => {
       setShowRemoveTeamModal(false);
       setSelectedTeamToRemove(null);
     } catch (error) {
-      toast.error('Erro ao remover time');
+      toast.error(t('admin.teams.toast.teamRemoveError'));
       console.error(error);
     } finally {
       setSaving(false);
@@ -294,10 +296,10 @@ const AdminTeams = ({ loggedUsername }) => {
   const totalAllocated = teams.reduce((s, t) => s + Number(t.campersCount ?? t.campers?.length ?? 0), 0);
   const biggestTeam = teams.reduce((m, t) => Math.max(m, Number(t.campersCount ?? 0)), 0);
   const statItems = [
-    { label: 'Times', value: teams.length },
-    { label: 'Inscritos alocados', value: totalAllocated, tone: 'free' },
-    { label: 'Sem time', value: availableCampers.length, tone: 'used' },
-    { label: 'Maior time', value: biggestTeam, tone: 'accent' },
+    { label: t('admin.teams.stats.teams'), value: teams.length },
+    { label: t('admin.teams.stats.allocated'), value: totalAllocated, tone: 'free' },
+    { label: t('admin.teams.stats.withoutTeam'), value: availableCampers.length, tone: 'used' },
+    { label: t('admin.teams.stats.biggestTeam'), value: biggestTeam, tone: 'accent' },
   ];
 
   const camperTerm = camperSearch.trim().toLowerCase();
@@ -321,14 +323,14 @@ const AdminTeams = ({ loggedUsername }) => {
       );
       toast.success(
         onlyUnassigned
-          ? `${result.assigned} inscrito(s) sem time distribuído(s) em ${result.teams} time(s).`
-          : `Times sorteados: ${result.assigned} inscrito(s) distribuído(s) em ${result.teams} time(s).`,
+          ? t('admin.teams.toast.randomRemainingResult', { assigned: result.assigned, teams: result.teams })
+          : t('admin.teams.toast.randomAllResult', { assigned: result.assigned, teams: result.teams }),
       );
       setRandomOpen(false);
       await fetchTeams(true);
       refetchCampers();
     } catch (error) {
-      toast.error('Não foi possível sortear os times.');
+      toast.error(t('admin.teams.toast.randomError'));
     } finally {
       setRandomizing(false);
     }
@@ -339,7 +341,7 @@ const AdminTeams = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'team-excel',
-      name: 'Baixar Relatório Times',
+      name: t('admin.teams.toolbar.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -348,7 +350,7 @@ const AdminTeams = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'team-random',
-      name: 'Sortear Times',
+      name: t('admin.teams.toolbar.randomAll'),
       onClick: () => openRandomModal('all'),
       typeButton: 'outline-teal-blue',
       typeIcon: 'person',
@@ -357,7 +359,7 @@ const AdminTeams = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'team-random-remaining',
-      name: 'Sortear os que Faltam',
+      name: t('admin.teams.toolbar.randomRemaining'),
       onClick: () => openRandomModal('remaining'),
       typeButton: 'outline-teal-blue',
       typeIcon: 'add-person',
@@ -366,7 +368,7 @@ const AdminTeams = ({ loggedUsername }) => {
       fill: '#fff',
       iconSize: 22,
       id: 'team-add',
-      name: 'Criar Novo Time',
+      name: t('admin.teams.toolbar.createTeam'),
       onClick: () => handleOpenModal(),
       typeButton: 'teal-blue',
       typeIcon: 'plus',
@@ -378,8 +380,8 @@ const AdminTeams = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="times"
         username={loggedUsername}
-        title="Times"
-        subtitle="Times e seus inscritos"
+        title={t('admin.teams.title')}
+        subtitle={t('admin.teams.subtitle')}
         typeIcon="team"
       />
 
@@ -389,21 +391,21 @@ const AdminTeams = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="teams-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por time ou inscrito..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.teams.searchPlaceholder')} />
         </div>
 
-        <SectionHeader title="Times" count={filteredTeams.length} />
+        <SectionHeader title={t('admin.teams.sectionTitle')} count={filteredTeams.length} />
 
         <div className="admin-table-card">
           <div className="table-responsive">
             <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">Nome do Time:</th>
-              <th className="table-cells-header">Cor da Pulseira:</th>
-              <th className="table-cells-header">Quantidade:</th>
-              <th className="table-cells-header">Inscritos:</th>
-              <th className="table-cells-header">Ações:</th>
+              <th className="table-cells-header">{t('admin.teams.columns.teamName')}</th>
+              <th className="table-cells-header">{t('admin.teams.columns.wristbandColor')}</th>
+              <th className="table-cells-header">{t('admin.teams.columns.quantity')}</th>
+              <th className="table-cells-header">{t('admin.teams.columns.campers')}</th>
+              <th className="table-cells-header">{t('admin.teams.columns.actions')}</th>
             </tr>
           </thead>
 
@@ -411,7 +413,7 @@ const AdminTeams = ({ loggedUsername }) => {
             {filteredTeams.length === 0 ? (
               <tr>
                 <td colSpan={5} className="text-start text-secondary p-4">
-                  Nenhum time registrado
+                  {t('admin.teams.empty')}
                 </td>
               </tr>
             ) : (
@@ -431,7 +433,7 @@ const AdminTeams = ({ loggedUsername }) => {
                 <td>
                   <Accordion>
                     <Accordion.Item eventKey="0">
-                      <Accordion.Header>Mostrar Inscritos</Accordion.Header>
+                      <Accordion.Header>{t('admin.teams.showCampers')}</Accordion.Header>
 
                       <Accordion.Body>
                         {team.campers?.length ? (
@@ -443,7 +445,7 @@ const AdminTeams = ({ loggedUsername }) => {
                                 <div className="table-action-cell">
                                   <ActionButton
                                     action="delete"
-                                    label="Remover inscrito"
+                                    label={t('admin.teams.removeCamper')}
                                     onClick={() => handleOpenRemoveCamperModal(camper.id)}
                                   />
                                 </div>
@@ -452,7 +454,7 @@ const AdminTeams = ({ loggedUsername }) => {
                             </React.Fragment>
                           ))
                         ) : (
-                          <small className="text-muted">Nenhum Inscrito</small>
+                          <small className="text-muted">{t('admin.teams.noCampers')}</small>
                         )}
                       </Accordion.Body>
                     </Accordion.Item>
@@ -462,13 +464,13 @@ const AdminTeams = ({ loggedUsername }) => {
                   <div className="table-action-cell">
                     <ActionButton
                       action="add"
-                      label="Adicionar inscrito"
+                      label={t('admin.teams.addCamper')}
                       onClick={() => handleOpenAddCamperModal(team)}
                     />
-                    <ActionButton action="edit" label="Editar time" onClick={() => handleOpenModal(team)} />
+                    <ActionButton action="edit" label={t('admin.teams.editTeam')} onClick={() => handleOpenModal(team)} />
                     <ActionButton
                       action="delete"
-                      label="Remover time"
+                      label={t('admin.teams.removeTeam')}
                       onClick={() => {
                         setSelectedTeamToRemove(team);
                         setShowRemoveTeamModal(true);
@@ -490,22 +492,22 @@ const AdminTeams = ({ loggedUsername }) => {
         variant="confirm"
         icon={editTeam ? 'edit' : 'plus'}
         iconFill={editTeam ? '' : '#057c05'}
-        title={editTeam ? 'Editar Time' : 'Criar Novo Time'}
+        title={editTeam ? t('admin.teams.editTitle') : t('admin.teams.createTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={handleCloseModal}>
-              Cancelar
+              {t('admin.teams.cancel')}
             </Button>
             <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={saving}>
-              {editTeam ? 'Salvar Alterações' : 'Criar Time'}
+              {editTeam ? t('admin.teams.saveChanges') : t('admin.teams.createTeamBtn')}
             </SpinnerButton>
           </>
         }
       >
         <Form.Group className="mb-3">
             <Form.Label>
-              <b>Nome do Time:</b>
+              <b>{t('admin.teams.teamNameLabel')}</b>
             </Form.Label>
             <Form.Control
               type="text"
@@ -517,7 +519,7 @@ const AdminTeams = ({ loggedUsername }) => {
 
           <Form.Group className="mb-3">
             <Form.Label>
-              <b>Pulseira do Time:</b>
+              <b>{t('admin.teams.teamWristbandLabel')}</b>
             </Form.Label>
 
             <Form.Select
@@ -531,7 +533,7 @@ const AdminTeams = ({ loggedUsername }) => {
               }
             >
               <option value="" disabled>
-                Selecione uma pulseira
+                {t('admin.teams.selectWristband')}
               </option>
 
               {teamWristbands.map((wristband) => (
@@ -549,7 +551,7 @@ const AdminTeams = ({ loggedUsername }) => {
                     backgroundColor: teamWristbands.find((w) => w.id === Number(formData.wristbandId))?.color,
                   }}
                 />
-                <small className="text-muted">Cor da pulseira selecionada</small>
+                <small className="text-muted">{t('admin.teams.selectedWristbandColor')}</small>
               </div>
             )}
         </Form.Group>
@@ -560,12 +562,12 @@ const AdminTeams = ({ loggedUsername }) => {
         onHide={() => setShowAddCamperModal(false)}
         variant="confirm"
         icon="plus"
-        title="Adicionar Inscrito"
+        title={t('admin.teams.addCamperTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowAddCamperModal(false)}>
-              Cancelar
+              {t('admin.teams.cancel')}
             </Button>
             <SpinnerButton
               variant="primary"
@@ -574,21 +576,21 @@ const AdminTeams = ({ loggedUsername }) => {
               disabled={!selectedCampersIds.length}
               loading={saving}
             >
-              Adicionar
+              {t('admin.teams.add')}
             </SpinnerButton>
           </>
         }
       >
         <Form.Group className="mb-3">
           <Form.Label>
-            <b>Inscritos:</b>
+            <b>{t('admin.teams.campersLabel')}</b>
           </Form.Label>
 
-          <SearchBox value={camperSearch} onChange={setCamperSearch} placeholder="Buscar inscrito..." />
+          <SearchBox value={camperSearch} onChange={setCamperSearch} placeholder={t('admin.teams.searchCamperPlaceholder')} />
 
           <div className="camper-checklist">
             {loadingCampers ? (
-              <small className="text-muted">Buscando lista de inscritos...</small>
+              <small className="text-muted">{t('admin.teams.loadingCampers')}</small>
             ) : filteredAvailableCampers.length ? (
               filteredAvailableCampers.map((camper) => {
                 const id = String(camper.id);
@@ -606,7 +608,7 @@ const AdminTeams = ({ loggedUsername }) => {
                     />
                     <span className="camper-check__info">
                       <span className="camper-check__name">
-                        {camper.personalInformation?.name || 'Sem nome'}
+                        {camper.personalInformation?.name || t('admin.teams.noName')}
                       </span>
                       {camper.personalInformation?.cpf && (
                         <span className="camper-check__cpf">{camper.personalInformation.cpf}</span>
@@ -616,12 +618,12 @@ const AdminTeams = ({ loggedUsername }) => {
                 );
               })
             ) : (
-              <small className="text-muted">Nenhum inscrito disponível</small>
+              <small className="text-muted">{t('admin.teams.noCampersAvailable')}</small>
             )}
           </div>
 
           {selectedCampersIds.length > 0 && (
-            <small className="text-success">{selectedCampersIds.length} selecionado(s)</small>
+            <small className="text-success">{t('admin.teams.selectedCount', { count: selectedCampersIds.length })}</small>
           )}
         </Form.Group>
       </CustomModal>
@@ -630,41 +632,45 @@ const AdminTeams = ({ loggedUsername }) => {
         show={showRemoveCamperModal}
         onHide={() => setShowRemoveCamperModal(false)}
         variant="cancel"
-        title="Excluir Inscrito"
+        title={t('admin.teams.removeCamperTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowRemoveCamperModal(false)}>
-              Cancelar
+              {t('admin.teams.cancel')}
             </Button>
             <SpinnerButton variant="danger" onClick={handleConfirmRemoveCamper} loading={saving}>
-              Remover
+              {t('admin.teams.remove')}
             </SpinnerButton>
           </>
         }
       >
-        <p>Deseja realmente remover este inscrito do time?</p>
+        <p>{t('admin.teams.removeCamperConfirm')}</p>
       </CustomModal>
 
       <CustomModal
         show={showRemoveTeamModal}
         onHide={handleCloseRemoveTeamModal}
         variant="cancel"
-        title="Excluir Time"
+        title={t('admin.teams.removeTeamTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowRemoveTeamModal(false)}>
-              Cancelar
+              {t('admin.teams.cancel')}
             </Button>
             <SpinnerButton variant="danger" onClick={handleConfirmRemoveTeam} loading={saving}>
-              Excluir
+              {t('admin.teams.delete')}
             </SpinnerButton>
           </>
         }
       >
         <p>
-          Deseja realmente remover o time <b>{selectedTeamToRemove?.name}</b>?
+          <Trans
+            i18nKey="admin.teams.removeTeamConfirm"
+            components={{ b: <b /> }}
+            values={{ name: selectedTeamToRemove?.name }}
+          />
         </p>
       </CustomModal>
 
@@ -672,28 +678,26 @@ const AdminTeams = ({ loggedUsername }) => {
         show={randomOpen}
         onHide={() => setRandomOpen(false)}
         variant="confirm"
-        title={randomMode === 'remaining' ? 'Sortear os que faltam' : 'Sortear times'}
+        title={randomMode === 'remaining' ? t('admin.teams.randomRemainingTitle') : t('admin.teams.randomAllTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setRandomOpen(false)} disabled={randomizing}>
-              Cancelar
+              {t('admin.teams.cancel')}
             </Button>
             <SpinnerButton variant="primary" className="btn-confirm" onClick={handleRandomAssign} loading={randomizing}>
-              {randomMode === 'remaining' ? 'Alocar' : 'Sortear Todos'}
+              {randomMode === 'remaining' ? t('admin.teams.allocate') : t('admin.teams.drawAll')}
             </SpinnerButton>
           </>
         }
       >
         {randomMode === 'remaining' ? (
           <p>
-            Sorteia <b>apenas os inscritos sem time</b> e os distribui de forma equilibrada entre os {teams.length}{' '}
-            time(s) existentes. Quem já está em um time <b>não é alterado</b>.
+            <Trans i18nKey="admin.teams.randomRemainingBody" components={{ b: <b /> }} values={{ count: teams.length }} />
           </p>
         ) : (
           <p>
-            Isso <b>refaz todos os times</b>: os inscritos são <b>redistribuídos aleatoriamente</b> e de forma
-            equilibrada entre os {teams.length} time(s) existentes. As alocações manuais atuais serão substituídas.
+            <Trans i18nKey="admin.teams.randomAllBody" components={{ b: <b /> }} values={{ count: teams.length }} />
           </p>
         )}
       </CustomModal>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
@@ -13,48 +14,22 @@ import CustomModal from '@/components/Global/CustomModal';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 
 const STAGES = [
-  {
-    key: 'form-on',
-    label: 'Aberto',
-    description: 'Inscrições abertas — o formulário está disponível para todos.',
-    icon: 'form',
-    tone: 'success',
-  },
-  {
-    key: 'form-off',
-    label: 'Fechado',
-    description: 'Exibe a tela "as inscrições começarão em breve".',
-    icon: 'clock',
-    tone: 'secondary',
-  },
-  {
-    key: 'form-waiting',
-    label: 'Esperando Início',
-    description: 'Inscrições encerradas — mostra a tela de espera do acampamento.',
-    icon: 'clock',
-    tone: 'warning',
-  },
-  {
-    key: 'form-closed',
-    label: 'Restrito',
-    description: 'Acesso restrito ao formulário de inscrição.',
-    icon: 'roles',
-    tone: 'danger',
-  },
-  {
-    key: 'maintenance',
-    label: 'Manutenção',
-    description: 'Site em manutenção — indisponível para os inscritos.',
-    icon: 'settings',
-    tone: 'danger',
-  },
+  { key: 'form-on', icon: 'form', tone: 'success' },
+  { key: 'form-off', icon: 'clock', tone: 'secondary' },
+  { key: 'form-waiting', icon: 'clock', tone: 'warning' },
+  { key: 'form-closed', icon: 'roles', tone: 'danger' },
+  { key: 'maintenance', icon: 'settings', tone: 'danger' },
 ];
 
 const AdminFormStage = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [formStage, setFormStage] = useState('');
   const [selectedStage, setSelectedStage] = useState('');
   const [showModal, setShowModal] = useState(false);
+
+  const stageLabel = (key) => t(`admin.formStage.stages.${key}.label`);
+  const stageDesc = (key) => t(`admin.formStage.stages.${key}.description`);
 
   scrollUp();
 
@@ -65,13 +40,13 @@ const AdminFormStage = ({ loggedUsername }) => {
         setFormStage(data.formStage);
       } catch (error) {
         console.error('Erro ao buscar os dados:', error);
-        toast.error('Erro ao carregar contexto do formulário');
+        toast.error(t('admin.formStage.loadError'));
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [t]);
 
   const current = STAGES.find((s) => s.key === formStage);
   const target = STAGES.find((s) => s.key === selectedStage);
@@ -88,11 +63,11 @@ const AdminFormStage = ({ loggedUsername }) => {
     setLoading(true);
     try {
       await updateFormStage(selectedStage);
-      toast.success('Estágio do formulário atualizado com sucesso');
-      registerLog(`Alterou o estágio do formulário para ${target?.label}`, loggedUsername);
+      toast.success(t('admin.formStage.updateSuccess'));
+      registerLog(`Alterou o estágio do formulário para ${target ? stageLabel(target.key) : ''}`, loggedUsername);
     } catch (error) {
       console.error('Erro ao atualizar contexto:', error);
-      toast.error('Erro ao atualizar o estágio do formulário');
+      toast.error(t('admin.formStage.updateError'));
     } finally {
       setLoading(false);
     }
@@ -102,8 +77,8 @@ const AdminFormStage = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--settings form-stage">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Estágio do Formulário"
-        subtitle="Estado atual do formulário de inscrição"
+        title={t('admin.formStage.title')}
+        subtitle={t('admin.formStage.subtitle')}
         typeIcon="form-context"
       />
 
@@ -115,15 +90,15 @@ const AdminFormStage = ({ loggedUsername }) => {
             </span>
             <div className="stage-current__body">
               <Badge bg={current.tone} text={current.tone === 'warning' ? 'dark' : undefined}>
-                Estado atual
+                {t('admin.formStage.currentBadge')}
               </Badge>
-              <h3 className="stage-current__title">{current.label}</h3>
-              <p className="stage-current__desc">{current.description}</p>
+              <h3 className="stage-current__title">{stageLabel(current.key)}</h3>
+              <p className="stage-current__desc">{stageDesc(current.key)}</p>
             </div>
           </div>
         )}
 
-        <h4 className="stage-heading">Alterar estágio</h4>
+        <h4 className="stage-heading">{t('admin.formStage.changeHeading')}</h4>
 
         <div className="stage-grid">
           {STAGES.map((stage) => {
@@ -139,9 +114,9 @@ const AdminFormStage = ({ loggedUsername }) => {
                 <span className="stage-card__icon">
                   <Icons typeIcon={stage.icon} iconSize={26} fill={active ? '#fff' : '#007185'} />
                 </span>
-                <span className="stage-card__title">{stage.label}</span>
-                <span className="stage-card__desc">{stage.description}</span>
-                {active && <span className="stage-card__badge">Atual</span>}
+                <span className="stage-card__title">{stageLabel(stage.key)}</span>
+                <span className="stage-card__desc">{stageDesc(stage.key)}</span>
+                {active && <span className="stage-card__badge">{t('admin.formStage.currentTag')}</span>}
               </button>
             );
           })}
@@ -151,20 +126,24 @@ const AdminFormStage = ({ loggedUsername }) => {
           show={showModal}
           onHide={() => setShowModal(false)}
           variant="confirm"
-          title="Confirmar Alteração"
+          title={t('admin.formStage.modalTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancelar
+                {t('admin.formStage.cancel')}
               </Button>
               <Button variant="primary" className="btn-confirm" onClick={handleConfirmChange}>
-                Confirmar
+                {t('admin.formStage.confirm')}
               </Button>
             </>
           }
         >
-          Alterar o estágio do formulário de <b>{current?.label}</b> para <b>{target?.label}</b>?
+          <Trans
+            i18nKey="admin.formStage.modalBody"
+            components={{ b: <b /> }}
+            values={{ from: current ? stageLabel(current.key) : '', to: target ? stageLabel(target.key) : '' }}
+          />
         </CustomModal>
 
         <Loading loading={loading} />

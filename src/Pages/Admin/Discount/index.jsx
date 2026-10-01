@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Form, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
@@ -39,6 +40,7 @@ const formatCpf = (v) => {
 };
 
 const AdminDiscount = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [discount, setDiscount] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       const data = await listCoupons();
       setDiscount(data.coupons);
     } catch (error) {
-      toast.error('Erro ao buscar descontos');
+      toast.error(t('admin.discount.fetchError'));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -73,12 +75,12 @@ const AdminDiscount = ({ loggedUsername }) => {
 
     try {
       await createCoupon({ ...newDiscount, id: Date.now().toString() });
-      toast.success('Desconto criado com sucesso');
+      toast.success(t('admin.discount.createSuccess'));
       setShowModal(false);
       registerLog(`Criou o desconto atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
       await fetchDiscounts(true);
     } catch (error) {
-      toast.error('Erro ao criar desconto');
+      toast.error(t('admin.discount.createError'));
     } finally {
       setSaving(false);
     }
@@ -89,12 +91,12 @@ const AdminDiscount = ({ loggedUsername }) => {
 
     try {
       await updateCoupon(editingDiscount.id, editingDiscount);
-      toast.success('Desconto atualizado com sucesso');
+      toast.success(t('admin.discount.updateSuccess'));
       setShowModal(false);
       registerLog(`Editou o desconto atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
       await fetchDiscounts(true);
     } catch (error) {
-      toast.error('Erro ao atualizar desconto');
+      toast.error(t('admin.discount.updateError'));
     } finally {
       setSaving(false);
     }
@@ -105,12 +107,12 @@ const AdminDiscount = ({ loggedUsername }) => {
 
     try {
       await deleteCoupon(discountToDelete.id, discountToDelete);
-      toast.success('Desconto excluído com sucesso');
+      toast.success(t('admin.discount.deleteSuccess'));
       setShowConfirmDelete(false);
       registerLog(`Excluiu o desconto atrelado ao CPF ${discountToDelete.cpf}`, loggedUsername);
       await fetchDiscounts(true);
     } catch (error) {
-      toast.error('Erro ao excluir desconto');
+      toast.error(t('admin.discount.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -178,16 +180,16 @@ const AdminDiscount = ({ loggedUsername }) => {
   const totalGranted = discount.reduce((s, d) => s + toNumber(d.discount), 0);
   const totalPaid = discount.reduce((s, d) => s + toNumber(d.totalPrice), 0);
   const statItems = [
-    { label: 'Descontos', value: discount.length },
-    { label: 'Utilizados', value: usedCount, tone: 'free' },
-    { label: 'Não utilizados', value: discount.length - usedCount, tone: 'used' },
-    { label: 'Valor concedido', value: formatBRL(totalGranted), tone: 'accent' },
-    { label: 'Valor pago', value: formatBRL(totalPaid), tone: 'info' },
+    { label: t('admin.discount.statTotal'), value: discount.length },
+    { label: t('admin.discount.statUsed'), value: usedCount, tone: 'free' },
+    { label: t('admin.discount.statUnused'), value: discount.length - usedCount, tone: 'used' },
+    { label: t('admin.discount.statGranted'), value: formatBRL(totalGranted), tone: 'accent' },
+    { label: t('admin.discount.statPaid'), value: formatBRL(totalPaid), tone: 'info' },
   ];
   const statusChips = [
-    { value: 'all', label: 'Todos', count: discount.length },
-    { value: 'used', label: 'Utilizados', count: usedCount },
-    { value: 'unused', label: 'Não utilizados', count: discount.length - usedCount },
+    { value: 'all', label: t('admin.discount.chipAll'), count: discount.length },
+    { value: 'used', label: t('admin.discount.chipUsed'), count: usedCount },
+    { value: 'unused', label: t('admin.discount.chipUnused'), count: discount.length - usedCount },
   ];
   const term = search.trim().toLowerCase();
   const filtered = discount.filter((d) => {
@@ -202,7 +204,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'discount-excel',
-      name: 'Baixar Relatório',
+      name: t('admin.discount.downloadReport'),
       onClick: generateExcel,
       typeButton: 'outline-teal-blue',
       typeIcon: 'excel',
@@ -211,7 +213,7 @@ const AdminDiscount = ({ loggedUsername }) => {
       fill: '#fff',
       iconSize: 22,
       id: 'add-new-discount',
-      name: 'Criar Novo Desconto',
+      name: t('admin.discount.createButton'),
       onClick: () => openModal(null),
       typeButton: 'teal-blue',
       typeIcon: 'discount',
@@ -223,8 +225,8 @@ const AdminDiscount = ({ loggedUsername }) => {
       <AdminSubpageHeader
         sessionKey="descontos"
         username={loggedUsername}
-        title="Descontos"
-        subtitle="Cupons e descontos atrelados a CPFs"
+        title={t('admin.discount.title')}
+        subtitle={t('admin.discount.subtitle')}
         typeIcon="discount"
       />
 
@@ -234,30 +236,30 @@ const AdminDiscount = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="discounts-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por CPF, usuário ou motivo..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.discount.searchPlaceholder')} />
           <FilterChips options={statusChips} value={statusFilter} onChange={setStatusFilter} />
         </div>
 
-        <SectionHeader title="Descontos cadastrados" count={filtered.length} />
+        <SectionHeader title={t('admin.discount.sectionTitle')} count={filtered.length} />
 
         <div className="admin-table-card">
           <div className="table-responsive">
             <Table striped bordered hover className="custom-table">
           <thead>
             <tr>
-              <th className="table-cells-header">CPF atrelado:</th>
-              <th className="table-cells-header">Valor Desconto:</th>
-              <th className="table-cells-header">Usuário:</th>
-              <th className="table-cells-header">Motivo:</th>
-              <th className="table-cells-header">Valor Pago:</th>
-              <th className="table-cells-header">Ações:</th>
+              <th className="table-cells-header">{t('admin.discount.colCpf')}</th>
+              <th className="table-cells-header">{t('admin.discount.colDiscount')}</th>
+              <th className="table-cells-header">{t('admin.discount.colUser')}</th>
+              <th className="table-cells-header">{t('admin.discount.colReason')}</th>
+              <th className="table-cells-header">{t('admin.discount.colPaid')}</th>
+              <th className="table-cells-header">{t('admin.discount.colActions')}</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-start text-secondary p-4">
-                  Nenhum desconto registrado
+                  {t('admin.discount.empty')}
                 </td>
               </tr>
             ) : (
@@ -270,15 +272,15 @@ const AdminDiscount = ({ loggedUsername }) => {
                     {item.user ? (
                       <Badge bg="success">{item.user}</Badge>
                     ) : (
-                      <Badge bg="secondary">Não utilizado</Badge>
+                      <Badge bg="secondary">{t('admin.discount.notUsed')}</Badge>
                     )}
                   </td>
                   <td>{item.discountReason || <span className="text-secondary">—</span>}</td>
                   <td>{item.totalPrice ? formatBRL(item.totalPrice) : <span className="text-secondary">—</span>}</td>
                   <td>
                     <div className="table-action-cell">
-                      <ActionButton action="edit" label="Editar desconto" onClick={() => openModal(item)} />
-                      <ActionButton action="delete" label="Excluir desconto" onClick={() => openConfirmDeleteModal(item)} />
+                      <ActionButton action="edit" label={t('admin.discount.editDiscount')} onClick={() => openModal(item)} />
+                      <ActionButton action="delete" label={t('admin.discount.deleteDiscount')} onClick={() => openConfirmDeleteModal(item)} />
                     </div>
                   </td>
                 </tr>
@@ -296,15 +298,15 @@ const AdminDiscount = ({ loggedUsername }) => {
         variant="confirm"
         icon={editingDiscount ? 'edit' : 'plus'}
         iconFill={editingDiscount ? '' : '#057c05'}
-        title={editingDiscount ? 'Editar Desconto' : 'Criar Novo Desconto'}
+        title={editingDiscount ? t('admin.discount.editModalTitle') : t('admin.discount.createModalTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={closeModal}>
-              Cancelar
+              {t('admin.discount.cancel')}
             </Button>
             <SpinnerButton variant="primary" className="btn-confirm" onClick={handleSubmit} loading={saving}>
-              {editingDiscount ? 'Salvar Alterações' : 'Criar Desconto'}
+              {editingDiscount ? t('admin.discount.saveChanges') : t('admin.discount.createDiscount')}
             </SpinnerButton>
           </>
         }
@@ -312,7 +314,7 @@ const AdminDiscount = ({ loggedUsername }) => {
         <Form>
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>CPF atrelado:</b>
+                <b>{t('admin.discount.formCpf')}</b>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -333,7 +335,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Valor:</b>
+                <b>{t('admin.discount.formValue')}</b>
               </Form.Label>
               <Form.Control
                 type="number"
@@ -350,7 +352,7 @@ const AdminDiscount = ({ loggedUsername }) => {
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Motivo do Desconto:</b>
+                <b>{t('admin.discount.formReason')}</b>
               </Form.Label>
               <Form.Control
                 type="text"
@@ -361,7 +363,7 @@ const AdminDiscount = ({ loggedUsername }) => {
                     ? setEditingDiscount({ ...editingDiscount, discountReason: e.target.value })
                     : setNewDiscount({ ...newDiscount, discountReason: e.target.value })
                 }
-                placeholder="Ex: Desconto pastoral, equipe, financeiro..."
+                placeholder={t('admin.discount.reasonPlaceholder')}
               />
             </Form.Group>
           </Form>
@@ -371,12 +373,12 @@ const AdminDiscount = ({ loggedUsername }) => {
         show={showConfirmDelete}
         onHide={closeConfirmDeleteModal}
         variant="cancel"
-        title="Excluir Desconto"
+        title={t('admin.discount.deleteModalTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={closeConfirmDeleteModal}>
-              Cancelar
+              {t('admin.discount.cancel')}
             </Button>
             <SpinnerButton
               variant="danger"
@@ -384,12 +386,12 @@ const AdminDiscount = ({ loggedUsername }) => {
               onClick={() => discountToDelete && handleDeleteDiscount(discountToDelete)}
               loading={saving}
             >
-              Excluir
+              {t('admin.discount.delete')}
             </SpinnerButton>
           </>
         }
       >
-        Tem certeza que deseja excluir o desconto vinculado ao CPF <b>{discountToDelete?.cpf}</b>?
+        <Trans i18nKey="admin.discount.deleteConfirm" values={{ cpf: discountToDelete?.cpf }} components={{ b: <b /> }} />
       </CustomModal>
 
         <Loading loading={loading} />

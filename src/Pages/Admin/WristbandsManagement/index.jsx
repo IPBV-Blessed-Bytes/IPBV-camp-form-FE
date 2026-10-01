@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Form, Table, Badge } from 'react-bootstrap';
+import { useTranslation, Trans } from 'react-i18next';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -24,6 +25,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
 const AdminWristbandsManagement = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
   const { wristbands, isLoading: loadingWristbands, refetch: refetchWristbands } = useWristbandsList();
   const [search, setSearch] = useState('');
@@ -45,7 +47,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     const { type, label, color } = formData;
 
     if (!type || !label || !color) {
-      toast.error('Todos os campos são obrigatórios');
+      toast.error(t('admin.wristbands.toast.allFieldsRequired'));
       return false;
     }
 
@@ -56,7 +58,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       );
 
       if (duplicatedFood) {
-        toast.error(`Já existe uma pulseira de alimentação do tipo ${label}. Não é possível cadastrar outra igual.`);
+        toast.error(t('admin.wristbands.toast.duplicateFood', { label }));
         return false;
       }
     }
@@ -73,11 +75,11 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     try {
       if (editingWristband) {
         await updateWristband(editingWristband.id, formData);
-        toast.success('Pulseira editada com sucesso');
+        toast.success(t('admin.wristbands.toast.wristbandUpdated'));
         registerLog(`Editou pulseira ${formData.label}`, loggedUsername);
       } else {
         await createWristband(formData);
-        toast.success('Pulseira criada com sucesso');
+        toast.success(t('admin.wristbands.toast.wristbandCreated'));
         registerLog(`Criou pulseira ${formData.label}`, loggedUsername);
       }
 
@@ -86,7 +88,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       setShowModal(false);
       refetchWristbands();
     } catch (error) {
-      toast.error('Erro ao salvar pulseira');
+      toast.error(t('admin.wristbands.toast.wristbandSaveError'));
     } finally {
       setSaving(false);
     }
@@ -96,12 +98,12 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     setSaving(true);
     try {
       await deleteWristband(wristbandToDelete.id);
-      toast.success('Pulseira removida com sucesso');
+      toast.success(t('admin.wristbands.toast.wristbandRemoved'));
       registerLog(`Removeu pulseira ${wristbandToDelete.label}`, loggedUsername);
       refetchWristbands();
       setShowDeleteModal(false);
     } catch (error) {
-      toast.error('Erro ao remover pulseira');
+      toast.error(t('admin.wristbands.toast.wristbandRemoveError'));
     } finally {
       setSaving(false);
     }
@@ -128,16 +130,16 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
   const teamCount = wristbands.filter((b) => b.type === 'TEAM').length;
   const foodCount = wristbands.filter((b) => b.type === 'FOOD').length;
   const statItems = [
-    { label: 'Pulseiras', value: wristbands.length },
-    { label: 'Ativas', value: activeCount, tone: 'free' },
-    { label: 'Inativas', value: wristbands.length - activeCount, tone: 'used' },
-    { label: 'Times', value: teamCount, tone: 'accent' },
-    { label: 'Alimentação', value: foodCount, tone: 'info' },
+    { label: t('admin.wristbands.stats.wristbands'), value: wristbands.length },
+    { label: t('admin.wristbands.stats.active'), value: activeCount, tone: 'free' },
+    { label: t('admin.wristbands.stats.inactive'), value: wristbands.length - activeCount, tone: 'used' },
+    { label: t('admin.wristbands.stats.teams'), value: teamCount, tone: 'accent' },
+    { label: t('admin.wristbands.stats.food'), value: foodCount, tone: 'info' },
   ];
   const typeChips = [
-    { value: 'all', label: 'Todas', count: wristbands.length },
-    { value: 'TEAM', label: 'Time', count: teamCount },
-    { value: 'FOOD', label: 'Alimentação', count: foodCount },
+    { value: 'all', label: t('admin.wristbands.chips.all'), count: wristbands.length },
+    { value: 'TEAM', label: t('admin.wristbands.chips.team'), count: teamCount },
+    { value: 'FOOD', label: t('admin.wristbands.chips.food'), count: foodCount },
   ];
   const term = search.trim().toLowerCase();
   const filtered = wristbands.filter(
@@ -149,7 +151,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-wristband',
-      name: 'Criar Nova Pulseira',
+      name: t('admin.wristbands.createWristband'),
       onClick: handleCreateClick,
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
@@ -160,8 +162,8 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--wristbands">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Pulseiras"
-        subtitle="Pulseiras de times e de alimentação"
+        title={t('admin.wristbands.title')}
+        subtitle={t('admin.wristbands.subtitle')}
         typeIcon="wristband"
       />
 
@@ -171,28 +173,28 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         <StatCards items={statItems} />
 
         <div className="wristbands-toolbar">
-          <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
+          <SearchBox value={search} onChange={setSearch} placeholder={t('admin.wristbands.searchPlaceholder')} />
           <FilterChips options={typeChips} value={typeFilter} onChange={setTypeFilter} />
         </div>
 
-        <SectionHeader title="Pulseiras" count={filtered.length} />
+        <SectionHeader title={t('admin.wristbands.sectionTitle')} count={filtered.length} />
 
         <div className="admin-table-card">
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Tipo:</th>
-                <th className="table-cells-header">Nome:</th>
-                <th className="table-cells-header">Cor:</th>
-                <th className="table-cells-header">Status:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.wristbands.columns.type')}</th>
+                <th className="table-cells-header">{t('admin.wristbands.columns.name')}</th>
+                <th className="table-cells-header">{t('admin.wristbands.columns.color')}</th>
+                <th className="table-cells-header">{t('admin.wristbands.columns.status')}</th>
+                <th className="table-cells-header">{t('admin.wristbands.columns.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-start text-secondary p-4">
-                    Nenhuma pulseira registrada
+                    {t('admin.wristbands.empty')}
                   </td>
                 </tr>
               ) : (
@@ -200,7 +202,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                 <tr key={band.id}>
                   <td>
                     <Badge bg={band.type === 'FOOD' ? 'warning' : 'primary'} text={band.type === 'FOOD' ? 'dark' : undefined}>
-                      {band.type === 'FOOD' ? 'Alimentação' : 'Time'}
+                      {band.type === 'FOOD' ? t('admin.wristbands.badgeFood') : t('admin.wristbands.badgeTeam')}
                     </Badge>
                   </td>
                   <td>{band.label}</td>
@@ -211,12 +213,12 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                     </span>
                   </td>
                   <td>
-                    <Badge bg={band.active ? 'success' : 'secondary'}>{band.active ? 'Ativa' : 'Inativa'}</Badge>
+                    <Badge bg={band.active ? 'success' : 'secondary'}>{band.active ? t('admin.wristbands.statusActive') : t('admin.wristbands.statusInactive')}</Badge>
                   </td>
                   <td>
                     <div className="table-action-cell">
-                      <ActionButton action="edit" label="Editar pulseira" onClick={() => handleEditClick(band)} />
-                      <ActionButton action="delete" label="Excluir pulseira" onClick={() => handleDeleteClick(band)} />
+                      <ActionButton action="edit" label={t('admin.wristbands.editWristband')} onClick={() => handleEditClick(band)} />
+                      <ActionButton action="delete" label={t('admin.wristbands.deleteWristband')} onClick={() => handleDeleteClick(band)} />
                     </div>
                   </td>
                 </tr>
@@ -232,15 +234,15 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         variant="confirm"
         icon={editingWristband ? 'edit' : 'plus'}
         iconFill={editingWristband ? '' : '#057c05'}
-        title={editingWristband ? 'Editar Pulseira' : 'Criar Pulseira'}
+        title={editingWristband ? t('admin.wristbands.editTitle') : t('admin.wristbands.createTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancelar
+              {t('admin.wristbands.cancel')}
             </Button>
             <SpinnerButton className="btn-confirm" variant="primary" onClick={handleSubmit} loading={saving}>
-              {editingWristband ? 'Salvar alterações' : 'Criar Pulseira'}
+              {editingWristband ? t('admin.wristbands.saveChanges') : t('admin.wristbands.createWristbandBtn')}
             </SpinnerButton>
           </>
         }
@@ -248,23 +250,23 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         <Form>
             <Form.Group>
               <Form.Label>
-                <b>Tipo:</b>
+                <b>{t('admin.wristbands.typeLabel')}</b>
               </Form.Label>
               <Form.Select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value, label: '' })}
               >
                 <option disabled value="">
-                  Selecione uma opção
+                  {t('admin.wristbands.selectOption')}
                 </option>
-                <option value="TEAM">Time</option>
-                <option value="FOOD">Alimentação</option>
+                <option value="TEAM">{t('admin.wristbands.typeTeam')}</option>
+                <option value="FOOD">{t('admin.wristbands.typeFood')}</option>
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mt-3">
               <Form.Label>
-                <b>Nome:</b>
+                <b>{t('admin.wristbands.nameLabel')}</b>
               </Form.Label>
 
               {formData.type === 'FOOD' ? (
@@ -273,7 +275,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                 >
                   <option value="" disabled>
-                    Selecione uma opção
+                    {t('admin.wristbands.selectOption')}
                   </option>
                   {FOOD_NAME_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -284,7 +286,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               ) : (
                 <Form.Control
                   type="text"
-                  placeholder="Digite o nome"
+                  placeholder={t('admin.wristbands.namePlaceholder')}
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                 />
@@ -293,7 +295,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
 
             <Form.Group className="mt-3">
               <Form.Label>
-                <b>Cor:</b>
+                <b>{t('admin.wristbands.colorLabel')}</b>
               </Form.Label>
               <div className="d-flex align-items-center gap-3">
                 <Form.Control
@@ -317,7 +319,7 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
               <Form.Check
                 checked={formData.active}
                 className="d-flex justify-content-end gap-2"
-                label="Pulseira ativa"
+                label={t('admin.wristbands.activeSwitch')}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
                 type="switch"
               />
@@ -329,20 +331,24 @@ const AdminWristbandsManagement = ({ loggedUsername }) => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         variant="cancel"
-        title="Confirmar Exclusão"
+        title={t('admin.wristbands.confirmDeleteTitle')}
         centered={false}
         footer={
           <>
             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
+              {t('admin.wristbands.cancel')}
             </Button>
             <SpinnerButton variant="danger" onClick={handleDelete} loading={saving}>
-              Deletar
+              {t('admin.wristbands.delete')}
             </SpinnerButton>
           </>
         }
       >
-        Deseja remover a pulseira <strong>{wristbandToDelete?.label}</strong>?
+        <Trans
+          i18nKey="admin.wristbands.deleteConfirm"
+          components={{ strong: <strong /> }}
+          values={{ label: wristbandToDelete?.label }}
+        />
       </CustomModal>
 
         <Loading loading={loadingWristbands} />
