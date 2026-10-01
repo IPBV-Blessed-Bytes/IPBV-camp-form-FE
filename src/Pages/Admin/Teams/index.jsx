@@ -14,7 +14,7 @@ import {
   randomAssignTeams,
 } from '@/services/teams';
 import { useWristbandsList } from '@/hooks/useWristbandsList';
-import { useCampersList } from '@/hooks/useCampersList';
+import { useParticipantsList } from '@/hooks/useParticipantsList';
 import { registerLog } from '@/services/logs';
 import ActionButton from '@/components/Global/ActionButton';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -42,7 +42,7 @@ const AdminTeams = ({ loggedUsername }) => {
   const [selectedCampersIds, setSelectedCampersIds] = useState([]);
   const [selectedCamperId, setSelectedCamperId] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const { campers, isLoading: loadingCampers, refetch: refetchCampers } = useCampersList();
+  const { campers, isLoading: loadingCampers, refetch: refetchCampers } = useParticipantsList();
   const [selectedTeamToRemove, setSelectedTeamToRemove] = useState(null);
   const [formData, setFormData] = useState({
     name: '',

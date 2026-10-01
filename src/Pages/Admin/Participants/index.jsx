@@ -10,12 +10,12 @@ import Loading from '@/components/Global/Loading';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
-import CoreTable from '@/components/Admin/CampersTable/CoreTable';
-import TablePagination from '@/components/Admin/CampersTable/TablePagination';
-import EditAndAddCamperModal from '@/components/Admin/CampersTable/EditAndAddCamperModal';
-import ImportCampersModal from '@/components/Admin/CampersTable/ImportCampersModal';
+import CoreTable from '@/components/Admin/ParticipantsTable/CoreTable';
+import TablePagination from '@/components/Admin/ParticipantsTable/TablePagination';
+import EditAndAddParticipantModal from '@/components/Admin/ParticipantsTable/EditAndAddParticipantModal';
+import ImportParticipantsModal from '@/components/Admin/ParticipantsTable/ImportParticipantsModal';
 
-import useCampersData from './hooks/useCampersData';
+import useParticipantsData from './hooks/useParticipantsData';
 import { useProductCatalog } from './hooks/useProductCatalog';
 import { buildCampersColumns, makeDefaultFilter } from './utils/buildColumns';
 import { filterTypes } from './utils/tableFilters';
@@ -35,7 +35,7 @@ const formatCurrentDate = () => {
   )}:${pad(now.getSeconds())}`;
 };
 
-const AdminCampers = ({ loggedUsername, userRole }) => {
+const AdminParticipants = ({ loggedUsername, userRole }) => {
   scrollUp();
 
   const {
@@ -50,7 +50,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
     importCampers,
     deleteSelected,
     deleteOne,
-  } = useCampersData({ loggedUsername });
+  } = useParticipantsData({ loggedUsername });
 
   const catalog = useProductCatalog();
 
@@ -325,7 +325,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         />
       </Row>
 
-      <EditAndAddCamperModal
+      <EditAndAddParticipantModal
         name={name}
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}
@@ -346,7 +346,7 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
         handleConfirmDeleteSpecific={handleConfirmDeleteSpecific}
       />
 
-      <ImportCampersModal
+      <ImportParticipantsModal
         show={showImportModal}
         onHide={() => setShowImportModal(false)}
         onImport={importCampers}
@@ -359,9 +359,9 @@ const AdminCampers = ({ loggedUsername, userRole }) => {
   );
 };
 
-AdminCampers.propTypes = {
+AdminParticipants.propTypes = {
   loggedUsername: PropTypes.string,
   userRole: PropTypes.string,
 };
 
-export default AdminCampers;
+export default AdminParticipants;

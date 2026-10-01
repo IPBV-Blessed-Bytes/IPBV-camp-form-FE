@@ -9,7 +9,7 @@ import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import useActiveLot from '@/hooks/useActiveLot';
-import { saveFinalObservation } from '@/services/campers';
+import { saveFinalObservation } from '@/services/participants';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getTempData } from '@/utils/formStorage';
 import { stripEventPrefix } from '@/config/eventScope';

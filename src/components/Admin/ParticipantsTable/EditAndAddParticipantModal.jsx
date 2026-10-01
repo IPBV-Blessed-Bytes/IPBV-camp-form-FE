@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
 import SpinnerButton from '@/components/Global/SpinnerButton';
-import CamperFormModal from './CamperFormModal';
+import ParticipantFormModal from './ParticipantFormModal';
 
-const EditAndAddCamperModal = ({
+const EditAndAddParticipantModal = ({
   name,
   showEditModal,
   setShowEditModal,
@@ -26,7 +26,7 @@ const EditAndAddCamperModal = ({
   handleConfirmDeleteSpecific,
 }) => (
   <>
-    <CamperFormModal
+    <ParticipantFormModal
       key={`edit-${editRowIndex}-${showEditModal}`}
       show={showEditModal}
       onHide={() => setShowEditModal(false)}
@@ -41,7 +41,7 @@ const EditAndAddCamperModal = ({
       submitting={savingEdit}
     />
 
-    <CamperFormModal
+    <ParticipantFormModal
       key={`add-${showAddModal}`}
       show={showAddModal}
       onHide={() => setShowAddModal(false)}
@@ -83,7 +83,7 @@ const EditAndAddCamperModal = ({
   </>
 );
 
-EditAndAddCamperModal.propTypes = {
+EditAndAddParticipantModal.propTypes = {
   name: PropTypes.string,
   showEditModal: PropTypes.bool,
   setShowEditModal: PropTypes.func,
@@ -104,4 +104,4 @@ EditAndAddCamperModal.propTypes = {
   handleConfirmDeleteSpecific: PropTypes.func,
 };
 
-export default EditAndAddCamperModal;
+export default EditAndAddParticipantModal;

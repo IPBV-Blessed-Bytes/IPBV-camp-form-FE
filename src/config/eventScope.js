@@ -4,7 +4,7 @@ export const SELECTED_EVENT_NAME_KEY = 'selected-event-name';
 export const GLOBAL_ADMIN_SEGMENTS = new Set(['', 'eventos', 'usuarios', 'papeis', 'logs']);
 
 export const EVENT_SCOPED_PREFIXES = new Set([
-  'camper',
+  'participants',
   'rooms',
   'base-date',
   'ride',

@@ -36,7 +36,7 @@ import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
 import BeforePayment from '@/Pages/BeforePayment';
 
-const AdminCampers = lazy(() => import('../Pages/Admin/Campers'));
+const AdminParticipants = lazy(() => import('../Pages/Admin/Participants'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
 const AdminBus = lazy(() => import('../Pages/Admin/Bus'));
 const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
@@ -207,14 +207,14 @@ const FormRoutes = () => {
               }
             />
             <Route
-              path={adminPath('/acampantes')}
+              path={adminPath('/participantes')}
               element={
                 <ProtectedRoute
                   allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
                   userRole={userRole}
                   requiredPermission="REGISTRATIONS_READ"
                 >
-                  <AdminCampers formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
+                  <AdminParticipants formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
                 </ProtectedRoute>
               }
             />

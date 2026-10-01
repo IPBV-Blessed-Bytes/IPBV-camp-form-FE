@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import CustomModal from '@/components/Global/CustomModal';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
-import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormChange';
-import { useProductCatalog } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
+import { handleCamperFormChange } from '@/Pages/Admin/Participants/utils/handleFormChange';
+import { useProductCatalog } from '@/Pages/Admin/Participants/hooks/useProductCatalog';
 import Columns from './Columns';
 
-const CamperFormModal = ({
+const ParticipantFormModal = ({
   show,
   onHide,
   title,
@@ -93,7 +93,7 @@ const CamperFormModal = ({
   );
 };
 
-CamperFormModal.propTypes = {
+ParticipantFormModal.propTypes = {
   show: PropTypes.bool,
   onHide: PropTypes.func,
   title: PropTypes.string,
@@ -107,4 +107,4 @@ CamperFormModal.propTypes = {
   submitting: PropTypes.bool,
 };
 
-export default CamperFormModal;
+export default ParticipantFormModal;

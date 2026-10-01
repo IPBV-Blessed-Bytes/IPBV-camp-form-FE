@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { cpf } from 'cpf-cnpj-validator';
 
-import { deleteUserPreviousYear, getUserPreviousYear } from '@/services/campers';
+import { deleteUserPreviousYear, getUserPreviousYear } from '@/services/participants';
 import { useFormState } from '@/contexts/FormStateContext';
 import { FORM_STORAGE_KEYS } from '@/utils/formStorage';
 import { formatDate } from '../utils/fieldHelpers';

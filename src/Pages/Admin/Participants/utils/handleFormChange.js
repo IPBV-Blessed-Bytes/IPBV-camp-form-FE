@@ -1,4 +1,4 @@
-import { normalizeProductName } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
+import { normalizeProductName } from '@/Pages/Admin/Participants/hooks/useProductCatalog';
 
 const BOOLEAN_FIELDS = ['pastoralFamily', 'contact.car', 'contact.needRide', 'contact.isWhatsApp'];
 

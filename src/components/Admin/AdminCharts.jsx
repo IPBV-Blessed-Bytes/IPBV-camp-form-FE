@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import PropTypes from 'prop-types';
 
 import { permissionsSections } from '@/fetchers/permissions';
-import { useCampersList } from '@/hooks/useCampersList';
+import { useParticipantsList } from '@/hooks/useParticipantsList';
 import CheckinBalance from '@/components/Admin/CheckinBalance';
 import VacanciesProgression from '@/components/Admin/VacanciesProgression';
 import '../Style/AdminCharts.scss';
@@ -46,7 +46,7 @@ const AdminCharts = ({ availablePackages, userRole }) => {
   const { vacanciesProgressionPermissions, checkinBalancePermissions, filledVacanciesChartPermissions, allInfoChartPermissions } =
     permissionsSections(userRole);
 
-  const { campers } = useCampersList();
+  const { campers } = useParticipantsList();
 
   const usedPackages = availablePackages?.usedPackages || {};
   const totalPackages = availablePackages?.totalPackages || {};

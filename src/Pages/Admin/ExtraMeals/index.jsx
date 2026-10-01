@@ -3,7 +3,7 @@ import { Table, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import './style.scss';
 import { downloadSingleSheet } from '@/utils/excelExport';
-import { useCampersList } from '@/hooks/useCampersList';
+import { useParticipantsList } from '@/hooks/useParticipantsList';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -15,7 +15,7 @@ import SearchBox from '@/components/Admin/SearchBox';
 const AdminExtraMeals = () => {
   scrollUp();
 
-  const { campers, isLoading: loading, isError } = useCampersList();
+  const { campers, isLoading: loading, isError } = useParticipantsList();
   const [search, setSearch] = useState('');
 
   const usersWithExtraMeals = useMemo(() => campers.filter((user) => user.extraMeals?.someFood), [campers]);

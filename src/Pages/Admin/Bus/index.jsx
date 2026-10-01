@@ -14,7 +14,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
-import useCampersData from '../Campers/hooks/useCampersData';
+import useParticipantsData from '../Participants/hooks/useParticipantsData';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const BUS_TRANSPORTATIONS = ['Com Ônibus', 'Com Onibus', 'Ônibus Equipe', 'Onibus Equipe'];
@@ -35,7 +35,7 @@ const EDIT_FIELDS = [
 const AdminBus = ({ loggedUsername, userRole }) => {
   scrollUp();
 
-  const { data, loading, saveEdit } = useCampersData({ loggedUsername });
+  const { data, loading, saveEdit } = useParticipantsData({ loggedUsername });
 
   const [search, setSearch] = useState('');
   const [busFilter, setBusFilter] = useState('all'); // 'all' | 'normal' | 'equipe'

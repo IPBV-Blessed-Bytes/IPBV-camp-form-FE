@@ -4,9 +4,9 @@ import { Form } from 'react-bootstrap';
 import { CREW_OPTIONS } from '@/utils/constants';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import ActionButton from '@/components/Global/ActionButton';
-import ColumnFilter from '@/components/Admin/CampersTable/ColumnFilter';
-import ColumnFilterWithSelect from '@/components/Admin/CampersTable/ColumnFilterWithSelect';
-import ColumnFilterWithTwoValues from '@/components/Admin/CampersTable/ColumnFilterWithTwoValues';
+import ColumnFilter from '@/components/Admin/ParticipantsTable/ColumnFilter';
+import ColumnFilterWithSelect from '@/components/Admin/ParticipantsTable/ColumnFilterWithSelect';
+import ColumnFilterWithTwoValues from '@/components/Admin/ParticipantsTable/ColumnFilterWithTwoValues';
 
 import { alphabeticalSort, ageFilterFn } from './tableFilters';
 

@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 
 import CustomModal from '@/components/Global/CustomModal';
 import Icons from '@/components/Global/Icons';
-import { downloadCampersTemplate, parseCampersFile } from '@/Pages/Admin/Campers/utils/importCampers';
-import './ImportCampersModal.scss';
+import { downloadCampersTemplate, parseCampersFile } from '@/Pages/Admin/Participants/utils/importParticipants';
+import './ImportParticipantsModal.scss';
 
-const ImportCampersModal = ({ show, onHide, onImport, loading }) => {
+const ImportParticipantsModal = ({ show, onHide, onImport, loading }) => {
   const inputRef = useRef(null);
   const [fileName, setFileName] = useState('');
   const [parsed, setParsed] = useState(null);
@@ -175,11 +175,11 @@ const ImportCampersModal = ({ show, onHide, onImport, loading }) => {
   );
 };
 
-ImportCampersModal.propTypes = {
+ImportParticipantsModal.propTypes = {
   show: PropTypes.bool,
   onHide: PropTypes.func.isRequired,
   onImport: PropTypes.func.isRequired,
   loading: PropTypes.bool,
 };
 
-export default ImportCampersModal;
+export default ImportParticipantsModal;

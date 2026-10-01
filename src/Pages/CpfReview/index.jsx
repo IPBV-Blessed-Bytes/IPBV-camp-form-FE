@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
-import { getPersonData } from '@/services/campers';
+import { getPersonData } from '@/services/participants';
 import { eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { useFormState } from '@/contexts/FormStateContext';

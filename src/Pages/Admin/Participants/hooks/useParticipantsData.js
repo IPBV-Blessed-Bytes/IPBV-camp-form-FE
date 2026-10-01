@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import { createCamper, updateCamper, deleteCamper, deleteCampers, bulkImportCampers } from '@/services/campers';
+import { createParticipant, updateParticipant, deleteParticipant, deleteParticipants, bulkImportParticipants } from '@/services/participants';
 import { registerLog } from '@/services/logs';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { useCampersList, CAMPERS_QUERY_KEY } from '@/hooks/useCampersList';
+import { useParticipantsList, CAMPERS_QUERY_KEY } from '@/hooks/useParticipantsList';
 
 import { sanitizeFields } from '../utils/sanitizeFields';
 
@@ -48,19 +48,19 @@ const buildAddPayload = (formData, currentDate) => {
   };
 };
 
-const useCampersData = ({ loggedUsername }) => {
+const useParticipantsData = ({ loggedUsername }) => {
   const queryClient = useQueryClient();
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { campers: data, isLoading, refetch } = useCampersList();
+  const { campers: data, isLoading, refetch } = useParticipantsList();
 
   const setCampersCache = (updater) => queryClient.setQueryData(CAMPERS_QUERY_KEY, (prev = []) => updater(prev));
 
-  const updateMutation = useMutation({ mutationFn: ({ id, payload }) => updateCamper(id, payload) });
-  const createMutation = useMutation({ mutationFn: (payload) => createCamper(payload) });
-  const deleteOneMutation = useMutation({ mutationFn: (id) => deleteCamper(id) });
-  const deleteManyMutation = useMutation({ mutationFn: (ids) => deleteCampers(ids) });
-  const importMutation = useMutation({ mutationFn: (payload) => bulkImportCampers(payload) });
+  const updateMutation = useMutation({ mutationFn: ({ id, payload }) => updateParticipant(id, payload) });
+  const createMutation = useMutation({ mutationFn: (payload) => createParticipant(payload) });
+  const deleteOneMutation = useMutation({ mutationFn: (id) => deleteParticipant(id) });
+  const deleteManyMutation = useMutation({ mutationFn: (ids) => deleteParticipants(ids) });
+  const importMutation = useMutation({ mutationFn: (payload) => bulkImportParticipants(payload) });
 
   const loading = isLoading || importMutation.isPending;
   const savingEdit = updateMutation.isPending;
@@ -176,4 +176,4 @@ const useCampersData = ({ loggedUsername }) => {
   };
 };
 
-export default useCampersData;
+export default useParticipantsData;
