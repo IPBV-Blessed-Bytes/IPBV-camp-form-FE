@@ -2,11 +2,13 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 
 export const StoreNav = ({ onLanding }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { isLoggedIn, displayName } = useContext(AuthContext);
   const firstName = (displayName || '').trim().split(' ')[0];
   return (
@@ -16,23 +18,23 @@ export const StoreNav = ({ onLanding }) => {
           <span className="storefront__brand-mark">
             <Icons typeIcon="tent" iconSize={36} fill="#ffffff" />
           </span>
-          Plataforma de Inscrições
+          {t('site.nav.brand')}
         </button>
         <nav className="storefront__nav-links">
-          {onLanding && <a href="#planos">Preços</a>}
+          {onLanding && <a href="#planos">{t('site.nav.prices')}</a>}
           <button type="button" className="storefront__nav-linkbtn" onClick={() => navigate('/ajuda')}>
-            Ajuda
+            {t('site.nav.help')}
           </button>
           {isLoggedIn ? (
             <div className="storefront__nav-account">
-              {firstName && <span className="storefront__nav-hi">Olá, {firstName}</span>}
+              {firstName && <span className="storefront__nav-hi">{t('site.nav.hi', { name: firstName })}</span>}
               <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
-                Meu Painel
+                {t('site.nav.myPanel')}
               </button>
             </div>
           ) : (
             <button type="button" className="storefront__nav-login" onClick={() => navigate('/admin')}>
-              Entrar
+              {t('site.nav.login')}
             </button>
           )}
         </nav>
@@ -47,6 +49,7 @@ StoreNav.propTypes = {
 
 export const StoreFooter = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   return (
     <footer className="storefront__footer">
@@ -55,8 +58,8 @@ export const StoreFooter = () => {
           type="button"
           className="storefront__footer-mark"
           onClick={() => navigate('/painel-interno')}
-          aria-label="Painel Interno - Sistema"
-          title="Painel Interno - Sistema"
+          aria-label={t('site.footer.panelTitle')}
+          title={t('site.footer.panelTitle')}
         >
           <Icons typeIcon="tent" iconSize={26} fill="#ffffff" />
         </button>
@@ -68,16 +71,14 @@ export const StoreFooter = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Powered by Blessed Bytes Team
+              {t('site.footer.poweredBy')}
             </a>
             <span className="storefront__footer-sep"> • </span>
             <em>
-              <b>1 Coríntios 15:58</b>
+              <b>{t('site.footer.verse')}</b>
             </em>
           </p>
-          <p className="storefront__footer-copyright">
-            © {currentYear} Plataforma de Inscrições • Todos os direitos reservados
-          </p>
+          <p className="storefront__footer-copyright">{t('site.footer.copyright', { year: currentYear })}</p>
         </div>
       </Container>
     </footer>
