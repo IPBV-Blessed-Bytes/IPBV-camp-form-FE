@@ -21,8 +21,8 @@ export const StoreNav = ({ onLanding }) => {
           {t('site.nav.brand')}
         </button>
         <nav className="storefront__nav-links">
-          {onLanding && <a href="#planos">{t('site.nav.prices')}</a>}
-          <button type="button" className="storefront__nav-linkbtn" onClick={() => navigate('/ajuda')}>
+          {onLanding && <a href="#planos" className='storefront__nav-link-plans'>{t('site.nav.prices')}</a>}
+          <button type="button" className="storefront__nav-link-btn" onClick={() => navigate('/ajuda')}>
             {t('site.nav.help')}
           </button>
           {isLoggedIn ? (
