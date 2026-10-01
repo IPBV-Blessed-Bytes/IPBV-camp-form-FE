@@ -1,0 +1,205 @@
+{
+  "site": {
+    "nav": {
+      "brand": "Registration Platform",
+      "prices": "Pricing",
+      "help": "Help",
+      "hi": "Hi, {{name}}",
+      "myPanel": "My Dashboard",
+      "login": "Sign in"
+    },
+    "footer": {
+      "panelTitle": "Internal Panel - System",
+      "poweredBy": "Powered by Blessed Bytes Team",
+      "verse": "1 Corinthians 15:58",
+      "copyright": "© {{year}} Registration Platform • All rights reserved"
+    },
+    "landing": {
+      "documentTitle": "Registration System for Churches | Camps, Retreats and Conferences",
+      "hero": {
+        "eyebrow": "Built for churches and ministries",
+        "title": "Create your church's registration system in minutes",
+        "subtitle": "Custom form, online payments and complete management of camps, retreats, conferences and events — all in one place.",
+        "ctaStart": "Get Started",
+        "seePrices": "See Pricing",
+        "chips": {
+          "pix": "PIX, card and bank slip",
+          "noMonthly": "No monthly fee",
+          "readyMinutes": "Ready in minutes"
+        }
+      },
+      "features": {
+        "form": {
+          "title": "A Form Your Way",
+          "text": "Build fields, sections and packages without coding. Every event looks like your church."
+        },
+        "payment": {
+          "title": "Online Payment",
+          "text": "PIX, card and bank slip. The money goes straight to the church's account, with automatic transfer."
+        },
+        "management": {
+          "title": "Complete Management",
+          "text": "Registrations, spots, rooms, buses and reports brought together in a single dashboard."
+        },
+        "checkin": {
+          "title": "QR Check-in",
+          "text": "Confirm attendance at the event entrance from your phone, no paper and no lines."
+        }
+      },
+      "differentials": {
+        "eyebrow": "The difference",
+        "title": "Built for the Reality of the Church",
+        "lede": "Selling tickets and collecting form responses is already everywhere. What doesn't exist is a system that also organizes the <b>church event's operation</b> — rides, rooms, teams, wristbands and check-in — integrated with payment, in a single flow.",
+        "items": {
+          "transport": {
+            "title": "Rides and Transport",
+            "text": "Ride offers and requests among registrants and control of the church bus."
+          },
+          "rooms": {
+            "title": "Rooms",
+            "text": "Assign registrants to rooms, with companions, right from the dashboard."
+          },
+          "teams": {
+            "title": "Teams and Crews",
+            "text": "Organize registrants into teams and service crews for the event."
+          },
+          "checkin": {
+            "title": "Check-in and Wristbands",
+            "text": "Attendance by QR or ID number, individual or by family, and wristband control."
+          },
+          "packages": {
+            "title": "Packages and Batches",
+            "text": "Lodging, meals and transport by category, with pricing by age and by batch."
+          },
+          "multievent": {
+            "title": "Multi-event",
+            "text": "Camp, conference and retreat in the same account, each with its own page and registrations."
+          }
+        },
+        "vsGoogleTag": "vs. Google Forms",
+        "vsGoogleText": "Here you get payment, packages, user accounts and event management — not just collecting responses.",
+        "vsGenericTag": "vs. Generic ticket-selling platforms",
+        "vsGenericText": "The form is yours, editable field by field, with rides, rooms, teams, wristbands and check-in, designed 100% for your church and/or organization."
+      },
+      "purpose": {
+        "eyebrow": "Our purpose",
+        "title": "Technology at the Service of Your Church",
+        "lede": "We were born serving a local church's camp and grew alongside it. Our mission is to take the weight of organizing off the leadership's shoulders, so the church can focus on what matters: <b>people and the Kingdom</b>.",
+        "values": {
+          "smallChurch": {
+            "title": "Serving the Small Church",
+            "text": "The same tool the large church has, within reach of the small congregation — with no monthly fee that strains the budget."
+          },
+          "stewardship": {
+            "title": "Stewardship and Trust",
+            "text": "The money belongs to the church and goes straight to its account. We don't hold anything; you stay in control."
+          },
+          "dataCare": {
+            "title": "Care with Data",
+            "text": "Registrants' data handled with security and responsibility, in compliance with the LGPD."
+          },
+          "simplicity": {
+            "title": "Simplicity",
+            "text": "Ready in minutes, with no need for IT. You build, publish and receive — and get back to caring for people. Any data can be edited by you at any time."
+          }
+        }
+      },
+      "plans": {
+        "title": "Two Plans, No Monthly Fee",
+        "lede": "Choose the size of your church. Free account; you only pay when you create an event — and on paid ones, only on what you sell. The money goes straight to the church's account.",
+        "perPaidRegistration": "per paid registration",
+        "freeEventBlurb": "Free event: {{fee}}/event or {{annual}}/year unlimited.",
+        "essencialName": "Essential",
+        "essencialTagline": "Form + registrations + check-in. For those who just need to register, receive and control entry.",
+        "essencialFeature1": "100% editable form",
+        "essencialFeature2": "Payment (PIX, card and bank slip)",
+        "essencialFeature3": "Registrations, reports and Excel",
+        "essencialFeature4": "Event page and FAQ",
+        "recommended": "Recommended",
+        "completoName": "Complete",
+        "completoTagline": "Everything in Essential + event logistics. For those who organize it all.",
+        "completoFeature1": "Everything in Essential, plus:",
+        "completoFeature2": "Rides and the church bus",
+        "completoFeature3": "Rooms and teams/crews",
+        "completoFeature4": "QR check-in and wristbands",
+        "footnote": "No monthly fee — you pay as you go. The 14-day free trial applies only to <b>free events</b>; <b>paid events already charge the fee</b> per registration from the first sale."
+      },
+      "ctaBand": {
+        "title": "Ready to Get Started?",
+        "text": "Create your church's system now — it takes less than a minute and the account is free.",
+        "button": "Create my System"
+      },
+      "faqs": {
+        "title": "Frequently asked questions"
+      }
+    },
+    "storefront": {
+      "errors": {
+        "churchRequired": "Enter the name of the church or organization.",
+        "nameRequired": "Enter your name.",
+        "emailRequired": "Enter your email.",
+        "emailInvalid": "Enter a valid email.",
+        "slugRequired": "Enter an identifier (slug) for your system.",
+        "passwordTooShort": "The password must be at least 6 characters.",
+        "termsRequired": "You must read and accept the Terms and Conditions.",
+        "createFailed": "We couldn't create the system. Please try again.",
+        "googleChurchRequired": "Fill in the church name before continuing with Google.",
+        "googleSlugRequired": "Enter an identifier (slug) before continuing with Google.",
+        "googleTermsRequired": "You must read and accept the Terms and Conditions before continuing with Google.",
+        "googleCreateFailed": "We couldn't create the system with Google."
+      },
+      "success": {
+        "title": "Done! The system for {{church}} has been created.",
+        "yourGoogleAccount": "from your Google account",
+        "confirmedIntro": "Sign in with the email <strong>{{email}}</strong> to manage your system.",
+        "accessPanel": "Go to the admin dashboard",
+        "viewPublicPage": "View the public page ({{path}})",
+        "unconfirmed": "We sent a <strong>confirmation email to {{email}}</strong>. Click the link in the email to activate access — then just sign in with the email and the password you set."
+      },
+      "back": "Back",
+      "formTitle": "Create your system",
+      "formLede": "It takes less than a minute. Free account, no credit card — you get the system ready right away.",
+      "labelChurch": "Church / organization name",
+      "placeholderChurch": "e.g.: Central Baptist Church",
+      "labelSlug": "Identifier (slug)",
+      "placeholderSlug": "central-baptist-church",
+      "slugFallback": "your-church",
+      "slugHint": "Your public page: /e/{{slug}}",
+      "labelName": "Your name",
+      "placeholderName": "Administrator name",
+      "labelEmail": "Email (will be your login)",
+      "placeholderEmail": "you@church.com",
+      "labelPassword": "Password",
+      "placeholderPassword": "At least 6 characters",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "termsLabel": "I have read and accept the <1>Terms and Conditions</1>.",
+      "submit": "Create my System",
+      "reassurance": "No fee to create the account. You only pay when you create an event{{feeSuffix}}.",
+      "reassuranceFee": " — {{percent}}% per paid registration",
+      "or": "or",
+      "googleHint": "Fill in the name and the identifier above and use your Google account — no password, and the email comes in already confirmed."
+    },
+    "terms": {
+      "title": "Terms and Conditions of Use",
+      "version": "Version {{version}}",
+      "notice": "<strong>Draft — pending legal review.</strong> This text is a starting point and must be reviewed and approved by a lawyer/accountant before commercial use. It does not constitute legal advice.",
+      "s1Title": "1. About the service",
+      "s1Body": "The platform offers a registration and event management system (the \"Service\") for churches and organizations (the \"Client\"). The Client is responsible for the content of its event, the amounts charged and the relationship with its registrants.",
+      "s2Title": "2. Account and Client responsibilities",
+      "s2Body": "The Client is responsible for keeping its credentials confidential, for the accuracy of the information provided and for complying with the laws applicable to its event, including tax obligations and issuing invoices to its registrants when applicable.",
+      "s3Title": "3. Payments and fees",
+      "s3Body": "Registration payments are processed by a third-party payment provider. A platform fee, disclosed at the time the event is created, may apply to each paid registration. A fixed fee may be charged for free events. The transfer of amounts to the Client follows the payment provider's rules and timelines.",
+      "s4Title": "4. Data protection (LGPD)",
+      "s4Body": "The platform processes registrants' personal data on behalf of the Client, as a data processor, in accordance with the General Data Protection Law (Law No. 13.709/2018). The Client, as data controller, is responsible for the legal basis of the processing and for communications to the data subjects.",
+      "s5Title": "5. Availability and limitation of liability",
+      "s5Body": "The Service is provided \"as is\". We make reasonable efforts to keep the platform available, but we do not guarantee uninterrupted operation. The platform's liability is limited, at most, to the fee amounts actually paid by the Client to the platform.",
+      "s6Title": "6. Default and suspension",
+      "s6Body": "Failure to pay the fees due may result in the suspension of the public form and, later, of administrative access, as communicated to the Client, until the situation is resolved.",
+      "s7Title": "7. Changes",
+      "s7Body": "These Terms may be updated. The current version is identified by the date above. Continued use of the Service after changes implies agreement with the version then in force.",
+      "s8Title": "8. Contact",
+      "s8Body": "Questions about these Terms may be sent through the contact channels provided on the platform."
+    }
+  }
+}

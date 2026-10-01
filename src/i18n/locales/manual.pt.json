@@ -1,0 +1,341 @@
+{
+  "manual": {
+    "tabs": {
+      "cliente": "Ajuda do cliente",
+      "dono": "Runbook do dono",
+      "tecnico": "Arquitetura",
+      "vendas": "Vendas"
+    },
+    "header": {
+      "title": "Manual da Plataforma",
+      "subtitle": "Documentação: uso pelo cliente, operação, arquitetura e vendas",
+      "docTitlePublic": "Ajuda | Sistema de Inscrição para Igrejas"
+    },
+    "nav": {
+      "title": "Nesta seção",
+      "c-comecar": "Primeiros passos",
+      "c-evento": "Criar um evento",
+      "c-form": "Montar o formulário",
+      "c-produtos": "Produtos, pacotes e lotes",
+      "c-publicar": "Publicar e página pública",
+      "c-inscricoes": "Gerenciar inscrições",
+      "c-ferramentas": "Ferramentas do evento",
+      "d-painel": "Painel da Plataforma",
+      "d-provisionar": "Provisionar uma igreja",
+      "d-cobranca": "Como você recebe",
+      "d-inadimplencia": "Inadimplência",
+      "d-config": "Configuração",
+      "d-hosting": "Custo de hospedagem",
+      "d-golive": "Go-live",
+      "t-stack": "Stack",
+      "t-tenancy": "Multi-tenancy",
+      "t-schema": "Formulário schema-driven",
+      "t-checkout": "Checkout e split",
+      "t-billing": "Billing e enforcement",
+      "t-platform": "Camada de plataforma",
+      "v-porque": "Por que não é só um form",
+      "v-como": "Como funciona",
+      "v-precos": "Preços",
+      "v-recursos": "Recursos"
+    },
+    "footer": "Manual da Plataforma · documentação interna (cliente · dono · engenharia · vendas). Conteúdo em evolução conforme o produto; valores de preço e a integração de pagamento em sandbox estão em definição.",
+    "cliente": {
+      "hero": {
+        "eyebrow": "Para a igreja",
+        "title": "Monte o sistema de inscrições do seu evento",
+        "lede": "Um formulário de inscrição <strong>100% editável</strong>, com pagamento online e a gestão completa do seu acampamento, congresso ou retiro — tudo num lugar só."
+      },
+      "comecar": {
+        "h2": "Primeiros passos",
+        "p1": "Depois que sua conta é criada, você entra no <strong>painel administrativo</strong> com o e-mail e a senha que definiu. O painel é organizado em cartões por área: inscrições, financeiro, configurações do formulário e ferramentas do evento.",
+        "calloutK": "Conceito",
+        "calloutP": "Cada igreja é uma <strong>organização</strong> e pode ter <strong>vários eventos</strong> (o acampamento anual, um congresso, um retiro). Cada evento tem seu próprio formulário, página pública e inscrições, isolados dos demais."
+      },
+      "evento": {
+        "h2": "Criar um evento",
+        "p1": "Em <strong>Eventos</strong>, crie um novo evento com nome e identificador (o <em>slug</em> que vira o endereço público, por exemplo <code>/e/sua-igreja</code>). Escolha se terá pagamento ligado ou será gratuito. Você pode manter as inscrições fechadas enquanto termina de montar tudo."
+      },
+      "form": {
+        "h2": "Montar o formulário",
+        "p1": "No <strong>Construtor de Formulário</strong> você define quais perguntas o inscrito responde. Não precisa começar do zero:",
+        "h3modelo": "Comece com um modelo",
+        "pModelo": "Com o formulário vazio, escolha um modelo pronto e ele cria as seções e campos base para você ajustar:",
+        "cardAcampamentoT": "Acampamento",
+        "cardAcampamentoP": "Dados pessoais, responsável, pacote (hospedagem/alimentação), carona e saúde.",
+        "cardCongressoT": "Congresso",
+        "cardCongressoP": "Dados pessoais, responsável, pacote de inscrição e informações ministeriais.",
+        "cardRetiroT": "Retiro",
+        "cardRetiroP": "Dados pessoais, responsável, pacote, transporte e saúde.",
+        "h3campos": "Seções e campos",
+        "pCampos": "Organize o formulário em <strong>seções</strong> e, dentro delas, <strong>campos</strong>. Cada campo tem rótulo, tipo e se é obrigatório. Tipos disponíveis:",
+        "li1": "Texto curto e longo, número, data, e-mail, telefone;",
+        "li2": "<strong>CPF</strong> — garante inscrição única por documento;",
+        "li3": "Lista, escolha única e múltipla escolha (opções digitadas <em>ou</em> puxadas de tabelas do evento, como produtos e lotes);",
+        "li4": "<strong>Consentimento (LGPD)</strong> — caixa de aceite com texto e link;",
+        "li5": "<strong>Arquivo</strong> — o inscrito envia um documento (ver documento de menor).",
+        "h3modulos": "Módulos",
+        "pModulos": "Ative o módulo <strong>Pacote</strong> (hospedagem, alimentação e transporte por categorias) e o módulo <strong>Carona</strong> (oferta e procura de vagas), quando o evento pedir."
+      },
+      "produtos": {
+        "h2": "Produtos, pacotes e lotes",
+        "p1": "Para eventos pagos, cadastre <strong>produtos</strong>, agrupe-os em <strong>categorias de pacote</strong> e defina <strong>lotes</strong> com datas e preços. O valor de cada inscrição é calculado automaticamente a partir do pacote escolhido, das regras de preço por idade e da taxa do evento."
+      },
+      "publicar": {
+        "h2": "Publicar e a página pública",
+        "p1": "Em <strong>Estágio do Formulário</strong> você liga as inscrições. A página pública fica em <code>/e/seu-slug</code>: o inscrito faz login, preenche o formulário (várias pessoas da família num único carrinho) e paga por PIX, cartão ou boleto. A confirmação é automática — sem enviar comprovante.",
+        "h3inst": "Área institucional",
+        "pInst": "Cada evento tem uma <strong>landing institucional</strong> editável (programação, galeria, parceiros, como chegar, contador de visitas) com <strong>templates</strong> de layout e cor escolhidos no admin, sem mexer no formulário."
+      },
+      "inscricoes": {
+        "h2": "Gerenciar inscrições",
+        "p1": "Em <strong>Inscrições</strong> você vê tudo em tabela, com busca, cartões de resumo e <strong>exportação para Excel</strong>. Dá para ver detalhes, editar, excluir (vai para a lixeira, com restauração) e, em inscrições pagas, emitir <strong>reembolso</strong>.",
+        "h3admin": "Campos administrativos",
+        "pAdmin": "Você pode criar <strong>campos que só a administração preenche</strong> após a inscrição (equipe, observações internas, família pastoral). Eles aparecem como colunas extras marcadas na tabela e entram no export, separados das respostas do inscrito.",
+        "h3menor": "Documento de menor",
+        "pMenor": "Suba um <strong>modelo de documento</strong> por evento; o responsável baixa o modelo no formulário e envia o documento assinado pelo campo de arquivo. Você acessa cada arquivo direto na tabela de inscrições."
+      },
+      "ferramentas": {
+        "h2": "Ferramentas do evento",
+        "cardCheckinT": "Check-in",
+        "cardCheckinP": "Presença por CPF ou QR, individual ou por pedido.",
+        "cardQuartosT": "Quartos",
+        "cardQuartosP": "Distribuição de inscritos por quarto, com acompanhantes.",
+        "cardTimesT": "Times",
+        "cardTimesP": "Alocação de inscritos em times/equipes.",
+        "cardPulseirasT": "Pulseiras",
+        "cardPulseirasP": "Controle de pulseiras por inscrito.",
+        "cardBoletosT": "Boletos",
+        "cardBoletosP": "Boletos parcelados e vencimentos.",
+        "cardFaqT": "FAQ e chatbot",
+        "cardFaqP": "Perguntas frequentes em accordions e assistente opcional.",
+        "calloutK": "Dica",
+        "calloutP": "Em <strong>Papéis e Permissões</strong> crie contas para sua equipe (secretaria, credenciamento, financeiro) com acesso só ao que cada um precisa."
+      }
+    },
+    "dono": {
+      "hero": {
+        "eyebrow": "Para o operador da plataforma",
+        "title": "Runbook do dono",
+        "lede": "Como <strong>você</strong> opera o negócio: provisionar e gerir igrejas, receber via split do PagarMe e controlar inadimplência. Uma única instância serve todas as igrejas como <em>tenants</em>."
+      },
+      "painel": {
+        "h2": "Painel da Plataforma",
+        "p1": "O <strong>Painel da Plataforma</strong> (em <code>/platform</code>) é separado do admin das igrejas e só aparece para você. O acesso é liberado por uma <strong>allowlist de e-mails</strong>: quem estiver em <code>PLATFORM_OWNER_EMAILS</code> enxerga o painel; os demais recebem 403. Lá você vê os totais e a lista de todas as igrejas."
+      },
+      "provisionar": {
+        "h2": "Provisionar uma igreja",
+        "p1": "Provisionar é <strong>instantâneo</strong> — cria linhas no banco, sem deploy manual. Dois caminhos:",
+        "step1T": "Self-service (loja)",
+        "step1P": "A igreja entra em <code>/comprar</code>, preenche nome, identificador e dados do admin, e o sistema cria a organização + admin + primeiro evento automaticamente.",
+        "step2T": "Manual (painel)",
+        "step2P": "Você cria a organização pelo Painel da Plataforma, definindo nome, identificador, plano e status.",
+        "calloutK": "Atenção",
+        "calloutP": "Hoje o signup já dá acesso imediato (sem e-mail de confirmação). Falta o e-mail de boas-vindas com credenciais — melhoria planejada."
+      },
+      "cobranca": {
+        "h2": "Como você recebe",
+        "p1": "Você <strong>não é facilitador de pagamento</strong>. O dinheiro flui em dois canais:",
+        "li1": "<strong>Inscrito → Igreja:</strong> o pagamento da inscrição cai na conta da própria igreja.",
+        "li2": "<strong>Igreja → Você:</strong> você fica com um percentual, automático.",
+        "h3split": "Eventos pagos: split do PagarMe",
+        "pSplit": "Cada igreja é um <strong>recebedor (recipient)</strong> no seu marketplace PagarMe. Em cada inscrição paga, o PagarMe faz o <strong>split</strong>: a igreja recebe (100 − X)% direto e você recebe <strong>X%</strong>. O PagarMe custodia e liquida. No painel, cada organização tem o <strong>recebedor</strong> e a <strong>taxa da plataforma (%)</strong>.",
+        "h3gratuitos": "Eventos gratuitos",
+        "pGratuitos": "Sem inscrição paga não há split, então a igreja paga uma <strong>taxa fixa</strong> a você (por evento, ou um valor por eventos ilimitados), com <strong>14 dias de trial</strong>.",
+        "calloutDefK": "Onde definir",
+        "calloutDefP": "O <strong>%</strong> padrão, a <strong>taxa de evento gratuito</strong> e o <strong>anual</strong> são editados em <strong>Preços da plataforma</strong>, no painel do dono. A taxa (%) pode ser sobrescrita por igreja. Padrões atuais: 5%, R$39/evento, R$290/ano.",
+        "calloutContK": "Valide com contador",
+        "calloutContP": "Você é o marketplace de registro; o PagarMe é a instituição regulada. Valide NF do seu percentual e enquadramento fiscal com um contador."
+      },
+      "inadimplencia": {
+        "h2": "Inadimplência e regularização",
+        "p1": "Cada organização tem um <strong>estado de cobrança</strong> e uma <strong>data de vencimento</strong>. O bloqueio é escalonado a partir do vencimento (ou do fim do trial):",
+        "thSituacao": "Situação",
+        "thEstado": "Estado",
+        "thAcontece": "O que acontece",
+        "r1Situacao": "Em dia / trial vigente",
+        "r1Estado": "Liberado",
+        "r1Acontece": "Acesso total.",
+        "r2Situacao": "Até 2 dias após o vencimento",
+        "r2Estado": "Aviso",
+        "r2Acontece": "Acesso total; e-mail avisando o bloqueio.",
+        "r3Situacao": "2 a 7 dias após",
+        "r3Estado": "Form bloqueado",
+        "r3Acontece": "Página pública off; admin ainda entra.",
+        "r4Situacao": "7+ dias após",
+        "r4Estado": "Admin bloqueado",
+        "r4Acontece": "Sistema 100% inutilizado até regularizar.",
+        "r5Situacao": "Cancelado",
+        "r5Estado": "Bloqueado",
+        "r5Acontece": "Acesso encerrado.",
+        "p2": "Um <strong>job diário</strong> envia os e-mails de aviso/bloqueio. No painel, a seção <strong>Cobrança & inadimplência</strong> mostra a situação de todas as igrejas (em dia / vencendo / form bloqueado / admin bloqueado) e uma lista de atenção com os dias até o próximo bloqueio.",
+        "p3": "Para reativar uma igreja, use o botão <strong>Regularizar</strong> (1 clique: volta a ativa e avança o vencimento). A regularização <strong>automática</strong> — pagamento confirmado reativa a org via webhook — já tem o endpoint pronto e entra junto com a cobrança real no PagarMe."
+      },
+      "config": {
+        "h2": "Configuração",
+        "thVar": "Variável",
+        "thParaQue": "Para quê",
+        "var1": "E-mails que enxergam o Painel da Plataforma.",
+        "var2": "Chave master do seu marketplace PagarMe.",
+        "var3": "Seu recebedor (onde cai o seu %).",
+        "var4": "Percentual padrão da plataforma (default 10).",
+        "var5": "Domínio usado em links de e-mail e no success_url."
+      },
+      "hosting": {
+        "h2": "Custo de hospedagem",
+        "p1": "Como é <strong>uma instância única</strong> servindo todas as igrejas, o custo é fixo (não cresce por cliente) até precisar escalar. Componentes:",
+        "thComponente": "Componente",
+        "thOpcao": "Opção típica",
+        "thCusto": "Custo/mês (ref.)",
+        "r1Componente": "Frontend (estático)",
+        "r1Opcao": "Vercel / Netlify / Cloudflare Pages",
+        "r1Custo": "Grátis–US$20",
+        "r2Componente": "Backend (JVM ~1 GB)",
+        "r2Opcao": "VPS (Hostinger/DO) ou Railway/Fly.io",
+        "r2Custo": "US$7–15",
+        "r3Componente": "Banco MySQL",
+        "r3Opcao": "No mesmo VPS, ou gerenciado",
+        "r3Custo": "US$0–15",
+        "r4Componente": "E-mail transacional",
+        "r4Opcao": "Brevo/Resend (tier grátis)",
+        "r4Custo": "Grátis–US$10",
+        "r5Componente": "Storage de arquivos",
+        "r5Opcao": "S3 / Cloudflare R2 (se migrar do banco)",
+        "r5Custo": "~Grátis–US$5",
+        "r6Componente": "Domínio",
+        "r6Opcao": "anual, rateado",
+        "r6Custo": "~US$1–3",
+        "p2": "Dois cenários realistas em baixo volume:",
+        "li1": "<strong>Enxuto</strong> (VPS único self-managed + FE grátis + e-mail no tier grátis): <strong>~US$10–18/mês</strong> (~R$60–100).",
+        "li2": "<strong>Gerenciado</strong> (Railway/Render + banco gerenciado + FE grátis): <strong>~US$25–45/mês</strong> (~R$140–250).",
+        "calloutAtK": "Ponto de atenção",
+        "calloutAtP": "Hoje imagens e PDFs são guardados como BLOB no MySQL — isso incha o banco e encarece o storage gerenciado. Migrar esses arquivos para <strong>object storage</strong> (S3/R2) reduz custo e melhora performance.",
+        "calloutEqK": "Ponto de equilíbrio",
+        "calloutEqP": "Com custo fixo de ~R$100/mês: a um ticket médio de R$150 e taxa de 5%, <strong>~14 inscrições pagas/mês</strong> já cobrem a infra; ou uma a duas taxas de evento gratuito. Isso alimenta a definição de preços.",
+        "ref": "Valores são <strong>referências</strong> (câmbio ~R$5,50/US$, varia) para dimensionar — confirme na contratação."
+      },
+      "golive": {
+        "h2": "O que falta para o go-live",
+        "li1": "<strong>Onboarding do recebedor</strong> — formulário de dados bancários/KYC criando o recipient no PagarMe.",
+        "li2": "<strong>Checkout via Orders API</strong> — migrar PIX/cartão/boleto para o Orders com split (validar em sandbox).",
+        "li3": "<strong>Taxa de evento gratuito</strong> e <strong>plano anual</strong> opcional.",
+        "li4": "<strong>Regularização automática</strong> por webhook de pagamento.",
+        "li5": "<strong>Preços</strong> definitivos e custo de hospedagem."
+      }
+    },
+    "tecnico": {
+      "hero": {
+        "eyebrow": "Para engenharia",
+        "title": "Arquitetura da plataforma",
+        "lede": "Uma instância multi-tenant, formulário <strong>schema-driven</strong>, sobre Spring Boot e React. Panorama para onboarding de devs e manutenção."
+      },
+      "stack": {
+        "h2": "Stack",
+        "li1": "<strong>Backend:</strong> Spring Boot 3.1.2 · Java 17 · Maven · MySQL · Flyway · Spring Data JPA · Lombok · Spring Security (JWT).",
+        "li2": "<strong>Frontend:</strong> React 18 · Vite · react-router · react-bootstrap · react-query · react-toastify · DOMPurify.",
+        "li3": "<strong>Pagamentos:</strong> PagarMe API v5 (payment links + Orders; migração para Orders + split em andamento)."
+      },
+      "tenancy": {
+        "h2": "Multi-tenancy",
+        "p1": "Hierarquia: <strong>Organization</strong> → <strong>Event</strong> → tudo escopado por <code>event_id</code>.",
+        "li1": "Controllers de evento usam <code>@EventScoped</code> sob <code>/e/{slug}/…</code>.",
+        "li2": "<code>EventResolverInterceptor</code> resolve o slug → Event, popula o <code>EventContext</code> (ThreadLocal) e aplica o <strong>gate de cobrança</strong>.",
+        "li3": "Controllers de plataforma (auth, users, events, <code>/platform</code>) não são event-scoped.",
+        "li4": "No FE, <code>withEventScope(url)</code> reescreve <code>/x</code> → <code>/e/{slug}/x</code> só para os prefixos em <code>EVENT_SCOPED_PREFIXES</code>."
+      },
+      "schema": {
+        "h2": "Formulário schema-driven",
+        "li1": "<code>FormSection</code> / <code>FormField</code> definem o formulário por evento; opções podem vir de tabelas (<code>config.source</code> = products/lots/package_categories).",
+        "li2": "Módulos (Pacote, Carona) são seções com <code>moduleType</code>.",
+        "li3": "<code>EventRegistration</code> guarda respostas em JSON (<code>answers</code>) e respostas administrativas em <code>adminAnswers</code>.",
+        "li4": "<code>AdminField</code>, <code>MinorTemplate</code> e <code>RegistrationUpload</code> complementam o motor.",
+        "calloutK": "Legado vs genérico",
+        "calloutP": "O caminho <strong>genérico</strong> (schema-driven, <code>EventRegistration</code>) convive com o <strong>legado Camper</strong> (tabelas <code>acampantes</code>, específico do IPBV). O rewrite do IPBV é o item final do roadmap."
+      },
+      "checkout": {
+        "h2": "Checkout e split",
+        "p1": "<code>GenericCheckoutService</code> cria as cobranças no PagarMe (auth Basic, host de sandbox para <code>sk_test</code>). Modelo de receita = <strong>marketplace + split</strong>:",
+        "li1": "A igreja é um <strong>recipient</strong> sob o marketplace; a cobrança usa a chave master da plataforma.",
+        "li2": "<code>PagarmeSplitService</code> monta o array de split percentual (igreja 100 − X, plataforma X) em <code>payments[].split[]</code>.",
+        "li3": "Split no <strong>Orders API</strong> cobre pix/cartão/boleto; payment link só splita cartão — daí a migração."
+      },
+      "billing": {
+        "h2": "Billing e enforcement",
+        "li1": "<code>Organization</code>: <code>pagarme_recipient_id</code>, <code>platform_fee_percent</code>, <code>billing_status</code>, <code>due_date</code>, <code>trial_ends_at</code>.",
+        "li2": "<code>BillingEnforcementService.levelFor(org)</code> computa NONE / PUBLIC_BLOCKED / ADMIN_BLOCKED (2 e 7 dias).",
+        "li3": "O interceptor devolve <strong>402</strong> com <code>billing_blocked: public|admin</code>; staff (role ≠ guest) passa no bloqueio só-público.",
+        "li4": "<code>BillingNotificationService</code>: job <code>@Scheduled</code> diário de avisos."
+      },
+      "platform": {
+        "h2": "Camada de plataforma",
+        "li1": "<code>PlatformController</code> / <code>PlatformService</code>: organizações (CRUD), stats, FAQ da loja — gateados por <code>@platformSecurity.isOwner</code>.",
+        "li2": "<code>ProvisioningService</code>: cria org + admin + evento no signup (trial de 14 dias).",
+        "li3": "<code>PlatformSecurityService</code>: checa o e-mail contra <code>platform.owner-emails</code>.",
+        "li4": "Migrations Flyway recentes: V3.73 (organization) → V3.79 (billing status)."
+      }
+    },
+    "vendas": {
+      "hero": {
+        "eyebrow": "Para igrejas e eventos cristãos",
+        "title": "O sistema de inscrições feito para a sua igreja",
+        "lede": "Formulário personalizado, pagamento online e gestão completa de acampamentos, congressos e retiros. <strong>Sem mensalidade</strong> que pese no orçamento da igreja pequena."
+      },
+      "porque": {
+        "h2": "Por que não é só um formulário",
+        "p1": "Existe o Sympla (venda de ingresso) e o Google Forms (formulário). Não existe um <strong>formulário 100% editável, focado na realidade da igreja</strong>, com pagamento e as automações que o evento cristão precisa.",
+        "cardGfT": "vs. Google Forms",
+        "cardGfP": "Aqui tem pagamento, pacotes, contas de usuário e controle do evento — não só coleta.",
+        "cardSymplaT": "vs. Sympla",
+        "cardSymplaP": "O formulário é seu, editável campo a campo, com carona, quartos, times, pulseiras e check-in."
+      },
+      "como": {
+        "h2": "Como funciona",
+        "step1T": "Crie sua conta",
+        "step1P": "Grátis, em minutos. Você só paga quando cria um evento.",
+        "step2T": "Monte seu evento",
+        "step2P": "Comece por um modelo pronto e ajuste campos, pacotes e a página do evento.",
+        "step3T": "Publique e receba",
+        "step3P": "Divulgue o link e receba inscrições e pagamentos direto na conta da igreja, com confirmação automática."
+      },
+      "precos": {
+        "h2": "Preços",
+        "p1": "Pensado para <strong>não onerar igreja pequena</strong>: você paga conforme usa.",
+        "pagoT": "Evento pago",
+        "pagoAmt": "5% <small>por inscrição paga</small>",
+        "pagoLi1": "Taxa de serviço somada ao inscrito",
+        "pagoLi2": "Dinheiro na conta da igreja",
+        "pagoLi3": "PIX, cartão e boleto",
+        "gratT": "Evento gratuito",
+        "gratAmt": "R$39 <small>por evento</small>",
+        "gratLi1": "Ou R$290/ano ilimitado",
+        "gratLi2": "14 dias de trial",
+        "gratLi3": "Inscrições ilimitadas",
+        "semT": "Sem mensalidade",
+        "semAmt": "R$0 <small>fixo</small>",
+        "semLi1": "Você paga conforme usa",
+        "semLi2": "Sem assinatura obrigatória",
+        "semLi3": "Acessível a igreja pequena",
+        "calloutK": "Nota",
+        "calloutP": "Modelo <strong>pay-as-you-go</strong>: sem mensalidade obrigatória, sem custódia do dinheiro da igreja. Os valores (o %, a taxa de evento gratuito e o anual) são definidos pelo dono no painel da plataforma."
+      },
+      "recursos": {
+        "h2": "Tudo que vem junto",
+        "c1T": "Formulário editável",
+        "c1P": "Campos, seções e regras do seu jeito, com modelos prontos.",
+        "c2T": "Pagamento automático",
+        "c2P": "PIX, cartão e boleto com confirmação sem comprovante.",
+        "c3T": "Carona e transporte",
+        "c3P": "Oferta e procura de vagas e ônibus da igreja.",
+        "c4T": "Quartos e times",
+        "c4P": "Hospedagem e equipes organizadas pela administração.",
+        "c5T": "Check-in e pulseiras",
+        "c5P": "Presença por QR/CPF no dia do evento.",
+        "c6T": "Multi-evento",
+        "c6P": "Acampamento, congressos e retiros na mesma conta.",
+        "c7T": "Página do evento",
+        "c7P": "Landing institucional com programação, galeria e mapa.",
+        "c8T": "Relatórios",
+        "c8P": "Inscrições em tabela, exportação para Excel e resumos."
+      }
+    }
+  }
+}

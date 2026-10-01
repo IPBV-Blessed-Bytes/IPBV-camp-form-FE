@@ -1,0 +1,205 @@
+{
+  "site": {
+    "nav": {
+      "brand": "Plataforma de Inscripciones",
+      "prices": "Precios",
+      "help": "Ayuda",
+      "hi": "Hola, {{name}}",
+      "myPanel": "Mi Panel",
+      "login": "Entrar"
+    },
+    "footer": {
+      "panelTitle": "Panel Interno - Sistema",
+      "poweredBy": "Powered by Blessed Bytes Team",
+      "verse": "1 Corintios 15:58",
+      "copyright": "© {{year}} Plataforma de Inscripciones • Todos los derechos reservados"
+    },
+    "landing": {
+      "documentTitle": "Sistema de Inscripción para Iglesias | Campamentos, Retiros y Congresos",
+      "hero": {
+        "eyebrow": "Hecho para iglesias y ministerios",
+        "title": "Crea el sistema de inscripciones de tu iglesia en minutos",
+        "subtitle": "Formulario personalizado, pagos en línea y gestión completa de campamentos, retiros, congresos y eventos — todo en un solo lugar.",
+        "ctaStart": "Empezar Ahora",
+        "seePrices": "Ver Precios",
+        "chips": {
+          "pix": "PIX, tarjeta y boleto",
+          "noMonthly": "Sin mensualidad",
+          "readyMinutes": "Listo en minutos"
+        }
+      },
+      "features": {
+        "form": {
+          "title": "Un Formulario a tu Manera",
+          "text": "Crea campos, secciones y paquetes sin programar. Cada evento con la identidad de tu iglesia."
+        },
+        "payment": {
+          "title": "Pago en Línea",
+          "text": "PIX, tarjeta y boleto. El dinero llega directo a la cuenta de la iglesia, con transferencia automática."
+        },
+        "management": {
+          "title": "Gestión Completa",
+          "text": "Inscritos, cupos, habitaciones, autobuses e informes reunidos en un solo panel."
+        },
+        "checkin": {
+          "title": "Check-in por QR",
+          "text": "Confirma la asistencia en la entrada del evento desde el celular, sin papel y sin filas."
+        }
+      },
+      "differentials": {
+        "eyebrow": "El diferencial",
+        "title": "Hecho para la Realidad de la Iglesia",
+        "lede": "Vender entradas y recopilar formularios ya hay de sobra. Lo que no existe es un sistema que también organiza la <b>operación del evento de la iglesia</b> — transporte compartido, habitaciones, equipos, pulseras y check-in — integrada al pago, en un solo flujo.",
+        "items": {
+          "transport": {
+            "title": "Transporte Compartido",
+            "text": "Oferta y búsqueda de cupos entre los inscritos y control del autobús de la iglesia."
+          },
+          "rooms": {
+            "title": "Habitaciones",
+            "text": "Asigna a los inscritos por habitación, con acompañantes, directo desde el panel."
+          },
+          "teams": {
+            "title": "Equipos y Cuadrillas",
+            "text": "Organiza a los inscritos en equipos y cuadrillas de servicio del evento."
+          },
+          "checkin": {
+            "title": "Check-in y Pulseras",
+            "text": "Asistencia por QR o documento, individual o por familia, y control de pulseras."
+          },
+          "packages": {
+            "title": "Paquetes y Lotes",
+            "text": "Alojamiento, alimentación y transporte por categoría, con precio por edad y por lote."
+          },
+          "multievent": {
+            "title": "Multi-evento",
+            "text": "Campamento, congreso y retiro en la misma cuenta, cada uno con su página e inscripciones."
+          }
+        },
+        "vsGoogleTag": "vs. Google Forms",
+        "vsGoogleText": "Aquí hay pago, paquetes, cuentas de usuario y la gestión del evento — no solo recopilación de respuestas.",
+        "vsGenericTag": "vs. Plataformas genéricas de venta de entradas",
+        "vsGenericText": "El formulario es tuyo, editable campo por campo, con transporte compartido, habitaciones, equipos, pulseras y check-in, pensado 100% para tu iglesia y/u organización."
+      },
+      "purpose": {
+        "eyebrow": "Nuestro propósito",
+        "title": "Tecnología al Servicio de tu Iglesia",
+        "lede": "Nacimos sirviendo al campamento de una iglesia local y crecimos con ella. Nuestra misión es quitar el peso de la organización de los hombros del liderazgo, para que la iglesia se enfoque en lo que importa: <b>las personas y el Reino</b>.",
+        "values": {
+          "smallChurch": {
+            "title": "Servir a la Iglesia Pequeña",
+            "text": "La misma herramienta de la iglesia grande, accesible para la congregación pequeña — sin mensualidad que pese en el presupuesto."
+          },
+          "stewardship": {
+            "title": "Mayordomía y Confianza",
+            "text": "El dinero es de la iglesia y llega directo a su cuenta. Nosotros no custodiamos nada; tú mantienes el control."
+          },
+          "dataCare": {
+            "title": "Cuidado con los Datos",
+            "text": "Datos de los inscritos tratados con seguridad y responsabilidad, conforme a la LGPD."
+          },
+          "simplicity": {
+            "title": "Simplicidad",
+            "text": "Listo en minutos, sin depender de TI. Tú montas, publicas y recibes — y vuelves a cuidar de las personas. Cualquier dato puede ser editado por ti mismo en cualquier momento."
+          }
+        }
+      },
+      "plans": {
+        "title": "Dos Planes, sin Mensualidad",
+        "lede": "Elige el tamaño de tu iglesia. Cuenta gratis; solo pagas cuando creas un evento — y en el de pago, solo sobre lo que vendes. El dinero llega directo a la cuenta de la iglesia.",
+        "perPaidRegistration": "por inscripción pagada",
+        "freeEventBlurb": "Evento gratuito: {{fee}}/evento o {{annual}}/año ilimitado.",
+        "essencialName": "Esencial",
+        "essencialTagline": "Formulario + inscripciones + check-in. Para quien solo necesita inscribir, recibir y controlar la entrada.",
+        "essencialFeature1": "Formulario 100% editable",
+        "essencialFeature2": "Pago (PIX, tarjeta y boleto)",
+        "essencialFeature3": "Inscritos, informes y Excel",
+        "essencialFeature4": "Página del evento y FAQ",
+        "recommended": "Recomendado",
+        "completoName": "Completo",
+        "completoTagline": "Todo lo del Esencial + la logística del evento. Para quien lo organiza todo.",
+        "completoFeature1": "Todo lo del Esencial, y más:",
+        "completoFeature2": "Transporte compartido y autobús de la iglesia",
+        "completoFeature3": "Habitaciones y equipos/cuadrillas",
+        "completoFeature4": "Check-in por QR y pulseras",
+        "footnote": "Sin mensualidad — pagas según lo usas. La prueba gratis de 14 días vale solo para <b>eventos gratuitos</b>; <b>los eventos de pago ya cobran la tarifa</b> por inscripción desde la primera venta."
+      },
+      "ctaBand": {
+        "title": "¿Listo Para Empezar?",
+        "text": "Crea el sistema de tu iglesia ahora — toma menos de un minuto y la cuenta es gratis.",
+        "button": "Crear mi Sistema"
+      },
+      "faqs": {
+        "title": "Preguntas frecuentes"
+      }
+    },
+    "storefront": {
+      "errors": {
+        "churchRequired": "Indica el nombre de la iglesia u organización.",
+        "nameRequired": "Indica tu nombre.",
+        "emailRequired": "Indica tu correo electrónico.",
+        "emailInvalid": "Indica un correo electrónico válido.",
+        "slugRequired": "Indica un identificador (slug) para tu sistema.",
+        "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+        "termsRequired": "Es necesario leer y aceptar los Términos y Condiciones.",
+        "createFailed": "No fue posible crear el sistema. Inténtalo de nuevo.",
+        "googleChurchRequired": "Completa el nombre de la iglesia antes de continuar con Google.",
+        "googleSlugRequired": "Indica un identificador (slug) antes de continuar con Google.",
+        "googleTermsRequired": "Es necesario leer y aceptar los Términos y Condiciones antes de continuar con Google.",
+        "googleCreateFailed": "No fue posible crear el sistema con Google."
+      },
+      "success": {
+        "title": "¡Listo! El sistema de {{church}} fue creado.",
+        "yourGoogleAccount": "de tu cuenta de Google",
+        "confirmedIntro": "Entra con el correo <strong>{{email}}</strong> para administrar tu sistema.",
+        "accessPanel": "Acceder al panel administrativo",
+        "viewPublicPage": "Ver la página pública ({{path}})",
+        "unconfirmed": "Enviamos un <strong>correo de confirmación a {{email}}</strong>. Haz clic en el enlace del correo para activar el acceso — después solo entra con el correo y la contraseña que definiste."
+      },
+      "back": "Volver",
+      "formTitle": "Crea tu sistema",
+      "formLede": "Toma menos de un minuto. Cuenta gratis, sin tarjeta de crédito — recibes el sistema listo al instante.",
+      "labelChurch": "Nombre de la iglesia / organización",
+      "placeholderChurch": "Ej.: Iglesia Bautista Central",
+      "labelSlug": "Identificador (slug)",
+      "placeholderSlug": "iglesia-bautista-central",
+      "slugFallback": "tu-iglesia",
+      "slugHint": "Tu página pública: /e/{{slug}}",
+      "labelName": "Tu nombre",
+      "placeholderName": "Nombre del administrador",
+      "labelEmail": "Correo electrónico (será tu acceso)",
+      "placeholderEmail": "tu@iglesia.com",
+      "labelPassword": "Contraseña",
+      "placeholderPassword": "Mínimo 6 caracteres",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "termsLabel": "He leído y acepto los <1>Términos y Condiciones</1>.",
+      "submit": "Crear mi Sistema",
+      "reassurance": "Sin tarifa para crear la cuenta. Solo pagas cuando creas un evento{{feeSuffix}}.",
+      "reassuranceFee": " — {{percent}}% por inscripción pagada",
+      "or": "o",
+      "googleHint": "Completa el nombre y el identificador arriba y usa tu cuenta de Google — sin contraseña, y el correo entra ya confirmado."
+    },
+    "terms": {
+      "title": "Términos y Condiciones de Uso",
+      "version": "Versión {{version}}",
+      "notice": "<strong>Borrador — pendiente de revisión jurídica.</strong> Este texto es un punto de partida y debe ser revisado y aprobado por un abogado/contador antes del uso comercial. No constituye asesoramiento jurídico.",
+      "s1Title": "1. Sobre el servicio",
+      "s1Body": "La plataforma ofrece un sistema de inscripciones y gestión de eventos (el \"Servicio\") para iglesias y organizaciones (el \"Cliente\"). El Cliente es responsable del contenido de su evento, de los importes cobrados y de la relación con sus inscritos.",
+      "s2Title": "2. Cuenta y responsabilidades del Cliente",
+      "s2Body": "El Cliente es responsable de mantener la confidencialidad de sus credenciales, de la veracidad de la información registrada y del cumplimiento de las leyes aplicables a su evento, incluidas las obligaciones fiscales y la emisión de facturas a sus inscritos, cuando corresponda.",
+      "s3Title": "3. Pagos y tarifas",
+      "s3Body": "Los pagos de las inscripciones son procesados por un proveedor de pago externo. Sobre cada inscripción pagada puede aplicarse una tarifa de la plataforma, informada en el momento de la creación del evento. En los eventos gratuitos puede cobrarse una tarifa fija. La transferencia de los importes al Cliente sigue las reglas y los plazos del proveedor de pago.",
+      "s4Title": "4. Protección de datos (LGPD)",
+      "s4Body": "La plataforma trata los datos personales de los inscritos en nombre del Cliente, en calidad de operadora, conforme a la Ley General de Protección de Datos (Ley n.º 13.709/2018). El Cliente, como controlador, es responsable de la base legal del tratamiento y de las comunicaciones a los titulares.",
+      "s5Title": "5. Disponibilidad y limitación de responsabilidad",
+      "s5Body": "El Servicio se proporciona \"tal como está\". Empleamos esfuerzos razonables para mantener la plataforma disponible, pero no garantizamos un funcionamiento ininterrumpido. La responsabilidad de la plataforma se limita, como máximo, a los importes de tarifa efectivamente pagados por el Cliente a la plataforma.",
+      "s6Title": "6. Incumplimiento y suspensión",
+      "s6Body": "El impago de las tarifas debidas puede ocasionar la suspensión del formulario público y, posteriormente, del acceso administrativo, según se comunique al Cliente, hasta la regularización.",
+      "s7Title": "7. Cambios",
+      "s7Body": "Estos Términos pueden actualizarse. La versión vigente se identifica por la fecha indicada arriba. El uso continuado del Servicio tras los cambios implica la aceptación de la versión entonces vigente.",
+      "s8Title": "8. Contacto",
+      "s8Body": "Las dudas sobre estos Términos pueden enviarse a través de los canales de contacto indicados en la plataforma."
+    }
+  }
+}
