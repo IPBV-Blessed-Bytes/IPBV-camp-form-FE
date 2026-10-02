@@ -12,6 +12,19 @@
       "cpfReview": "Registration Lookup",
       "faq": "FAQ"
     },
+    "institutional": {
+      "nav": {
+        "sobre": "About",
+        "programacao": "Schedule",
+        "palestrantes": "Speakers",
+        "equipe": "Team",
+        "galeria": "Gallery",
+        "avisos": "Notices",
+        "parceiros": "Partners",
+        "como-chegar": "Directions",
+        "contato": "Contact"
+      }
+    },
     "footer": {
       "panelTitle": "Internal Panel - System",
       "poweredBy": "Made by Enrolla",

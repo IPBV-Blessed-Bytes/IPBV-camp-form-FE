@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
@@ -21,6 +22,7 @@ const REGISTRATION_STATUS = {
 
 const Institutional = () => {
   useDocumentTitle();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { handleAdminClick } = useFormState();
   const { name: eventName, mapQuery, contact, contactMessage, socialLinks, registrationsOpen } = useEventBranding();
@@ -163,7 +165,7 @@ const Institutional = () => {
                   setMenuOpen(false);
                 }}
               >
-                {n.label}
+                {t(`site.institutional.nav.${n.id}`)}
               </button>
             ))}
             <div className="inst-nav__menu-actions">

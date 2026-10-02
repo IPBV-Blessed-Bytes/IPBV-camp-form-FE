@@ -12,6 +12,19 @@
       "cpfReview": "Verificação de Inscrição",
       "faq": "Perguntas Frequentes"
     },
+    "institutional": {
+      "nav": {
+        "sobre": "Sobre",
+        "programacao": "Programação",
+        "palestrantes": "Palestrantes",
+        "equipe": "Equipe",
+        "galeria": "Galeria",
+        "avisos": "Avisos",
+        "parceiros": "Parceiros",
+        "como-chegar": "Como Chegar",
+        "contato": "Contato"
+      }
+    },
     "footer": {
       "panelTitle": "Painel Interno - Sistema",
       "poweredBy": "Feito pela Enrolla",

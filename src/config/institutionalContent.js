@@ -130,13 +130,13 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
 };
 
 export const INSTITUTIONAL_NAV = [
-  { id: 'sobre', label: 'Sobre' },
-  { id: 'programacao', label: 'Programação' },
-  { id: 'palestrantes', label: 'Palestrantes' },
-  { id: 'equipe', label: 'Equipe' },
-  { id: 'galeria', label: 'Galeria' },
-  { id: 'avisos', label: 'Avisos' },
-  { id: 'parceiros', label: 'Parceiros' },
-  { id: 'como-chegar', label: 'Como Chegar' },
-  { id: 'contato', label: 'Contato' },
+  { id: 'sobre' },
+  { id: 'programacao' },
+  { id: 'palestrantes' },
+  { id: 'equipe' },
+  { id: 'galeria' },
+  { id: 'avisos' },
+  { id: 'parceiros' },
+  { id: 'como-chegar' },
+  { id: 'contato' },
 ];
