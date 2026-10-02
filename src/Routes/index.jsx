@@ -48,6 +48,7 @@ const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
 const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
+const AdminStoreOrders = lazy(() => import('@/Pages/Admin/StoreOrders'));
 const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'));
 const AdminChangeRequests = lazy(() => import('@/Pages/Admin/ChangeRequests'));
 const ForgotPassword = lazy(() => import('@/Pages/Auth/ForgotPassword'));
@@ -390,6 +391,18 @@ const FormRoutes = () => {
                   requiredPermission="PRODUCTS_WRITE"
                 >
                   <AdminProductsManagement formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/pedidos-loja')}
+              element={
+                <ProtectedRoute
+                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                  userRole={userRole}
+                  requiredPermission="PRODUCTS_READ"
+                >
+                  <AdminStoreOrders loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

@@ -1,0 +1,35 @@
+@use '../../../styles/Variables.scss' as *;
+
+.store-orders {
+  &__section {
+    margin-top: 1.5rem;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__status {
+    max-width: 14rem;
+  }
+
+  &__products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  &__chip {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: $teal-100;
+    color: $gray-800;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}

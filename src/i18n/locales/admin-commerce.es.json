@@ -1,5 +1,45 @@
 {
   "admin": {
+    "storeOrders": {
+      "title": "Pedidos de la Tienda",
+      "subtitle": "Productos comprados en las inscripciones y control de stock",
+      "salesTitle": "Resumen por producto",
+      "ordersTitle": "Pedidos",
+      "stats": {
+        "orders": "Pedidos con productos",
+        "itemsSold": "Artículos vendidos",
+        "lowStock": "Stock bajo",
+        "outOfStock": "Agotados"
+      },
+      "col": {
+        "date": "Fecha",
+        "name": "Nombre",
+        "cpf": "CPF",
+        "order": "Pedido",
+        "status": "Estado",
+        "products": "Productos",
+        "total": "Total",
+        "product": "Producto",
+        "price": "Precio",
+        "sold": "Vendidos",
+        "pending": "Pendientes",
+        "stock": "Stock inicial",
+        "remaining": "Restante"
+      },
+      "status": {
+        "confirmed": "Confirmado",
+        "paid": "Pagado",
+        "pending": "Pendiente",
+        "refunded": "Reembolsado",
+        "canceled": "Cancelado"
+      },
+      "filter": { "all": "Todos los estados" },
+      "searchPlaceholder": "Buscar por nombre, CPF o pedido",
+      "export": "Exportar",
+      "empty": "Ningún producto registrado.",
+      "noOrders": "Ningún pedido encontrado.",
+      "outOfStock": "Agotado"
+    },
     "products": {
       "title": "Productos",
       "subtitle": "Alojamiento, transporte y alimentación — con precio y plazas por lote",

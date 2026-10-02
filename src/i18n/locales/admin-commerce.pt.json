@@ -1,5 +1,45 @@
 {
   "admin": {
+    "storeOrders": {
+      "title": "Pedidos da Loja",
+      "subtitle": "Produtos comprados nas inscrições e controle de estoque",
+      "salesTitle": "Resumo por produto",
+      "ordersTitle": "Pedidos",
+      "stats": {
+        "orders": "Pedidos com produtos",
+        "itemsSold": "Itens vendidos",
+        "lowStock": "Estoque baixo",
+        "outOfStock": "Esgotados"
+      },
+      "col": {
+        "date": "Data",
+        "name": "Nome",
+        "cpf": "CPF",
+        "order": "Pedido",
+        "status": "Status",
+        "products": "Produtos",
+        "total": "Total",
+        "product": "Produto",
+        "price": "Preço",
+        "sold": "Vendidos",
+        "pending": "Pendentes",
+        "stock": "Estoque inicial",
+        "remaining": "Restante"
+      },
+      "status": {
+        "confirmed": "Confirmado",
+        "paid": "Pago",
+        "pending": "Pendente",
+        "refunded": "Reembolsado",
+        "canceled": "Cancelado"
+      },
+      "filter": { "all": "Todos os status" },
+      "searchPlaceholder": "Buscar por nome, CPF ou pedido",
+      "export": "Exportar",
+      "empty": "Nenhum produto cadastrado.",
+      "noOrders": "Nenhum pedido encontrado.",
+      "outOfStock": "Esgotado"
+    },
     "products": {
       "title": "Produtos",
       "subtitle": "Hospedagem, transporte e alimentação — com preço e vagas por lote",

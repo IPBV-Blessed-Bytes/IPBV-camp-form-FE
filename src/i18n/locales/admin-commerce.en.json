@@ -1,5 +1,45 @@
 {
   "admin": {
+    "storeOrders": {
+      "title": "Store Orders",
+      "subtitle": "Products bought in registrations and stock control",
+      "salesTitle": "Per-product summary",
+      "ordersTitle": "Orders",
+      "stats": {
+        "orders": "Orders with products",
+        "itemsSold": "Items sold",
+        "lowStock": "Low stock",
+        "outOfStock": "Out of stock"
+      },
+      "col": {
+        "date": "Date",
+        "name": "Name",
+        "cpf": "CPF",
+        "order": "Order",
+        "status": "Status",
+        "products": "Products",
+        "total": "Total",
+        "product": "Product",
+        "price": "Price",
+        "sold": "Sold",
+        "pending": "Pending",
+        "stock": "Initial stock",
+        "remaining": "Remaining"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "paid": "Paid",
+        "pending": "Pending",
+        "refunded": "Refunded",
+        "canceled": "Canceled"
+      },
+      "filter": { "all": "All statuses" },
+      "searchPlaceholder": "Search by name, CPF or order",
+      "export": "Export",
+      "empty": "No products registered.",
+      "noOrders": "No orders found.",
+      "outOfStock": "Out of stock"
+    },
     "products": {
       "title": "Products",
       "subtitle": "Lodging, transport and meals — with price and vacancies per lot",
