@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { parse, isValid } from 'date-fns';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import DOMPurify from 'dompurify';
 
 import useEventSchema from '@/hooks/useEventSchema';
@@ -61,9 +62,9 @@ const collectErrors = (validationError) => {
   return errors;
 };
 
-const displayValue = (field, value) => {
+const displayValue = (field, value, t) => {
   if (value == null || value === '') return '—';
-  if (field.type === 'consent') return value ? 'Aceito' : '—';
+  if (field.type === 'consent') return value ? t('form.dynamic.consentAccepted') : '—';
   if (field.type === 'checkbox') {
     const labels = (field.options || []).filter((o) => value.includes(o.value)).map((o) => o.label);
     return labels.length ? labels.join(', ') : '—';
@@ -81,6 +82,7 @@ const PAYMENT_OPTIONS = [
 ];
 
 const DynamicForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
@@ -188,11 +190,14 @@ const DynamicForm = () => {
 
   const currentStep = wizardSteps[stepIndex];
   const isReview = currentStep?.kind === 'review';
-  const stepLabel = (st) =>
-    ({ section: st.section?.name, package: st.section?.name || 'Pacote', ride: st.section?.name || 'Carona', review: 'Revisão', cart: 'Carrinho', payment: 'Pagamento' })[
-      st.kind
-    ];
-  const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps]);
+  const stepLabel = useCallback(
+    (st) =>
+      ({ section: st.section?.name, package: st.section?.name || t('form.dynamic.packageLabel'), ride: st.section?.name || t('form.dynamic.rideLabel'), review: t('form.dynamic.review'), cart: t('form.dynamic.cart'), payment: t('form.dynamic.payment') })[
+        st.kind
+      ],
+    [t],
+  );
+  const stepperSteps = useMemo(() => wizardSteps.map(stepLabel), [wizardSteps, stepLabel]);
 
   const personPackageTotal = useCallback(
     (person) => packageTotal(person.__package, packageProducts, ageRules, computeAge(person.nascimento, baseDate)),
@@ -241,7 +246,7 @@ const DynamicForm = () => {
         return true;
       } catch (validationError) {
         setErrors((prev) => ({ ...prev, ...collectErrors(validationError) }));
-        toast.error('Preencha os campos obrigatórios.');
+        toast.error(t('form.dynamic.fillRequired'));
         return false;
       }
     }
@@ -249,7 +254,7 @@ const DynamicForm = () => {
       const selection = currentAnswers.__package || {};
       const missing = packageCategories.filter((c) => c.required && !(selection[c.id]?.length));
       if (missing.length) {
-        toast.error(`Escolha uma opção em: ${missing.map((m) => m.name).join(', ')}`);
+        toast.error(t('form.dynamic.chooseOptionIn', { fields: missing.map((m) => m.name).join(', ') }));
         return false;
       }
       return true;
@@ -257,11 +262,11 @@ const DynamicForm = () => {
     if (currentStep.kind === 'ride') {
       const ride = currentAnswers.__ride || {};
       if (ride.mode === 'offer' && !(Number(ride.seats) > 0)) {
-        toast.error('Informe quantas vagas você tem no carro.');
+        toast.error(t('form.dynamic.rideSeatsRequired'));
         return false;
       }
       if ((ride.mode === 'offer' || ride.mode === 'need') && !(ride.phone || '').trim()) {
-        toast.error('Informe um WhatsApp para combinar a carona.');
+        toast.error(t('form.dynamic.rideWhatsappRequired'));
         return false;
       }
       return true;
@@ -298,7 +303,7 @@ const DynamicForm = () => {
     } catch (validationError) {
       setErrors(collectErrors(validationError));
       setStepIndex(0);
-      toast.error('Preencha os campos obrigatórios antes de continuar.');
+      toast.error(t('form.dynamic.fillRequiredBeforeContinue'));
       return false;
     }
   };
@@ -309,7 +314,7 @@ const DynamicForm = () => {
     setAnswers({});
     setErrors({});
     setStepIndex(0);
-    toast.success('Pessoa adicionada. Preencha os dados da próxima.');
+    toast.success(t('form.dynamic.personAdded'));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -326,7 +331,7 @@ const DynamicForm = () => {
       if (savedAnswers && Object.keys(savedAnswers).length) setAnswers(savedAnswers);
       setStepIndex(cartStepIndex);
       setMaxStepReached((max) => Math.max(max, cartStepIndex));
-      toast.info('Seu carrinho foi restaurado. Você já pode finalizar o pagamento.');
+      toast.info(t('form.dynamic.cartRestored'));
       return true;
     };
 
@@ -393,7 +398,7 @@ const DynamicForm = () => {
     // Ponte em localStorage (sobrevive à confirmação de e-mail em outra aba) e,
     // no cadastro, o draft também vai pro servidor (retomada cross-device).
     saveInscriptionDraftLocal(buildInscriptionDraft(slug, people, currentAnswers));
-    toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
+    toast.info(t('form.dynamic.createAccountToFinish'));
     navigate('/entrar', { state: { from: eventPath('/') } });
   };
 
@@ -473,11 +478,11 @@ const DynamicForm = () => {
     }
 
     if (!people.length) {
-      toast.error('Adicione ao menos um inscrito ao carrinho.');
+      toast.error(t('form.dynamic.addAtLeastOne'));
       return;
     }
     if (!paymentMethod) {
-      toast.error('Escolha uma forma de pagamento.');
+      toast.error(t('form.dynamic.choosePaymentMethod'));
       return;
     }
 
@@ -505,7 +510,7 @@ const DynamicForm = () => {
       }
       const paymentUrl = result?.payment_url;
       if (!paymentUrl) {
-        toast.error('Não foi possível gerar o pagamento. Tente novamente.');
+        toast.error(t('form.dynamic.paymentFailed'));
         return;
       }
       clearInscriptionDraft();
@@ -542,16 +547,13 @@ const DynamicForm = () => {
         <div className="form__container container">
           <Row className="justify-content-center">
             <Col lg={8} className="text-center my-5">
-              <h2>Inscrições encerradas</h2>
-              <p className="mt-3">
-                As inscrições para este evento foram encerradas. Você ainda pode entrar na sua conta para acompanhar sua
-                inscrição.
-              </p>
+              <h2>{t('form.dynamic.registrationsClosedTitle')}</h2>
+              <p className="mt-3">{t('form.dynamic.registrationsClosedText')}</p>
               <button
                 className="btn btn-teal-blue mt-3"
                 onClick={() => navigate(isLoggedIn ? '/minha-conta' : '/entrar')}
               >
-                {isLoggedIn ? 'Ir para minha conta' : 'Entrar na minha conta'}
+                {isLoggedIn ? t('form.dynamic.goToMyAccount') : t('form.dynamic.loginToMyAccount')}
               </button>
             </Col>
           </Row>
@@ -569,18 +571,18 @@ const DynamicForm = () => {
           <Row className="justify-content-center">
             <Col lg={10} className="my-5">
               <div className="text-center">
-                <h2>Boletos gerados! 🎉</h2>
+                <h2>{t('form.dynamic.boletosGeneratedTitle')}</h2>
                 <p className="mt-3">
-                  Pague o <b>1º boleto</b> para confirmar sua vaga. Enviamos todos os boletos também para o seu e-mail.
+                  {t('form.dynamic.boletoResultPart1')}<b>{t('form.dynamic.firstBoleto')}</b>{t('form.dynamic.boletoResultPart2')}
                 </p>
               </div>
               <BoletoList boletos={boletoResult} />
               <div className="text-center d-flex flex-column align-items-center gap-2">
                 <button className="btn btn-outline-teal-blue mt-3" onClick={() => navigate('/minhas-inscricoes')}>
-                  Ver minhas inscrições
+                  {t('form.dynamic.viewMyRegistrations')}
                 </button>
                 <button className="btn btn-teal-blue" onClick={restart}>
-                  Voltar ao início
+                  {t('form.dynamic.backToStart')}
                 </button>
               </div>
             </Col>
@@ -599,14 +601,12 @@ const DynamicForm = () => {
           <Row className="justify-content-center">
             <Col lg={8} className="my-5">
               <div className="text-center">
-                <h2>Pague com Pix para confirmar</h2>
-                <p className="mt-3">
-                  Escaneie o QR code no app do seu banco ou copie o código Pix abaixo. A confirmação é automática.
-                </p>
+                <h2>{t('form.dynamic.pixTitle')}</h2>
+                <p className="mt-3">{t('form.dynamic.pixInstructions')}</p>
                 {pixResult.qr_code_url && (
                   <img
                     src={pixResult.qr_code_url}
-                    alt="QR code Pix"
+                    alt={t('form.dynamic.pixQrAlt')}
                     style={{ maxWidth: '260px', width: '100%', margin: '1rem auto', display: 'block' }}
                   />
                 )}
@@ -623,19 +623,19 @@ const DynamicForm = () => {
                       className="btn btn-teal-blue"
                       onClick={() => {
                         navigator.clipboard?.writeText(pixResult.qr_code);
-                        toast.success('Código Pix copiado!');
+                        toast.success(t('form.dynamic.pixCodeCopied'));
                       }}
                     >
-                      Copiar código Pix
+                      {t('form.dynamic.copyPixCode')}
                     </button>
                   </div>
                 )}
                 <div className="text-center d-flex flex-column align-items-center gap-2 mt-4">
                   <button className="btn btn-outline-teal-blue" onClick={() => navigate('/minhas-inscricoes')}>
-                    Ver minhas inscrições
+                    {t('form.dynamic.viewMyRegistrations')}
                   </button>
                   <button className="btn btn-teal-blue" onClick={restart}>
-                    Voltar ao início
+                    {t('form.dynamic.backToStart')}
                   </button>
                 </div>
               </div>
@@ -654,14 +654,14 @@ const DynamicForm = () => {
         <div className="form__container container">
           <Row className="justify-content-center">
             <Col lg={8} className="text-center my-5">
-              <h2>Inscrição enviada! 🎉</h2>
-              <p className="mt-3">Recebemos suas respostas com sucesso.</p>
+              <h2>{t('form.dynamic.submittedTitle')}</h2>
+              <p className="mt-3">{t('form.dynamic.submittedText')}</p>
               <div className="d-flex flex-column align-items-center gap-2">
                 <button className="btn btn-outline-teal-blue mt-3" onClick={() => navigate('/minhas-inscricoes')}>
-                  Ver minhas inscrições
+                  {t('form.dynamic.viewMyRegistrations')}
                 </button>
                 <button className="btn btn-teal-blue" onClick={restart}>
-                  Voltar ao início
+                  {t('form.dynamic.backToStart')}
                 </button>
               </div>
             </Col>
@@ -677,7 +677,7 @@ const DynamicForm = () => {
       <div className="components-container">
         <Header />
         <div className="form__container container">
-          <p className="text-center my-5">Este evento ainda não possui um formulário configurado.</p>
+          <p className="text-center my-5">{t('form.dynamic.noFormConfigured')}</p>
         </div>
         <Footer handleAdminClick={() => navigate('/admin')} />
       </div>
@@ -714,7 +714,7 @@ const DynamicForm = () => {
                             <span className="d-flex gap-3 mb-3 align-items-center justify-content-center">
                               <Icons className="flex-shrink-0" typeIcon="location-pin" iconSize={30} fill={iconColor} />
                               {top.place}
-                              {top.speaker ? ` • Preletor: ${top.speaker}` : ''}
+                              {top.speaker ? ` • ${t('form.dynamic.speakerLabel')} ${top.speaker}` : ''}
                             </span>
                           )}
                         </span>
@@ -722,11 +722,11 @@ const DynamicForm = () => {
                           <span className="d-flex gap-3 align-items-center justify-content-center">
                             <Icons className="flex-shrink-0" typeIcon="simple-info" iconSize={35} fill={iconColor} />
                             <span>
-                              Inscrições até{' '}
+                              {t('form.dynamic.registrationsUntil')}{' '}
                               <em>
                                 <b>{top.registrationsDeadline}</b>
                               </em>{' '}
-                              ou até o esgotamento das vagas!
+                              {t('form.dynamic.orUntilSoldOut')}
                             </span>
                           </span>
                         )}
@@ -738,7 +738,7 @@ const DynamicForm = () => {
                   {(homeInfo?.bottom?.length || 0) > 0 && (
                     <Row className="justify-content-center">
                       <Col xl={9}>
-                        <h4 className="mb-4 fw-bold">Informações Importantes</h4>
+                        <h4 className="mb-4 fw-bold">{t('form.dynamic.importantInfo')}</h4>
                         <ul className="info-home-list">
                           {homeInfo.bottom.map((item) => (
                             <li key={item.id} className="mb-3">
@@ -788,28 +788,28 @@ const DynamicForm = () => {
           <Col lg={10} className="px-0">
             {isReview ? (
               <FormStepLayout
-                title={people.length ? `Revisão — pessoa ${people.length + 1}` : 'Revisão'}
+                title={people.length ? t('form.dynamic.reviewTitlePerson', { number: people.length + 1 }) : t('form.dynamic.review')}
                 description={
                   paymentEnabled
-                    ? 'Confira as respostas antes de continuar para o carrinho.'
-                    : 'Confira as respostas. Você pode adicionar outra pessoa ou enviar tudo.'
+                    ? t('form.dynamic.reviewDescCart')
+                    : t('form.dynamic.reviewDescNoPayment')
                 }
                 footer={
                   <>
                     <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
-                      Voltar
+                      {t('form.dynamic.back')}
                     </Button>
                     {paymentEnabled ? (
                       <Button variant="warning" size="lg" onClick={commitAndGoToCart} disabled={submitting}>
-                        Continuar
+                        {t('form.dynamic.continue')}
                       </Button>
                     ) : (
                       <div className="d-flex gap-2">
                         <Button variant="outline-warning" size="lg" onClick={addPerson} disabled={submitting}>
-                          Adicionar pessoa
+                          {t('form.dynamic.addPerson')}
                         </Button>
                         <Button variant="warning" size="lg" onClick={handleSubmit} disabled={submitting}>
-                          {submitting ? 'Enviando...' : `Enviar (${people.length + 1})`}
+                          {submitting ? t('form.dynamic.sending') : t('form.dynamic.sendCount', { count: people.length + 1 })}
                         </Button>
                       </div>
                     )}
@@ -818,7 +818,7 @@ const DynamicForm = () => {
               >
                 {people.length > 0 && (
                   <p className="text-muted">
-                    {people.length} pessoa(s) já adicionada(s). Abaixo, a pessoa {people.length + 1}.
+                    {t('form.dynamic.peopleAddedNote', { count: people.length, next: people.length + 1 })}
                   </p>
                 )}
                 <div className="dynamic-form__review">
@@ -828,7 +828,7 @@ const DynamicForm = () => {
                       {sec.fields.map((field) => (
                         <div key={field.key} className="d-flex justify-content-between border-bottom py-2">
                           <span className="fw-bold">{field.label}</span>
-                          <span>{displayValue(field, currentAnswers[field.key])}</span>
+                          <span>{displayValue(field, currentAnswers[field.key], t)}</span>
                         </div>
                       ))}
                     </div>
@@ -836,7 +836,7 @@ const DynamicForm = () => {
 
                   {paymentEnabled && (
                     <div className="mb-4">
-                      <h5>Pacote</h5>
+                      <h5>{t('form.dynamic.packageLabel')}</h5>
                       {packageCategories.map((cat) => {
                         const sel = (currentAnswers.__package || {})[cat.id] || [];
                         return packageProducts
@@ -853,12 +853,12 @@ const DynamicForm = () => {
                       })}
                       {registrationFee > 0 && (
                         <div className="d-flex justify-content-between border-bottom py-2">
-                          <span className="fw-bold">Taxa de Inscrição</span>
+                          <span className="fw-bold">{t('form.dynamic.registrationFeeLabel')}</span>
                           <span>{formatPrice(registrationFee)}</span>
                         </div>
                       )}
                       <div className="d-flex justify-content-between py-2">
-                        <span className="fw-bold">Total</span>
+                        <span className="fw-bold">{t('form.dynamic.total')}</span>
                         <b>{formatPrice(personTotal(currentAnswers))}</b>
                       </div>
                     </div>
@@ -871,11 +871,11 @@ const DynamicForm = () => {
                   <Col xs={12} xl={8} className="mb-2 px-0 px-lg-2">
                     <Card className="h-100">
                       <Card.Body>
-                        <Card.Title>Carrinho</Card.Title>
+                        <Card.Title>{t('form.dynamic.cart')}</Card.Title>
                         {people.length === 0 ? (
                           <div className="empty-cart">
                             <Icons typeIcon="cart" iconSize={48} fill="#ced4da" />
-                            <p>Nenhum inscrito adicionado ao carrinho</p>
+                            <p>{t('form.dynamic.emptyCart')}</p>
                           </div>
                         ) : (
                           people.map((person, personIndex) => {
@@ -886,7 +886,7 @@ const DynamicForm = () => {
                                 <Card.Body>
                                   <div className="d-flex justify-content-between align-items-center mb-3">
                                     <h4 className="cart-user-title mb-0">
-                                      <b>{person.nome || `Pessoa ${personIndex + 1}`}</b>
+                                      <b>{person.nome || t('form.dynamic.personFallback', { number: personIndex + 1 })}</b>
                                     </h4>
                                     <div className="d-flex gap-2">
                                       <Button
@@ -927,7 +927,7 @@ const DynamicForm = () => {
                                   })}
                                   <div className="packages-horizontal-line-cart"></div>
                                   <h5 className="cart-user-total fw-bold d-flex justify-content-between">
-                                    Total Inscrito: <span>{formatPrice(personTotal(person))}</span>
+                                    {t('form.dynamic.totalPerPerson')} <span>{formatPrice(personTotal(person))}</span>
                                   </h5>
                                 </Card.Body>
                               </Card>
@@ -936,7 +936,7 @@ const DynamicForm = () => {
                         )}
                         <div className="text-center">
                           <Button variant="outline-secondary" className="plus-camper-button" size="lg" onClick={addCamper}>
-                            <Icons typeIcon="plus" iconSize={25} fill="#6c757d" /> &nbsp;Adicionar Inscrito
+                            <Icons typeIcon="plus" iconSize={25} fill="#6c757d" /> &nbsp;{t('form.dynamic.addRegistrant')}
                           </Button>
                         </div>
                       </Card.Body>
@@ -946,55 +946,55 @@ const DynamicForm = () => {
                   <Col xs={12} xl={4} className="px-0 px-lg-2">
                     <Card className="mb-4">
                       <Card.Body>
-                        <Card.Title>Resumo</Card.Title>
+                        <Card.Title>{t('form.dynamic.summary')}</Card.Title>
                         <div className="packages-horizontal-line-cart"></div>
                         <div className="summary">
                           {registrationFee > 0 && (
                             <div className="summary-individual-base">
                               <div className="d-flex align-items-center gap-1">
-                                <h5 className="summary-individual-base-label mb-0">Taxa de Inscrição:</h5>
+                                <h5 className="summary-individual-base-label mb-0">{t('form.dynamic.registrationFeeColon')}</h5>
                                 <Tips
                                   classNameWrapper="mt-0"
                                   placement="top"
                                   typeIcon="info"
                                   size={15}
                                   color="#7f7878"
-                                  text="Taxa de inscrição do evento, somada ao valor do pacote de cada inscrito."
+                                  text={t('form.dynamic.registrationFeeTooltip')}
                                 />
                               </div>
                               <h5 className="mb-0">{formatPrice(registrationFee)}</h5>
                             </div>
                           )}
                           <div className="summary-total-package">
-                            <h5 className="summary-total-package-label mb-0">Total do Pacote:</h5>
+                            <h5 className="summary-total-package-label mb-0">{t('form.dynamic.packageTotalColon')}</h5>
                             <h5 className="mb-0">{formatPrice(packagesTotal)}</h5>
                           </div>
                           {packagesDiscountTotal > 0 && (
                             <div className="summary-total-package">
-                              <h5 className="summary-total-package-label mb-0">Desconto:</h5>
+                              <h5 className="summary-total-package-label mb-0">{t('form.dynamic.discountColon')}</h5>
                               <h5 className="mb-0 summary-discount-value">-{formatPrice(packagesDiscountTotal)}</h5>
                             </div>
                           )}
                           {groupDiscountAmount > 0 && (
                             <div className="summary-total-package">
-                              <h5 className="summary-total-package-label mb-0">Desconto de grupo ({groupDiscountPercent}%):</h5>
+                              <h5 className="summary-total-package-label mb-0">{t('form.dynamic.groupDiscount', { percent: groupDiscountPercent })}</h5>
                               <h5 className="mb-0 summary-discount-value">-{formatPrice(groupDiscountAmount)}</h5>
                             </div>
                           )}
                           <div className="packages-horizontal-line-cart"></div>
                           <div className="summary-total-geral mb-3">
-                            <h5 className="fw-bold mb-0">Total:</h5>
+                            <h5 className="fw-bold mb-0">{t('form.dynamic.totalColon')}</h5>
                             <h5 className="fw-bold mb-0">{formatPrice(netGrandTotal)}</h5>
                           </div>
                           <div className="summary-buttons d-grid gap-3">
                             {people.length > 0 && (
                               <Button variant="teal-blue" size="lg" onClick={goToPayment}>
-                                Pagamento
+                                {t('form.dynamic.payment')}
                               </Button>
                             )}
                             {grandTotal > 0 && (
                               <Button variant="outline-secondary" onClick={() => setShowSimulator(true)}>
-                                <Icons typeIcon="money" iconSize={20} fill="#6c757d" /> Simular Taxas de Pagamento
+                                <Icons typeIcon="money" iconSize={20} fill="#6c757d" /> {t('form.dynamic.simulateFees')}
                               </Button>
                             )}
                           </div>
@@ -1013,25 +1013,22 @@ const DynamicForm = () => {
               </div>
             ) : currentStep.kind === 'payment' ? (
               <FormStepLayout
-                title="Pagamento"
+                title={t('form.dynamic.payment')}
                 footer={
                   <>
                     <Button variant="light" size="lg" onClick={goBack} disabled={submitting}>
-                      Voltar
+                      {t('form.dynamic.back')}
                     </Button>
-                    <SpinnerButton variant="warning" size="lg" onClick={handlePayment} loading={submitting}>Avançar</SpinnerButton>
+                    <SpinnerButton variant="warning" size="lg" onClick={handlePayment} loading={submitting}>{t('form.dynamic.advance')}</SpinnerButton>
                   </>
                 }
               >
                 <div className="dynamic-form__payment">
                   <p>
-                    Escolha a forma de pagamento desejada. <b>Atenção:</b> após selecionar a forma de pagamento, você
-                    será redirecionado para a tela de finalização, e não será possível voltar para alterar essa opção.
-                    Certifique-se de sua escolha antes de prosseguir. <b>Importante:</b>{' '}
-                    <i>não é necessário enviar comprovante de pagamento!</i> Todo o processo é digital e registrado
-                    automaticamente em nossa base de dados.
+                    {t('form.dynamic.paymentWarnPart1')}<b>{t('form.dynamic.attention')}</b>{t('form.dynamic.paymentWarnPart2')}<b>{t('form.dynamic.important')}</b>{' '}
+                    <i>{t('form.dynamic.noReceiptNeeded')}</i>{t('form.dynamic.paymentWarnPart3')}
                   </p>
-                  <p className="payment-heading fw-bold mt-4 mb-2">Escolha sua forma de pagamento:</p>
+                  <p className="payment-heading fw-bold mt-4 mb-2">{t('form.dynamic.choosePaymentHeading')}</p>
                   <div className="payment-grid">
                     {PAYMENT_OPTIONS.filter((option) => option.key !== 'ticket' || boletoEnabled).map((option) => {
                       const active = paymentMethod === option.key;
@@ -1048,9 +1045,9 @@ const DynamicForm = () => {
                           <span className="payment-card__icon">
                             <Icons typeIcon={option.icon} iconSize={26} fill={active ? '#fff' : iconColor} />
                           </span>
-                          <span className="payment-card__title">{option.label}</span>
-                          <span className="payment-card__desc">{option.description}</span>
-                          {active && <span className="payment-card__badge">Selecionado</span>}
+                          <span className="payment-card__title">{t(`form.dynamic.pm_${option.key}_label`)}</span>
+                          <span className="payment-card__desc">{t(`form.dynamic.pm_${option.key}_desc`)}</span>
+                          {active && <span className="payment-card__badge">{t('form.dynamic.selected')}</span>}
                         </button>
                       );
                     })}
@@ -1058,7 +1055,7 @@ const DynamicForm = () => {
 
                   {paymentMethod === 'ticket' && boletoMaxInstallments >= 2 && (
                     <div className="mt-4">
-                      <Form.Label className="fw-bold">Em quantas parcelas (boletos mensais)?</Form.Label>
+                      <Form.Label className="fw-bold">{t('form.dynamic.installmentsQuestion')}</Form.Label>
                       <div className="dynamic-form__installments">
                         {Array.from({ length: boletoMaxInstallments }, (_, i) => i + 1).map((n) => (
                           <button
@@ -1072,18 +1069,18 @@ const DynamicForm = () => {
                         ))}
                       </div>
                       <p className="text-secondary small mt-2 mb-0">
-                        Serão gerados {boletoInstallments} {boletoInstallments === 1 ? 'boleto' : 'boletos mensais'}. O
-                        1º confirma sua vaga; os demais mantêm a inscrição em dia.
+                        {boletoInstallments === 1
+                          ? t('form.dynamic.boletoGeneratedSingular', { count: boletoInstallments })
+                          : t('form.dynamic.boletoGeneratedPlural', { count: boletoInstallments })}
                       </p>
                       <p className="text-secondary small mt-2 mb-0">
-                        Se o vencimento da <b>última parcela</b> ficar a <b>menos de {boletoMinDaysBeforeEvent} dias</b> do início do evento, ele
-                        é <b>antecipado automaticamente</b> para garantir que o pagamento seja compensado a tempo.
+                        {t('form.dynamic.boletoWarnPart1')}<b>{t('form.dynamic.lastInstallment')}</b>{t('form.dynamic.boletoWarnPart2')}<b>{t('form.dynamic.lessThanDays', { days: boletoMinDaysBeforeEvent })}</b>{t('form.dynamic.boletoWarnPart3')}<b>{t('form.dynamic.autoAnticipated')}</b>{t('form.dynamic.boletoWarnPart4')}
                       </p>
                     </div>
                   )}
 
                   <Form.Group className="mt-4" controlId="donation-input">
-                    <Form.Label className="fw-bold">Quer incluir uma doação social? (opcional)</Form.Label>
+                    <Form.Label className="fw-bold">{t('form.dynamic.donationQuestion')}</Form.Label>
                     <InputGroup style={{ maxWidth: '220px' }}>
                       <InputGroup.Text>R$</InputGroup.Text>
                       <Form.Control
@@ -1096,13 +1093,13 @@ const DynamicForm = () => {
                       />
                     </InputGroup>
                     <Form.Text className="text-muted-italic">
-                      A doação é somada ao seu pagamento e destinada ao projeto social do evento.
+                      {t('form.dynamic.donationHelp')}
                     </Form.Text>
                   </Form.Group>
 
                   <p className="text-muted mt-4">
-                    {people.length} inscrição(ões)
-                    {Number(donation) > 0 && ` + doação ${formatPrice(Number(donation))}`} · Total{' '}
+                    {t('form.dynamic.registrationsCount', { count: people.length })}
+                    {Number(donation) > 0 && t('form.dynamic.plusDonation', { price: formatPrice(Number(donation)) })} · {t('form.dynamic.total')}{' '}
                     <b>{formatPrice(netGrandTotal + (Number(donation) || 0))}</b>
                   </p>
                 </div>
@@ -1122,19 +1119,19 @@ const DynamicForm = () => {
                 />
                 <div className="form-step__nav dynamic-package__nav">
                   <Button variant="light" size="lg" onClick={goBack} disabled={stepIndex === 0}>
-                    Voltar
+                    {t('form.dynamic.back')}
                   </Button>
                   <Button variant="warning" size="lg" onClick={goNext}>
-                    {wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
+                    {wizardSteps[stepIndex + 1]?.kind === 'review' ? t('form.dynamic.reviewAction') : t('form.dynamic.advance')}
                   </Button>
                 </div>
               </div>
             ) : currentStep.kind === 'ride' ? (
               <FormStepLayout
-                title={currentStep.section?.name || 'Carona'}
+                title={currentStep.section?.name || t('form.dynamic.rideLabel')}
                 onBack={stepIndex === 0 ? undefined : goBack}
                 onNext={goNext}
-                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
+                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? t('form.dynamic.reviewAction') : t('form.dynamic.advance')}
               >
                 <RideStep value={currentAnswers.__ride} onChange={(sel) => setValue('__ride', sel)} />
               </FormStepLayout>
@@ -1143,7 +1140,7 @@ const DynamicForm = () => {
                 title={currentStep.section.name}
                 onBack={stepIndex === 0 ? undefined : goBack}
                 onNext={goNext}
-                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? 'Revisar' : 'Avançar'}
+                nextLabel={wizardSteps[stepIndex + 1]?.kind === 'review' ? t('form.dynamic.reviewAction') : t('form.dynamic.advance')}
               >
                 <div className="dynamic-fields" data-columns={currentStep.section.columns || 1}>
                   {currentStep.section.fields.map((field) => (
