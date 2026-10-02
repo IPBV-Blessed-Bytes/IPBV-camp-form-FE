@@ -532,6 +532,8 @@
       "contactMsgPlaceholder": "Mensagem pré-preenchida ao abrir a conversa (opcional)",
       "shareMsgLabel": "Mensagem \"Compartilhar\" (WhatsApp):",
       "shareMsgPlaceholder": "Texto enviado ao compartilhar o evento (opcional)",
+      "deliveryNoteLabel": "Nota de entrega da loja:",
+      "deliveryNotePlaceholder": "Ex.: os itens serão entregues no check-in (opcional)",
       "spreadsheetLabel": "Link da Planilha Antiga:",
       "spreadsheetPlaceholder": "https://drive.google.com/...",
       "spreadsheetHelp": "Botão \"Planilha Antiga\" na home do admin. Deixe em branco para ocultar.",

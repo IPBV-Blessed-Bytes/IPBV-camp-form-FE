@@ -84,7 +84,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -1105,6 +1105,7 @@ const DynamicForm = () => {
               </FormStepLayout>
             ) : currentStep.kind === 'package' ? (
               <div className="dynamic-package">
+                {storeDeliveryNote && <p className="dynamic-package__delivery-note">{storeDeliveryNote}</p>}
                 <PackageStep
                   categories={packageCategories}
                   products={packageProducts}

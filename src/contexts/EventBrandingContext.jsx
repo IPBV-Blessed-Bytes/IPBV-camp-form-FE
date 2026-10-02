@@ -76,6 +76,7 @@ export const EventBrandingProvider = ({ children }) => {
       faviconUrl,
       mapQuery: event?.mapQuery || '',
       socialLinks: event?.socialLinks || '',
+      storeDeliveryNote: event?.storeDeliveryNote || '',
       groupDiscountThresholdCents: Number(event?.groupDiscountThresholdCents) || 0,
       groupDiscountPercent: Number(event?.groupDiscountPercent) || 0,
       loading: isLoading,

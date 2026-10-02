@@ -532,6 +532,8 @@
       "contactMsgPlaceholder": "Pre-filled message when opening the conversation (optional)",
       "shareMsgLabel": "Message \"Share\" (WhatsApp):",
       "shareMsgPlaceholder": "Text sent when sharing the event (optional)",
+      "deliveryNoteLabel": "Store delivery note:",
+      "deliveryNotePlaceholder": "E.g.: items will be handed out at check-in (optional)",
       "spreadsheetLabel": "Old Spreadsheet Link:",
       "spreadsheetPlaceholder": "https://drive.google.com/...",
       "spreadsheetHelp": "The \"Old Spreadsheet\" button on the admin home. Leave blank to hide.",

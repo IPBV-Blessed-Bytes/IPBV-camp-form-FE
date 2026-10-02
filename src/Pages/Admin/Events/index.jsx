@@ -47,6 +47,7 @@ const EMPTY_EVENT = {
   iconKey: '',
   contactMessage: '',
   shareMessage: '',
+  storeDeliveryNote: '',
   oldSpreadsheetUrl: '',
   faviconUrl: '',
   mapQuery: '',
@@ -151,6 +152,7 @@ const AdminEvents = ({ loggedUsername }) => {
       iconKey: event.iconKey || '',
       contactMessage: event.contactMessage || '',
       shareMessage: event.shareMessage || '',
+      storeDeliveryNote: event.storeDeliveryNote || '',
       oldSpreadsheetUrl: event.oldSpreadsheetUrl || '',
       faviconUrl: event.faviconUrl || '',
       mapQuery: event.mapQuery || '',
@@ -253,6 +255,7 @@ const AdminEvents = ({ loggedUsername }) => {
       iconKey: draft.iconKey || null,
       contactMessage: draft.contactMessage.trim() || null,
       shareMessage: draft.shareMessage.trim() || null,
+      storeDeliveryNote: draft.storeDeliveryNote.trim() || null,
       oldSpreadsheetUrl: draft.oldSpreadsheetUrl.trim() || null,
       faviconUrl: draft.faviconUrl.trim() || null,
       mapQuery: draft.mapQuery.trim() || null,
@@ -683,6 +686,21 @@ const AdminEvents = ({ loggedUsername }) => {
                   value={draft.shareMessage}
                   onChange={(e) => handleChange('shareMessage')(e.target.value)}
                   placeholder={t('admin.events.shareMsgPlaceholder')}
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <b>{t('admin.events.deliveryNoteLabel')}</b>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={2}
+                  value={draft.storeDeliveryNote}
+                  onChange={(e) => handleChange('storeDeliveryNote')(e.target.value)}
+                  placeholder={t('admin.events.deliveryNotePlaceholder')}
                 />
               </Form.Group>
             </Col>

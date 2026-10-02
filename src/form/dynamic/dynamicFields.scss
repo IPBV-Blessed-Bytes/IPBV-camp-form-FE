@@ -150,3 +150,13 @@
     color: $gray-600;
   }
 }
+
+.dynamic-package__delivery-note {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid $primary;
+  border-radius: 6px;
+  background: $teal-100;
+  color: $gray-800;
+  font-size: 0.92rem;
+}
