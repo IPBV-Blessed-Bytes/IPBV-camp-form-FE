@@ -1,4 +1,24 @@
 {
+  "form": {
+    "pkg": {
+      "summaryTitle": "Resumo do Pacote",
+      "notSelected": "Não selecionado",
+      "registrationFee": "Taxa de Inscrição:",
+      "discount": "Desconto:",
+      "discountTooltip": "Valor de desconto aplicado diretamente ao CPF do inscrito, mesmo que haja mais de um usuário no carrinho.",
+      "total": "Total:",
+      "accomodationDesc": "Vamos começar a montagem do seu pacote. A escolha da hospedagem é obrigatória.",
+      "transportDesc": "Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdade total com transporte próprio. A escolha do transporte é obrigatória.",
+      "foodDesc": "Você pode optar por todas as refeições ou nenhuma refeição. Não teremos vendas de refeições avulsas. A escolha da alimentação é obrigatória."
+    },
+    "cart": {
+      "totalPerPerson": "Total Inscrito:",
+      "extraMeals": "Refeições Extras:",
+      "empty": "Nenhum usuário adicionado ao carrinho",
+      "confirmRemoveUser": "Tem certeza que deseja remover este usuário?",
+      "confirmClearCart": "Tem certeza que deseja esvaziar o carrinho?"
+    }
+  },
   "common": {
     "adminPanel": "Painel Administrativo",
     "event": "Evento:",

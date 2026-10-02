@@ -1,4 +1,24 @@
 {
+  "form": {
+    "pkg": {
+      "summaryTitle": "Package Summary",
+      "notSelected": "Not selected",
+      "registrationFee": "Registration Fee:",
+      "discount": "Discount:",
+      "discountTooltip": "Discount applied directly to the registrant's CPF, even if there is more than one person in the cart.",
+      "total": "Total:",
+      "accomodationDesc": "Let's start building your package. Choosing lodging is required.",
+      "transportDesc": "We have options for every style. Go with the church group or have full freedom with your own transport. Choosing transport is required.",
+      "foodDesc": "You can choose all meals or none at all. We won't sell individual meals. Choosing meals is required."
+    },
+    "cart": {
+      "totalPerPerson": "Registrant Total:",
+      "extraMeals": "Extra Meals:",
+      "empty": "No one added to the cart",
+      "confirmRemoveUser": "Are you sure you want to remove this person?",
+      "confirmClearCart": "Are you sure you want to empty the cart?"
+    }
+  },
   "common": {
     "adminPanel": "Admin Panel",
     "event": "Event:",

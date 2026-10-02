@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
@@ -63,7 +64,7 @@ const renderPackageDetails = (user, age) => {
   );
 };
 
-const renderUserTotalInfo = (user, age) => {
+const renderUserTotalInfo = (user, age, t) => {
   const { accomodation, transportation, food } = getDiscountedPrices(user, age);
   const extraMeals = Number(user.extraMeals?.totalPrice || 0);
 
@@ -76,7 +77,7 @@ const renderUserTotalInfo = (user, age) => {
     <div className="cart-item">
       <div className="item-info">
         <h5 className="cart-user-total fw-bold d-flex justify-content-between">
-          Total Inscrito: <span>R$ {sumBeforeDiscount},00</span>
+          {t('form.cart.totalPerPerson')} <span>R$ {sumBeforeDiscount},00</span>
         </h5>
       </div>
     </div>
@@ -92,6 +93,7 @@ const Cart = ({
   setFormValues,
   rawFee,
 }) => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
@@ -182,7 +184,7 @@ const Cart = ({
     return (
       <div className="empty-cart">
         <Icons typeIcon="cart" iconSize={48} fill="#ced4da" />
-        <p>Nenhum usuário adicionado ao carrinho</p>
+        <p>{t('form.cart.empty')}</p>
       </div>
     );
   }
@@ -192,7 +194,6 @@ const Cart = ({
       {validUsers.map((user, index) => {
         const userName = user.personalInformation.name || `Pessoa ${index + 1}`;
         const age = calculateAge(new Date(user.personalInformation.birthday));
-        const registrationFee = calculateRegistrationFee(rawFee, age);
         const itemId = user.package?.id || user.package?.accomodation?.id;
 
         return (
@@ -227,7 +228,7 @@ const Cart = ({
                     <div className="item-info">
                       <div className="item-extra-meals mb-3">
                         <div className="d-flex justify-content-between">
-                          <h5>Refeições Extras:</h5>
+                          <h5>{t('form.cart.extraMeals')}</h5>
                           <h5>R$ {Number(user.extraMeals?.totalPrice || 0)},00</h5>
                         </div>
                       </div>
@@ -237,7 +238,7 @@ const Cart = ({
 
               <div className="packages-horizontal-line-cart"></div>
 
-              {renderUserTotalInfo(user, age, registrationFee)}
+              {renderUserTotalInfo(user, age, t)}
             </Card.Body>
           </Card>
         );
@@ -259,8 +260,8 @@ const Cart = ({
           </>
         }
       >
-        {modalType === 'removeUser' && <p>Tem certeza que deseja remover este usuário?</p>}
-        {modalType === 'clearCart' && <p>Tem certeza que deseja esvaziar o carrinho?</p>}
+        {modalType === 'removeUser' && <p>{t('form.cart.confirmRemoveUser')}</p>}
+        {modalType === 'clearCart' && <p>{t('form.cart.confirmClearCart')}</p>}
       </CustomModal>
     </div>
   );

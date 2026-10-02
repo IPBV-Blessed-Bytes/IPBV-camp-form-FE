@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
@@ -14,6 +15,7 @@ import { useFormState } from '@/contexts/FormStateContext';
 import Loading from '@/components/Global/Loading';
 
 const Packages = () => {
+  const { t } = useTranslation();
   const {
     age,
     backStep,
@@ -187,7 +189,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                   <h2 className="packages-page__lot-title">{activeLot?.name}</h2>
                   <Card.Title>Hospedagem</Card.Title>
                   <Card.Text>
-                    Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>.
+                    {t('form.pkg.accomodationDesc')}{' '}
                     <em className="discount-description text-success small">
                       {getCategoryDiscountDescription('Hospedagem')}
                     </em>
@@ -206,8 +208,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                 <Card.Body>
                   <Card.Title>Transporte</Card.Title>
                   <Card.Text>
-                    Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdate total com transporte
-                    próprio. A escolha do transporte é <strong>obrigatória</strong>.
+                    {t('form.pkg.transportDesc')}{' '}
                     <em className="discount-description text-success small">
                       {getCategoryDiscountDescription('Transporte')}
                     </em>
@@ -226,9 +227,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                 <Card.Body>
                   <Card.Title>Alimentação</Card.Title>
                   <Card.Text>
-                    Você pode optar por todas as refeições ou nenhuma refeição.{' '}
-                    <strong>Não teremos vendas de refeições avulsas</strong>. A escolha do alimentação é{' '}
-                    <strong>obrigatória</strong>.
+                    {t('form.pkg.foodDesc')}{' '}
                     <em className="discount-description text-success small">
                       {getCategoryDiscountDescription('Alimentação')}
                     </em>
@@ -257,7 +256,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
           <Col xs={12} xl={4} className="px-0 ps-xl-3">
             <Card>
               <Card.Body>
-                <Card.Title>Resumo do Pacote</Card.Title>
+                <Card.Title>{t('form.pkg.summaryTitle')}</Card.Title>
                 <div className="summary">
                   <div className="summary__accomodation">
                     <div className="summary__accomodation__label">Hospedagem:</div>
@@ -269,7 +268,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                       {items.find((i) => i.category === 'Hospedagem') ? (
                         <div>{items.find((i) => i.category === 'Hospedagem')?.name}</div>
                       ) : (
-                        <small className="text-secondary">Não selecionado</small>
+                        <small className="text-secondary">{t('form.pkg.notSelected')}</small>
                       )}
                       {items.find((i) => i.category === 'Hospedagem') && (
                         <div className="summary__accomodation__value">R$ {accomodationPrice},00</div>
@@ -288,7 +287,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                       {items.find((i) => i.category === 'Transporte') ? (
                         <div>{items.find((i) => i.category === 'Transporte')?.name}</div>
                       ) : (
-                        <small className="text-secondary">Não selecionado</small>
+                        <small className="text-secondary">{t('form.pkg.notSelected')}</small>
                       )}
                       {items.find((i) => i.category === 'Transporte') && (
                         <div className="summary__accomodation__value">R$ {transportationPrice},00</div>
@@ -307,7 +306,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                       {items.find((i) => i.category === 'Alimentação') ? (
                         <div>{items.find((i) => i.category === 'Alimentação')?.name}</div>
                       ) : (
-                        <small className="text-secondary">Não selecionado</small>
+                        <small className="text-secondary">{t('form.pkg.notSelected')}</small>
                       )}
                       {items.find((i) => i.category === 'Alimentação') && (
                         <div className="summary__accomodation__value">R$ {foodPrice},00</div>
@@ -319,7 +318,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                   <div className="summary__individual-base">
                     <div className="d-flex justify-content-between">
                       <div className="d-flex align-items-center gap-1">
-                        <div className="summary-individual-base-label">Taxa de Inscrição:</div>
+                        <div className="summary-individual-base-label">{t('form.pkg.registrationFee')}</div>
                         <Tips
                           classNameWrapper="mt-0 mb-2"
                           placement="top"
@@ -338,14 +337,14 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                     <div className="summary__discount">
                       <div className="d-flex justify-content-between">
                         <div className="d-flex align-items-center gap-1">
-                          <div>Desconto:</div>
+                          <div>{t('form.pkg.discount')}</div>
                           <Tips
                             classNameWrapper="mt-0 mb-1"
                             placement="top"
                             typeIcon="info"
                             size={15}
                             color={'#7f7878'}
-                            text="Valor de desconto aplicado diretamente ao CPF do inscrito, mesmo que haja mais de um usuário no carrinho."
+                            text={t('form.pkg.discountTooltip')}
                           />
                         </div>
                         <div className="summary-discount-value">-R$ {discountNumeric},00</div>
@@ -356,7 +355,7 @@ acima de 15 anos = ${getFeeByAge(20)} reais
 
                   <div className="summary__discount">
                     <strong className="d-flex justify-content-between">
-                      <div>Total:</div>
+                      <div>{t('form.pkg.total')}</div>
                       <div>R$ {finalTotal},00</div>
                     </strong>
                   </div>
