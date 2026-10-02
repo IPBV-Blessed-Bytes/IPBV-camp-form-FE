@@ -19,6 +19,11 @@ const PAYMENT_OPTIONS = [
   { key: 'ticket', label: 'Boleto', description: 'Vencimento em 3 dias', icon: 'barcode' },
 ];
 
+const formatBRL = (cents) => (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const formatPct = (percent) => `${Number(percent).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`;
+const DEFAULT_CARD_PCT = [4.79, 7.31, 8.57, 9.83, 11.09, 12.35, 13.61, 14.87, 16.13, 17.39, 18.65, 19.91];
+const toNum = (value, fallback) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
+
 const ChooseFormPayment = () => {
   const { backStep, currentFormValues, sendForm, setBackStepFlag, status, updateFormValues } = useFormState();
   const initialValues = currentFormValues;
@@ -29,18 +34,25 @@ const ChooseFormPayment = () => {
   const [eventDate, setEventDate] = useState('');
   const [boletoMax, setBoletoMax] = useState('');
   const [minDaysBeforeEvent, setMinDaysBeforeEvent] = useState(20);
+  const [fees, setFees] = useState({});
 
   useEffect(() => {
     Promise.all([
       initBaseDate(),
       getPublicSetting('boleto_max_installments'),
       getPublicSetting('boleto_min_days_before_event'),
+      getPublicSetting('payment_fees'),
     ])
-      .then(([baseDate, maxValue, minDaysValue]) => {
+      .then(([baseDate, maxValue, minDaysValue, feesValue]) => {
         setEventDate(baseDate || '');
         setBoletoMax(maxValue || '');
         const parsed = Number(minDaysValue);
         if (Number.isFinite(parsed) && parsed > 0) setMinDaysBeforeEvent(parsed);
+        try {
+          setFees(feesValue ? JSON.parse(feesValue) : {});
+        } catch {
+          setFees({});
+        }
       })
       .catch(() => {});
   }, []);
@@ -105,6 +117,16 @@ const ChooseFormPayment = () => {
   const visibleOptions = PAYMENT_OPTIONS.filter((option) => option.key !== 'ticket' || boletoAvailable);
   const showInstallments = values.formPayment === 'ticket' && maxInstallments >= 2;
 
+  const boletoFeeCents = Math.round((toNum(fees.boletoFixed, 3.49) + toNum(fees.transactionFixed, 0.99)) * 100);
+  const pixPercent = toNum(fees.pixPercent, 1.19);
+  const pixFixedCents = Math.round(toNum(fees.transactionFixed, 0.99) * 100);
+  const cardPct =
+    Array.isArray(fees.cardInstallmentPercent) && fees.cardInstallmentPercent.length
+      ? fees.cardInstallmentPercent
+      : DEFAULT_CARD_PCT;
+  const cardMinPct = toNum(cardPct[0], 4.79);
+  const cardMaxPct = toNum(cardPct[cardPct.length - 1], 19.91);
+
   useEffect(() => {
     setBackStepFlag(true);
   }, [setBackStepFlag]);
@@ -153,6 +175,34 @@ const ChooseFormPayment = () => {
                 );
               })}
             </div>
+
+            {values.formPayment === 'creditCard' && (
+              <p className="payment-boleto-fee small mt-3 mb-0">
+                <b>Atenção:</b> no cartão há <b>juros que aumentam conforme o número de parcelas</b> (de{' '}
+                {formatPct(cardMinPct)} em 1x até {formatPct(cardMaxPct)} em 12x), já incluídos no valor final.
+              </p>
+            )}
+
+            {values.formPayment === 'pix' && (
+              <p className="payment-boleto-fee small mt-3 mb-0">
+                <b>Atenção:</b> no PIX há uma taxa de{' '}
+                <b>
+                  {formatPct(pixPercent)} + {formatBRL(pixFixedCents)}
+                </b>
+                , já incluída no valor final.
+              </p>
+            )}
+
+            {values.formPayment === 'ticket' && (
+              <p className="payment-boleto-fee small mt-3 mb-0">
+                <b>Atenção:</b> cada boleto gerado possui uma taxa da administradora financeira no valor de <b>{formatBRL(boletoFeeCents)}</b>, já incluídos no valor do boleto.
+                {installments >= 2 && (
+                  <>
+                    {' '}Com {installments} boletos, a taxa total fica em <b>{formatBRL(boletoFeeCents * installments)}</b>.
+                  </>
+                )}
+              </p>
+            )}
 
             {showInstallments && (
               <div className="payment-installments-block mt-3">

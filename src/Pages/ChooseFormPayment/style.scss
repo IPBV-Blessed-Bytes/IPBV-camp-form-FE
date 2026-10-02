@@ -125,3 +125,11 @@
 .payment-installments-warning {
   color: $primary;
 }
+
+.payment-boleto-fee {
+  color: $warning-dark;
+  background: rgba($warning, 0.12);
+  border-left: 3px solid $warning;
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+}
