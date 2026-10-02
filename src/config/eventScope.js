@@ -40,6 +40,9 @@ export const EVENT_SCOPED_PREFIXES = new Set([
   'recipient-onboarding',
   'platform-billing',
   'finance',
+  'refunds',
+  'boleto-installments',
+  'backup',
 ]);
 
 export const getEventSlugFromPath = (pathname = window.location.pathname) => {
