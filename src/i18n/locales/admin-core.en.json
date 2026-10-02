@@ -1,5 +1,10 @@
 {
   "admin": {
+    "impersonation": {
+      "viewingAs": "You are viewing as {{org}} ({{user}})",
+      "exit": "Exit view",
+      "leaving": "Leaving…"
+    },
     "shell": {
       "reorderError": "Could not save the new order.",
       "myEventsTitle": "My events",

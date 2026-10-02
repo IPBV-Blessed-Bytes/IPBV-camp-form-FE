@@ -105,3 +105,23 @@ export const deletePlatformFaq = async (id) => {
   const { data } = await authFetcher.delete(`/platform/faqs/${id}`);
   return data;
 };
+
+export const listOrganizationUsers = async (organizationId) => {
+  const { data } = await authFetcher.get(`/platform/organizations/${organizationId}/users`);
+  return Array.isArray(data) ? data : [];
+};
+
+export const startImpersonation = async (payload) => {
+  const { data } = await authFetcher.post('/platform/impersonate', payload);
+  return data;
+};
+
+export const stopImpersonation = async (logId) => {
+  const { data } = await authFetcher.post(`/platform/impersonate/${logId}/stop`);
+  return data;
+};
+
+export const listImpersonations = async () => {
+  const { data } = await authFetcher.get('/platform/impersonations');
+  return Array.isArray(data) ? data : [];
+};

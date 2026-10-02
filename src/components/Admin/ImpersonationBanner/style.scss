@@ -1,0 +1,40 @@
+@use '../../../styles/Variables.scss' as *;
+
+.impersonation-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1080;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: $warning-dark;
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+
+  &__text {
+    font-weight: 600;
+  }
+
+  &__exit {
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.2rem 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+}

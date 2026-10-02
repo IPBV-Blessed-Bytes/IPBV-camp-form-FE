@@ -24,7 +24,10 @@ import {
   getPlatformRevenue,
   getPlatformConfig,
   downloadPlatformExport,
+  listOrganizationUsers,
+  startImpersonation,
 } from '@/services/platform';
+import { beginImpersonation } from '@/config/impersonation';
 import { getSystemStage, updateSystemStage } from '@/services/systemStage';
 import { getOrganizationCatalog } from '@/services/events';
 import { setSelectedEvent } from '@/config/eventScope';
@@ -233,7 +236,10 @@ const Platform = () => {
   const [savingGrant, setSavingGrant] = useState(false);
   const [impersonate, setImpersonate] = useState(null);
   const [impersonateEvents, setImpersonateEvents] = useState([]);
+  const [impersonateUsers, setImpersonateUsers] = useState([]);
+  const [impersonateUserId, setImpersonateUserId] = useState('');
   const [impersonateLoading, setImpersonateLoading] = useState(false);
+  const [entering, setEntering] = useState(false);
   const [broadcast, setBroadcast] = useState({ audience: 'all', subject: '', message: '' });
   const [sendingBroadcast, setSendingBroadcast] = useState(false);
   const [config, setConfig] = useState(null);
@@ -363,20 +369,45 @@ const Platform = () => {
   const openImpersonate = async (org) => {
     setImpersonate(org);
     setImpersonateEvents([]);
+    setImpersonateUsers([]);
+    setImpersonateUserId('');
     setImpersonateLoading(true);
     try {
-      const { events } = await getOrganizationCatalog(org.slug);
+      const [{ events }, users] = await Promise.all([
+        getOrganizationCatalog(org.slug),
+        listOrganizationUsers(org.id),
+      ]);
       setImpersonateEvents(Array.isArray(events) ? events : []);
+      const list = Array.isArray(users) ? users : [];
+      setImpersonateUsers(list);
+      const admin = list.find((u) => u.roleName === 'admin') || list[0];
+      if (admin) setImpersonateUserId(admin.id);
     } catch {
       setImpersonateEvents([]);
+      setImpersonateUsers([]);
     } finally {
       setImpersonateLoading(false);
     }
   };
 
-  const enterAdminAs = (slug) => {
-    setSelectedEvent(slug);
-    window.location.assign('/admin');
+  const enterAdminAs = async (slug, name) => {
+    if (!impersonate || !impersonateUserId) {
+      toast.error('Selecione um usuário para impersonar.');
+      return;
+    }
+    setEntering(true);
+    try {
+      const session = await startImpersonation({
+        organizationId: impersonate.id,
+        targetUserId: impersonateUserId,
+      });
+      beginImpersonation(session);
+      setSelectedEvent(slug, name);
+      window.location.assign('/admin');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error) || 'Não foi possível entrar como este cliente.');
+      setEntering(false);
+    }
   };
 
   const openCreateRole = () => {
@@ -1937,26 +1968,50 @@ const Platform = () => {
         }
       >
         <p className="platform__pricing-subtitle">
-          Escolha um evento desta igreja para abrir o painel administrativo dela (suporte). Você entra com acesso total.
+          Entre no painel desta igreja como um dos usuários dela (suporte). A sessão é <b>auditada</b> e você verá
+          exatamente o que aquele usuário vê.
         </p>
         {impersonateLoading ? (
           <Loading loading />
-        ) : impersonateEvents.length === 0 ? (
-          <p className="platform__empty">Esta igreja não tem eventos ativos.</p>
         ) : (
-          <div className="platform__impersonate-list">
-            {impersonateEvents.map((event) => (
-              <button
-                key={event.slug}
-                type="button"
-                className="platform__impersonate-item"
-                onClick={() => enterAdminAs(event.slug)}
+          <>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Entrar como</b>
+              </Form.Label>
+              <Form.Select
+                value={impersonateUserId}
+                onChange={(e) => setImpersonateUserId(e.target.value)}
+                disabled={impersonateUsers.length === 0}
               >
-                <span>{event.name}</span>
-                <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
-              </button>
-            ))}
-          </div>
+                {impersonateUsers.length === 0 && <option value="">Nenhum usuário neste cliente</option>}
+                {impersonateUsers.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.displayName || u.login}
+                    {u.roleName ? ` — ${u.roleName}` : ''}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            {impersonateEvents.length === 0 ? (
+              <p className="platform__empty">Esta igreja não tem eventos ativos.</p>
+            ) : (
+              <div className="platform__impersonate-list">
+                {impersonateEvents.map((event) => (
+                  <button
+                    key={event.slug}
+                    type="button"
+                    className="platform__impersonate-item"
+                    onClick={() => enterAdminAs(event.slug, event.name)}
+                    disabled={entering || !impersonateUserId}
+                  >
+                    <span>{event.name}</span>
+                    <Icons typeIcon="arrow-right" iconSize={16} fill="#007185" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </CustomModal>
     </div>

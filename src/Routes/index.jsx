@@ -10,6 +10,7 @@ import Header from '@/components/Global/Header';
 import Loading from '@/components/Global/Loading';
 import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
+import ImpersonationBanner from '@/components/Admin/ImpersonationBanner';
 import ChatbotWidget from '@/components/Global/ChatbotWidget';
 
 import { useEventBranding } from '@/contexts/EventBrandingContext';
@@ -121,6 +122,7 @@ const FormRoutes = () => {
       <a className="skip-to-content" href="#main-content">
         Pular para o conteúdo
       </a>
+      <ImpersonationBanner />
       {!adminPathname && formPath && (
         <div className="components-container">
           {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}

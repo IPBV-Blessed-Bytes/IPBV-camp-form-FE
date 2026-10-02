@@ -1,5 +1,10 @@
 {
   "admin": {
+    "impersonation": {
+      "viewingAs": "Estás viendo como {{org}} ({{user}})",
+      "exit": "Salir de la vista",
+      "leaving": "Saliendo…"
+    },
     "shell": {
       "reorderError": "No se pudo guardar el nuevo orden.",
       "myEventsTitle": "Mis eventos",
