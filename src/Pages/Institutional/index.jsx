@@ -16,8 +16,8 @@ import { eventPath } from '@/config/eventScope';
 import './style.scss';
 
 const REGISTRATION_STATUS = {
-  open: { label: 'Inscrições abertas', tone: 'open' },
-  closed: { label: 'Inscrições encerradas', tone: 'closed' },
+  open: { tone: 'open' },
+  closed: { tone: 'closed' },
 };
 
 const Institutional = () => {
@@ -223,7 +223,7 @@ const Institutional = () => {
               {registrationStatus && (
                 <span className={`inst-status inst-status--${registrationStatus.tone}`}>
                   <span className="inst-status__dot" />
-                  {registrationStatus.label}
+                  {t(`site.institutional.status.${registrationsOpen ? 'open' : 'closed'}`)}
                 </span>
               )}
               {hero.tagline && <span className="inst-hero__tag">{hero.tagline}</span>}

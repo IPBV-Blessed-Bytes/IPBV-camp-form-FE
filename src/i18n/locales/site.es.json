@@ -23,6 +23,10 @@
         "parceiros": "Socios",
         "como-chegar": "Cómo Llegar",
         "contato": "Contacto"
+      },
+      "status": {
+        "open": "Inscripciones abiertas",
+        "closed": "Inscripciones cerradas"
       }
     },
     "footer": {
