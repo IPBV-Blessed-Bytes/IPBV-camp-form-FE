@@ -137,6 +137,6 @@ export const INSTITUTIONAL_NAV = [
   { id: 'galeria', label: 'Galeria' },
   { id: 'avisos', label: 'Avisos' },
   { id: 'parceiros', label: 'Parceiros' },
-  { id: 'como-chegar', label: 'Como chegar' },
+  { id: 'como-chegar', label: 'Como Chegar' },
   { id: 'contato', label: 'Contato' },
 ];
