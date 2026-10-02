@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { Accordion, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
@@ -261,7 +262,7 @@ const Landing = () => {
                 <Accordion.Item eventKey={String(index)} key={faq.id}>
                   <Accordion.Header>{faq.question}</Accordion.Header>
                   <Accordion.Body>
-                    <div className="storefront__faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                    <div className="storefront__faq-answer" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer || '') }} />
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

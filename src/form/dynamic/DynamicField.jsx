@@ -190,7 +190,7 @@ const DynamicField = ({ field, value, onChange, error }) => {
           label={
             <span>
               {config?.text}{' '}
-              {config?.link && (
+              {config?.link && /^https?:\/\//i.test(config.link) && (
                 <a href={config.link} target="_blank" rel="noreferrer">
                   (saiba mais)
                 </a>

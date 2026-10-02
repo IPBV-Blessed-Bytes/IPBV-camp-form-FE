@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, Badge, Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, CartesianGrid } from 'recharts';
@@ -1273,7 +1274,7 @@ const Platform = () => {
                 <Accordion.Item eventKey={String(index)} key={faq.id}>
                   <Accordion.Header>{faq.question}</Accordion.Header>
                   <Accordion.Body>
-                    <div className="platform__faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                    <div className="platform__faq-answer" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer || '') }} />
                     <div className="platform__faq-actions">
                       <Button size="sm" variant="outline-teal-blue" onClick={() => openEditFaq(faq)}>
                         Editar
