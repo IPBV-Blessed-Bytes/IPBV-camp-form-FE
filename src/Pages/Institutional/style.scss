@@ -222,7 +222,7 @@ $inst-tint: $gray-50;
       transform: translateY(-7px) rotate(-45deg);
     }
 
-    @media (max-width: $xl) {
+    @media (max-width: $xxxxl) {
       display: flex;
     }
 
@@ -441,6 +441,12 @@ $inst-tint: $gray-50;
       grid-template-columns: 1fr;
     }
   }
+}
+
+#palestrantes .inst-cards,
+#equipe .inst-cards {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 240px));
+  justify-content: center;
 }
 
 .inst-card {
