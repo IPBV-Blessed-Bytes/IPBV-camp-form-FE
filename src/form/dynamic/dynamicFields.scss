@@ -160,3 +160,9 @@
   color: $gray-800;
   font-size: 0.92rem;
 }
+
+.cart-item__product {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

@@ -843,7 +843,8 @@ const DynamicForm = () => {
                           .filter((p) => sel.includes(p.id))
                           .map((p) => (
                             <div key={p.id} className="d-flex justify-content-between border-bottom py-2">
-                              <span className="fw-bold">
+                              <span className="fw-bold cart-item__product">
+                                {p.iconKey && <Icons typeIcon={p.iconKey} iconSize={16} fill={iconColor} />}
                                 {cat.name}: {p.name}
                               </span>
                               <span>{formatPrice(productPrice(p, ageRules, age))}</span>
@@ -916,7 +917,10 @@ const DynamicForm = () => {
                                               <h5>{cat.name}:</h5>
                                               <h5>{formatPrice(productPrice(p, ageRules, personAge))}</h5>
                                             </div>
-                                            <p>{p.name}</p>
+                                            <p className="cart-item__product">
+                                              {p.iconKey && <Icons typeIcon={p.iconKey} iconSize={18} fill={iconColor} />}
+                                              {p.name}
+                                            </p>
                                           </div>
                                         </div>
                                       ));
