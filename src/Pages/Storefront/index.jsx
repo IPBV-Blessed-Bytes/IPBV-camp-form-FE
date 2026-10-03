@@ -121,6 +121,16 @@ const Storefront = () => {
     }
   };
 
+  const feeTiers = settings?.defaultFeeTiers || [];
+  const feePercents = feeTiers.length ? feeTiers.map((tier) => tier.percent) : [settings?.defaultFeePercent];
+  const feeMin = feePercents.length ? Math.min(...feePercents) : undefined;
+  const feeMax = feePercents.length ? Math.max(...feePercents) : undefined;
+  const feeSuffix = settings
+    ? feeMin != null && feeMin !== feeMax
+      ? t('site.storefront.reassuranceFeeRange', { min: feeMin, max: feeMax })
+      : t('site.storefront.reassuranceFee', { percent: settings.defaultFeePercent })
+    : '';
+
   if (result) {
     const confirmed = result.emailVerified || result.google;
     return (
@@ -129,7 +139,11 @@ const Storefront = () => {
         <Container className="storefront__success-wrap">
           <div className="storefront__success">
             <span className="storefront__success-badge">
-              <Icons typeIcon={confirmed ? 'checked' : 'email'} iconSize={40} fill={confirmed ? '#057c05' : '#0a5f86'} />
+              <Icons
+                typeIcon={confirmed ? 'checked' : 'email'}
+                iconSize={40}
+                fill={confirmed ? '#057c05' : '#0a5f86'}
+              />
             </span>
             <h2>{t('site.storefront.success.title', { church: result.churchName })}</h2>
             {confirmed ? (
@@ -178,136 +192,169 @@ const Storefront = () => {
           {t('site.storefront.back')}
         </button>
 
-        <div className="storefront__signup-card">
-          <div className="storefront__signup-head">
-            <h1 className="storefront__section-title">{t('site.storefront.formTitle')}</h1>
-            <p className="storefront__signup-lede">{t('site.storefront.formLede')}</p>
+        <div className="storefront__signup-layout">
+          <div className="storefront__signup-card">
+            <div className="storefront__signup-head">
+              <h1 className="storefront__section-title">{t('site.storefront.formTitle')}</h1>
+              <p className="storefront__signup-lede">{t('site.storefront.formLede')}</p>
+            </div>
+
+            <Form onSubmit={handleSubmit} className="storefront__form">
+              <Row className="g-3">
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold">{t('site.storefront.labelChurch')}</Form.Label>
+                    <Form.Control
+                      value={churchName}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setChurchName(value);
+                        setSlug((prev) => (prev && prev !== slugify(churchName) ? prev : slugify(value)));
+                      }}
+                      placeholder={t('site.storefront.placeholderChurch')}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold">{t('site.storefront.labelSlug')}</Form.Label>
+                    <Form.Control
+                      value={slug}
+                      onChange={(e) => setSlug(slugify(e.target.value))}
+                      placeholder={t('site.storefront.placeholderSlug')}
+                      size="lg"
+                    />
+                    <Form.Text className="text-muted">
+                      {t('site.storefront.slugHint', { slug: slug || t('site.storefront.slugFallback') })}
+                    </Form.Text>
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold">{t('site.storefront.labelName')}</Form.Label>
+                    <Form.Control
+                      value={adminName}
+                      onChange={(e) => setAdminName(e.target.value)}
+                      placeholder={t('site.storefront.placeholderName')}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold">{t('site.storefront.labelEmail')}</Form.Label>
+                    <Form.Control
+                      type="email"
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
+                      placeholder={t('site.storefront.placeholderEmail')}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Form.Group>
+                    <Form.Label className="fw-bold">{t('site.storefront.labelPassword')}</Form.Label>
+                    <div className="storefront__password">
+                      <Form.Control
+                        type={showPassword ? 'text' : 'password'}
+                        value={adminPassword}
+                        onChange={(e) => setAdminPassword(e.target.value)}
+                        placeholder={t('site.storefront.placeholderPassword')}
+                        size="lg"
+                        className="storefront__password-input"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        aria-label={
+                          showPassword ? t('site.storefront.hidePassword') : t('site.storefront.showPassword')
+                        }
+                        className="storefront__password-toggle"
+                      >
+                        <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                      </button>
+                    </div>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Form.Group className="storefront__terms mb-3">
+                <Form.Check
+                  className="mt-2"
+                  type="checkbox"
+                  id="storefront-terms"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  label={
+                    <Trans
+                      i18nKey="site.storefront.termsLabel"
+                      components={{
+                        1: (
+                          <a
+                            className="storefront__terms-link"
+                            href="/termos"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          />
+                        ),
+                      }}
+                    />
+                  }
+                />
+              </Form.Group>
+
+              <Button
+                type="submit"
+                variant="teal-blue"
+                size="lg"
+                className="storefront__submit fw-bold"
+                disabled={loading}
+              >
+                {t('site.storefront.submit')}
+              </Button>
+              <p className="storefront__form-reassurance">
+                <Icons typeIcon="checked" iconSize={15} fill="#057c05" />{' '}
+                {t('site.storefront.reassurance', { feeSuffix })}
+              </p>
+
+              <div className="storefront__divider">
+                <span>{t('site.storefront.or')}</span>
+              </div>
+              <div className="storefront__google">
+                <GoogleSignInButton onCredential={handleGoogle} />
+                <p className="storefront__google-hint">{t('site.storefront.googleHint')}</p>
+              </div>
+            </Form>
           </div>
 
-          <Form onSubmit={handleSubmit} className="storefront__form">
-            <Row className="g-3">
-              <Col xs={12} md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">{t('site.storefront.labelChurch')}</Form.Label>
-                  <Form.Control
-                    value={churchName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setChurchName(value);
-                      setSlug((prev) => (prev && prev !== slugify(churchName) ? prev : slugify(value)));
-                    }}
-                    placeholder={t('site.storefront.placeholderChurch')}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">{t('site.storefront.labelSlug')}</Form.Label>
-                  <Form.Control
-                    value={slug}
-                    onChange={(e) => setSlug(slugify(e.target.value))}
-                    placeholder={t('site.storefront.placeholderSlug')}
-                    size="lg"
-                  />
-                  <Form.Text className="text-muted">
-                    {t('site.storefront.slugHint', { slug: slug || t('site.storefront.slugFallback') })}
-                  </Form.Text>
-                </Form.Group>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">{t('site.storefront.labelName')}</Form.Label>
-                  <Form.Control
-                    value={adminName}
-                    onChange={(e) => setAdminName(e.target.value)}
-                    placeholder={t('site.storefront.placeholderName')}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">{t('site.storefront.labelEmail')}</Form.Label>
-                  <Form.Control
-                    type="email"
-                    value={adminEmail}
-                    onChange={(e) => setAdminEmail(e.target.value)}
-                    placeholder={t('site.storefront.placeholderEmail')}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">{t('site.storefront.labelPassword')}</Form.Label>
-                  <div className="storefront__password">
-                    <Form.Control
-                      type={showPassword ? 'text' : 'password'}
-                      value={adminPassword}
-                      onChange={(e) => setAdminPassword(e.target.value)}
-                      placeholder={t('site.storefront.placeholderPassword')}
-                      size="lg"
-                      className="storefront__password-input"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      aria-label={showPassword ? t('site.storefront.hidePassword') : t('site.storefront.showPassword')}
-                      className="storefront__password-toggle"
-                    >
-                      <Icons typeIcon={showPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
-                    </button>
-                  </div>
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Form.Group className="storefront__terms mb-3">
-              <Form.Check
-                type="checkbox"
-                id="storefront-terms"
-                checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
-                label={
-                  <Trans
-                    i18nKey="site.storefront.termsLabel"
-                    components={{ 1: <a href="/termos" target="_blank" rel="noopener noreferrer" /> }}
-                  />
-                }
-              />
-            </Form.Group>
-
-            <Button
-              type="submit"
-              variant="teal-blue"
-              size="lg"
-              className="storefront__submit fw-bold"
-              disabled={loading}
-            >
-              {t('site.storefront.submit')}
-            </Button>
-            <p className="storefront__form-reassurance">
-              <Icons typeIcon="checked" iconSize={15} fill="#057c05" />{' '}
-              {t('site.storefront.reassurance', {
-                feeSuffix: settings
-                  ? t('site.storefront.reassuranceFee', { percent: settings.defaultFeePercent })
-                  : '',
-              })}
-            </p>
-
-            <div className="storefront__divider">
-              <span>{t('site.storefront.or')}</span>
-            </div>
-            <div className="storefront__google">
-              <GoogleSignInButton onCredential={handleGoogle} />
-              <p className="storefront__google-hint">{t('site.storefront.googleHint')}</p>
-            </div>
-          </Form>
+          <aside className="storefront__signup-aside">
+            <h2 className="storefront__signup-aside-title">{t('site.storefront.aside.title')}</h2>
+            <p className="storefront__signup-aside-subtitle">{t('site.storefront.aside.subtitle')}</p>
+            <ul className="storefront__signup-aside-list">
+              <li>
+                <Icons typeIcon="money" iconSize={18} fill="currentColor" /> {t('site.storefront.aside.b1')}
+              </li>
+              <li>
+                <Icons typeIcon="form" iconSize={18} fill="currentColor" /> {t('site.storefront.aside.b2')}
+              </li>
+              <li>
+                <Icons typeIcon="credit-card" iconSize={18} fill="currentColor" /> {t('site.storefront.aside.b3')}
+              </li>
+              <li>
+                <Icons typeIcon="checkin" iconSize={18} fill="currentColor" /> {t('site.storefront.aside.b4')}
+              </li>
+              <li>
+                <Icons typeIcon="clock" iconSize={18} fill="currentColor" /> {t('site.storefront.aside.b5')}
+              </li>
+            </ul>
+            <p className="storefront__signup-aside-foot">{t('site.storefront.aside.foot')}</p>
+          </aside>
         </div>
       </Container>
 

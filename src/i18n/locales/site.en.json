@@ -203,8 +203,19 @@
       "submit": "Create my System",
       "reassurance": "No fee to create the account. You only pay when you create an event{{feeSuffix}}.",
       "reassuranceFee": " — {{percent}}% per paid registration",
+      "reassuranceFeeRange": " — from {{min}}% to {{max}}% per paid registration",
       "or": "or",
-      "googleHint": "Fill in the name and the identifier above and use your Google account — no password, and the email comes in already confirmed."
+      "googleHint": "Fill in the name and the identifier above and use your Google account — no password, and the email comes in already confirmed.",
+      "aside": {
+        "title": "Everything your church needs to take registrations",
+        "subtitle": "Free account. You only pay when you sell.",
+        "b1": "No monthly fee — pay only when you sell",
+        "b2": "Fully editable form",
+        "b3": "PIX, card and bank slip",
+        "b4": "Registrations, reports and check-in",
+        "b5": "Ready in under a minute",
+        "foot": "The money goes straight to your church's account."
+      }
     },
     "terms": {
       "title": "Terms and Conditions of Use",

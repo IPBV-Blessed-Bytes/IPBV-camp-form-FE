@@ -203,8 +203,19 @@
       "submit": "Crear mi Sistema",
       "reassurance": "Sin tarifa para crear la cuenta. Solo pagas cuando creas un evento{{feeSuffix}}.",
       "reassuranceFee": " — {{percent}}% por inscripción pagada",
+      "reassuranceFeeRange": " — del {{min}}% al {{max}}% por inscripción pagada",
       "or": "o",
-      "googleHint": "Completa el nombre y el identificador arriba y usa tu cuenta de Google — sin contraseña, y el correo entra ya confirmado."
+      "googleHint": "Completa el nombre y el identificador arriba y usa tu cuenta de Google — sin contraseña, y el correo entra ya confirmado.",
+      "aside": {
+        "title": "Todo lo que tu iglesia necesita para inscribir",
+        "subtitle": "Cuenta gratis. Solo pagas cuando vendes.",
+        "b1": "Sin mensualidad — paga solo cuando vendes",
+        "b2": "Formulario 100% editable",
+        "b3": "PIX, tarjeta y boleto",
+        "b4": "Inscritos, informes y check-in",
+        "b5": "Listo en menos de un minuto",
+        "foot": "El dinero va directo a la cuenta de tu iglesia."
+      }
     },
     "terms": {
       "title": "Términos y Condiciones de Uso",

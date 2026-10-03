@@ -592,9 +592,70 @@
   }
 
   &__form-page {
-    max-width: 760px;
+    max-width: 1040px;
     padding-top: 2rem;
     padding-bottom: 1rem;
+  }
+
+  &__signup-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+    gap: 1.5rem;
+    align-items: start;
+
+    @media (max-width: 860px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__signup-aside {
+    background: linear-gradient(160deg, $primary, $blue-800);
+    color: $white;
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    box-shadow: 0 18px 44px rgba($blue-800, 0.18);
+  }
+
+  &__signup-aside-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0 0 0.4rem;
+    color: $white;
+  }
+
+  &__signup-aside-subtitle {
+    color: rgba($white, 0.85);
+    margin: 0 0 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  &__signup-aside-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    svg {
+      flex: 0 0 auto;
+    }
+  }
+
+  &__signup-aside-foot {
+    margin: 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba($white, 0.2);
+    font-size: 0.9rem;
+    color: rgba($white, 0.9);
   }
 
   &__back {
@@ -638,6 +699,12 @@
   &__form {
     margin: 0 auto;
     max-width: 720px;
+  }
+
+  &__terms-link {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: underline;
   }
 
   &__password {
