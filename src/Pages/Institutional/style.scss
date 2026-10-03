@@ -1172,6 +1172,16 @@ $inst-tint: $gray-50;
     justify-content: flex-start;
   }
 
+  .inst-hero__badges {
+    align-items: flex-start;
+  }
+
+  .inst-hero__stats {
+    margin-left: max(0px, calc(50% - 560px));
+    margin-right: 0;
+    max-width: 760px;
+  }
+
   .inst-section__head {
     max-width: 760px;
     margin-left: 0;
