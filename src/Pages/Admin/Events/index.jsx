@@ -238,6 +238,11 @@ const AdminEvents = ({ loggedUsername }) => {
     navigate('/admin/info');
   };
 
+  const openInstitutional = (event) => {
+    setSelectedEvent(event.slug, event.name);
+    navigate('/admin/institucional');
+  };
+
   const openFaq = (event) => {
     setSelectedEvent(event.slug, event.name);
     navigate('/admin/faq');
@@ -453,6 +458,15 @@ const AdminEvents = ({ loggedUsername }) => {
                     >
                       <Icons typeIcon="info" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardInfoHome')}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openInstitutional(event)}
+                    >
+                      <Icons typeIcon="tent" iconSize={17} fill="currentColor" />
+                      {t('admin.events.cardInstitutional')}
                     </Button>
                     <Button
                       size="sm"
