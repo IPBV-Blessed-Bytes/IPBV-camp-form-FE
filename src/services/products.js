@@ -2,12 +2,13 @@ import fetcher from '@/fetchers';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config';
 import { eventPath } from '@/config/eventScope';
+import { compressImage } from '@/utils/compressImage';
 
 export const productImageUrl = (id) => (id ? `${BASE_URL}${eventPath(`/products/${id}/image`)}` : '');
 
 export const uploadProductImage = async (id, file) => {
   const form = new FormData();
-  form.append('file', file);
+  form.append('file', await compressImage(file));
   const { data } = await authFetcher.post(`/products/${id}/image`, form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

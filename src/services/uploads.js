@@ -1,10 +1,11 @@
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config';
 import { getEventSlug } from '@/config/eventScope';
+import { compressImage } from '@/utils/compressImage';
 
 export const uploadRegistrationFile = async (file) => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', await compressImage(file));
   const { data } = await authFetcher.post('/uploads', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

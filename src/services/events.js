@@ -1,6 +1,7 @@
 import fetcher from '@/fetchers';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config';
+import { compressImage } from '@/utils/compressImage';
 
 export const eventImageUrl = (id) => (id ? `${BASE_URL}/events/${id}/image` : '');
 
@@ -46,7 +47,7 @@ export const deleteEvent = async (id) => {
 
 export const uploadEventImage = async (id, file) => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', await compressImage(file));
   const { data } = await authFetcher.post(`/events/${id}/image`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 60_000,

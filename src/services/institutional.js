@@ -2,6 +2,7 @@ import fetcher from '@/fetchers';
 import authFetcher from '@/fetchers/fetcherWithCredentials';
 import { BASE_URL } from '@/config';
 import { getEventSlug } from '@/config/eventScope';
+import { compressImage } from '@/utils/compressImage';
 
 export const getInstitutionalContent = async () => {
   const { data } = await fetcher.get('/institutional/content');
@@ -15,7 +16,7 @@ export const updateInstitutionalContent = async (content) => {
 
 export const uploadInstitutionalImage = async (file) => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', await compressImage(file));
   const { data } = await authFetcher.post('/institutional/images', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 60_000,
