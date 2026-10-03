@@ -9,6 +9,10 @@
   align-items: flex-end;
   gap: 12px;
 
+  @media (max-width: $sm) {
+    bottom: 100px;
+  }
+
   &__fab {
     width: 56px;
     height: 56px;
