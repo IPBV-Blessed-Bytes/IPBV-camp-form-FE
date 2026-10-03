@@ -4,6 +4,8 @@ import { Container, Card, Form, Button } from 'react-bootstrap';
 import { formPaymentSchema } from '@/form/validations/schema';
 import { toast } from 'react-toastify';
 import { useFormState } from '@/contexts/FormStateContext';
+import { getPaymentFees } from '@/services/paymentFees';
+import formatCurrency from '@/utils/formatCurrency';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import CustomModal from '@/components/Global/CustomModal';
@@ -15,6 +17,13 @@ const ChooseFormPayment = () => {
   const updateForm = updateFormValues('formPayment');
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const [fees, setFees] = useState(null);
+
+  useEffect(() => {
+    getPaymentFees()
+      .then(setFees)
+      .catch(() => setFees(null));
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -72,6 +81,23 @@ const ChooseFormPayment = () => {
     setBackStepFlag(true);
   }, [setBackStepFlag]);
 
+  const feeNotice = (() => {
+    if (!fees || !values.formPayment) return '';
+    if (values.formPayment === 'ticket') {
+      return `O boleto tem uma taxa de geração de ${formatCurrency(fees.boletoFixedCents / 100)} somada ao valor.`;
+    }
+    if (values.formPayment === 'pix') {
+      return `O PIX tem uma taxa de ${formatCurrency(fees.pixFixedCents / 100)} somada ao valor.`;
+    }
+    if (values.formPayment === 'creditCard') {
+      const pct = fees.cardInstallmentPercent || [];
+      if (!pct.length) return '';
+      const fmt = (n) => String(n).replace('.', ',');
+      return `No cartão de crédito há juros que aumentam conforme o número de parcelas — de ${fmt(pct[0])}% (1x) até ${fmt(pct[pct.length - 1])}% (${pct.length}x), somados ao valor.`;
+    }
+    return '';
+  })();
+
   return (
     <>
       <FormStepLayout
@@ -110,6 +136,8 @@ const ChooseFormPayment = () => {
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.formPayment}</Form.Control.Feedback>
               </Form.Group>
+
+              {feeNotice && <div className="choose-payment__fee-notice">{feeNotice}</div>}
             </Form>
           </Container>
       </FormStepLayout>

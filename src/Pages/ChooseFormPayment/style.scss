@@ -5,3 +5,15 @@
     padding: 1.875rem !important;
   }
 }
+
+.choose-payment__fee-notice {
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  background: rgba($yellow, 0.14);
+  border: 1px solid rgba($yellow, 0.5);
+  color: $dark-brown;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
