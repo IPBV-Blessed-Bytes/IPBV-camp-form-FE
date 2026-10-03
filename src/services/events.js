@@ -27,7 +27,7 @@ export const getEvent = async (slug) => {
 
 export const listAllEvents = async () => {
   const { data } = await authFetcher.get('/events/all');
-  return data?.events || [];
+  return { events: data?.events || [], organizationSlug: data?.organizationSlug || '' };
 };
 
 export const createEvent = async (payload) => {

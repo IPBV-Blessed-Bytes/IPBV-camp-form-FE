@@ -106,6 +106,7 @@ const AdminEvents = ({ loggedUsername }) => {
   const [selected, setSelected] = useState(null);
   const [draft, setDraft] = useState(EMPTY_EVENT);
   const [search, setSearch] = useState('');
+  const [orgSlug, setOrgSlug] = useState('');
   const [imageBusy, setImageBusy] = useState(false);
   const [imageVersion, setImageVersion] = useState(0);
   const [hasImage, setHasImage] = useState(false);
@@ -114,7 +115,9 @@ const AdminEvents = ({ loggedUsername }) => {
   const loadEvents = async () => {
     setLoading(true);
     try {
-      setEvents(await listAllEvents());
+      const { events: list, organizationSlug } = await listAllEvents();
+      setEvents(list);
+      setOrgSlug(organizationSlug);
     } catch {
       toast.error(t('admin.events.loadError'));
     } finally {
@@ -129,6 +132,22 @@ const AdminEvents = ({ loggedUsername }) => {
   const openCreate = () => {
     setDraft(EMPTY_EVENT);
     setShowFormModal(true);
+  };
+
+  const publicUrl = orgSlug ? `${window.location.origin}/o/${orgSlug}` : '';
+
+  const openPublicPage = () => {
+    if (orgSlug) navigate(`/o/${orgSlug}`);
+  };
+
+  const copyPublicLink = async () => {
+    if (!publicUrl) return;
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      toast.success(t('admin.events.publicLinkCopied'));
+    } catch {
+      toast.error(t('admin.events.publicLinkCopyError'));
+    }
   };
 
   const openEdit = (event) => {
@@ -339,10 +358,32 @@ const AdminEvents = ({ loggedUsername }) => {
           {events.length > 0 && (
             <SearchBox value={search} onChange={setSearch} placeholder={t('admin.events.searchPlaceholder')} />
           )}
-          <Button className="d-flex align-items-center" variant="teal-blue" onClick={openCreate}>
-            {t('admin.events.newEvent')}&nbsp;&nbsp;
-            <Icons typeIcon="plus" iconSize={16} fill="#fff" />
-          </Button>
+          <div className="admin-events__toolbar-actions">
+            {orgSlug && (
+              <div className="admin-events__public-actions">
+                <Button
+                  className="d-flex align-items-center gap-2"
+                  variant="outline-teal-blue"
+                  onClick={openPublicPage}
+                >
+                  <Icons typeIcon="world" iconSize={16} fill="currentColor" />
+                  {t('admin.events.viewPublic')}
+                </Button>
+                <Button
+                  className="d-flex align-items-center gap-2"
+                  variant="outline-teal-blue"
+                  onClick={copyPublicLink}
+                >
+                  <Icons typeIcon="share" iconSize={16} fill="currentColor" />
+                  {t('admin.events.copyLink')}
+                </Button>
+              </div>
+            )}
+            <Button className="d-flex align-items-center gap-2" variant="teal-blue" onClick={openCreate}>
+              {t('admin.events.newEvent')}
+              <Icons typeIcon="plus" iconSize={16} fill="#fff" />
+            </Button>
+          </div>
         </div>
 
         {loading ? (
