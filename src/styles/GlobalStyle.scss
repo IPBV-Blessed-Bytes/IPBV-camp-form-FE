@@ -478,7 +478,7 @@ body {
   color: $white;
   opacity: 0.9;
 
-  svg:not(.rooms-rename-icon) {
+  svg:not(.rooms-rename-icon):not(.icon-stroke) {
     fill: $white;
   }
 }
