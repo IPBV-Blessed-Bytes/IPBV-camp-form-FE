@@ -18,6 +18,11 @@ const SCALAR_INPUT_TYPES = {
   phone: 'tel',
 };
 
+const MAX_FILE_MB = 5;
+const isImageFile = (file) => Boolean(file.type) && file.type.startsWith('image/');
+const isAllowedFile = (file) =>
+  isImageFile(file) || file.type === 'application/pdf' || /\.(pdf|docx?|png|jpe?g|webp|gif)$/i.test(file.name);
+
 const DynamicField = ({ field, value, onChange, error }) => {
   const { key, label, type, required, placeholder, helpText, options = [], config } = field;
   const controlId = `field-${key}`;
@@ -35,12 +40,34 @@ const DynamicField = ({ field, value, onChange, error }) => {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+    if (!isAllowedFile(file)) {
+      toast.error(`"${file.name}" não é um formato aceito. Envie uma foto (JPG, PNG), PDF ou DOC.`);
+      return;
+    }
+    if (!isImageFile(file) && file.size > MAX_FILE_MB * 1024 * 1024) {
+      const mb = (file.size / (1024 * 1024)).toFixed(1);
+      toast.error(`"${file.name}" tem ${mb} MB e passa do limite de ${MAX_FILE_MB} MB. Envie um arquivo menor.`);
+      return;
+    }
     setUploading(true);
     try {
       const data = await uploadRegistrationFile(file);
       onChange({ id: data.id, name: data.name });
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Não foi possível enviar o arquivo.');
+      const apiMessage = getApiErrorMessage(err);
+      if (err?.response?.status === 413) {
+        toast.error(`O arquivo é maior que o limite de ${MAX_FILE_MB} MB. Tente um arquivo menor.`);
+      } else if (apiMessage) {
+        toast.error(apiMessage);
+      } else if (err?.code === 'ECONNABORTED') {
+        toast.error('O envio demorou demais e foi cancelado. Tente novamente com um arquivo menor.');
+      } else if (!err?.response) {
+        toast.error(
+          'O servidor recusou o envio (arquivo pode estar grande demais) ou a conexão caiu. Tente um arquivo menor e verifique sua internet.',
+        );
+      } else {
+        toast.error('Não foi possível enviar o arquivo. Tente novamente.');
+      }
     } finally {
       setUploading(false);
     }
@@ -158,6 +185,10 @@ const DynamicField = ({ field, value, onChange, error }) => {
             disabled={uploading}
             onChange={handleFileChange}
           />
+          <Form.Text className="text-muted d-block">
+            Formatos: foto (JPG, PNG), PDF ou DOC • Tamanho máximo: {MAX_FILE_MB} MB. As fotos são otimizadas
+            automaticamente.
+          </Form.Text>
           {uploading && (
             <span className="dynamic-file__status">
               <Spinner animation="border" size="sm" /> Enviando...
