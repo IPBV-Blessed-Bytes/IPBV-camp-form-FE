@@ -30,7 +30,8 @@ const loadGoogleScript = () =>
 
 const GoogleSignInButton = ({ onCredential }) => {
   const { i18n } = useTranslation();
-  const googleLocale = GOOGLE_LOCALES[i18n.resolvedLanguage] || 'pt-BR';
+  const baseLanguage = (i18n.resolvedLanguage || 'pt').split('-')[0];
+  const googleLocale = GOOGLE_LOCALES[baseLanguage] || 'pt-BR';
   const buttonRef = useRef(null);
   const onCredentialRef = useRef(onCredential);
   onCredentialRef.current = onCredential;
