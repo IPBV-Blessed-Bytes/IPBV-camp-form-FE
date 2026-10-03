@@ -16,7 +16,7 @@ const InfoButton = ({ timeout, time }) => {
   const hasContact = Boolean(contactDigits);
   const whatsappNumber = `55${contactDigits}`;
   const iconFill = secondaryColor || '#ffc107';
-  const defaultShareMessage = 'Faça sua inscrição no acampamento da IPBV : https://enrolla.com.br/';
+  const defaultShareMessage = 'Faça sua inscrição no Inscriptio : https://inscriptio.com.br/';
   const contactUrl = contactMessage
     ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(contactMessage)}`
     : `https://wa.me/${whatsappNumber}`;

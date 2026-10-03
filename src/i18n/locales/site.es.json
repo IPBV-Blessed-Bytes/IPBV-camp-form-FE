@@ -1,7 +1,7 @@
 {
   "site": {
     "nav": {
-      "brand": "Enrolla",
+      "brand": "Inscriptio",
       "prices": "Precios",
       "help": "Ayuda",
       "hi": "Hola, {{name}}",
@@ -31,12 +31,12 @@
     },
     "footer": {
       "panelTitle": "Panel Interno - Sistema",
-      "poweredBy": "Hecho por Enrolla",
+      "poweredBy": "Hecho por Inscriptio",
       "verse": "1 Corintios 15:58",
-      "copyright": "© {{year}} Enrolla • Todos los derechos reservados"
+      "copyright": "© {{year}} Inscriptio • Todos los derechos reservados"
     },
     "landing": {
-      "documentTitle": "Enrolla — Inscripciones para tu Iglesia y ministerio | Campamentos, Retiros y Congresos",
+      "documentTitle": "Inscriptio — Inscripciones para tu Iglesia y ministerio | Campamentos, Retiros y Congresos",
       "hero": {
         "eyebrow": "Hecho para iglesias y ministerios",
         "title": "Crea el sistema de inscripciones de tu iglesia en minutos",

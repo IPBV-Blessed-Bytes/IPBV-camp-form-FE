@@ -1,7 +1,7 @@
 {
   "site": {
     "nav": {
-      "brand": "Enrolla",
+      "brand": "Inscriptio",
       "prices": "Pricing",
       "help": "Help",
       "hi": "Hi, {{name}}",
@@ -31,12 +31,12 @@
     },
     "footer": {
       "panelTitle": "Internal Panel - System",
-      "poweredBy": "Made by Enrolla",
+      "poweredBy": "Made by Inscriptio",
       "verse": "1 Corinthians 15:58",
-      "copyright": "© {{year}} Enrolla • All rights reserved"
+      "copyright": "© {{year}} Inscriptio • All rights reserved"
     },
     "landing": {
-      "documentTitle": "Enrolla — Registrations for Your Church and Ministry | Camps, Retreats and Conferences",
+      "documentTitle": "Inscriptio — Registrations for Your Church and Ministry | Camps, Retreats and Conferences",
       "hero": {
         "eyebrow": "Built for churches and ministries",
         "title": "Create your church's registration system in minutes",
