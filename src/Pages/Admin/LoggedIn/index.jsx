@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import { getNonPayingChildren, getCrewBus } from '@/services/stats';
+import { getCamperMetrics } from '@/services/registrationMetrics';
 import { registerLog } from '@/services/logs';
 import { getSetting } from '@/services/settings';
 import { permissionsSections } from '@/fetchers/permissions';
@@ -18,6 +19,7 @@ import SessionCard from '@/components/Admin/SessionCard';
 import AdminTopbar from '@/components/Admin/AdminTopbar';
 import SectionHeader from '@/components/Admin/SectionHeader';
 import AdminCharts from '@/components/Admin/AdminCharts';
+import DashboardCharts from '@/components/Admin/DashboardCharts';
 import AdminTourModal from '@/components/Admin/AdminTourModal';
 import { getAdminTourDismissed, setAdminTourDismissed } from '@/services/adminTour';
 
@@ -70,6 +72,7 @@ const AdminLoggedIn = ({
   const [filteredCountNonPayingChildren, setFilteredCountNonPayingChildren] = useState(0);
   const [crewBusUsers, setCrewBusUsers] = useState(0);
   const [crewBusVacancies, setCrewBusVacancies] = useState(22);
+  const [camperMetrics, setCamperMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
@@ -105,15 +108,17 @@ const AdminLoggedIn = ({
       setLoading(true);
 
       try {
-        const [nonPayingChildren, crewBus, crewBusSetting] = await Promise.all([
+        const [nonPayingChildren, crewBus, crewBusSetting, metrics] = await Promise.all([
           getNonPayingChildren(),
           getCrewBus(),
           getSetting('crew_bus_vacancies').catch(() => ''),
+          getCamperMetrics().catch(() => null),
         ]);
 
         setFilteredCountNonPayingChildren(nonPayingChildren?.quantity || 0);
         setCrewBusUsers(crewBus?.quantity || 0);
         setCrewBusVacancies(Number(crewBusSetting) || 22);
+        setCamperMetrics(metrics);
       } catch (error) {
         console.error('Erro ao buscar contadores do admin:', error);
       } finally {
@@ -482,6 +487,10 @@ const AdminLoggedIn = ({
           <>
             <SectionHeader title="Visão geral" />
             <AdminCharts availablePackages={availablePackages} userRole={userRole} />
+            <DashboardCharts
+              monthly={camperMetrics?.monthly}
+              paymentComposition={camperMetrics?.paymentComposition}
+            />
           </>
         )}
 
