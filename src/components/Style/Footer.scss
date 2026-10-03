@@ -34,6 +34,18 @@
     height: 3.5rem;
   }
 
+  &-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $primary, $blue);
+    box-shadow: 0 4px 12px rgba($primary, 0.28);
+    cursor: pointer;
+  }
+
   &__credits {
     color: $gray-500-2;
   }

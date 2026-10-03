@@ -1,6 +1,5 @@
 import { PropTypes } from 'prop-types';
 import '../Style/Footer.scss';
-import logoFooter from '../../../public/Images/logo.png';
 import Icons from '@/components/Global/Icons';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 
@@ -36,7 +35,9 @@ const Footer = ({ handleAdminClick }) => {
   return (
     <footer className="form__footer">
       <a className="form__footer__admin" onClick={handleAdminClick}>
-        <img src={logoFooter} className="form__footer-logo" alt="logo" />
+        <span className="form__footer-mark">
+          <Icons typeIcon="tent" iconSize={26} fill="#ffffff" />
+        </span>
       </a>
 
       <div className="form__footer__end">
@@ -61,11 +62,11 @@ const Footer = ({ handleAdminClick }) => {
           <p className="form__footer__powered">
             <a
               className="mail-to"
-              href="https://wa.me/5581993727854?text=Ol%C3%A1!%20Queria%20informa%C3%A7%C3%B5es%20acerca%20do%20sistema%20de%20inscri%C3%A7%C3%B5es%20feito%20pelo%20Blessed%20Bytes%20Team."
+              href="https://inscriptio.com.br/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Powered by Blessed Bytes Team
+              Feito pela Inscriptio
             </a>
             <span className="form__footer__sep"> • </span>
             <em>
@@ -73,7 +74,7 @@ const Footer = ({ handleAdminClick }) => {
             </em>
           </p>
           <p className="form__footer__copyright">
-            © {currentYear} Igreja Presbiteriana de Boa Viagem • Todos os Direitos Reservados
+            © {currentYear} Inscriptio • Todos os Direitos Reservados
           </p>
         </div>
       </div>
