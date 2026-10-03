@@ -66,6 +66,29 @@ const Landing = () => {
   const essencialFreeEventFee = settings ? formatBRL(settings.essencialFreeEventFeeCents) : '—';
   const essencialFreeEventAnnual = settings ? formatBRL(settings.essencialFreeEventAnnualCents) : '—';
 
+  const feeTiers = settings?.defaultFeeTiers || [];
+  const completoHeadline = () => {
+    if (!feeTiers.length) return feePercent;
+    const percents = feeTiers.map((tier) => tier.percent);
+    const min = Math.min(...percents);
+    const max = Math.max(...percents);
+    return min === max ? `${min}%` : `${min}–${max}%`;
+  };
+  const feeTierLines = feeTiers.map((tier, index) => {
+    const previous = index > 0 ? feeTiers[index - 1].maxCents : null;
+    if (tier.maxCents == null) {
+      return t('site.landing.plans.feeTierAbove', { percent: tier.percent, amount: formatBRL(previous) });
+    }
+    if (previous == null) {
+      return t('site.landing.plans.feeTierUpTo', { percent: tier.percent, amount: formatBRL(tier.maxCents) });
+    }
+    return t('site.landing.plans.feeTierBetween', {
+      percent: tier.percent,
+      from: formatBRL(previous),
+      to: formatBRL(tier.maxCents),
+    });
+  });
+
   return (
     <div className="storefront">
       <StoreNav onLanding />
@@ -204,9 +227,19 @@ const Landing = () => {
                 <span className="storefront__plan-name">{t('site.landing.plans.completoName')}</span>
                 <span className="storefront__plan-tagline">{t('site.landing.plans.completoTagline')}</span>
                 <span className="storefront__plan-price">
-                  {feePercent}
+                  {completoHeadline()}
                   <small> {t('site.landing.plans.perPaidRegistration')}</small>
                 </span>
+                {feeTierLines.length > 0 && (
+                  <div className="storefront__plan-tiers">
+                    <span className="storefront__plan-tiers-intro">{t('site.landing.plans.feeTiersIntro')}</span>
+                    <ul>
+                      {feeTierLines.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <span className="storefront__plan-blurb">
                   {t('site.landing.plans.freeEventBlurb', { fee: freeEventFee, annual: freeEventAnnual })}
                 </span>

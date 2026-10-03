@@ -515,6 +515,33 @@
     line-height: 1.5;
   }
 
+  &__plan-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .storefront__plan-tiers-intro {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: $gray-500-2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    li {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $ink;
+    }
+  }
+
   &__plan-list {
     list-style: none;
     padding: 0;
