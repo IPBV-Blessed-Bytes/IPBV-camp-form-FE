@@ -1,4 +1,5 @@
 import { Accordion, Card } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import scrollUp from '@/hooks/useScrollUp';
@@ -42,7 +43,7 @@ const FAQ = () => {
                   <Accordion.Item eventKey={String(index)} key={faq.id}>
                     <Accordion.Header>{faq.question}</Accordion.Header>
                     <Accordion.Body>
-                      <div className="faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer || '' }} />
+                      <div className="faq-answer" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(faq.answer || '') }} />
                     </Accordion.Body>
                   </Accordion.Item>
                 ))}
