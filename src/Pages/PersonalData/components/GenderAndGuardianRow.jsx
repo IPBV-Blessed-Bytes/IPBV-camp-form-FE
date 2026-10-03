@@ -10,7 +10,11 @@ import Icons from '@/components/Global/Icons';
 import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
 import { BASE_URL } from '@/config';
 import { uploadGuardianDocument } from '@/services/documents';
+import { getApiErrorMessage } from '@/fetchers/helpers';
 import { extractNumbers } from '../utils/fieldHelpers';
+
+const MAX_DOC_MB = 16;
+const isAllowedDocType = (file) => file.type === 'application/pdf' || file.type.startsWith('image/');
 
 const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }) => {
   const { values, errors, handleChange, setFieldValue } = useFormikContext();
@@ -20,6 +24,23 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
   const handleDocumentsChange = async (event) => {
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
+
+    const badType = files.find((file) => !isAllowedDocType(file));
+    if (badType) {
+      toast.error(`"${badType.name}" não é um formato aceito. Envie uma foto (JPG, PNG) ou um arquivo PDF.`);
+      event.target.value = '';
+      return;
+    }
+    const tooBig = files.find((file) => file.size > MAX_DOC_MB * 1024 * 1024);
+    if (tooBig) {
+      const mb = (tooBig.size / (1024 * 1024)).toFixed(1);
+      toast.error(
+        `"${tooBig.name}" tem ${mb} MB e passa do limite de ${MAX_DOC_MB} MB. Tente tirar a foto em qualidade menor ou enviar um PDF.`,
+      );
+      event.target.value = '';
+      return;
+    }
+
     setUploading(true);
     try {
       const results = [];
@@ -32,7 +53,14 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
       setFieldValue('guardianDocuments', nextDocs.map((doc) => doc.id).join(','));
     } catch (error) {
       console.error('Erro ao enviar documento:', error);
-      toast.error('Não foi possível enviar o arquivo. Tente novamente.');
+      if (error?.response?.status === 413) {
+        toast.error(`Arquivo muito grande. O tamanho máximo permitido é ${MAX_DOC_MB} MB por arquivo.`);
+      } else {
+        toast.error(
+          getApiErrorMessage(error) ||
+            'Não foi possível enviar o arquivo. Verifique sua conexão com a internet e tente novamente.',
+        );
+      }
     } finally {
       setUploading(false);
       event.target.value = '';
@@ -202,6 +230,9 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                   <span>Modelo de Autorização</span>
                 </a>
               </div>
+              <Form.Text className="text-muted d-block mt-2">
+                Formatos aceitos: <b>foto (JPG, PNG) ou PDF</b> • Tamanho máximo: <b>{MAX_DOC_MB} MB</b> por arquivo.
+              </Form.Text>
               <Form.Text className="text-muted d-block mt-2">
                 Baixe o modelo de autorização para viagem de menor desacompanhado caso o menor for sozinho, imprima e
                 assine. Depois envie a foto ou PDF da declaração assinada <b>junto com a certidão de nascimento</b> do
