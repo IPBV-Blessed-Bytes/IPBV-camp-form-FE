@@ -10,10 +10,11 @@ import Icons from '@/components/Global/Icons';
 import { CPF_MASK, PHONE_MASK } from '@/utils/masks';
 import { BASE_URL } from '@/config';
 import { uploadGuardianDocument } from '@/services/documents';
+import { compressImage } from '@/utils/compressImage';
 import { getApiErrorMessage } from '@/fetchers/helpers';
 import { extractNumbers } from '../utils/fieldHelpers';
 
-const MAX_DOC_MB = 16;
+const MAX_DOC_MB = 5;
 const isAllowedDocType = (file) => file.type === 'application/pdf' || file.type.startsWith('image/');
 
 const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }) => {
@@ -31,20 +32,22 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
       event.target.value = '';
       return;
     }
-    const tooBig = files.find((file) => file.size > MAX_DOC_MB * 1024 * 1024);
-    if (tooBig) {
-      const mb = (tooBig.size / (1024 * 1024)).toFixed(1);
-      toast.error(
-        `"${tooBig.name}" tem ${mb} MB e passa do limite de ${MAX_DOC_MB} MB. Tente tirar a foto em qualidade menor ou enviar um PDF.`,
-      );
-      event.target.value = '';
-      return;
-    }
 
     setUploading(true);
     try {
+      const processed = await Promise.all(files.map((file) => compressImage(file)));
+
+      const tooBig = processed.find((file) => file.size > MAX_DOC_MB * 1024 * 1024);
+      if (tooBig) {
+        const mb = (tooBig.size / (1024 * 1024)).toFixed(1);
+        toast.error(
+          `"${tooBig.name}" tem ${mb} MB e passa do limite de ${MAX_DOC_MB} MB. Tente tirar a foto em qualidade menor ou enviar um PDF.`,
+        );
+        return;
+      }
+
       const results = [];
-      for (const file of files) {
+      for (const file of processed) {
         const data = await uploadGuardianDocument(file);
         results.push({ id: data.id, fileName: data.fileName });
       }
@@ -231,7 +234,7 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
                 </a>
               </div>
               <Form.Text className="text-muted d-block mt-2">
-                Formatos aceitos: <b>foto (JPG, PNG) ou PDF</b> • Tamanho máximo: <b>{MAX_DOC_MB} MB</b> por arquivo.
+                Formatos aceitos: <b>foto (JPG, PNG) ou PDF</b> • Tamanho máximo: <b>{MAX_DOC_MB} MB</b> por arquivo. 
               </Form.Text>
               <Form.Text className="text-muted d-block mt-2">
                 Baixe o modelo de autorização para viagem de menor desacompanhado caso o menor for sozinho, imprima e
