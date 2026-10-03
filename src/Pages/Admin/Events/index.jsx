@@ -386,41 +386,75 @@ const AdminEvents = ({ loggedUsername }) => {
                   </div>
 
                   <div className="event-admin-card__config">
-                    <Button size="sm" variant="outline-teal-blue" onClick={() => openFormBuilder(event)}>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openFormBuilder(event)}
+                    >
+                      <Icons typeIcon="form" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardFields')}
                     </Button>
-                    <Button size="sm" variant="outline-teal-blue" onClick={() => openSubmissions(event)}>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openSubmissions(event)}
+                    >
+                      <Icons typeIcon="person" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardSubmissions')}
                     </Button>
-                    <Button size="sm" variant="outline-teal-blue" onClick={() => openInfoHome(event)}>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openInfoHome(event)}
+                    >
+                      <Icons typeIcon="info" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardInfoHome')}
                     </Button>
-                    <Button size="sm" variant="outline-teal-blue" onClick={() => openFaq(event)}>
+                    <Button
+                      size="sm"
+                      variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openFaq(event)}
+                    >
+                      <Icons typeIcon="question" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardFaq')}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline-teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
                       disabled={!event.paymentEnabled}
                       title={event.paymentEnabled ? '' : t('admin.events.packageDisabledTitle')}
                       onClick={() => openPackage(event)}
                     >
+                      <Icons typeIcon="cart" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardPackage')}
                     </Button>
                   </div>
 
                   <div className="event-admin-card__footer">
-                    <Button size="sm" variant="teal-blue" onClick={() => openEdit(event)}>
+                    <Button
+                      size="sm"
+                      variant="teal-blue"
+                      className="d-flex align-items-center justify-content-center gap-1"
+                      onClick={() => openEdit(event)}
+                    >
+                      <Icons typeIcon="edit" iconSize={17} fill="none" className="icon-stroke" />
                       {t('admin.events.edit')}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline-danger"
+                      className="d-flex align-items-center justify-content-center gap-1"
                       onClick={() => {
                         setSelected(event);
                         setShowDeleteModal(true);
                       }}
                     >
+                      <Icons typeIcon="delete" iconSize={17} fill="currentColor" />
                       {t('admin.events.delete')}
                     </Button>
                   </div>

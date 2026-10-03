@@ -43,11 +43,15 @@
 
 .event-admin-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 340px));
+  justify-content: center;
+  gap: 1.25rem;
+  max-width: 1080px;
+  margin-inline: auto;
 
-  @media (max-width: 720px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    max-width: 380px;
   }
 }
 
@@ -58,11 +62,11 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
-  padding: 1.4rem 1.25rem 1.25rem;
+  gap: 0.8rem;
+  padding: 1.2rem 1.1rem 1.1rem;
   background: $white;
   border: 1px solid $gray-200;
-  border-radius: 18px;
+  border-radius: 16px;
   box-shadow: 0 4px 18px rgba($blue-900, 0.05);
   overflow: hidden;
   transition:
@@ -169,6 +173,8 @@
 
     .btn {
       width: 100%;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.92rem;
     }
 
     .btn:disabled,
@@ -185,6 +191,11 @@
     justify-content: flex-end;
     padding-top: 0.5rem;
     border-top: 1px solid $gray-100;
+
+    .btn {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.92rem;
+    }
   }
 }
 
