@@ -56,13 +56,19 @@ const GenderAndGuardianRow = ({ showLegalGuardianFields, onPersistGuardianName }
       setFieldValue('guardianDocuments', nextDocs.map((doc) => doc.id).join(','));
     } catch (error) {
       console.error('Erro ao enviar documento:', error);
+      const apiMessage = getApiErrorMessage(error);
       if (error?.response?.status === 413) {
-        toast.error(`Arquivo muito grande. O tamanho máximo permitido é ${MAX_DOC_MB} MB por arquivo.`);
-      } else {
+        toast.error(`O arquivo é maior que o limite de ${MAX_DOC_MB} MB. Tente enviar uma foto menor.`);
+      } else if (apiMessage) {
+        toast.error(apiMessage);
+      } else if (error?.code === 'ECONNABORTED') {
+        toast.error('O envio demorou demais e foi cancelado. Tente novamente com uma foto menor.');
+      } else if (!error?.response) {
         toast.error(
-          getApiErrorMessage(error) ||
-            'Não foi possível enviar o arquivo. Verifique sua conexão com a internet e tente novamente.',
+          'O servidor recusou o envio (arquivo pode estar grande demais) ou a conexão caiu. Tente uma foto menor e verifique sua internet.',
         );
+      } else {
+        toast.error('Não foi possível enviar o arquivo. Tente novamente.');
       }
     } finally {
       setUploading(false);

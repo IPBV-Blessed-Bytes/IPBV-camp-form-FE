@@ -1,7 +1,7 @@
 const DEFAULT_MAX_DIMENSION = 1600;
 const DEFAULT_QUALITY = 0.7;
 
-const readImage = (file) =>
+const loadImageElement = (file) =>
   new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const image = new Image();
@@ -15,6 +15,17 @@ const readImage = (file) =>
     };
     image.src = url;
   });
+
+const loadSource = async (file) => {
+  if (typeof createImageBitmap === 'function') {
+    try {
+      return await createImageBitmap(file);
+    } catch {
+      return loadImageElement(file);
+    }
+  }
+  return loadImageElement(file);
+};
 
 const canvasToBlob = (canvas, quality) =>
   new Promise((resolve) => {
@@ -30,10 +41,16 @@ export const compressImage = async (
   }
 
   try {
-    const image = await readImage(file);
-    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
-    const width = Math.round(image.width * scale);
-    const height = Math.round(image.height * scale);
+    const source = await loadSource(file);
+    const sourceWidth = source.width;
+    const sourceHeight = source.height;
+    if (!sourceWidth || !sourceHeight) {
+      return file;
+    }
+
+    const scale = Math.min(1, maxDimension / Math.max(sourceWidth, sourceHeight));
+    const width = Math.max(1, Math.round(sourceWidth * scale));
+    const height = Math.max(1, Math.round(sourceHeight * scale));
 
     const canvas = document.createElement('canvas');
     canvas.width = width;
@@ -42,14 +59,17 @@ export const compressImage = async (
     if (!context) {
       return file;
     }
-    context.drawImage(image, 0, 0, width, height);
+    context.drawImage(source, 0, 0, width, height);
+    if (typeof source.close === 'function') {
+      source.close();
+    }
 
     const blob = await canvasToBlob(canvas, quality);
     if (!blob || blob.size >= file.size) {
       return file;
     }
 
-    const baseName = file.name.replace(/\.[^.]+$/, '');
+    const baseName = file.name ? file.name.replace(/\.[^.]+$/, '') : 'imagem';
     return new File([blob], `${baseName}.jpg`, {
       type: 'image/jpeg',
       lastModified: Date.now(),
