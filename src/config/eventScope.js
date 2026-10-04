@@ -1,6 +1,22 @@
 export const SELECTED_EVENT_KEY = 'selected-event';
 export const SELECTED_EVENT_NAME_KEY = 'selected-event-name';
 
+export const APEX_DOMAIN = 'inscriptio.com.br';
+const RESERVED_SUBDOMAINS = new Set(['www', 'app', 'api', 'admin', 'mail', 'painel-interno']);
+
+export const getTenantFromHostname = (hostname = window.location.hostname) => {
+  try {
+    const override = new URLSearchParams(window.location.search).get('tenant') || localStorage.getItem('tenant-override');
+    if (override) return override;
+  } catch {
+    /* ignore */
+  }
+  if (!hostname || !hostname.endsWith(`.${APEX_DOMAIN}`)) return null;
+  const subdomain = hostname.slice(0, hostname.length - `.${APEX_DOMAIN}`.length);
+  if (!subdomain || subdomain.includes('.') || RESERVED_SUBDOMAINS.has(subdomain)) return null;
+  return subdomain;
+};
+
 export const GLOBAL_ADMIN_SEGMENTS = new Set(['', 'eventos', 'usuarios', 'papeis', 'logs']);
 
 export const EVENT_SCOPED_PREFIXES = new Set([
