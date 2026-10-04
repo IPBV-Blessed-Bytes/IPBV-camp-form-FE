@@ -28,7 +28,7 @@ const socialHref = (key, value) => {
 
 const Footer = ({ handleAdminClick }) => {
   const currentYear = new Date().getFullYear();
-  const { socialLinks } = useEventBranding();
+  const { socialLinks, name: eventName } = useEventBranding();
   const social = parseSocial(socialLinks);
   const links = SOCIAL_NETWORKS.filter((network) => (social[network.key] || '').trim());
 
@@ -68,13 +68,9 @@ const Footer = ({ handleAdminClick }) => {
             >
               Feito pela Inscriptio
             </a>
-            <span className="form__footer__sep"> • </span>
-            <em>
-              <b>1 Coríntios 15:58</b>
-            </em>
           </p>
           <p className="form__footer__copyright">
-            © {currentYear} Inscriptio • Todos os Direitos Reservados
+            © {currentYear} {eventName || 'Inscriptio'} • Todos os Direitos Reservados
           </p>
         </div>
       </div>
