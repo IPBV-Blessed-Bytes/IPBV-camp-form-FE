@@ -233,24 +233,9 @@ const AdminEvents = ({ loggedUsername }) => {
     navigate('/admin/inscricoes');
   };
 
-  const openInfoHome = (event) => {
-    setSelectedEvent(event.slug, event.name);
-    navigate('/admin/info');
-  };
-
   const openInstitutional = (event) => {
     setSelectedEvent(event.slug, event.name);
     navigate('/admin/institucional');
-  };
-
-  const openFaq = (event) => {
-    setSelectedEvent(event.slug, event.name);
-    navigate('/admin/faq');
-  };
-
-  const openPackage = (event) => {
-    setSelectedEvent(event.slug, event.name);
-    navigate('/admin/pacote');
   };
 
   const handleSave = async () => {
@@ -436,15 +421,6 @@ const AdminEvents = ({ loggedUsername }) => {
                       size="sm"
                       variant="outline-teal-blue"
                       className="d-flex align-items-center justify-content-center gap-1"
-                      onClick={() => openFormBuilder(event)}
-                    >
-                      <Icons typeIcon="form" iconSize={17} fill="currentColor" />
-                      {t('admin.events.cardFields')}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-teal-blue"
-                      className="d-flex align-items-center justify-content-center gap-1"
                       onClick={() => openSubmissions(event)}
                     >
                       <Icons typeIcon="person" iconSize={17} fill="currentColor" />
@@ -454,10 +430,10 @@ const AdminEvents = ({ loggedUsername }) => {
                       size="sm"
                       variant="outline-teal-blue"
                       className="d-flex align-items-center justify-content-center gap-1"
-                      onClick={() => openInfoHome(event)}
+                      onClick={() => openFormBuilder(event)}
                     >
-                      <Icons typeIcon="info" iconSize={17} fill="currentColor" />
-                      {t('admin.events.cardInfoHome')}
+                      <Icons typeIcon="form" iconSize={17} fill="currentColor" />
+                      {t('admin.events.cardFields')}
                     </Button>
                     <Button
                       size="sm"
@@ -467,26 +443,6 @@ const AdminEvents = ({ loggedUsername }) => {
                     >
                       <Icons typeIcon="tent" iconSize={17} fill="currentColor" />
                       {t('admin.events.cardInstitutional')}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-teal-blue"
-                      className="d-flex align-items-center justify-content-center gap-1"
-                      onClick={() => openFaq(event)}
-                    >
-                      <Icons typeIcon="question" iconSize={17} fill="currentColor" />
-                      {t('admin.events.cardFaq')}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-teal-blue"
-                      className="d-flex align-items-center justify-content-center gap-1"
-                      disabled={!event.paymentEnabled}
-                      title={event.paymentEnabled ? '' : t('admin.events.packageDisabledTitle')}
-                      onClick={() => openPackage(event)}
-                    >
-                      <Icons typeIcon="cart" iconSize={17} fill="currentColor" />
-                      {t('admin.events.cardPackage')}
                     </Button>
                   </div>
 
