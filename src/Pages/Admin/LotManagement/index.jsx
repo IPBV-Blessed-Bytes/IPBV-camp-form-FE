@@ -32,6 +32,12 @@ const parseDate = (dateString) => {
   return isValid(parsed) ? parsed : null;
 };
 
+const parseEndOfDay = (dateString) => {
+  const date = parseDate(dateString);
+  if (date) date.setHours(23, 59, 59, 999);
+  return date;
+};
+
 const formatDate = (date) => {
   if (!date) return '';
   return date.toLocaleDateString('pt-BR');
@@ -184,7 +190,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
   const now = new Date();
   const lotStatus = (lot) => {
     const start = parseDate(lot.startDate);
-    const end = parseDate(lot.endDate);
+    const end = parseEndOfDay(lot.endDate);
     if (start && end && now >= start && now <= end) return 'current';
     if (start && now < start) return 'upcoming';
     if (end && now > end) return 'ended';
@@ -241,7 +247,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                 {filteredLots.map((lot, index) => {
                   const today = new Date();
                   const start = parseDate(lot.startDate);
-                  const end = parseDate(lot.endDate);
+                  const end = parseEndOfDay(lot.endDate);
                   const isCurrentLot = start && end && today >= start && today <= end;
 
                   return (
