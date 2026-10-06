@@ -11,12 +11,14 @@ export const getPublicBaseDate = async () => {
   return data;
 };
 
-export const createBaseDate = async (baseDate) => {
-  const { data } = await authFetcher.post('/base-date', { baseDate });
+export const createBaseDate = async (payload) => {
+  const body = typeof payload === 'string' ? { baseDate: payload } : payload;
+  const { data } = await authFetcher.post('/base-date', body);
   return data;
 };
 
-export const updateBaseDate = async (baseDate) => {
-  const { data } = await authFetcher.put('/base-date', { baseDate });
+export const updateBaseDate = async (payload) => {
+  const body = typeof payload === 'string' ? { baseDate: payload } : payload;
+  const { data } = await authFetcher.put('/base-date', body);
   return data;
 };

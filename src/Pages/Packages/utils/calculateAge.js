@@ -2,8 +2,11 @@ import { getBaseDate as fetchBaseDate } from '@/services/baseDate';
 
 let baseDate = null;
 let baseDatePromise = null;
+let eventSchedule = null;
 
 export const getBaseDate = () => baseDate;
+
+export const getEventSchedule = () => eventSchedule;
 
 const parseBRDate = (dateString) => {
   if (!dateString) return null;
@@ -18,6 +21,12 @@ export const initBaseDate = () => {
   baseDatePromise = fetchBaseDate()
     .then((data) => {
       baseDate = parseBRDate(data?.baseDate);
+      eventSchedule = {
+        baseDate: data?.baseDate || null,
+        startTime: data?.startTime || null,
+        endDate: data?.endDate || null,
+        endTime: data?.endTime || null,
+      };
       return baseDate;
     })
     .catch((error) => {

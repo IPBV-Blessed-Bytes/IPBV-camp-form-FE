@@ -60,6 +60,9 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [spreadsheet, setSpreadsheet] = useState('');
   const [pagarmeDash, setPagarmeDash] = useState('');
   const [baseDate, setBaseDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [baseDateExists, setBaseDateExists] = useState(false);
   const [boletoMax, setBoletoMax] = useState('');
   const [boletoMinDays, setBoletoMinDays] = useState('');
@@ -96,6 +99,9 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setShowLgpd(eventData?.showLgpdModal !== false);
       if (baseDateData && baseDateData.baseDate) {
         setBaseDate(baseDateData.baseDate);
+        setStartTime(baseDateData.startTime || '');
+        setEndDate(baseDateData.endDate || '');
+        setEndTime(baseDateData.endTime || '');
         setBaseDateExists(true);
       }
       setTemplateExists(Boolean(templateExistsData));
@@ -136,10 +142,16 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       });
 
       if (baseDate) {
+        const baseDatePayload = {
+          baseDate,
+          startTime: startTime || null,
+          endDate: endDate || null,
+          endTime: endTime || null,
+        };
         if (baseDateExists) {
-          await updateBaseDate(baseDate);
+          await updateBaseDate(baseDatePayload);
         } else {
-          await createBaseDate(baseDate);
+          await createBaseDate(baseDatePayload);
           setBaseDateExists(true);
         }
       }
@@ -212,22 +224,52 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
               <Col xs={12} lg={6}>
                 <FormSection title={t('admin.utility.eventSectionTitle')}>
                   <Form.Group className="mb-3">
-                    <Form.Label>{t('admin.utility.eventDateLabel')}</Form.Label>
-                    <div>
-                      <DatePicker
-                        selected={parseDate(baseDate)}
-                        onChange={(date) => setBaseDate(formatDate(date))}
-                        className="form-control mb-1"
-                        placeholderText={t('admin.utility.datePlaceholder')}
-                        dateFormat="dd/MM/yyyy"
-                        locale="ptBR"
-                        dropdownMode="select"
-                        showMonthDropdown
-                        showYearDropdown
-                      />
-                    </div>
+                    <Form.Label>{t('admin.utility.eventDateLabel')} — Início</Form.Label>
+                    <Row className="g-2">
+                      <Col xs={7}>
+                        <DatePicker
+                          selected={parseDate(baseDate)}
+                          onChange={(date) => setBaseDate(formatDate(date))}
+                          className="form-control"
+                          placeholderText={t('admin.utility.datePlaceholder')}
+                          dateFormat="dd/MM/yyyy"
+                          locale="ptBR"
+                          dropdownMode="select"
+                          showMonthDropdown
+                          showYearDropdown
+                        />
+                      </Col>
+                      <Col xs={5}>
+                        <Form.Control type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                      </Col>
+                    </Row>
                     <Form.Text className="text-muted">
-                      {t('admin.utility.eventDateHelp')}
+                      {t('admin.utility.eventDateHelp')} A data de início é a referência para o cálculo de idade.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Fim do evento (opcional)</Form.Label>
+                    <Row className="g-2">
+                      <Col xs={7}>
+                        <DatePicker
+                          selected={parseDate(endDate)}
+                          onChange={(date) => setEndDate(formatDate(date))}
+                          className="form-control"
+                          placeholderText={t('admin.utility.datePlaceholder')}
+                          dateFormat="dd/MM/yyyy"
+                          locale="ptBR"
+                          dropdownMode="select"
+                          showMonthDropdown
+                          showYearDropdown
+                        />
+                      </Col>
+                      <Col xs={5}>
+                        <Form.Control type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                      </Col>
+                    </Row>
+                    <Form.Text className="text-muted">
+                      Data e hora de término — usadas na tela de informações e no “adicionar ao calendário”.
                     </Form.Text>
                   </Form.Group>
 
