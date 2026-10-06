@@ -6,6 +6,7 @@ import { useCart } from 'react-use-cart';
 import { loadProducts } from './utils/products';
 import './style.scss';
 import ProductList from '@/components/Global/ProductList';
+import Icons from '@/components/Global/Icons';
 import Tips from '@/components/Global/Tips';
 import getDiscountedProducts from './utils/getDiscountedProducts';
 import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
@@ -136,9 +137,9 @@ const Packages = () => {
     });
   };
 
-  const validRegistrations = totalRegistrationsGlobal.totalValidRegistrationsGlobal;
+  const validRegistrations = Number(totalRegistrationsGlobal?.totalValidRegistrations || 0);
   const isChild = age < 9;
-  const isRegistrationClosed = validRegistrations >= totalSeats && !isChild;
+  const isRegistrationClosed = validRegistrations >= Number(totalSeats || 0) && !isChild;
 
   const discounted = getDiscountedProducts(age);
 
@@ -178,12 +179,44 @@ até 8 anos = ${getFeeByAge(8)} reais,
 acima de 15 anos = ${getFeeByAge(20)} reais
 `;
 
+  if (isRegistrationClosed) {
+    return (
+      <Container className="packages-page form__container__cart-height">
+        <Row>
+          <Col xs={12} className="px-0">
+            <Card className="registration-closed-card mb-0">
+              <Card.Body className="registration-closed">
+                <div className="registration-closed__icon">
+                  <Icons typeIcon="camp" iconSize={44} fill="#007185" />
+                </div>
+                <h3 className="registration-closed__title">Vagas Esgotadas</h3>
+                <p className="registration-closed__text">
+                  Desculpe, as vagas para inscrições estão completas.
+                  <br />
+                  Para maiores dúvidas, favor contactar a secretaria da igreja.
+                </p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row>
+          <div className="form__container__buttons mt-0">
+            <Button variant="light" onClick={backStep} size="lg">
+              Voltar
+            </Button>
+          </div>
+        </Row>
+        <Loading loading={loading} />
+      </Container>
+    );
+  }
+
   return (
     <Container className="packages-page form__container__cart-height">
       <Row>
         <Col xs={12} xl={8} className="px-0 mb-3 mb-xl-0">
-          {!isRegistrationClosed ? (
-            <>
+          <>
               <Card className="mb-3">
                 <Card.Body>
                   <h2 className="packages-page__lot-title">{activeLot?.name}</h2>
@@ -242,18 +275,9 @@ acima de 15 anos = ${getFeeByAge(20)} reais
                 </Card.Body>
               </Card>
             </>
-          ) : (
-            <div className="registration-closed-message">
-              <p>
-                Desculpe, as vagas para inscrições estão completas. <br />
-                Para maiores dúvidas, favor contactar a secretaria da igreja.
-              </p>
-            </div>
-          )}
         </Col>
 
-        {!isRegistrationClosed && (
-          <Col xs={12} xl={4} className="px-0 ps-xl-3">
+        <Col xs={12} xl={4} className="px-0 ps-xl-3">
             <Card>
               <Card.Body>
                 <Card.Title>{t('form.pkg.summaryTitle')}</Card.Title>
@@ -363,7 +387,6 @@ acima de 15 anos = ${getFeeByAge(20)} reais
               </Card.Body>
             </Card>
           </Col>
-        )}
       </Row>
 
       <Row>
@@ -371,11 +394,9 @@ acima de 15 anos = ${getFeeByAge(20)} reais
           <Button variant="light" onClick={backStep} size="lg">
             Voltar
           </Button>
-          {!isRegistrationClosed && (
-            <Button variant="warning" onClick={submitForm} size="lg">
-              Avançar
-            </Button>
-          )}
+          <Button variant="warning" onClick={submitForm} size="lg">
+            Avançar
+          </Button>
         </div>
       </Row>
       <Loading loading={loading} />

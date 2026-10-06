@@ -61,10 +61,29 @@
   }
 }
 
-.registration-closed-message {
-  font-weight: bold;
-  margin-top: 12.5rem;
+.registration-closed-card {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.registration-closed {
+  padding-block: 2.5rem;
   text-align: center;
+
+  &__icon {
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    color: $primary;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  &__text {
+    color: #5b6066;
+    margin-bottom: 0;
+  }
 }
 
 .selected-icon-container {

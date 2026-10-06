@@ -42,6 +42,15 @@ const ProductList = forwardRef(({ age, cartKey, category, products, packageCount
 
   const getAvailability = (product, usedValidPackages) => {
     if (age < 9) return true;
+
+    if (product.id === 'bus-yes') {
+      const busCap = packageCount?.totalBusVacancies;
+      if (busCap !== null && busCap !== undefined) {
+        const usedBus = Number(packageCount?.usedValidPackages?.['bus-yes'] || 0);
+        if (usedBus >= Number(busCap)) return false;
+      }
+    }
+
     if (product.vacancies === null || product.vacancies === undefined) return true;
 
     const used = Number(usedValidPackages?.[product.id] || 0);
