@@ -49,7 +49,8 @@ const AdminCharts = ({ availablePackages, userRole }) => {
   const { campers } = useCampersList();
 
   const usedPackages = availablePackages?.usedPackages || {};
-  const totalPackages = availablePackages?.totalPackages || {};
+  const hospedagemLotTotal = availablePackages?.hospedagemLotTotal ?? null;
+  const hospedagemLotUsed = availablePackages?.hospedagemLotUsed ?? 0;
 
   const fillingVacancies = useMemo(
     () =>
@@ -94,7 +95,7 @@ const AdminCharts = ({ availablePackages, userRole }) => {
           {vacanciesProgressionPermissions && (
             <div className="admin-charts__card">
               <h3 className="admin-charts__card-title">Avanço de Inscrições</h3>
-              <VacanciesProgression usedValidPackages={usedPackagesData} totalPackages={totalPackages} />
+              <VacanciesProgression hospedagemLotTotal={hospedagemLotTotal} hospedagemLotUsed={hospedagemLotUsed} />
             </div>
           )}
           {checkinBalancePermissions && (
@@ -127,7 +128,8 @@ AdminCharts.propTypes = {
   availablePackages: PropTypes.shape({
     usedPackages: PropTypes.object,
     usedValidPackages: PropTypes.object,
-    totalPackages: PropTypes.object,
+    hospedagemLotTotal: PropTypes.number,
+    hospedagemLotUsed: PropTypes.number,
   }),
   userRole: PropTypes.string,
 };

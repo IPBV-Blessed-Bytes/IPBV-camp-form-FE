@@ -47,7 +47,6 @@ const AdminDonations = lazy(() => import('../Pages/Admin/Donations'));
 const AdminRefunds = lazy(() => import('../Pages/Admin/Refunds'));
 const AdminTrash = lazy(() => import('../Pages/Admin/Trash'));
 const AdminUserLogs = lazy(() => import('../Pages/Admin/UserLogs'));
-const AdminSeatManagement = lazy(() => import('../Pages/Admin/SeatManagement'));
 const AdminUsersManagement = lazy(() => import('../Pages/Admin/UsersManagement'));
 const AdminProductsManagement = lazy(() => import('@/Pages/Admin/ProductsManagement'));
 const AdminRolesManagement = lazy(() => import('@/Pages/Admin/RolesManagement'));
@@ -82,16 +81,12 @@ const FormRoutes = () => {
     formStage,
     formPath,
     handleAdminClick,
-    handleUpdateTotalBusVacancies,
-    handleUpdateTotalPackages,
-    handleUpdateTotalSeats,
     isNotSuccessPathname,
     loading,
     loggedUsername,
     packageCount,
     steps,
     totalBusVacancies,
-    totalPackages,
     totalRegistrations,
     totalSeats,
     userRole,
@@ -326,24 +321,6 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminUserLogs formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/vagas')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminSeatManagement
-                    formStage={formStage}
-                    loading={loading}
-                    loggedUsername={loggedUsername}
-                    handleUpdateTotalBusVacancies={handleUpdateTotalBusVacancies}
-                    handleUpdateTotalPackages={handleUpdateTotalPackages}
-                    handleUpdateTotalSeats={handleUpdateTotalSeats}
-                    totalBusVacancies={totalBusVacancies}
-                    totalPackages={totalPackages}
-                    totalSeats={totalSeats}
-                  />
                 </ProtectedRoute>
               }
             />

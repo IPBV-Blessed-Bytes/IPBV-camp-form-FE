@@ -41,11 +41,27 @@ const ProductList = ({ age, cartKey, categoryKey, selectionRule = 'SINGLE', prod
     }
   }, [items]);
 
-  const getAvailability = (product, usedValidPackages) => {
+  const getAvailability = (product) => {
     if (age < 9) return true;
-    if (product.vacancies === null || product.vacancies === undefined) return true;
 
-    const used = Number(usedValidPackages?.[product.id] || 0);
+    if (categoryKey === 'HOSPEDAGEM') {
+      const total = packageCount?.hospedagemLotTotal;
+      if (total !== null && total !== undefined) {
+        const used = Number(packageCount?.hospedagemLotUsed || 0);
+        if (used >= Number(total)) return false;
+      }
+
+      const globalCap = product.globalVacancies;
+      if (globalCap !== null && globalCap !== undefined) {
+        const usedAccommodation = Number(packageCount?.usedValidPackages?.[product.id] || 0);
+        if (usedAccommodation >= Number(globalCap)) return false;
+      }
+
+      return true;
+    }
+
+    if (product.vacancies === null || product.vacancies === undefined) return true;
+    const used = Number(packageCount?.usedValidPackages?.[product.id] || 0);
     return Number(product.vacancies) > used;
   };
 
@@ -76,7 +92,7 @@ const ProductList = ({ age, cartKey, categoryKey, selectionRule = 'SINGLE', prod
       <div className="product-grid">
         {filtered.map((product) => {
           const alreadySelected = !!getItem(product.id);
-          const isAvailable = getAvailability(product, packageCount?.usedValidPackages);
+          const isAvailable = getAvailability(product);
 
           return (
             <div

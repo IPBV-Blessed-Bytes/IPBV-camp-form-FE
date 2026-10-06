@@ -8,6 +8,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 import { getLotsAuthenticated, createLot, updateLot as updateLotRequest, deleteLot } from '@/services/lots';
+import { getPackageCount, updatePackageCount, updateTotalBusVacancies } from '@/services/packages';
 import scrollUp from '@/hooks/useScrollUp';
 import Loading from '@/components/Global/Loading';
 import SpinnerButton from '@/components/Global/SpinnerButton';
@@ -16,6 +17,8 @@ import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
 import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
+import FormSection from '@/components/Admin/FormSection';
+import SectionHeader from '@/components/Admin/SectionHeader';
 import Icons from '@/components/Global/Icons';
 
 registerLocale('ptBR', ptBR);
@@ -53,8 +56,13 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     price: { ...defaultPrice },
     startDate: '',
     endDate: '',
+    totalVacancies: '',
   });
   const [search, setSearch] = useState('');
+  const [totalSeats, setTotalSeats] = useState(0);
+  const [totalBusVacancies, setTotalBusVacancies] = useState(0);
+  const [savingSeats, setSavingSeats] = useState(false);
+  const [savingBus, setSavingBus] = useState(false);
 
   scrollUp();
 
@@ -71,8 +79,55 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     }
   };
 
+  const fetchGeneralVacancies = async () => {
+    try {
+      const data = await getPackageCount();
+      setTotalSeats(Number(data?.totalSeats || 0));
+      setTotalBusVacancies(Number(data?.totalBusVacancies || 0));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const saveTotalSeats = async () => {
+    if (Number(totalSeats) < 0) {
+      toast.error('O limite total de inscritos não pode ser menor que 0');
+      return;
+    }
+    try {
+      setSavingSeats(true);
+      await updatePackageCount({ totalSeats: Number(totalSeats) });
+      toast.success('Limite total de inscritos ajustado com sucesso');
+      registerLog(`Ajustou o limite total de inscritos para ${totalSeats}`, loggedUsername);
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao ajustar o limite total de inscritos');
+    } finally {
+      setSavingSeats(false);
+    }
+  };
+
+  const saveBusVacancies = async () => {
+    if (Number(totalBusVacancies) < 0) {
+      toast.error('As vagas de ônibus não podem ser menores que 0');
+      return;
+    }
+    try {
+      setSavingBus(true);
+      await updateTotalBusVacancies({ totalBusVacancies: Number(totalBusVacancies) });
+      toast.success('Vagas de ônibus ajustadas com sucesso');
+      registerLog(`Ajustou as vagas totais de ônibus para ${totalBusVacancies}`, loggedUsername);
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao ajustar as vagas de ônibus');
+    } finally {
+      setSavingBus(false);
+    }
+  };
+
   useEffect(() => {
     fetchLots();
+    fetchGeneralVacancies();
   }, []);
 
   const handleLotChange = (id, field, value, nestedField = null) => {
@@ -105,6 +160,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: lot.startDate,
         endDate: lot.endDate,
         price: { registrationFee: lot.price?.registrationFee || '' },
+        totalVacancies:
+          lot.totalVacancies === '' || lot.totalVacancies === null || lot.totalVacancies === undefined
+            ? null
+            : Number(lot.totalVacancies),
       });
       toast.success(`${lot.name} atualizado com sucesso`);
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
@@ -165,6 +224,10 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: newLot.startDate,
         endDate: newLot.endDate,
         price: { registrationFee: newLot.price.registrationFee || '' },
+        totalVacancies:
+          newLot.totalVacancies === '' || newLot.totalVacancies === null || newLot.totalVacancies === undefined
+            ? null
+            : Number(newLot.totalVacancies),
       });
       toast.success(`${newLot.name} adicionado com sucesso`);
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
@@ -174,6 +237,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         price: { ...defaultPrice },
         startDate: '',
         endDate: '',
+        totalVacancies: '',
       });
       await fetchLots(true);
     } catch (error) {
@@ -233,7 +297,54 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
 
         <StatCards items={statItems} />
 
-        <div className="lots-toolbar">
+        <SectionHeader title="Vagas gerais do evento" />
+
+        <Row className="g-4 mb-1 lot-general-vacancies">
+          <Col xs={12} lg={6} className="d-flex">
+            <FormSection
+              title="Limite Total de Inscritos"
+              description="Teto geral do evento: ao atingir esse número de inscritos válidos, o formulário fecha para todos. As vagas de hospedagem por acomodação são o total por lote, definido em cada lote abaixo."
+            >
+              <Form.Group controlId="inputSeats">
+                <Form.Label>Vagas Totais Inscritos:</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  value={totalSeats}
+                  onChange={(e) => setTotalSeats(Number(e.target.value))}
+                />
+              </Form.Group>
+
+              <div className="d-flex mt-auto pt-3 justify-content-end">
+                <SpinnerButton variant="teal-blue" onClick={saveTotalSeats} loading={savingSeats}>
+                  Ajustar Limite Total
+                </SpinnerButton>
+              </div>
+            </FormSection>
+          </Col>
+
+          <Col xs={12} lg={6} className="d-flex">
+            <FormSection title="Vagas de Ônibus" description="Total de vagas do ônibus para todo o evento.">
+              <Form.Group controlId="inputBus">
+                <Form.Label>Vagas Totais no Ônibus:</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  value={totalBusVacancies}
+                  onChange={(e) => setTotalBusVacancies(Number(e.target.value))}
+                />
+              </Form.Group>
+
+              <div className="d-flex mt-auto pt-3 justify-content-end">
+                <SpinnerButton variant="teal-blue" onClick={saveBusVacancies} loading={savingBus}>
+                  Ajustar Vagas Ônibus
+                </SpinnerButton>
+              </div>
+            </FormSection>
+          </Col>
+        </Row>
+
+        <div className="lots-toolbar mt-3">
           <SearchBox value={search} onChange={setSearch} placeholder="Buscar por nome..." />
         </div>
 
@@ -318,6 +429,25 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           </Col>
 
                         </Row>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>
+                            <strong>Total de vagas (hospedagem):</strong>
+                          </Form.Label>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            value={lot.totalVacancies ?? ''}
+                            onChange={(e) => handleLotChange(lot.id, 'totalVacancies', e.target.value)}
+                            className="form-control-lg"
+                            placeholder="Deixe em branco para vagas ilimitadas"
+                          />
+                          <Form.Text className="text-secondary">
+                            Total de vagas de hospedagem deste lote, somando todas as acomodações. Ao atingir o
+                            limite, todas as hospedagens ficam indisponíveis até o lote virar ou você liberar mais
+                            vagas. O ônibus continua com vagas próprias na tela de Produtos.
+                          </Form.Text>
+                        </Form.Group>
 
                         <div className="d-flex mt-3 justify-content-end gap-2">
                           <Button
@@ -435,6 +565,22 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                     dropdownMode="select"
                     showMonthDropdown
                     showYearDropdown
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={12} lg={6} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>Total de Vagas (hospedagem):</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    value={newLot.totalVacancies}
+                    onChange={(e) => setNewLot({ ...newLot, totalVacancies: e.target.value })}
+                    className="form-control-lg form-control-bg admin-field--even"
+                    placeholder="Deixe em branco para vagas ilimitadas"
                   />
                 </Form.Group>
               </Col>

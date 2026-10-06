@@ -61,7 +61,16 @@ const PRODUCT_ICONS = [
   'sticker',
 ];
 
-const emptyForm = { name: '', description: '', category: '', active: true, iconKey: '', stock: '', price: '' };
+const emptyForm = {
+  name: '',
+  description: '',
+  category: '',
+  active: true,
+  iconKey: '',
+  stock: '',
+  price: '',
+  globalVacancies: '',
+};
 
 const AdminProductsManagement = ({ loggedUsername }) => {
   const [loading, setLoading] = useState(false);
@@ -135,6 +144,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       iconKey: product.iconKey || '',
       stock: product.initialStock ?? '',
       price: product.price ?? '',
+      globalVacancies: product.globalVacancies ?? '',
     });
     resetImageState();
     if (product.hasImage) setImagePreview(productImageUrl(product.id));
@@ -191,11 +201,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
 
   const saveLotPrices = async (productId) => {
     const entries = Object.entries(lotPrices);
+    const isHospedagem = formData.category === 'HOSPEDAGEM';
     for (const [lotId, values] of entries) {
       await setLotProductPrice(lotId, productId, {
         price: Number(values.price || 0),
         foodPrice: Number(values.foodPrice || 0),
-        vacancies: values.vacancies === '' ? null : Number(values.vacancies),
+        vacancies: isHospedagem || values.vacancies === '' ? null : Number(values.vacancies),
       });
     }
   };
@@ -211,6 +222,10 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         ...formData,
         stock: formData.stock === '' || formData.stock === null ? null : Number(formData.stock),
         price: isStore && formData.price !== '' && formData.price !== null ? Number(formData.price) : null,
+        globalVacancies:
+          formData.category === 'HOSPEDAGEM' && formData.globalVacancies !== '' && formData.globalVacancies !== null
+            ? Number(formData.globalVacancies)
+            : null,
       };
       if (editingProduct) {
         await updateProduct(editingProduct.id, payload);
@@ -494,6 +509,9 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                     {product.description && <div className="text-secondary small">{product.description}</div>}
                     {product.stock != null && (
                       <div className="text-secondary small">Estoque: {product.stock}</div>
+                    )}
+                    {product.category === 'HOSPEDAGEM' && product.globalVacancies != null && (
+                      <div className="text-secondary small">Vagas globais: {product.globalVacancies}</div>
                     )}
                   </td>
                   <td>{categoryLabel(product.category)}</td>
@@ -801,13 +819,34 @@ const AdminProductsManagement = ({ loggedUsername }) => {
             {formData.category !== STORE_KEY && (
             <>
             <hr />
+            {formData.category === 'HOSPEDAGEM' && (
+              <Form.Group controlId="formGlobalVacancies" className="mb-3">
+                <Form.Label>
+                  <b>Vagas Globais do Evento:</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  placeholder="Deixe em branco para ilimitado"
+                  value={formData.globalVacancies}
+                  onChange={(e) => setFormData({ ...formData, globalVacancies: e.target.value })}
+                />
+                <Form.Text className="text-secondary">
+                  Teto total desta acomodação no evento inteiro (somando todos os lotes). Ao atingir, só esta
+                  acomodação fica indisponível. O total geral por lote (pool de hospedagem) é definido na tela de
+                  <b> Lotes</b>.
+                </Form.Text>
+              </Form.Group>
+            )}
             <h6 className="mt-3">
               <b>Preço e vagas por lote</b>
             </h6>
             <p className="text-secondary small">
-              Deixe o campo <b>Vagas</b> em branco para deixá-las ilimitadas. Na hospedagem, o <b>Preço</b> é
-              só a hospedagem e a <b>Parte alimentação</b> é <b>somada</b> a ele para formar o total; o desconto
-              por idade de alimentação (faixa global) incide sobre a alimentação, e o de hospedagem sobre o preço.
+              Na hospedagem, o <b>Preço</b> é só a hospedagem e a <b>Parte alimentação</b> é <b>somada</b> a ele
+              para formar o total; o desconto por idade de alimentação (faixa global) incide sobre a alimentação,
+              e o de hospedagem sobre o preço. As <b>vagas da hospedagem</b> agora são um <b>total único por lote</b>
+              (somando todas as acomodações), definido na tela de <b>Lotes</b>. O campo <b>Vagas</b> aqui vale só
+              para o transporte; deixe em branco para ilimitado.
             </p>
             <div className="lot-prices-grid">
               {lots.map((lot) => (
@@ -836,15 +875,17 @@ const AdminProductsManagement = ({ loggedUsername }) => {
                         />
                       </Form.Group>
                     )}
-                    <Form.Group>
-                      <Form.Label className="small mb-0">Vagas</Form.Label>
-                      <Form.Control
-                        type="number"
-                        min="0"
-                        value={lotPrices[lot.id]?.vacancies ?? ''}
-                        onChange={(e) => setLotField(lot.id, 'vacancies', e.target.value)}
-                      />
-                    </Form.Group>
+                    {formData.category !== 'HOSPEDAGEM' && (
+                      <Form.Group>
+                        <Form.Label className="small mb-0">Vagas</Form.Label>
+                        <Form.Control
+                          type="number"
+                          min="0"
+                          value={lotPrices[lot.id]?.vacancies ?? ''}
+                          onChange={(e) => setLotField(lot.id, 'vacancies', e.target.value)}
+                        />
+                      </Form.Group>
+                    )}
                   </div>
                 </div>
               ))}

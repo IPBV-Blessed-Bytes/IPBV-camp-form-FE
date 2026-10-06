@@ -12,3 +12,12 @@
 .lot-range-date {
   margin-right: 0.5rem;
 }
+
+.lot-general-vacancies {
+  .admin-form-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+}

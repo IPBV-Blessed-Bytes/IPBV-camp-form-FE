@@ -178,21 +178,21 @@ const AdminLoggedIn = ({
       totalChildren,
       totalAdultsNonPaid,
     } = totalRegistrations;
-    const { usedPackages = {}, usedValidPackages = {}, totalPackages = {} } = availablePackages || {};
+    const {
+      usedPackages = {},
+      usedValidPackages = {},
+      hospedagemLotTotal = null,
+      hospedagemLotUsed = 0,
+    } = availablePackages || {};
 
     const calculatePackages = (dataSource) =>
-      PACKAGE_MAPPING.map(({ key, totalKey, title }) => {
-        const confirmed = Number(dataSource[key] || 0);
-        const total = totalPackages[totalKey] || 0;
-        return {
-          title,
-          filledVacancies: confirmed,
-          remainingVacancies: Math.max(total - confirmed, 0),
-          showRemainingVacancies: true,
-        };
-      });
+      PACKAGE_MAPPING.map(({ key, title }) => ({
+        title,
+        filledVacancies: Number(dataSource[key] || 0),
+      }));
 
     const busYesConfirmed = Number(usedValidPackages['bus-yes'] || 0);
+    const lotUsed = Number(hospedagemLotUsed || 0);
 
     return {
       validPackageCardsData: calculatePackages(usedValidPackages),
@@ -223,6 +223,12 @@ const AdminLoggedIn = ({
           filledVacancies: Number(totalValidRegistrations),
           remainingVacancies: Math.max(totalSeats - totalValidRegistrations, 0),
           showRemainingVacancies: true,
+        },
+        {
+          title: 'Hospedagem (lote atual)',
+          filledVacancies: lotUsed,
+          remainingVacancies: hospedagemLotTotal == null ? 0 : Math.max(hospedagemLotTotal - lotUsed, 0),
+          showRemainingVacancies: hospedagemLotTotal != null,
         },
         {
           title: 'Total de Inscritos Geral',
@@ -342,7 +348,6 @@ const AdminLoggedIn = ({
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
     { path: 'utilitarios', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 40, accent: '#cc6d00' },
     { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#d32f2f' },
-    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
     { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#0c9183' },
     { path: 'loja', title: 'Pedidos da Loja', typeIcon: 'cart', iconSize: 42, accent: '#0066cc' },
     { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
