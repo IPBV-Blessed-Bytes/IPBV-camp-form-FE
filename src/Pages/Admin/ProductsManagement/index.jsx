@@ -220,7 +220,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     try {
       const payload = {
         ...formData,
-        stock: formData.stock === '' || formData.stock === null ? null : Number(formData.stock),
+        stock: isStore && formData.stock !== '' && formData.stock !== null ? Number(formData.stock) : null,
         price: isStore && formData.price !== '' && formData.price !== null ? Number(formData.price) : null,
         globalVacancies:
           formData.category === 'HOSPEDAGEM' && formData.globalVacancies !== '' && formData.globalVacancies !== null
@@ -731,22 +731,24 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               />
             </Form.Group>
 
-            <Form.Group controlId="formStock" className="mt-3">
-              <Form.Label>
-                <b>Estoque disponibilizado (itens de loja):</b>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                placeholder="Deixe em branco para ilimitado"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-              />
-              <Form.Text className="text-secondary">
-                Quantidade total disponibilizada para venda na loja. A cada compra o <b>disponível</b> diminui; ao
-                zerar, o item some do formulário. Deixe em branco para Hospedagem/Transporte (sem controle de estoque).
-              </Form.Text>
-            </Form.Group>
+            {formData.category === STORE_KEY && (
+              <Form.Group controlId="formStock" className="mt-3">
+                <Form.Label>
+                  <b>Estoque disponibilizado (itens de loja):</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  placeholder="Deixe em branco para ilimitado"
+                  value={formData.stock}
+                  onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                />
+                <Form.Text className="text-secondary">
+                  Quantidade total disponibilizada para venda na loja. A cada compra o <b>disponível</b> diminui; ao
+                  zerar, o item some do formulário.
+                </Form.Text>
+              </Form.Group>
+            )}
 
             {formData.category === STORE_KEY && (
               <Form.Group controlId="formStorePrice" className="mt-3">
