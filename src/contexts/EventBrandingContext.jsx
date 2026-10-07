@@ -63,7 +63,6 @@ export const EventBrandingProvider = ({ children }) => {
       year: event?.year || null,
       color,
       secondaryColor,
-      legacyForm: Boolean(event?.legacyForm),
       paymentEnabled: Boolean(event?.paymentEnabled),
       registrationFeeEnabled: Boolean(event?.registrationFeeEnabled),
       boletoEnabled: Boolean(event?.boletoEnabled),

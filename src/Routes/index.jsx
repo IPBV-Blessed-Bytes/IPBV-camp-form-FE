@@ -1,28 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
-import { lazy, Suspense, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { lazy, Suspense } from 'react';
 
-import { enumSteps } from '@/utils/constants';
 import { useFormState } from '@/contexts/FormStateContext';
 
-import Footer from '@/components/Global/Footer';
-import Header from '@/components/Global/Header';
 import Loading from '@/components/Global/Loading';
-import InfoButton from '../components/Global/InfoButton';
 import ProtectedRoute from '@/components/Global/ProtectedRoute';
 import ImpersonationBanner from '@/components/Admin/ImpersonationBanner';
 import ChatbotWidget from '@/components/Global/ChatbotWidget';
 
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import DynamicForm from '../Pages/DynamicForm';
-import FormHome from '../Pages/Home';
-import FormPersonalData from '../Pages/PersonalData';
-import FormContact from '../Pages/Contact';
-import FormPackages from '../Pages/Packages';
-import ExtraMeals from '../Pages/ExtraMeals';
-import FinalReview from '../Pages/FinalReview';
-import ChooseFormPayment from '../Pages/ChooseFormPayment';
-import FormSuccess from '../Pages/Success';
 import FormFeedback from '../Pages/Feedback';
 import CpfReview from '../Pages/CpfReview';
 import CpfData from '../Pages/CpfReview/CpfData';
@@ -35,7 +22,6 @@ import Institutional from '@/Pages/Institutional';
 
 import WaitingForCamp from '../Pages/WaitingForCamp';
 import Offline from '../Pages/Offline';
-import BeforePayment from '@/Pages/BeforePayment';
 
 const AdminParticipants = lazy(() => import('../Pages/Admin/Participants'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
@@ -91,22 +77,18 @@ const Unavailable = lazy(() => import('@/Pages/Unavailable'));
 const SystemDown = lazy(() => import('@/Pages/SystemDown'));
 
 const FormRoutes = () => {
-  const [showInfoButton, setShowInfoButton] = useState(false);
   const {
     adminPathname,
     availablePackages,
     effectiveFormStage,
     formStage,
     formPath,
-    handleAdminClick,
     handleUpdateTotalBusVacancies,
     handleUpdateTotalPackages,
     handleUpdateTotalSeats,
-    isNotSuccessPathname,
     loading,
     loggedUsername,
     packageCount,
-    steps,
     totalBusVacancies,
     totalPackages,
     totalRegistrations,
@@ -116,7 +98,7 @@ const FormRoutes = () => {
 
   const adminPath = (segment) => `${effectiveFormStage === 'maintenance' ? '/dev' : '/admin'}${segment}`;
 
-  const { legacyForm, loading: brandingLoading } = useEventBranding();
+  const { loading: brandingLoading } = useEventBranding();
 
   return (
     <div className="form" id="main-content">
@@ -132,63 +114,7 @@ const FormRoutes = () => {
 
           {effectiveFormStage === 'form-on' && brandingLoading && <Loading loading />}
 
-          {effectiveFormStage === 'form-on' && !brandingLoading && !legacyForm && <DynamicForm />}
-
-          {effectiveFormStage === 'form-on' && !brandingLoading && legacyForm && (
-            <>
-              <Header showNavMenu />
-
-              {steps !== enumSteps.packages && steps !== enumSteps.beforePayment && (
-                <div className="form__container container">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      {steps === enumSteps.home && isNotSuccessPathname && (
-                        <FormHome onLgpdClose={() => setShowInfoButton(true)} />
-                      )}
-
-                      {steps === enumSteps.personalData && isNotSuccessPathname && <FormPersonalData />}
-
-                      {steps === enumSteps.contact && isNotSuccessPathname && <FormContact />}
-
-                      {steps === enumSteps.extraMeals && isNotSuccessPathname && <ExtraMeals />}
-
-                      {steps === enumSteps.finalReview && isNotSuccessPathname && <FinalReview />}
-
-                      {steps === enumSteps.formPayment && isNotSuccessPathname && <ChooseFormPayment />}
-
-                      <Routes>
-                        <Route path="/e/:slug/sucesso" element={<FormSuccess />} />
-                      </Routes>
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {steps === enumSteps.packages && isNotSuccessPathname && (
-                <div className="form__container container-fluid ">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      <FormPackages />
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {steps === enumSteps.beforePayment && isNotSuccessPathname && (
-                <div className="form__container container-fluid ">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      <BeforePayment />
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {showInfoButton && <InfoButton timeout />}
-
-              <Footer handleAdminClick={handleAdminClick} />
-            </>
-          )}
+          {effectiveFormStage === 'form-on' && !brandingLoading && <DynamicForm />}
         </div>
       )}
 

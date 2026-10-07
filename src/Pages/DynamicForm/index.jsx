@@ -16,6 +16,8 @@ import { computeAge, packageTotal, packageFullTotal, formatPrice, productPrice }
 import { createSubmission } from '@/services/submissions';
 import { createGenericCheckout } from '@/services/checkout';
 import { validateCouponCode } from '@/services/couponCodes';
+import { buildEventCalendarUrl } from '@/utils/calendar';
+import { getEventSchedule } from '@/Pages/Packages/utils/calculateAge';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { getProducts } from '@/services/products';
 import { getLots } from '@/services/lots';
@@ -87,7 +89,20 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery } = useEventBranding();
+
+  const calendarUrl = (() => {
+    const schedule = getEventSchedule() || {};
+    return buildEventCalendarUrl({
+      title: eventName || 'Acampamento',
+      baseDate: schedule.baseDate,
+      startTime: schedule.startTime,
+      endDate: schedule.endDate,
+      endTime: schedule.endTime,
+      location: mapQuery,
+      details: eventName ? `Inscrição confirmada — ${eventName}` : 'Inscrição confirmada',
+    });
+  })();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -624,6 +639,11 @@ const DynamicForm = () => {
               </div>
               <BoletoList boletos={boletoResult} />
               <div className="text-center d-flex flex-column align-items-center gap-2">
+                {calendarUrl && (
+                  <a className="btn btn-outline-teal-blue mt-3" href={calendarUrl} target="_blank" rel="noopener noreferrer">
+                    Adicionar ao Google Agenda
+                  </a>
+                )}
                 <button className="btn btn-outline-teal-blue mt-3" onClick={() => navigate('/minhas-inscricoes')}>
                   {t('form.dynamic.viewMyRegistrations')}
                 </button>
@@ -677,6 +697,11 @@ const DynamicForm = () => {
                   </div>
                 )}
                 <div className="text-center d-flex flex-column align-items-center gap-2 mt-4">
+                  {calendarUrl && (
+                    <a className="btn btn-outline-teal-blue" href={calendarUrl} target="_blank" rel="noopener noreferrer">
+                      Adicionar ao Google Agenda
+                    </a>
+                  )}
                   <button className="btn btn-outline-teal-blue" onClick={() => navigate('/minhas-inscricoes')}>
                     {t('form.dynamic.viewMyRegistrations')}
                   </button>

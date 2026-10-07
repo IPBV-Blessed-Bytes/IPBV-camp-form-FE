@@ -1,7 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format, isValid } from 'date-fns';
-import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import PropTypes from 'prop-types';
 
@@ -9,26 +7,16 @@ import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import { eventPath, stripEventPrefix } from '@/config/eventScope';
-import { calculateRegistrationFee } from '@/utils/calculateRegistrationFee';
 import { FORM_STORAGE_KEYS, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
-import { createCheckout } from '@/services/checkout';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import calculateAge, { initBaseDate } from '@/Pages/Packages/utils/calculateAge';
-import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
 import { products } from '@/Pages/Packages/utils/products';
 
 const SKIP_PERSIST_SECTIONS = ['personalInformation', 'contact', 'package', 'extraMeals'];
 const EMPTY_FORM_VALUES = {};
 
 const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-const sanitizeForms = (forms) =>
-  forms.map(({ personalInformation, contact, ...rest }) => ({
-    ...rest,
-    personalInformation: { ...personalInformation },
-    contact,
-  }));
 
 const isUserValid = (user) =>
   Boolean(user?.personalInformation?.name?.trim() || user?.personalInformation?.birthday?.trim());
@@ -54,7 +42,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   const [usedPackages, setUsedPackages] = useState();
   const [usedValidPackages, setUsedValidPackages] = useState({});
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(undefined);
+  const [status] = useState(undefined);
   const [withFood, setWithFood] = useState(false);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -66,7 +54,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   const [preFill, setPreFill] = useState(true);
   const [highestStepReached, setHighestStepReached] = useState(enumSteps.home);
   const [backStepFlag, setBackStepFlag] = useState(true);
-  const [basePriceTotal, setBasePriceTotal] = useState(0);
   const [packageCount, setPackageCount] = useState(null);
 
   const windowPathname = window.location.pathname;
@@ -178,7 +165,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
   }, []);
   const resetFormSubmitted = useCallback(() => setFormSubmitted(false), []);
   const handlePreFill = useCallback((value) => setPreFill(Boolean(value)), []);
-  const handleBasePriceChange = useCallback((value) => setBasePriceTotal(value), []);
 
   const updateFormValues = useCallback(
     (sectionKey) => (newData, callback) => {
@@ -285,116 +271,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
     scrollTop();
   }, []);
 
-  const handleCheckoutResponse = useCallback(
-    (response) => {
-      const checkoutUrl = response.data.payment_url;
-      const checkoutStatus = response.data.checkout_status;
-      setStatus('loaded');
-
-      if (checkoutUrl && checkoutStatus === 'Checkout generated') {
-        window.open(checkoutUrl, '_self');
-        toast.success('Redirecionando para pagamento...');
-      } else if ([200, 201].includes(response.status)) {
-        goToSuccessPage();
-        setFormSubmitted(true);
-        toast.success('Inscrição validada com sucesso');
-      } else if (checkoutStatus === 'Checkout Error') {
-        toast.error('Erro ao criar checkout');
-      }
-    },
-    [goToSuccessPage],
-  );
-
-  const sendForm = useCallback(
-    async (formikValues) => {
-      if (!isLoggedIn) {
-        toast.info('Crie sua conta e confirme seu e-mail para finalizar a inscrição.');
-        navigate('/entrar');
-        return;
-      }
-      setLoading(true);
-      try {
-        setStatus('loading');
-
-        const discountList = JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.discountList) || '[]');
-        const registrationFeePerUser = basePriceTotal;
-
-        const buildFormPayload = (form, index) => {
-          const formBirthday = new Date(form?.personalInformation?.birthday);
-          const formAge = isValid(formBirthday) ? calculateAge(formBirthday) : 0;
-
-          const discountedProducts = getDiscountedProducts(formAge);
-          const getProductPrice = (id) => discountedProducts.find((p) => p.id === id)?.price || 0;
-
-          const accomodationPrice = getProductPrice(form.package?.accomodation?.id);
-          const transportationPrice = getProductPrice(form.package?.transportation?.id);
-          const foodPrice = form.package?.food?.id ? getProductPrice(form.package?.food?.id) : 0;
-          const extraMealsPrice = Number(form.extraMeals?.totalPrice || 0);
-          const registrationFee = calculateRegistrationFee(registrationFeePerUser, formAge);
-
-          const subtotal =
-            Number(accomodationPrice) +
-            Number(transportationPrice) +
-            Number(foodPrice) +
-            Number(extraMealsPrice) +
-            Number(registrationFee);
-
-          const rawDiscount = Number(discountList[index] || 0);
-          const appliedDiscount = Math.min(subtotal, rawDiscount);
-          const totalPrice = subtotal - appliedDiscount;
-
-          return {
-            ...form,
-            package: {
-              accomodation: {
-                id: form.package?.accomodation?.id || '',
-                price: accomodationPrice,
-              },
-              accomodationName: form.package?.accomodation?.name || '',
-              transportation: {
-                id: form.package?.transportation?.id || '',
-                price: transportationPrice,
-              },
-              transportationName: form.package?.transportation?.name || '',
-              food: {
-                id: form.package?.food?.id || '',
-                price: foodPrice,
-              },
-              foodName: form.package?.food?.name || '',
-              price: subtotal,
-              finalPrice: totalPrice,
-            },
-            formPayment: formikValues.formPayment || 'nonPaid',
-            registrationDate: format(new Date(), 'dd/MM/yyyy HH:mm:ss'),
-            totalPrice,
-            manualRegistration: false,
-            appliedDiscount,
-            authorization: true,
-          };
-        };
-
-        const formsToSend = formValues.filter(isUserValid).map(buildFormPayload);
-        const finalPriceCheckout = formsToSend.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-
-        const response = await createCheckout({
-          forms: sanitizeForms(formsToSend),
-          finalPriceCheckout,
-        });
-
-        handleCheckoutResponse(response);
-      } catch (error) {
-        setStatus('error');
-        toast.error(error?.response?.data || 'Ocorreu um erro');
-      } finally {
-        sessionStorage.removeItem(FORM_STORAGE_KEYS.previousUserData);
-        sessionStorage.removeItem(FORM_STORAGE_KEYS.savedUsers);
-        sessionStorage.removeItem(FORM_STORAGE_KEYS.currentFormIndex);
-        setLoading(false);
-      }
-    },
-    [basePriceTotal, formValues, handleCheckoutResponse, isLoggedIn, navigate],
-  );
-
   const value = useMemo(
     () => ({
       adminPathname,
@@ -417,7 +293,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       goToSuccessPage,
       handleAddNewUser,
       handleAdminClick,
-      handleBasePriceChange,
       handleDiscountChange,
       handlePersonData,
       handlePreFill,
@@ -438,7 +313,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       prepareNewDraft,
       resetFormSubmitted,
       resetFormValues,
-      sendForm,
       setBackStepFlag,
       setFormValues,
       setPreFill,
@@ -474,7 +348,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       goToSuccessPage,
       handleAddNewUser,
       handleAdminClick,
-      handleBasePriceChange,
       handleDiscountChange,
       handlePersonData,
       handlePreFill,
@@ -495,7 +368,6 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
       prepareNewDraft,
       resetFormSubmitted,
       resetFormValues,
-      sendForm,
       status,
       steps,
       totalBusVacancies,
