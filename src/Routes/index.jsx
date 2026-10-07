@@ -41,6 +41,7 @@ const AdminParticipants = lazy(() => import('../Pages/Admin/Participants'));
 const AdminRide = lazy(() => import('../Pages/Admin/Ride'));
 const AdminBus = lazy(() => import('../Pages/Admin/Bus'));
 const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
+const AdminCouponCodes = lazy(() => import('../Pages/Admin/CouponCodes'));
 const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
 const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
@@ -294,6 +295,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole} requiredPermission="COUPONS_MANAGE">
                   <AdminDiscount formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/cupons')}
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'collaborator', 'collaborator-viewer']} userRole={userRole} requiredPermission="COUPONS_MANAGE">
+                  <AdminCouponCodes loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

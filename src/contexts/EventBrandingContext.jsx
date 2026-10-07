@@ -79,6 +79,7 @@ export const EventBrandingProvider = ({ children }) => {
       storeDeliveryNote: event?.storeDeliveryNote || '',
       groupDiscountThresholdCents: Number(event?.groupDiscountThresholdCents) || 0,
       groupDiscountPercent: Number(event?.groupDiscountPercent) || 0,
+      couponCodesEnabled: Boolean(event?.couponCodesEnabled),
       loading: isLoading,
     }),
     [event, color, secondaryColor, faviconUrl, isLoading],

@@ -41,6 +41,7 @@ const EMPTY_EVENT = {
   feeMode: 'passed',
   agePricingEnabled: false,
   registrationFeeEnabled: false,
+  couponCodesEnabled: false,
   boletoEnabled: false,
   boletoMaxInstallments: 5,
   boletoMinDaysBeforeEvent: '',
@@ -165,6 +166,7 @@ const AdminEvents = ({ loggedUsername }) => {
       feeMode: event.feeMode || 'passed',
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
+      couponCodesEnabled: event.couponCodesEnabled ?? false,
       boletoEnabled: event.boletoEnabled ?? false,
       boletoMaxInstallments: event.boletoMaxInstallments ?? 5,
       boletoMinDaysBeforeEvent: event.boletoMinDaysBeforeEvent ?? '',
@@ -258,6 +260,7 @@ const AdminEvents = ({ loggedUsername }) => {
       feeMode: draft.paymentEnabled ? draft.feeMode : 'passed',
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
+      couponCodesEnabled: draft.paymentEnabled ? draft.couponCodesEnabled : false,
       boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
       boletoMaxInstallments: Number(draft.boletoMaxInstallments) || 1,
       boletoMinDaysBeforeEvent: draft.boletoMinDaysBeforeEvent ? Number(draft.boletoMinDaysBeforeEvent) : null,
@@ -912,6 +915,18 @@ const AdminEvents = ({ loggedUsername }) => {
               />
               <Form.Text className="text-muted-italic">
                 {t('admin.events.regFeeHelp')}
+              </Form.Text>
+
+              <Form.Check
+                type="switch"
+                id="event-coupon-codes-switch"
+                className="mt-2"
+                label="Habilitar cupons de desconto"
+                checked={draft.couponCodesEnabled}
+                onChange={(e) => handleChange('couponCodesEnabled')(e.target.checked)}
+              />
+              <Form.Text className="text-muted-italic">
+                Permite que o inscrito aplique um código de cupom no formulário. Gerencie os códigos na tela de Cupons.
               </Form.Text>
 
               <Form.Check

@@ -290,6 +290,14 @@ const AdminLoggedIn = ({
       iconSize: 50,
     },
     {
+      permission: discountButtonHomePermissions,
+      path: 'cupons',
+      cardType: 'discount-card',
+      title: 'Cupons',
+      typeIcon: 'cash',
+      iconSize: 46,
+    },
+    {
       permission: roomsButtonHomePermissions,
       path: 'quartos',
       cardType: 'rooms-card',

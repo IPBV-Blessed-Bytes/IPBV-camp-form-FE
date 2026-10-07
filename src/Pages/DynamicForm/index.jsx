@@ -15,6 +15,7 @@ import RideStep from '@/form/dynamic/RideStep';
 import { computeAge, packageTotal, packageFullTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
 import { createGenericCheckout } from '@/services/checkout';
+import { validateCouponCode } from '@/services/couponCodes';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { getProducts } from '@/services/products';
 import { getLots } from '@/services/lots';
@@ -86,7 +87,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled } = useEventBranding();
   const iconColor = eventColor || '#007185';
 
   const slug = getEventSlug();
@@ -142,6 +143,9 @@ const DynamicForm = () => {
   const [boletoResult, setBoletoResult] = useState(null);
   const [pixResult, setPixResult] = useState(null);
   const [donation, setDonation] = useState('');
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponChecking, setCouponChecking] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
 
   const { data: homeInfo } = useQuery({
@@ -233,6 +237,47 @@ const DynamicForm = () => {
     () => Math.max(0, grandTotal - groupDiscountAmount),
     [grandTotal, groupDiscountAmount],
   );
+  const couponBase = useMemo(
+    () => Math.max(0, packagesTotal - groupDiscountAmount),
+    [packagesTotal, groupDiscountAmount],
+  );
+  const couponDiscount = useMemo(() => {
+    if (!appliedCoupon || couponBase <= 0) return 0;
+    const amount = Number(appliedCoupon.discountAmount) || 0;
+    if (appliedCoupon.discountType === 'VALUE') return Math.min(amount, couponBase);
+    return couponBase * (Math.min(amount, 100) / 100);
+  }, [appliedCoupon, couponBase]);
+  const finalTotal = useMemo(
+    () => Math.max(0, netGrandTotal - couponDiscount),
+    [netGrandTotal, couponDiscount],
+  );
+
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponChecking(true);
+    try {
+      const cpf = people[0]?.cpf || '';
+      const result = await validateCouponCode({ code, cpf });
+      if (result?.valid) {
+        setAppliedCoupon(result);
+        toast.success('Cupom aplicado!');
+      } else {
+        setAppliedCoupon(null);
+        toast.error(result?.message || 'Cupom inválido');
+      }
+    } catch (e) {
+      setAppliedCoupon(null);
+      toast.error('Não foi possível validar o cupom');
+    } finally {
+      setCouponChecking(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput('');
+  };
 
   const setValue = (key, value) => {
     setAnswers((prev) => ({ ...(Object.keys(prev).length ? prev : initializedAnswers), [key]: value }));
@@ -495,6 +540,7 @@ const DynamicForm = () => {
         paymentMethod,
         boletoInstallments,
         donation: Number(donation) || 0,
+        couponCode: appliedCoupon?.code || null,
       });
       if (result?.boletos?.length) {
         clearInscriptionDraft();
@@ -981,10 +1027,43 @@ const DynamicForm = () => {
                               <h5 className="mb-0 summary-discount-value">-{formatPrice(groupDiscountAmount)}</h5>
                             </div>
                           )}
+                          {couponCodesEnabled && appliedCoupon && couponDiscount > 0 && (
+                            <div className="summary-total-package">
+                              <h5 className="summary-total-package-label mb-0">
+                                Cupom {appliedCoupon.code}
+                              </h5>
+                              <h5 className="mb-0 summary-discount-value">-{formatPrice(couponDiscount)}</h5>
+                            </div>
+                          )}
+                          {couponCodesEnabled && (
+                            <div className="summary-coupon mt-2 mb-2">
+                              {appliedCoupon ? (
+                                <Button variant="link" size="sm" className="p-0" onClick={handleRemoveCoupon}>
+                                  Remover cupom
+                                </Button>
+                              ) : (
+                                <div className="d-flex gap-2 align-items-start">
+                                  <Form.Control
+                                    type="text"
+                                    placeholder="Cupom de desconto"
+                                    value={couponInput}
+                                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                                  />
+                                  <SpinnerButton
+                                    variant="outline-teal-blue"
+                                    onClick={handleApplyCoupon}
+                                    loading={couponChecking}
+                                  >
+                                    Aplicar
+                                  </SpinnerButton>
+                                </div>
+                              )}
+                            </div>
+                          )}
                           <div className="packages-horizontal-line-cart"></div>
                           <div className="summary-total-geral mb-3">
                             <h5 className="fw-bold mb-0">{t('form.dynamic.totalColon')}</h5>
-                            <h5 className="fw-bold mb-0">{formatPrice(netGrandTotal)}</h5>
+                            <h5 className="fw-bold mb-0">{formatPrice(finalTotal)}</h5>
                           </div>
                           <div className="summary-buttons d-grid gap-3">
                             {people.length > 0 && (
@@ -1006,7 +1085,7 @@ const DynamicForm = () => {
                 <PaymentSimulatorModal
                   show={showSimulator}
                   onHide={() => setShowSimulator(false)}
-                  base={netGrandTotal}
+                  base={finalTotal}
                   fees={DEFAULT_FEES}
                   maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
                 />
@@ -1100,7 +1179,7 @@ const DynamicForm = () => {
                   <p className="text-muted mt-4">
                     {t('form.dynamic.registrationsCount', { count: people.length })}
                     {Number(donation) > 0 && t('form.dynamic.plusDonation', { price: formatPrice(Number(donation)) })} · {t('form.dynamic.total')}{' '}
-                    <b>{formatPrice(netGrandTotal + (Number(donation) || 0))}</b>
+                    <b>{formatPrice(finalTotal + (Number(donation) || 0))}</b>
                   </p>
                 </div>
               </FormStepLayout>
