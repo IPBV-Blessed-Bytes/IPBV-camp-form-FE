@@ -89,7 +89,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery, refundProtectionEnabled, protectionFeeType, protectionFeeAmount } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery, refundProtectionEnabled, protectionFeeType, protectionFeeAmount, pixEnabled, cardEnabled, cardMaxInstallments } = useEventBranding();
 
   const calendarUrl = (() => {
     const schedule = getEventSchedule() || {};
@@ -1154,6 +1154,10 @@ const DynamicForm = () => {
                   base={payableTotal}
                   fees={DEFAULT_FEES}
                   maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
+                  maxCardInstallments={cardMaxInstallments}
+                  showPix={pixEnabled}
+                  showCard={cardEnabled}
+                  showBoleto={boletoEnabled}
                 />
               </div>
             ) : currentStep.kind === 'payment' ? (
@@ -1175,7 +1179,12 @@ const DynamicForm = () => {
                   </p>
                   <p className="payment-heading fw-bold mt-4 mb-2">{t('form.dynamic.choosePaymentHeading')}</p>
                   <div className="payment-grid">
-                    {PAYMENT_OPTIONS.filter((option) => option.key !== 'ticket' || boletoEnabled).map((option) => {
+                    {PAYMENT_OPTIONS.filter((option) => {
+                      if (option.key === 'ticket') return boletoEnabled;
+                      if (option.key === 'pix') return pixEnabled;
+                      if (option.key === 'creditCard') return cardEnabled;
+                      return true;
+                    }).map((option) => {
                       const active = paymentMethod === option.key;
                       return (
                         <button

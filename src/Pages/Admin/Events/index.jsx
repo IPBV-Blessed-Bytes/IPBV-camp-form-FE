@@ -48,6 +48,9 @@ const EMPTY_EVENT = {
   refundDeadlineDays: '',
   boletoEnabled: false,
   boletoMaxInstallments: 5,
+  pixEnabled: true,
+  cardEnabled: true,
+  cardMaxInstallments: 12,
   boletoMinDaysBeforeEvent: '',
   iconKey: '',
   contactMessage: '',
@@ -177,6 +180,9 @@ const AdminEvents = ({ loggedUsername }) => {
       refundDeadlineDays: event.refundDeadlineDays ?? '',
       boletoEnabled: event.boletoEnabled ?? false,
       boletoMaxInstallments: event.boletoMaxInstallments ?? 5,
+      pixEnabled: event.pixEnabled !== false,
+      cardEnabled: event.cardEnabled !== false,
+      cardMaxInstallments: event.cardMaxInstallments ?? 12,
       boletoMinDaysBeforeEvent: event.boletoMinDaysBeforeEvent ?? '',
       iconKey: event.iconKey || '',
       contactMessage: event.contactMessage || '',
@@ -277,6 +283,9 @@ const AdminEvents = ({ loggedUsername }) => {
         draft.refundDeadlineDays === '' || draft.refundDeadlineDays === null ? null : Number(draft.refundDeadlineDays),
       boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
       boletoMaxInstallments: Number(draft.boletoMaxInstallments) || 1,
+      pixEnabled: draft.paymentEnabled ? draft.pixEnabled : false,
+      cardEnabled: draft.paymentEnabled ? draft.cardEnabled : false,
+      cardMaxInstallments: Math.min(12, Math.max(1, Number(draft.cardMaxInstallments) || 12)),
       boletoMinDaysBeforeEvent: draft.boletoMinDaysBeforeEvent ? Number(draft.boletoMinDaysBeforeEvent) : null,
       iconKey: draft.iconKey || null,
       contactMessage: draft.contactMessage.trim() || null,
@@ -989,8 +998,38 @@ const AdminEvents = ({ loggedUsername }) => {
 
               <Form.Check
                 type="switch"
-                id="event-boleto-switch"
+                id="event-pix-switch"
                 className="mt-3"
+                label="Habilitar PIX"
+                checked={draft.pixEnabled}
+                onChange={(e) => handleChange('pixEnabled')(e.target.checked)}
+              />
+
+              <Form.Check
+                type="switch"
+                id="event-card-switch"
+                className="mt-2"
+                label="Habilitar cartão de crédito"
+                checked={draft.cardEnabled}
+                onChange={(e) => handleChange('cardEnabled')(e.target.checked)}
+              />
+              {draft.cardEnabled && (
+                <Form.Group className="mt-2" controlId="event-card-max">
+                  <Form.Label className="mb-1">Cartão: parcelar em até (vezes)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={1}
+                    max={12}
+                    value={draft.cardMaxInstallments}
+                    onChange={(e) => handleChange('cardMaxInstallments')(e.target.value)}
+                  />
+                </Form.Group>
+              )}
+
+              <Form.Check
+                type="switch"
+                id="event-boleto-switch"
+                className="mt-2"
                 label={t('admin.events.boletoSwitch')}
                 checked={draft.boletoEnabled}
                 onChange={(e) => handleChange('boletoEnabled')(e.target.checked)}

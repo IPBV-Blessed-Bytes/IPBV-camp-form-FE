@@ -8,8 +8,19 @@ import './style.scss';
 const formatBRL = (value) =>
   (Number(value) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-const PaymentSimulatorModal = ({ show, onHide, base, fees, maxBoletoInstallments }) => {
+const PaymentSimulatorModal = ({
+  show,
+  onHide,
+  base,
+  fees,
+  maxBoletoInstallments,
+  maxCardInstallments = 12,
+  showPix = true,
+  showCard = true,
+  showBoleto = true,
+}) => {
   const { pix, boleto, card, boletoInstallments } = simulatePayments(base, fees, maxBoletoInstallments);
+  const cardRows = card.slice(0, Math.max(1, maxCardInstallments));
 
   return (
     <CustomModal
@@ -28,27 +39,31 @@ const PaymentSimulatorModal = ({ show, onHide, base, fees, maxBoletoInstallments
         </p>
 
         <div className="fees-simulator__highlights">
-          <div className="fees-simulator__highlight">
-            <span className="fees-simulator__highlight-icon">
-              <Icons typeIcon="cash" iconSize={22} fill="#1a8a45" />
-            </span>
-            <div>
-              <span className="fees-simulator__highlight-label">PIX</span>
-              <span className="fees-simulator__highlight-value">{formatBRL(pix)}</span>
+          {showPix && (
+            <div className="fees-simulator__highlight">
+              <span className="fees-simulator__highlight-icon">
+                <Icons typeIcon="cash" iconSize={22} fill="#1a8a45" />
+              </span>
+              <div>
+                <span className="fees-simulator__highlight-label">PIX</span>
+                <span className="fees-simulator__highlight-value">{formatBRL(pix)}</span>
+              </div>
             </div>
-          </div>
-          <div className="fees-simulator__highlight">
-            <span className="fees-simulator__highlight-icon">
-              <Icons typeIcon="barcode" iconSize={22} fill="#d39e00" />
-            </span>
-            <div>
-              <span className="fees-simulator__highlight-label">Boleto</span>
-              <span className="fees-simulator__highlight-value">{formatBRL(boleto)}</span>
+          )}
+          {showBoleto && (
+            <div className="fees-simulator__highlight">
+              <span className="fees-simulator__highlight-icon">
+                <Icons typeIcon="barcode" iconSize={22} fill="#d39e00" />
+              </span>
+              <div>
+                <span className="fees-simulator__highlight-label">Boleto</span>
+                <span className="fees-simulator__highlight-value">{formatBRL(boleto)}</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {boletoInstallments.length > 0 && (
+        {showBoleto && boletoInstallments.length > 0 && (
           <>
             <h6 className="fees-simulator__card-title">
               <Icons typeIcon="barcode" iconSize={18} fill="#d39e00" /> Boleto parcelado
@@ -76,29 +91,33 @@ const PaymentSimulatorModal = ({ show, onHide, base, fees, maxBoletoInstallments
           </>
         )}
 
-        <h6 className="fees-simulator__card-title">
-          <Icons typeIcon="credit-card" iconSize={18} fill="#007185" /> Cartão de crédito
-        </h6>
-        <div className="fees-simulator__table-wrap">
-          <Table className="fees-simulator__table">
-            <thead>
-              <tr>
-                <th>Parcelas</th>
-                <th>Valor da parcela</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {card.map((row) => (
-                <tr key={row.installments}>
-                  <td>{row.installments}x</td>
-                  <td>{formatBRL(row.perInstallment)}</td>
-                  <td className="fw-bold">{formatBRL(row.total)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+        {showCard && (
+          <>
+            <h6 className="fees-simulator__card-title">
+              <Icons typeIcon="credit-card" iconSize={18} fill="#007185" /> Cartão de crédito
+            </h6>
+            <div className="fees-simulator__table-wrap">
+              <Table className="fees-simulator__table">
+                <thead>
+                  <tr>
+                    <th>Parcelas</th>
+                    <th>Valor da parcela</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cardRows.map((row) => (
+                    <tr key={row.installments}>
+                      <td>{row.installments}x</td>
+                      <td>{formatBRL(row.perInstallment)}</td>
+                      <td className="fw-bold">{formatBRL(row.total)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </>
+        )}
       </div>
     </CustomModal>
   );
@@ -110,6 +129,10 @@ PaymentSimulatorModal.propTypes = {
   base: PropTypes.number,
   fees: PropTypes.object,
   maxBoletoInstallments: PropTypes.number,
+  maxCardInstallments: PropTypes.number,
+  showPix: PropTypes.bool,
+  showCard: PropTypes.bool,
+  showBoleto: PropTypes.bool,
 };
 
 PaymentSimulatorModal.defaultProps = {
