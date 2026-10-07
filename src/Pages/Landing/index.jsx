@@ -185,6 +185,25 @@ const Landing = () => {
           </div>
         </section>
 
+        <section className="storefront__video">
+          <div className="storefront__section-head">
+            <span className="storefront__eyebrow storefront__eyebrow--dark">Depoimentos</span>
+            <h2 className="storefront__section-title">Quem usa, recomenda</h2>
+            <p className="storefront__plans-lede">
+              Veja o que igrejas e organizações dizem sobre o Inscriptio.
+            </p>
+          </div>
+          <div className="storefront__video-frame">
+            <iframe
+              src="https://www.youtube.com/embed/giHDkC0xvRw"
+              title="Depoimentos sobre o Inscriptio"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+        </section>
+
         <section className="storefront__plans" id="planos">
           <div className="storefront__section-head">
             <h2 className="storefront__section-title">{t('site.landing.plans.title')}</h2>
