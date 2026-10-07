@@ -89,7 +89,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery, refundProtectionEnabled, protectionFeeType, protectionFeeAmount } = useEventBranding();
 
   const calendarUrl = (() => {
     const schedule = getEventSchedule() || {};
@@ -161,6 +161,7 @@ const DynamicForm = () => {
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponChecking, setCouponChecking] = useState(false);
+  const [protectionOpted, setProtectionOpted] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
 
   const { data: homeInfo } = useQuery({
@@ -266,6 +267,13 @@ const DynamicForm = () => {
     () => Math.max(0, netGrandTotal - couponDiscount),
     [netGrandTotal, couponDiscount],
   );
+  const protectionPreview = useMemo(() => {
+    if (!refundProtectionEnabled || !protectionFeeAmount || people.length === 0) return 0;
+    if (protectionFeeType === 'VALUE') return people.length * Number(protectionFeeAmount);
+    return finalTotal * (Math.min(Number(protectionFeeAmount), 100) / 100);
+  }, [refundProtectionEnabled, protectionFeeAmount, protectionFeeType, people.length, finalTotal]);
+  const protectionTotal = protectionOpted ? protectionPreview : 0;
+  const payableTotal = useMemo(() => finalTotal + protectionTotal, [finalTotal, protectionTotal]);
 
   const handleApplyCoupon = async () => {
     const code = couponInput.trim();
@@ -546,7 +554,9 @@ const DynamicForm = () => {
       return;
     }
 
-    const registrations = people.map((personAnswers) => ({ answers: personAnswers }));
+    const registrations = people.map((personAnswers) => ({
+      answers: { ...personAnswers, __refundProtection: refundProtectionEnabled && protectionOpted },
+    }));
 
     setSubmitting(true);
     try {
@@ -1085,10 +1095,41 @@ const DynamicForm = () => {
                               )}
                             </div>
                           )}
+                          {refundProtectionEnabled && protectionPreview > 0 && (
+                            <div className="summary-protection mt-3 mb-2 p-3" style={{ border: '1px solid #e6e8eb', borderRadius: '0.5rem' }}>
+                              <div className="fw-bold mb-1">Proteção da Inscrição</div>
+                              <div className="text-secondary small mb-2">
+                                Se não puder comparecer por algum imprevisto, você pode solicitar o reembolso do
+                                ingresso. Adicione por apenas uma fração do ingresso.
+                              </div>
+                              <Form.Check
+                                type="radio"
+                                id="refund-protection-yes"
+                                name="refund-protection"
+                                label={`Garanta seu reembolso por ${formatPrice(protectionPreview)}`}
+                                checked={protectionOpted}
+                                onChange={() => setProtectionOpted(true)}
+                              />
+                              <Form.Check
+                                type="radio"
+                                id="refund-protection-no"
+                                name="refund-protection"
+                                label="Não quero proteger minha inscrição"
+                                checked={!protectionOpted}
+                                onChange={() => setProtectionOpted(false)}
+                              />
+                            </div>
+                          )}
+                          {protectionTotal > 0 && (
+                            <div className="summary-total-package">
+                              <h5 className="summary-total-package-label mb-0">Proteção da inscrição</h5>
+                              <h5 className="mb-0">+{formatPrice(protectionTotal)}</h5>
+                            </div>
+                          )}
                           <div className="packages-horizontal-line-cart"></div>
                           <div className="summary-total-geral mb-3">
                             <h5 className="fw-bold mb-0">{t('form.dynamic.totalColon')}</h5>
-                            <h5 className="fw-bold mb-0">{formatPrice(finalTotal)}</h5>
+                            <h5 className="fw-bold mb-0">{formatPrice(payableTotal)}</h5>
                           </div>
                           <div className="summary-buttons d-grid gap-3">
                             {people.length > 0 && (
@@ -1110,7 +1151,7 @@ const DynamicForm = () => {
                 <PaymentSimulatorModal
                   show={showSimulator}
                   onHide={() => setShowSimulator(false)}
-                  base={finalTotal}
+                  base={payableTotal}
                   fees={DEFAULT_FEES}
                   maxBoletoInstallments={boletoEnabled ? boletoMaxInstallments : 1}
                 />
@@ -1204,7 +1245,7 @@ const DynamicForm = () => {
                   <p className="text-muted mt-4">
                     {t('form.dynamic.registrationsCount', { count: people.length })}
                     {Number(donation) > 0 && t('form.dynamic.plusDonation', { price: formatPrice(Number(donation)) })} · {t('form.dynamic.total')}{' '}
-                    <b>{formatPrice(finalTotal + (Number(donation) || 0))}</b>
+                    <b>{formatPrice(payableTotal + (Number(donation) || 0))}</b>
                   </p>
                 </div>
               </FormStepLayout>

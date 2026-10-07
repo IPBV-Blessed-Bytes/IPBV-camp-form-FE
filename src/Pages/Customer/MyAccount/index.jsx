@@ -26,6 +26,7 @@ import {
   createChangeRequest,
   getMyChangeRequests,
   cancelPendingRegistration,
+  requestRefund,
 } from '@/services/me';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import { printReceipt } from '@/utils/receipt';
@@ -78,6 +79,9 @@ const MyAccount = () => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [cancelTarget, setCancelTarget] = useState(null);
   const [canceling, setCanceling] = useState(false);
+  const [refundTarget, setRefundTarget] = useState(null);
+  const [refundProcessing, setRefundProcessing] = useState(false);
+  const [refundBank, setRefundBank] = useState({});
 
   const fetchData = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -154,6 +158,34 @@ const MyAccount = () => {
       toast.error('Não foi possível cancelar a inscrição.');
     } finally {
       setCanceling(false);
+    }
+  };
+
+  const isBoletoMethod = (method) => method === 'boleto' || method === 'ticket';
+
+  const handleRefund = async () => {
+    if (!refundTarget) return;
+    const boleto = isBoletoMethod(refundTarget.paymentMethod);
+    if (boleto) {
+      const required = ['holderName', 'holderDocument', 'bank', 'branchNumber', 'accountNumber', 'accountCheckDigit'];
+      if (required.some((key) => !refundBank[key])) {
+        toast.error('Preencha os dados bancários para o reembolso do boleto.');
+        return;
+      }
+    }
+    setRefundProcessing(true);
+    try {
+      await requestRefund(
+        refundTarget.id,
+        boleto ? { bankAccount: { ...refundBank, type: refundBank.type || 'checking' } } : {},
+      );
+      toast.success('Reembolso solicitado com sucesso.');
+      setRefundTarget(null);
+      await fetchData();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Não foi possível solicitar o reembolso.');
+    } finally {
+      setRefundProcessing(false);
     }
   };
 
@@ -290,6 +322,17 @@ const MyAccount = () => {
                             <Button variant="outline-teal-blue" onClick={() => printOrderReceipt(r)}>
                               <Icons typeIcon="notebook" iconSize={18} fill="#007185" /> &nbsp;Recibo
                             </Button>
+                            {r.protectionOpted && (
+                              <Button
+                                variant="outline-danger"
+                                onClick={() => {
+                                  setRefundBank({});
+                                  setRefundTarget(r);
+                                }}
+                              >
+                                Solicitar Reembolso
+                              </Button>
+                            )}
                           </div>
                         ) : r.status === 'PENDING_PAYMENT' ? (
                           <div className="d-flex flex-wrap gap-2">
@@ -404,6 +447,90 @@ const MyAccount = () => {
           )}{' '}
           Se quiser participar depois, será necessário fazer uma nova inscrição.
         </Alert>
+      </CustomModal>
+
+      <CustomModal
+        show={Boolean(refundTarget)}
+        onHide={() => (refundProcessing ? null : setRefundTarget(null))}
+        variant="cancel"
+        icon="error"
+        iconFill="#dc3545"
+        title="Solicitar reembolso"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setRefundTarget(null)} disabled={refundProcessing}>
+              Voltar
+            </Button>
+            <SpinnerButton variant="danger" onClick={handleRefund} loading={refundProcessing}>
+              Confirmar reembolso
+            </SpinnerButton>
+          </>
+        }
+      >
+        <p>
+          Você tem <b>reembolso garantido</b> nesta inscrição. Ao confirmar, o estorno será processado{' '}
+          <b>imediatamente</b>. A taxa de proteção não é reembolsável.
+        </p>
+        {refundTarget && isBoletoMethod(refundTarget.paymentMethod) && (
+          <div className="mt-2">
+            <Alert variant="info" className="py-2 small">
+              Como o pagamento foi por boleto, informe a conta para receber o estorno.
+            </Alert>
+            <Row className="g-2">
+              <Col xs={12}>
+                <Form.Control
+                  placeholder="Nome do titular"
+                  value={refundBank.holderName || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, holderName: e.target.value })}
+                />
+              </Col>
+              <Col xs={12}>
+                <Form.Control
+                  placeholder="CPF/CNPJ do titular"
+                  value={refundBank.holderDocument || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, holderDocument: e.target.value })}
+                />
+              </Col>
+              <Col xs={6}>
+                <Form.Control
+                  placeholder="Banco (ex.: 001)"
+                  value={refundBank.bank || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, bank: e.target.value })}
+                />
+              </Col>
+              <Col xs={6}>
+                <Form.Control
+                  placeholder="Agência"
+                  value={refundBank.branchNumber || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, branchNumber: e.target.value })}
+                />
+              </Col>
+              <Col xs={8}>
+                <Form.Control
+                  placeholder="Conta"
+                  value={refundBank.accountNumber || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, accountNumber: e.target.value })}
+                />
+              </Col>
+              <Col xs={4}>
+                <Form.Control
+                  placeholder="Dígito"
+                  value={refundBank.accountCheckDigit || ''}
+                  onChange={(e) => setRefundBank({ ...refundBank, accountCheckDigit: e.target.value })}
+                />
+              </Col>
+              <Col xs={12}>
+                <Form.Select
+                  value={refundBank.type || 'checking'}
+                  onChange={(e) => setRefundBank({ ...refundBank, type: e.target.value })}
+                >
+                  <option value="checking">Conta corrente</option>
+                  <option value="savings">Conta poupança</option>
+                </Form.Select>
+              </Col>
+            </Row>
+          </div>
+        )}
       </CustomModal>
 
       <CustomModal

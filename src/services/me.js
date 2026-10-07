@@ -27,6 +27,11 @@ export const cancelPendingRegistration = async (id) => {
   await authFetcher.delete(`/me/registrations/pending/${id}`);
 };
 
+export const requestRefund = async (id, payload) => {
+  const { data } = await authFetcher.post(`/me/registrations/${id}/refund`, payload || {});
+  return data;
+};
+
 export const getInscriptionDraft = async () => {
   const { data } = await authFetcher.get('/me/inscription-draft');
   if (!data?.draft) return null;

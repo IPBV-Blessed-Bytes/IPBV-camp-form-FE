@@ -42,6 +42,10 @@ const EMPTY_EVENT = {
   agePricingEnabled: false,
   registrationFeeEnabled: false,
   couponCodesEnabled: false,
+  refundProtectionEnabled: false,
+  protectionFeeType: 'PERCENT',
+  protectionFeeAmount: '',
+  refundDeadlineDays: '',
   boletoEnabled: false,
   boletoMaxInstallments: 5,
   boletoMinDaysBeforeEvent: '',
@@ -167,6 +171,10 @@ const AdminEvents = ({ loggedUsername }) => {
       agePricingEnabled: event.agePricingEnabled ?? false,
       registrationFeeEnabled: event.registrationFeeEnabled ?? false,
       couponCodesEnabled: event.couponCodesEnabled ?? false,
+      refundProtectionEnabled: event.refundProtectionEnabled ?? false,
+      protectionFeeType: event.protectionFeeType || 'PERCENT',
+      protectionFeeAmount: event.protectionFeeAmount ?? '',
+      refundDeadlineDays: event.refundDeadlineDays ?? '',
       boletoEnabled: event.boletoEnabled ?? false,
       boletoMaxInstallments: event.boletoMaxInstallments ?? 5,
       boletoMinDaysBeforeEvent: event.boletoMinDaysBeforeEvent ?? '',
@@ -261,6 +269,12 @@ const AdminEvents = ({ loggedUsername }) => {
       agePricingEnabled: draft.paymentEnabled ? draft.agePricingEnabled : false,
       registrationFeeEnabled: draft.paymentEnabled ? draft.registrationFeeEnabled : false,
       couponCodesEnabled: draft.paymentEnabled ? draft.couponCodesEnabled : false,
+      refundProtectionEnabled: draft.paymentEnabled ? draft.refundProtectionEnabled : false,
+      protectionFeeType: draft.protectionFeeType === 'VALUE' ? 'VALUE' : 'PERCENT',
+      protectionFeeAmount:
+        draft.protectionFeeAmount === '' || draft.protectionFeeAmount === null ? null : Number(draft.protectionFeeAmount),
+      refundDeadlineDays:
+        draft.refundDeadlineDays === '' || draft.refundDeadlineDays === null ? null : Number(draft.refundDeadlineDays),
       boletoEnabled: draft.paymentEnabled ? draft.boletoEnabled : false,
       boletoMaxInstallments: Number(draft.boletoMaxInstallments) || 1,
       boletoMinDaysBeforeEvent: draft.boletoMinDaysBeforeEvent ? Number(draft.boletoMinDaysBeforeEvent) : null,
@@ -928,6 +942,50 @@ const AdminEvents = ({ loggedUsername }) => {
               <Form.Text className="text-muted-italic">
                 Permite que o inscrito aplique um código de cupom no formulário. Gerencie os códigos na tela de Cupons.
               </Form.Text>
+
+              <Form.Check
+                type="switch"
+                id="event-refund-protection-switch"
+                className="mt-2"
+                label="Habilitar reembolso garantido"
+                checked={draft.refundProtectionEnabled}
+                onChange={(e) => handleChange('refundProtectionEnabled')(e.target.checked)}
+              />
+              <Form.Text className="text-muted-italic">
+                O inscrito paga uma taxa de proteção no formulário e pode solicitar o reembolso sozinho pela conta dele.
+              </Form.Text>
+
+              {draft.refundProtectionEnabled && (
+                <div className="mt-2 ps-3">
+                  <Form.Label className="small mb-1">Taxa de proteção</Form.Label>
+                  <div className="d-flex gap-2">
+                    <Form.Select
+                      style={{ maxWidth: '150px' }}
+                      value={draft.protectionFeeType}
+                      onChange={(e) => handleChange('protectionFeeType')(e.target.value)}
+                    >
+                      <option value="PERCENT">Percentual (%)</option>
+                      <option value="VALUE">Valor fixo (R$)</option>
+                    </Form.Select>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder={draft.protectionFeeType === 'VALUE' ? 'R$' : '%'}
+                      value={draft.protectionFeeAmount}
+                      onChange={(e) => handleChange('protectionFeeAmount')(e.target.value)}
+                    />
+                  </div>
+                  <Form.Label className="small mb-1 mt-2">Prazo p/ solicitar reembolso (dias antes do início)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    placeholder="Em branco = até a data de início"
+                    value={draft.refundDeadlineDays}
+                    onChange={(e) => handleChange('refundDeadlineDays')(e.target.value)}
+                  />
+                </div>
+              )}
 
               <Form.Check
                 type="switch"
