@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 const CoreTable = ({ getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, showFilters, selectedRows }) => {
   return (
     <div className="admin-table-card">
-      <div className="table-responsive">
+      <div className="table-responsive" tabIndex={0}>
         <Table striped bordered hover {...getTableProps()} className="custom-table">
           <thead>
             {headerGroups.map((headerGroup) => {

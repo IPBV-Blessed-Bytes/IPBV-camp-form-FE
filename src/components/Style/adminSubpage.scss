@@ -191,6 +191,10 @@ $admin-accents: (
   .table-responsive:not(.ride) {
     height: auto;
     max-height: calc(100vh - 230px);
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
   }
 
   .custom-table {
