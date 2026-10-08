@@ -32,7 +32,7 @@ import StatCards from '@/components/Admin/StatCards';
 import SearchBox from '@/components/Admin/SearchBox';
 import FilterChips from '@/components/Admin/FilterChips';
 
-const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '', stock: '', price: '' };
+const emptyForm = { name: '', description: '', packageCategoryId: '', active: true, iconKey: '', stock: '', price: '', tracksStock: false };
 
 const PRODUCT_ICONS = [
   'cart', 'tent', 'camp', 'food', 'bus', 'ride', 'bible', 'music', 'wristband',
@@ -204,6 +204,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       iconKey: product.iconKey || '',
       stock: product.initialStock ?? '',
       price: product.price ?? '',
+      tracksStock: product.initialStock != null,
     });
     const initial = {};
     lots.forEach((lot) => {
@@ -239,7 +240,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
     packageCategoryId: Number(formData.packageCategoryId),
     active: formData.active,
     iconKey: formData.iconKey || '',
-    stock: formData.stock === '' ? null : Number(formData.stock),
+    stock: formData.tracksStock && formData.stock !== '' ? Number(formData.stock) : null,
     price: formData.price === '' || formData.price === null ? null : Number(formData.price),
   });
 
@@ -589,28 +590,39 @@ const AdminProductsManagement = ({ loggedUsername }) => {
               )}
             </Form.Group>
 
-            <Form.Group controlId="formStock" className="mt-3">
-              <Form.Label>
-                <b>{t('admin.products.formStock')}</b>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min={0}
-                placeholder={t('admin.products.stockPlaceholder')}
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+            <Form.Group controlId="formTracksStock" className="mt-3">
+              <Form.Check
+                type="switch"
+                label={t('admin.products.tracksStock', 'Controlar estoque deste produto')}
+                checked={!!formData.tracksStock}
+                onChange={(e) => setFormData({ ...formData, tracksStock: e.target.checked })}
               />
-              <Form.Text className="text-muted">
-                {t('admin.products.stockHint')}
-                {editingProduct && editingProduct.stock != null && (
-                  <Trans
-                    i18nKey="admin.products.stockToday"
-                    values={{ stock: editingProduct.stock, initial: editingProduct.initialStock }}
-                    components={{ b: <b /> }}
-                  />
-                )}
-              </Form.Text>
             </Form.Group>
+
+            {formData.tracksStock && (
+              <Form.Group controlId="formStock" className="mt-3">
+                <Form.Label>
+                  <b>{t('admin.products.formStock')}</b>
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  placeholder={t('admin.products.stockPlaceholder')}
+                  value={formData.stock}
+                  onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                />
+                <Form.Text className="text-muted">
+                  {t('admin.products.stockHint')}
+                  {editingProduct && editingProduct.stock != null && (
+                    <Trans
+                      i18nKey="admin.products.stockToday"
+                      values={{ stock: editingProduct.stock, initial: editingProduct.initialStock }}
+                      components={{ b: <b /> }}
+                    />
+                  )}
+                </Form.Text>
+              </Form.Group>
+            )}
 
             <Form.Group controlId="formSinglePrice" className="mt-3">
               <Form.Label>
