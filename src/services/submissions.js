@@ -5,6 +5,11 @@ export const createSubmission = async (payload) => {
   return data;
 };
 
+export const createManualSubmission = async (payload) => {
+  const { data } = await fetcher.post('/submissions/manual', payload);
+  return data;
+};
+
 export const listSubmissions = async () => {
   const { data } = await fetcher.get('/submissions');
   return data?.submissions || [];

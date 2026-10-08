@@ -1,5 +1,101 @@
 @use '../../../styles/Variables.scss' as *;
+
+.camper-form-modal {
+  .modal-content {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .modal-body {
+    background-color: $white;
+    padding: 1.75rem 1.5rem 0.5rem;
+  }
+
+  .modal-footer {
+    background-color: $white;
+    border-top: 1px solid $gray-100;
+    padding: 1.15rem 1.5rem;
+  }
+
+  .form-label {
+    color: $gray-800;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 1rem;
+    padding: 0.6rem 0.85rem;
+    background-color: $white;
+    border: 1px solid $gray-300;
+    border-radius: 8px;
+    color: $gray-900;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover:not(:disabled) {
+      border-color: $gray-400;
+    }
+
+    &:focus {
+      background-color: $white;
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
+      outline: none;
+    }
+
+    &:disabled {
+      background-color: $gray-50;
+      color: $gray-500;
+    }
+  }
+
+  .form-control::placeholder {
+    opacity: 0.5;
+  }
+}
+
 .admin-submissions {
+  &__select-col {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  &__select-head,
+  &__row-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      min-height: auto;
+    }
+
+    .form-check-input {
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+
+  &__new-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    @media (max-width: $lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   &__actions {
     align-items: center;
     display: flex;

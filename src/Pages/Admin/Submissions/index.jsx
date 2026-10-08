@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import useEventSchema from '@/hooks/useEventSchema';
 import { formatValue } from '@/form/dynamic/formatAnswer';
-import { listSubmissions, updateSubmission, deleteSubmission } from '@/services/submissions';
+import { listSubmissions, updateSubmission, deleteSubmission, createManualSubmission } from '@/services/submissions';
 import { listAdminFields, updateSubmissionAdminAnswers } from '@/services/adminFields';
 import { registrationFileUrl } from '@/services/uploads';
 import { getEventSlug } from '@/config/eventScope';
@@ -20,6 +20,9 @@ import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
+import ActionButton from '@/components/Global/ActionButton';
+import AdminToolbar from '@/components/Admin/AdminToolbar';
+import { computeAge } from '@/form/dynamic/packagePricing';
 
 const PAYMENT_STATUS = [
   { value: 'pending', labelKey: 'admin.submissions.statusPending', bg: 'warning', text: 'dark' },
@@ -121,7 +124,6 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const { fields, loading: schemaLoading } = useEventSchema();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(null);
   const [editAnswers, setEditAnswers] = useState({});
   const [editAdminAnswers, setEditAdminAnswers] = useState({});
@@ -131,6 +133,14 @@ const AdminSubmissions = ({ loggedUsername }) => {
   const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState('');
   const [refundTarget, setRefundTarget] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [columnFilters, setColumnFilters] = useState({});
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [newAnswers, setNewAnswers] = useState({});
+  const [newStatus, setNewStatus] = useState('');
+  const [childrenFilter, setChildrenFilter] = useState(false);
 
   const loadSubmissions = async () => {
     setLoading(true);
@@ -250,20 +260,160 @@ const AdminSubmissions = ({ loggedUsername }) => {
   }, [submissions, hasPayment]);
 
   const filteredSubmissions = useMemo(() => {
+    const colValue = (submission, colId) => {
+      if (colId === 'createdAt') return formatDate(submission.createdAt);
+      if (colId === 'userEmail') return submission.userEmail || '';
+      if (colId === 'paymentStatus') return statusLabel(submission.paymentStatus) || submission.paymentStatus || '';
+      if (colId.startsWith('adm-')) {
+        const field = adminFields.find((item) => `adm-${item.key}` === colId);
+        return field ? String(formatValue(field, submission.adminAnswers?.[field.key]) ?? '') : '';
+      }
+      const field = fields.find((item) => item.key === colId);
+      return field ? String(formatValue(field, submission.answers?.[field.key]) ?? '') : '';
+    };
+
     const term = search.trim().toLowerCase();
-    if (!term) return submissions;
+    const activeColFilters = Object.entries(columnFilters).filter(([, value]) => value && value.trim());
     return submissions.filter((submission) => {
-      const haystack = [
-        submission.userEmail || '',
-        ...fields.map((field) => formatValue(field, submission.answers?.[field.key])),
-      ]
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(term);
+      if (childrenFilter) {
+        const age = computeAge(submission.answers?.nascimento);
+        if (age == null || age < 2 || age > 10) return false;
+      }
+      if (term) {
+        const haystack = [
+          submission.userEmail || '',
+          ...fields.map((field) => formatValue(field, submission.answers?.[field.key])),
+        ]
+          .join(' ')
+          .toLowerCase();
+        if (!haystack.includes(term)) return false;
+      }
+      return activeColFilters.every(([colId, value]) => {
+        if (colId === 'paymentStatus') return (submission.paymentStatus || '') === value;
+        return colValue(submission, colId).toLowerCase().includes(value.trim().toLowerCase());
+      });
     });
-  }, [submissions, fields, search]);
+  }, [submissions, fields, adminFields, search, columnFilters, childrenFilter]);
 
   const isLoading = loading || schemaLoading;
+
+  const hasBirthday = fields.some((field) => field.key === 'nascimento');
+
+  const toolsButtons = [
+    {
+      id: 'filters',
+      name: showFilters ? t('admin.submissions.hideFilters') : t('admin.submissions.filter'),
+      onClick: () => setShowFilters((prev) => !prev),
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'filter',
+      fill: '#007185',
+      iconSize: 22,
+    },
+    {
+      id: 'children-filter',
+      name: childrenFilter ? t('admin.submissions.showAll') : t('admin.submissions.childrenFilter'),
+      onClick: () => setChildrenFilter((prev) => !prev),
+      typeButton: childrenFilter ? 'teal-blue' : 'outline-teal-blue',
+      typeIcon: 'family',
+      fill: childrenFilter ? '#ffffff' : '#007185',
+      iconSize: 22,
+      condition: hasBirthday,
+    },
+    {
+      id: 'export',
+      name: t('admin.submissions.exportExcel'),
+      onClick: handleExport,
+      typeButton: 'outline-teal-blue',
+      typeIcon: 'excel',
+      fill: '#007185',
+      iconSize: 22,
+      condition: submissions.length > 0,
+    },
+    {
+      id: 'bulk-delete',
+      name: t('admin.submissions.bulkDelete'),
+      onClick: () => setShowBulkDelete(true),
+      typeButton: 'outline-danger',
+      typeIcon: 'delete',
+      fill: '#dc3545',
+      iconSize: 22,
+      condition: selectedIds.length > 0,
+    },
+    {
+      id: 'new-registration',
+      name: t('admin.submissions.newRegistration'),
+      onClick: () => {
+        setNewAnswers({});
+        setNewStatus('');
+        setShowNew(true);
+      },
+      typeButton: 'teal-blue',
+      typeIcon: 'add-person',
+      fill: '#ffffff',
+      iconSize: 22,
+    },
+  ];
+
+  const filterInput = (colId) => (
+    <Form.Control
+      size="sm"
+      placeholder={t('admin.submissions.filterPlaceholder')}
+      value={columnFilters[colId] || ''}
+      onChange={(event) => setColumnFilters((prev) => ({ ...prev, [colId]: event.target.value }))}
+    />
+  );
+
+  const filterStatusSelect = () => (
+    <Form.Select
+      size="sm"
+      value={columnFilters.paymentStatus || ''}
+      onChange={(event) => setColumnFilters((prev) => ({ ...prev, paymentStatus: event.target.value }))}
+    >
+      <option value="">{t('admin.submissions.filterAll')}</option>
+      {PAYMENT_STATUS.map((s) => (
+        <option key={s.value} value={s.value}>
+          {t(s.labelKey)}
+        </option>
+      ))}
+    </Form.Select>
+  );
+
+  const visibleIds = filteredSubmissions.map((item) => item.id);
+  const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id));
+  const toggleRow = (id) =>
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  const toggleSelectAll = () => setSelectedIds(allSelected ? [] : visibleIds);
+
+  const handleBulkDelete = async () => {
+    setBusy(true);
+    try {
+      await Promise.all(selectedIds.map((id) => deleteSubmission(id)));
+      toast.success(t('admin.submissions.toastDeleteSuccess'));
+      setSelectedIds([]);
+      setShowBulkDelete(false);
+      await loadSubmissions();
+    } catch {
+      toast.error(t('admin.submissions.toastDeleteError'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleCreateManual = async () => {
+    setBusy(true);
+    try {
+      const payload = { answers: newAnswers };
+      if (hasPayment || newStatus) payload.paymentStatus = newStatus || null;
+      await createManualSubmission(payload);
+      toast.success(t('admin.submissions.toastCreateSuccess'));
+      setShowNew(false);
+      await loadSubmissions();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || t('admin.submissions.toastCreateError'));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <div className="admin-subpage admin-submissions">
@@ -275,13 +425,12 @@ const AdminSubmissions = ({ loggedUsername }) => {
       />
 
       <div className="admin-submissions__content">
+        <AdminToolbar buttons={toolsButtons} />
+
         <StatCards items={statItems} />
 
         <div className="admin-submissions__toolbar">
           <SearchBox value={search} onChange={setSearch} placeholder={t('admin.submissions.searchPlaceholder')} />
-          <Button variant="teal-blue" onClick={handleExport} disabled={!submissions.length}>
-            {t('admin.submissions.exportExcel')}
-          </Button>
         </div>
 
         {isLoading ? (
@@ -292,26 +441,86 @@ const AdminSubmissions = ({ loggedUsername }) => {
           <p className="admin-submissions__empty">{t('admin.submissions.emptyFiltered')}</p>
         ) : (
           <div className="admin-submissions__table-wrap">
-            <Table hover responsive className="admin-submissions__table">
+            <Table striped bordered hover responsive className="admin-submissions__table custom-table">
               <thead>
                 <tr>
-                  <th>{t('admin.submissions.colData')}</th>
-                  <th>{t('admin.submissions.colEmail')}</th>
-                  {hasPayment && <th>{t('admin.submissions.colStatus')}</th>}
+                  <th className="table-cells-header admin-submissions__select-col">
+                    <div className="admin-submissions__select-head">
+                      <Form.Check
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        aria-label={t('admin.submissions.selectAll')}
+                      />
+                      <span>
+                        {selectedIds.length > 0
+                          ? t('admin.submissions.selectedCount', { count: selectedIds.length })
+                          : t('admin.submissions.selectAll')}
+                      </span>
+                    </div>
+                  </th>
+                  <th className="table-cells-header">{t('admin.submissions.colOrder')}</th>
+                  <th className="table-cells-header">{t('admin.submissions.colData')}</th>
+                  <th className="table-cells-header">{t('admin.submissions.colEmail')}</th>
+                  {hasPayment && <th className="table-cells-header">{t('admin.submissions.colStatus')}</th>}
                   {fields.map((field) => (
-                    <th key={field.key}>{field.label}</th>
+                    <th className="table-cells-header" key={field.key}>{field.label}</th>
                   ))}
                   {adminFields.map((field) => (
-                    <th key={`adm-${field.key}`} className="admin-submissions__admin-col">
+                    <th key={`adm-${field.key}`} className="table-cells-header admin-submissions__admin-col">
                       {field.label}
                     </th>
                   ))}
-                  <th>{t('admin.submissions.colActions')}</th>
                 </tr>
+                {showFilters && (
+                  <tr className="filter">
+                    <th />
+                    <th />
+                    <th>{filterInput('createdAt')}</th>
+                    <th>{filterInput('userEmail')}</th>
+                    {hasPayment && <th>{filterStatusSelect()}</th>}
+                    {fields.map((field) => (
+                      <th key={field.key}>{filterInput(field.key)}</th>
+                    ))}
+                    {adminFields.map((field) => (
+                      <th key={`adm-${field.key}`}>{filterInput(`adm-${field.key}`)}</th>
+                    ))}
+                  </tr>
+                )}
               </thead>
               <tbody>
-                {filteredSubmissions.map((submission) => (
-                  <tr key={submission.id}>
+                {filteredSubmissions.map((submission, index) => (
+                  <tr key={submission.id} className={selectedIds.includes(submission.id) ? 'selected-row' : ''}>
+                    <td className="admin-submissions__select-col">
+                      <div className="admin-submissions__row-head">
+                        <Form.Check
+                          type="checkbox"
+                          checked={selectedIds.includes(submission.id)}
+                          onChange={() => toggleRow(submission.id)}
+                          aria-label={`${index + 1}`}
+                        />
+                        <div className="admin-submissions__actions table-action-cell">
+                          <ActionButton
+                            action="edit"
+                            title={t('admin.submissions.actionEdit')}
+                            onClick={() => openEdit(submission)}
+                          />
+                          <ActionButton
+                            action="delete"
+                            title={t('admin.submissions.actionDelete')}
+                            onClick={() => setToDelete(submission)}
+                          />
+                          {submission.paymentStatus === 'paid' && Number(submission.totalCents) > 0 && (
+                            <ActionButton
+                              action="refund"
+                              title={t('admin.submissions.actionRefund')}
+                              onClick={() => setRefundTarget(submission)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td>{index + 1}</td>
                     <td>{formatDate(submission.createdAt)}</td>
                     <td>{submission.userEmail || '—'}</td>
                     {hasPayment && (
@@ -336,24 +545,6 @@ const AdminSubmissions = ({ loggedUsername }) => {
                         {formatValue(field, submission.adminAnswers?.[field.key])}
                       </td>
                     ))}
-                    <td>
-                      <div className="admin-submissions__actions">
-                        <Button size="sm" variant="outline-teal-blue" onClick={() => setSelected(submission)}>
-                          {t('admin.submissions.actionDetails')}
-                        </Button>
-                        <Button size="sm" variant="outline-success" onClick={() => openEdit(submission)}>
-                          {t('admin.submissions.actionEdit')}
-                        </Button>
-                        <Button size="sm" variant="outline-danger" onClick={() => setToDelete(submission)}>
-                          {t('admin.submissions.actionDelete')}
-                        </Button>
-                        {submission.paymentStatus === 'paid' && Number(submission.totalCents) > 0 && (
-                          <Button size="sm" variant="outline-warning" onClick={() => setRefundTarget(submission)}>
-                            {t('admin.submissions.actionRefund')}
-                          </Button>
-                        )}
-                      </div>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -363,47 +554,6 @@ const AdminSubmissions = ({ loggedUsername }) => {
       </div>
 
       <CustomModal
-        show={Boolean(selected)}
-        onHide={() => setSelected(null)}
-        variant="info"
-        title={t('admin.submissions.detailTitle')}
-        icon="add-person"
-      >
-        {selected && (
-          <div className="admin-submissions__detail">
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span className="fw-bold">{t('admin.submissions.colData')}</span>
-              <span>{formatDate(selected.createdAt)}</span>
-            </div>
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span className="fw-bold">{t('admin.submissions.colEmail')}</span>
-              <span>{selected.userEmail || '—'}</span>
-            </div>
-            {hasPayment && (
-              <div className="d-flex justify-content-between border-bottom py-2">
-                <span className="fw-bold">{t('admin.submissions.paymentStatus')}</span>
-                <span>{statusLabel(selected.paymentStatus) || selected.paymentStatus || '—'}</span>
-              </div>
-            )}
-            {fields.map((field) => (
-              <div key={field.key} className="d-flex justify-content-between border-bottom py-2">
-                <span className="fw-bold">{field.label}</span>
-                <span>{renderFieldValue(field, selected.answers?.[field.key], t)}</span>
-              </div>
-            ))}
-            {adminFields.map((field) => (
-              <div key={`adm-${field.key}`} className="d-flex justify-content-between border-bottom py-2">
-                <span className="fw-bold">
-                  {field.label} <span className="admin-submissions__admin-tag">{t('admin.submissions.adminTag')}</span>
-                </span>
-                <span>{formatValue(field, selected.adminAnswers?.[field.key])}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </CustomModal>
-
-      <CustomModal
         show={Boolean(editing)}
         onHide={() => setEditing(null)}
         variant="confirm"
@@ -411,6 +561,8 @@ const AdminSubmissions = ({ loggedUsername }) => {
         iconFill="#057c05"
         title={t('admin.submissions.editTitle')}
         centered={false}
+        size="xl"
+        dialogClassName="camper-form-modal"
         footer={
           <>
             <Button variant="secondary" onClick={() => setEditing(null)} disabled={busy}>
@@ -423,50 +575,54 @@ const AdminSubmissions = ({ loggedUsername }) => {
         }
       >
         {editing && (
-          <Form className="admin-submissions__edit">
-            {hasPayment && (
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <b>{t('admin.submissions.paymentStatus')}</b>
-                </Form.Label>
-                <Form.Select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
-                  <option value="">—</option>
-                  {PAYMENT_STATUS.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {t(s.labelKey)}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            )}
-            {fields.map((field) => (
-              <Form.Group key={field.key} className="mb-3">
-                <Form.Label>
-                  <b>{field.label}</b>
-                  {field.required && <span className="text-danger"> *</span>}
-                </Form.Label>
-                <EditField
-                  field={field}
-                  value={editAnswers[field.key]}
-                  onChange={(value) => handleEditChange(field.key, value)}
-                />
-              </Form.Group>
-            ))}
+          <Form>
+            <div className="admin-submissions__new-grid">
+              {hasPayment && (
+                <Form.Group>
+                  <Form.Label>
+                    <b>{t('admin.submissions.paymentStatus')}</b>
+                  </Form.Label>
+                  <Form.Select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                    <option value="">—</option>
+                    {PAYMENT_STATUS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {t(s.labelKey)}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              )}
+              {fields.map((field) => (
+                <Form.Group key={field.key}>
+                  <Form.Label>
+                    <b>{field.label}</b>
+                    {field.required && <span className="text-danger"> *</span>}
+                  </Form.Label>
+                  <EditField
+                    field={field}
+                    value={editAnswers[field.key]}
+                    onChange={(value) => handleEditChange(field.key, value)}
+                  />
+                </Form.Group>
+              ))}
+            </div>
             {adminFields.length > 0 && (
               <div className="admin-submissions__admin-section">
                 <p className="admin-submissions__admin-section-title">{t('admin.submissions.adminFields')}</p>
-                {adminFields.map((field) => (
-                  <Form.Group key={`adm-${field.key}`} className="mb-3">
-                    <Form.Label>
-                      <b>{field.label}</b>
-                    </Form.Label>
-                    <EditField
-                      field={field}
-                      value={editAdminAnswers[field.key]}
-                      onChange={(value) => handleAdminEditChange(field.key, value)}
-                    />
-                  </Form.Group>
-                ))}
+                <div className="admin-submissions__new-grid">
+                  {adminFields.map((field) => (
+                    <Form.Group key={`adm-${field.key}`}>
+                      <Form.Label>
+                        <b>{field.label}</b>
+                      </Form.Label>
+                      <EditField
+                        field={field}
+                        value={editAdminAnswers[field.key]}
+                        onChange={(value) => handleAdminEditChange(field.key, value)}
+                      />
+                    </Form.Group>
+                  ))}
+                </div>
               </div>
             )}
           </Form>
@@ -492,6 +648,78 @@ const AdminSubmissions = ({ loggedUsername }) => {
         {t('admin.submissions.deleteConfirm', {
           suffix: toDelete?.userEmail ? ` (${toDelete.userEmail})` : '',
         })}
+      </CustomModal>
+
+      <CustomModal
+        show={showBulkDelete}
+        onHide={() => setShowBulkDelete(false)}
+        variant="cancel"
+        title={t('admin.submissions.deleteTitle')}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowBulkDelete(false)} disabled={busy}>
+              {t('admin.submissions.cancel')}
+            </Button>
+            <SpinnerButton variant="danger" onClick={handleBulkDelete} loading={busy}>
+              {t('admin.submissions.bulkDelete')}
+            </SpinnerButton>
+          </>
+        }
+      >
+        {t('admin.submissions.deleteConfirm', { suffix: ` (${selectedIds.length})` })}
+      </CustomModal>
+
+      <CustomModal
+        show={showNew}
+        onHide={() => setShowNew(false)}
+        variant="confirm"
+        icon="plus"
+        iconFill="#057c05"
+        title={t('admin.submissions.newRegistration')}
+        centered={false}
+        size="xl"
+        dialogClassName="camper-form-modal"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowNew(false)} disabled={busy}>
+              {t('admin.submissions.cancel')}
+            </Button>
+            <SpinnerButton variant="confirm" onClick={handleCreateManual} loading={busy}>
+              {t('admin.submissions.create')}
+            </SpinnerButton>
+          </>
+        }
+      >
+        <Form className="admin-submissions__new-grid">
+          {hasPayment && (
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>{t('admin.submissions.paymentStatus')}</b>
+              </Form.Label>
+              <Form.Select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+                <option value="">—</option>
+                {PAYMENT_STATUS.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {t(s.labelKey)}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          )}
+          {fields.map((field) => (
+            <Form.Group key={field.key} className="mb-3">
+              <Form.Label>
+                <b>{field.label}</b>
+                {field.required && <span className="text-danger"> *</span>}
+              </Form.Label>
+              <EditField
+                field={field}
+                value={newAnswers[field.key]}
+                onChange={(value) => setNewAnswers((prev) => ({ ...prev, [field.key]: value }))}
+              />
+            </Form.Group>
+          ))}
+        </Form>
       </CustomModal>
 
       <RefundModal

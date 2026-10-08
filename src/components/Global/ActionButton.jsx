@@ -4,6 +4,7 @@ import Icons from '@/components/Global/Icons';
 import './ActionButton.scss';
 
 const ACTIONS = {
+  details: { color: '#155a9b', icon: 'simple-info' },
   edit: { color: '#0c9183', icon: 'edit', stroke: true },
   delete: { color: '#dc3545', icon: 'delete' },
   refund: { color: '#d69300', icon: 'money' },
@@ -33,7 +34,7 @@ const ActionButton = ({ action, typeIcon, iconSize, onClick, disabled, title, la
 };
 
 ActionButton.propTypes = {
-  action: PropTypes.oneOf(['edit', 'delete', 'refund', 'restore', 'add', 'reissue']).isRequired,
+  action: PropTypes.oneOf(['details', 'edit', 'delete', 'refund', 'restore', 'add', 'reissue']).isRequired,
   typeIcon: PropTypes.string,
   iconSize: PropTypes.number,
   onClick: PropTypes.func,
