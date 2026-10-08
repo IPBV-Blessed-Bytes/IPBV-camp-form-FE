@@ -21,16 +21,8 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
   const { isLoggedIn, user } = useAuth();
   const displayName = typeof user === 'string' ? user.split('@')[0] : '';
   const formState = useFormState({ optional: true });
-  const {
-    backStepFlag,
-    formSubmitted,
-    formValues,
-    goToStep,
-    handlePreFill,
-    hasFood,
-    highestStepReached,
-    steps,
-  } = formState ?? {};
+  const { backStepFlag, formSubmitted, formValues, goToStep, handlePreFill, hasFood, highestStepReached, steps } =
+    formState ?? {};
 
   const handleStepChange = (newStep) => {
     if (location.pathname === '/sucesso') {
@@ -56,7 +48,7 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
     <header className="form__header">
       <Container>
         <div className="form__header__left">
-          <Button type="button" variant="" className="header-back-link" onClick={() => navigate('/')}>
+          <Button type="button" variant="" className="header-back-link d-lg-inline-block d-none" onClick={() => navigate('/')}>
             <Icons typeIcon="arrow-left" iconSize={16} fill="#ffffff" /> Área Institucional
           </Button>
 
@@ -78,17 +70,37 @@ const Header = ({ showNavMenu = false, showLogin = true }) => {
         </div>
 
         <div className="form__header__right">
-          {showLogin && (
-            isLoggedIn ? (
-              <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/minha-conta'); scrollTop(); }}>
-                Bem-vindo, {displayName}. <br/><span>Entrar na Minha conta</span>
+          <Button type="button" variant="" className="header-back-link d-lg-none" onClick={() => navigate('/')}>
+            <Icons typeIcon="arrow-left" iconSize={16} fill="#ffffff" /> Área Institucional
+          </Button>
+
+          {showLogin &&
+            (isLoggedIn ? (
+              <Button
+                type="button"
+                variant=""
+                className="header-login-link"
+                onClick={() => {
+                  navigate('/minha-conta');
+                  scrollTop();
+                }}
+              >
+                Bem-vindo, {displayName}. <br />
+                <span>Entrar na Minha conta</span>
               </Button>
             ) : (
-              <Button type="button" variant="" className="header-login-link" onClick={() => { navigate('/entrar'); scrollTop(); }}>
+              <Button
+                type="button"
+                variant=""
+                className="header-login-link"
+                onClick={() => {
+                  navigate('/entrar');
+                  scrollTop();
+                }}
+              >
                 Já tem cadastro? <span>Faça seu login</span>
               </Button>
-            )
-          )}
+            ))}
 
           {showCartButton && (
             <Button
