@@ -6,6 +6,8 @@ import { cpf } from 'cpf-cnpj-validator';
 
 import { personalInformationSchema } from '@/form/validations/schema';
 import { checkCoupon } from '@/services/coupons';
+import { getPreSaleByCpf } from '@/services/campers';
+import { setPreSaleAmount } from '@/utils/preSale';
 import { useFormState } from '@/contexts/FormStateContext';
 import FormStepLayout from '@/components/Global/FormStepLayout';
 
@@ -66,6 +68,13 @@ const PersonalData = () => {
       try {
         const data = await checkCoupon({ cpf: values.cpf, birthday: values.birthday });
         handleDiscountChange?.(data.discount, currentFormIndex);
+
+        try {
+          const preSale = await getPreSaleByCpf(values.cpf);
+          setPreSaleAmount(values.cpf, preSale?.preSale ? preSale.prePaidAmount : '');
+        } catch (preSaleError) {
+          console.error('Erro ao verificar pré-venda:', preSaleError);
+        }
 
         nextStep();
         updateForm(values);

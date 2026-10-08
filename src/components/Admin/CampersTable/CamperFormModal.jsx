@@ -34,6 +34,14 @@ const CamperFormModal = ({
 
   const handleSubmit = async () => {
     setFormSubmitted(true);
+    if (!isEdit && formData.preSale) {
+      const name = formData?.personalInformation?.name?.trim();
+      const cpf = formData?.personalInformation?.cpf?.trim();
+      const amount = String(formData?.prePaidAmount ?? '').trim();
+      if (!name || !cpf || !amount) {
+        return;
+      }
+    }
     await onSubmit(formData);
   };
 
@@ -60,16 +68,71 @@ const CamperFormModal = ({
       }
     >
       <Form>
-        <Columns
-          editFormData={isEdit ? formData : undefined}
-          addFormData={isEdit ? undefined : formData}
-          handleFormChange={handleChange}
-          formSubmitted={formSubmitted}
-          currentDate={currentDate}
-          editForm={isEdit}
-          addForm={!isEdit}
-          catalog={catalog}
-        />
+        {!isEdit && (
+          <Form.Group className="mb-3">
+            <Form.Check
+              type="switch"
+              id="preSaleSwitch"
+              label="Inscrição de pré-venda (lote 0) — informar apenas nome, CPF e valor pago"
+              checked={!!formData.preSale}
+              onChange={(e) => setFormData((prev) => ({ ...prev, preSale: e.target.checked }))}
+            />
+          </Form.Group>
+        )}
+        {!isEdit && formData.preSale ? (
+          <>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Nome:</b>
+              </Form.Label>
+              <Form.Control
+                name="personalInformation.name"
+                value={formData?.personalInformation?.name || ''}
+                onChange={handleChange}
+                isInvalid={formSubmitted && !formData?.personalInformation?.name?.trim()}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>CPF:</b>
+              </Form.Label>
+              <Form.Control
+                name="personalInformation.cpf"
+                value={formData?.personalInformation?.cpf || ''}
+                onChange={handleChange}
+                isInvalid={formSubmitted && !formData?.personalInformation?.cpf?.trim()}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Valor pago na pré-venda (R$):</b>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData?.prePaidAmount || ''}
+                onChange={(e) => setFormData((prev) => ({ ...prev, prePaidAmount: e.target.value, totalPrice: e.target.value }))}
+                isInvalid={formSubmitted && !String(formData?.prePaidAmount ?? '').trim()}
+              />
+              <Form.Text className="text-secondary">
+                Valor já pago na pré-venda. Será deduzido automaticamente quando a pessoa escolher
+                hospedagem e transporte no formulário.
+              </Form.Text>
+            </Form.Group>
+          </>
+        ) : (
+          <Columns
+            editFormData={isEdit ? formData : undefined}
+            addFormData={isEdit ? undefined : formData}
+            handleFormChange={handleChange}
+            formSubmitted={formSubmitted}
+            currentDate={currentDate}
+            editForm={isEdit}
+            addForm={!isEdit}
+            catalog={catalog}
+          />
+        )}
       </Form>
       {isEdit && cpfDigits && (
         <div className="camper-form-qr mt-3">

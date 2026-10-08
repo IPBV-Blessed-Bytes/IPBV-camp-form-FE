@@ -45,6 +45,11 @@ export const getPersonData = async (payload) => {
   return data;
 };
 
+export const getPreSaleByCpf = async (cpf) => {
+  const { data } = await fetcher.get('/camper/pre-sale', { params: { cpf } });
+  return data;
+};
+
 export const saveFinalObservation = async ({ cpf, text }) => {
   const { data } = await fetcher.post('/camper/finalObservation', { cpf, text });
   return data;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { formatBRL } from '@/utils/formatBRL';
+import { getPreSaleFoodCredit } from '@/utils/preSale';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import './style.scss';
@@ -102,6 +103,7 @@ const BeforePayment = () => {
   const getSummaryValues = (formValuesToSummarize) => {
     let totalFinal = 0;
     let totalDiscount = 0;
+    let totalPreSale = 0;
     const userTotals = [];
 
     formValuesToSummarize.forEach((user) => {
@@ -131,14 +133,16 @@ const BeforePayment = () => {
 
       const discountableBase = Math.max(packageTotal - Number(extras), 0);
       const appliedDiscount = Math.min(discountableBase, discount);
-      const finalPrice = packageTotal - appliedDiscount;
+      const preSaleFoodCredit = getPreSaleFoodCredit(user, discounted);
+      const finalPrice = Math.max(packageTotal - appliedDiscount - preSaleFoodCredit, 0);
 
       totalFinal += finalPrice;
       totalDiscount += appliedDiscount;
+      totalPreSale += preSaleFoodCredit;
       userTotals.push({ name: user.personalInformation?.name?.trim() || 'Acampante', total: finalPrice });
     });
 
-    return { totalFinal, totalDiscount, userTotals };
+    return { totalFinal, totalDiscount, totalPreSale, userTotals };
   };
 
   useEffect(() => {
@@ -161,7 +165,7 @@ const BeforePayment = () => {
     fetchProducts();
   }, [validFormValues]);
 
-  const { totalFinal, totalDiscount, userTotals } = getSummaryValues(validFormValues);
+  const { totalFinal, totalDiscount, totalPreSale, userTotals } = getSummaryValues(validFormValues);
 
   const totalGeral = totalFinal;
   const totalWithDonation = totalGeral + donationValue;
@@ -217,6 +221,13 @@ const BeforePayment = () => {
                   <div className="summary-total-package">
                     <h5 className="summary-total-package-label">Desconto:</h5>
                     <h5 className="summary-total-package-value summary-discount-value">-R$ {formatBRL(totalDiscount)}</h5>
+                  </div>
+                )}
+
+                {totalPreSale > 0 && (
+                  <div className="summary-total-package">
+                    <h5 className="summary-total-package-label">Desconto pré-venda:</h5>
+                    <h5 className="summary-total-package-value summary-discount-value">-R$ {formatBRL(totalPreSale)}</h5>
                   </div>
                 )}
 

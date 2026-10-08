@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { formatBRL } from '@/utils/formatBRL';
+import { getPreSaleAmount } from '@/utils/preSale';
+import { getTempData } from '@/utils/formStorage';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
@@ -49,6 +51,9 @@ const Packages = () => {
   const [loading, setLoading] = useState(true);
   const [productsState, setProductsState] = useState([]);
   const [activeLot, setActiveLot] = useState(null);
+
+  const preSaleCpf = getTempData().personalInformation?.cpf || currentFormValues?.personalInformation?.cpf;
+  const isPreSale = getPreSaleAmount(preSaleCpf) > 0;
 
   useEffect(() => {
     const fetchLotsAndProducts = async () => {
@@ -107,6 +112,14 @@ const Packages = () => {
       );
     }
   }, [hasDiscount, discount]);
+
+  useEffect(() => {
+    if (isPreSale) {
+      toast.info(
+        'Como você já fez sua pré inscrição, o valor pago abaterá o valor da alimentação automaticamente do seu pacote.',
+      );
+    }
+  }, [isPreSale]);
 
   const discounted = getDiscountedProducts(age);
   const cartItems = dedupeCart(items);
@@ -192,6 +205,10 @@ const Packages = () => {
   const discountNumeric = Number(discount) || 0;
   const discountableTotal = Math.max(totalBeforeDiscount - storeTotal, 0);
   const finalTotal = Math.max(totalBeforeDiscount - Math.min(discountableTotal, discountNumeric), 0);
+  const hospedagemItem = cartItems.find((i) => i.categoryKey === 'HOSPEDAGEM');
+  const hospedagemDiscounted = hospedagemItem ? discounted.find((p) => p.id === hospedagemItem.id) : null;
+  const preSaleFoodCredit = isPreSale ? Number(hospedagemDiscounted?.foodComponent || 0) : 0;
+  const finalTotalWithPreSale = Math.max(finalTotal - preSaleFoodCredit, 0);
 
   const summaryFor = (key) => cartItems.find((i) => i.categoryKey === key);
 
@@ -233,139 +250,148 @@ const Packages = () => {
       <Row>
         <Col xs={12} xl={8} className="px-0 mb-3 mb-xl-0">
           <>
+            <Card className="mb-3">
+              <Card.Body>
+                <h2 className="packages-page__lot-title">{activeLot?.name}</h2>
+                <Card.Title>Hospedagem</Card.Title>
+                <Card.Text>
+                  Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>. A
+                  hospedagem já contempla alimentação completa!
+                  <em className="discount-description text-success small">
+                    {getCategoryDiscountDescription('HOSPEDAGEM')}
+                  </em>
+                </Card.Text>
+                <ProductList
+                  age={age}
+                  cartKey={cartKey}
+                  categoryKey="HOSPEDAGEM"
+                  products={productsState}
+                  packageCount={packageCount}
+                />
+              </Card.Body>
+            </Card>
+
+            <Card className="mb-3">
+              <Card.Body>
+                <Card.Title>Transporte</Card.Title>
+                <Card.Text>
+                  Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdade total com transporte
+                  próprio. A escolha do transporte é <strong>obrigatória</strong>.
+                  <em className="discount-description text-success small">
+                    {getCategoryDiscountDescription('TRANSPORTE')}
+                  </em>
+                </Card.Text>
+                <ProductList
+                  age={age}
+                  cartKey={cartKey}
+                  categoryKey="TRANSPORTE"
+                  products={productsState}
+                  packageCount={packageCount}
+                />
+              </Card.Body>
+            </Card>
+
+            {hasStoreItems && (
               <Card className="mb-3">
                 <Card.Body>
-                  <h2 className="packages-page__lot-title">{activeLot?.name}</h2>
-                  <Card.Title>Hospedagem</Card.Title>
+                  <Card.Title>Loja</Card.Title>
                   <Card.Text>
-                    Vamos começar a montagem do seu pacote. A escolha da hospedagem é <strong>obrigatória</strong>. A
-                    hospedagem já contempla alimentação completa!
-                    <em className="discount-description text-success small">
-                      {getCategoryDiscountDescription('HOSPEDAGEM')}
-                    </em>
+                    Itens extras da loja IPBV (opcional). Escolha a quantidade de cada item, conforme a disponibilidade.{' '}
+                    <b>
+                      <em>Os itens serão entregues no ato do check-in durante o acampamento.</em>
+                    </b>
                   </Card.Text>
-                  <ProductList
-                    age={age}
-                    cartKey={cartKey}
-                    categoryKey="HOSPEDAGEM"
-                    products={productsState}
-                    packageCount={packageCount}
-                  />
+                  <StoreItemList products={productsState} discounted={discounted} />
                 </Card.Body>
               </Card>
-
-              <Card className="mb-3">
-                <Card.Body>
-                  <Card.Title>Transporte</Card.Title>
-                  <Card.Text>
-                    Temos opções para todos estilos. Vá com o grupo da igreja ou tenha liberdade total com transporte
-                    próprio. A escolha do transporte é <strong>obrigatória</strong>.
-                    <em className="discount-description text-success small">
-                      {getCategoryDiscountDescription('TRANSPORTE')}
-                    </em>
-                  </Card.Text>
-                  <ProductList
-                    age={age}
-                    cartKey={cartKey}
-                    categoryKey="TRANSPORTE"
-                    products={productsState}
-                    packageCount={packageCount}
-                  />
-                </Card.Body>
-              </Card>
-
-              {hasStoreItems && (
-                <Card className="mb-3">
-                  <Card.Body>
-                    <Card.Title>Loja</Card.Title>
-                    <Card.Text>
-                      Itens extras da loja IPBV (opcional). Escolha a quantidade de cada item, conforme a
-                      disponibilidade.{' '}
-                      <b>
-                        <em>Os itens serão entregues no ato do check-in durante o acampamento.</em>
-                      </b>
-                    </Card.Text>
-                    <StoreItemList products={productsState} discounted={discounted} />
-                  </Card.Body>
-                </Card>
-              )}
-            </>
+            )}
+          </>
         </Col>
 
         <Col xs={12} xl={4} className="px-0 ps-xl-3">
-            <Card>
-              <Card.Body>
-                <Card.Title>Resumo do Pacote</Card.Title>
-                <div className="summary">
-                  {['HOSPEDAGEM', 'TRANSPORTE'].map((key) => {
-                    const item = summaryFor(key);
-                    const label = key === 'HOSPEDAGEM' ? 'Hospedagem' : 'Transporte';
-                    return (
-                      <div className="summary__accomodation" key={key}>
-                        <div className="summary__accomodation__label">{label}:</div>
-                        <div className={`summary__accomodation__content ${item ? 'with-border' : 'no-border'}`}>
-                          {item ? (
-                            <>
-                              <div>{item.name}</div>
-                              <div className="summary__accomodation__value">R$ {formatBRL(priceForItem(item))}</div>
-                            </>
-                          ) : (
-                            <small className="text-secondary">Não selecionado</small>
-                          )}
-                        </div>
-                        <div className="packages-horizontal-line-cart"></div>
-                      </div>
-                    );
-                  })}
-
-                  {storeCartItems.length > 0 && (
-                    <div className="summary__accomodation">
-                      <div className="summary__accomodation__label">Loja:</div>
-                      <div className="summary__accomodation__content with-border">
-                        {storeCartItems.map((item) => (
-                          <div key={item.id} className="d-flex justify-content-between">
-                            <div>
-                              {item.name}
-                              {Number(item.quantity) > 1 ? ` (x${item.quantity})` : ''}
-                            </div>
+          <Card>
+            <Card.Body>
+              <Card.Title>Resumo do Pacote</Card.Title>
+              <div className="summary">
+                {['HOSPEDAGEM', 'TRANSPORTE'].map((key) => {
+                  const item = summaryFor(key);
+                  const label = key === 'HOSPEDAGEM' ? 'Hospedagem' : 'Transporte';
+                  return (
+                    <div className="summary__accomodation" key={key}>
+                      <div className="summary__accomodation__label">{label}:</div>
+                      <div className={`summary__accomodation__content ${item ? 'with-border' : 'no-border'}`}>
+                        {item ? (
+                          <>
+                            <div>{item.name}</div>
                             <div className="summary__accomodation__value">R$ {formatBRL(priceForItem(item))}</div>
+                          </>
+                        ) : (
+                          <small className="text-secondary">Não selecionado</small>
+                        )}
+                      </div>
+                      <div className="packages-horizontal-line-cart"></div>
+                    </div>
+                  );
+                })}
+
+                {storeCartItems.length > 0 && (
+                  <div className="summary__accomodation">
+                    <div className="summary__accomodation__label">Loja:</div>
+                    <div className="summary__accomodation__content with-border">
+                      {storeCartItems.map((item) => (
+                        <div key={item.id} className="d-flex justify-content-between">
+                          <div>
+                            {item.name}
+                            {Number(item.quantity) > 1 ? ` (x${item.quantity})` : ''}
                           </div>
-                        ))}
-                      </div>
-                      <div className="packages-horizontal-line-cart"></div>
-                    </div>
-                  )}
-
-                  {hasDiscount && discountNumeric > 0 && (
-                    <div className="summary__discount">
-                      <div className="d-flex justify-content-between">
-                        <div className="d-flex align-items-center gap-1">
-                          <div>Desconto:</div>
-                          <Tips
-                            classNameWrapper="mt-0 mb-1"
-                            placement="top"
-                            typeIcon="info"
-                            size={15}
-                            color={'#7f7878'}
-                            text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
-                          />
+                          <div className="summary__accomodation__value">R$ {formatBRL(priceForItem(item))}</div>
                         </div>
-                        <div className="summary-discount-value">-R$ {formatBRL(discountNumeric)}</div>
-                      </div>
-                      <div className="packages-horizontal-line-cart"></div>
+                      ))}
                     </div>
-                  )}
-
-                  <div className="summary__discount">
-                    <strong className="d-flex justify-content-between">
-                      <div>Total:</div>
-                      <div>R$ {formatBRL(finalTotal)}</div>
-                    </strong>
+                    <div className="packages-horizontal-line-cart"></div>
                   </div>
+                )}
+
+                {hasDiscount && discountNumeric > 0 && (
+                  <div className="summary__discount">
+                    <div className="d-flex justify-content-between text-success">
+                      <div className="d-flex align-items-center gap-1">
+                        <div>Desconto:</div>
+                        <Tips
+                          classNameWrapper="mt-0 mb-1"
+                          placement="top"
+                          typeIcon="info"
+                          size={15}
+                          color={'#1a8a45'}
+                          text="Valor de desconto aplicado diretamente ao CPF do acampante, mesmo que haja mais de um usuário no carrinho."
+                        />
+                      </div>
+                      <div>-R$ {formatBRL(discountNumeric)}</div>
+                    </div>
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
+                )}
+
+                {preSaleFoodCredit > 0 && (
+                  <div className="summary__discount">
+                    <div className="d-flex justify-content-between text-success">
+                      <div>Pago na pré-venda:</div>
+                      <div>-R$ {formatBRL(preSaleFoodCredit)}</div>
+                    </div>
+                    <div className="packages-horizontal-line-cart"></div>
+                  </div>
+                )}
+
+                <div className="summary__discount">
+                  <strong className="d-flex justify-content-between">
+                    <div>Total:</div>
+                    <div>R$ {formatBRL(finalTotalWithPreSale)}</div>
+                  </strong>
                 </div>
-              </Card.Body>
-            </Card>
-          </Col>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
       <Row>

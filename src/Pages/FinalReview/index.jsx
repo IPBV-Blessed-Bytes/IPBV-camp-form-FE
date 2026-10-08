@@ -6,6 +6,7 @@ import FormStepLayout from '@/components/Global/FormStepLayout';
 import { format, isValid } from 'date-fns';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '../Packages/utils/getDiscountedProducts';
+import { getPreSaleFoodCredit } from '@/utils/preSale';
 import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import { saveFinalObservation } from '@/services/campers';
@@ -88,7 +89,8 @@ const FinalReview = () => {
 
   const totalBeforeDiscount = packageOriginalPrice + extraMealsPrice;
   const discountableBase = Math.max(totalBeforeDiscount - extrasPrice, 0);
-  const finalTotal = Math.max(totalBeforeDiscount - Math.min(discountableBase, discountNumeric), 0);
+  const preSaleFoodCredit = getPreSaleFoodCredit(formValues, discountedProducts);
+  const finalTotal = Math.max(totalBeforeDiscount - Math.min(discountableBase, discountNumeric) - preSaleFoodCredit, 0);
 
   return (
     <>
@@ -100,280 +102,283 @@ const FinalReview = () => {
           nextDisabled={!isConfirmed || !isDataAuthorized}
         >
           <Container>
-              <div className="form-review">
-                <Card.Text>Revise os dados do formulário antes de submeter.</Card.Text>
+            <div className="form-review">
+              <Card.Text>Revise os dados do formulário antes de submeter.</Card.Text>
 
-                <Form>
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Nome:</span> <br />
-                        {formValues.personalInformation.name}
-                      </Card.Text>
-                    </Col>
+              <Form>
+                <Row className="row-gap">
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Nome:</span> <br />
+                      {formValues.personalInformation.name}
+                    </Card.Text>
+                  </Col>
 
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Gênero:</span> <br />
-                        {formValues.personalInformation.gender}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Gênero:</span> <br />
+                      {formValues.personalInformation.gender}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
 
-                  <Row className="row-gap">
-                    <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
-                      <Card.Text>
-                        <span className="form-review__section-title">Pacote:</span> <br />
-                        Hospedagem = {formValues.package.accomodation.name}
-                        <br />
-                        Preço = R$ {formatBRL(accomodationPrice)}
-                        <span className="packages-horizontal-line" />
-                        Transporte = {formValues.package.transportation.name}
-                        <br />
-                        Preço = R$ {formatBRL(transportationPrice)}
-                        {!formValues.package.food.id &&
-                          formValues.package.transportation.name &&
-                          (formValues.contact.car === true || formValues.contact.needRide) === true && (
-                            <span className="packages-horizontal-line" />
-                          )}
-                        {formValues.package.food.id && (
-                          <>
-                            <span className="packages-horizontal-line" />
-                            Alimentação = {formValues.package.food.name}
-                            <br />
-                            Preço = R$ {formatBRL(foodPrice)}
-                            {!formValues.extraMeals?.totalPrice && <span className="packages-horizontal-line" />}
-                          </>
+                <Row className="row-gap">
+                  <Col md={formValues.extraMeals?.totalPrice ? 5 : 6} className={'fw-bold'}>
+                    <Card.Text>
+                      <span className="form-review__section-title">Pacote:</span> <br />
+                      Hospedagem = {formValues.package.accomodation.name}
+                      <br />
+                      Preço = R$ {formatBRL(accomodationPrice)}
+                      <span className="packages-horizontal-line" />
+                      Transporte = {formValues.package.transportation.name}
+                      <br />
+                      Preço = R$ {formatBRL(transportationPrice)}
+                      {!formValues.package.food.id &&
+                        formValues.package.transportation.name &&
+                        (formValues.contact.car === true || formValues.contact.needRide) === true && (
+                          <span className="packages-horizontal-line" />
                         )}
-                        {extrasList.map((extra) => (
-                          <span key={extra.id}>
-                            <span className="packages-horizontal-line" />
-                            {extra.category ? `${extra.category} = ` : ''}
-                            {extra.name}
-                            {Number(extra.quantity) > 1 ? ` (x${extra.quantity})` : ''}
-                            <br />
-                            Preço = R$ {formatBRL((Number(getProductPrice(extra.id)) || 0) * (Number(extra.quantity) || 1))}
-                          </span>
-                        ))}
-                      </Card.Text>
-                    </Col>
-                    <Col md={4} className="fw-bold">
-                      {formValues.extraMeals?.someFood && (
-                        <Card.Text>
-                          <span className="form-review__section-title">Refeição Extra:</span>
+                      {formValues.package.food.id && (
+                        <>
+                          <span className="packages-horizontal-line" />
+                          Alimentação = {formValues.package.food.name}
                           <br />
-                          Preço = R$ {formatBRL(extraMealsPrice)}
-                          <div className="packages-horizontal-line-mobile" />
-                        </Card.Text>
+                          Preço = R$ {formatBRL(foodPrice)}
+                          {!formValues.extraMeals?.totalPrice && <span className="packages-horizontal-line" />}
+                        </>
                       )}
-                    </Col>
-
-                    <Col
-                      md={formValues.extraMeals?.totalPrice ? 3 : 6}
-                      className={`fw-bold ${!formValues.package.food.id ? 'mt-3' : ''}`}
-                    >
-                      <Card.Text>
-                        <span className="form-review__section-title">
-                          Valor Total {discountNumeric > 0 ? 'com Desconto' : ''}:
+                      {extrasList.map((extra) => (
+                        <span key={extra.id}>
+                          <span className="packages-horizontal-line" />
+                          {extra.category ? `${extra.category} = ` : ''}
+                          {extra.name}
+                          {Number(extra.quantity) > 1 ? ` (x${extra.quantity})` : ''}
+                          <br />
+                          Preço = R${' '}
+                          {formatBRL((Number(getProductPrice(extra.id)) || 0) * (Number(extra.quantity) || 1))}
                         </span>
+                      ))}
+                    </Card.Text>
+                  </Col>
+                  <Col md={4} className="fw-bold">
+                    {formValues.extraMeals?.someFood && (
+                      <Card.Text>
+                        <span className="form-review__section-title">Refeição Extra:</span>
                         <br />
-                        {discountNumeric > 0 ? (
-                          <>
-                            <em className="text-decoration-line-through text-muted me-2">R$ {formatBRL(totalBeforeDiscount)}</em>
-                            <em className="fw-bold text-success">R$ {formatBRL(finalTotal)}</em>
-                          </>
-                        ) : (
-                          <em className="fw-bold">R$ {formatBRL(finalTotal)}</em>
-                        )}
+                        Preço = R$ {formatBRL(extraMealsPrice)}
+                        <div className="packages-horizontal-line-mobile" />
                       </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
+                    )}
+                  </Col>
 
-                  {(formValues.contact.car === true || formValues.contact.needRide === true) && (
-                    <>
-                      <Row className="row-gap">
-                        {formValues.contact.car === true && (
-                          <>
-                            <Col md={6} className="fw-bold">
-                              <Card.Text>
-                                <span className="form-review__section-title">Vai de carro e pode oferecer carona:</span>{' '}
-                                <br />
-                                {formValues.contact.car === true && 'Sim'}
-                              </Card.Text>
-                            </Col>
+                  <Col
+                    md={formValues.extraMeals?.totalPrice ? 3 : 6}
+                    className={`fw-bold ${!formValues.package.food.id ? 'mt-3' : ''}`}
+                  >
+                    <Card.Text>
+                      <span className="form-review__section-title">
+                        Valor Total {discountNumeric > 0 || preSaleFoodCredit > 0 ? 'com Desconto' : ''}:
+                      </span>
+                      <br />
+                      {discountNumeric > 0 || preSaleFoodCredit > 0 ? (
+                        <>
+                          <em className="text-decoration-line-through text-muted me-2">
+                            R$ {formatBRL(totalBeforeDiscount)}
+                          </em>
+                          <em className="fw-bold text-success">R$ {formatBRL(finalTotal)}</em>
+                        </>
+                      ) : (
+                        <em className="fw-bold">R$ {formatBRL(finalTotal)}</em>
+                      )}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
 
-                            <Col md={6} className="fw-bold">
-                              <Card.Text>
-                                <span className="form-review__section-title">Vagas de Carona:</span> <br />
-                                {formValues.contact.numberVacancies}
-                              </Card.Text>
-                            </Col>
-                          </>
-                        )}
-                        {formValues.contact.needRide === true && (
+                {(formValues.contact.car === true || formValues.contact.needRide === true) && (
+                  <>
+                    <Row className="row-gap">
+                      {formValues.contact.car === true && (
+                        <>
                           <Col md={6} className="fw-bold">
                             <Card.Text>
-                              <span className="form-review__section-title">Precisa de Carona:</span> <br />
-                              {formValues.contact.needRide === true && 'Sim'}
+                              <span className="form-review__section-title">Vai de carro e pode oferecer carona:</span>{' '}
+                              <br />
+                              {formValues.contact.car === true && 'Sim'}
                             </Card.Text>
                           </Col>
-                        )}
-                      </Row>
-                      <span className="packages-horizontal-line" />
-                    </>
-                  )}
 
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Data de Nascimento:</span> <br />
-                        {isValid(new Date(formValues.personalInformation.birthday))
-                          ? format(new Date(formValues.personalInformation.birthday), 'dd/MM/yyyy')
-                          : 'Data inválida'}
-                      </Card.Text>
-                    </Col>
-
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Igreja:</span> <br />
-                        {formValues.contact.church}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
-
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">CPF:</span> <br />
-                        {formValues.personalInformation.cpf}
-                      </Card.Text>
-                    </Col>
-
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">RG:</span> <br />
-                        {formValues.personalInformation.rg}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
-
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Telefone: </span>
-                        <br />
-                        {formValues.contact.cellPhone} - Whatsapp ({formValues.contact.isWhatsApp ? 'Sim' : 'Não'})
-                      </Card.Text>
-                    </Col>
-
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Email: </span>
-                        <br />
-                        {formValues.contact.email}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
-
-                  <Row className="row-gap">
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Alergia: </span>
-                        <br />
-                        {formValues.contact.hasAllergy ? 'Sim -' : 'Não'} {formValues.contact.allergy}
-                      </Card.Text>
-                    </Col>
-
-                    <Col md={6} className="fw-bold">
-                      <Card.Text>
-                        <span className="form-review__section-title">Acompanhantes:</span> <br />
-                        {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
-                      </Card.Text>
-                    </Col>
-                  </Row>
-                  <span className="packages-horizontal-line" />
-
-                  {formValues.personalInformation.legalGuardianName && (
-                    <>
-                      <Row className="row-gap">
-                        <Col md={4} className="fw-bold">
+                          <Col md={6} className="fw-bold">
+                            <Card.Text>
+                              <span className="form-review__section-title">Vagas de Carona:</span> <br />
+                              {formValues.contact.numberVacancies}
+                            </Card.Text>
+                          </Col>
+                        </>
+                      )}
+                      {formValues.contact.needRide === true && (
+                        <Col md={6} className="fw-bold">
                           <Card.Text>
-                            <span className="form-review__section-title">Nome Resp. Legal: </span>
-                            <br />
-                            {formValues.personalInformation.legalGuardianName}
+                            <span className="form-review__section-title">Precisa de Carona:</span> <br />
+                            {formValues.contact.needRide === true && 'Sim'}
                           </Card.Text>
                         </Col>
+                      )}
+                    </Row>
+                    <span className="packages-horizontal-line" />
+                  </>
+                )}
 
-                        <Col md={4} className="fw-bold">
-                          <Card.Text>
-                            <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
-                            {formValues.personalInformation.legalGuardianCpf}
-                          </Card.Text>
-                        </Col>
+                <Row className="row-gap">
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Data de Nascimento:</span> <br />
+                      {isValid(new Date(formValues.personalInformation.birthday))
+                        ? format(new Date(formValues.personalInformation.birthday), 'dd/MM/yyyy')
+                        : 'Data inválida'}
+                    </Card.Text>
+                  </Col>
 
-                        <Col md={4} className="fw-bold">
-                          <Card.Text>
-                            <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
-                            {formValues.personalInformation.legalGuardianCellPhone}
-                          </Card.Text>
-                        </Col>
-                      </Row>
-                      <span className="packages-horizontal-line" />
-                    </>
-                  )}
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Igreja:</span> <br />
+                      {formValues.contact.church}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
 
-                  <Form.Group controlId="finalObservation">
-                    <Form.Label className="form-label-final-observation-text fw-bold">
-                      Deseja enviar alguma observação final sobre a sua inscrição?&nbsp;
-                    </Form.Label>
-                    <Form.Label className="form-label-final-observation-complement fw-bold">
-                      Faremos o máximo para poder lhe ajudar!
-                    </Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      className="mb-2"
-                      rows={3}
-                      placeholder="Digite sua observação (opcional)"
-                      value={observation}
-                      maxLength={300}
-                      onChange={(e) => setObservation(e.target.value)}
-                    />
-                    <Form.Text
-                      className={`d-flex justify-content-end ${isLimitReached ? 'text-danger fw-bold' : 'text-muted'}`}
-                    >
-                      {observation.length}/300 caracteres
-                    </Form.Text>
-                  </Form.Group>
-                  <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
-                    <Form.Check
-                      className="form-review__section-title fw-bold"
-                      type={'checkbox'}
-                      label={'Confirma que os dados foram preenchidos corretamente?'}
-                      id={'confirmData'}
-                      name={'hasCoupon'}
-                      onChange={handleCheckboxChange}
-                      checked={isConfirmed}
-                    />
+                <Row className="row-gap">
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">CPF:</span> <br />
+                      {formValues.personalInformation.cpf}
+                    </Card.Text>
+                  </Col>
 
-                    <Form.Check
-                      className="form-review__section-title fw-bold"
-                      type={'checkbox'}
-                      label={
-                        'Autorizo o armazenamento e uso de meus dados para fins do acampamento. Eles não serão utilizados para nenhuma outra finalidade.'
-                      }
-                      id={'authorizeData'}
-                      onChange={handleAuthorizationChange}
-                      checked={isDataAuthorized}
-                    />
-                  </Form.Group>
-                </Form>
-              </div>
-            </Container>
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">RG:</span> <br />
+                      {formValues.personalInformation.rg}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
+
+                <Row className="row-gap">
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Telefone: </span>
+                      <br />
+                      {formValues.contact.cellPhone} - Whatsapp ({formValues.contact.isWhatsApp ? 'Sim' : 'Não'})
+                    </Card.Text>
+                  </Col>
+
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Email: </span>
+                      <br />
+                      {formValues.contact.email}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
+
+                <Row className="row-gap">
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Alergia: </span>
+                      <br />
+                      {formValues.contact.hasAllergy ? 'Sim -' : 'Não'} {formValues.contact.allergy}
+                    </Card.Text>
+                  </Col>
+
+                  <Col md={6} className="fw-bold">
+                    <Card.Text>
+                      <span className="form-review__section-title">Acompanhantes:</span> <br />
+                      {formValues.contact.hasAggregate ? 'Sim -' : 'Não'} {formValues.contact.aggregate}
+                    </Card.Text>
+                  </Col>
+                </Row>
+                <span className="packages-horizontal-line" />
+
+                {formValues.personalInformation.legalGuardianName && (
+                  <>
+                    <Row className="row-gap">
+                      <Col md={4} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">Nome Resp. Legal: </span>
+                          <br />
+                          {formValues.personalInformation.legalGuardianName}
+                        </Card.Text>
+                      </Col>
+
+                      <Col md={4} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">CPF Resp. Legal:</span> <br />
+                          {formValues.personalInformation.legalGuardianCpf}
+                        </Card.Text>
+                      </Col>
+
+                      <Col md={4} className="fw-bold">
+                        <Card.Text>
+                          <span className="form-review__section-title">Telefone Resp. Legal:</span> <br />
+                          {formValues.personalInformation.legalGuardianCellPhone}
+                        </Card.Text>
+                      </Col>
+                    </Row>
+                    <span className="packages-horizontal-line" />
+                  </>
+                )}
+
+                <Form.Group controlId="finalObservation">
+                  <Form.Label className="form-label-final-observation-text fw-bold">
+                    Deseja enviar alguma observação final sobre a sua inscrição?&nbsp;
+                  </Form.Label>
+                  <Form.Label className="form-label-final-observation-complement fw-bold">
+                    Faremos o máximo para poder lhe ajudar!
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    className="mb-2"
+                    rows={3}
+                    placeholder="Digite sua observação (opcional)"
+                    value={observation}
+                    maxLength={300}
+                    onChange={(e) => setObservation(e.target.value)}
+                  />
+                  <Form.Text
+                    className={`d-flex justify-content-end ${isLimitReached ? 'text-danger fw-bold' : 'text-muted'}`}
+                  >
+                    {observation.length}/300 caracteres
+                  </Form.Text>
+                </Form.Group>
+                <Form.Group className="d-flex justify-content-center flex-column gap-2 mt-4">
+                  <Form.Check
+                    className="form-review__section-title fw-bold"
+                    type={'checkbox'}
+                    label={'Confirma que os dados foram preenchidos corretamente?'}
+                    id={'confirmData'}
+                    name={'hasCoupon'}
+                    onChange={handleCheckboxChange}
+                    checked={isConfirmed}
+                  />
+
+                  <Form.Check
+                    className="form-review__section-title fw-bold"
+                    type={'checkbox'}
+                    label={
+                      'Autorizo o armazenamento e uso de meus dados para fins do acampamento. Eles não serão utilizados para nenhuma outra finalidade.'
+                    }
+                    id={'authorizeData'}
+                    onChange={handleAuthorizationChange}
+                    checked={isDataAuthorized}
+                  />
+                </Form.Group>
+              </Form>
+            </div>
+          </Container>
         </FormStepLayout>
       )}
     </>

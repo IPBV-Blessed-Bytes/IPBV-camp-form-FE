@@ -9,6 +9,7 @@ import { USER_STORAGE_KEY, USER_STORAGE_ROLE } from '@/config';
 import { enumSteps, initialValues } from '@/utils/constants';
 import { isAdminPath, shouldRenderForm } from '@/utils/pathname';
 import { FORM_STORAGE_KEYS, clearInscriptionDraftLocal, clearTempData, getTempData, saveTempData } from '@/utils/formStorage';
+import { getPreSaleAmount } from '@/utils/preSale';
 import { deleteInscriptionDraft } from '@/services/me';
 import { getPackageCount, getTotalRegistrations } from '@/services/packages';
 import { createCheckout } from '@/services/checkout';
@@ -362,7 +363,10 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
           const rawDiscount = Number(discountList[index] || 0);
           const discountableBase = Math.max(subtotal - Number(extrasPrice), 0);
           const appliedDiscount = Math.min(discountableBase, rawDiscount);
-          const totalPrice = subtotal - appliedDiscount;
+          const isPreSale = getPreSaleAmount(form.personalInformation?.cpf) > 0;
+          const accomodationProduct = discountedProducts.find((p) => p.id === form.package?.accomodation?.id);
+          const preSaleFoodCredit = isPreSale ? Number(accomodationProduct?.foodComponent || 0) : 0;
+          const totalPrice = Math.max(subtotal - appliedDiscount - preSaleFoodCredit, 0);
 
           return {
             ...form,

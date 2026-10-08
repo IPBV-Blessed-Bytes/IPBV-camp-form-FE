@@ -4,6 +4,7 @@ import { Button, Card } from 'react-bootstrap';
 import { useCart } from 'react-use-cart';
 import calculateAge from '@/Pages/Packages/utils/calculateAge';
 import getDiscountedProducts from '@/Pages/Packages/utils/getDiscountedProducts';
+import { getPreSaleFoodCredit } from '@/utils/preSale';
 import PropTypes from 'prop-types';
 import Icons from '@/components/Global/Icons';
 import CustomModal from '@/components/Global/CustomModal';
@@ -143,7 +144,8 @@ const Cart = ({
     const nonStore =
       Number(accomodation) + Number(transportation) + Number(food) + (user.package?.food?.id ? 0 : Number(extraMeals));
     const appliedDiscount = Math.min(Math.max(nonStore, 0), Number(discount));
-    const total = Math.max(nonStore + Number(extras) - appliedDiscount, 0);
+    const preSaleFoodCredit = getPreSaleFoodCredit(user, getDiscountedProducts(age));
+    const total = Math.max(nonStore + Number(extras) - appliedDiscount - preSaleFoodCredit, 0);
     return acc + total;
   }, 0);
 

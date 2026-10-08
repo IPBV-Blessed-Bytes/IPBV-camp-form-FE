@@ -34,6 +34,7 @@ const getDiscountedProducts = (ageRaw) => {
     const basePrice = accommodationPrice + foodPrice;
 
     let price = basePrice;
+    let foodComponent = 0;
     let discountDescription = '';
 
     if (foodPrice > 0) {
@@ -43,6 +44,7 @@ const getDiscountedProducts = (ageRaw) => {
       const discountedAccommodation = applyRule(accommodationPrice, accommodationRule);
       const discountedFood = applyRule(foodPrice, foodRule);
       price = discountedAccommodation + discountedFood;
+      foodComponent = Number(discountedFood.toFixed(2));
 
       const parts = [];
       if (discountedAccommodation < accommodationPrice) {
@@ -71,6 +73,7 @@ const getDiscountedProducts = (ageRaw) => {
     return {
       ...product,
       price: Number(price.toFixed(2)),
+      foodComponent,
       discountDescription,
     };
   });

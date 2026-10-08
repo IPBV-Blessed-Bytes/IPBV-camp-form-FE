@@ -45,6 +45,8 @@ const buildAddPayload = (formData, currentDate) => {
       discountValue: '',
     },
     registrationDate: currentDate,
+    preSale: !!formData.preSale,
+    prePaidAmount: formData.preSale ? formData.prePaidAmount || formData.totalPrice || '' : null,
   };
 };
 
