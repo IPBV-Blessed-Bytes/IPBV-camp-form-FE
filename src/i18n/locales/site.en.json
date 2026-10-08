@@ -134,7 +134,7 @@
         "feeTierBetween": "{{percent}}% from {{from}} to {{to}}",
         "feeTierAbove": "{{percent}}% above {{amount}}",
         "freeEventBlurb": "Free event: {{fee}}/event or {{annual}}/year unlimited.*",
-        "freeEventFootnote": "* Churches that have already run a paid event get free events on the basic tier (form, registrations and check-in) <b>at no cost</b> — the prices above unlock the full logistics (rooms, teams, rides, store and finance).",
+        "freeEventFootnote": "Churches that have already run a paid event get free events on the basic tier (form, registrations and check-in) <b>at no cost</b> — the prices above unlock the full logistics (rooms, teams, rides, store and finance).",
         "essencialName": "Essential",
         "essencialTagline": "Form + registrations + check-in. For those who just need to register, receive and control entry.",
         "essencialFeature1": "100% editable form",

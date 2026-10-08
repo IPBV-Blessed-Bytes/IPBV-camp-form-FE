@@ -134,7 +134,7 @@
         "feeTierBetween": "{{percent}}% de {{from}} a {{to}}",
         "feeTierAbove": "{{percent}}% acima de {{amount}}",
         "freeEventBlurb": "Evento gratuito: {{fee}}/evento ou {{annual}}/ano ilimitado.*",
-        "freeEventFootnote": "* Igrejas que já realizaram um evento pago têm os eventos gratuitos no nível básico (formulário, inscrições e check-in) <b>sem custo</b> — os valores acima liberam a logística completa (quartos, times, caronas, loja e financeiro).",
+        "freeEventFootnote": "Igrejas que já realizaram um evento pago têm os eventos gratuitos no nível básico (formulário, inscrições e check-in) <b>sem custo</b> — os valores acima liberam a logística completa (quartos, times, caronas, loja e financeiro).",
         "essencialName": "Essencial",
         "essencialTagline": "Formulário + inscrições + check-in. Pra quem só precisa inscrever, receber e controlar entrada.",
         "essencialFeature1": "Formulário 100% editável",

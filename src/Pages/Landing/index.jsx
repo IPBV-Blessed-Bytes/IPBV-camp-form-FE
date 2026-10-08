@@ -279,17 +279,19 @@ const Landing = () => {
               </div>
             </Col>
           </Row>
-          <div className="storefront__plans-footnote d-flex">
-            <Icons typeIcon="simple-info" iconSize={50} fill="#7f7878" />
-
-            <div>
-              <p className="mb-2">
+          <div className="storefront__plans-note">
+            <p className='align-items-center'>
+              <Icons typeIcon="simple-info" iconSize={18} fill="#007185" />
+              <span>
                 <Trans i18nKey="site.landing.plans.footnote" components={{ b: <b /> }} />
-              </p>
-              <p className="mb-0">
+              </span>
+            </p>
+            <p className='align-items-center'>
+              <Icons typeIcon="checked" iconSize={18} fill="#057c05" />
+              <span>
                 <Trans i18nKey="site.landing.plans.freeEventFootnote" components={{ b: <b /> }} />
-              </p>
-            </div>
+              </span>
+            </p>
           </div>
         </section>
 
