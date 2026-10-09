@@ -36,6 +36,12 @@ const filterWith = (FilterComponent, extraProps = {}) =>
 export const makeDefaultFilter = () => filterWith(ColumnFilter);
 
 const renderOrDash = ({ value }) => value || '-';
+const renderPrice = ({ value }) => {
+  if (value === undefined || value === null || value === '') return '-';
+  const number = Number(value);
+  if (Number.isNaN(number)) return value;
+  return Number.isInteger(number) ? String(number) : number.toFixed(2).replace('.', ',');
+};
 const renderPipedList = ({ value }) => (value ? value.replace(/\|/g, ', ') : '-');
 const renderYesNo = ({ value }) => (value ? 'Sim' : !value ? 'Não' : '-');
 
@@ -95,16 +101,14 @@ export const buildCampersColumns = ({
               className="table-checkbox"
               type="checkbox"
               onChange={handleSelectAll}
-              checked={
-                selectedRows.length > 0 && selectedRows.length === (rowsRef?.current?.length || 0)
-              }
+              checked={selectedRows.length > 0 && selectedRows.length === (rowsRef?.current?.length || 0)}
             />
             &nbsp;
             {selectedRows.length === 1
               ? `${selectedRows.length} selecionado`
               : selectedRows.length > 1
-              ? `${selectedRows.length} selecionados`
-              : 'Selecionar Todos'}
+                ? `${selectedRows.length} selecionados`
+                : 'Selecionar Todos'}
           </span>
         </div>
       ),
@@ -142,10 +146,10 @@ export const buildCampersColumns = ({
           row.package.accomodationName === 'Colegio Camping'
             ? 'COLÉGIO'
             : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
-            ? 'SEMINÁRIO'
-            : row.package.accomodationName === 'Externo'
-            ? 'EXTERNO'
-            : ''
+              ? 'SEMINÁRIO'
+              : row.package.accomodationName === 'Externo'
+                ? 'EXTERNO'
+                : ''
         } ${
           row.package.transportationName === 'Com Ônibus' ||
           row.package.transportationName === 'Com Onibus' ||
@@ -153,8 +157,8 @@ export const buildCampersColumns = ({
           row.package.transportationName === 'Onibus Equipe'
             ? 'COM ÔNIBUS'
             : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
-            ? 'SEM ÔNIBUS'
-            : ''
+              ? 'SEM ÔNIBUS'
+              : ''
         }`,
       Filter: textFilter,
       sortType: 'alphanumeric',
@@ -208,15 +212,15 @@ export const buildCampersColumns = ({
         row.package.accomodationName === 'Colegio Quarto Coletivo'
           ? 'Colégio Quarto Coletivo'
           : row.package.accomodationName === 'Colégio Quarto Família' ||
-            row.package.accomodationName === 'Colegio Quarto Familia'
-          ? 'Colégio Quarto Família'
-          : row.package.accomodationName === 'Colégio Camping' || row.package.accomodationName === 'Colegio Camping'
-          ? 'Colégio Camping'
-          : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
-          ? 'Seminário'
-          : row.package.accomodationName === 'Externo'
-          ? 'Externo'
-          : row.package.accomodationName || '',
+              row.package.accomodationName === 'Colegio Quarto Familia'
+            ? 'Colégio Quarto Família'
+            : row.package.accomodationName === 'Colégio Camping' || row.package.accomodationName === 'Colegio Camping'
+              ? 'Colégio Camping'
+              : row.package.accomodationName === 'Seminário' || row.package.accomodationName === 'Seminario'
+                ? 'Seminário'
+                : row.package.accomodationName === 'Externo'
+                  ? 'Externo'
+                  : row.package.accomodationName || '',
       Filter: selectFilter(
         catalogOptions('HOSPEDAGEM', [
           { value: 'Colégio Quarto Coletivo', label: 'Colégio Quarto Coletivo' },
@@ -234,10 +238,10 @@ export const buildCampersColumns = ({
         row.package.transportationName === 'Com Ônibus' || row.package.transportationName === 'Com Onibus'
           ? 'Com Ônibus'
           : row.package.transportationName === 'Sem Ônibus' || row.package.transportationName === 'Sem Onibus'
-          ? 'Sem Ônibus'
-          : row.package.transportationName === 'Ônibus Equipe' || row.package.transportationName === 'Onibus Equipe'
-          ? 'Ônibus Equipe'
-          : row.package.transportationName || '',
+            ? 'Sem Ônibus'
+            : row.package.transportationName === 'Ônibus Equipe' || row.package.transportationName === 'Onibus Equipe'
+              ? 'Ônibus Equipe'
+              : row.package.transportationName || '',
       Filter: selectFilter(
         catalogOptions('TRANSPORTE', [
           { value: 'Com Ônibus', label: 'Com Ônibus' },
@@ -280,7 +284,7 @@ export const buildCampersColumns = ({
       accessor: 'totalPrice',
       Filter: textFilter,
       sortType: 'alphanumeric',
-      Cell: renderOrDash,
+      Cell: renderPrice,
     },
     {
       Header: 'Desconto:',
