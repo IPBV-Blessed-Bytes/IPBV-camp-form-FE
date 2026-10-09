@@ -7,6 +7,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { parse, isValid } from 'date-fns';
 
 import { getSetting, updateSetting } from '@/services/settings';
+import { previewRetention } from '@/services/scheduledTasks';
 import { uploadGuardianDocument } from '@/services/documents';
 import { BASE_URL } from '@/config';
 import { getBaseDate, createBaseDate, updateBaseDate } from '@/services/baseDate';
@@ -79,6 +80,8 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [uploadingTemplate, setUploadingTemplate] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [retentionPreview, setRetentionPreview] = useState(null);
+  const [retentionLoading, setRetentionLoading] = useState(false);
 
   scrollUp();
 
@@ -227,6 +230,36 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setLoading(false);
     }
   };
+
+  const handleRetentionPreview = async () => {
+    setRetentionLoading(true);
+    try {
+      const data = await previewRetention();
+      setRetentionPreview(data);
+    } catch (error) {
+      console.error('Erro ao gerar a prévia de retenção:', error);
+      toast.error('Não foi possível gerar a prévia de retenção. Tente novamente.');
+    } finally {
+      setRetentionLoading(false);
+    }
+  };
+
+  const retentionStatusLabel = (status) => {
+    switch (status) {
+      case 'within-retention':
+        return 'Dentro do prazo de retenção — nada seria apagado.';
+      case 'expired':
+        return 'Expirado — os dados abaixo seriam apagados.';
+      case 'no-event-date':
+        return 'Sem data de evento configurada.';
+      case 'disabled':
+        return 'Retenção de dados desativada.';
+      default:
+        return status || 'Status desconhecido.';
+    }
+  };
+
+  const retentionTables = retentionPreview?.tables ? Object.entries(retentionPreview.tables) : [];
 
   return (
     <div className="admin-subpage utility-settings">
@@ -547,6 +580,71 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                       Quando desligado, o aviso de conformidade com a LGPD não aparece na abertura do formulário de
                       inscrição.
                     </Form.Text>
+                  </Form.Group>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} lg={6}>
+              <div className="utility-card h-100">
+                <div className="utility-card__header">
+                  <span className="utility-card__icon">
+                    <Icons typeIcon="roles" iconSize={20} stroke="#007185" fill="none" />
+                  </span>
+                  <span>Retenção de dados (LGPD)</span>
+                </div>
+                <div className="utility-card__body">
+                  <Form.Group>
+                    <Form.Text className="text-muted-italic d-block mb-3">
+                      Prévia do que seria apagado automaticamente após o prazo de retenção contado a partir da data do
+                      evento. Esta ação é somente leitura e <b>NÃO</b> apaga nada.
+                    </Form.Text>
+
+                    <Button
+                      variant="outline-secondary"
+                      type="button"
+                      onClick={handleRetentionPreview}
+                      disabled={retentionLoading}
+                    >
+                      {retentionLoading ? 'Carregando prévia...' : 'Ver prévia de retenção'}
+                    </Button>
+
+                    {retentionPreview && (
+                      <div className="mt-3">
+                        <p className="mb-2">
+                          <b>Prévia (somente leitura):</b> {retentionStatusLabel(retentionPreview.status)}
+                        </p>
+                        {retentionPreview.months != null && (
+                          <p className="mb-1">
+                            <b>Prazo de retenção:</b> {retentionPreview.months} meses
+                          </p>
+                        )}
+                        {retentionPreview.eventDate && (
+                          <p className="mb-1">
+                            <b>Data do evento:</b> {retentionPreview.eventDate}
+                          </p>
+                        )}
+                        {retentionPreview.cutoff && (
+                          <p className="mb-1">
+                            <b>Data de corte:</b> {retentionPreview.cutoff}
+                          </p>
+                        )}
+                        {retentionPreview.totalRows != null && (
+                          <p className="mb-1">
+                            <b>Total de registros:</b> {retentionPreview.totalRows}
+                          </p>
+                        )}
+                        {retentionTables.length > 0 && (
+                          <ul className="mb-0 mt-2">
+                            {retentionTables.map(([table, count]) => (
+                              <li key={table}>
+                                {table}: {count}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
                   </Form.Group>
                 </div>
               </div>
