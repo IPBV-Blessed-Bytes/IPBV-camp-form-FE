@@ -266,14 +266,6 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
-      permission: settingsButtonPermissions,
-      path: 'solicitacoes',
-      title: 'Solicitações de Alteração',
-      typeIcon: 'refresh',
-      iconSize: 40,
-      accent: '#0c9183',
-    },
-    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
@@ -302,15 +294,15 @@ const AdminLoggedIn = ({
       path: 'descontos',
       cardType: 'discount-card',
       title: 'Descontos',
-      typeIcon: 'discount',
+      typeIcon: 'cash',
       iconSize: 50,
     },
     {
       permission: discountButtonHomePermissions,
       path: 'cupons',
-      cardType: 'discount-card',
+      cardType: 'coupons-card',
       title: 'Cupons',
-      typeIcon: 'cash',
+      typeIcon: 'discount',
       iconSize: 46,
     },
     {
@@ -319,14 +311,6 @@ const AdminLoggedIn = ({
       cardType: 'teams-card',
       title: 'Times',
       typeIcon: 'team',
-      iconSize: 50,
-    },
-    {
-      permission: feedbackButtonHomePermissions,
-      path: 'opiniao',
-      cardType: 'feedback-card',
-      title: 'Feedbacks',
-      typeIcon: 'feedback',
       iconSize: 50,
     },
     {
@@ -348,10 +332,10 @@ const AdminLoggedIn = ({
     {
       permission: settingsButtonPermissions,
       path: 'reembolsos',
+      cardType: 'refunds-card',
       title: 'Reembolsos',
       typeIcon: 'money',
       iconSize: 40,
-      accent: '#1a8a45',
     },
     {
       permission: registeredButtonHomePermissions,
@@ -364,33 +348,48 @@ const AdminLoggedIn = ({
     {
       permission: settingsButtonPermissions,
       path: 'pedidos-loja',
+      cardType: 'store-card',
       title: 'Pedidos da Loja',
       typeIcon: 'cart',
       iconSize: 44,
-      accent: '#b9770a',
+    },
+    {
+      permission: settingsButtonPermissions,
+      path: 'solicitacoes',
+      cardType: 'alteration-card',
+      title: 'Solicitações de Alteração',
+      typeIcon: 'refresh',
+      iconSize: 40,
+    },
+    {
+      permission: feedbackButtonHomePermissions,
+      path: 'opiniao',
+      cardType: 'feedback-card',
+      title: 'Feedbacks',
+      typeIcon: 'feedback',
+      iconSize: 50,
     },
   ];
 
   const settingsSessions = [
-    { path: 'eventos', title: 'Eventos', typeIcon: 'calendar', iconSize: 40, accent: '#2E5AAC' },
+    { path: 'eventos', title: 'Eventos', typeIcon: 'calendar', iconSize: 40, accent: '#5fa75f' },
     { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
-    { path: 'formulario', title: 'Campos do Formulário', typeIcon: 'form', iconSize: 42, accent: '#204691' },
+    { path: 'formulario', title: 'Campos do Formulário', typeIcon: 'form', iconSize: 42, accent: '#b9770a' },
     {
       path: 'campos-admin',
       title: 'Campos Administrativos',
       typeIcon: 'form-context',
       iconSize: 40,
-      accent: '#5c6bc0',
+      accent: '#d32f2f',
     },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
     { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 42, accent: '#8e44ad' },
-    { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 40, accent: '#cc6d00' },
+    { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 40, accent: '#e0a800' },
     { path: 'identidade', title: 'Identidade da Organização', typeIcon: 'camera', iconSize: 42, accent: '#0ea5a0' },
-    { path: 'pacote', title: 'Pacote', typeIcon: 'cart', iconSize: 42, accent: '#b9770a' },
+    { path: 'pacote', title: 'Pacote', typeIcon: 'cart', iconSize: 42, accent: '#25d366' },
     { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#0066cc' },
-    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
+    { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#b5468a' },
     { path: 'recebimento', title: 'Recebimento', typeIcon: 'money', iconSize: 42, accent: '#057c05' },
-
     { path: 'financeiro', title: 'Financeiro', typeIcon: 'money', iconSize: 42, accent: '#204691' },
     { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
     { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
@@ -399,7 +398,7 @@ const AdminLoggedIn = ({
     { path: 'utilitarias', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 42, accent: '#607d8b' },
     { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
-    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#204691' },
+    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#d32f2f' },
   ];
 
   const SETTINGS_PAGE_SIZE = 12;

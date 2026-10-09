@@ -3,14 +3,19 @@
 
 $admin-accent-registered: $primary;
 $admin-accent-ride: $orange;
-$admin-accent-discount: $emerald;
 $admin-accent-bus: $lavender;
 $admin-accent-rooms: $secondary;
+$admin-accent-discount: $emerald;
+$admin-accent-coupons: $danger-dark;
+
 $admin-accent-teams: $sky-blue;
-$admin-accent-feedback: $royal-blue;
 $admin-accent-checkin: $teal;
 $admin-accent-boletos: $gold;
+$admin-accent-refunds: $purple;
 $admin-accent-donations: $magenta;
+$admin-accent-store: $gray-500-3;
+$admin-accent-alteration: $bronze;
+$admin-accent-feedback: $royal-blue;
 
 .admin {
   background-color: $gray-50;
@@ -180,17 +185,17 @@ $admin-accent-donations: $magenta;
   &--bus-card {
     --session-accent: #{$admin-accent-bus};
   }
-  &--discount-card {
-    --session-accent: #{$admin-accent-discount};
-  }
   &--rooms-card {
     --session-accent: #{$admin-accent-rooms};
   }
+  &--discount-card {
+    --session-accent: #{$admin-accent-discount};
+  }
+    &--coupons-card {
+    --session-accent: #{$admin-accent-coupons};
+  }
   &--teams-card {
     --session-accent: #{$admin-accent-teams};
-  }
-  &--feedback-card {
-    --session-accent: #{$admin-accent-feedback};
   }
   &--checkin-card {
     --session-accent: #{$admin-accent-checkin};
@@ -198,8 +203,20 @@ $admin-accent-donations: $magenta;
   &--boletos-card {
     --session-accent: #{$admin-accent-boletos};
   }
+  &--refunds-card {
+    --session-accent: #{$admin-accent-refunds};
+  }
   &--donations-card {
     --session-accent: #{$admin-accent-donations};
+  }
+  &--store-card {
+    --session-accent: #{$admin-accent-store};
+  }
+  &--alteration-card {
+    --session-accent: #{$admin-accent-alteration};
+  }
+  &--feedback-card {
+    --session-accent: #{$admin-accent-feedback};
   }
 
   &--draggable {
