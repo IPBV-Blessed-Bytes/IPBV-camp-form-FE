@@ -13,7 +13,7 @@ export class ManualComponent {
   readonly salesPricesHeading: Locator;
 
   constructor(readonly page: Page) {
-    this.title = page.getByRole('heading', { name: 'Manual da Plataforma' });
+    this.title = page.getByRole('heading', { name: 'Manual da Inscriptio' });
     this.clientTab = page.getByRole('tab', { name: 'Ajuda do cliente' });
     this.ownerTab = page.getByRole('tab', { name: 'Runbook do dono' });
     this.architectureTab = page.getByRole('tab', { name: 'Arquitetura' });
