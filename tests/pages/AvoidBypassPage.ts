@@ -22,7 +22,7 @@ export class AvoidBypassComponent {
   }
 
   async goToPageNotAllowed() {
-    await this.page.goto('/admin/acampantes', {
+    await this.page.goto('/admin/participantes', {
       waitUntil: 'commit',
     });
   }
