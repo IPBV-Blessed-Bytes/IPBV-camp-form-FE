@@ -47,6 +47,15 @@ export class AuthenticationComponent {
     await this.fillPassword(user.password);
     await this.signInButton.click();
     await this.page.waitForFunction(() => !!localStorage.getItem('token_jwt'));
+    await this.dismissTourIfPresent();
+  }
+
+  async dismissTourIfPresent() {
+    try {
+      await this.page.getByRole('button', { name: 'Pular tour' }).click({ timeout: 6000 });
+    } catch {
+      /* tour not shown */
+    }
   }
 
   async selectEvent(slug: string) {
