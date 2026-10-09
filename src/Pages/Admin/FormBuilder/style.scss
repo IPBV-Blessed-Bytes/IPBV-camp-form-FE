@@ -8,33 +8,16 @@
 
   &__toolbar {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
 
   &__empty {
     text-align: center;
     color: $gray-500;
-    padding: 3rem 0;
-  }
-
-  &__templates {
-    padding: 1.5rem 0 0;
-  }
-
-  &__templates-title {
+    padding: 1.75rem 0 0.5rem;
     margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    text-align: center;
-  }
-
-  &__templates-hint {
-    margin: 0.35rem auto 1.25rem;
-    max-width: 640px;
-    text-align: center;
-    color: $gray-500;
-    font-size: 0.92rem;
   }
 
   &__templates-grid {
@@ -74,7 +57,7 @@
   &__template-name {
     font-size: 1.05rem;
     font-weight: 700;
-    color: $blue;
+    color: $blue-900;
   }
 
   &__template-desc {

@@ -11,6 +11,7 @@ import useEventName from '@/hooks/useEventName';
 import { EVENT_TEMPLATES } from '@/config/eventTemplates';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import StatCards from '@/components/Admin/StatCards';
+import FormSection from '@/components/Admin/FormSection';
 import MinorTemplateCard from '@/components/Admin/MinorTemplateCard';
 import CustomModal from '@/components/Global/CustomModal';
 import Loading from '@/components/Global/Loading';
@@ -367,7 +368,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
   ];
 
   return (
-    <div className="admin-subpage form-builder ">
+    <div className="admin-subpage admin-subpage--settings form-builder">
       <AdminSubpageHeader
         username={loggedUsername}
         title={t('admin.formBuilder.title')}
@@ -393,7 +394,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
               disabled={saving}
             >
               {t('admin.formBuilder.btnModulePackage')}&nbsp;&nbsp;
-              <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
+              <Icons typeIcon="plus" iconSize={16} fill="#007185" />
             </Button>
           )}
           {!hasModule('ride') && (
@@ -404,7 +405,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
               disabled={saving}
             >
               {t('admin.formBuilder.btnModuleRide')}&nbsp;&nbsp;
-              <Icons typeIcon="plus" iconSize={16} fill="#0d6efd" />
+              <Icons typeIcon="plus" iconSize={16} fill="#007185" />
             </Button>
           )}
         </div>
@@ -412,11 +413,10 @@ const AdminFormBuilder = ({ loggedUsername }) => {
         {loading ? (
           <Loading loading />
         ) : sections.length === 0 ? (
-          <div className="form-builder__templates">
-            <p className="form-builder__templates-title">{t('admin.formBuilder.templatesTitle')}</p>
-            <p className="form-builder__templates-hint">
-              {t('admin.formBuilder.templatesHint')}
-            </p>
+          <FormSection
+            title={t('admin.formBuilder.templatesTitle')}
+            description={t('admin.formBuilder.templatesHint')}
+          >
             <div className="form-builder__templates-grid">
               {EVENT_TEMPLATES.map((tpl) => (
                 <button
@@ -435,7 +435,7 @@ const AdminFormBuilder = ({ loggedUsername }) => {
               ))}
             </div>
             <p className="form-builder__empty">{t('admin.formBuilder.emptyManual')}</p>
-          </div>
+          </FormSection>
         ) : (
           <div className="form-builder__sections">
             {sectionsWithFields.map((section, sectionIndex) => (
