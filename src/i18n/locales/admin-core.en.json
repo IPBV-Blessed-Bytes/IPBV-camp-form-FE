@@ -350,7 +350,20 @@
         "byStatusTitle": "Composition by status",
         "registrations": "Registrations",
         "empty": "Charts appear here as soon as the first registrations arrive.",
-        "months": ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+        "months": [
+          "jan",
+          "feb",
+          "mar",
+          "apr",
+          "may",
+          "jun",
+          "jul",
+          "aug",
+          "sep",
+          "oct",
+          "nov",
+          "dec"
+        ],
         "status": {
           "paid": "Paid",
           "free": "Free",
@@ -396,6 +409,17 @@
           }
         ]
       }
+    },
+    "prefs": {
+      "title": "Panel Preferences",
+      "cardStyle": "Card style",
+      "styleCurrent": "Filled",
+      "styleTinted": "Tinted",
+      "styleMono": "Mono",
+      "stylePastel": "Pastel",
+      "reorder": "Reorder cards",
+      "editButton": "Edit button",
+      "sideBorder": "Side border"
     }
   }
 }

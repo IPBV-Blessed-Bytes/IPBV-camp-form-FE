@@ -350,7 +350,20 @@
         "byStatusTitle": "Composição por status",
         "registrations": "Inscrições",
         "empty": "Os gráficos aparecem aqui assim que as primeiras inscrições chegarem.",
-        "months": ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+        "months": [
+          "jan",
+          "fev",
+          "mar",
+          "abr",
+          "mai",
+          "jun",
+          "jul",
+          "ago",
+          "set",
+          "out",
+          "nov",
+          "dez"
+        ],
         "status": {
           "paid": "Pagos",
           "free": "Gratuitos",
@@ -396,6 +409,17 @@
           }
         ]
       }
+    },
+    "prefs": {
+      "title": "Preferências do Painel",
+      "cardStyle": "Estilo dos cards",
+      "styleCurrent": "Preenchido",
+      "styleTinted": "Tingido",
+      "styleMono": "Mono",
+      "stylePastel": "Pastel",
+      "reorder": "Reordenar cards",
+      "editButton": "Botão de edição",
+      "sideBorder": "Borda lateral"
     }
   }
 }

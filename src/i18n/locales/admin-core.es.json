@@ -350,7 +350,20 @@
         "byStatusTitle": "Composición por estado",
         "registrations": "Inscripciones",
         "empty": "Los gráficos aparecen aquí en cuanto lleguen las primeras inscripciones.",
-        "months": ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+        "months": [
+          "ene",
+          "feb",
+          "mar",
+          "abr",
+          "may",
+          "jun",
+          "jul",
+          "ago",
+          "sep",
+          "oct",
+          "nov",
+          "dic"
+        ],
         "status": {
           "paid": "Pagados",
           "free": "Gratuitos",
@@ -396,6 +409,17 @@
           }
         ]
       }
+    },
+    "prefs": {
+      "title": "Preferencias del Panel",
+      "cardStyle": "Estilo de las tarjetas",
+      "styleCurrent": "Relleno",
+      "styleTinted": "Teñido",
+      "styleMono": "Mono",
+      "stylePastel": "Pastel",
+      "reorder": "Reordenar tarjetas",
+      "editButton": "Botón de edición",
+      "sideBorder": "Borde lateral"
     }
   }
 }

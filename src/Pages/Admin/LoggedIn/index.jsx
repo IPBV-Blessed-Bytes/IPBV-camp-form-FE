@@ -90,9 +90,55 @@ const AdminLoggedIn = ({
   const [view, setView] = useState('main');
   const [carouselDirection, setCarouselDirection] = useState('forward');
   const [settingsPage, setSettingsPage] = useState(0);
+  const readPref = (key, fallback) => {
+    try {
+      const value = localStorage.getItem(key);
+      return value == null ? fallback : value;
+    } catch {
+      return fallback;
+    }
+  };
+  const persistPref = (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const [cardStyle, setCardStyle] = useState(() => readPref('admin-card-style', 'current'));
+  const [showStripe, setShowStripe] = useState(() => readPref('admin-cards-stripe', 'on') === 'on');
+  const [reorderEnabled, setReorderEnabled] = useState(() => readPref('admin-cards-reorder', 'on') === 'on');
+  const [editPencilEnabled, setEditPencilEnabled] = useState(() => readPref('admin-cards-edit', 'on') === 'on');
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
+  const changeCardStyle = (style) => {
+    setCardStyle(style);
+    persistPref('admin-card-style', style);
+  };
+  const toggleStripe = () => {
+    setShowStripe((prev) => {
+      persistPref('admin-cards-stripe', prev ? 'off' : 'on');
+      return !prev;
+    });
+  };
+  const toggleReorder = () => {
+    setReorderEnabled((prev) => {
+      persistPref('admin-cards-reorder', prev ? 'off' : 'on');
+      return !prev;
+    });
+  };
+  const toggleEditPencil = () => {
+    setEditPencilEnabled((prev) => {
+      persistPref('admin-cards-edit', prev ? 'off' : 'on');
+      return !prev;
+    });
+  };
 
   const { configs: sessionConfigs, refetch: refetchSessions } = useAdminSessions();
   const canEditSessions = userRole === 'admin';
+  const showEditPencil = canEditSessions && editPencilEnabled;
+  const canReorder = canEditSessions && reorderEnabled;
   const [dragKey, setDragKey] = useState(null);
 
   const orderNavSessions = (sessions) => {
@@ -485,8 +531,8 @@ const AdminLoggedIn = ({
               </button>
             </div>
           )}
-          <div className="session-carousel">
-            {view === 'main' && canEditSessions && (
+          <div className="session-carousel" data-card-style={cardStyle} data-card-stripe={showStripe ? 'on' : 'off'}>
+            {view === 'main' && canReorder && (
               <p className="session-carousel__hint">
                 <Icons typeIcon="edit" iconSize={14} fill="none" /> {t('admin.shell.reorderHint')}
               </p>
@@ -546,15 +592,15 @@ const AdminLoggedIn = ({
                           locked={isLocked(session.path)}
                           lockHint={t('admin.card.lockHint')}
                           lockCta={t('admin.card.unlock')}
-                          canEdit={canEditSessions && !isLocked(session.path)}
+                          canEdit={showEditPencil && !isLocked(session.path)}
                           onEdit={() => setEditingSession(session.path)}
                           onClick={() =>
                             isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
                           }
-                          draggable={canEditSessions && !isLocked(session.path)}
+                          draggable={canReorder && !isLocked(session.path)}
                           dragging={dragKey === session.path}
                           onDragStart={() => setDragKey(session.path)}
-                          onDragOver={(e) => canEditSessions && e.preventDefault()}
+                          onDragOver={(e) => canReorder && e.preventDefault()}
                           onDrop={() => handleReorderDrop(ordered, session.path)}
                           onDragEnd={() => setDragKey(null)}
                         />
@@ -587,15 +633,15 @@ const AdminLoggedIn = ({
                       locked={isLocked(session.path)}
                       lockHint={t('admin.card.lockHint')}
                       lockCta={t('admin.card.unlock')}
-                      canEdit={canEditSessions && !isLocked(session.path)}
+                      canEdit={showEditPencil && !isLocked(session.path)}
                       onEdit={() => setEditingSession(session.path)}
                       onClick={() =>
                         isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
                       }
-                      draggable={canEditSessions && !isLocked(session.path)}
+                      draggable={canReorder && !isLocked(session.path)}
                       dragging={dragKey === session.path}
                       onDragStart={() => setDragKey(session.path)}
-                      onDragOver={(e) => canEditSessions && e.preventDefault()}
+                      onDragOver={(e) => canReorder && e.preventDefault()}
                       onDrop={() => handleReorderDrop(visibleSettingsSessions, session.path)}
                       onDragEnd={() => setDragKey(null)}
                     />
@@ -640,6 +686,61 @@ const AdminLoggedIn = ({
           )}
         </div>
       )}
+
+      <div className="admin-prefs">
+        {prefsOpen && (
+          <div className="admin-prefs__panel" role="dialog" aria-label={t('admin.prefs.title')}>
+            <span className="admin-prefs__title">{t('admin.prefs.title')}</span>
+
+            <div className="admin-prefs__group">
+              <span className="admin-prefs__label">{t('admin.prefs.cardStyle')}</span>
+              <div className="admin-prefs__styles">
+                {[
+                  ['current', 'styleCurrent'],
+                  ['tinted', 'styleTinted'],
+                  ['mono', 'styleMono'],
+                  ['pastel', 'stylePastel'],
+                ].map(([key, lbl]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`admin-prefs__style${cardStyle === key ? ' is-active' : ''}`}
+                    onClick={() => changeCardStyle(key)}
+                  >
+                    {t(`admin.prefs.${lbl}`)}
+                  </button>
+                ))}
+              </div>
+              <label className="admin-prefs__toggle mt-2">
+                <input type="checkbox" checked={showStripe} onChange={toggleStripe} />
+                <span>{t('admin.prefs.sideBorder')}</span>
+              </label>
+            </div>
+
+            {canEditSessions && (
+              <div className="admin-prefs__group">
+                <label className="admin-prefs__toggle">
+                  <input type="checkbox" checked={reorderEnabled} onChange={toggleReorder} />
+                  <span>{t('admin.prefs.reorder')}</span>
+                </label>
+                <label className="admin-prefs__toggle">
+                  <input type="checkbox" checked={editPencilEnabled} onChange={toggleEditPencil} />
+                  <span>{t('admin.prefs.editButton')}</span>
+                </label>
+              </div>
+            )}
+          </div>
+        )}
+        <button
+          type="button"
+          className={`admin-prefs__fab${prefsOpen ? ' is-open' : ''}`}
+          aria-label={t('admin.prefs.title')}
+          aria-expanded={prefsOpen}
+          onClick={() => setPrefsOpen((prev) => !prev)}
+        >
+          <Icons typeIcon="settings" iconSize={22} fill="#fff" />
+        </button>
+      </div>
     </div>
   );
 };
