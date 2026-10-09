@@ -266,6 +266,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: settingsButtonPermissions,
+      path: 'solicitacoes',
+      title: 'Solicitações de Alteração',
+      typeIcon: 'refresh',
+      iconSize: 40,
+      accent: '#0c9183',
+    },
+    {
       permission: rideButtonHomePermissions,
       path: 'carona',
       cardType: 'ride-card',
@@ -279,6 +287,14 @@ const AdminLoggedIn = ({
       cardType: 'bus-card',
       title: 'Ônibus',
       typeIcon: 'bus',
+      iconSize: 50,
+    },
+    {
+      permission: roomsButtonHomePermissions,
+      path: 'quartos',
+      cardType: 'rooms-card',
+      title: 'Quartos',
+      typeIcon: 'rooms',
       iconSize: 50,
     },
     {
@@ -296,14 +312,6 @@ const AdminLoggedIn = ({
       title: 'Cupons',
       typeIcon: 'cash',
       iconSize: 46,
-    },
-    {
-      permission: roomsButtonHomePermissions,
-      path: 'quartos',
-      cardType: 'rooms-card',
-      title: 'Quartos',
-      typeIcon: 'rooms',
-      iconSize: 50,
     },
     {
       permission: teamsButtonHomePermissions,
@@ -338,6 +346,14 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
+      permission: settingsButtonPermissions,
+      path: 'reembolsos',
+      title: 'Reembolsos',
+      typeIcon: 'money',
+      iconSize: 40,
+      accent: '#1a8a45',
+    },
+    {
       permission: registeredButtonHomePermissions,
       path: 'doacoes',
       cardType: 'donations-card',
@@ -346,53 +362,44 @@ const AdminLoggedIn = ({
       iconSize: 40,
     },
     {
-      permission: registeredButtonHomePermissions,
-      path: 'reembolsos',
-      cardType: 'registered-card',
-      title: 'Reembolsos',
-      typeIcon: 'money',
-      iconSize: 40,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'financeiro',
-      cardType: 'registered-card',
-      title: 'Financeiro',
-      typeIcon: 'money',
-      iconSize: 42,
-    },
-    {
-      permission: registeredButtonHomePermissions,
-      path: 'lixeira',
-      cardType: 'registered-card',
-      title: 'Lixeira',
-      typeIcon: 'delete',
-      iconSize: 40,
+      permission: settingsButtonPermissions,
+      path: 'pedidos-loja',
+      title: 'Pedidos da Loja',
+      typeIcon: 'cart',
+      iconSize: 44,
+      accent: '#b9770a',
     },
   ];
 
   const settingsSessions = [
-    { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
-    { path: 'campos-admin', title: 'Campos Administrativos', typeIcon: 'form-context', iconSize: 40, accent: '#5c6bc0' },
-    { path: 'recebimento', title: 'Recebimento', typeIcon: 'money', iconSize: 42, accent: '#057c05' },
     { path: 'eventos', title: 'Eventos', typeIcon: 'calendar', iconSize: 40, accent: '#2E5AAC' },
+    { path: 'estagio', title: 'Estágio do Formulário', typeIcon: 'form-context', iconSize: 42, accent: '#204691' },
+    { path: 'formulario', title: 'Campos do Formulário', typeIcon: 'form', iconSize: 42, accent: '#204691' },
+    {
+      path: 'campos-admin',
+      title: 'Campos Administrativos',
+      typeIcon: 'form-context',
+      iconSize: 40,
+      accent: '#5c6bc0',
+    },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
+    { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 42, accent: '#8e44ad' },
     { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 40, accent: '#cc6d00' },
     { path: 'identidade', title: 'Identidade da Organização', typeIcon: 'camera', iconSize: 42, accent: '#0ea5a0' },
-    { path: 'formulario', title: 'Campos do Formulário', typeIcon: 'form', iconSize: 42, accent: '#204691' },
-    { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 42, accent: '#8e44ad' },
     { path: 'pacote', title: 'Pacote', typeIcon: 'cart', iconSize: 42, accent: '#b9770a' },
-    { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'lotes', title: 'Lotes', typeIcon: 'calendar', iconSize: 40, accent: '#0066cc' },
-    { path: 'utilitarias', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 42, accent: '#607d8b' },
-    { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },
-    { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
-    { path: 'pedidos-loja', title: 'Pedidos da Loja', typeIcon: 'cart', iconSize: 44, accent: '#b9770a' },
-    { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
-    { path: 'solicitacoes', title: 'Solicitações de Alteração', typeIcon: 'refresh', iconSize: 40, accent: '#0c9183' },
-    { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
     { path: 'vagas', title: 'Vagas', typeIcon: 'camp', iconSize: 44, accent: '#49bd72' },
+    { path: 'recebimento', title: 'Recebimento', typeIcon: 'money', iconSize: 42, accent: '#057c05' },
+
+    { path: 'financeiro', title: 'Financeiro', typeIcon: 'money', iconSize: 42, accent: '#204691' },
+    { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
+    { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
+    { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
+    { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },
+    { path: 'utilitarias', title: 'Informações Utilitárias', typeIcon: 'settings', iconSize: 42, accent: '#607d8b' },
+    { path: 'logs', title: 'Logs de Usuários', typeIcon: 'logs', iconSize: 44, accent: '#555050' },
     { path: 'backup', title: 'Backup', typeIcon: 'excel', iconSize: 40, accent: '#4caf50' },
+    { path: 'lixeira', title: 'Lixeira', typeIcon: 'delete', iconSize: 40, accent: '#204691' },
   ];
 
   const SETTINGS_PAGE_SIZE = 12;
@@ -461,70 +468,111 @@ const AdminLoggedIn = ({
           </div>
         </div>
       ) : (
-      <div className="admin-home__content">
-        <PlatformBillingBanner canManage={settingsButtonPermissions} />
-        {needsRecebimento && (
-          <div className="admin-home__recebimento-alert" role="alert">
-            <Icons typeIcon="money" iconSize={30} fill="#8a5300" />
-            <div className="admin-home__recebimento-alert-text">
-              <strong>{t('admin.shell.recebimentoAlertTitle')}</strong>
-              <span>{t('admin.shell.recebimentoAlertText')}</span>
-            </div>
-            <button
-              type="button"
-              className="admin-home__recebimento-alert-btn"
-              onClick={() => navigate(`${routePrefix}/recebimento`)}
-            >
-              {t('admin.shell.recebimentoAlertBtn')}
-            </button>
-          </div>
-        )}
-        <div className="session-carousel">
-          {view === 'main' && canEditSessions && (
-            <p className="session-carousel__hint">
-              <Icons typeIcon="edit" iconSize={14} fill="none" /> {t('admin.shell.reorderHint')}
-            </p>
-          )}
-          {view === 'settings' && (
-            <div className="settings-toolbar">
-              <button type="button" className="settings-toolbar__back" onClick={openMainView}>
-                <Icons typeIcon="arrow-left" iconSize={18} fill="#495057" />
-                {t('admin.shell.mainButtons')}
+        <div className="admin-home__content">
+          <PlatformBillingBanner canManage={settingsButtonPermissions} />
+          {needsRecebimento && (
+            <div className="admin-home__recebimento-alert" role="alert">
+              <Icons typeIcon="money" iconSize={30} fill="#8a5300" />
+              <div className="admin-home__recebimento-alert-text">
+                <strong>{t('admin.shell.recebimentoAlertTitle')}</strong>
+                <span>{t('admin.shell.recebimentoAlertText')}</span>
+              </div>
+              <button
+                type="button"
+                className="admin-home__recebimento-alert-btn"
+                onClick={() => navigate(`${routePrefix}/recebimento`)}
+              >
+                {t('admin.shell.recebimentoAlertBtn')}
               </button>
-              {settingsPages.length > 1 && (
-                <div className="settings-toolbar__pager">
-                  <button
-                    type="button"
-                    className="settings-toolbar__page-btn"
-                    disabled={currentSettingsPage === 0}
-                    onClick={() => goToSettingsPage(currentSettingsPage - 1, 'back')}
-                  >
-                    {t('admin.shell.prev')}
-                  </button>
-                  <span className="settings-toolbar__page-info">
-                    {t('admin.shell.pageInfo', { current: currentSettingsPage + 1, total: settingsPages.length })}
-                  </span>
-                  <button
-                    type="button"
-                    className="settings-toolbar__page-btn"
-                    disabled={currentSettingsPage === settingsPages.length - 1}
-                    onClick={() => goToSettingsPage(currentSettingsPage + 1, 'forward')}
-                  >
-                    {t('admin.shell.next')}
-                  </button>
-                </div>
-              )}
             </div>
           )}
-          <Row
-            key={view === 'settings' ? `settings-${currentSettingsPage}` : 'main'}
-            className={`navigation-header gx-3 session-pane session-pane--${carouselDirection}`}
-          >
-            {view === 'main' ? (
-              <>
-                {orderNavSessions(
-                  navigationSessions.filter((session) => isSessionAllowed(session.path)),
-                ).map((session, _i, ordered) => {
+          <div className="session-carousel">
+            {view === 'main' && canEditSessions && (
+              <p className="session-carousel__hint">
+                <Icons typeIcon="edit" iconSize={14} fill="none" /> {t('admin.shell.reorderHint')}
+              </p>
+            )}
+            {view === 'settings' && (
+              <div className="settings-toolbar">
+                <button type="button" className="settings-toolbar__back" onClick={openMainView}>
+                  <Icons typeIcon="arrow-left" iconSize={18} fill="#495057" />
+                  {t('admin.shell.mainButtons')}
+                </button>
+                {settingsPages.length > 1 && (
+                  <div className="settings-toolbar__pager">
+                    <button
+                      type="button"
+                      className="settings-toolbar__page-btn"
+                      disabled={currentSettingsPage === 0}
+                      onClick={() => goToSettingsPage(currentSettingsPage - 1, 'back')}
+                    >
+                      {t('admin.shell.prev')}
+                    </button>
+                    <span className="settings-toolbar__page-info">
+                      {t('admin.shell.pageInfo', { current: currentSettingsPage + 1, total: settingsPages.length })}
+                    </span>
+                    <button
+                      type="button"
+                      className="settings-toolbar__page-btn"
+                      disabled={currentSettingsPage === settingsPages.length - 1}
+                      onClick={() => goToSettingsPage(currentSettingsPage + 1, 'forward')}
+                    >
+                      {t('admin.shell.next')}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            <Row
+              key={view === 'settings' ? `settings-${currentSettingsPage}` : 'main'}
+              className={`navigation-header gx-3 session-pane session-pane--${carouselDirection}`}
+            >
+              {view === 'main' ? (
+                <>
+                  {orderNavSessions(navigationSessions.filter((session) => isSessionAllowed(session.path))).map(
+                    (session, _i, ordered) => {
+                      const resolved = resolveSession(session.path, sessionConfigs[session.path], {
+                        title: t(`admin.shell.sessions.${session.path}`),
+                        icon: session.typeIcon,
+                      });
+                      return (
+                        <SessionCard
+                          key={session.path}
+                          permission={session.permission}
+                          cardType={session.cardType}
+                          iconSize={session.iconSize}
+                          title={resolved.title}
+                          typeIcon={resolved.icon}
+                          accentColor={resolved.color || session.accent}
+                          locked={isLocked(session.path)}
+                          lockHint={t('admin.card.lockHint')}
+                          lockCta={t('admin.card.unlock')}
+                          canEdit={canEditSessions && !isLocked(session.path)}
+                          onEdit={() => setEditingSession(session.path)}
+                          onClick={() =>
+                            isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
+                          }
+                          draggable={canEditSessions && !isLocked(session.path)}
+                          dragging={dragKey === session.path}
+                          onDragStart={() => setDragKey(session.path)}
+                          onDragOver={(e) => canEditSessions && e.preventDefault()}
+                          onDrop={() => handleReorderDrop(ordered, session.path)}
+                          onDragEnd={() => setDragKey(null)}
+                        />
+                      );
+                    },
+                  )}
+                  <SessionCard
+                    permission={settingsButtonPermissions}
+                    title={t('admin.shell.settings')}
+                    typeIcon="settings"
+                    iconSize={42}
+                    accentColor="#37474f"
+                    onClick={openSettingsView}
+                  />
+                </>
+              ) : (
+                settingsPages[currentSettingsPage].map((session) => {
                   const resolved = resolveSession(session.path, sessionConfigs[session.path], {
                     title: t(`admin.shell.sessions.${session.path}`),
                     icon: session.typeIcon,
@@ -532,12 +580,11 @@ const AdminLoggedIn = ({
                   return (
                     <SessionCard
                       key={session.path}
-                      permission={session.permission}
-                      cardType={session.cardType}
-                      iconSize={session.iconSize}
+                      permission={settingsButtonPermissions}
                       title={resolved.title}
                       typeIcon={resolved.icon}
-                      accentColor={resolved.color}
+                      iconSize={session.iconSize}
+                      accentColor={resolved.color || session.accent}
                       locked={isLocked(session.path)}
                       lockHint={t('admin.card.lockHint')}
                       lockCta={t('admin.card.unlock')}
@@ -550,89 +597,49 @@ const AdminLoggedIn = ({
                       dragging={dragKey === session.path}
                       onDragStart={() => setDragKey(session.path)}
                       onDragOver={(e) => canEditSessions && e.preventDefault()}
-                      onDrop={() => handleReorderDrop(ordered, session.path)}
+                      onDrop={() => handleReorderDrop(visibleSettingsSessions, session.path)}
                       onDragEnd={() => setDragKey(null)}
                     />
                   );
-                })}
-                <SessionCard
-                  permission={settingsButtonPermissions}
-                  title={t('admin.shell.settings')}
-                  typeIcon="settings"
-                  iconSize={42}
-                  accentColor="#37474f"
-                  onClick={openSettingsView}
-                />
-              </>
-            ) : (
-              settingsPages[currentSettingsPage].map((session) => {
-                const resolved = resolveSession(session.path, sessionConfigs[session.path], {
-                  title: t(`admin.shell.sessions.${session.path}`),
-                  icon: session.typeIcon,
-                });
-                return (
-                  <SessionCard
-                    key={session.path}
-                    permission={settingsButtonPermissions}
-                    title={resolved.title}
-                    typeIcon={resolved.icon}
-                    iconSize={session.iconSize}
-                    accentColor={resolved.color || session.accent}
-                    locked={isLocked(session.path)}
-                    lockHint={t('admin.card.lockHint')}
-                    lockCta={t('admin.card.unlock')}
-                    canEdit={canEditSessions && !isLocked(session.path)}
-                    onEdit={() => setEditingSession(session.path)}
-                    onClick={() =>
-                      isLocked(session.path) ? handleLockedClick() : navigate(`${routePrefix}/${session.path}`)
-                    }
-                    draggable={canEditSessions && !isLocked(session.path)}
-                    dragging={dragKey === session.path}
-                    onDragStart={() => setDragKey(session.path)}
-                    onDragOver={(e) => canEditSessions && e.preventDefault()}
-                    onDrop={() => handleReorderDrop(visibleSettingsSessions, session.path)}
-                    onDragEnd={() => setDragKey(null)}
-                  />
-                );
-              })
-            )}
-          </Row>
+                })
+              )}
+            </Row>
+          </div>
+
+          {editingSession && (
+            <SessionEditModal
+              show={Boolean(editingSession)}
+              onHide={() => setEditingSession(null)}
+              sessionKey={editingSession}
+              sessionTitle={
+                [...navigationSessions, ...settingsSessions].some((s) => s.path === editingSession)
+                  ? t(`admin.shell.sessions.${editingSession}`)
+                  : undefined
+              }
+              defaultIcon={
+                [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.typeIcon
+              }
+              config={sessionConfigs[editingSession]}
+              onSaved={refetchSessions}
+            />
+          )}
+
+          {packagesAndTotalCardsPermissions && !spinnerLoading && !loading && (
+            <>
+              <SectionHeader title={t('admin.shell.overview')} count={metricsCards.length} />
+              <StatCards items={metricsCards} />
+              <DashboardCharts metrics={metrics} />
+            </>
+          )}
+
+          <Loading loading={spinnerLoading || loading} />
+
+          {utilitiesLinksPermissions && (
+            <Row>
+              <ExternalLinkRow />
+            </Row>
+          )}
         </div>
-
-        {editingSession && (
-          <SessionEditModal
-            show={Boolean(editingSession)}
-            onHide={() => setEditingSession(null)}
-            sessionKey={editingSession}
-            sessionTitle={
-              [...navigationSessions, ...settingsSessions].some((s) => s.path === editingSession)
-                ? t(`admin.shell.sessions.${editingSession}`)
-                : undefined
-            }
-            defaultIcon={
-              [...navigationSessions, ...settingsSessions].find((s) => s.path === editingSession)?.typeIcon
-            }
-            config={sessionConfigs[editingSession]}
-            onSaved={refetchSessions}
-          />
-        )}
-
-        {packagesAndTotalCardsPermissions && !spinnerLoading && !loading && (
-          <>
-            <SectionHeader title={t('admin.shell.overview')} count={metricsCards.length} />
-            <StatCards items={metricsCards} />
-            <DashboardCharts metrics={metrics} />
-          </>
-        )}
-
-        <Loading loading={spinnerLoading || loading} />
-
-        {utilitiesLinksPermissions && (
-          <Row>
-            <ExternalLinkRow />
-          </Row>
-        )}
-      </div>
       )}
     </div>
   );
