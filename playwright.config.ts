@@ -37,6 +37,8 @@ export default defineConfig({
   ],
 
   use: {
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
   },
