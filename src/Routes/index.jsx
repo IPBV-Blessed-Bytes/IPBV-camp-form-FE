@@ -69,6 +69,7 @@ const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
+const AdminOrgBranding = lazy(() => import('@/Pages/Admin/OrgBranding'));
 const Platform = lazy(() => import('@/Pages/Platform'));
 const OwnerLogin = lazy(() => import('@/Pages/OwnerLogin'));
 const Storefront = lazy(() => import('@/Pages/Storefront'));
@@ -487,6 +488,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminInstitutional loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/identidade')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminOrgBranding loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

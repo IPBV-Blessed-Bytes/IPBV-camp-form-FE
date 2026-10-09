@@ -378,6 +378,7 @@ const AdminLoggedIn = ({
     { path: 'eventos', title: 'Eventos', typeIcon: 'calendar', iconSize: 40, accent: '#2E5AAC' },
     { path: 'info', title: 'Informações Iniciais Form', typeIcon: 'info', iconSize: 44, accent: '#3498db' },
     { path: 'institucional', title: 'Área Institucional', typeIcon: 'megaphone', iconSize: 40, accent: '#cc6d00' },
+    { path: 'identidade', title: 'Identidade da Organização', typeIcon: 'camera', iconSize: 42, accent: '#0ea5a0' },
     { path: 'formulario', title: 'Campos do Formulário', typeIcon: 'form', iconSize: 42, accent: '#204691' },
     { path: 'faq', title: 'Perguntas Frequentes', typeIcon: 'question', iconSize: 42, accent: '#8e44ad' },
     { path: 'pacote', title: 'Pacote', typeIcon: 'cart', iconSize: 42, accent: '#b9770a' },

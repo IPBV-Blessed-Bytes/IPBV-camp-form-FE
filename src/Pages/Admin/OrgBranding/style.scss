@@ -1,0 +1,240 @@
+@use '../../../styles/Variables.scss' as *;
+
+.org-branding {
+  &__body {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  &__card {
+    background: $white;
+    border: 1px solid $gray-200;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 12px rgba($blue-900, 0.04);
+  }
+
+  &__card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $blue-900;
+    margin-bottom: 0.25rem;
+  }
+
+  &__hint {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin-bottom: 1.1rem;
+  }
+
+  &__logo-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__logo-box {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: $white;
+    border: 1px solid color-mix(in srgb, var(--brand) 18%, $gray-200);
+    box-shadow: 0 6px 18px rgba($blue-900, 0.08);
+    flex-shrink: 0;
+  }
+
+  &__logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.4rem;
+  }
+
+  &__logo-monogram {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: $white;
+    background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 60%, $blue-900));
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__logo-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  &__input {
+    border-radius: 10px;
+    border: 1px solid $gray-300;
+    font-size: 1rem;
+    padding: 0.6rem 0.85rem;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+
+  &__counter {
+    display: block;
+    text-align: right;
+    font-size: 0.78rem;
+    color: $gray-500;
+    margin-top: 0.3rem;
+  }
+
+  &__color-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  &__color-swatch {
+    width: 56px;
+    height: 44px;
+    border: 1px solid $gray-300;
+    border-radius: 10px;
+    padding: 2px;
+    background: $white;
+    cursor: pointer;
+  }
+
+  &__color-hex {
+    max-width: 180px;
+  }
+
+  &__save {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--brand, #{$primary});
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__preview {
+    position: sticky;
+    top: 1.5rem;
+    border-radius: 20px;
+    padding: 1.25rem;
+    background:
+      radial-gradient(600px 300px at 50% -10%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+      linear-gradient(180deg, $gray-50 0%, $gray-100 100%);
+    border: 1px solid $gray-200;
+  }
+
+  &__preview-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $gray-500;
+    margin-bottom: 1rem;
+  }
+
+  &__preview-hero {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 1rem;
+  }
+
+  &__preview-logo {
+    width: 76px;
+    height: 76px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $white;
+    border: 1px solid color-mix(in srgb, var(--brand) 18%, $gray-200);
+    box-shadow: 0 8px 22px rgba($blue-900, 0.12);
+    margin-bottom: 1rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 0.35rem;
+    }
+
+    span {
+      font-size: 2rem;
+      font-weight: 800;
+      color: $white;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 60%, $blue-900));
+    }
+  }
+
+  &__preview-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+    background: color-mix(in srgb, var(--brand) 12%, $white);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 0.8rem;
+  }
+
+  &__preview-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $blue-900;
+    margin-bottom: 0.4rem;
+  }
+
+  &__preview-desc {
+    font-size: 0.9rem;
+    color: $gray-600;
+    line-height: 1.5;
+    margin-bottom: 1.1rem;
+    max-width: 280px;
+  }
+
+  &__preview-card {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+    background: $white;
+    border: 1px solid $gray-200;
+    border-top: 4px solid var(--brand);
+    border-radius: 12px;
+    padding: 0.85rem 1.75rem;
+    box-shadow: 0 6px 18px rgba($blue-900, 0.06);
+  }
+}
