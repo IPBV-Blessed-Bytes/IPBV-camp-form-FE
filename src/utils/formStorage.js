@@ -8,6 +8,7 @@ export const FORM_STORAGE_KEYS = {
   currentFormIndex: 'currentFormIndex',
   resumeCheckout: 'resumeCheckout',
   donation: 'donation',
+  prefillOptOut: 'prefillOptOut',
 };
 
 export const getTempData = () => JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.tempData)) || {};
@@ -25,6 +26,7 @@ const DRAFT_KEYS = [
   FORM_STORAGE_KEYS.currentFormIndex,
   FORM_STORAGE_KEYS.discountList,
   FORM_STORAGE_KEYS.donation,
+  FORM_STORAGE_KEYS.prefillOptOut,
   FORM_STORAGE_KEYS.resumeCheckout,
 ];
 

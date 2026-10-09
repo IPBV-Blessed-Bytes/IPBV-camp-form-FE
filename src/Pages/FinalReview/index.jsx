@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { useCart } from 'react-use-cart';
 import { saveFinalObservation } from '@/services/campers';
 import { useFormState } from '@/contexts/FormStateContext';
-import { getTempData } from '@/utils/formStorage';
+import { FORM_STORAGE_KEYS, getTempData } from '@/utils/formStorage';
 import './style.scss';
 
 const FinalReview = () => {
@@ -19,6 +19,9 @@ const FinalReview = () => {
   const updateForm = updateFormValues('finalReview');
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDataAuthorized, setIsDataAuthorized] = useState(false);
+  const [prefillOptOut, setPrefillOptOut] = useState(
+    () => sessionStorage.getItem(FORM_STORAGE_KEYS.prefillOptOut) === 'true',
+  );
   const [observation, setObservation] = useState('');
   const location = useLocation();
   const { emptyCart } = useCart();
@@ -37,6 +40,11 @@ const FinalReview = () => {
 
   const handleAuthorizationChange = (e) => {
     setIsDataAuthorized(e.target.checked);
+  };
+
+  const handlePrefillOptOutChange = (e) => {
+    setPrefillOptOut(e.target.checked);
+    sessionStorage.setItem(FORM_STORAGE_KEYS.prefillOptOut, String(e.target.checked));
   };
 
   const handleSaveUser = async () => {
@@ -374,6 +382,15 @@ const FinalReview = () => {
                     id={'authorizeData'}
                     onChange={handleAuthorizationChange}
                     checked={isDataAuthorized}
+                  />
+
+                  <Form.Check
+                    className="form-review__section-title fw-bold"
+                    type={'checkbox'}
+                    label={'Não usar meus dados para pré-preencher minhas inscrições futuras.'}
+                    id={'prefillOptOut'}
+                    onChange={handlePrefillOptOutChange}
+                    checked={prefillOptOut}
                   />
                 </Form.Group>
               </Form>

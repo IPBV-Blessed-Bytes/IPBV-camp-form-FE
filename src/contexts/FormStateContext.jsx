@@ -325,6 +325,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
         setStatus('loading');
 
         const discountList = JSON.parse(sessionStorage.getItem(FORM_STORAGE_KEYS.discountList) || '[]');
+        const prefillOptOut = sessionStorage.getItem(FORM_STORAGE_KEYS.prefillOptOut) === 'true';
 
         const buildFormPayload = (form, index) => {
           const formBirthday = new Date(form?.personalInformation?.birthday);
@@ -397,6 +398,7 @@ export const FormStateProvider = ({ children, formStageCloseForm }) => {
             manualRegistration: false,
             appliedDiscount,
             authorization: true,
+            prefillOptOut,
           };
         };
 
