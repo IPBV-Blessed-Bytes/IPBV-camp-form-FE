@@ -52,8 +52,7 @@ const AdminTopbar = ({ username, logout }) => {
     if (!slug || slug === currentSlug) return;
     const chosen = events.find((event) => event.slug === slug);
     setSelectedEvent(slug, chosen?.name);
-    // Re-scope the whole admin to the chosen event (fetchers read the selected slug).
-    window.location.assign('/admin');
+    window.location.reload();
   };
 
   return (
