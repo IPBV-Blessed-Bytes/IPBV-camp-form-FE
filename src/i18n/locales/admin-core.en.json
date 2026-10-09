@@ -64,7 +64,9 @@
         "solicitacoes": "Change Requests",
         "usuarios": "Users",
         "vagas": "Vacancies",
-        "backup": "Backup"
+        "backup": "Backup",
+        "cupons": "Coupons",
+        "identidade": "Identity"
       }
     },
     "backup": {

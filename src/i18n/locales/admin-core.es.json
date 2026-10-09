@@ -64,7 +64,9 @@
         "solicitacoes": "Solicitudes de Cambio",
         "usuarios": "Usuarios",
         "vagas": "Plazas",
-        "backup": "Copia de seguridad"
+        "backup": "Copia de seguridad",
+        "cupons": "Cupones",
+        "identidade": "Identidad"
       }
     },
     "backup": {

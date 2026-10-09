@@ -64,7 +64,9 @@
         "solicitacoes": "Solicitações de Alteração",
         "usuarios": "Usuários",
         "vagas": "Vagas",
-        "backup": "Backup"
+        "backup": "Backup",
+        "cupons": "Cupons",
+        "identidade": "Identidade"
       }
     },
     "backup": {
