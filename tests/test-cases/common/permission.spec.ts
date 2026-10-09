@@ -19,8 +19,7 @@ test.describe('Permissions flow', () => {
     await expect(permission.timesCard).toBeVisible();
     await expect(permission.feedbacksCard).toBeVisible();
     await expect(permission.checkinCard).toBeVisible();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
+    await expect(permission.overviewSession).toBeVisible();
   });
 
   test('Check collaborator permissions', async ({ authentication, permission }) => {
@@ -36,8 +35,7 @@ test.describe('Permissions flow', () => {
     await expect(permission.quartosCard).toBeVisible();
     await expect(permission.timesCard).toBeVisible();
     await expect(permission.feedbacksCard).toBeVisible();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
+    await expect(permission.overviewSession).toBeVisible();
   });
 
   test('Check collaboratorUser viewer permissions', async ({ authentication, permission }) => {
@@ -53,8 +51,7 @@ test.describe('Permissions flow', () => {
     await expect(permission.timesCard).toBeHidden();
     await expect(permission.feedbacksCard).toBeHidden();
     await expect(permission.checkinCard).toBeHidden();
-    await expect(permission.packagesSession).toBeVisible();
-    await expect(permission.totalSession).toBeVisible();
+    await expect(permission.overviewSession).toBeVisible();
   });
 
   test('Check checker permissions', async ({ authentication, permission }) => {

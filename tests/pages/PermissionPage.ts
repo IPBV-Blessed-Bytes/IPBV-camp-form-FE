@@ -10,8 +10,7 @@ export class PermissionsComponent {
   readonly feedbacksCard: Locator;
   readonly checkinCard: Locator;
   readonly configuracoesCard: Locator;
-  readonly packagesSession: Locator;
-  readonly totalSession: Locator;
+  readonly overviewSession: Locator;
 
   constructor(readonly page: Page) {
     this.logoutButton = page.locator('.admin-topbar__user');
@@ -23,7 +22,6 @@ export class PermissionsComponent {
     this.feedbacksCard = page.getByRole('heading', { name: 'Feedbacks', exact: true });
     this.checkinCard = page.getByRole('heading', { name: 'Check-in', exact: true });
     this.configuracoesCard = page.getByRole('heading', { name: 'Configurações', exact: true });
-    this.packagesSession = page.getByRole('heading', { name: 'Pacotes válidos', exact: true });
-    this.totalSession = page.getByRole('heading', { name: 'Totais gerais', exact: true });
+    this.overviewSession = page.getByRole('heading', { name: 'Visão geral', exact: true });
   }
 }
