@@ -12,7 +12,7 @@ export class AuthenticationComponent {
   readonly eventSelect: Locator;
 
   constructor(readonly page: Page) {
-    this.churchFooterLogo = page.locator('.form__footer-logo');
+    this.churchFooterLogo = page.locator('.form__footer__admin');
     this.adminAccess = page.getByRole('heading', { name: 'Painel Administrativo' });
     this.usernameInput = page.getByRole('textbox', { name: 'Nome de Usuário' });
     this.passwordInput = page.getByLabel('Senha', { exact: true });
