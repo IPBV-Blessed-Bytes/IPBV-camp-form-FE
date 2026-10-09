@@ -27,7 +27,8 @@
       "status": {
         "open": "Registrations open",
         "closed": "Registrations closed"
-      }
+      },
+      "addToCalendar": "Add to calendar"
     },
     "footer": {
       "panelTitle": "Internal Panel - System",

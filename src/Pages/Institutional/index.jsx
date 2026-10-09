@@ -13,6 +13,8 @@ import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV } from '@/config/institutionalContent';
 import { eventPath } from '@/config/eventScope';
+import { buildEventCalendarUrl } from '@/utils/calendar';
+import { getEventSchedule } from '@/Pages/Packages/utils/calculateAge';
 import './style.scss';
 
 const REGISTRATION_STATUS = {
@@ -97,6 +99,16 @@ const Institutional = () => {
   const template = content.template || 'template-1';
   const accent = content.color || '#007185';
   const hero = content.hero || {};
+  const eventSchedule = getEventSchedule() || {};
+  const calendarUrl = buildEventCalendarUrl({
+    title: eventName || hero.title || '',
+    baseDate: eventSchedule.baseDate,
+    startTime: eventSchedule.startTime,
+    endDate: eventSchedule.endDate,
+    endTime: eventSchedule.endTime,
+    location: mapQuery,
+    details: eventName || hero.title || '',
+  });
   const stats = content.stats || [];
   const about = content.about || {};
   const highlights = about.highlights || [];
@@ -252,6 +264,16 @@ const Institutional = () => {
             <Button type="button" variant="" className="inst-btn inst-btn--outline-light inst-btn--lg" onClick={() => scrollTo('sobre')}>
               Saiba mais
             </Button>
+            {calendarUrl && (
+              <a
+                className="inst-btn inst-btn--outline-light inst-btn--lg"
+                href={calendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('site.institutional.addToCalendar')}
+              </a>
+            )}
           </div>
         </div>
         {stats.length > 0 && (

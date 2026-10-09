@@ -27,7 +27,8 @@
       "status": {
         "open": "Inscrições abertas",
         "closed": "Inscrições encerradas"
-      }
+      },
+      "addToCalendar": "Adicionar ao calendário"
     },
     "footer": {
       "panelTitle": "Painel Interno - Sistema",
