@@ -11,6 +11,7 @@ import useEventSchema from '@/hooks/useEventSchema';
 import { buildValidationSchema, initialAnswers } from '@/form/dynamic/buildValidation';
 import DynamicField from '@/form/dynamic/DynamicField';
 import PackageStep from '@/form/dynamic/PackageStep';
+import WorkshopStep from '@/form/dynamic/WorkshopStep';
 import RideStep from '@/form/dynamic/RideStep';
 import { computeAge, packageTotal, packageFullTotal, formatPrice, productPrice } from '@/form/dynamic/packagePricing';
 import { createSubmission } from '@/services/submissions';
@@ -20,6 +21,7 @@ import { buildEventCalendarUrl } from '@/utils/calendar';
 import { getEventSchedule } from '@/Pages/Packages/utils/calculateAge';
 import { getPublicHomeInfo } from '@/services/homeInfo';
 import { getProducts } from '@/services/products';
+import { listPublicWorkshops } from '@/services/workshops';
 import { getLots } from '@/services/lots';
 import { listPackageCategories } from '@/services/packageCategories';
 import { listAgePriceRules } from '@/services/agePriceRules';
@@ -145,6 +147,20 @@ const DynamicForm = () => {
     [registrationFeeEnabled, activeLot],
   );
 
+  const { data: workshopsData } = useQuery({
+    queryKey: ['workshops', slug],
+    queryFn: listPublicWorkshops,
+  });
+  const workshopsEnabled = Boolean(workshopsData?.enabled);
+  const workshops = useMemo(() => workshopsData?.workshops || [], [workshopsData]);
+  const workshopMinChoices = workshopsData?.minChoices ?? null;
+  const workshopMaxChoices = workshopsData?.maxChoices ?? null;
+  const workshopById = useMemo(() => new Map(workshops.map((w) => [w.id, w])), [workshops]);
+  const workshopsTotalFor = useCallback(
+    (ids) => (ids || []).reduce((sum, id) => sum + Number(workshopById.get(id)?.price || 0), 0),
+    [workshopById],
+  );
+
   const [answers, setAnswers] = useState({});
   const [errors, setErrors] = useState({});
   const [stepIndex, setStepIndex] = useState(0);
@@ -200,19 +216,20 @@ const DynamicForm = () => {
       steps.push({ kind: 'section', section: s });
     });
     if (paymentEnabled && !steps.some((s) => s.kind === 'package')) steps.push({ kind: 'package' });
+    if (workshopsEnabled && workshops.length > 0) steps.push({ kind: 'workshop' });
     steps.push({ kind: 'review' });
     if (paymentEnabled) {
       steps.push({ kind: 'cart' });
       steps.push({ kind: 'payment' });
     }
     return steps;
-  }, [sections, paymentEnabled, people.length]);
+  }, [sections, paymentEnabled, people.length, workshopsEnabled, workshops.length]);
 
   const currentStep = wizardSteps[stepIndex];
   const isReview = currentStep?.kind === 'review';
   const stepLabel = useCallback(
     (st) =>
-      ({ section: st.section?.name, package: st.section?.name || t('form.dynamic.packageLabel'), ride: st.section?.name || t('form.dynamic.rideLabel'), review: t('form.dynamic.review'), cart: t('form.dynamic.cart'), payment: t('form.dynamic.payment') })[
+      ({ section: st.section?.name, package: st.section?.name || t('form.dynamic.packageLabel'), workshop: t('form.dynamic.workshops.stepTitle'), ride: st.section?.name || t('form.dynamic.rideLabel'), review: t('form.dynamic.review'), cart: t('form.dynamic.cart'), payment: t('form.dynamic.payment') })[
         st.kind
       ],
     [t],
@@ -224,8 +241,8 @@ const DynamicForm = () => {
     [packageProducts, ageRules, baseDate],
   );
   const personTotal = useCallback(
-    (person) => personPackageTotal(person) + registrationFee,
-    [personPackageTotal, registrationFee],
+    (person) => personPackageTotal(person) + registrationFee + workshopsTotalFor(person.__workshops),
+    [personPackageTotal, registrationFee, workshopsTotalFor],
   );
   const packagesTotal = useMemo(
     () => people.reduce((sum, person) => sum + personPackageTotal(person), 0),
@@ -323,6 +340,18 @@ const DynamicForm = () => {
       const missing = packageCategories.filter((c) => c.required && !(selection[c.id]?.length));
       if (missing.length) {
         toast.error(t('form.dynamic.chooseOptionIn', { fields: missing.map((m) => m.name).join(', ') }));
+        return false;
+      }
+      return true;
+    }
+    if (currentStep.kind === 'workshop') {
+      const selected = currentAnswers.__workshops || [];
+      if (workshopMinChoices && selected.length < workshopMinChoices) {
+        toast.error(t('form.dynamic.workshops.minError', { count: workshopMinChoices }));
+        return false;
+      }
+      if (workshopMaxChoices && selected.length > workshopMaxChoices) {
+        toast.error(t('form.dynamic.workshops.maxError', { count: workshopMaxChoices }));
         return false;
       }
       return true;
@@ -915,6 +944,26 @@ const DynamicForm = () => {
                     </div>
                   ))}
 
+                  {workshopsEnabled && (currentAnswers.__workshops || []).length > 0 && (
+                    <div className="mb-4">
+                      <h5>{t('form.dynamic.workshops.stepTitle')}</h5>
+                      {(currentAnswers.__workshops || []).map((id) => {
+                        const workshop = workshopById.get(id);
+                        if (!workshop) return null;
+                        return (
+                          <div key={id} className="d-flex justify-content-between border-bottom py-2">
+                            <span className="fw-bold">{workshop.title}</span>
+                            <span>
+                              {Number(workshop.price || 0) === 0
+                                ? t('form.dynamic.workshops.free')
+                                : formatPrice(workshop.price)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
                   {paymentEnabled && (
                     <div className="mb-4">
                       <h5>{t('form.dynamic.packageLabel')}</h5>
@@ -1006,6 +1055,26 @@ const DynamicForm = () => {
                                         </div>
                                       ));
                                   })}
+                                  {workshopsEnabled &&
+                                    (person.__workshops || []).map((id) => {
+                                      const workshop = workshopById.get(id);
+                                      if (!workshop) return null;
+                                      return (
+                                        <div key={id} className="cart-item">
+                                          <div className="item-info mb-3">
+                                            <div className="d-flex justify-content-between">
+                                              <h5>{t('form.dynamic.workshops.stepTitle')}:</h5>
+                                              <h5>
+                                                {Number(workshop.price || 0) === 0
+                                                  ? t('form.dynamic.workshops.free')
+                                                  : formatPrice(workshop.price)}
+                                              </h5>
+                                            </div>
+                                            <p className="cart-item__product">{workshop.title}</p>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
                                   <div className="packages-horizontal-line-cart"></div>
                                   <h5 className="cart-user-total fw-bold d-flex justify-content-between">
                                     {t('form.dynamic.totalPerPerson')} <span>{formatPrice(personTotal(person))}</span>
@@ -1270,6 +1339,24 @@ const DynamicForm = () => {
                   registrationFee={registrationFee}
                   value={currentAnswers.__package}
                   onChange={(sel) => setValue('__package', sel)}
+                />
+                <div className="form-step__nav dynamic-package__nav">
+                  <Button variant="light" size="lg" onClick={goBack} disabled={stepIndex === 0}>
+                    {t('form.dynamic.back')}
+                  </Button>
+                  <Button variant="warning" size="lg" onClick={goNext}>
+                    {wizardSteps[stepIndex + 1]?.kind === 'review' ? t('form.dynamic.reviewAction') : t('form.dynamic.advance')}
+                  </Button>
+                </div>
+              </div>
+            ) : currentStep.kind === 'workshop' ? (
+              <div className="dynamic-package">
+                <WorkshopStep
+                  workshops={workshops}
+                  minChoices={workshopMinChoices}
+                  maxChoices={workshopMaxChoices}
+                  value={currentAnswers.__workshops}
+                  onChange={(sel) => setValue('__workshops', sel)}
                 />
                 <div className="form-step__nav dynamic-package__nav">
                   <Button variant="light" size="lg" onClick={goBack} disabled={stepIndex === 0}>

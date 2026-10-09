@@ -438,6 +438,7 @@ const AdminLoggedIn = ({
     { path: 'recebimento', title: 'Recebimento', typeIcon: 'money', iconSize: 42, accent: '#057c05' },
     { path: 'financeiro', title: 'Financeiro', typeIcon: 'money', iconSize: 42, accent: '#204691' },
     { path: 'produtos', title: 'Produtos', typeIcon: 'cart', iconSize: 44, accent: '#FF7F50' },
+    { path: 'oficinas', title: 'Oficinas', typeIcon: 'notebook', iconSize: 42, accent: '#7e57c2' },
     { path: 'pulseiras', title: 'Pulseiras', typeIcon: 'wristband', iconSize: 44, accent: '#e0a800' },
     { path: 'usuarios', title: 'Usuários', typeIcon: 'add-person', iconSize: 44, accent: '#6f42c1' },
     { path: 'papeis', title: 'Papéis e Permissões', typeIcon: 'feedback', iconSize: 44, accent: '#b5468a' },

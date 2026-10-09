@@ -110,7 +110,28 @@
       "pm_pix_label": "PIX",
       "pm_pix_desc": "Aprobación al instante",
       "pm_ticket_label": "Boleto",
-      "pm_ticket_desc": "Boletos mensuales"
+      "pm_ticket_desc": "Boletos mensuales",
+      "workshops": {
+        "stepTitle": "Talleres",
+        "summaryTitle": "Talleres seleccionados",
+        "noneSelected": "Ningún taller seleccionado",
+        "empty": "No hay talleres disponibles por ahora.",
+        "free": "Gratis",
+        "soldOut": "Agotado",
+        "seatsLeft": "{{count}} cupos",
+        "selected": "Seleccionado",
+        "select": "Seleccionar",
+        "conflictHint": "Horario en conflicto con otro taller seleccionado.",
+        "chooseExactly": "Elige {{count}} taller(es).",
+        "chooseRange": "Elige de {{min}} a {{max}} talleres.",
+        "chooseMin": "Elige al menos {{count}} taller(es).",
+        "chooseMax": "Elige hasta {{count}} taller(es).",
+        "chooseFree": "Elige los talleres a los que quieras asistir.",
+        "soldOutError": "Este taller está agotado.",
+        "maxError": "Puedes elegir como máximo {{count}} taller(es).",
+        "conflictError": "Este taller tiene conflicto de horario con otro ya seleccionado.",
+        "minError": "Elige al menos {{count}} taller(es) para continuar."
+      }
     }
   },
   "common": {

@@ -110,7 +110,28 @@
       "pm_pix_label": "PIX",
       "pm_pix_desc": "Instant approval",
       "pm_ticket_label": "Boleto",
-      "pm_ticket_desc": "Monthly boletos"
+      "pm_ticket_desc": "Monthly boletos",
+      "workshops": {
+        "stepTitle": "Workshops",
+        "summaryTitle": "Selected workshops",
+        "noneSelected": "No workshop selected",
+        "empty": "No workshops available right now.",
+        "free": "Free",
+        "soldOut": "Sold out",
+        "seatsLeft": "{{count}} seats left",
+        "selected": "Selected",
+        "select": "Select",
+        "conflictHint": "Time conflicts with another selected workshop.",
+        "chooseExactly": "Choose {{count}} workshop(s).",
+        "chooseRange": "Choose from {{min}} to {{max}} workshops.",
+        "chooseMin": "Choose at least {{count}} workshop(s).",
+        "chooseMax": "Choose up to {{count}} workshop(s).",
+        "chooseFree": "Choose the workshops you want to attend.",
+        "soldOutError": "This workshop is sold out.",
+        "maxError": "You can choose at most {{count}} workshop(s).",
+        "conflictError": "This workshop conflicts with the schedule of another already selected.",
+        "minError": "Choose at least {{count}} workshop(s) to continue."
+      }
     }
   },
   "common": {

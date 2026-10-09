@@ -66,6 +66,7 @@ const AdminManual = lazy(() => import('@/Pages/Manual'));
 const AdminRecebimento = lazy(() => import('@/Pages/Admin/Recebimento'));
 const AdminFinance = lazy(() => import('@/Pages/Admin/Finance'));
 const AdminPackageBuilder = lazy(() => import('@/Pages/Admin/PackageBuilder'));
+const AdminWorkshopManagement = lazy(() => import('@/Pages/Admin/WorkshopManagement'));
 const AdminFaqBuilder = lazy(() => import('@/Pages/Admin/FaqBuilder'));
 const FAQ = lazy(() => import('../Pages/FAQ'));
 const AdminInstitutional = lazy(() => import('@/Pages/Admin/Institutional'));
@@ -448,6 +449,14 @@ const FormRoutes = () => {
               element={
                 <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
                   <AdminPackageBuilder formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/oficinas')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                  <AdminWorkshopManagement formStage={formStage} loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />

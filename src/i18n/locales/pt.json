@@ -110,7 +110,28 @@
       "pm_pix_label": "PIX",
       "pm_pix_desc": "Aprovação na hora",
       "pm_ticket_label": "Boleto",
-      "pm_ticket_desc": "Boletos mensais"
+      "pm_ticket_desc": "Boletos mensais",
+      "workshops": {
+        "stepTitle": "Oficinas",
+        "summaryTitle": "Oficinas selecionadas",
+        "noneSelected": "Nenhuma oficina selecionada",
+        "empty": "Nenhuma oficina disponível no momento.",
+        "free": "Grátis",
+        "soldOut": "Esgotada",
+        "seatsLeft": "{{count}} vagas",
+        "selected": "Selecionada",
+        "select": "Selecionar",
+        "conflictHint": "Horário em conflito com outra oficina selecionada.",
+        "chooseExactly": "Escolha {{count}} oficina(s).",
+        "chooseRange": "Escolha de {{min}} a {{max}} oficinas.",
+        "chooseMin": "Escolha pelo menos {{count}} oficina(s).",
+        "chooseMax": "Escolha até {{count}} oficina(s).",
+        "chooseFree": "Escolha as oficinas que deseja participar.",
+        "soldOutError": "Esta oficina está esgotada.",
+        "maxError": "Você pode escolher no máximo {{count}} oficina(s).",
+        "conflictError": "Esta oficina conflita com o horário de outra já selecionada.",
+        "minError": "Escolha pelo menos {{count}} oficina(s) para continuar."
+      }
     }
   },
   "common": {

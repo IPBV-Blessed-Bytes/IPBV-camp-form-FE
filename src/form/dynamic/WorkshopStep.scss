@@ -1,0 +1,61 @@
+@use '../../styles/Variables.scss' as *;
+
+.workshop-card {
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__session {
+    color: var(--event-color, $primary);
+    font-weight: 700;
+  }
+
+  &__time {
+    color: $ink;
+    font-weight: 600;
+  }
+
+  &__conflict {
+    color: $danger;
+  }
+}
+
+.workshop-badge {
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+
+  &--price {
+    background: rgba($primary, 0.12);
+    color: $primary;
+  }
+
+  &--free {
+    background: rgba($emerald, 0.16);
+    color: $emerald;
+  }
+
+  &--seats {
+    background: $gray-100;
+    color: $ink;
+  }
+
+  &--soldout {
+    background: $danger-light;
+    color: $danger;
+  }
+}
+
+.workshop-summary {
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid $gray-200;
+  }
+}
