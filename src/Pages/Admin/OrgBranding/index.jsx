@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Form, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import {
@@ -11,15 +12,24 @@ import {
   orgLogoUrl,
 } from '@/services/organizationBranding';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
+import FormSection from '@/components/Admin/FormSection';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
 import './style.scss';
 
 const DEFAULT_COLOR = '#007185';
-const HEX_PATTERN = /^#([0-9a-fA-F]{6})$/;
+const HEX_PATTERN = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+const expandHex = (hex) => {
+  if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
+    return `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+  }
+  return hex;
+};
 
 const OrgBranding = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const fileRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -36,7 +46,7 @@ const OrgBranding = ({ loggedUsername }) => {
       setDescription(data?.description || '');
       setBrandColor(data?.brandColor || DEFAULT_COLOR);
     } catch {
-      toast.error('Não foi possível carregar a identidade da organização.');
+      toast.error(t('admin.orgBranding.loadError'));
     } finally {
       setLoading(false);
     }
@@ -60,9 +70,9 @@ const OrgBranding = ({ loggedUsername }) => {
       await uploadOrgLogo(file);
       setBranding((prev) => ({ ...prev, hasLogo: true }));
       setLogoVersion(Date.now());
-      toast.success('Logo atualizado.');
+      toast.success(t('admin.orgBranding.logoSaved'));
     } catch {
-      toast.error('Não foi possível enviar o logo.');
+      toast.error(t('admin.orgBranding.logoError'));
     } finally {
       setUploading(false);
     }
@@ -74,9 +84,9 @@ const OrgBranding = ({ loggedUsername }) => {
       await deleteOrgLogo();
       setBranding((prev) => ({ ...prev, hasLogo: false }));
       setLogoVersion(0);
-      toast.success('Logo removido.');
+      toast.success(t('admin.orgBranding.logoRemoved'));
     } catch {
-      toast.error('Não foi possível remover o logo.');
+      toast.error(t('admin.orgBranding.logoRemoveError'));
     } finally {
       setUploading(false);
     }
@@ -84,16 +94,16 @@ const OrgBranding = ({ loggedUsername }) => {
 
   const handleSave = async () => {
     if (brandColor && !HEX_PATTERN.test(brandColor)) {
-      toast.error('Informe uma cor em formato hexadecimal, ex: #0ea5a0.');
+      toast.error(t('admin.orgBranding.colorInvalid'));
       return;
     }
     setSaving(true);
     try {
       await updateOrgBranding({ description, brandColor });
       setBranding((prev) => ({ ...prev, description, brandColor }));
-      toast.success('Identidade salva.');
+      toast.success(t('admin.orgBranding.saved'));
     } catch {
-      toast.error('Não foi possível salvar as alterações.');
+      toast.error(t('admin.orgBranding.saveError'));
     } finally {
       setSaving(false);
     }
@@ -104,21 +114,21 @@ const OrgBranding = ({ loggedUsername }) => {
   const logoSrc = hasLogo ? `${orgLogoUrl(slug)}?v=${logoVersion || 1}` : '';
 
   return (
-    <div className="org-branding">
+    <div className="admin-subpage admin-subpage--settings">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Identidade da Organização"
-        subtitle="Personalize a página inicial que seus inscritos veem"
+        title={t('admin.orgBranding.title')}
+        subtitle={t('admin.orgBranding.subtitle')}
         typeIcon="camera"
       />
 
-      <div className="org-branding__body">
+      <div className="admin-subpage__content org-branding">
         <Row className="g-4">
           <Col xs={12} lg={7}>
-            <div className="org-branding__card">
-              <h2 className="org-branding__card-title">Logo</h2>
-              <p className="org-branding__hint">Aparece no topo da sua página pública. PNG ou JPG, fundo transparente de preferência.</p>
-
+            <FormSection
+              title={t('admin.orgBranding.logoTitle')}
+              description={t('admin.orgBranding.logoDesc')}
+            >
               <div className="org-branding__logo-row">
                 <div className="org-branding__logo-box" style={{ '--brand': accent }}>
                   {hasLogo ? (
@@ -129,90 +139,81 @@ const OrgBranding = ({ loggedUsername }) => {
                 </div>
                 <div className="org-branding__logo-actions">
                   <input ref={fileRef} type="file" accept="image/*" hidden onChange={handleLogoFile} />
-                  <SpinnerButton
-                    variant="primary"
-                    loading={uploading}
-                    onClick={() => fileRef.current?.click()}
-                  >
-                    {hasLogo ? 'Trocar logo' : 'Enviar logo'}
+                  <SpinnerButton variant="outline-teal-blue" loading={uploading} onClick={() => fileRef.current?.click()}>
+                    {hasLogo ? t('admin.orgBranding.changeLogo') : t('admin.orgBranding.uploadLogo')}
                   </SpinnerButton>
                   {hasLogo && (
                     <Button variant="outline-danger" disabled={uploading} onClick={handleRemoveLogo}>
-                      Remover
+                      {t('admin.orgBranding.remove')}
                     </Button>
                   )}
                 </div>
               </div>
-            </div>
+            </FormSection>
 
-            <div className="org-branding__card">
-              <h2 className="org-branding__card-title">Descrição</h2>
-              <p className="org-branding__hint">Uma frase curta que apresenta sua organização aos inscritos.</p>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                maxLength={280}
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Ex: Comunidade cristã na Barra da Tijuca. Inscreva-se nos nossos eventos."
-                className="org-branding__input"
-              />
-              <span className="org-branding__counter">{description.length}/280</span>
-            </div>
+            <FormSection title={t('admin.orgBranding.descriptionTitle')} description={t('admin.orgBranding.descriptionDesc')}>
+              <Form.Group className="mt-2">
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  maxLength={280}
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  placeholder={t('admin.orgBranding.descriptionPlaceholder')}
+                />
+                <span className="org-branding__counter">{description.length}/280</span>
+              </Form.Group>
+            </FormSection>
 
-            <div className="org-branding__card">
-              <h2 className="org-branding__card-title">Cor da marca</h2>
-              <p className="org-branding__hint">Usada nos destaques da página pública.</p>
+            <FormSection title={t('admin.orgBranding.colorTitle')} description={t('admin.orgBranding.colorDesc')}>
               <div className="org-branding__color-row">
                 <input
                   type="color"
-                  value={accent}
+                  value={expandHex(accent)}
                   onChange={(event) => setBrandColor(event.target.value)}
                   className="org-branding__color-swatch"
-                  aria-label="Cor da marca"
+                  aria-label={t('admin.orgBranding.colorTitle')}
                 />
                 <Form.Control
                   value={brandColor}
                   onChange={(event) => setBrandColor(event.target.value)}
-                  placeholder="#0ea5a0"
-                  className="org-branding__input org-branding__color-hex"
+                  placeholder={t('admin.orgBranding.colorPlaceholder')}
+                  className="org-branding__color-hex"
                   isInvalid={!!brandColor && !HEX_PATTERN.test(brandColor)}
                 />
               </div>
-            </div>
+            </FormSection>
 
             <div className="org-branding__save">
-              <SpinnerButton variant="success" loading={saving} onClick={handleSave}>
-                Salvar alterações
-              </SpinnerButton>
               {slug && (
                 <a className="org-branding__link" href={`/o/${slug}`} target="_blank" rel="noreferrer">
-                  Ver página pública
+                  {t('admin.orgBranding.viewPublicPage')}
                   <Icons typeIcon="arrow-right" iconSize={16} fill={accent} />
                 </a>
               )}
+
+              <SpinnerButton variant="teal-blue" loading={saving} onClick={handleSave}>
+                {t('admin.orgBranding.save')}
+              </SpinnerButton>
             </div>
           </Col>
 
           <Col xs={12} lg={5}>
-            <div className="org-branding__preview" style={{ '--brand': accent }}>
-              <span className="org-branding__preview-label">Prévia</span>
-              <div className="org-branding__preview-hero">
-                <div className="org-branding__preview-logo">
-                  {hasLogo ? (
-                    <img src={logoSrc} alt={name} />
-                  ) : (
-                    <span>{(name || '?').charAt(0).toUpperCase()}</span>
-                  )}
+            <FormSection title={t('admin.orgBranding.preview')}>
+              <div className="org-branding__preview" style={{ '--brand': accent }}>
+                <div className="org-branding__preview-hero">
+                  <div className="org-branding__preview-logo">
+                    {hasLogo ? <img src={logoSrc} alt={name} /> : <span>{(name || '?').charAt(0).toUpperCase()}</span>}
+                  </div>
+                  <span className="org-branding__preview-eyebrow">{t('admin.orgBranding.previewEyebrow')}</span>
+                  <h3 className="org-branding__preview-name">{name || t('admin.orgBranding.orgFallback')}</h3>
+                  <p className="org-branding__preview-desc">
+                    {description || t('admin.orgBranding.descFallback')}
+                  </p>
+                  <span className="org-branding__preview-card">{t('admin.orgBranding.eventExample')}</span>
                 </div>
-                <span className="org-branding__preview-eyebrow">Inscrições abertas</span>
-                <h3 className="org-branding__preview-name">{name || 'Sua Organização'}</h3>
-                <p className="org-branding__preview-desc">
-                  {description || 'Selecione um evento abaixo para iniciar sua inscrição'}
-                </p>
-                <span className="org-branding__preview-card">Evento exemplo</span>
               </div>
-            </div>
+            </FormSection>
           </Col>
         </Row>
       </div>

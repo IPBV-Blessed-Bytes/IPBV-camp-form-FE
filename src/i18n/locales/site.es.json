@@ -237,6 +237,18 @@
       "s7Body": "Estos Términos pueden actualizarse. La versión vigente se identifica por la fecha indicada arriba. El uso continuado del Servicio tras los cambios implica la aceptación de la versión entonces vigente.",
       "s8Title": "8. Contacto",
       "s8Body": "Las dudas sobre estos Términos pueden enviarse a través de los canales de contacto indicados en la plataforma."
+    },
+    "catalog": {
+      "documentTitleGeneric": "Elige tu evento",
+      "documentTitleOrg": "Eventos · {{org}}",
+      "eyebrowOpen": "Inscripciones abiertas",
+      "title": "Elige tu Evento",
+      "subtitle": "Selecciona un evento abajo para iniciar tu inscripción",
+      "loadError": "No se pudieron cargar los eventos.",
+      "empty": "Ningún evento disponible por el momento.",
+      "registerCta": "Inscribirse",
+      "accountCta": "Entrar en mi cuenta",
+      "closedBadge": "Inscripciones cerradas"
     }
   }
 }

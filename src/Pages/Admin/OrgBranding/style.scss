@@ -1,34 +1,6 @@
 @use '../../../styles/Variables.scss' as *;
 
 .org-branding {
-  &__body {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 4rem;
-  }
-
-  &__card {
-    background: $white;
-    border: 1px solid $gray-200;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 2px 12px rgba($blue-900, 0.04);
-  }
-
-  &__card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: $blue-900;
-    margin-bottom: 0.25rem;
-  }
-
-  &__hint {
-    font-size: 0.875rem;
-    color: $gray-500;
-    margin-bottom: 1.1rem;
-  }
-
   &__logo-row {
     display: flex;
     align-items: center;
@@ -75,18 +47,6 @@
     flex-wrap: wrap;
   }
 
-  &__input {
-    border-radius: 10px;
-    border: 1px solid $gray-300;
-    font-size: 1rem;
-    padding: 0.6rem 0.85rem;
-
-    &:focus {
-      border-color: $primary;
-      box-shadow: 0 0 0 3px rgba($primary, 0.15);
-    }
-  }
-
   &__counter {
     display: block;
     text-align: right;
@@ -119,6 +79,7 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 0.5rem;
   }
@@ -137,24 +98,12 @@
   }
 
   &__preview {
-    position: sticky;
-    top: 1.5rem;
-    border-radius: 20px;
-    padding: 1.25rem;
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
     background:
       radial-gradient(600px 300px at 50% -10%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
       linear-gradient(180deg, $gray-50 0%, $gray-100 100%);
     border: 1px solid $gray-200;
-  }
-
-  &__preview-label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: $gray-500;
-    margin-bottom: 1rem;
   }
 
   &__preview-hero {

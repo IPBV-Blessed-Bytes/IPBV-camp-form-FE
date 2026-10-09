@@ -574,6 +574,36 @@
       "boletoMinHelp": "O último boleto vence no máximo esse número de dias antes do evento, garantindo que o pagamento (que leva de 2 a 5 dias úteis para cair na conta) entre antes da data. Em branco usa o padrão (20 dias).",
       "deleteTitle": "Excluir evento",
       "deleteConfirm": "Tem certeza que deseja excluir <b>{{name}}</b>? Eventos com inscrições vinculadas não podem ser excluídos, desative-o."
+    },
+    "orgBranding": {
+      "title": "Identidade da Organização",
+      "subtitle": "Personalize a página inicial que seus inscritos veem",
+      "logoTitle": "Logo",
+      "logoDesc": "Aparece no topo da sua página pública. PNG ou JPG, fundo transparente de preferência.",
+      "uploadLogo": "Enviar Logo",
+      "changeLogo": "Trocar Logo",
+      "remove": "Remover",
+      "descriptionTitle": "Descrição",
+      "descriptionDesc": "Uma frase curta que apresenta sua organização aos inscritos.",
+      "descriptionPlaceholder": "Ex: Comunidade cristã na Barra da Tijuca. Inscreva-se nos nossos eventos.",
+      "colorTitle": "Cor da marca",
+      "colorDesc": "Usada nos destaques da página pública.",
+      "colorPlaceholder": "#0ea5a0",
+      "preview": "Prévia",
+      "previewEyebrow": "Inscrições abertas",
+      "orgFallback": "Sua Organização",
+      "descFallback": "Selecione um evento abaixo para iniciar sua inscrição",
+      "eventExample": "Evento exemplo",
+      "viewPublicPage": "Ver página pública",
+      "save": "Salvar",
+      "loadError": "Não foi possível carregar a identidade da organização.",
+      "logoSaved": "Logo atualizado.",
+      "logoError": "Não foi possível enviar o logo.",
+      "logoRemoved": "Logo removido.",
+      "logoRemoveError": "Não foi possível remover o logo.",
+      "colorInvalid": "Informe uma cor em formato hexadecimal, ex: #0ea5a0.",
+      "saved": "Identidade salva.",
+      "saveError": "Não foi possível salvar as alterações."
     }
   }
 }

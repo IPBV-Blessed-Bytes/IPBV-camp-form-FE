@@ -237,6 +237,18 @@
       "s7Body": "These Terms may be updated. The current version is identified by the date above. Continued use of the Service after changes implies agreement with the version then in force.",
       "s8Title": "8. Contact",
       "s8Body": "Questions about these Terms may be sent through the contact channels provided on the platform."
+    },
+    "catalog": {
+      "documentTitleGeneric": "Choose your event",
+      "documentTitleOrg": "Events · {{org}}",
+      "eyebrowOpen": "Registrations open",
+      "title": "Choose your Event",
+      "subtitle": "Select an event below to start your registration",
+      "loadError": "Could not load the events.",
+      "empty": "No events available at the moment.",
+      "registerCta": "Register",
+      "accountCta": "Sign in to my account",
+      "closedBadge": "Registrations closed"
     }
   }
 }

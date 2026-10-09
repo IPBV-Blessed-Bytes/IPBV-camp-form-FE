@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { listEvents, getOrganizationCatalog, eventImageUrl } from '@/services/events';
 import { orgLogoUrl } from '@/services/organizationBranding';
@@ -63,8 +64,9 @@ OrgLogo.propTypes = {
   accent: PropTypes.string,
 };
 
-const EventCard = ({ event, accent, navigate }) => {
-  const color = event.color || accent;
+const EventCard = ({ event, accent, brandColor, navigate }) => {
+  const { t } = useTranslation();
+  const color = brandColor || event.color || accent;
   const registrationsOpen = event.registrationsOpen !== false;
 
   const handleClick = () => {
@@ -91,10 +93,10 @@ const EventCard = ({ event, accent, navigate }) => {
       {event.year && <span className="event-card__year">{event.year}</span>}
       <span className="event-card__name">{event.name}</span>
 
-      {!registrationsOpen && <span className="event-card__badge">Inscrições encerradas</span>}
+      {!registrationsOpen && <span className="event-card__badge">{t('site.catalog.closedBadge')}</span>}
 
       <span className="event-card__cta">
-        {registrationsOpen ? 'Fazer inscrição' : 'Entrar na minha conta'}
+        {registrationsOpen ? t('site.catalog.registerCta') : t('site.catalog.accountCta')}
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path
             d="M5 12h14M13 6l6 6-6 6"
@@ -113,10 +115,12 @@ const EventCard = ({ event, accent, navigate }) => {
 EventCard.propTypes = {
   event: PropTypes.object,
   accent: PropTypes.string,
+  brandColor: PropTypes.string,
   navigate: PropTypes.func,
 };
 
 const EventCatalog = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { orgSlug } = useParams();
   const [events, setEvents] = useState([]);
@@ -148,12 +152,15 @@ const EventCatalog = () => {
   const orgName = organization?.name || '';
 
   useEffect(() => {
-    document.title = orgName ? `Eventos · ${orgName}` : 'Escolha seu evento';
-  }, [orgName]);
+    document.title = orgName
+      ? t('site.catalog.documentTitleOrg', { org: orgName })
+      : t('site.catalog.documentTitleGeneric');
+  }, [orgName, t]);
 
   if (loading) return <Loading loading />;
 
-  const accent = organization?.brandColor || DEFAULT_COLOR;
+  const brandColor = organization?.brandColor || null;
+  const accent = brandColor || DEFAULT_COLOR;
   const openCount = events.filter((event) => event.registrationsOpen !== false).length;
   const contactEmail = organization?.contactEmail;
 
@@ -165,25 +172,25 @@ const EventCatalog = () => {
             <OrgLogo slug={organization?.slug || orgSlug} name={orgName} accent={accent} />
           )}
 
-          {openCount > 0 && <span className="event-catalog__eyebrow">Inscrições abertas</span>}
+          {openCount > 0 && <span className="event-catalog__eyebrow">{t('site.catalog.eyebrowOpen')}</span>}
 
-          <h1 className="event-catalog__title">{orgName || 'Escolha seu Evento'}</h1>
+          <h1 className="event-catalog__title">{orgName || t('site.catalog.title')}</h1>
 
           <p className="event-catalog__subtitle">
-            {organization?.description || 'Selecione um evento abaixo para iniciar sua inscrição'}
+            {organization?.description || t('site.catalog.subtitle')}
           </p>
         </div>
 
-        {error && <p className="text-center event-catalog__empty">Não foi possível carregar os eventos.</p>}
+        {error && <p className="text-center event-catalog__empty">{t('site.catalog.loadError')}</p>}
 
         {!error && events.length === 0 && (
-          <p className="text-center event-catalog__empty">Nenhum evento disponível no momento.</p>
+          <p className="text-center event-catalog__empty">{t('site.catalog.empty')}</p>
         )}
 
         <Row className="g-4 justify-content-center">
           {events.map((event) => (
             <Col key={event.slug} xs={12} sm={6} lg={4}>
-              <EventCard event={event} accent={accent} navigate={navigate} />
+              <EventCard event={event} accent={accent} brandColor={brandColor} navigate={navigate} />
             </Col>
           ))}
         </Row>

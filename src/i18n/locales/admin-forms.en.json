@@ -574,6 +574,36 @@
       "boletoMinHelp": "The last boleto is due at most this number of days before the event, ensuring the payment (which takes 2 to 5 business days to clear) arrives before the date. Blank uses the default (20 days).",
       "deleteTitle": "Delete event",
       "deleteConfirm": "Are you sure you want to delete <b>{{name}}</b>? Events with linked registrations cannot be deleted, deactivate it."
+    },
+    "orgBranding": {
+      "title": "Organization Identity",
+      "subtitle": "Customize the home page your registrants see",
+      "logoTitle": "Logo",
+      "logoDesc": "Shown at the top of your public page. PNG or JPG, transparent background preferred.",
+      "uploadLogo": "Upload Logo",
+      "changeLogo": "Change Logo",
+      "remove": "Remove",
+      "descriptionTitle": "Description",
+      "descriptionDesc": "A short sentence that introduces your organization to registrants.",
+      "descriptionPlaceholder": "e.g.: Christian community in Barra da Tijuca. Register for our events.",
+      "colorTitle": "Brand color",
+      "colorDesc": "Used in the highlights of the public page.",
+      "colorPlaceholder": "#0ea5a0",
+      "preview": "Preview",
+      "previewEyebrow": "Registrations open",
+      "orgFallback": "Your Organization",
+      "descFallback": "Select an event below to start your registration",
+      "eventExample": "Sample event",
+      "viewPublicPage": "View public page",
+      "save": "Save",
+      "loadError": "Could not load the organization identity.",
+      "logoSaved": "Logo updated.",
+      "logoError": "Could not upload the logo.",
+      "logoRemoved": "Logo removed.",
+      "logoRemoveError": "Could not remove the logo.",
+      "colorInvalid": "Enter a color in hexadecimal format, e.g.: #0ea5a0.",
+      "saved": "Identity saved.",
+      "saveError": "Could not save the changes."
     }
   }
 }
