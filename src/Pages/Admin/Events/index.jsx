@@ -66,6 +66,7 @@ const EMPTY_EVENT = {
   crewBusVacancies: '',
   whatsappGroupLink: '',
   showLgpdModal: true,
+  prefillEnabled: false,
 };
 
 const SOCIAL_NETWORKS = [
@@ -199,6 +200,7 @@ const AdminEvents = ({ loggedUsername }) => {
       crewBusVacancies: event.crewBusVacancies ?? '',
       whatsappGroupLink: event.whatsappGroupLink ?? '',
       showLgpdModal: event.showLgpdModal !== false,
+      prefillEnabled: event.prefillEnabled ?? false,
     });
     setHasImage(false);
     setImageVersion(Date.now());
@@ -308,6 +310,7 @@ const AdminEvents = ({ loggedUsername }) => {
         draft.crewBusVacancies === '' || draft.crewBusVacancies == null ? null : Number(draft.crewBusVacancies),
       whatsappGroupLink: draft.whatsappGroupLink?.trim() || null,
       showLgpdModal: draft.showLgpdModal !== false,
+      prefillEnabled: draft.prefillEnabled ?? false,
     };
 
     try {
@@ -1066,6 +1069,18 @@ const AdminEvents = ({ loggedUsername }) => {
               )}
             </>
           )}
+
+          <Form.Check
+            type="switch"
+            id="event-prefill-switch"
+            className="mt-3"
+            label={t('admin.events.prefillSwitch')}
+            checked={draft.prefillEnabled}
+            onChange={(e) => handleChange('prefillEnabled')(e.target.checked)}
+          />
+          <Form.Text className="text-muted-italic">
+            {t('admin.events.prefillHelp')}
+          </Form.Text>
         </Form>
       </CustomModal>
 

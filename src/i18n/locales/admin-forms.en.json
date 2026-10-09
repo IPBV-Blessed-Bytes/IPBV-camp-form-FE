@@ -588,6 +588,8 @@
       "deleteConfirm": "Are you sure you want to delete <b>{{name}}</b>? Events with linked registrations cannot be deleted, deactivate it.",
       "enableCoupons": "Enable discount coupons",
       "enableCouponsHelp": "Lets the registrant apply a coupon code in the form. Manage the codes on the Coupons screen.",
+      "prefillSwitch": "Pre-fill",
+      "prefillHelp": "Lets logged-in users pre-fill the form with the data from their own previous registration.",
       "enableRefundProtection": "Enable guaranteed refund",
       "refundProtectionHelp": "The registrant pays a protection fee in the form and can request the refund themselves from their account.",
       "protectionFeeLabel": "Protection fee",

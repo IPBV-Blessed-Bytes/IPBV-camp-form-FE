@@ -19,6 +19,12 @@
       "confirmClearCart": "Are you sure you want to empty the cart?"
     },
     "dynamic": {
+      "prefill": {
+        "bannerText": "Want to use the data from your last registration?",
+        "useMyData": "Use my data from my last registration",
+        "applied": "Fields filled in with your last registration.",
+        "optOutLabel": "Do not use my data for future pre-fill"
+      },
       "fillRequired": "Please fill in the required fields.",
       "chooseOptionIn": "Choose an option in: {{fields}}",
       "rideSeatsRequired": "Enter how many seats you have in your car.",

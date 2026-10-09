@@ -588,6 +588,8 @@
       "deleteConfirm": "¿Está seguro de que desea eliminar <b>{{name}}</b>? Los eventos con inscripciones vinculadas no se pueden eliminar, desactívelo.",
       "enableCoupons": "Habilitar cupones de descuento",
       "enableCouponsHelp": "Permite que el inscrito aplique un código de cupón en el formulario. Gestiona los códigos en la pantalla de Cupones.",
+      "prefillSwitch": "Autocompletado",
+      "prefillHelp": "Permite que los usuarios conectados autocompleten el formulario con los datos de su propia inscripción anterior.",
       "enableRefundProtection": "Habilitar reembolso garantizado",
       "refundProtectionHelp": "El inscrito paga una tarifa de protección en el formulario y puede solicitar el reembolso por su cuenta.",
       "protectionFeeLabel": "Tarifa de protección",

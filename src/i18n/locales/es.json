@@ -19,6 +19,12 @@
       "confirmClearCart": "¿Seguro que deseas vaciar el carrito?"
     },
     "dynamic": {
+      "prefill": {
+        "bannerText": "¿Quieres usar los datos de tu última inscripción?",
+        "useMyData": "Usar mis datos de la última inscripción",
+        "applied": "Campos completados con tu última inscripción.",
+        "optOutLabel": "No usar mis datos para el autocompletado futuro"
+      },
       "fillRequired": "Completa los campos obligatorios.",
       "chooseOptionIn": "Elige una opción en: {{fields}}",
       "rideSeatsRequired": "Indica cuántos lugares tienes en el coche.",

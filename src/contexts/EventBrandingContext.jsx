@@ -79,6 +79,7 @@ export const EventBrandingProvider = ({ children }) => {
       groupDiscountThresholdCents: Number(event?.groupDiscountThresholdCents) || 0,
       groupDiscountPercent: Number(event?.groupDiscountPercent) || 0,
       couponCodesEnabled: Boolean(event?.couponCodesEnabled),
+      prefillEnabled: Boolean(event?.prefillEnabled),
       refundProtectionEnabled: Boolean(event?.refundProtectionEnabled),
       protectionFeeType: event?.protectionFeeType || 'PERCENT',
       protectionFeeAmount: Number(event?.protectionFeeAmount) || 0,

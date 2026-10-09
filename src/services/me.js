@@ -50,3 +50,9 @@ export const getMyChangeRequests = async () => {
   const { data } = await authFetcher.get('/me/change-requests');
   return Array.isArray(data?.changeRequests) ? data.changeRequests : [];
 };
+
+export const getPrefillSource = async () => {
+  const { data } = await authFetcher.get('/me/prefill-source');
+  const answers = data?.answers;
+  return answers && typeof answers === 'object' ? answers : null;
+};

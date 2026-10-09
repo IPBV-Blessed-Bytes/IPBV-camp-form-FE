@@ -31,7 +31,7 @@ import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import { useEventBranding } from '@/contexts/EventBrandingContext';
 import { getEventSlug, eventPath } from '@/config/eventScope';
 import { getApiErrorMessage } from '@/fetchers/helpers';
-import { getInscriptionDraft, deleteInscriptionDraft } from '@/services/me';
+import { getInscriptionDraft, deleteInscriptionDraft, getPrefillSource } from '@/services/me';
 import {
   buildInscriptionDraft,
   saveInscriptionDraftLocal,
@@ -91,7 +91,7 @@ const DynamicForm = () => {
   const navigate = useNavigate();
   const { fields, sections: allSections, loading } = useEventSchema();
   const { isLoggedIn } = useContext(AuthContext);
-  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery, refundProtectionEnabled, protectionFeeType, protectionFeeAmount, pixEnabled, cardEnabled, cardMaxInstallments } = useEventBranding();
+  const { color: eventColor, paymentEnabled, registrationFeeEnabled, registrationsOpen, boletoEnabled, boletoMaxInstallments, boletoMinDaysBeforeEvent, groupDiscountThresholdCents, groupDiscountPercent, storeDeliveryNote, couponCodesEnabled, name: eventName, mapQuery, refundProtectionEnabled, protectionFeeType, protectionFeeAmount, pixEnabled, cardEnabled, cardMaxInstallments, prefillEnabled } = useEventBranding();
 
   const calendarUrl = (() => {
     const schedule = getEventSchedule() || {};
@@ -179,6 +179,8 @@ const DynamicForm = () => {
   const [couponChecking, setCouponChecking] = useState(false);
   const [protectionOpted, setProtectionOpted] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
+  const [prefillSource, setPrefillSource] = useState(null);
+  const [noPrefill, setNoPrefill] = useState(false);
 
   const { data: homeInfo } = useQuery({
     queryKey: ['home-info', getEventSlug()],
@@ -322,6 +324,35 @@ const DynamicForm = () => {
   const setValue = (key, value) => {
     setAnswers((prev) => ({ ...(Object.keys(prev).length ? prev : initializedAnswers), [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
+  };
+
+  const prefillFetchedRef = useRef(false);
+  useEffect(() => {
+    if (!prefillEnabled || !isLoggedIn || prefillFetchedRef.current) return;
+    prefillFetchedRef.current = true;
+    getPrefillSource()
+      .then((source) => {
+        if (source && Object.keys(source).length) setPrefillSource(source);
+      })
+      .catch(() => {});
+  }, [prefillEnabled, isLoggedIn]);
+
+  const applyPrefill = () => {
+    if (!prefillSource) return;
+    const fieldByKey = new Map(fields.map((field) => [field.key, field]));
+    const next = { ...(Object.keys(answers).length ? answers : initializedAnswers) };
+    let filled = 0;
+    Object.entries(prefillSource).forEach(([key, value]) => {
+      if (key.startsWith('__')) return;
+      const field = fieldByKey.get(key);
+      if (!field || field.type === 'file') return;
+      next[key] = value;
+      filled += 1;
+    });
+    if (!filled) return;
+    setAnswers(next);
+    setErrors({});
+    toast.success(t('form.dynamic.prefill.applied'));
   };
 
   const validateStep = () => {
@@ -553,7 +584,9 @@ const DynamicForm = () => {
 
     if (!validateCurrentPerson()) return;
 
-    const registrations = [...people, currentAnswers].map((personAnswers) => ({ answers: personAnswers }));
+    const registrations = [...people, currentAnswers].map((personAnswers) => ({
+      answers: prefillEnabled ? { ...personAnswers, __noPrefill: noPrefill } : personAnswers,
+    }));
 
     setSubmitting(true);
     try {
@@ -584,7 +617,11 @@ const DynamicForm = () => {
     }
 
     const registrations = people.map((personAnswers) => ({
-      answers: { ...personAnswers, __refundProtection: refundProtectionEnabled && protectionOpted },
+      answers: {
+        ...personAnswers,
+        __refundProtection: refundProtectionEnabled && protectionOpted,
+        ...(prefillEnabled ? { __noPrefill: noPrefill } : {}),
+      },
     }));
 
     setSubmitting(true);
@@ -635,6 +672,7 @@ const DynamicForm = () => {
     setBoletoResult(null);
     setPixResult(null);
     setDonation('');
+    setNoPrefill(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -883,6 +921,10 @@ const DynamicForm = () => {
     );
   }
 
+  const showPrefillBanner = Boolean(
+    prefillEnabled && isLoggedIn && prefillSource && currentStep?.kind === 'section',
+  );
+
   return (
     <div className="components-container">
       <Header
@@ -896,6 +938,20 @@ const DynamicForm = () => {
       <div className="form__container container">
         <Row className="justify-content-center">
           <Col lg={10} className="px-0">
+            {showPrefillBanner && (
+              <div
+                className="dynamic-form__prefill mb-3 p-3 d-flex flex-wrap gap-2 align-items-center justify-content-between"
+                style={{ border: '1px solid #e6e8eb', borderRadius: '0.5rem' }}
+              >
+                <span className="d-flex align-items-center gap-2">
+                  <Icons typeIcon="simple-info" iconSize={22} fill={iconColor} />
+                  {t('form.dynamic.prefill.bannerText')}
+                </span>
+                <Button variant="outline-teal-blue" size="sm" onClick={applyPrefill}>
+                  {t('form.dynamic.prefill.useMyData')}
+                </Button>
+              </div>
+            )}
             {isReview ? (
               <FormStepLayout
                 title={people.length ? t('form.dynamic.reviewTitlePerson', { number: people.length + 1 }) : t('form.dynamic.review')}
@@ -994,6 +1050,16 @@ const DynamicForm = () => {
                     </div>
                   )}
                 </div>
+                {prefillEnabled && (
+                  <Form.Check
+                    type="checkbox"
+                    id="no-prefill-optout"
+                    className="mt-3"
+                    label={t('form.dynamic.prefill.optOutLabel')}
+                    checked={noPrefill}
+                    onChange={(e) => setNoPrefill(e.target.checked)}
+                  />
+                )}
               </FormStepLayout>
             ) : currentStep.kind === 'cart' ? (
               <div className="dynamic-cart">
