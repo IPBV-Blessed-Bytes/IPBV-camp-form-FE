@@ -56,6 +56,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
     price: { ...defaultPrice },
     startDate: '',
     endDate: '',
+    totalVacancies: '',
   });
   const [search, setSearch] = useState('');
 
@@ -108,6 +109,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: lot.startDate,
         endDate: lot.endDate,
         price: { registrationFee: lot.price?.registrationFee || '' },
+        totalVacancies: lot.totalVacancies === '' || lot.totalVacancies == null ? null : Number(lot.totalVacancies),
       });
       toast.success(t('admin.lots.updateSuccess', { name: lot.name }));
       registerLog(`Atualizou o ${lot.name}`, loggedUsername);
@@ -168,6 +170,8 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         startDate: newLot.startDate,
         endDate: newLot.endDate,
         price: { registrationFee: newLot.price.registrationFee || '' },
+        totalVacancies:
+          newLot.totalVacancies === '' || newLot.totalVacancies == null ? null : Number(newLot.totalVacancies),
       });
       toast.success(t('admin.lots.addSuccess', { name: newLot.name }));
       registerLog(`Adicionou o ${newLot.name}`, loggedUsername);
@@ -177,6 +181,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         price: { ...defaultPrice },
         startDate: '',
         endDate: '',
+        totalVacancies: '',
       });
       await fetchLots(true);
     } catch (error) {
@@ -335,6 +340,20 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                           </Col>
                         </Row>
 
+                        <Form.Group className="mb-3">
+                          <Form.Label>
+                            <strong>{t('admin.lots.totalVacancies')}</strong>
+                          </Form.Label>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            value={lot.totalVacancies ?? ''}
+                            onChange={(e) => handleLotChange(lot.id, 'totalVacancies', e.target.value)}
+                            className="form-control-lg"
+                          />
+                          <Form.Text className="text-secondary">{t('admin.lots.totalVacanciesHint')}</Form.Text>
+                        </Form.Group>
+
                         <div className="d-flex mt-3 justify-content-end gap-2">
                           <Button
                             variant="outline-danger"
@@ -434,6 +453,22 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
                     className="form-control-lg form-control-bg admin-field--odd"
                     placeholder={t('admin.lots.pricePlaceholder')}
                   />
+                </Form.Group>
+              </Col>
+
+              <Col md={12} lg={6} className="mb-3">
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <strong>{t('admin.lots.totalVacancies')}</strong>
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0"
+                    value={newLot.totalVacancies}
+                    onChange={(e) => setNewLot({ ...newLot, totalVacancies: e.target.value })}
+                    className="form-control-lg form-control-bg admin-field--even"
+                  />
+                  <Form.Text className="text-secondary">{t('admin.lots.totalVacanciesHint')}</Form.Text>
                 </Form.Group>
               </Col>
 

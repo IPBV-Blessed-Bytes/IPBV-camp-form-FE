@@ -215,7 +215,9 @@
       "deleteSuccess": "{{name}} deletado com sucesso",
       "deleteError": "Erro ao deletar lote",
       "addSuccess": "{{name}} adicionado com sucesso",
-      "addError": "Erro ao adicionar lote"
+      "addError": "Erro ao adicionar lote",
+      "totalVacancies": "Total de vagas do lote",
+      "totalVacanciesHint": "Vazio = ilimitado. Fecha o lote quando atingir o total de inscrições."
     },
     "seats": {
       "title": "Vagas",

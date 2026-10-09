@@ -215,7 +215,9 @@
       "deleteSuccess": "{{name}} eliminado con éxito",
       "deleteError": "Error al eliminar el lote",
       "addSuccess": "{{name}} agregado con éxito",
-      "addError": "Error al agregar el lote"
+      "addError": "Error al agregar el lote",
+      "totalVacancies": "Total de cupos del lote",
+      "totalVacanciesHint": "Vacío = ilimitado. Cierra el lote al alcanzar el total de inscripciones."
     },
     "seats": {
       "title": "Plazas",

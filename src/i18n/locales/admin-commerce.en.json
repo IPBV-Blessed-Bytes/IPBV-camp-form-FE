@@ -215,7 +215,9 @@
       "deleteSuccess": "{{name}} deleted successfully",
       "deleteError": "Error deleting lot",
       "addSuccess": "{{name}} added successfully",
-      "addError": "Error adding lot"
+      "addError": "Error adding lot",
+      "totalVacancies": "Lot total vacancies",
+      "totalVacanciesHint": "Empty = unlimited. Closes the lot when the total number of registrations is reached."
     },
     "seats": {
       "title": "Vacancies",
