@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Form, Badge } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -36,6 +37,7 @@ const emptyForm = {
 };
 
 const AdminCouponCodes = ({ loggedUsername }) => {
+  const { t } = useTranslation();
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -53,7 +55,7 @@ const AdminCouponCodes = ({ loggedUsername }) => {
       const data = await listCouponCodes();
       setCoupons(Array.isArray(data) ? data : []);
     } catch (error) {
-      toast.error('Erro ao carregar cupons');
+      toast.error(t('admin.couponCodes.loadError'));
     } finally {
       if (!silent) setLoading(false);
     }
@@ -85,15 +87,15 @@ const AdminCouponCodes = ({ loggedUsername }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.code.trim()) {
-      toast.error('Informe o código do cupom');
+      toast.error(t('admin.couponCodes.codeRequired'));
       return;
     }
     if (!formData.discountAmount || Number(formData.discountAmount) <= 0) {
-      toast.error('Informe um desconto maior que zero');
+      toast.error(t('admin.couponCodes.amountRequired'));
       return;
     }
     if (formData.discountType === 'PERCENT' && Number(formData.discountAmount) > 100) {
-      toast.error('O desconto percentual não pode passar de 100%');
+      toast.error(t('admin.couponCodes.percentMax'));
       return;
     }
 
@@ -111,16 +113,16 @@ const AdminCouponCodes = ({ loggedUsername }) => {
       if (editing) {
         await updateCouponCode(editing.id, payload);
         registerLog(`Editou o cupom ${payload.code}`, loggedUsername);
-        toast.success('Cupom atualizado');
+        toast.success(t('admin.couponCodes.updated'));
       } else {
         await createCouponCode(payload);
         registerLog(`Criou o cupom ${payload.code}`, loggedUsername);
-        toast.success('Cupom criado');
+        toast.success(t('admin.couponCodes.created'));
       }
       setShowModal(false);
       await fetchCoupons(true);
     } catch (error) {
-      const message = typeof error?.response?.data === 'string' ? error.response.data : 'Erro ao salvar cupom';
+      const message = typeof error?.response?.data === 'string' ? error.response.data : t('admin.couponCodes.saveError');
       toast.error(message);
     } finally {
       setSaving(false);
@@ -133,11 +135,11 @@ const AdminCouponCodes = ({ loggedUsername }) => {
     try {
       await deleteCouponCode(toDelete.id);
       registerLog(`Excluiu o cupom ${toDelete.code}`, loggedUsername);
-      toast.success('Cupom excluído');
+      toast.success(t('admin.couponCodes.deleted'));
       setShowDeleteModal(false);
       await fetchCoupons(true);
     } catch (error) {
-      toast.error('Erro ao excluir cupom');
+      toast.error(t('admin.couponCodes.deleteError'));
     } finally {
       setSaving(false);
     }
@@ -148,9 +150,9 @@ const AdminCouponCodes = ({ loggedUsername }) => {
 
   const activeCount = coupons.filter((c) => c.active !== false).length;
   const statItems = [
-    { label: 'Cupons', value: coupons.length },
-    { label: 'Ativos', value: activeCount, tone: 'free' },
-    { label: 'Inativos', value: coupons.length - activeCount, tone: 'used' },
+    { label: t('admin.couponCodes.statTotal'), value: coupons.length },
+    { label: t('admin.couponCodes.statActive'), value: activeCount, tone: 'free' },
+    { label: t('admin.couponCodes.statInactive'), value: coupons.length - activeCount, tone: 'used' },
   ];
 
   const toolsButtons = [
@@ -158,7 +160,7 @@ const AdminCouponCodes = ({ loggedUsername }) => {
       fill: '#007185',
       iconSize: 22,
       id: 'add-coupon',
-      name: 'Criar Cupom',
+      name: t('admin.couponCodes.create'),
       onClick: handleCreateClick,
       typeButton: 'outline-teal-blue',
       typeIcon: 'plus',
@@ -169,8 +171,8 @@ const AdminCouponCodes = ({ loggedUsername }) => {
     <div className="admin-subpage admin-subpage--coupons">
       <AdminSubpageHeader
         username={loggedUsername}
-        title="Cupons"
-        subtitle="Códigos de desconto que o inscrito aplica no formulário"
+        title={t('admin.couponCodes.title')}
+        subtitle={t('admin.couponCodes.subtitle')}
         typeIcon="cash"
       />
 
@@ -182,19 +184,19 @@ const AdminCouponCodes = ({ loggedUsername }) => {
           <Table striped bordered hover responsive className="custom-table">
             <thead>
               <tr>
-                <th className="table-cells-header">Código:</th>
-                <th className="table-cells-header">Desconto:</th>
-                <th className="table-cells-header">Usos:</th>
-                <th className="table-cells-header">Expira em:</th>
-                <th className="table-cells-header">Status:</th>
-                <th className="table-cells-header">Ações:</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colCode')}</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colDiscount')}</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colUses')}</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colExpires')}</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colStatus')}</th>
+                <th className="table-cells-header">{t('admin.couponCodes.colActions')}</th>
               </tr>
             </thead>
             <tbody>
               {coupons.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-start text-secondary p-4">
-                    Nenhum cupom cadastrado
+                    {t('admin.couponCodes.empty')}
                   </td>
                 </tr>
               ) : (
@@ -211,17 +213,17 @@ const AdminCouponCodes = ({ loggedUsername }) => {
                     <td>{coupon.expiresAt || <span className="text-secondary small">—</span>}</td>
                     <td>
                       {coupon.active !== false ? (
-                        <Badge bg="success">Ativo</Badge>
+                        <Badge bg="success">{t('admin.couponCodes.statusActive')}</Badge>
                       ) : (
-                        <Badge bg="secondary">Inativo</Badge>
+                        <Badge bg="secondary">{t('admin.couponCodes.statusInactive')}</Badge>
                       )}
                     </td>
                     <td>
                       <div className="table-action-cell">
-                        <ActionButton action="edit" label="Editar cupom" onClick={() => handleEditClick(coupon)} />
+                        <ActionButton action="edit" label={t('admin.couponCodes.editAction')} onClick={() => handleEditClick(coupon)} />
                         <ActionButton
                           action="delete"
-                          label="Excluir cupom"
+                          label={t('admin.couponCodes.deleteAction')}
                           onClick={() => {
                             setToDelete(coupon);
                             setShowDeleteModal(true);
@@ -241,15 +243,15 @@ const AdminCouponCodes = ({ loggedUsername }) => {
           onHide={() => setShowModal(false)}
           variant="confirm"
           icon={editing ? 'edit' : 'plus'}
-          title={editing ? 'Editar Cupom' : 'Criar Cupom'}
+          title={editing ? t('admin.couponCodes.modalEdit') : t('admin.couponCodes.modalCreate')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancelar
+                {t('admin.couponCodes.cancel')}
               </Button>
               <SpinnerButton className="btn-confirm" variant="primary" onClick={handleSubmit} loading={saving}>
-                {editing ? 'Salvar' : 'Criar'}
+                {editing ? t('admin.couponCodes.save') : t('admin.couponCodes.createBtn')}
               </SpinnerButton>
             </>
           }
@@ -257,34 +259,34 @@ const AdminCouponCodes = ({ loggedUsername }) => {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Código:</b>
+                <b>{t('admin.couponCodes.fieldCode')}</b>
               </Form.Label>
               <Form.Control
                 type="text"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                placeholder="Ex.: IGREJA10"
+                placeholder={t('admin.couponCodes.codePlaceholder')}
                 size="lg"
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Tipo de desconto:</b>
+                <b>{t('admin.couponCodes.fieldType')}</b>
               </Form.Label>
               <Form.Select
                 value={formData.discountType}
                 onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
                 size="lg"
               >
-                <option value="PERCENT">Percentual (%)</option>
-                <option value="VALUE">Valor fixo (R$)</option>
+                <option value="PERCENT">{t('admin.couponCodes.typePercent')}</option>
+                <option value="VALUE">{t('admin.couponCodes.typeValue')}</option>
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>{formData.discountType === 'VALUE' ? 'Valor (R$):' : 'Percentual (%):'}</b>
+                <b>{formData.discountType === 'VALUE' ? t('admin.couponCodes.fieldValue') : t('admin.couponCodes.fieldPercent')}</b>
               </Form.Label>
               <Form.Control
                 type="number"
@@ -297,28 +299,28 @@ const AdminCouponCodes = ({ loggedUsername }) => {
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Máximo de usos:</b>
+                <b>{t('admin.couponCodes.fieldMaxUses')}</b>
               </Form.Label>
               <Form.Control
                 type="number"
                 min="0"
                 value={formData.maxUses}
                 onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
-                placeholder="Deixe em branco para ilimitado"
+                placeholder={t('admin.couponCodes.maxUsesPlaceholder')}
               />
-              <Form.Text className="text-secondary">Cada CPF só usa o cupom uma vez.</Form.Text>
+              <Form.Text className="text-secondary">{t('admin.couponCodes.maxUsesHint')}</Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>
-                <b>Expira em (opcional):</b>
+                <b>{t('admin.couponCodes.fieldExpires')}</b>
               </Form.Label>
               <div>
                 <DatePicker
                   selected={parseDate(formData.expiresAt)}
                   onChange={(date) => setFormData({ ...formData, expiresAt: formatDate(date) })}
                   className="form-control"
-                  placeholderText="dd/mm/aaaa"
+                  placeholderText={t('admin.couponCodes.datePlaceholder')}
                   dateFormat="dd/MM/yyyy"
                   locale="ptBR"
                   dropdownMode="select"
@@ -332,7 +334,7 @@ const AdminCouponCodes = ({ loggedUsername }) => {
             <Form.Group>
               <Form.Check
                 type="switch"
-                label="Cupom ativo"
+                label={t('admin.couponCodes.fieldActive')}
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
               />
@@ -344,20 +346,20 @@ const AdminCouponCodes = ({ loggedUsername }) => {
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
           variant="cancel"
-          title="Confirmar Exclusão"
+          title={t('admin.couponCodes.deleteTitle')}
           centered={false}
           footer={
             <>
               <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-                Cancelar
+                {t('admin.couponCodes.cancel')}
               </Button>
               <SpinnerButton variant="danger" className="btn-cancel" onClick={handleDelete} loading={saving}>
-                Excluir
+                {t('admin.couponCodes.deleteConfirm')}
               </SpinnerButton>
             </>
           }
         >
-          Tem certeza que deseja excluir o cupom <strong>{toDelete?.code}</strong>?
+          {t('admin.couponCodes.deleteQuestionPre')} <strong>{toDelete?.code}</strong>?
         </CustomModal>
 
         <Loading loading={loading} />

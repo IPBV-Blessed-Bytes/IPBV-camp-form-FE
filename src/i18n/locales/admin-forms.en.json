@@ -107,7 +107,19 @@
       "deleteFieldTitle": "Delete Field",
       "deleteConfirmQuestion": "Are you sure you want to delete <b>{{name}}</b>?",
       "deleteSectionSuffix": " The section must have no fields.",
-      "deleteSectionAllSuffix": " This will delete the section and all {{count}} field(s) inside it. This action cannot be undone."
+      "deleteSectionAllSuffix": " This will delete the section and all {{count}} field(s) inside it. This action cannot be undone.",
+      "minorTemplate": {
+        "title": "Template document for minors",
+        "subtitle": "Template file (e.g. consent/authorization) that guardians can download in the form. One per event.",
+        "download": "Download current",
+        "replace": "Replace",
+        "upload": "Upload template",
+        "remove": "Remove",
+        "uploadSuccess": "Template uploaded successfully.",
+        "uploadError": "Could not upload the template.",
+        "removeSuccess": "Template removed.",
+        "removeError": "Could not remove the template."
+      }
     },
     "formStage": {
       "title": "Form Stage",
@@ -573,7 +585,19 @@
       "boletoMinPlaceholder": "20",
       "boletoMinHelp": "The last boleto is due at most this number of days before the event, ensuring the payment (which takes 2 to 5 business days to clear) arrives before the date. Blank uses the default (20 days).",
       "deleteTitle": "Delete event",
-      "deleteConfirm": "Are you sure you want to delete <b>{{name}}</b>? Events with linked registrations cannot be deleted, deactivate it."
+      "deleteConfirm": "Are you sure you want to delete <b>{{name}}</b>? Events with linked registrations cannot be deleted, deactivate it.",
+      "enableCoupons": "Enable discount coupons",
+      "enableCouponsHelp": "Lets the registrant apply a coupon code in the form. Manage the codes on the Coupons screen.",
+      "enableRefundProtection": "Enable guaranteed refund",
+      "refundProtectionHelp": "The registrant pays a protection fee in the form and can request the refund themselves from their account.",
+      "protectionFeeLabel": "Protection fee",
+      "feePercent": "Percentage (%)",
+      "feeValue": "Fixed amount (R$)",
+      "refundDeadlineLabel": "Deadline to request refund (days before start)",
+      "refundDeadlinePlaceholder": "Blank = until the start date",
+      "enablePix": "Enable PIX",
+      "enableCard": "Enable credit card",
+      "cardInstallmentsLabel": "Card: installments up to (times)"
     },
     "orgBranding": {
       "title": "Organization Identity",

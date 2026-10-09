@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 import {
   getMinorTemplateExists,
@@ -14,6 +15,7 @@ import './MinorTemplateCard.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
 const MinorTemplateCard = () => {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
   const [exists, setExists] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,10 +43,10 @@ const MinorTemplateCard = () => {
     setBusy(true);
     try {
       await uploadMinorTemplate(file);
-      toast.success('Modelo enviado com sucesso.');
+      toast.success(t('admin.formBuilder.minorTemplate.uploadSuccess'));
       setExists(true);
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Não foi possível enviar o modelo.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.minorTemplate.uploadError'));
     } finally {
       setBusy(false);
     }
@@ -54,10 +56,10 @@ const MinorTemplateCard = () => {
     setBusy(true);
     try {
       await deleteMinorTemplate();
-      toast.success('Modelo removido.');
+      toast.success(t('admin.formBuilder.minorTemplate.removeSuccess'));
       setExists(false);
     } catch (err) {
-      toast.error(getApiErrorMessage(err) || 'Não foi possível remover o modelo.');
+      toast.error(getApiErrorMessage(err) || t('admin.formBuilder.minorTemplate.removeError'));
     } finally {
       setBusy(false);
     }
@@ -68,9 +70,9 @@ const MinorTemplateCard = () => {
       <div className="minor-template-card__info">
         <Icons typeIcon="form-context" iconSize={26} fill="#204691" />
         <div>
-          <p className="minor-template-card__title">Modelo de documento para menores</p>
+          <p className="minor-template-card__title">{t('admin.formBuilder.minorTemplate.title')}</p>
           <p className="minor-template-card__subtitle">
-            Arquivo modelo (ex.: declaração/autorização) que os responsáveis podem baixar no formulário. Um por evento.
+            {t('admin.formBuilder.minorTemplate.subtitle')}
           </p>
         </div>
       </div>
@@ -83,15 +85,15 @@ const MinorTemplateCard = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Baixar atual
+            {t('admin.formBuilder.minorTemplate.download')}
           </a>
         )}
         <SpinnerButton size="sm" variant="teal-blue" loading={busy} onClick={() => inputRef.current?.click()}>
-          {exists ? 'Substituir' : 'Enviar modelo'}
+          {exists ? t('admin.formBuilder.minorTemplate.replace') : t('admin.formBuilder.minorTemplate.upload')}
         </SpinnerButton>
         {!loading && exists && (
           <Button size="sm" variant="outline-danger" disabled={busy} onClick={handleDelete}>
-            Remover
+            {t('admin.formBuilder.minorTemplate.remove')}
           </Button>
         )}
         <input

@@ -107,7 +107,19 @@
       "deleteFieldTitle": "Excluir Campo",
       "deleteConfirmQuestion": "Tem certeza que deseja excluir <b>{{name}}</b>?",
       "deleteSectionSuffix": " A seção precisa estar sem campos.",
-      "deleteSectionAllSuffix": " Isso vai excluir a seção e todos os {{count}} campo(s) dentro dela. Esta ação não pode ser desfeita."
+      "deleteSectionAllSuffix": " Isso vai excluir a seção e todos os {{count}} campo(s) dentro dela. Esta ação não pode ser desfeita.",
+      "minorTemplate": {
+        "title": "Modelo de documento para menores",
+        "subtitle": "Arquivo modelo (ex.: declaração/autorização) que os responsáveis podem baixar no formulário. Um por evento.",
+        "download": "Baixar atual",
+        "replace": "Substituir",
+        "upload": "Enviar modelo",
+        "remove": "Remover",
+        "uploadSuccess": "Modelo enviado com sucesso.",
+        "uploadError": "Não foi possível enviar o modelo.",
+        "removeSuccess": "Modelo removido.",
+        "removeError": "Não foi possível remover o modelo."
+      }
     },
     "formStage": {
       "title": "Estágio do Formulário",
@@ -573,7 +585,19 @@
       "boletoMinPlaceholder": "20",
       "boletoMinHelp": "O último boleto vence no máximo esse número de dias antes do evento, garantindo que o pagamento (que leva de 2 a 5 dias úteis para cair na conta) entre antes da data. Em branco usa o padrão (20 dias).",
       "deleteTitle": "Excluir evento",
-      "deleteConfirm": "Tem certeza que deseja excluir <b>{{name}}</b>? Eventos com inscrições vinculadas não podem ser excluídos, desative-o."
+      "deleteConfirm": "Tem certeza que deseja excluir <b>{{name}}</b>? Eventos com inscrições vinculadas não podem ser excluídos, desative-o.",
+      "enableCoupons": "Habilitar cupons de desconto",
+      "enableCouponsHelp": "Permite que o inscrito aplique um código de cupom no formulário. Gerencie os códigos na tela de Cupons.",
+      "enableRefundProtection": "Habilitar reembolso garantido",
+      "refundProtectionHelp": "O inscrito paga uma taxa de proteção no formulário e pode solicitar o reembolso sozinho pela conta dele.",
+      "protectionFeeLabel": "Taxa de proteção",
+      "feePercent": "Percentual (%)",
+      "feeValue": "Valor fixo (R$)",
+      "refundDeadlineLabel": "Prazo p/ solicitar reembolso (dias antes do início)",
+      "refundDeadlinePlaceholder": "Em branco = até a data de início",
+      "enablePix": "Habilitar PIX",
+      "enableCard": "Habilitar cartão de crédito",
+      "cardInstallmentsLabel": "Cartão: parcelar em até (vezes)"
     },
     "orgBranding": {
       "title": "Identidade da Organização",

@@ -944,37 +944,37 @@ const AdminEvents = ({ loggedUsername }) => {
                 type="switch"
                 id="event-coupon-codes-switch"
                 className="mt-2"
-                label="Habilitar cupons de desconto"
+                label={t('admin.events.enableCoupons')}
                 checked={draft.couponCodesEnabled}
                 onChange={(e) => handleChange('couponCodesEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                Permite que o inscrito aplique um código de cupom no formulário. Gerencie os códigos na tela de Cupons.
+                {t('admin.events.enableCouponsHelp')}
               </Form.Text>
 
               <Form.Check
                 type="switch"
                 id="event-refund-protection-switch"
                 className="mt-2"
-                label="Habilitar reembolso garantido"
+                label={t('admin.events.enableRefundProtection')}
                 checked={draft.refundProtectionEnabled}
                 onChange={(e) => handleChange('refundProtectionEnabled')(e.target.checked)}
               />
               <Form.Text className="text-muted-italic">
-                O inscrito paga uma taxa de proteção no formulário e pode solicitar o reembolso sozinho pela conta dele.
+                {t('admin.events.refundProtectionHelp')}
               </Form.Text>
 
               {draft.refundProtectionEnabled && (
                 <div className="mt-2 ps-3">
-                  <Form.Label className="small mb-1">Taxa de proteção</Form.Label>
+                  <Form.Label className="small mb-1">{t('admin.events.protectionFeeLabel')}</Form.Label>
                   <div className="d-flex gap-2">
                     <Form.Select
                       style={{ maxWidth: '150px' }}
                       value={draft.protectionFeeType}
                       onChange={(e) => handleChange('protectionFeeType')(e.target.value)}
                     >
-                      <option value="PERCENT">Percentual (%)</option>
-                      <option value="VALUE">Valor fixo (R$)</option>
+                      <option value="PERCENT">{t('admin.events.feePercent')}</option>
+                      <option value="VALUE">{t('admin.events.feeValue')}</option>
                     </Form.Select>
                     <Form.Control
                       type="number"
@@ -985,11 +985,11 @@ const AdminEvents = ({ loggedUsername }) => {
                       onChange={(e) => handleChange('protectionFeeAmount')(e.target.value)}
                     />
                   </div>
-                  <Form.Label className="small mb-1 mt-2">Prazo p/ solicitar reembolso (dias antes do início)</Form.Label>
+                  <Form.Label className="small mb-1 mt-2">{t('admin.events.refundDeadlineLabel')}</Form.Label>
                   <Form.Control
                     type="number"
                     min="0"
-                    placeholder="Em branco = até a data de início"
+                    placeholder={t('admin.events.refundDeadlinePlaceholder')}
                     value={draft.refundDeadlineDays}
                     onChange={(e) => handleChange('refundDeadlineDays')(e.target.value)}
                   />
@@ -1000,7 +1000,7 @@ const AdminEvents = ({ loggedUsername }) => {
                 type="switch"
                 id="event-pix-switch"
                 className="mt-3"
-                label="Habilitar PIX"
+                label={t('admin.events.enablePix')}
                 checked={draft.pixEnabled}
                 onChange={(e) => handleChange('pixEnabled')(e.target.checked)}
               />
@@ -1009,13 +1009,13 @@ const AdminEvents = ({ loggedUsername }) => {
                 type="switch"
                 id="event-card-switch"
                 className="mt-2"
-                label="Habilitar cartão de crédito"
+                label={t('admin.events.enableCard')}
                 checked={draft.cardEnabled}
                 onChange={(e) => handleChange('cardEnabled')(e.target.checked)}
               />
               {draft.cardEnabled && (
                 <Form.Group className="mt-2" controlId="event-card-max">
-                  <Form.Label className="mb-1">Cartão: parcelar em até (vezes)</Form.Label>
+                  <Form.Label className="mb-1">{t('admin.events.cardInstallmentsLabel')}</Form.Label>
                   <Form.Control
                     type="number"
                     min={1}

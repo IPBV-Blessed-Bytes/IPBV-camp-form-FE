@@ -107,7 +107,19 @@
       "deleteFieldTitle": "Eliminar campo",
       "deleteConfirmQuestion": "¿Está seguro de que desea eliminar <b>{{name}}</b>?",
       "deleteSectionSuffix": " La sección debe estar sin campos.",
-      "deleteSectionAllSuffix": " Esto eliminará la sección y todos los {{count}} campo(s) dentro de ella. Esta acción no se puede deshacer."
+      "deleteSectionAllSuffix": " Esto eliminará la sección y todos los {{count}} campo(s) dentro de ella. Esta acción no se puede deshacer.",
+      "minorTemplate": {
+        "title": "Plantilla de documento para menores",
+        "subtitle": "Archivo plantilla (ej.: declaración/autorización) que los responsables pueden descargar en el formulario. Uno por evento.",
+        "download": "Descargar actual",
+        "replace": "Reemplazar",
+        "upload": "Enviar plantilla",
+        "remove": "Quitar",
+        "uploadSuccess": "Plantilla enviada con éxito.",
+        "uploadError": "No se pudo enviar la plantilla.",
+        "removeSuccess": "Plantilla eliminada.",
+        "removeError": "No se pudo eliminar la plantilla."
+      }
     },
     "formStage": {
       "title": "Etapa del formulario",
@@ -573,7 +585,19 @@
       "boletoMinPlaceholder": "20",
       "boletoMinHelp": "El último boleto vence como máximo este número de días antes del evento, garantizando que el pago (que tarda de 2 a 5 días hábiles en acreditarse) entre antes de la fecha. En blanco usa el valor predeterminado (20 días).",
       "deleteTitle": "Eliminar evento",
-      "deleteConfirm": "¿Está seguro de que desea eliminar <b>{{name}}</b>? Los eventos con inscripciones vinculadas no se pueden eliminar, desactívelo."
+      "deleteConfirm": "¿Está seguro de que desea eliminar <b>{{name}}</b>? Los eventos con inscripciones vinculadas no se pueden eliminar, desactívelo.",
+      "enableCoupons": "Habilitar cupones de descuento",
+      "enableCouponsHelp": "Permite que el inscrito aplique un código de cupón en el formulario. Gestiona los códigos en la pantalla de Cupones.",
+      "enableRefundProtection": "Habilitar reembolso garantizado",
+      "refundProtectionHelp": "El inscrito paga una tarifa de protección en el formulario y puede solicitar el reembolso por su cuenta.",
+      "protectionFeeLabel": "Tarifa de protección",
+      "feePercent": "Porcentaje (%)",
+      "feeValue": "Valor fijo (R$)",
+      "refundDeadlineLabel": "Plazo para solicitar reembolso (días antes del inicio)",
+      "refundDeadlinePlaceholder": "En blanco = hasta la fecha de inicio",
+      "enablePix": "Habilitar PIX",
+      "enableCard": "Habilitar tarjeta de crédito",
+      "cardInstallmentsLabel": "Tarjeta: cuotas hasta (veces)"
     },
     "orgBranding": {
       "title": "Identidad de la Organización",
