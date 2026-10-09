@@ -179,7 +179,9 @@
       "nameRequired": "Indique el nombre de la categoría.",
       "saveError": "Error al guardar la categoría.",
       "reorderError": "Error al reordenar.",
-      "deleteError": "Error al eliminar."
+      "deleteError": "Error al eliminar.",
+      "lotPoolSwitch": "Consume el cupo total del lote",
+      "lotPoolHint": "Las inscripciones que eligen un ítem de esta categoría cuentan en el total de cupos del lote (ej.: alojamiento)."
     },
     "lots": {
       "title": "Lotes",

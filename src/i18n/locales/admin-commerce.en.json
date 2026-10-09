@@ -179,7 +179,9 @@
       "nameRequired": "Enter the category name.",
       "saveError": "Error saving the category.",
       "reorderError": "Error reordering.",
-      "deleteError": "Error deleting."
+      "deleteError": "Error deleting.",
+      "lotPoolSwitch": "Counts toward the lot total",
+      "lotPoolHint": "Registrations that pick an item from this category count toward the lot total vacancies (e.g. accommodation)."
     },
     "lots": {
       "title": "Lots",

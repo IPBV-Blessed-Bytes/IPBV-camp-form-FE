@@ -179,7 +179,9 @@
       "nameRequired": "Informe o nome da categoria.",
       "saveError": "Erro ao salvar a categoria.",
       "reorderError": "Erro ao reordenar.",
-      "deleteError": "Erro ao excluir."
+      "deleteError": "Erro ao excluir.",
+      "lotPoolSwitch": "Consome a vaga total do lote",
+      "lotPoolHint": "Inscrições que escolhem um item desta categoria contam no total de vagas do lote (ex.: hospedagem)."
     },
     "lots": {
       "title": "Lotes",

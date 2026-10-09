@@ -21,7 +21,7 @@ import Icons from '@/components/Global/Icons';
 import './style.scss';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 
-const EMPTY_CATEGORY = { id: null, name: '', description: '', selectionRule: 'single', required: true };
+const EMPTY_CATEGORY = { id: null, name: '', description: '', selectionRule: 'single', required: true, countsTowardLotPool: false };
 
 const AdminPackageBuilder = ({ loggedUsername }) => {
   const { t } = useTranslation();
@@ -110,6 +110,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       description: category.description || '',
       selectionRule: category.selectionRule || 'single',
       required: category.required ?? true,
+      countsTowardLotPool: category.countsTowardLotPool ?? false,
     });
     setShowModal(true);
   };
@@ -125,6 +126,7 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
       description: draft.description.trim() || null,
       selectionRule: draft.selectionRule,
       required: draft.required,
+      countsTowardLotPool: draft.countsTowardLotPool,
       order: draft.id ? undefined : categories.length,
     };
     try {
@@ -378,6 +380,15 @@ const AdminPackageBuilder = ({ loggedUsername }) => {
             checked={draft.required}
             onChange={(e) => setDraft((prev) => ({ ...prev, required: e.target.checked }))}
           />
+          <Form.Check
+            type="switch"
+            id="category-lot-pool-switch"
+            className="mt-2"
+            label={t('admin.packages.lotPoolSwitch')}
+            checked={draft.countsTowardLotPool}
+            onChange={(e) => setDraft((prev) => ({ ...prev, countsTowardLotPool: e.target.checked }))}
+          />
+          <Form.Text className="text-secondary d-block">{t('admin.packages.lotPoolHint')}</Form.Text>
         </Form>
       </CustomModal>
 
