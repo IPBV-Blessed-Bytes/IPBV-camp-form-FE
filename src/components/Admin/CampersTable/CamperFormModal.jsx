@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { InputMask, format as formatMask } from '@react-input/mask';
 
+import { CPF_MASK } from '@/utils/masks';
 import CustomModal from '@/components/Global/CustomModal';
 import SpinnerButton from '@/components/Global/SpinnerButton';
 import CheckinQrModal from '@/components/Global/CheckinQrModal';
@@ -9,6 +11,7 @@ import { handleCamperFormChange } from '@/Pages/Admin/Campers/utils/handleFormCh
 import { useProductCatalog } from '@/Pages/Admin/Campers/hooks/useProductCatalog';
 import { openGuardianDocument } from '@/services/documents';
 import Columns from './Columns';
+import Icons from '@/components/Global/Icons';
 
 const CamperFormModal = ({
   show,
@@ -29,6 +32,10 @@ const CamperFormModal = ({
   const catalog = useProductCatalog();
 
   const cpfDigits = String(formData?.personalInformation?.cpf || '').replace(/\D/g, '');
+
+  const nameMissing = formSubmitted && !formData?.personalInformation?.name?.trim();
+  const cpfMissing = formSubmitted && !cpfDigits;
+  const amountMissing = formSubmitted && !String(formData?.prePaidAmount ?? '').trim();
 
   const handleChange = useCallback((event) => handleCamperFormChange(event, setFormData, catalog), [catalog]);
 
@@ -80,47 +87,93 @@ const CamperFormModal = ({
           </Form.Group>
         )}
         {!isEdit && formData.preSale ? (
-          <>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>Nome:</b>
-              </Form.Label>
-              <Form.Control
-                name="personalInformation.name"
-                value={formData?.personalInformation?.name || ''}
-                onChange={handleChange}
-                isInvalid={formSubmitted && !formData?.personalInformation?.name?.trim()}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>CPF:</b>
-              </Form.Label>
-              <Form.Control
-                name="personalInformation.cpf"
-                value={formData?.personalInformation?.cpf || ''}
-                onChange={handleChange}
-                isInvalid={formSubmitted && !formData?.personalInformation?.cpf?.trim()}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <b>Valor pago na pré-venda (R$):</b>
-              </Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData?.prePaidAmount || ''}
-                onChange={(e) => setFormData((prev) => ({ ...prev, prePaidAmount: e.target.value, totalPrice: e.target.value }))}
-                isInvalid={formSubmitted && !String(formData?.prePaidAmount ?? '').trim()}
-              />
-              <Form.Text className="text-secondary">
-                Valor já pago na pré-venda. Será deduzido automaticamente quando a pessoa escolher
-                hospedagem e transporte no formulário.
-              </Form.Text>
-            </Form.Group>
-          </>
+          <Row>
+            <Col xs={12} md={6} className="mb-3">
+              <Form.Group>
+                <b>
+                  <Form.Label>
+                    Nome: <span className="text-danger">*</span>
+                  </Form.Label>
+                </b>
+                <Form.Control
+                  name="personalInformation.name"
+                  value={formData?.personalInformation?.name || ''}
+                  onChange={handleChange}
+                  className="form-control-lg form-control-bg custom-new-registration admin-field--even"
+                  placeholder="Nome do Acampante"
+                  isInvalid={nameMissing}
+                />
+
+                {nameMissing && (
+                  <div className="invalid-feedback d-block">
+                    Insira um nome&nbsp;
+                    <Icons typeIcon="error" iconSize={25} fill="#c92432" />
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={6} className="mb-3">
+              <Form.Group>
+                <b>
+                  <Form.Label>
+                    CPF: <span className="text-danger">*</span>
+                  </Form.Label>
+                </b>
+                <InputMask
+                  component={Form.Control}
+                  {...CPF_MASK}
+                  name="personalInformation.cpf"
+                  value={formatMask(String(formData?.personalInformation?.cpf ?? '').replace(/\D/g, ''), CPF_MASK)}
+                  onChange={(event) =>
+                    handleChange({
+                      target: { name: 'personalInformation.cpf', value: event.target.value.replace(/\D/g, '') },
+                    })
+                  }
+                  className="form-control-lg form-control-bg custom-new-registration admin-field--even"
+                  placeholder="000.000.000-00"
+                  isInvalid={cpfMissing}
+                />
+                {cpfMissing && (
+                  <div className="invalid-feedback d-block">
+                    Insira um CPF válido&nbsp;
+                    <Icons typeIcon="error" iconSize={25} fill="#c92432" />
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={6} className="mb-3">
+              <Form.Group>
+                <b>
+                  <Form.Label>
+                    Valor pago na pré-venda (R$): <span className="text-danger">*</span>
+                  </Form.Label>
+                </b>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData?.prePaidAmount || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, prePaidAmount: e.target.value, totalPrice: e.target.value }))
+                  }
+                  className="form-control-lg form-control-bg custom-new-registration admin-field--even"
+                  placeholder="000"
+                  isInvalid={amountMissing}
+                />
+                {amountMissing && (
+                  <div className="invalid-feedback d-block">
+                    Insira valor&nbsp;
+                    <Icons typeIcon="error" iconSize={25} fill="#c92432" />
+                  </div>
+                )}
+
+                <Form.Text className="text-secondary">
+                  Valor já pago na pré-venda. Será deduzido automaticamente quando a pessoa escolher hospedagem e
+                  transporte no formulário.
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
         ) : (
           <Columns
             editFormData={isEdit ? formData : undefined}
@@ -164,12 +217,7 @@ const CamperFormModal = ({
               .map((id) => id.trim())
               .filter(Boolean)
               .map((id) => (
-                <Button
-                  key={id}
-                  variant="outline-teal-blue"
-                  size="sm"
-                  onClick={() => openGuardianDocument(id)}
-                >
+                <Button key={id} variant="outline-teal-blue" size="sm" onClick={() => openGuardianDocument(id)}>
                   Abrir documento #{id}
                 </Button>
               ))}
