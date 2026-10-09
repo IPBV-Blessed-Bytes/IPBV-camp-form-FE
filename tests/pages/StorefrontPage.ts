@@ -18,7 +18,7 @@ export class StorefrontComponent {
   readonly churchNameError: Locator;
 
   constructor(readonly page: Page) {
-    this.heroTitle = page.getByRole('heading', { name: 'Crie o sistema de inscrições da sua igreja em minutos' });
+    this.heroTitle = page.getByRole('heading', { name: 'Crie seu sistema' });
     this.plansSectionTitle = page.getByRole('heading', { name: 'Preços simples, sem mensalidade' });
     this.paidPlanName = page.getByText('Evento pago', { exact: true });
     this.paidPlanPrice = page.locator('.storefront__plan--feature .storefront__plan-price');
