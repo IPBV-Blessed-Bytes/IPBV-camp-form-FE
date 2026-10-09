@@ -24,7 +24,7 @@ export class PlatformComponent {
   constructor(readonly page: Page) {
     this.title = page.getByRole('heading', { name: 'Painel da Plataforma' });
     this.statCards = page.locator('.stat-cards');
-    this.organizationsStat = this.statCards.getByText('Organizações', { exact: true });
+    this.organizationsStat = this.statCards.getByText('Clientes (igrejas)', { exact: true });
     this.eventsStat = this.statCards.getByText('Eventos', { exact: true });
     this.registrationsStat = this.statCards.getByText('Inscrições', { exact: true });
     this.usersStat = this.statCards.getByText('Usuários', { exact: true });
@@ -45,6 +45,10 @@ export class PlatformComponent {
 
   async goto() {
     await this.page.goto('/platform', { waitUntil: 'commit' });
+  }
+
+  async goToSection(label: string) {
+    await this.page.locator('.platform__nav').getByRole('button', { name: label }).click();
   }
 
   async openNewOrganizationModal() {

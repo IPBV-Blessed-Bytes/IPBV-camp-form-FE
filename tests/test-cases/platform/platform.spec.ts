@@ -18,15 +18,18 @@ test.describe('Platform owner panel flow', () => {
     await expect(platform.registrationsStat).toBeVisible();
     await expect(platform.usersStat).toBeVisible();
 
+    await platform.goToSection('Preços');
     await expect(platform.pricingHeading).toBeVisible();
     await expect(platform.feePercentLabel).toBeVisible();
     await expect(platform.freeEventFeeLabel).toBeVisible();
     await expect(platform.freeEventAnnualLabel).toBeVisible();
     await expect(platform.savePricingButton).toBeVisible();
 
+    await platform.goToSection('Clientes');
     await expect(platform.organizationsTable).toBeVisible();
     await expect(platform.ipbvOrgCell).toBeVisible();
 
+    await platform.goToSection('FAQ da loja');
     await expect(platform.storeFaqsHeading).toBeVisible();
   });
 
@@ -36,6 +39,7 @@ test.describe('Platform owner panel flow', () => {
     await platform.goto();
     await expect(platform.title).toBeVisible();
 
+    await platform.goToSection('Clientes');
     await platform.openNewOrganizationModal();
 
     await expect(platform.modal).toBeVisible();
