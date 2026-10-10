@@ -204,6 +204,36 @@
     }
   }
 
+  .account-danger-zone {
+    align-items: center;
+    border-color: $danger;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+
+    &__info {
+      flex: 1 1 260px;
+    }
+
+    &__title {
+      align-items: center;
+      color: $danger-dark;
+      display: flex;
+      font-weight: 700;
+      gap: 0.5rem;
+      margin: 0 0 0.5rem;
+    }
+
+    &__text {
+      color: $ink;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  }
+
   .account-order-header {
     align-items: center;
     background: rgba($primary, 0.08);

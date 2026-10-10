@@ -23,6 +23,7 @@ import {
   createChangeRequest,
   getMyChangeRequests,
   cancelPendingRegistration,
+  deleteMyAccount,
 } from '@/services/me';
 import { getBoletosByOrder } from '@/services/boletos';
 import BoletoList from '@/components/Global/BoletoList';
@@ -83,6 +84,8 @@ const MyAccount = () => {
   const [qrTarget, setQrTarget] = useState(null);
   const [cancelTarget, setCancelTarget] = useState(null);
   const [canceling, setCanceling] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   const fetchData = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -171,6 +174,22 @@ const MyAccount = () => {
       toast.error('Não foi possível cancelar a inscrição.');
     } finally {
       setCanceling(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+
+    try {
+      await deleteMyAccount();
+      setShowDeleteAccount(false);
+      toast.success('Sua conta foi excluída e seus dados pessoais foram anonimizados.');
+      await logout();
+      navigate('/entrar');
+    } catch (error) {
+      toast.error('Não foi possível excluir sua conta. Tente novamente.');
+    } finally {
+      setDeletingAccount(false);
     }
   };
 
@@ -442,6 +461,27 @@ const MyAccount = () => {
             </div>
           </>
         )}
+
+        <div className="account-section-header">
+          <h4 className="account-section-header__title">Excluir minha conta</h4>
+          <div className="account-section-header__line" />
+        </div>
+
+        <div className="account-card account-danger-zone">
+          <div className="account-danger-zone__info">
+            <h4 className="account-danger-zone__title">
+              <Icons typeIcon="error" iconSize={22} fill="#dc3545" />
+              Zona de perigo
+            </h4>
+            <p className="account-danger-zone__text">
+              Ao excluir sua conta, seus dados pessoais nas inscrições serão anonimizados e sua conta de acesso será
+              removida. Esta ação é irreversível.
+            </p>
+          </div>
+          <Button variant="outline-danger" onClick={() => setShowDeleteAccount(true)}>
+            Excluir minha conta
+          </Button>
+        </div>
       </div>
 
       <CheckinQrModal
@@ -488,6 +528,31 @@ const MyAccount = () => {
             </>
           )}{' '}
           Se quiser participar depois, será necessário fazer uma nova inscrição.
+        </Alert>
+      </CustomModal>
+
+      <CustomModal
+        show={showDeleteAccount}
+        onHide={() => (deletingAccount ? null : setShowDeleteAccount(false))}
+        variant="cancel"
+        icon="error"
+        title="Excluir minha conta"
+        iconFill="#dc3545"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteAccount(false)} disabled={deletingAccount}>
+              Voltar
+            </Button>
+            <SpinnerButton variant="danger" onClick={handleDeleteAccount} loading={deletingAccount}>
+              Sim, excluir minha conta
+            </SpinnerButton>
+          </>
+        }
+      >
+        <p>Tem certeza que deseja excluir sua conta?</p>
+        <Alert variant="danger" className="py-2 small mb-0">
+          Seus dados pessoais nas inscrições serão anonimizados e sua conta de acesso será removida.{' '}
+          <b>Esta ação é irreversível.</b>
         </Alert>
       </CustomModal>
 

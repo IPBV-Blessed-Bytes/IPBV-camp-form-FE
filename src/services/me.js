@@ -40,3 +40,8 @@ export const getInscriptionDraft = async () => {
 export const deleteInscriptionDraft = async () => {
   await authFetcher.delete('/me/inscription-draft');
 };
+
+export const deleteMyAccount = async () => {
+  const { data } = await authFetcher.delete('/me/account');
+  return data;
+};
