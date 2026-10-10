@@ -27,6 +27,7 @@ const BOLETO_MIN_DAYS_KEY = 'boleto_min_days_before_event';
 const CREW_BUS_KEY = 'crew_bus_vacancies';
 const PAGARME_DASH_KEY = 'pagarme_dashboard_url';
 const BACKUP_EMAIL_KEY = 'backup_email';
+const BACKUP_PASSWORD_KEY = 'backup_password';
 const EVENT_MAP_KEY = 'event_map';
 const SOCIAL_LINKS_KEY = 'social_links';
 const DECLARATION_TEMPLATE_KEY = 'guardian_declaration_template_id';
@@ -72,6 +73,9 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
   const [crewBus, setCrewBus] = useState('');
   const [pagarmeDash, setPagarmeDash] = useState('');
   const [backupEmail, setBackupEmail] = useState('');
+  const [backupPassword, setBackupPassword] = useState('');
+  const [showBackupPassword, setShowBackupPassword] = useState(false);
+  const [clearBackupPassword, setClearBackupPassword] = useState(false);
   const [eventMap, setEventMap] = useState('');
   const [social, setSocial] = useState({});
   const [templateId, setTemplateId] = useState('');
@@ -190,6 +194,15 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
       setEventMap(eventMapValue || '');
       setSocial(parseSocial(socialValue));
       setWhatsappGroup(whatsappValue || '');
+
+      if (clearBackupPassword) {
+        await updateSetting(BACKUP_PASSWORD_KEY, '');
+        setBackupPassword('');
+        setClearBackupPassword(false);
+      } else if (backupPassword.trim()) {
+        await updateSetting(BACKUP_PASSWORD_KEY, backupPassword);
+        setBackupPassword('');
+      }
 
       if (baseDate) {
         if (baseDateExists) {
@@ -325,7 +338,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     </Form.Text>
                   </Form.Group>
 
-                  <Form.Group className="mb-0">
+                  <Form.Group className="mb-5">
                     <Form.Label>
                       <b>E-mail do Backup Diário:</b>
                     </Form.Label>
@@ -338,6 +351,44 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
                     <Form.Text className="text-muted-italic">
                       Todo dia de madrugada o sistema envia a planilha (CSV) dos inscritos para este e-mail. Em branco =
                       envia para o e-mail remetente do sistema.
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-0">
+                    <Form.Label>
+                      <b>Senha do Backup:</b>
+                    </Form.Label>
+                    <div className="password-wrapper">
+                      <Form.Control
+                        type={showBackupPassword ? 'text' : 'password'}
+                        className="password-input"
+                        value={backupPassword}
+                        onChange={(e) => setBackupPassword(e.target.value)}
+                        placeholder="Deixe em branco para manter a senha atual"
+                        autoComplete="new-password"
+                        disabled={clearBackupPassword}
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle"
+                        onClick={() => setShowBackupPassword(!showBackupPassword)}
+                        aria-label={showBackupPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      >
+                        <Icons typeIcon={showBackupPassword ? 'visible-password' : 'hidden-password'} iconSize={22} />
+                      </button>
+                    </div>
+                    <Form.Check
+                      type="checkbox"
+                      id="clear-backup-password"
+                      className="mt-2"
+                      label="Remover a senha (enviar o backup sem proteção)"
+                      checked={clearBackupPassword}
+                      onChange={(e) => setClearBackupPassword(e.target.checked)}
+                    />
+                    <Form.Text className="text-muted-italic">
+                      Quando há senha, o backup enviado por e-mail vai como um ZIP protegido (AES). Guarde esta senha em
+                      lugar seguro: sem ela não é possível abrir o arquivo. Por segurança a senha atual nunca é exibida
+                      aqui — deixe em branco para mantê-la e preencha apenas para definir uma nova.
                     </Form.Text>
                   </Form.Group>
                 </div>
