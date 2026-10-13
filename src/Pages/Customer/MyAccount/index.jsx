@@ -187,7 +187,7 @@ const MyAccount = () => {
       await logout();
       navigate('/entrar');
     } catch (error) {
-      toast.error('Não foi possível excluir sua conta. Tente novamente.');
+      toast.error(error?.response?.data?.message || 'Não foi possível excluir sua conta. Tente novamente.');
     } finally {
       setDeletingAccount(false);
     }
