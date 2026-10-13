@@ -17,8 +17,11 @@ import './DashboardCharts.scss';
 
 const PAYMENT_COLORS = {
   creditCard: '#204691',
-  pix: '#16a34a',
+  pix: '#b5468a',
   ticket: '#f59e0b',
+  ticketAVista: '#f59e0b',
+  ticketParcelado: '#16a34a',
+  naoPagante: '#dc2626',
   outros: '#9ca3af',
 };
 
