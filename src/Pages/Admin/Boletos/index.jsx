@@ -392,7 +392,7 @@ const AdminBoletos = ({ loggedUsername }) => {
 
           <div className="admin-table-card">
             {boletos.length === 0 ? (
-              <div className="text-start text-secondary p-4">Nenhum boleto parcelado gerado</div>
+              <div className="text-start text-secondary p-4">Nenhum boleto gerado</div>
             ) : (
               <Accordion alwaysOpen className="boletos-accordion">
                 {groupedBoletos.map((group) => {
@@ -436,15 +436,17 @@ const AdminBoletos = ({ loggedUsername }) => {
                           <div className="boleto-group-contact">
                             <ContactLinks cellPhone={group.cellPhone} email={group.email} whatsApp={group.whatsApp} />
                           </div>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            className="boleto-group-delete"
-                            onClick={() => setDeleteOrderTarget(group)}
-                          >
-                            <Icons typeIcon="delete" iconSize={16} fill={'#dc3545'} />
-                            Excluir todos os boletos do pedido
-                          </Button>
+                          {!group.installments.every((boleto) => boleto.avista) && (
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              className="boleto-group-delete"
+                              onClick={() => setDeleteOrderTarget(group)}
+                            >
+                              <Icons typeIcon="delete" iconSize={16} fill={'#dc3545'} />
+                              Excluir todos os boletos do pedido
+                            </Button>
+                          )}
                         </div>
                         <Table responsive className="boleto-installments-table">
                           <thead>
@@ -471,7 +473,7 @@ const AdminBoletos = ({ loggedUsername }) => {
                               return (
                                 <tr key={boleto.id} className={isRealOverdue ? 'boleto-row-overdue' : ''}>
                                   <td>
-                                    {boleto.installmentNumber}/{boleto.totalInstallments}
+                                    {boleto.avista ? 'À vista' : `${boleto.installmentNumber}/${boleto.totalInstallments}`}
                                   </td>
                                   <td>R$ {formatBRL(boleto.amount)}</td>
                                   <td>{formatDate(boleto.dueDate)}</td>
@@ -481,28 +483,34 @@ const AdminBoletos = ({ loggedUsername }) => {
                                   </td>
                                   <td>
                                     <div className="table-action-cell">
-                                      {isEditable(boleto.status) && (
+                                      {boleto.avista ? (
+                                        <span className="text-secondary small">À vista — somente leitura</span>
+                                      ) : (
                                         <>
+                                          {isEditable(boleto.status) && (
+                                            <>
+                                              <ActionButton
+                                                action="edit"
+                                                iconSize={18}
+                                                title="Alterar vencimento"
+                                                onClick={() => openDueDate(boleto)}
+                                              />
+                                              <ActionButton
+                                                action="delete"
+                                                iconSize={18}
+                                                title="Cancelar boleto"
+                                                onClick={() => setCancelTarget(boleto)}
+                                              />
+                                            </>
+                                          )}
                                           <ActionButton
-                                            action="edit"
+                                            action="reissue"
                                             iconSize={18}
-                                            title="Alterar vencimento"
-                                            onClick={() => openDueDate(boleto)}
-                                          />
-                                          <ActionButton
-                                            action="delete"
-                                            iconSize={18}
-                                            title="Cancelar boleto"
-                                            onClick={() => setCancelTarget(boleto)}
+                                            title="Gerar novo boleto"
+                                            onClick={() => openReissue(boleto)}
                                           />
                                         </>
                                       )}
-                                      <ActionButton
-                                        action="reissue"
-                                        iconSize={18}
-                                        title="Gerar novo boleto"
-                                        onClick={() => openReissue(boleto)}
-                                      />
                                     </div>
                                   </td>
                                 </tr>
