@@ -83,13 +83,13 @@ const AdminFormStage = ({ loggedUsername }) => {
   };
 
   const handleConfirmChange = async () => {
-    setFormStage(selectedStage);
-    setShowModal(false);
     setLoading(true);
     try {
       await updateFormStage(selectedStage);
+      setFormStage(selectedStage);
       toast.success('Estágio do formulário atualizado com sucesso');
       registerLog(`Alterou o estágio do formulário para ${target?.label}`, loggedUsername);
+      setShowModal(false);
     } catch (error) {
       console.error('Erro ao atualizar contexto:', error);
       toast.error('Erro ao atualizar o estágio do formulário');

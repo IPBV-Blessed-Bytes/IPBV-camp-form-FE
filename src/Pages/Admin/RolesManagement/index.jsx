@@ -105,11 +105,11 @@ const AdminRolesManagement = ({ loggedUsername }) => {
         toast.success('Papel criado com sucesso');
         registerLog(`Criou papel ${formData.name}`, loggedUsername);
       }
+      await fetchAll(true);
       setShowModal(false);
       setEditingRole(null);
       setFormData(emptyForm);
       setSelectedPerms(new Set());
-      await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao salvar papel');
     } finally {
@@ -123,8 +123,8 @@ const AdminRolesManagement = ({ loggedUsername }) => {
       await deleteRole(roleToDelete.id);
       toast.success('Papel excluído com sucesso');
       registerLog(`Excluiu papel ${roleToDelete.name}`, loggedUsername);
-      setShowDeleteModal(false);
       await fetchAll(true);
+      setShowDeleteModal(false);
     } catch (error) {
       toast.error('Não foi possível excluir o papel (papéis de sistema não podem ser excluídos)');
     } finally {

@@ -110,10 +110,10 @@ const AdminUsersManagement = ({ loggedUsername }) => {
         toast.success('Usuário criado com sucesso');
         registerLog(`Criou usuário ${formData.displayName || formData.email}`, loggedUsername);
       }
+      await fetchUsers(true);
       setFormData({ displayName: '', password: '', role: '', email: '' });
       setEditingUser(null);
       setShowModal(false);
-      await fetchUsers(true);
     } catch (error) {
       toast.error('Erro ao salvar usuário');
     } finally {
@@ -127,8 +127,8 @@ const AdminUsersManagement = ({ loggedUsername }) => {
       await deleteUser(userToDelete.id);
       toast.success('Usuário deletado com sucesso');
       registerLog(`Deletou usuário ${userToDelete.displayName || userToDelete.email}`, loggedUsername);
-      setShowDeleteModal(false);
       await fetchUsers(true);
+      setShowDeleteModal(false);
     } catch (error) {
       toast.error(error?.response?.data || 'Erro ao deletar usuário');
     } finally {

@@ -243,12 +243,12 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         toast.success('Produto criado com sucesso');
         registerLog(`Criou produto ${formData.name}`, loggedUsername);
       }
+      await fetchAll(true);
       setShowModal(false);
       setEditingProduct(null);
       setFormData(emptyForm);
       setLotPrices({});
       resetImageState();
-      await fetchAll(true);
     } catch (error) {
       toast.error('Erro ao salvar produto');
     } finally {
@@ -262,8 +262,8 @@ const AdminProductsManagement = ({ loggedUsername }) => {
       await deleteProduct(productToDelete.id);
       toast.success('Produto excluído com sucesso');
       registerLog(`Excluiu produto ${productToDelete.name}`, loggedUsername);
-      setShowDeleteModal(false);
       await fetchAll(true);
+      setShowDeleteModal(false);
     } catch (error) {
       toast.error('Erro ao excluir produto');
     } finally {

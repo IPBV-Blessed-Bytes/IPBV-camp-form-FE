@@ -84,7 +84,7 @@ const AdminRooms = ({ loggedUsername }) => {
       const data = await createRoomRequest(newRoom);
 
       if (data === 'Quarto criado com sucesso.') {
-        refetchRooms();
+        await refetchRooms();
         toast.success('Quarto criado com sucesso');
         registerLog(`Criou o quarto com nome ${newRoomName}`, loggedUsername);
         handleCloseModal();
@@ -144,8 +144,8 @@ const AdminRooms = ({ loggedUsername }) => {
         const data = await deleteRoom(roomToDelete.id, roomData);
 
         if (data === 'Quarto removido com sucesso.') {
-          refetchRooms();
-          fetchUsers(true);
+          await refetchRooms();
+          await fetchUsers(true);
           toast.success('Quarto excluido com sucesso');
           registerLog(`Excluiu o quarto com nome ${roomToDelete.name}`, loggedUsername);
           handleCloseDeleteModal();
@@ -176,7 +176,7 @@ const AdminRooms = ({ loggedUsername }) => {
         const data = await renameRoomRequest(roomToRename.id, roomData);
 
         if (data === 'Nome do quarto atualizado com sucesso.') {
-          refetchRooms();
+          await refetchRooms();
           toast.success('Quarto renomeado com sucesso');
           registerLog(`Renomeou o quarto com nome ${roomToRename.name}`, loggedUsername);
           handleCloseEditModal();
@@ -261,8 +261,8 @@ const AdminRooms = ({ loggedUsername }) => {
 
       if (data === 'Acampante removido do quarto com sucesso.') {
         toast.success('Acampante removido do quarto com sucesso');
-        refetchRooms();
-        fetchUsers(true);
+        await refetchRooms();
+        await fetchUsers(true);
         handleCloseDeleteCamperFromRoomModal();
       }
     } catch (error) {

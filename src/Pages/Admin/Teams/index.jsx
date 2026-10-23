@@ -116,8 +116,8 @@ const AdminTeams = ({ loggedUsername }) => {
         registerLog(`Criou o time "${payload.name}"`, loggedUsername);
       }
 
-      handleCloseModal();
       await fetchTeams(true);
+      handleCloseModal();
     } catch (error) {
       toast.error('Erro ao salvar time');
       console.error(error);
@@ -145,12 +145,12 @@ const AdminTeams = ({ loggedUsername }) => {
       toast.success('Acampantes adicionados ao time');
       registerLog(`Adicionou ${selectedCampersIds.length} acampantes ao time ${selectedTeam.name}`, loggedUsername);
 
+      await fetchTeams(true);
+      refetchCampers();
+
       setSelectedCampersIds([]);
       setSelectedTeam(null);
       setShowAddCamperModal(false);
-
-      await fetchTeams(true);
-      refetchCampers();
     } catch (error) {
       toast.error('Erro ao adicionar acampantes ao time');
       console.error(error);
