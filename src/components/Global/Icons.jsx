@@ -7,6 +7,7 @@ import {
   Info, MapPin, LogOut, ScrollText, User, Megaphone, MessageCircle, MessageSquare, Search, Wallet,
   Music, Square, Notebook, Phone, Plus, TrendingUp, CircleHelp, RefreshCw, Car, ShieldCheck,
   BedDouble, CircleCheck, Settings, Share2, ChevronRight, Pin, ArrowUpDown, Globe, Eye,
+  HandCoins, FileCog, Package, ShoppingBag, Layers, Armchair, Landmark, Wrench,
 } from 'lucide-react';
 
 const LUCIDE_ICONS = {
@@ -83,6 +84,14 @@ const LUCIDE_ICONS = {
   share: Share2,
   sort: ArrowUpDown,
   world: Globe,
+  donation: HandCoins,
+  'admin-fields': FileCog,
+  package: Package,
+  product: ShoppingBag,
+  lot: Layers,
+  vacancy: Armchair,
+  finance: Landmark,
+  utility: Wrench,
 };
 
 const Icons = ({ className, iconSize, onClick, typeIcon, fill, stroke }) => {

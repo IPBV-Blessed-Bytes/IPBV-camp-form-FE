@@ -280,7 +280,7 @@ const AdminUtilitySettings = ({ loggedUsername }) => {
         username={loggedUsername}
         title="Informações Utilitárias"
         subtitle="Telefone de contato, planilha antiga, data do evento e parcelamento do boleto."
-        typeIcon="settings"
+        typeIcon="utility"
       />
 
       <div className="utility-settings__content">

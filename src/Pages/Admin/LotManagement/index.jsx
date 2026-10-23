@@ -289,7 +289,7 @@ const AdminLotManagement = ({ loading, loggedUsername }) => {
         username={loggedUsername}
         title="Lotes"
         subtitle="Lotes de preço por data determinada"
-        typeIcon="calendar"
+        typeIcon="lot"
       />
 
       <div className="admin-subpage__content">

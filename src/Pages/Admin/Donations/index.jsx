@@ -189,7 +189,7 @@ const AdminDonations = ({ loggedUsername }) => {
         username={loggedUsername}
         title="Doações"
         subtitle="Contribuições para ajuda a pessoas necessitadas, separadas do valor dos pacotes."
-        typeIcon="couple"
+        typeIcon="donation"
       />
 
       <div className="admin-subpage__content">

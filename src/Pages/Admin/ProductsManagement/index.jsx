@@ -468,7 +468,7 @@ const AdminProductsManagement = ({ loggedUsername }) => {
         username={loggedUsername}
         title="Produtos"
         subtitle="Hospedagem, transporte e alimentação — com preço e vagas por lote"
-        typeIcon="cart"
+        typeIcon="product"
       />
 
       <div className="admin-subpage__content">
