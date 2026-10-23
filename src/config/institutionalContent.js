@@ -24,7 +24,7 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
     tagline: 'Retiro de Verão 2027',
     title: 'Um final de semana para renovar a fé, criar laços e descansar em Deus.',
     subtitle:
-      'Três dias de louvor, palavra, comunhão e muita alegria. Vagas limitadas — garanta a sua e traga a família.',
+      'Três dias de louvor, palavra, comunhão e muita alegria. Vagas limitadas, garanta a sua e traga a família.',
     dateLabel: '13 a 15 de fevereiro de 2027',
     locationLabel: 'Sítio Água Viva · Gravatá, PE',
     backgroundImageId: null,
@@ -105,7 +105,7 @@ export const DEFAULT_INSTITUTIONAL_CONTENT = {
   notices: {
     title: 'Avisos importantes',
     items: [
-      { title: 'Vagas limitadas', text: 'As inscrições encerram assim que as vagas se esgotarem — não deixe para a última hora.' },
+      { title: 'Vagas limitadas', text: 'As inscrições encerram assim que as vagas se esgotarem, não deixe para a última hora.' },
       { title: 'Descontos por idade', text: 'Crianças e adolescentes têm valores diferenciados, aplicados automaticamente na inscrição.' },
       { title: 'Parcelamento', text: 'Você pode pagar em boletos mensais ou no cartão. Simule as taxas na hora da inscrição.' },
     ],
