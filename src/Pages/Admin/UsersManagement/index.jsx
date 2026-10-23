@@ -60,13 +60,7 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     if (!silent) setLoading(true);
     try {
       const data = await listUsers();
-      const sortedUsers = [...data].sort((a, b) => {
-        const adminA = a.role === 'admin' ? 0 : 1;
-        const adminB = b.role === 'admin' ? 0 : 1;
-        if (adminA !== adminB) return adminA - adminB;
-        return (a.displayName || a.email || a.login || '').localeCompare(b.displayName || b.email || b.login || '');
-      });
-      setUsers(sortedUsers);
+      setUsers(Array.isArray(data) ? data : []);
     } catch (error) {
       toast.error('Erro ao buscar usuários');
     } finally {
@@ -188,8 +182,18 @@ const AdminUsersManagement = ({ loggedUsername }) => {
     { value: 'all', label: 'Todos', count: users.length },
     ...rolesPresent.map((r) => ({ value: r, label: translateRole(r), count: byRole[r] })),
   ];
+  const userName = (u) => u.displayName || u.email || u.login || '';
+  const compareUsers = (a, b) => {
+    const adminA = a.role === 'admin' ? 0 : 1;
+    const adminB = b.role === 'admin' ? 0 : 1;
+    if (adminA !== adminB) return adminA - adminB;
+    const roleCmp = translateRole(a.role).localeCompare(translateRole(b.role), 'pt', { sensitivity: 'base' });
+    if (roleCmp !== 0) return roleCmp;
+    return userName(a).localeCompare(userName(b), 'pt', { sensitivity: 'base' });
+  };
+  const sortedUsers = [...users].sort(compareUsers);
   const term = search.trim().toLowerCase();
-  const filteredUsers = users.filter(
+  const filteredUsers = sortedUsers.filter(
     (u) =>
       (roleFilter === 'all' || u.role === roleFilter) &&
       (!term ||
