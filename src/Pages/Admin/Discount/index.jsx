@@ -74,9 +74,9 @@ const AdminDiscount = ({ loggedUsername }) => {
     try {
       await createCoupon({ ...newDiscount, id: Date.now().toString() });
       toast.success('Desconto criado com sucesso');
-      setShowModal(false);
       registerLog(`Criou o desconto atrelado ao CPF ${newDiscount.cpf}`, loggedUsername);
       await fetchDiscounts(true);
+      setShowModal(false);
     } catch (error) {
       toast.error('Erro ao criar desconto');
     } finally {
@@ -90,9 +90,9 @@ const AdminDiscount = ({ loggedUsername }) => {
     try {
       await updateCoupon(editingDiscount.id, editingDiscount);
       toast.success('Desconto atualizado com sucesso');
-      setShowModal(false);
       registerLog(`Editou o desconto atrelado ao CPF ${editingDiscount.cpf}`, loggedUsername);
       await fetchDiscounts(true);
+      setShowModal(false);
     } catch (error) {
       toast.error('Erro ao atualizar desconto');
     } finally {
@@ -106,9 +106,9 @@ const AdminDiscount = ({ loggedUsername }) => {
     try {
       await deleteCoupon(discountToDelete.id, discountToDelete);
       toast.success('Desconto excluído com sucesso');
-      setShowConfirmDelete(false);
       registerLog(`Excluiu o desconto atrelado ao CPF ${discountToDelete.cpf}`, loggedUsername);
       await fetchDiscounts(true);
+      setShowConfirmDelete(false);
     } catch (error) {
       toast.error('Erro ao excluir desconto');
     } finally {
@@ -162,6 +162,7 @@ const AdminDiscount = ({ loggedUsername }) => {
         'Motivo do Desconto': item.discountReason || '-',
         Usuário: item.user ? item.user : 'NÃO UTILIZADO',
         'Valor Pago': item.totalPrice ? item.totalPrice : '-',
+        'Criado por': item.createdBy || '-',
       };
 
       numericFields.forEach((key) => {
@@ -249,13 +250,14 @@ const AdminDiscount = ({ loggedUsername }) => {
               <th className="table-cells-header">Usuário:</th>
               <th className="table-cells-header">Motivo:</th>
               <th className="table-cells-header">Valor Pago:</th>
+              <th className="table-cells-header">Criado por:</th>
               <th className="table-cells-header">Ações:</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-start text-secondary p-4">
+                <td colSpan={7} className="text-start text-secondary p-4">
                   Nenhum desconto registrado
                 </td>
               </tr>
@@ -274,6 +276,7 @@ const AdminDiscount = ({ loggedUsername }) => {
                   </td>
                   <td>{item.discountReason || <span className="text-secondary">—</span>}</td>
                   <td>{item.totalPrice ? formatBRL(item.totalPrice) : <span className="text-secondary">—</span>}</td>
+                  <td>{item.createdBy || <span className="text-secondary">—</span>}</td>
                   <td>
                     <div className="table-action-cell">
                       <ActionButton action="edit" label="Editar desconto" onClick={() => openModal(item)} />
