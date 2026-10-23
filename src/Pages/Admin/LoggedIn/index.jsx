@@ -9,7 +9,7 @@ import { getCamperMetrics } from '@/services/registrationMetrics';
 import { registerLog } from '@/services/logs';
 import { getSetting } from '@/services/settings';
 import { permissionsSections } from '@/fetchers/permissions';
-import scrollUp from '@/hooks/useScrollUp';
+import scrollUp, { scrollTop } from '@/hooks/useScrollUp';
 import { AuthContext } from '@/hooks/useAuth/AuthProvider';
 import Loading from '@/components/Global/Loading';
 import Icons from '@/components/Global/Icons';
@@ -89,6 +89,7 @@ const AdminLoggedIn = ({
     setCarouselDirection('forward');
     setSettingsPage(0);
     setView('settings');
+    scrollTop();
   };
 
   const openMainView = () => {
