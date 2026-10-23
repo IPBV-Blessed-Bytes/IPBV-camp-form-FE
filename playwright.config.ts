@@ -5,6 +5,7 @@ import { config as common } from 'tests/test-cases/common/config';
 import { config as form } from 'tests/test-cases/form/config';
 import { config as adminHome } from 'tests/test-cases/adminHome/config';
 import { config as discount } from 'tests/test-cases/discount/config';
+import { config as roles } from 'tests/test-cases/roles/config';
 import { config as room } from 'tests/test-cases/room/config';
 import { config as checkRegistration } from 'tests/test-cases/checkRegistration/config';
 import { config as faq } from 'tests/test-cases/faq/config';
@@ -38,6 +39,7 @@ export default defineConfig({
     form,
     adminHome,
     discount,
+    roles,
     room,
     checkRegistration,
     faq,

@@ -16,6 +16,8 @@ export class DiscountComponent {
   readonly deletedToast: Locator;
   readonly saveChangesButton: Locator;
   readonly confirmDeleteButton: Locator;
+  readonly createdByColumnHeader: Locator;
+  readonly modalBackdrop: Locator;
 
   constructor(readonly page: Page) {
     this.heading = page.getByRole('heading', { name: 'Descontos', exact: true });
@@ -28,6 +30,8 @@ export class DiscountComponent {
     this.deletedToast = page.getByText('Desconto excluído com sucesso');
     this.saveChangesButton = page.getByRole('button', { name: 'Salvar Alterações' });
     this.confirmDeleteButton = page.getByRole('button', { name: 'Excluir', exact: true });
+    this.createdByColumnHeader = page.getByRole('columnheader', { name: 'Criado por:' });
+    this.modalBackdrop = page.locator('.modal-backdrop');
   }
 
   async open() {

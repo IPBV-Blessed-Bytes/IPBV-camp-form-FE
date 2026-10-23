@@ -9,10 +9,14 @@ test.describe('Gestão de descontos', () => {
   test('cria, edita e exclui um desconto', async ({ authentication, discount }) => {
     await authentication.login(testsConfig.users.adminUser);
     await discount.open();
+    await expect(discount.createdByColumnHeader).toBeVisible();
 
     await discount.createDiscount();
     await expect(discount.createdToast).toBeVisible();
     await expect(discount.createdRow()).toBeVisible();
+
+    await expect(discount.modalBackdrop).toHaveCount(0);
+    await expect(discount.createNewDiscountButton).toBeEnabled();
 
     await discount.editDiscount();
     await expect(discount.updatedToast).toBeVisible();
