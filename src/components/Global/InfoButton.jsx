@@ -9,6 +9,7 @@ const InfoButton = ({ timeout, time }) => {
   const [showWhatsAppIcon, setShowWhatsAppIcon] = useState(false);
   const [showWhatsAppButtons, setShowWhatsAppButtons] = useState(false);
   const whatsappButtonRef = useRef(null);
+  const floatingButtonsRef = useRef(null);
   const navigate = useNavigate();
   const contact = useContactPhone();
   const contactDigits = contact.replace(/\D/g, '');
@@ -28,14 +29,16 @@ const InfoButton = ({ timeout, time }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (whatsappButtonRef.current && !whatsappButtonRef.current.contains(event.target)) {
+      const insideToggle = whatsappButtonRef.current && whatsappButtonRef.current.contains(event.target);
+      const insideButtons = floatingButtonsRef.current && floatingButtonsRef.current.contains(event.target);
+      if (!insideToggle && !insideButtons) {
         setShowWhatsAppButtons(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [whatsappButtonRef]);
+  }, []);
 
   const toggleWhatsAppButtons = () => {
     setShowWhatsAppButtons(!showWhatsAppButtons);
@@ -49,7 +52,7 @@ const InfoButton = ({ timeout, time }) => {
         </button>
       )}
 
-      <div className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
+      <div ref={floatingButtonsRef} className={`info-floating-buttons ${showWhatsAppButtons ? 'show' : ''}`}>
         {hasContact && (
           <button
             className="whatsapp-message-button"
