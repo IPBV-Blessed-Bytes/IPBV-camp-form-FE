@@ -1,7 +1,7 @@
 
 # 🎉 **Site de Inscrições - Acampamento IPBV** 🎉
 
-Este projeto faz parte da iniciativa **Inscriptio**, sendo a terceira versão da plataforma de inscrições para o acampamento da nossa igreja. Desenvolvemos uma aplicação robusta e segura para simplificar o processo de inscrição, gestão de participantes e pagamentos, tornando a experiência tanto para os usuários quanto para a equipe organizadora muito mais eficiente.
+Este projeto faz parte da iniciativa **Stroly**, sendo a terceira versão da plataforma de inscrições para o acampamento da nossa igreja. Desenvolvemos uma aplicação robusta e segura para simplificar o processo de inscrição, gestão de participantes e pagamentos, tornando a experiência tanto para os usuários quanto para a equipe organizadora muito mais eficiente.
 
 ## 🚀 **Visão Geral**
 

@@ -6,7 +6,7 @@ import Icons from '@/components/Global/Icons';
 import { getPublicSetting } from '@/services/settings';
 
 const INSCRIPTIO_WHATSAPP = `https://wa.me/5581993727854?text=${encodeURIComponent(
-  'Olá! Queria informações acerca do sistema de inscrições feito pela Inscriptio.',
+  'Olá! Queria informações acerca do sistema de inscrições feito pela Stroly.',
 )}`;
 
 const SOCIAL_NETWORKS = [
@@ -71,7 +71,7 @@ const Footer = ({ handleAdminClick }) => {
         <div className="form__footer__credits">
           <p className="form__footer__powered">
             <a className="mail-to" href={INSCRIPTIO_WHATSAPP} target="_blank" rel="noopener noreferrer">
-              Feito pela Inscriptio
+              Feito pela Stroly
             </a>
             <span className="form__footer__sep"> • </span>
             <em>
@@ -79,7 +79,7 @@ const Footer = ({ handleAdminClick }) => {
             </em>
           </p>
           <p className="form__footer__copyright">
-            © {currentYear} Inscriptio • Todos os Direitos Reservados
+            © {currentYear} Stroly • Todos os Direitos Reservados
           </p>
         </div>
       </div>
