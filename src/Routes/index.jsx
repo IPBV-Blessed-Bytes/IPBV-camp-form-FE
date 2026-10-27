@@ -39,6 +39,10 @@ const AdminBus = lazy(() => import('../Pages/Admin/Bus'));
 const AdminDiscount = lazy(() => import('../Pages/Admin/Discount'));
 const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
+const AdminPolls = lazy(() => import('@/Pages/Admin/Polls'));
+const Votacao = lazy(() => import('@/Pages/Votacao'));
+const AdminWorkshops = lazy(() => import('@/Pages/Admin/Workshops'));
+const Workshops = lazy(() => import('@/Pages/Workshops'));
 const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
 const AdminCheckin = lazy(() => import('../Pages/Admin/Checkin'));
 const AdminBoletos = lazy(() => import('../Pages/Admin/Boletos'));
@@ -169,6 +173,8 @@ const FormRoutes = () => {
         <Suspense fallback={<Loading loading />}>
           <Routes>
             <Route path="/" element={<Institutional />} />
+            <Route path="/votacao" element={<Votacao />} />
+            <Route path="/workshops" element={<Workshops />} />
             <Route
               path={adminPath('')}
               element={
@@ -253,6 +259,22 @@ const FormRoutes = () => {
                   requiredPermission="TEAMS_MANAGE"
                 >
                   <AdminTeams formStage={formStage} loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/votacoes')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="POLLS_MANAGE">
+                  <AdminPolls loggedUsername={loggedUsername} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={adminPath('/workshops')}
+              element={
+                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="WORKSHOPS_MANAGE">
+                  <AdminWorkshops loggedUsername={loggedUsername} />
                 </ProtectedRoute>
               }
             />
@@ -484,6 +506,8 @@ const FormRoutes = () => {
                 <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
                 <Route path="/minha-conta" element={<CustomerMyAccount />} />
                 <Route path="/minha-conta/boletos" element={<Boletos />} />
+                <Route path="/votacao" element={<Votacao />} />
+                <Route path="/workshops" element={<Workshops />} />
               </>
             )}
           </Routes>
