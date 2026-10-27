@@ -440,6 +440,19 @@ const AdminInstitutional = ({ loggedUsername }) => {
                 <Form.Control value={gallery.subtitle || ''} onChange={(e) => patch((n) => { n.gallery.subtitle = e.target.value; })} />
               </Form.Group>
             </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label><b>Formato da galeria:</b></Form.Label>
+                <Form.Select
+                  value={['carousel', 'albums'].includes(gallery.layout) ? gallery.layout : 'grid'}
+                  onChange={(e) => patch((n) => { n.gallery.layout = e.target.value; })}
+                >
+                  <option value="grid">Bloco (grade)</option>
+                  <option value="carousel">Carrossel</option>
+                  <option value="albums">Álbuns (agrupador)</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
           </Row>
           <div className="inst-admin__card-head">
             <h6>Fotos</h6>

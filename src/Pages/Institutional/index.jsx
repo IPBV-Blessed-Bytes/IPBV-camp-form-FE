@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import Icons from '@/components/Global/Icons';
 import Loading from '@/components/Global/Loading';
 import Footer from '@/components/Global/Footer';
@@ -145,6 +150,34 @@ const Institutional = () => {
   );
   const gallery = content.gallery || {};
   const photos = (gallery.photos || []).filter((p) => p && (p.imageId || (p.label && p.label.trim())));
+  const galleryLayout = ['carousel', 'albums'].includes(gallery.layout) ? gallery.layout : 'grid';
+  const renderGalleryItem = (p, i) => {
+    const album = (p.images || []).filter(Boolean);
+    const hasAlbum = album.length > 0;
+    const open = hasAlbum ? () => setGalleryModal({ label: p.label, images: album }) : undefined;
+    return (
+      <div
+        key={`${p.label}-${i}`}
+        className={`inst-gallery__item inst-gallery__item--${GALLERY_TONES[i % GALLERY_TONES.length]}${
+          hasAlbum ? ' inst-gallery__item--clickable' : ''
+        }`}
+        onClick={open}
+        onKeyDown={open ? (e) => (e.key === 'Enter' || e.key === ' ') && open() : undefined}
+        role={hasAlbum ? 'button' : undefined}
+        tabIndex={hasAlbum ? 0 : undefined}
+      >
+        {p.imageId && (
+          <img className="inst-gallery__cover" src={institutionalImageUrl(p.imageId)} alt={p.label || 'Galeria'} loading="lazy" />
+        )}
+        {hasAlbum && <span className="inst-gallery__count">{album.length}</span>}
+        {p.label && (
+          <span className="inst-gallery__label">
+            {!p.imageId && <Icons typeIcon="camera" iconSize={22} fill="#ffffff" />} {p.label}
+          </span>
+        )}
+      </div>
+    );
+  };
   const notices = content.notices || {};
   const noticeItems = notices.items || [];
   const partners = content.partners || {};
@@ -391,34 +424,29 @@ const Institutional = () => {
             <h2>{gallery.title || 'Galeria'}</h2>
             {gallery.subtitle && <p>{gallery.subtitle}</p>}
           </div>
-          <div className="inst-gallery">
-            {photos.map((p, i) => {
-              const album = (p.images || []).filter(Boolean);
-              const hasAlbum = album.length > 0;
-              return (
-                <div
-                  key={`${p.label}-${i}`}
-                  className={`inst-gallery__item inst-gallery__item--${GALLERY_TONES[i % GALLERY_TONES.length]}${
-                    hasAlbum ? ' inst-gallery__item--clickable' : ''
-                  }`}
-                  onClick={hasAlbum ? () => setGalleryModal({ label: p.label, images: album }) : undefined}
-                  onKeyDown={hasAlbum ? (e) => (e.key === 'Enter' || e.key === ' ') && setGalleryModal({ label: p.label, images: album }) : undefined}
-                  role={hasAlbum ? 'button' : undefined}
-                  tabIndex={hasAlbum ? 0 : undefined}
-                >
-                  {p.imageId && (
-                    <img className="inst-gallery__cover" src={institutionalImageUrl(p.imageId)} alt={p.label || 'Galeria'} loading="lazy" />
-                  )}
-                  {hasAlbum && <span className="inst-gallery__count">{album.length}</span>}
-                  {p.label && (
-                    <span className="inst-gallery__label">
-                      {!p.imageId && <Icons typeIcon="camera" iconSize={22} fill="#ffffff" />} {p.label}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          {galleryLayout === 'carousel' ? (
+            <div className="inst-gallery-carousel" style={{ '--swiper-theme-color': '#007185' }}>
+              <Swiper
+                modules={[Autoplay, Navigation, Pagination]}
+                spaceBetween={14}
+                slidesPerView={1}
+                loop={photos.length > 2}
+                grabCursor
+                autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                navigation
+                pagination={{ clickable: true }}
+                breakpoints={{ 640: { slidesPerView: 2 }, 992: { slidesPerView: 3 } }}
+              >
+                {photos.map((p, i) => (
+                  <SwiperSlide key={`${p.label}-${i}`}>{renderGalleryItem(p, i)}</SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          ) : (
+            <div className={`inst-gallery${galleryLayout === 'albums' ? ' inst-gallery--albums' : ''}`}>
+              {photos.map((p, i) => renderGalleryItem(p, i))}
+            </div>
+          )}
         </section>
       )}
 
