@@ -17,6 +17,7 @@ const buildEditPayload = (formData) => {
     observation: formData.observation || '',
     pastoralFamily: !!formData.pastoralFamily,
     crew: formData.crew || '',
+    familyGroup: formData.familyGroup || '',
     package: {
       ...sanitized.package,
       accomodationName: formData.package?.accomodationName || '',
@@ -35,6 +36,7 @@ const buildAddPayload = (formData, currentDate) => {
     observation: formData.observation || '',
     pastoralFamily: !!formData.pastoralFamily,
     crew: formData.crew || '',
+    familyGroup: formData.familyGroup || '',
     ...sanitized,
     package: {
       ...sanitized.package,

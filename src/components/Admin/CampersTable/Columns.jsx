@@ -221,6 +221,13 @@ const FIELDS = [
     ],
   },
   {
+    label: 'Grupo Familiar',
+    name: 'familyGroup',
+    type: 'text',
+    placeholder: 'Mesmo rótulo p/ familiares (ex.: Silva). Mantém a família no mesmo time no sorteio.',
+    oddOrEven: 'odd',
+  },
+  {
     label: 'Observação Adm',
     name: 'observation',
     type: 'text',
