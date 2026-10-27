@@ -620,18 +620,14 @@ $inst-tint: $gray-50;
 }
 
 .inst-gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 14px;
 
-  @media (max-width: $lg) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: $sm) {
-    grid-template-columns: 1fr;
-  }
-
   &__item {
+    flex: 0 1 320px;
+    max-width: 100%;
     position: relative;
     overflow: hidden;
     aspect-ratio: 4 / 3;
