@@ -41,6 +41,7 @@ const AdminRooms = lazy(() => import('../Pages/Admin/Rooms'));
 const AdminTeams = lazy(() => import('@/Pages/Admin/Teams'));
 const AdminPolls = lazy(() => import('@/Pages/Admin/Polls'));
 const Votacao = lazy(() => import('@/Pages/Votacao'));
+const Competicao = lazy(() => import('@/Pages/Competicao'));
 const AdminWorkshops = lazy(() => import('@/Pages/Admin/Workshops'));
 const Workshops = lazy(() => import('@/Pages/Workshops'));
 const AdminExtraMeals = lazy(() => import('../Pages/Admin/ExtraMeals'));
@@ -174,6 +175,7 @@ const FormRoutes = () => {
           <Routes>
             <Route path="/" element={<Institutional />} />
             <Route path="/votacao" element={<Votacao />} />
+            <Route path="/competicao" element={<Competicao />} />
             <Route path="/workshops" element={<Workshops />} />
             <Route
               path={adminPath('')}
@@ -507,6 +509,7 @@ const FormRoutes = () => {
                 <Route path="/minha-conta" element={<CustomerMyAccount />} />
                 <Route path="/minha-conta/boletos" element={<Boletos />} />
                 <Route path="/votacao" element={<Votacao />} />
+            <Route path="/competicao" element={<Competicao />} />
                 <Route path="/workshops" element={<Workshops />} />
               </>
             )}

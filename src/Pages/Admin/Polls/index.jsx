@@ -511,6 +511,7 @@ const AdminPolls = ({ loggedUsername }) => {
         show={!!managedPoll}
         onHide={() => setManageId(null)}
         variant="info"
+        size="lg"
         title="Gerenciar votação"
         footer={
           <Button variant="secondary" onClick={() => setManageId(null)}>
@@ -524,6 +525,44 @@ const AdminPolls = ({ loggedUsername }) => {
               <Form.Label className="fw-semibold">Título</Form.Label>
               <Form.Control defaultValue={managedPoll.title} onBlur={(e) => handleRename(managedPoll, e.target.value)} />
             </Form.Group>
+
+            <div className="polls-signup">
+              <Form.Check
+                type="switch"
+                id={`poll-voting-${managedPoll.id}`}
+                className="polls-signup__switch polls-signup__switch--voting"
+                checked={!!managedPoll.active}
+                onChange={async () => {
+                  try {
+                    await updatePoll(managedPoll.id, { active: !managedPoll.active });
+                    load(true);
+                  } catch {
+                    toast.error('Erro ao atualizar a votação.');
+                  }
+                }}
+                label={managedPoll.active ? 'Votação aberta (o público pode votar)' : 'Votação parada (iniciar para o público votar)'}
+              />
+              <Form.Check
+                type="switch"
+                id={`poll-signup-${managedPoll.id}`}
+                className="polls-signup__switch"
+                checked={!!managedPoll.signupEnabled}
+                onChange={async () => {
+                  try {
+                    await updatePoll(managedPoll.id, { signupEnabled: !managedPoll.signupEnabled });
+                    load(true);
+                  } catch {
+                    toast.error('Erro ao atualizar a inscrição.');
+                  }
+                }}
+                label="Inscrição de competidores aberta (o público pode se inscrever)"
+              />
+              {managedPoll.signupEnabled && (
+                <p className="polls-signup__link">
+                  Link público de inscrição: <code>{`${window.location.origin}/competicao`}</code>
+                </p>
+              )}
+            </div>
 
             <div className="polls-manage__opt-head">
               <span className="fw-semibold">Opções</span>
@@ -556,6 +595,16 @@ const AdminPolls = ({ loggedUsername }) => {
                         <div className="polls-option__bar-fill" style={{ width: `${pct}%` }} />
                       </div>
                       <span className="polls-option__votes">{votes} voto(s)</span>
+                      {(option.music || option.observation) && (
+                        <div className="polls-option__details">
+                          {option.music && (
+                            <span className="polls-option__detail">🎵 {option.music}</span>
+                          )}
+                          {option.observation && (
+                            <span className="polls-option__detail">📝 {option.observation}</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <button type="button" className="polls-option__del" onClick={() => handleDeleteOption(option.id)} title="Remover opção" aria-label="Remover opção">
                       <Icons typeIcon="delete" iconSize={16} fill="currentColor" />

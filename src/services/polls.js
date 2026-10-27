@@ -52,4 +52,22 @@ export const votePoll = async (pollId, optionId, voterToken) => {
   return data;
 };
 
+export const getSignupOpenPolls = async () => {
+  const { data } = await fetcher.get('/polls/signup-open');
+  return Array.isArray(data) ? data : [];
+};
+
+export const signupToPoll = async (pollId, { name, file, signupToken, observation, music }) => {
+  const form = new FormData();
+  form.append('name', name);
+  if (signupToken) form.append('signupToken', signupToken);
+  if (observation) form.append('observation', observation);
+  if (music) form.append('music', music);
+  if (file) form.append('file', file);
+  const { data } = await fetcher.post(`/polls/${pollId}/signup`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+};
+
 export const pollOptionImageUrl = (optionId) => `${BASE_URL}/polls/options/${optionId}/image`;

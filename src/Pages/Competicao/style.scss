@@ -1,0 +1,231 @@
+$accent: #0a7d5a;
+$accent-soft: #2bbd8c;
+$ink: #14241d;
+$muted: #6c757d;
+
+.competir {
+  min-height: 100vh;
+  width: 100%;
+  padding: 2.25rem clamp(1rem, 4vw, 3.5rem) 3.5rem;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #fff;
+    border: 1px solid #e0e3e6;
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-weight: 600;
+    color: #37474f;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+
+    &:hover {
+      border-color: $accent;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+    padding: 2rem 1.25rem;
+    border-radius: 22px;
+    color: #fff;
+    background: linear-gradient(135deg, #0a7d5a 0%, #0e9e73 55%, #2bbd8c 100%);
+    box-shadow: 0 16px 34px rgba(10, 125, 90, 0.28);
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0.6rem 0 0;
+    }
+
+    p {
+      margin: 0.5rem auto 0;
+      max-width: 30rem;
+      color: rgba(255, 255, 255, 0.92);
+    }
+  }
+
+  &__badge {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &__empty {
+    text-align: center;
+    color: $muted;
+    padding: 2.5rem 1rem;
+
+    p {
+      margin: 0.5rem 0 0;
+      font-style: italic;
+    }
+  }
+}
+
+.competir-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 18px;
+  padding: 1.35rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 10px 26px rgba(16, 36, 29, 0.07);
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin: 0;
+      text-transform: capitalize;
+    }
+  }
+
+  &__count {
+    font-weight: 700;
+    color: $accent;
+    background: #e5f6ee;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  &__contestants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.1rem;
+  }
+
+  &__done {
+    display: block;
+    text-align: center;
+    font-weight: 700;
+    color: #1e7e34;
+    background: #e5f6ee;
+    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+  }
+
+  &__btn {
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, $accent, $accent-soft);
+    --bs-btn-bg: #{$accent};
+    --bs-btn-border-color: #{$accent};
+    --bs-btn-hover-bg: #{$accent};
+    --bs-btn-active-bg: #{$accent};
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+}
+
+.competir-contestant {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex: 0 0 auto;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, $accent, $accent-soft);
+  }
+}
+
+.custom-modal {
+  .competir-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+
+    &__thumb {
+      width: 92px;
+      height: 92px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex: 0 0 auto;
+      border: 1px solid #e4e8eb;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    &__initial {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #0a7d5a, #2bbd8c);
+    }
+
+    &__placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: #f1f3f5;
+      border: 1px dashed #c7ced3;
+    }
+
+    &__fields {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .competir__header h1 {
+    font-size: 1.6rem;
+  }
+
+  .competir-form {
+    flex-direction: column;
+    align-items: center;
+  }
+}

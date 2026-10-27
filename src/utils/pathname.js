@@ -17,6 +17,7 @@ const shouldRenderForm = (pathname) => {
     pathname !== '/minha-conta' &&
     pathname !== '/minha-conta/boletos' &&
     pathname !== '/votacao' &&
+    pathname !== '/competicao' &&
     pathname !== '/workshops'
   );
 };
