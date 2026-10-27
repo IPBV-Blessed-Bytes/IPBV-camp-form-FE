@@ -439,8 +439,12 @@ body {
   color: $white;
   opacity: 0.9;
 
-  svg:not(.rooms-rename-icon) {
+  svg:not(.rooms-rename-icon):not(.lucide) {
     fill: $white;
+  }
+
+  svg.lucide {
+    stroke: $white;
   }
 }
 
