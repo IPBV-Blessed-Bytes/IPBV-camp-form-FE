@@ -10,6 +10,7 @@ import useDocumentTitle from '@/hooks/useDocumentTitle';
 import { useFormState } from '@/contexts/FormStateContext';
 import { getInstitutionalContent, institutionalImageUrl, registerInstitutionalVisit } from '@/services/institutional';
 import { getPublicSetting } from '@/services/settings';
+import { getActiveWorkshops, workshopImageUrl } from '@/services/workshops';
 import { DEFAULT_INSTITUTIONAL_CONTENT, GALLERY_TONES, INSTITUTIONAL_NAV, HOW_TO_STEPS } from '@/config/institutionalContent';
 
 const REGISTRATION_STATUS = {
@@ -35,9 +36,14 @@ const Institutional = () => {
   const [visits, setVisits] = useState(null);
   const [galleryModal, setGalleryModal] = useState(null);
   const [lightbox, setLightbox] = useState(null);
+  const [workshops, setWorkshops] = useState([]);
 
   const goToForm = () => {
     navigate('/inscricao');
+    scrollTop();
+  };
+  const goToWorkshops = () => {
+    navigate('/workshops');
     scrollTop();
   };
   const goToAccount = () => {
@@ -49,6 +55,12 @@ const Institutional = () => {
     getInstitutionalContent()
       .then((data) => setContent(data && Object.keys(data).length ? data : DEFAULT_INSTITUTIONAL_CONTENT))
       .catch(() => setContent(DEFAULT_INSTITUTIONAL_CONTENT));
+  }, []);
+
+  useEffect(() => {
+    getActiveWorkshops()
+      .then((data) => setWorkshops(Array.isArray(data) ? data : []))
+      .catch(() => setWorkshops([]));
   }, []);
 
   useEffect(() => {
@@ -497,6 +509,40 @@ const Institutional = () => {
                 </div>
               </a>
             )}
+          </div>
+        </section>
+      )}
+
+      {workshops.length > 0 && (
+        <section className="inst-section inst-section--tinted" id="workshops">
+          <div className="inst-section__head">
+            <h2>Workshops</h2>
+            <p>Participe dos nossos workshops. Faça login na sua conta e escolha os que quiser.</p>
+          </div>
+          <div className="inst-workshops">
+            {workshops.map((workshop) => (
+              <div className="inst-workshops__item" key={workshop.id}>
+                <div className="inst-workshops__media">
+                  {workshop.hasImage ? (
+                    <img src={workshopImageUrl(workshop.id)} alt={workshop.name} loading="lazy" />
+                  ) : (
+                    <span className="inst-workshops__media--empty">{workshop.name?.charAt(0)?.toUpperCase() || '?'}</span>
+                  )}
+                </div>
+                <h3>{workshop.name}</h3>
+                {workshop.description && <p>{workshop.description}</p>}
+                {workshop.vacancies > 0 && (
+                  <span className="inst-workshops__vagas">
+                    {workshop.remaining > 0 ? `${workshop.remaining} vaga(s) restante(s)` : 'Esgotado'}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-4">
+            <Button type="button" className="inst-btn inst-btn--primary inst-btn--lg" onClick={goToWorkshops}>
+              Inscrever-se nos workshops
+            </Button>
           </div>
         </section>
       )}
