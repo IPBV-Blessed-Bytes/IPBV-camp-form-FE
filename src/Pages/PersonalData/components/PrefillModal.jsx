@@ -9,6 +9,7 @@ const PrefillModal = ({ show, onClose, onConfirm, onReject }) => (
     onHide={onClose}
     variant="info"
     title="Preencher Dados"
+    centered={false}
     footer={
       <>
         <Button variant="outline-secondary" onClick={onReject}>
