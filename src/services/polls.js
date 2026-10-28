@@ -47,8 +47,24 @@ export const getActivePolls = async () => {
   return data;
 };
 
-export const votePoll = async (pollId, optionId, voterToken) => {
-  const { data } = await fetcher.post(`/polls/${pollId}/vote`, { optionId, voterToken });
+export const startPollTimer = async (id) => {
+  const { data } = await authFetcher.post(`/polls/${id}/timer/start`);
+  return data;
+};
+
+export const pausePollTimer = async (id) => {
+  const { data } = await authFetcher.post(`/polls/${id}/timer/pause`);
+  return data;
+};
+
+export const resetPollTimer = async (id) => {
+  const { data } = await authFetcher.post(`/polls/${id}/timer/reset`);
+  return data;
+};
+
+export const votePoll = async (pollId, optionIds, voterToken) => {
+  const ids = Array.isArray(optionIds) ? optionIds : [optionIds];
+  const { data } = await fetcher.post(`/polls/${pollId}/vote`, { optionIds: ids, voterToken });
   return data;
 };
 

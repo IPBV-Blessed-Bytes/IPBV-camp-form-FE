@@ -11,6 +11,9 @@ import {
   addPollOption,
   deletePollOption,
   pollOptionImageUrl,
+  startPollTimer,
+  pausePollTimer,
+  resetPollTimer,
 } from '@/services/polls';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
 import AdminToolbar from '@/components/Admin/AdminToolbar';
@@ -24,6 +27,19 @@ import Icons from '@/components/Global/Icons';
 import './style.scss';
 
 const sortedOptions = (poll) => [...(poll.options || [])].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+
+const fmtClock = (secs) => `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
+
+const PODIUM_MEDALS = ['🥇', '🥈', '🥉'];
+
+const timerStateLabel = (poll, now) => {
+  if (!poll.votingDurationSeconds) return 'sem cronômetro definido';
+  if (poll.votingEndsAt) {
+    const rem = Math.max(0, Math.ceil((poll.votingEndsAt - now) / 1000));
+    return rem > 0 ? `em andamento — ${fmtClock(rem)}` : 'tempo esgotado';
+  }
+  return 'parado';
+};
 
 const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
 const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
@@ -97,6 +113,32 @@ const AdminPolls = ({ loggedUsername }) => {
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   const managedPoll = useMemo(() => polls.find((p) => p.id === manageId) || null, [polls, manageId]);
+
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const doTimer = async (action, pollId) => {
+    const fn = action === 'start' ? startPollTimer : action === 'pause' ? pausePollTimer : resetPollTimer;
+    try {
+      await fn(pollId);
+      load(true);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Não foi possível atualizar o cronômetro.');
+    }
+  };
+
+  const updateManaged = async (payload, errorMsg) => {
+    if (!managedPoll) return;
+    try {
+      await updatePoll(managedPoll.id, payload);
+      load(true);
+    } catch {
+      toast.error(errorMsg || 'Erro ao atualizar a votação.');
+    }
+  };
 
   const buildReveal = useCallback(
     () =>
@@ -342,6 +384,28 @@ const AdminPolls = ({ loggedUsername }) => {
                   <h2 className="polls-show__title">{poll.title}</h2>
                   <span className="polls-show__total">{poll.total} voto{poll.total === 1 ? '' : 's'}</span>
                 </div>
+                {poll.rows.length >= 2 && poll.rows.some((r) => r.showVotes && r.votes > 0) && (
+                  <div className="polls-podium">
+                    {[poll.rows[1], poll.rows[0], poll.rows[2]].filter(Boolean).map((row) => {
+                      const place = poll.rows.indexOf(row);
+                      return (
+                        <div className={`polls-podium__spot polls-podium__spot--${place + 1}`} key={`pod-${row.id}`}>
+                          <span className="polls-podium__medal">{PODIUM_MEDALS[place]}</span>
+                          <span className="polls-podium__avatar">
+                            {row.hasImage ? (
+                              <img src={pollOptionImageUrl(row.id)} alt={row.label} />
+                            ) : (
+                              <span className="polls-podium__initial">{row.label?.charAt(0)?.toUpperCase() || '?'}</span>
+                            )}
+                          </span>
+                          <span className="polls-podium__name" title={row.label}>{row.label}</span>
+                          <span className="polls-podium__votes">{row.showVotes ? `${row.votes} voto${row.votes === 1 ? '' : 's'}` : '—'}</span>
+                          <span className="polls-podium__bar" aria-hidden="true" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 <div className="polls-show__options">
                   {poll.rows.map((row) => (
                     <div className={`polls-show-row${row.leader ? ' is-leader' : ''}`} key={row.id}>
@@ -562,6 +626,67 @@ const AdminPolls = ({ loggedUsername }) => {
                   Link público de inscrição: <code>{`${window.location.origin}/competicao`}</code>
                 </p>
               )}
+            </div>
+
+            <div className="polls-config">
+              <Form.Check
+                type="switch"
+                id={`poll-multiple-${managedPoll.id}`}
+                className="polls-config__switch"
+                checked={!!managedPoll.allowMultiple}
+                onChange={() => updateManaged({ allowMultiple: !managedPoll.allowMultiple })}
+                label="Permitir escolha múltipla (o votante marca mais de uma opção)"
+              />
+              {managedPoll.allowMultiple && (
+                <Form.Group className="polls-config__max">
+                  <Form.Label className="small mb-1">Máximo de opções que o votante pode escolher</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={2}
+                    style={{ maxWidth: '7rem' }}
+                    defaultValue={managedPoll.maxChoices || 2}
+                    key={`max-${managedPoll.id}-${managedPoll.maxChoices}`}
+                    onBlur={(e) => {
+                      const value = Math.max(2, parseInt(e.target.value, 10) || 2);
+                      if (value !== managedPoll.maxChoices) updateManaged({ maxChoices: value });
+                    }}
+                  />
+                </Form.Group>
+              )}
+
+              <div className="polls-config__timer">
+                <span className="polls-config__timer-title">
+                  <Icons typeIcon="clock" iconSize={15} fill="var(--admin-accent, #007185)" /> Cronômetro da votação
+                </span>
+                <div className="polls-config__timer-row">
+                  <Form.Control
+                    type="number"
+                    min={0}
+                    style={{ maxWidth: '6.5rem' }}
+                    placeholder="min"
+                    defaultValue={managedPoll.votingDurationSeconds ? Math.round(managedPoll.votingDurationSeconds / 60) : ''}
+                    key={`dur-${managedPoll.id}-${managedPoll.votingDurationSeconds}`}
+                    onBlur={(e) => {
+                      const mins = Math.max(0, parseFloat(e.target.value) || 0);
+                      const secs = Math.round(mins * 60);
+                      if (secs !== (managedPoll.votingDurationSeconds || 0)) updateManaged({ votingDurationSeconds: secs });
+                    }}
+                  />
+                  <span className="polls-config__timer-unit">minutos</span>
+                  <span className="polls-config__timer-state">{timerStateLabel(managedPoll, now)}</span>
+                </div>
+                <div className="polls-config__timer-actions">
+                  <Button size="sm" variant="teal-blue" className="d-inline-flex align-items-center gap-1" onClick={() => doTimer('start', managedPoll.id)}>
+                    ▶ Iniciar
+                  </Button>
+                  <Button size="sm" variant="outline-teal-blue" onClick={() => doTimer('pause', managedPoll.id)}>
+                    ⏸ Pausar
+                  </Button>
+                  <Button size="sm" variant="outline-secondary" onClick={() => doTimer('reset', managedPoll.id)}>
+                    ↺ Reiniciar
+                  </Button>
+                </div>
+              </div>
             </div>
 
             <div className="polls-manage__opt-head">
