@@ -39,7 +39,7 @@ const CustomModal = ({
   const resolvedIconFill = iconFill ?? config.defaultIconFill;
 
   return (
-    <Modal className="custom-modal" show={show} onHide={onHide} centered={centered} {...modalProps}>
+    <Modal className="custom-modal" show={show} onHide={onHide} centered={centered} animation={false} {...modalProps}>
       <Modal.Header closeButton className={config.headerClass}>
         <Modal.Title className="d-flex align-items-center gap-2">
           <Icons typeIcon={resolvedIcon} iconSize={iconSize} fill={resolvedIconFill} />
