@@ -105,419 +105,429 @@ const FormRoutes = () => {
         Pular para o conteúdo
       </a>
       <div className="form" id="main-content" tabIndex={-1}>
-      <RouteMeta />
-      {!adminPathname && formPath && (
-        <div className="components-container">
-          {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}
-          {effectiveFormStage === 'form-off' && <Offline />}
-          {effectiveFormStage === 'maintenance' && <Maintenance />}
+        <RouteMeta />
+        {!adminPathname && formPath && (
+          <div className="components-container">
+            {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}
 
-          {effectiveFormStage === 'form-on' && (
-            <>
-              <Header showNavMenu />
-
-              {steps !== enumSteps.packages && steps !== enumSteps.beforePayment && (
-                <div className="form__container container">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      {steps === enumSteps.home && isNotSuccessPathname && (
-                        <FormHome onLgpdClose={() => setShowInfoButton(true)} />
-                      )}
-
-                      {steps === enumSteps.personalData && isNotSuccessPathname && <FormPersonalData />}
-
-                      {steps === enumSteps.contact && isNotSuccessPathname && <FormContact />}
-
-                      {steps === enumSteps.extraMeals && isNotSuccessPathname && <ExtraMeals />}
-
-                      {steps === enumSteps.finalReview && isNotSuccessPathname && <FinalReview />}
-
-                      {steps === enumSteps.formPayment && isNotSuccessPathname && <ChooseFormPayment />}
-
-                      <Routes>
-                        <Route path="/sucesso" element={<FormSuccess />} />
-                      </Routes>
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {steps === enumSteps.packages && isNotSuccessPathname && (
-                <div className="form__container container-fluid ">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      <FormPackages />
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {steps === enumSteps.beforePayment && isNotSuccessPathname && (
-                <div className="form__container container-fluid ">
-                  <Row className="justify-content-center">
-                    <Col lg={10} className="px-0">
-                      <BeforePayment />
-                    </Col>
-                  </Row>
-                </div>
-              )}
-
-              {showInfoButton && <InfoButton timeout />}
-
-              <Footer handleAdminClick={handleAdminClick} />
-            </>
-          )}
-        </div>
-      )}
-
-      <div className="routes">
-        <Suspense fallback={<Loading loading />}>
-          <Routes>
-            <Route path="/" element={<Institutional />} />
-            <Route path="/votacao" element={<Votacao />} />
-            <Route path="/competicao" element={<Competicao />} />
-            <Route path="/workshops" element={<Workshops />} />
-            <Route
-              path={adminPath('')}
-              element={
-                <Login
-                  availablePackages={availablePackages}
-                  formStage={formStage}
-                  spinnerLoading={loading}
-                  totalBusVacancies={totalBusVacancies}
-                  totalRegistrations={totalRegistrations}
-                  totalSeats={totalSeats}
-                  totalValidWithBus={totalRegistrations.totalValidWithBus}
-                  userRole={userRole}
-                />
-              }
-            />
-            <Route
-              path={adminPath('/acampantes')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
-                  userRole={userRole}
-                  requiredPermission="REGISTRATIONS_READ"
-                >
-                  <AdminCampers formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/carona')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="RIDES_MANAGE"
-                >
-                  <AdminRide formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/onibus')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
-                  userRole={userRole}
-                  requiredPermission="REGISTRATIONS_READ"
-                >
-                  <AdminBus formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/descontos')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
-                  userRole={userRole}
-                  requiredPermission="COUPONS_MANAGE"
-                >
-                  <AdminDiscount formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/quartos')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="ROOMS_MANAGE"
-                >
-                  <AdminRooms formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/times')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator', 'team-creator']}
-                  userRole={userRole}
-                  requiredPermission="TEAMS_MANAGE"
-                >
-                  <AdminTeams formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/votacoes')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="POLLS_MANAGE">
-                  <AdminPolls loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/workshops')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="WORKSHOPS_MANAGE">
-                  <AdminWorkshops loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/alimentacao')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="EXTRAMEALS_VIEW"
-                >
-                  <AdminExtraMeals />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/checkin')}
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
-                  <AdminCheckin formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/boletos')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminBoletos loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/taxas')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminPaymentFees loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/doacoes')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminDonations loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/reembolsos')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminRefunds loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/lixeira')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminTrash loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/logs')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminUserLogs formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/lotes')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminLotManagement
-                    formStage={formStage}
-                    loading={loading}
-                    loggedUsername={loggedUsername}
-                    packageCount={packageCount}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/estagio')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminFormStage formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/faq')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminFaqBuilder formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/manual')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
-                  <AdminManual loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/utilitarios')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminUtilitySettings formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/backup')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminBackup formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/institucional')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminInstitutional loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/usuarios')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="USERS_READ">
-                  <AdminUsersManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/produtos')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="PRODUCTS_WRITE"
-                >
-                  <AdminProductsManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/loja')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="REGISTRATIONS_READ"
-                >
-                  <AdminStoreOrders loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/papeis')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="ROLES_READ">
-                  <AdminRolesManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/solicitacoes')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="REGISTRATIONS_WRITE"
-                >
-                  <AdminChangeRequests formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/pulseiras')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminWristbandsManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/info')}
-              element={
-                <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
-                  <AdminHomepageInfoManagement formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={adminPath('/opiniao')}
-              element={
-                <ProtectedRoute
-                  allowedRoles={['admin', 'collaborator']}
-                  userRole={userRole}
-                  requiredPermission="FEEDBACK_VIEW"
-                >
-                  <AdminFeedback formStage={formStage} loggedUsername={loggedUsername} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/unauthorized"
-              element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
-            />
-
-            {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
+            {effectiveFormStage === 'form-off' && (
               <>
-                <Route path="/opiniao" element={<FormFeedback />} />
-                <Route path="/verificacao" element={<CpfReview />} />
-                <Route path="/verificacao/dados" element={<CpfData />} />
-                <Route path="/perguntas" element={<FAQ />} />
-                <Route path="/esqueci-senha" element={<ForgotPassword />} />
+                <Offline />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/unlock" element={<Unlock />} />
-                <Route path="/criar-conta" element={<CustomerSignUp />} />
-                <Route path="/entrar" element={<CustomerLogin />} />
-                <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
+                <Route path="/esqueci-senha" element={<ForgotPassword />} />
                 <Route path="/minha-conta" element={<CustomerMyAccount />} />
                 <Route path="/minha-conta/boletos" element={<Boletos />} />
-                <Route path="/votacao" element={<Votacao />} />
-            <Route path="/competicao" element={<Competicao />} />
-                <Route path="/workshops" element={<Workshops />} />
               </>
             )}
-          </Routes>
-        </Suspense>
-      </div>
 
-      {!adminPathname && <ChatbotWidget />}
+            {effectiveFormStage === 'maintenance' && <Maintenance />}
+
+            {effectiveFormStage === 'form-on' && (
+              <>
+                <Header showNavMenu />
+
+                {steps !== enumSteps.packages && steps !== enumSteps.beforePayment && (
+                  <div className="form__container container">
+                    <Row className="justify-content-center">
+                      <Col lg={10} className="px-0">
+                        {steps === enumSteps.home && isNotSuccessPathname && (
+                          <FormHome onLgpdClose={() => setShowInfoButton(true)} />
+                        )}
+
+                        {steps === enumSteps.personalData && isNotSuccessPathname && <FormPersonalData />}
+
+                        {steps === enumSteps.contact && isNotSuccessPathname && <FormContact />}
+
+                        {steps === enumSteps.extraMeals && isNotSuccessPathname && <ExtraMeals />}
+
+                        {steps === enumSteps.finalReview && isNotSuccessPathname && <FinalReview />}
+
+                        {steps === enumSteps.formPayment && isNotSuccessPathname && <ChooseFormPayment />}
+
+                        <Routes>
+                          <Route path="/sucesso" element={<FormSuccess />} />
+                        </Routes>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+
+                {steps === enumSteps.packages && isNotSuccessPathname && (
+                  <div className="form__container container-fluid ">
+                    <Row className="justify-content-center">
+                      <Col lg={10} className="px-0">
+                        <FormPackages />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+
+                {steps === enumSteps.beforePayment && isNotSuccessPathname && (
+                  <div className="form__container container-fluid ">
+                    <Row className="justify-content-center">
+                      <Col lg={10} className="px-0">
+                        <BeforePayment />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+
+                {showInfoButton && <InfoButton timeout />}
+
+                <Footer handleAdminClick={handleAdminClick} />
+              </>
+            )}
+          </div>
+        )}
+
+        <div className="routes">
+          <Suspense fallback={<Loading loading />}>
+            <Routes>
+              <Route path="/" element={<Institutional />} />
+              <Route path="/votacao" element={<Votacao />} />
+              <Route path="/competicao" element={<Competicao />} />
+              <Route path="/workshops" element={<Workshops />} />
+              <Route
+                path={adminPath('')}
+                element={
+                  <Login
+                    availablePackages={availablePackages}
+                    formStage={formStage}
+                    spinnerLoading={loading}
+                    totalBusVacancies={totalBusVacancies}
+                    totalRegistrations={totalRegistrations}
+                    totalSeats={totalSeats}
+                    totalValidWithBus={totalRegistrations.totalValidWithBus}
+                    userRole={userRole}
+                  />
+                }
+              />
+              <Route
+                path={adminPath('/acampantes')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
+                    userRole={userRole}
+                    requiredPermission="REGISTRATIONS_READ"
+                  >
+                    <AdminCampers formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/carona')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="RIDES_MANAGE"
+                  >
+                    <AdminRide formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/onibus')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator', 'collaborator-viewer', 'ride-manager', 'team-creator']}
+                    userRole={userRole}
+                    requiredPermission="REGISTRATIONS_READ"
+                  >
+                    <AdminBus formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/descontos')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator', 'collaborator-viewer']}
+                    userRole={userRole}
+                    requiredPermission="COUPONS_MANAGE"
+                  >
+                    <AdminDiscount formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/quartos')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="ROOMS_MANAGE"
+                  >
+                    <AdminRooms formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/times')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator', 'team-creator']}
+                    userRole={userRole}
+                    requiredPermission="TEAMS_MANAGE"
+                  >
+                    <AdminTeams formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/votacoes')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="POLLS_MANAGE">
+                    <AdminPolls loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/workshops')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="WORKSHOPS_MANAGE">
+                    <AdminWorkshops loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/alimentacao')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="EXTRAMEALS_VIEW"
+                  >
+                    <AdminExtraMeals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/checkin')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin', 'checker']} userRole={userRole} requiredPermission="CHECKIN">
+                    <AdminCheckin formStage={formStage} loggedUsername={loggedUsername} userRole={userRole} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/boletos')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminBoletos loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/taxas')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminPaymentFees loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/doacoes')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminDonations loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/reembolsos')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminRefunds loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/lixeira')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminTrash loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/logs')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminUserLogs formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/lotes')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminLotManagement
+                      formStage={formStage}
+                      loading={loading}
+                      loggedUsername={loggedUsername}
+                      packageCount={packageCount}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/estagio')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminFormStage formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/faq')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminFaqBuilder formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/manual')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole}>
+                    <AdminManual loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/utilitarios')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminUtilitySettings formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/backup')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminBackup formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/institucional')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminInstitutional loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/usuarios')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="USERS_READ">
+                    <AdminUsersManagement formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/produtos')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="PRODUCTS_WRITE"
+                  >
+                    <AdminProductsManagement formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/loja')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="REGISTRATIONS_READ"
+                  >
+                    <AdminStoreOrders loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/papeis')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="ROLES_READ">
+                    <AdminRolesManagement formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/solicitacoes')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="REGISTRATIONS_WRITE"
+                  >
+                    <AdminChangeRequests formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/pulseiras')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminWristbandsManagement formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/info')}
+                element={
+                  <ProtectedRoute allowedRoles={['admin']} userRole={userRole} requiredPermission="SETTINGS">
+                    <AdminHomepageInfoManagement formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={adminPath('/opiniao')}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={['admin', 'collaborator']}
+                    userRole={userRole}
+                    requiredPermission="FEEDBACK_VIEW"
+                  >
+                    <AdminFeedback formStage={formStage} loggedUsername={loggedUsername} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/unauthorized"
+                element={<div className="m-3">Você não tem permissão para acessar esta página.</div>}
+              />
+
+              {(effectiveFormStage === 'form-on' || effectiveFormStage === 'form-waiting') && (
+                <>
+                  <Route path="/opiniao" element={<FormFeedback />} />
+                  <Route path="/verificacao" element={<CpfReview />} />
+                  <Route path="/verificacao/dados" element={<CpfData />} />
+                  <Route path="/perguntas" element={<FAQ />} />
+                  <Route path="/esqueci-senha" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/unlock" element={<Unlock />} />
+                  <Route path="/criar-conta" element={<CustomerSignUp />} />
+                  <Route path="/entrar" element={<CustomerLogin />} />
+                  <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
+                  <Route path="/minha-conta" element={<CustomerMyAccount />} />
+                  <Route path="/minha-conta/boletos" element={<Boletos />} />
+                  <Route path="/votacao" element={<Votacao />} />
+                  <Route path="/competicao" element={<Competicao />} />
+                  <Route path="/workshops" element={<Workshops />} />
+                </>
+              )}
+            </Routes>
+          </Suspense>
+        </div>
+
+        {!adminPathname && <ChatbotWidget />}
       </div>
     </>
   );
