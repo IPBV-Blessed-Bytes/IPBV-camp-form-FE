@@ -111,13 +111,13 @@ const FormRoutes = () => {
             {effectiveFormStage === 'form-waiting' && <WaitingForCamp />}
 
             {effectiveFormStage === 'form-off' && (
-              <>
-                <Offline />
+              <Routes>
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/esqueci-senha" element={<ForgotPassword />} />
                 <Route path="/minha-conta" element={<CustomerMyAccount />} />
                 <Route path="/minha-conta/boletos" element={<Boletos />} />
-              </>
+                <Route path="*" element={<Offline />} />
+              </Routes>
             )}
 
             {effectiveFormStage === 'maintenance' && <Maintenance />}
