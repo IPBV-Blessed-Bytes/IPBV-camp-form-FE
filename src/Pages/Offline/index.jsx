@@ -32,12 +32,23 @@ const Offline = () => {
                 </p>
                 <Button
                   size="lg"
-                  className="mt-3"
+                  className="btn-teal-blue mt-3"
                   href={NEW_SYSTEM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Ir para o novo sistema de inscrições
+                </Button>
+                <p className="form__success__message mt-4">
+                  Já fez sua inscrição por aqui? Você pode continuar acessando a sua conta neste sistema para acompanhar
+                  a sua inscrição, emitir a 2ª via dos seus boletos e muito mais.
+                </p>
+                <Button
+                  variant="outline-secondary"
+                  className="mt-2"
+                  onClick={() => navigate('/minha-conta')}
+                >
+                  Acessar minha conta
                 </Button>
                 <p className="form__success__contact mt-4">
                   <b>

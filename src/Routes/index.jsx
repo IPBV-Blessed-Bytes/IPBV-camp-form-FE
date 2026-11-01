@@ -112,8 +112,11 @@ const FormRoutes = () => {
 
             {effectiveFormStage === 'form-off' && (
               <Routes>
+                <Route path="/entrar" element={<CustomerLogin />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/esqueci-senha" element={<ForgotPassword />} />
+                <Route path="/unlock" element={<Unlock />} />
+                <Route path="/confirmar-email" element={<CustomerConfirmEmail />} />
                 <Route path="/minha-conta" element={<CustomerMyAccount />} />
                 <Route path="/minha-conta/boletos" element={<Boletos />} />
                 <Route path="*" element={<Offline />} />
