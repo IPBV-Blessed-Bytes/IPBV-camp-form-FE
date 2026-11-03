@@ -12,9 +12,9 @@ const shouldRenderForm = (pathname) => {
     pathname !== '/reset-password' &&
     pathname !== '/unlock' &&
     pathname !== '/criar-conta' &&
-    // pathname !== '/entrar' &&
+    pathname !== '/entrar' &&
     pathname !== '/confirmar-email' &&
-    // pathname !== '/minha-conta' &&
+    pathname !== '/minha-conta' &&
     pathname !== '/minha-conta/boletos' &&
     pathname !== '/votacao' &&
     pathname !== '/competicao' &&
