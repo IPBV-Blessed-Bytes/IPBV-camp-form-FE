@@ -13,8 +13,17 @@ $overdue: $danger-dark;
   &__header {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.85rem;
     padding: 1rem 1.25rem;
+  }
+
+  &__resend {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-left: auto;
+    white-space: nowrap;
   }
 
   &__icon {

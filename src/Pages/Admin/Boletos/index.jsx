@@ -7,6 +7,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
 import { listAllBoletos, updateBoletoDueDate, cancelBoleto, reissueBoleto, deleteBoletosByOrder } from '@/services/boletos';
 import { registerLog } from '@/services/logs';
+import { resendOverdueReminders } from '@/services/scheduledTasks';
 import scrollUp from '@/hooks/useScrollUp';
 import { downloadSingleSheet } from '@/utils/excelExport';
 import AdminSubpageHeader from '@/components/Admin/AdminSubpageHeader';
@@ -91,6 +92,7 @@ const AdminBoletos = ({ loggedUsername }) => {
   const [reissueDate, setReissueDate] = useState(null);
   const [deleteOrderTarget, setDeleteOrderTarget] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [resending, setResending] = useState(false);
 
   scrollUp();
 
@@ -201,6 +203,24 @@ const AdminBoletos = ({ loggedUsername }) => {
       toast.error(error?.response?.data || 'Não foi possível excluir os boletos do pedido.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleResendReminders = async () => {
+    setResending(true);
+    try {
+      const result = await resendOverdueReminders();
+      const sent = typeof result?.sent === 'number' ? result.sent : 0;
+      registerLog('Reenviou lembretes de boletos vencidos', loggedUsername);
+      toast.success(
+        sent > 0
+          ? `Lembrete enviado para ${sent} boleto${sent > 1 ? 's' : ''} vencido${sent > 1 ? 's' : ''}.`
+          : 'Nenhum boleto vencido para notificar.',
+      );
+    } catch (error) {
+      toast.error(error?.response?.data || 'Não foi possível reenviar os lembretes.');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -349,6 +369,15 @@ const AdminBoletos = ({ loggedUsername }) => {
                     Boletos com vencimento já passado. Entre em contato para regularizar o pagamento.
                   </span>
                 </div>
+                <SpinnerButton
+                  variant="danger"
+                  className="inadimplentes-panel__resend"
+                  onClick={handleResendReminders}
+                  loading={resending}
+                >
+                  <Icons typeIcon="email" iconSize={18} fill="#fff" />
+                  <span>Reenviar lembretes de vencidos</span>
+                </SpinnerButton>
               </div>
 
               <div className="inadimplentes-panel__table-wrap">
